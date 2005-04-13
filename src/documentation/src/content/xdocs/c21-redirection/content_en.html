@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Redirection</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Upayavira" name="DC.Creator">
+</head>
+<body>
+
+    
+<h1>Introduction</h1>
+      
+<p>
+        A Redirector allows the sitemap to pass a request for one URI on to another,
+        whether that other URI is handled by Cocoon or not.
+      </p>
+      
+<p>
+        To redirect from <span class="codefrag">page1.html</span> to <span class="codefrag">page2.html</span>, you can use
+        the following:
+      </p>
+        
+<pre class="code">
+
+  &lt;map:match pattern="page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html"/&gt;
+  &lt;/map:match&gt;
+
+        </pre>
+
+    
+
+    
+<h1>HTTP redirects and how they work</h1>
+      
+<p>If the URI specified does not use the Cocoon: protocol, then an HTTP redirect
+         will occur. The new URI is sent back to the client, which will then request
+         the page from this new location.
+      </p>
+      
+<p>Therefore, directory handling in redirect URIs works differently from other
+         sitemap components.
+      </p>
+      
+<p>If the new URI is relative, then it will be relative to the directory of the 
+         page that called it, not relative to the URI of the sitemap containing it.
+         Thus, the following is incorrect:
+      </p>
+
+<pre class="code">
+
+  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="folder/page2.html"/&gt;
+  &lt;/map:match&gt;
+
+</pre>
+      
+<p>
+         This will in fact redirect the user to folder/folder/page2.html, which is
+         probably not intended. The correct version is:
+      </p>
+
+<pre class="code">
+
+  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html"/&gt;
+  &lt;/map:match&gt;
+    
+</pre>
+    
+    
+<h1>Internal Redirects Using the Cocoon Protocol</h1>
+      
+<p>
+        A redirection URI can make use of the <span class="codefrag">cocoon:</span> protocol to return
+        content from another Cocoon pipeline. In this case, the redirection happens     
+        internally. The content from the redirected URI is returned to the client as 
+        if it came from the original URI.
+      </p>
+      
+<p>
+        Directory handling is the same here as for other sitemap components. So that:
+      </p>
+
+<pre class="code">
+
+  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="cocoon:/folder/page2.html"/&gt;
+  &lt;/map:match&gt;
+
+</pre>
+      
+<p>
+        will return the content of <span class="codefrag">page2.html</span> to the client in response
+        to the request for <span class="codefrag">page1.html</span>.
+      </p>
+      
+<p>
+        Note: when the <span class="codefrag">cocoon:</span> protocol is used, an HTTP redirect is not
+        used.
+      </p>
+    
+    
+    
+<h1>Session Management with Redirects</h1>
+      
+<p>
+      By setting the <span class="codefrag">session</span> attribute to <span class="codefrag">yes</span>, the current
+      session will be maintained during the redirect.
+      </p>
+    
+    
+    
+<h1>Temporary and Permanent Redirects</h1>
+      
+<p>
+      By default, an HTTP redirect sends a code of <span class="codefrag">SC_MOVED_TEMPORARILY</span>, 
+      (<span class="codefrag">302</span>). This instructs the user agent to use the new URI, but not to
+      cache the resulting page, as it may well soon revert back to the old URI.
+      </p>
+      
+<p>
+        This can be a problem for pages that have been moved permanently, as the new
+        page will never be cached, placing additional load on both the browser and on
+        the server.
+      </p>
+      
+<p>
+        This can be avoided using a permanent redirect, using a code of 
+        <span class="codefrag">SC_MOVED_PERMANENTLY</span> (<span class="codefrag">301</span>). A permanent redirect 
+        can be specified as:
+      </p>
+       
+<pre class="code">
+
+  &lt;map:match pattern="page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html" permanent="yes"/&gt;
+  &lt;/map:match&gt;
+
+        </pre>   
+      
+<p>
+        This results in the user agent caching the redirected page, and thus saves
+        resources both on the server and for the client's browser.
+      </p>
+    
+    
+    
+<h1>Redirects in Pipelines</h1>
+      
+<p>
+        A redirect must stand alone in a pipeline - it cannot occur after a generator.
+        If a redirect needs to be generated conditionally by a pipeline, then a 
+        <span class="codefrag">&lt;meta&gt;</span> tag redirect should be added into the 
+        <span class="codefrag">&lt;head&gt;</span> of the HTML page. The syntax for this is:
+      </p>
+      
+<pre class="code">
+  
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="refresh" content="0;URL=page2.html"/&gt;
+    ...
+  &lt;/head&gt;
+  ...
+&lt;/html&gt;
+
+        </pre>
+    
+    
+    
+<h1>Global Redirects</h1>
+      
+<p>
+        When an aggregator accesses a source that includes a redirection, it will 
+        aggregate the document specified by the redirection URI.
+      </p>
+      
+<p>
+        Alternatively, if a redirection that has the <span class="codefrag">global</span> attribute is set 
+        (to <span class="codefrag">yes</span> or <span class="codefrag">true</span>) occurs within an aggregation, the 
+        aggregation is cancelled and the redirect is sent back to the client.
+      </p>
+    
+    
+    
+<h1>Redirecting to Resources</h1>
+      
+<p>Specifiying a <span class="codefrag">resource</span> attribute allows the redirection to a sitemap
+      resource. This usage has been deprecated. <span class="codefrag">map:call</span> should be used
+      instead.
+      </p>
+    
+
+
+</body>
+</html>

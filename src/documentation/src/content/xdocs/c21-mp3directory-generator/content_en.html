@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Description of the mp3directory generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Cocoon Community" name="DC.Creator">
+</head>
+<body>
+    
+<h1>MP3DirectoryGenerator</h1>
+ 
+<p>
+  Following extra attributes added to valid MP3 files:</p>
+ 
+<ul>
+ 
+<li>
+<em>frequency</em> : the frequency of the MP3 file in KHz (most common: 44.1)</li>
+ 
+<li>
+<em>bitrate</em> : the bitrate of the MP3 file in Kbit, from 8 to 448.</li>
+ 
+<li>
+<em>mode</em> : the mode of the MP3 file, one of the following: Stereo, 
+          Joint stereo, Dual channel, Single channel.</li>
+ 
+<li>
+<em>variable-rate</em> (optional) : value is "yes" if VBR header is detected.</li>
+ 
+<li>
+<em>title, artitst, album, year, comment, track, genre</em> (all optional) : 
+       values obtained from MP3 ID3 tag.</li>
+   
+</ul>
+    
+  
+</body>
+</html>

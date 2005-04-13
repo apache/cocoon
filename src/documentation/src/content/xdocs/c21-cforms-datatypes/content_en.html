@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: Datatypes</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Context</h1>
+      
+<p>Datatypes are used by certain widgets, more specifically the
+      <a href="widget_field.html">field</a> and
+      <a href="widget_multivaluefield.html">multivaluefield</a>
+      widgets, to allow them to edit different types of data
+      (e.g. strings, numbers, dates). For a general introduction
+      of the relationship between the widget and the datatype,
+      see the documentation of the <a href="widget_field.html">field</a>
+      widget.</p>
+    
+
+    
+<h1>General information</h1>
+      
+<p>In its most basic form a datatype is declared as follows:</p>
+
+      
+<pre class="code">&lt;fd:datatype base="..."&gt;</pre>
+
+      
+<p>The <strong>base</strong> attribute refers to one of the built-in
+      datatypes such as string or long.</p>
+
+      
+<h2>Convertors</h2>
+<p>A datatype needs a convertor. The purpose of a convertor
+        is to convert between string and object representations of values.
+        There is always a default convertor, but you change or configure
+        that using the fd:convertor element. Here's an example for dates:</p>
+<pre class="code">&lt;fd:datatype base="date"&gt;
+  &lt;fd:convertor type="formatting"&gt;
+    &lt;fd:patterns&gt;
+      &lt;fd:pattern&gt;dd/MM/yyyy&lt;/fd:pattern&gt;
+    &lt;/fd:patterns&gt;
+  &lt;/fd:convertor&gt;
+&lt;/fd:datatype&gt;</pre>
+<p>The <strong>type</strong> attribute on the fd:convertor element
+        is optional, if not specified the default one will be used (configured
+        in the cocoon.xconf). Any further content of the fd:convertor element
+        is specific to the convertor implementation and will be documented
+        in a seperate section.</p>
+
+      
+<h2>Selection lists (default implementation)</h2>
+<p>Widgets that have a datatype can also have a selection list.
+        Since selection lists are associated with datatypes, we discuss them here.
+        The selection list can be defined inline or read from an external source.
+        Example of inline declaration:</p>
+<pre class="code">&lt;fd:datatype base="long"/&gt;
+&lt;fd:selection-list&gt;
+  &lt;fd:item value="1"/&gt;
+  &lt;fd:item value="2"/&gt;
+  &lt;fd:item value="3"&gt;
+    &lt;fd:label&gt;three&lt;/fd:label&gt;
+  &lt;/fd:item&gt;
+  &lt;fd:item value="4"/&gt;
+  &lt;fd:item value="5"/&gt;
+&lt;/fd:selection-list&gt;</pre>
+<p>Each item in the selection-list can have a value (specified in the
+        value attribute) and optionally a label (specified in the fd:label element).
+        If no label is specified, the value is used as label. The fd:label
+        element can contain mixed content.</p>
+<p>To set a default selection, just set the value of the widget
+        containing the selection list.</p>
+<p>Example of getting a selection list from an external source:</p>
+<pre class="code">&lt;fd:datatype base="string"/&gt;
+&lt;fd:selection-list src="cocoon:/mychoices.xml"/&gt;</pre>
+<p>All Cocoon-supported protocols can be used. The format of the XML
+        produced by the source should be the same as in case of inline
+        specification of the selection list, thus the root element should
+        be a fd:selection-list element.</p>
+<p>By default, the selection list will be retrieved form the source once,
+        and then become part of the form definition, just like when you would
+        have defined it inline. This has the consequence that if the XML produced
+        by the source changes, you won't see the selection list changed. If you'd
+        like CForms to retrieve the content of the selection list each time it needs
+        it, add an attribute called "dynamic" with value "true", for example:</p>
+<pre class="code">&lt;fd:datatype base="string"/&gt;
+&lt;fd:selection-list src="cocoon:/mychoices.xml" dynamic="true"/&gt;</pre>
+<p>If the datatype is different from string, CForms will need to convert
+        the string values that appear in the selection list to their object
+        equivalent. This conversion is normally done using the same convertor
+        as the datatype in which the selection list appears, but you can also
+        specify a different one. Here's an example for a date selection list:</p>
+<pre class="code">&lt;fd:datatype base="date"/&gt;
+&lt;fd:selection-list&gt;
+  &lt;fd:convertor type="formatting"&gt;
+    &lt;fd:patterns&gt;
+      &lt;fd:pattern&gt;yyyyMMdd&lt;/fd:pattern&gt;
+    &lt;/fd:patterns&gt;
+  &lt;/fd:convertor&gt;
+  &lt;fd:item value="13020711"/&gt;
+  &lt;fd:item value="19120623"/&gt;
+  &lt;fd:item value="19690721"/&gt;
+  &lt;fd:item value="19700506"/&gt;
+  &lt;fd:item value="19781014"/&gt;
+  &lt;fd:item value="20010911"/&gt;
+&lt;/fd:selection-list&gt;</pre>
+<p>If there is a fd:convertor element, it should always be the first
+        child element of the fd:selection-list element. This works of course
+        also for selection lists retrieved from external sources.</p>
+<p>Selection list implementations are pluggable. Everything said until
+        now applies to the default selection list implementation. An alternative
+        implementation can be specified by using a <strong>type</strong> attribute
+        on the fd:selection-list element. The sections below describe the
+        alternative implementations currently available.</p>
+
+      
+<h2>Selection lists: flow-jxpath implementation</h2>
+<p>See the javadoc of the <a class="external" href="http://cvs.apache.org/viewcvs.cgi/*checkout*/cocoon-2.1/src/blocks/forms/java/org/apache/cocoon/forms/datatype/FlowJXPathSelectionListBuilder.java?rev=HEAD">FlowJXPathSelectionListBuilder</a> class for now.</p>
+<p>Example:</p>
+<p>In flowscript:</p>
+<pre class="code">var data = new Object();
+
+data.cityList = new Array(2);
+data.cityList[0] = {value:"AL", label:"Alabama"};
+data.cityList[1] = {value:"AK", label:"Alaska"};
+
+form.showForm("flow/myform.form", data);</pre>
+<p>and the corresponding selection list definition:</p>
+<pre class="code">&lt;fd:selection-list type="flow-jxpath" list-path="cityList" value-path="value" label-path="label" /&gt;</pre>
+<p>Hint: the label can be any kind of object, its toString() method will be called
+        to get the string to be displayed. In case the object supplied as
+        label implements the XMLizable interface, its toSAX method will be called instead.
+        One practical application of this is using i18n labels:</p>
+<pre class="code">importClass (Packages.org.apache.cocoon.forms.util.I18nMessage);
+...
+mylist[0] = {value: "x", label: new I18nMessage("myI18nKey") };</pre>
+
+      
+<h2>Selection lists: enum implementation</h2>
+<p>This type of selection list outputs a list of items corresponding
+        to the possible instances of an enumerated type (see below).</p>
+<p>Example:</p>
+<pre class="code">&lt;fd:selection-list type="enum" class="com.example.Sex"/&gt;</pre>
+<p>outputs:</p>
+<pre class="code">&lt;fi:selection-list&gt;
+  &lt;fi:item value=""/&gt;
+  &lt;fi:item value="com.example.Sex.MALE"&gt;
+    &lt;fi:label&gt;
+      &lt;i18n:text&gt;com.example.Sex.MALE&lt;/i18n:text&gt;
+    &lt;/fi:label&gt;
+  &lt;/fi:item&gt;
+  &lt;fi:item value="com.example.Sex.FEMALE"&gt;
+    &lt;fi:label&gt;
+      &lt;i18n:text&gt;com.example.Sex.FEMALE&lt;/i18n:text&gt;
+    &lt;/fi:label&gt;
+  &lt;/fi:item&gt;
+&lt;/fi:selection-list&gt;</pre>
+<p>If you don't want an initial null value, add a <strong>nullable="false"</strong>
+        attribute to the <strong>fd:selection-list</strong> element. This applies only to
+        <strong>enum</strong> type selection lists.</p>
+    
+
+    
+<h1>Available datatypes</h1>
+      
+<table>
+        
+<tr>
+          
+<th colspan="1" rowspan="1">CForms datatype</th>
+          <th colspan="1" rowspan="1">Java class</th>
+          <th colspan="1" rowspan="1">Convertors</th>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">string</td>
+          <td colspan="1" rowspan="1">java.lang.String</td>
+          <td colspan="1" rowspan="1">Strings obviously don't support any convertors, since there's no purpose in converting a string to a string.</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">decimal</td>
+          <td colspan="1" rowspan="1">java.math.BigDecimal</td>
+          <td colspan="1" rowspan="1">formatting (decimal), plain</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">integer</td>
+          <td colspan="1" rowspan="1">java.lang.Integer</td>
+          <td colspan="1" rowspan="1">similar as decimal datatype</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">long</td>
+          <td colspan="1" rowspan="1">java.lang.Long</td>
+          <td colspan="1" rowspan="1">similar as decimal datatype</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">double</td>
+          <td colspan="1" rowspan="1">java.lang.Double</td>
+          <td colspan="1" rowspan="1">similar as decimal datatype</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">date</td>
+          <td colspan="1" rowspan="1">java.util.Date</td>
+          <td colspan="1" rowspan="1">formatting (date), millis</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">enum</td>
+          <td colspan="1" rowspan="1">Enumerated type</td>
+          <td colspan="1" rowspan="1">enum</td>
+        
+</tr>
+      
+</table>
+
+      
+<h2>Enumerated datatype</h2>
+<p>The <strong>enum</strong> datatype is meant to be used with types
+        implementing Joshua Bloch's <a class="external" href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">typesafe enum pattern</a>.
+        The following is a possible implementation:</p>
+<pre class="code">package com.example;
+
+public class Sex {
+
+    public static final Sex MALE = new Sex("M");
+    public static final Sex FEMALE = new Sex("F");
+    private String code;
+
+    private Sex(String code) { this.code = code; }
+}</pre>
+<p>The following snippet shows the usage of this type:</p>
+<pre class="code">&lt;fd:field id="sex"&gt;
+  &lt;fd:label&gt;Sex&lt;/fd:label&gt;
+  &lt;fd:datatype base="enum"&gt;
+    &lt;fd:convertor type="enum"&gt;
+      &lt;fd:enum&gt;com.example.Sex&lt;/fd:enum&gt;
+    &lt;/fd:convertor&gt;
+  &lt;/fd:datatype&gt;
+  &lt;fd:selection-list type="enum" class="com.example.Sex"/&gt;
+&lt;/fd:field&gt;</pre>
+<p>If your enumerated type does not provide a <span class="codefrag">toString()</span> method,
+        the enum convertor will use the fully qualified class name, followed by the
+        name of the <span class="codefrag">public static final</span> field referring to each instance,
+        i.e. "<span class="codefrag">com.example.Sex.MALE</span>", "<span class="codefrag">com.example.Sex.FEMALE</span>" and so on.</p>
+<p>If you provide a <span class="codefrag">toString()</span> method which returns something
+        different, you should also provide a <span class="codefrag">fromString(String, Locale)</span>
+        method to convert those strings back to instances.</p>
+<p>The enum datatype is typically used together with the <strong>enum</strong> selection list type.</p>
+    
+
+    
+<h1>Available convertors</h1>
+      
+<h2>formatting (decimal)</h2>
+<p>This convertor uses the <span class="codefrag">java.text.DecimalFormat</span>
+        class (or <span class="codefrag">com.ibm.icu.text.DecimalFormat</span> class if it is
+        present in the classpath). This means it can perform locale-dependent,
+        pattern-based formatting of numbers.</p>
+<p>Configuration pseudo-schema:</p>
+<pre class="code">&lt;fd:convertor type="formatting" variant="integer|number|currency|percent" ? &gt;
+  &lt;fd:patterns&gt;
+    &lt;fd:pattern&gt;....&lt;/fd:pattern&gt; ?
+    &lt;fd:pattern locale="lang-COUNTRY"&gt;....&lt;/fd:pattern&gt; *
+  &lt;/fd:patterns&gt; ?
+&lt;/fd:convertor&gt;</pre>
+<p>The variant attribute and patterns element are optional. By
+        default, the "number" variant is used (or for longs: the "integer" variant).</p>
+<p>You can supply either a locale-independent formatting pattern or
+        locale-dependent formatting patterns. See the
+        <a class="external" href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/DecimalFormat.html">javadoc of the DecimalFormat class</a>
+        for the supported pattern syntax. CForms will always use the pattern
+        that is most specific for the current locale.</p>
+
+      
+<h2>plain</h2>
+<p>This convertor is not locale-dependent. It shows the full
+        precision of the number and uses dot as the decimal separator.</p>
+
+      
+<h2>date convertors</h2>
+<p>The date datatype can be used both for dates as times. The date datatype supports the following convertors:</p>
+<h3>formatting (date)</h3>
+<p>This convertor uses the <span class="codefrag">java.text.SimpleDateFormat</span> class
+          (or <span class="codefrag">com.ibm.icu.text.SimpleDateFormat</span> class if it is present
+          in the classpath). This means it can perform locale-dependent, pattern-based
+          formatting of dates.</p>
+<p>Configuration pseudo-schema:</p>
+<pre class="code">&lt;fd:convertor type="formatting" variant="date|time|datetime" ? style="short|medium|long|full" ?&gt;
+  &lt;fd:patterns&gt;
+    &lt;fd:pattern&gt;....&lt;/fd:pattern&gt; ?
+    &lt;fd:pattern locale="lang-COUNTRY"&gt;....&lt;/fd:pattern&gt; *
+  &lt;/fd:patterns&gt; ?
+&lt;/fd:convertor&gt;</pre>
+<p>Usually you will use either the variant and style attributes or the pattern(s).</p>
+<p>For example, the following convertor configuration:</p>
+<pre class="code">&lt;fd:convertor type="formatting" variant="date" style="short"&gt;</pre>
+<p>Will give the following for July 15, 2003: 7/15/03. Using style medium
+          it gives "Jul 15, 2003", style long gives "July 15, 2003", and style full
+          gives "Tuesday, July 15, 2003". These result are locale-dependent of course.</p>
+<p>Here's an example of using a formatting pattern:</p>
+<pre class="code">&lt;fd:convertor type="formatting"&gt;
+  &lt;fd:patterns&gt;
+    &lt;fd:pattern&gt;dd/MM/yyyy&lt;/fd:pattern&gt;
+  &lt;/fd:patterns&gt;
+&lt;/fd:convertor&gt;</pre>
+<p>Using the same date, this will now give "15/07/2003".</p>
+<p>It is also possible to use different patterns for different
+          locales by using multiple fd:pattern elements with "locale" attributes, for example:</p>
+<pre class="code">&lt;fd:convertor type="formatting"&gt;
+  &lt;fd:patterns&gt;
+    &lt;fd:pattern&gt;MM/dd/yyyy&lt;/fd:pattern&gt;
+    &lt;fd:pattern locale="nl-BE"&gt;dd/MM/yyyy&lt;/fd:pattern&gt;
+    &lt;fd:pattern locale="fr"&gt;dd-MM-yyyy&lt;/fd:pattern&gt;
+  &lt;/fd:patterns&gt;
+&lt;/fd:convertor&gt;</pre>
+<p>In this case, if the locale is "nl-BE", the second pattern will be
+          used; if the locale is "en", the first pattern will be used; and if the
+          locale is "fr-BE" the third pattern will be used (because when fr-BE is
+          not found, it will first search for "fr" before using the locale-indepent pattern).</p>
+<h3>millis</h3>
+<p>The millis convertor for dates uses the number of milliseconds since
+          January 1, 1970, 00:00:00 GMT as string representation. This will likely
+          not be used to present dates to the user, but may be useful in selection
+          lists retrieved from external sources.</p>
+    
+  
+</body>
+</html>

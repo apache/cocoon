@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Request Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the request generator of Cocoon." name="DC.Description">
+</head>
+<body>
+        
+<h1>Request Generator</h1>
+            
+<p>The request generator uses the current request to produce xml data.
+                     It converts some of the information contained in the request
+                     to structured xml.</p>
+            
+<ul>
+                
+<li>Name : request</li>
+                
+<li>Class: org.apache.cocoon.generation.RequestGenerator</li>
+                
+<li>Cacheable: no.</li>
+            
+</ul>
+
+<pre class="code">
+&lt;map:generate type="request"/&gt;
+&lt;!-- The src attribute is optional --&gt;
+</pre>
+            
+<p>The output has the following schema. All elements have the namespace
+               <span class="codefrag">http://apache.org/cocoon/request/2.0</span>
+</p>
+
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;!-- The root element is request. The target attribute is the 
+     requested uri and the source attribute is the optional 
+     source attribute of the sitemap entry for this pipeline. --&gt;
+&lt;request target="/cocoon/request" source=""
+         xmlns="http://apache.org/cocoon/request/2.0"&gt;
+
+  &lt;!-- First the headers: --&gt;
+  &lt;requestHeaders&gt;
+    &lt;header name="accept-language"&gt;de&lt;/header&gt;
+    &lt;header name="connection"&gt;Keep-Alive&lt;/header&gt;
+    &lt;header name="accept"&gt;image/gif, image/x-xbitmap, image/jpeg,
+      image/pjpeg, */*&lt;/header&gt;
+    &lt;header name="host"&gt;thehost.serving.cocoon&lt;/header&gt;
+    &lt;header name="accept-encoding"&gt;gzip, deflate&lt;/header&gt;
+    &lt;header name="user-agent"&gt;Browser User Agent&lt;/header&gt;
+    &lt;header name="referer"&gt;http://thehost.serving.cocoon/cocoon/welcome
+      &lt;/header&gt;
+  &lt;/requestHeaders&gt;
+
+  &lt;!-- All request parameters: --&gt;
+  &lt;requestParameters&gt;
+    &lt;!-- Create a parameter element for each parameter --&gt;
+    &lt;parameter name="login"&gt;
+      &lt;!-- Create a value element for each value --&gt;
+      &lt;value&gt;test&lt;/value&gt;
+    &lt;/parameter&gt;
+  &lt;/requestParameters&gt;
+
+  &lt;!-- All request attributes; see below the note on generate-attributes parameter. 
+       (This feature is available startign with version 2.1 --&gt;
+  &lt;requestAttributes&gt;
+    &lt;!-- Create an attribute element for each attribute --&gt;
+    &lt;attribute name="errorMessage"&gt;
+      &lt;!-- Create a value element for the attribute value --&gt;
+      &lt;value&gt;I was put here by an earlier action.&lt;/value&gt;
+    &lt;/attribute&gt;
+  &lt;/requestAttributes&gt;
+
+  &lt;!-- All configuration parameters: --&gt;
+  &lt;configurationParameters&gt;
+    &lt;!-- Create a parameter element for each parameter specified 
+         in the pipeline for this generator--&gt;
+    &lt;parameter name="test_sitemap_parameter"&gt;the value&lt;/parameter&gt;
+  &lt;/configurationParameters&gt;
+
+&lt;/request&gt;
+</pre>
+
+
+            
+<div class="note">If you want request attributes to be generated, you must specify <span class="codefrag">generate-attributes</span> parameter at generator definition or invocation in the sitemap.</div>
+
+<pre class="code">
+&lt;!-- This will turn on attribute generation on by default --&gt;
+&lt;map:generator name="request" src="org.apache.cocoon.generation.RequestGenerator"&gt; 
+    &lt;map:parameter name="generate-attributes" value="true"/&gt;
+&lt;/map:generator&gt;
+
+&lt;!-- or --&gt;
+
+    &lt;!-- This will turn on attribute generation for this invocation only. --&gt;
+    &lt;map:match pattern="request"&gt;
+        &lt;map:generate type="request"&gt;
+      &lt;map:parameter name="generate-attributes" value="true"/&gt;
+        &lt;/map:generate&gt;
+    &lt;/map:match&gt;
+
+
+</pre>
+        
+    
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christopher Oliver" name="DC.Creator">
+</head>
+<body>
+    
+<a name="Java"></a>
+<h1>Calling Java</h1>
+    
+<p>
+    You can easily call Java code from your Flowscripts, for example:
+    </p>
+    
+<pre class="code">
+    var map = new java.util.HashMap();
+    map.put("foo", "bar");
+    </pre>
+   
+<h2>Imports</h2>
+<p>Classes in packages under <span class="codefrag">java</span> are accessible directly in your scripts.</p>
+<p>Note that classes under <span class="codefrag">java.lang</span> are not automatically imported, however:</p>
+<pre class="code">var n = new java.lang.Integer(3);</pre>
+<p>All other java packages and classes are accessible under the property <span class="codefrag">Packages</span>:</p>
+<pre class="code">var tree = new Packages.javax.swing.JTree();</pre>
+<p>You can get the effect of Java imports using the <span class="codefrag">importPackage()</span> and <span class="codefrag">importClass()</span> functions:</p>
+<table>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       In Java:
+       </td>
+       <td colspan="1" rowspan="1">
+       In JavaScript:
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       import foo.*;
+       </td>
+       <td colspan="1" rowspan="1">
+       importPackage(Packages.foo);
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       import foo.Bar;
+       </td>
+       <td colspan="1" rowspan="1">
+       importClass(Packages.foo.Bar);
+       </td>
+     
+</tr>
+    
+</table>
+<p>Example:</p>
+<pre class="code">
+    importPackage(java.util);   
+    var set = new TreeSet();</pre>
+<p>
+    
+</p>
+   
+<h2>Bean Properties</h2>
+<p>
+      If your Java classes have getters and setters you can access them as properties in JavaScript:</p>
+<pre class="code">
+    var d = new java.util.Date();
+    d.year = 2003;    // same effect as d.setYear(2003);
+</pre>
+<p></p>
+   
+<h2>Dynamic Compilation</h2>
+<p> 
+    Cocoon includes an embedded Java compiler that can dynamically compile Java source files and load and execute the resulting classes at runtime. During development you can take advantage of this capability to rapidly develop, test, and debug your applications. The Cocoon source resolver is used to locate source files.
+   </p>
+<p>Example:</p>
+<pre class="code">
+
+      // Cause com.xyz.MyClass to be compiled and loaded:
+      importClass(Packages.com.xyz.MyClass); 
+
+      var obj = new MyClass("foo", 123); // call a constructor
+
+      obj.someMethod();              // call a method
+
+</pre>
+<p></p>
+<h3>Configuration</h3>
+<p>You control this behavior by specifying configuration properties in the <span class="codefrag">cocoon.xconf</span> file located in the WEB-INF/ directory of your application. These properties are located in the <span class="codefrag">component-instance</span> element under <span class="codefrag">flow-interpreters</span> whose <span class="codefrag">name</span> attribute has the value <span class="codefrag">"javascript"</span>. The following properties may be set:
+ </p>
+<table>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       Property:
+       </td>
+       <td colspan="1" rowspan="1">
+       Description:
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       reload-scripts
+       </td>
+       <td colspan="1" rowspan="1">
+       Determines whether Cocoon should attempt to detect changes to source files and reload them. This applies to both JavaScript and Java source files
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       check-time
+       </td>
+       <td colspan="1" rowspan="1">
+       Specifies an interval in milliseconds after which Cocoon will check for changes to source files (ignored if reload-scripts is false or unspecified)
+       </td>
+     
+</tr>
+     
+<tr>
+       
+<td colspan="1" rowspan="1">
+       classpath
+       </td>
+       <td colspan="1" rowspan="1">
+       A semicolon separated list of URL's that will be searched for Java source files
+       </td>
+     
+</tr>
+    
+</table>
+<p>Example:</p>
+<pre class="code">
+  &lt;flow-interpreters default="javascript" logger="flow"&gt;
+    &lt;!-- FOM (Flow Object Model) --&gt;
+    &lt;component-instance 
+class="org.apache.cocoon.components.flow.
+javascript.fom.FOM_JavaScriptInterpreter" name="javascript"&gt;
+      &lt;load-on-startup&gt;resource://org/apache/cocoon/components/
+flow/javascript/fom/fom_system.js&lt;/load-on-startup&gt;
+      &lt;reload-scripts&gt;true&lt;/reload-scripts&gt;
+      &lt;check-time&gt;4000&lt;/check-time&gt;
+      &lt;classpath&gt;file:C:/dev/myPackages;src/java&lt;/classpath&gt;
+      &lt;debugger&gt;enabled&lt;/debugger&gt; 
+    &lt;/component-instance&gt;
+  &lt;/flow-interpreters&gt;
+</pre>
+    
+<p></p>
+    
+  
+</body>
+</html>

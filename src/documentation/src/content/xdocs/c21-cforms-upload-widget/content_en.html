@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: upload widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>This widget allows to upload files by using Cocoon's file upload features.
+      For this reason, this widget won't function properly unless <span class="codefrag">enable-uploads</span>
+      is set to <span class="codefrag">true</span> in <span class="codefrag">WEB-INF/web.xml</span>.</p>
+
+      
+<p>Also, don't forget to put the <strong>enctype</strong> attribute as
+      <span class="codefrag">multipart/form-data</span> in the <strong>ft:form-template</strong>
+      element, inside the template file.</p>
+
+      
+<p>To retrieve the uploaded data, simply use the <span class="codefrag">getValue</span>
+      method of the widget, which will in this case return an object of the
+      following type:</p>
+
+      
+<pre class="code">org.apache.cocoon.servlet.multipart.Part</pre>
+
+      
+<p>The <span class="codefrag">setValue</span> method cannot be used with the upload widget.</p>
+
+      
+<p>The uploaded data will be automatically cleaned up when the upload
+      widget instance object is finialized by the JVM.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:upload id="..." mime-types="text/plain, text/xml" required="true|false"&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+&lt;/fd:upload&gt;</pre>
+
+      
+<p>The optional <span class="codefrag">mime-types</span> attribute allows to specify a
+      comma-separated list of mime-types which are accepted. The widget will
+      be invalid if the uploaded type isn't of one of the specified content types.</p>
+    
+  
+</body>
+</html>

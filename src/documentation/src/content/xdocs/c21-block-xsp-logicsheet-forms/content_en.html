@@ -1,0 +1,423 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Using Form Validation</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christian Haul" name="DC.Creator">
+</head>
+<body> 
+  
+<h1>Introduction</h1>
+
+   
+<p>
+    For most web applications input is essential. Apache Cocoon provides
+    variety of modules to support basic interaction like simple syntax checking
+    of input data or writing input data to databases.
+   </p>
+
+   
+<p>
+    A new but already very mature modules is the Cocoon Forms (former Woody) framework.
+    Another, simpler and older implementation is the validation using the
+    <span class="codefrag">FormValidatorAction</span>, which is described here.
+   </p>
+
+   
+<p>
+    To validate user input, an action, the <span class="codefrag">FormValidatorAction</span>, is
+    placed in your pipeline. Together with a descriptor file, that specifies
+    the allowed input, this action validates the request parameters. Based on
+    the result, a different page can be displayed and feedback can be given to
+    the user either using XSP and the <span class="codefrag">formval</span> logicsheet or the
+    <span class="codefrag">SimpleFormTransformer</span>.
+   </p>
+
+   
+<h2>Sitemap Usage</h2>
+<p>
+     To take advantage of the form validator action, create two pages. One for
+     the input form and one indicating the acceptance of the reservation.
+     Create a pipeline in your sitemap so that the confirmation page is only
+     shown when the action completed successfully and the input form is
+     returned otherwise.
+    </p>
+<pre class="code">
+
+&lt;?xml version="1.0"?&gt;
+   &lt;map:match pattern="car-reservation"&gt;
+     &lt;map:act type="form-validator"&gt;
+        &lt;!-- add you favourite database action here --&gt;
+        &lt;map:parameter name="descriptor" value="descriptor.xml"/&gt;
+        &lt;map:parameter name="constraint-set" value="car-reservation"/&gt;
+    &lt;map:generate type="serverpages" src="OK.xsp"/&gt;
+    &lt;map:transform src="stylesheets/dynamic-page2html.xsl"/&gt;
+    &lt;map:serialize/&gt;
+     &lt;/map:act&gt;
+     &lt;map:generate type="serverpages" src="test/ERROR.xsp"/&gt;
+     &lt;map:transform src="stylesheets/dynamic-page2html.xsl"/&gt;
+     &lt;map:serialize/&gt;
+   &lt;/map:match&gt;
+
+    </pre>
+<p>
+     Note here that you may not use a redirection to point to the pages if you
+     would like to access the validation results e.g. on the error page. A
+     redirection would create a new request object and thus discard the
+     validation results.
+    </p>
+<p>
+     A different example, that does not need serverpages but the
+     <span class="codefrag">SimpleFormTransformer</span>:
+    </p>
+<pre class="code">
+
+&lt;?xml version="1.0"?&gt;
+   &lt;map:match pattern="car-reservation"&gt;
+     &lt;map:act type="req-params"&gt;
+       &lt;map:parameter name="parameters" value="order"/&gt;
+
+       &lt;map:act type="form-validator"&gt;
+         &lt;map:parameter name="descriptor" value="descriptor.xml"/&gt;
+         &lt;map:parameter name="constraint-set" value="car-reservation"/&gt;
+         &lt;!-- add you favourite database action here --&gt;
+
+         &lt;map:generate type="file" src="OK.xml"/&gt;
+         &lt;map:transform src="stylesheets/dynamic-page2html.xsl"/&gt;
+         &lt;map:serialize/&gt;
+       &lt;/map:act&gt;
+     &lt;/map:act&gt;
+     &lt;map:generate type="file" src="test/ERROR.xml"/&gt;
+     &lt;map:transform src="stylesheets/dynamic-page2html.xsl"/&gt;
+     &lt;map:transform type="simple-form"/&gt;
+     &lt;map:serialize/&gt;
+   &lt;/map:match&gt;
+
+    </pre>
+<p>
+     Although this looks more complicated at first, it has advantages if you
+     don't want to or cannot use XSP. For example, if the form is stored as
+     XHTML in a database, XSP could not be used to fill the form with values
+     from request parameters or to display detailed error messages.
+    </p>
+<div class="note">
+     Keep in mind that files, here the descriptor file, could be specified
+     using the <span class="codefrag">cocoon:</span> pseudo-protocol. Thus the file could be
+     generated dynamically from another pipeline!
+    </div>
+
+   
+<h2>The Descriptor File</h2>
+<p>
+     For details on the syntax of the descriptor file see javadocs. Basically
+     it consists of two sections, a list of parameters and their properties and
+     a list of constraints or constraint sets. The file syntax is set up so
+     that it can be shared with the database actions.
+    </p>
+<h3>The types recognized by validator and their attributes</h3>
+<table>
+     
+<tr>
+      
+<td colspan="1" rowspan="1"><strong>string</strong></td><td colspan="1" rowspan="1">nullable="yes|no" default="str"</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1"><strong>long</strong></td><td colspan="1" rowspan="1">nullable="yes|no" default="123123"</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1"><strong>double</strong></td><td colspan="1" rowspan="1">nullable="yes|no" default="0.5"</td>
+     
+</tr>
+    
+</table>
+<p>
+     Default value takes place only when specified parameter is nullable and
+     really is null or empty. Long numbers may be specified in decimal, hex or
+     octal values as accepted by java.Lang.decode (String s).
+    </p>
+<h3>Constraints</h3>
+<table>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">matches-regex</td><td colspan="1" rowspan="1">POSIX regular expression</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">one-of</td><td colspan="1" rowspan="1">List of strings, enclosed and separated by <span class="codefrag">|</span></td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">min-len</td><td colspan="1" rowspan="1">positive integer</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">max-len</td><td colspan="1" rowspan="1">positive integer</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">min</td><td colspan="1" rowspan="1">Double / Long</td>
+     
+</tr>
+     
+<tr>
+      
+<td colspan="1" rowspan="1">max</td><td colspan="1" rowspan="1">Double / Long</td>
+     
+</tr>
+    
+</table>
+<p>
+     Constraints can be defined globally for a parameter and can be overridden
+     by redefinition in a constraint-set. Thus if e.g. a database field can take
+     at maximum 200 character, this property can be set globally.
+    </p>
+<p>
+     Values in parameter arrays are validated individually and the worst
+     error is reported back.
+    </p>
+<pre class="code">
+
+&lt;?xml version="1.0"?&gt;
+&lt;root&gt;
+
+  &lt;parameter name="persons" type="long" min="1" default="4" nullable="no"/&gt;
+  &lt;parameter name="deposit" type="double" min="10.0" max="999.99"/&gt;
+  &lt;parameter name="email" type="string" max-len="50"
+             matches-regex="^[\d\w][\d\w\-_\.]*@([\d\w\-_]+\.)\w\w\w?$"/&gt;
+  &lt;parameter name="colour" type="string" one-of="|red|green|blue|white|"/&gt;
+
+  &lt;constraint-set name="car-reservation"&gt;
+    &lt;validate name="persons"/&gt;
+    &lt;validate name="deposit" min="50.0"/&gt;
+    &lt;validate name="email"/&gt;
+  &lt;/constraint-set&gt;
+
+&lt;/root&gt;
+
+    </pre>
+<p>
+     The above could for example describe expected input from a reservation
+     form. Specifications in a constraint set take precedence over the general
+     ones.
+    </p>
+
+
+   
+<h2>XSP Usage</h2>
+<p>
+     To give the user some feedback why her/his submitted data was rejected
+     there is a special taglib "xsp-formval". Declare its name space as usual.
+    </p>
+<p>
+     If only interested in validation results, just:
+    </p>
+<pre class="code">
+
+     &lt;xsp-formval:on-ok name="persons"&gt;
+       &lt;myapp:error&gt;(ERROR)&lt;/myapp:error&gt;
+     &lt;/xsp-formval:on-ok&gt;
+
+    </pre>
+<p>
+     Alternatively, if you just want a boolean value from the logicsheet if a
+     test is successful, use this method:
+    </p>
+<pre class="code">
+
+     &lt;xsp:logic&gt;
+     if (!&lt;xsp-formval:is-ok name="persons"/&gt;) {
+          &lt;myapp:error&gt;(ERROR)&lt;/myapp:error&gt;
+         };
+     &lt;/xsp:logic&gt;
+
+    </pre>
+<p>
+     Internationalization issues are a separate concern and are not discussed
+     here.
+    </p>
+<p>
+     Currently the following validation result codes are supported:
+    </p>
+<table>
+     
+<tr>
+<th colspan="1" rowspan="1">tag</th><th colspan="1" rowspan="1">Meaning</th>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-ok</td><td colspan="1" rowspan="1">no error occurred, parameter
+       successfully checked</td>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-error</td><td colspan="1" rowspan="1">some error occurred, this is a result
+       that is never set but serves as a comparison target
+      </td>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-null</td><td colspan="1" rowspan="1">the parameter is null but 
+       isn't allowed to</td>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-toosmall</td><td colspan="1" rowspan="1">either value or length in case of
+       a string is less than the specified minimum</td>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-toolarge</td><td colspan="1" rowspan="1">either value or length in case of
+       a string is greater than the specified maximum</td>
+</tr>          
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-nomatch</td><td colspan="1" rowspan="1">a string parameter's value is not
+       matched by the specified regular expression</td>
+</tr>
+     
+<tr>
+<td colspan="1" rowspan="1">xsp-formval:is-notpresent</td><td colspan="1" rowspan="1">this is returned when the result
+       of a validation is requested but no such result is found in the request
+       attribute </td>
+</tr>
+    
+</table>
+<p>
+     For debugging purposes or if you would like to iterate over the validation
+     results, <span class="codefrag">xsp-formval:results</span> returns a
+     <span class="codefrag">java.util.Map</span> containing them all.
+    </p>
+<p>
+     If you would like to be more specific what went wrong, you can query the
+     descriptor file for attributes.
+    </p>
+<p>
+     First set the url of the file or resource that contains the parameter
+     descriptions and constraint sets.  This needs to be an ancestor to all
+     other tags (of this taglib). Multiple use of this tag is allowed (although
+     probably not necessary).
+    </p>
+<p> You need to do this only if you plan to query the descriptor file or if
+     you'd like to use the shorthand below. 
+    </p>
+<pre class="code">
+
+&lt;xsp-formval:descriptor name="descriptor.xml" constraint-set="reservation"&gt;
+   deposit must be at least EUR
+   &lt;xsp-formval:get-attribute parameter="deposit" name="min"/&gt;
+&lt;/xsp-formval:descriptor&gt;
+
+    </pre>
+<p>
+     If you need to use one parameter a lot, there's a short hand. Use this
+     e.g. if you'd like to set up the properties of an input tag according to
+     the information from the descriptor file or if you'd like to give detailed
+     error messages.
+    </p>
+<p>
+     Note that you can specify additional attributes in the description file
+     that are not understood (and therefore ignored) by the FormValidatorAction
+     but that could be queried here. This might be e.g. the size of the input
+     field which might be different from the max-len a parameter can take.
+    </p>
+<pre class="code">
+
+&lt;xsp-formval:descriptor name="descriptor.xml" constraint-set="car-reservation"&gt;
+  &lt;xsp-formval:validate name="deposit"&gt;
+  &lt;xsp:logic&gt;
+    if (&lt;xsp-formval:is-null/&gt;) {
+      &lt;myapp:error&gt; (you must specify a deposit)) &lt;/myapp:error&gt;
+    } else if ( &lt;xsp-formval:is-toosmall/&gt; ) {
+      &lt;myapp:error&gt;
+        (deposit is too small (&amp;lt; &lt;xsp-formval:get-attribute name="min"/&gt;))
+      &lt;/myapp:error&gt;
+    } else if ( &lt;xsp-formval:is-toolarge/&gt; ) {
+      &lt;myapp:error&gt;
+        (deposit is too large (&amp;gt; &lt;xsp-formval:get-attribute name="max"/&gt;))
+      &lt;/myapp:error&gt;
+    } else {
+      &lt;myapp:error&gt; (ERROR) &lt;/myapp:error&gt;
+    };
+  &lt;/xsp:logic&gt;
+  &lt;/xsp-formval:validate&gt;
+&lt;/xsp-formval:descriptor&gt;
+
+    </pre>
+
+   
+<h2>SimpleFormTransformer</h2>
+<p>
+     An alternative solution to using the <span class="codefrag">formval</span> logicsheet and
+     XSP is to use the <span class="codefrag">SimpleFormTransformer</span>. If fills the form
+     with values obtained from request parameters, overwriting existing
+     values. Hence the data entered by the user is not discarded when it does
+     not validate successfully.
+    </p>
+<div class="note">
+     Beware when using the <span class="codefrag">SimpleFormTransformer</span> together with
+     XSP: The observer behaviour can be very confusing when trying to set a
+     value from XSP and it is silently overwritten by the transformer!
+    </div>
+<p>
+     When a form element carries the attribute <span class="codefrag">fixed="true"</span>, the
+     transformer does not replace the value.
+    </p>
+<p>
+     Feedback can be given to the user through <span class="codefrag">&lt;error/&gt;</span>
+     tags. Error tags need to have a name attribute identical to the input
+     element they refer to. Multiple error elements may be present for any
+     input element. The <span class="codefrag">FormValidatorAction</span> sets a special field
+     <span class="codefrag">*</span> that indicates whether all parameters were validated
+     successfully or not.
+    </p>
+<p>
+     An error element is omitted together with all contents whenever the
+     specified condition is not met. Conditions are either exact or greater
+     equal constraints indicated by the attribute <span class="codefrag">when</span> or
+     <span class="codefrag">when-ge</span> respectively.
+    </p>
+<p>
+     Allowed values for error conditions are: <span class="codefrag">ok, not-present, error,
+      is-null, too-small, too-large, no-match </span>
+    
+</p>
+<pre class="code">
+
+     &lt;input name="email" type="text"/&gt;&lt;error name="email" when-ge="error"&gt;*&lt;/error&gt;
+     &lt;!-- ... --&gt;
+     &lt;error name="email" when="is-null"&gt;Please enter your email address.&lt;/errro&gt;
+     &lt;error name="email" when="no-match"&gt;Please enter a &lt;em&gt;syntacticly&lt;/em&gt; correct
+     email address.&lt;/errro&gt;
+
+    </pre>
+
+   
+<h2>Other Validations</h2>
+<p>
+   In addition to validating form input, other actions exists that validate
+   values from different sources using the same techniques and syntax. For
+   example, the <span class="codefrag">SessionValidatorAction</span> operates on session
+   attributes.
+  </p>
+
+   
+
+  
+</body>
+</html>

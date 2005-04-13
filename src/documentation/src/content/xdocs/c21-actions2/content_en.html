@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>actions</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+</head>
+<body>
+<pre class="code">This is the proposal for a Action sitemap component. It shows the 
+basic ideas behind actions. For more information look at the javadoc  
+comments in the file Action.java in the org.apache.cocoon.acting 
+package. For a possible implementation look at the file HelloAction.java 
+or at the other actions in the same package. 
+ 
+To give you an overview of the discussion about sitemap Actions here is 
+an excerpt from the cocoon-dev mailing list: 
+ 
+------------------------------------&lt;&lt;&gt;&gt;------------------------------------- 
+ 
+Peter Donald wrote: 
+&gt; 
+&gt; At 04:15  9/9/00 +0200, you wrote: 
+&gt; &gt;  &lt;match type="uri" pattern="myapp/**"&gt; 
+&gt; &gt;    &lt;!-- the following Matcher make the overall request 
+&gt; &gt;         analysis and makes important information available 
+&gt; &gt;         to subsequent components through the objectModel and 
+&gt; &gt;         a Map for substitution in src= attributes. 
+&gt; &gt;         Maybe a Controller sitemap component would be more 
+&gt; &gt;         appropriate 
+&gt; &gt;    --&gt; 
+&gt; &gt;    &lt;match type="myapp-controller" pattern="not really used"&gt; 
+&gt; &gt;      &lt;select type="myapp-action-selector"&gt; 
+&gt; &gt;        &lt;when test="add"&gt; 
+&gt; &gt;          &lt;!-- here the {1} is delivered by the matcher 
+&gt; &gt;               "myapp-controller" 
+&gt; &gt;          --&gt; 
+&gt; &gt;          &lt;generate src="myapp/{1}/remove.xsp"/&gt; 
+&gt; &gt;        &lt;/when&gt; 
+&gt; &gt;        &lt;when test="remove"&gt; 
+&gt; &gt;          &lt;generate src="myapp/{1}/remove.xsp"/&gt; 
+&gt; &gt;        &lt;/when&gt; 
+&gt; &gt;        &lt;otherwise&gt; 
+&gt; &gt;          &lt;generate src="myapp/{1}/index.xml"/&gt; 
+&gt; &gt;        &lt;/otherwise&gt; 
+&gt; &gt;      &lt;/select&gt; 
+&gt; &gt;      &lt;select type="browser"&gt; 
+&gt; &gt;        &lt;when test="netscape"&gt; 
+&gt; &gt;          &lt;transform src="myapp/{1}/style-ns.xsl"/&gt; 
+&gt; &gt;          &lt;serialize type="html"/&gt; 
+&gt; &gt;        &lt;/when&gt; 
+&gt; &gt;        &lt;when test="wap"&gt; 
+&gt; &gt;          &lt;transform src="myapp/{1}/style-wap.xsl"/&gt; 
+&gt; &gt;          &lt;serialize type="wap"/&gt; 
+&gt; &gt;        &lt;/when&gt; 
+&gt; &gt;        &lt;otherwise&gt; 
+&gt; &gt;          &lt;transform src="myapp/{1}/style-ie.xsl"/&gt; 
+&gt; &gt;          &lt;serialize type="html"/&gt; 
+&gt; &gt;        &lt;/otherwise&gt; 
+&gt; &gt;      &lt;/select&gt; 
+&gt; &gt;    &lt;/match&gt; 
+&gt; &gt;  &lt;/match&gt; 
+&gt; &gt;  &lt;-- here we catch all requests not handled by the match above 
+&gt; &gt;      and redirect them to the login screen or an error page 
+&gt; &gt;  --&gt; 
+&gt; &gt;  &lt;match pattern="myapp/**"&gt; 
+&gt; &gt;    &lt;redirect-to uri="myapp/login"/&gt; 
+&gt; &gt;  &lt;/match&gt; 
+&gt; &gt;Well, this example might not be the best one but I think its 
+&gt; &gt;good enough to start a discussion about it. What do you think? 
+&gt; 
+&gt; I like the approach but before an implementation can be defined there is a 
+&gt; few questions that must be answered first. Namely 
+&gt; 
+&gt; * What is an Action ? 
+&gt; * How will you use actions ? 
+&gt; 
+&gt; What is an Action ? 
+&gt; ------------------- 
+&gt; 
+&gt; In the above case you have associated an Action with a resource. ie the 
+&gt; Remove action is associated with myapp/{1}/remove.xsp resource. Do actions 
+&gt; have to be associated with a resource or are they independent of resources. 
+&gt; I would say that they are independent - an Action framework should be able 
+&gt; to be used via multiple interfaces whether via cocoon, turbine, telnet, 
+&gt; mail etc. So the "ShutdownRealWorldMachine" action is accessible via the C2 
+&gt; interface, a telnet interface or via any number of other methods. 
+ 
+The example above is probably misleading because we don't have a Action 
+component in the sitemap so far. Generally speaking I think a Sitemap 
+Action is an object that acts upon an application model based on data 
+supplied by the environments objectModel (ie Request). It's its 
+responsibility to make some data available to the Sitemap engine as 
+further selection/matching criteria (a List object) as well as in the 
+objectModel for other sitemap components 
+ 
+Suppose the Interface of an Actions is like this: 
+ 
+   public Interface Action { 
+       public List act (Map objectModel); 
+   } 
+ 
+and also suppose that the nested elements of the &lt;map:act&gt; elements are 
+skipped if the action returns a null value instead of a List. 
+ 
+ &lt;match type="uri" pattern="myapp/**"&gt; 
+   &lt;act type="myaction"&gt; 
+     &lt;select type="action-selector"&gt; 
+       &lt;when test="remove"/&gt; 
+         &lt;generate src="myapp/{1}/remove.xsp"/&gt; 
+       &lt;/when&gt; 
+       ... 
+     &lt;/select&gt; 
+   &lt;/act&gt; 
+ &lt;/match&gt; 
+ 
+The List object supplied by the action is used by the sitemap engine to 
+replace occurrences like {1} from certain attributes like src= but this 
+is optional. So the Action is not really associated to a resource. It's 
+the selector which does this association. 
+ 
+&gt; An action is essentially a snippet of code that is executed in response to 
+&gt; a request in a certain context (or Environment in C2s case). The action can 
+&gt; add and change the context/environment data. 
+ 
+Agreed. 
+ 
+&gt; How granular can actions be ? 
+ 
+You should be able to be as granular as you want. 
+ 
+&gt; Does session validation count as an action ? 
+ 
+Why not? 
+ 
+&gt; How about authorisation and authentication ? 
+ 
+I still suppose to leave authentication to the container but I know 
+someone will do it with a sitemap component :/ 
+Authorisation is more dependant on the application context and there are 
+the possibilities to use AuthorisationMatchers, AuthorisationSelectors, 
+AuthorisationActions or a authorisation logicsheet, what ever suit your 
+needs best. 
+ 
+&gt; What about form validation ? 
+ 
+Even here, it depends. If you only want to validate form data a Selector 
+can be used to achieve that and in the &lt;map:when&gt; elements you 
+regenerate the resource if validation fails or choose an action to put 
+the form data into your application model and generate the next screen 
+or whatever. 
+ 
+&gt; When I program actions I use a extremely granular approach. 
+ 
+No problem, you should be able to do things like that 
+ 
+ &lt;match type="uri" pattern="myapp/**"&gt; 
+   &lt;act type="session validation"&gt; 
+     &lt;act type="form-validation"&gt; 
+       &lt;select type="validation-check"&gt; 
+         &lt;when test="ok"&gt; 
+           &lt;act type="model-update"/&gt; 
+           &lt;generate src="next-page"/&gt; 
+         &lt;/when&gt; 
+         &lt;otherwise&gt; 
+           &lt;generate src="this-page"/&gt; 
+         &lt;/otherwise&gt; 
+       &lt;/select&gt; 
+     &lt;/act&gt; 
+   &lt;/act&gt; 
+   &lt;generate src="login"/&gt; 
+ &lt;/match&gt; 
+ 
+&gt; There is also the idea of latent actions. For instance the latent Action is 
+&gt; transmitted between end-user and cocoon until they are activated. Actions 
+&gt; may also be made latent (or deactivated) in a couple of cases. Like when 
+&gt; you try to submit form but are not logged in - it will save action/form 
+&gt; data (or put action into latent state) and then after login commit the 
+&gt; action (or re-activate action). 
+ 
+Isn't this a matter how components play together? 
+ 
+&gt; How will you use actions ? 
+&gt; --------------------------- 
+&gt; 
+&gt; In many cases when I program to a an actions approach each request can 
+&gt; result in many actions being executed. For instance it is not uncommon for 
+&gt; an action chain to occur like the following. 
+&gt; 
+&gt; SessionValidatorAction --&gt; RoleAssignerAction --&gt; FormValidationAction --&gt; 
+&gt; FormDBEntryAction 
+&gt; 
+&gt; The SessionValidatorAction will check the session and if not exist then it 
+&gt; will put a magic token in environment so that after action is executed then 
+&gt; the rest of action-chain and output resource is ignored and the user is 
+&gt; redirected to a login page. 
+&gt; 
+&gt; The RoleAssignerAction (lame name I know ;-&gt;) will check if the current 
+&gt; user implements a certain role and if not redirect them to appropriate 
+&gt; NoEntry.html type page. 
+&gt; ... 
+&gt; 
+&gt; So when I design a sitemap for a web-application I want to somehow be able 
+&gt; to do the following. 
+&gt; 
+&gt; * Anything under webapp/ must run SessionValidatorAction 
+&gt; * Anything under webapp/admin must run RoleAssignerAction and check for 
+&gt; "admin" role 
+&gt; * Then specific resources webapp/a.xml, webapp/b.xml and webapp/admin/c.xml 
+&gt; must run FormValidationAction with appropriate form schema and the 
+&gt; appropriate FormDBEntryAction 
+ 
+Didn't get the last one? What is a FormDBEntryAction for? Probably an 
+XSP page? 
+ 
+&gt; * A user can also arbitrarily submit an action from any page (via post 
+&gt; request or perhaps a ?action=blah tacked onto URL) that must be executed. 
+ 
+  &lt;match type="uri" pattern="webapp/**"&gt; 
+    &lt;act type="session-validation"/&gt; 
+    &lt;match type="uri" pattern="webapp/admin"&gt; 
+      &lt;act type="assign-role"&gt; 
+        &lt;select type="role-selector"&gt; 
+          &lt;when test="admin"&gt; 
+            &lt;match type="uri" pattern="webapp/admin/c.xml"&gt; 
+              &lt;act type="form-validation src="admin/form-schema-c.xsd"/&gt; 
+              &lt;!-- the following next-page action has knowledge of the 
+                   sequence of pages and returns a List with the first 
+element 
+                   corresponding to the "next page" appropriate 
+depending on 
+                   values in the objectModel signaling successful 
+validation by 
+                   the previous action (type="form-validation"). The 
+following 
+                   three lines could be put into a sitemap resource 
+definition 
+                   and replaced by &lt;redirect-to resource="next-page"/&gt; 
+              --&gt; 
+              &lt;act type="next-page"&gt; 
+                &lt;generate src="{1}"/&gt; 
+              &lt;/act&gt; 
+            &lt;/match&gt; 
+          &lt;otherwise&gt; 
+            &lt;match type="uri-regexp" pattern="webapp/(a|b)\.xml"&gt; 
+              &lt;act type="form-validation src="form-schema-{1}.xsd"/&gt; 
+              &lt;act type="next-page"&gt; 
+                &lt;generate src="{1}"/&gt; 
+              &lt;/act&gt; 
+            &lt;/match&gt; 
+          &lt;/when&gt; 
+        &lt;/select&gt; 
+      &lt;/act&gt; 
+    &lt;/match&gt; 
+  &lt;/match&gt; 
+ 
+&gt; 
+&gt; ---------------------------------------------------------------------------- 
+&gt; --------- 
+&gt; 
+&gt; So what would I want to see in a Cocoon-Application framework ??? 
+&gt; 
+&gt; Well actions are independent of resources and exist in a separate namespace. 
+&gt; 
+&gt; Each request can in theory result in a action-pipeline. 
+&gt; 
+&gt; Each action can add stuff to it's context (or Environment). 
+&gt; 
+&gt; Each action can in theory short-cut the action pipeline and move to another 
+&gt; action-resource pipeline and also store remaining submitted actions as 
+&gt; latent actions. 
+&gt; 
+&gt; An action pipeline must not necessarily be associated with a resource (it 
+&gt; should instead be able to specify a resource that it goes to post processing). 
+&gt; 
+&gt; It may also be good to have an action that's sole purpose is to extract 
+&gt; explicit action requests and execute/store them (ActionExtractorAction + 
+&gt; ActionDispatcherAction ???) 
+ 
+Please answer these question yourself after you've read my explanations. 
+ 
+&gt; But anyways I mean in no way to imply C2 is bad and if you want to add 
+&gt; hooks into sitemap generation to allow for this sort of stuff (or even 
+&gt; better do it yourself ;&gt;) I would gladly switch all my development across 
+&gt; to C2 and I suspect many others would too :P. 
+ 
+Implementing the framework to use actions like I've mentioned through 
+out this mail is a matter of an hour or two. But you're right 
+implementing general actions for general usage is another thing. 
+ 
+Giacomo</pre>
+</body>
+</html>

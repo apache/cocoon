@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Description of the JX transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Cocoon Community" name="DC.Creator">
+</head>
+<body>
+    
+<h1>JX Transformer</h1>
+      
+<p>
+        (<em>JX</em> for <a class="external" href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a>
+        and <a class="external" href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>x</em>l</a>).
+      </p>
+      
+<p>
+        Uses the namespace <span class="codefrag">http://apache.org/cocoon/templates/jx/1.0</span>.
+      </p>
+      
+<p>
+        Provides a generic page template with embedded JSTL and XPath
+        expression substitution to access data sent by Cocoon Flowscripts.
+      </p>
+      
+<p>
+        The embedded expression language allows a page author to access an
+        object using a simplified syntax such as
+      </p>
+
+<pre class="code">
+   &lt;site signOn="${accountForm.signOn}"&gt;
+</pre>      
+      
+<p>
+        Embedded JSTL expressions are contained in <span class="codefrag">${}</span>.
+      </p>
+      
+<p>
+        Embedded XPath expressions are contained in <span class="codefrag">#{}</span>.
+      </p>
+      
+<p>
+        Note that since this transformer uses
+        <a class="external" href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a>
+        and <a class="external" href="http://jakarta.apache.org/commons/jexl">Apache Jexl</a>, the
+        referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects from
+        a Flowscript. In addition the following implicit objects are available as
+        both XPath and JSTL variables:
+      </p>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1"><span class="codefrag">request</span> (<span class="codefrag">org.apache.cocoon.environment.Request</span>)</td>
+          <td colspan="1" rowspan="1">The Cocoon current request</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1"><span class="codefrag">session</span> (<span class="codefrag">org.apache.cocoon.environment.Session</span>)</td>
+          <td colspan="1" rowspan="1">The Cocoon session associated with the current request</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1"><span class="codefrag">context</span> (<span class="codefrag">org.apache.cocoon.environment.Context</span>)</td>
+          <td colspan="1" rowspan="1">The Cocoon context associated with the current request</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1"><span class="codefrag">parameters</span> (<span class="codefrag">org.apache.avalon.framework.parameters.Parameters</span>)</td>
+          <td colspan="1" rowspan="1">A map of parameters passed to the transformer in the pipeline</td>
+        
+</tr>
+      
+</table>
+      
+<p>
+  The current Web Continuation from the Flowscript
+  is also available as a variable named <span class="codefrag">continuation</span>. You would
+  typically access its <span class="codefrag">id</span>:
+      </p>
+
+<pre class="code">      
+     &lt;form action="${continuation.id}"&gt;
+</pre>      
+
+  
+<p>You can also reach previous continuations by using the
+  <span class="codefrag">getContinuation()</span> function:</p>
+ 
+
+<pre class="code">      
+      &lt;form action="${continuation.getContinuation(1).id}" &gt;
+</pre>      
+ 
+<p>The <span class="codefrag">template</span> tag defines a new template:</p>
+
+<pre class="code">      
+     &lt;template&gt;
+        body
+     &lt;/template&gt;
+</pre>      
+ 
+  
+<p>The <span class="codefrag">import</span> tag allows you to include another template
+  within the current template. The content of the imported template is
+  compiled and will be executed in place of the <span class="codefrag">import</span> tag:</p>
+
+<pre class="code">
+    &lt;import uri="URI" [context="Expression"]/&gt;
+</pre>
+ 
+<p>The Cocoon source resolver is used to resolve <span class="codefrag">uri</span>.
+ If <span class="codefrag">context</span> is present, then its value is used as the context
+ for evaluating the imported template, otherwise the current context is
+ used.</p>
+ 
+<p>The <span class="codefrag">set</span> tag creates a local alias of an object. The
+ <span class="codefrag">var</span> attribute specifies the name of a variable to assign the
+ object to. The <span class="codefrag">value</span> attribute specifies the object (defaults
+ to <span class="codefrag">body</span> if not present):</p>
+
+
+<pre class="code">      
+     &lt;set var="Name" [value="Value"]&gt;
+         [body]
+     &lt;/set&gt;
+</pre>      
+ 
+<p>If used within a <span class="codefrag">macro</span> definition (see below)
+ variables created by <span class="codefrag">set</span> are only visible within the body of
+ the <span class="codefrag">macro</span>.</p>
+ 
+<p>The <span class="codefrag">if</span> tag allows the conditional execution of its body
+ according to value of a <span class="codefrag">test</span> attribute:</p>
+
+
+<pre class="code">      
+    &lt;if test="Expression"&gt;
+        body
+    &lt;/if&gt;
+</pre>      
+ 
+<p>The <span class="codefrag">choose</span> tag performs conditional block execution by the
+  embedded <span class="codefrag">when</span> sub tags. It renders the body of the first
+  <span class="codefrag">when</span> tag whose <span class="codefrag">test</span> condition evaluates to true.
+  If none of the <span class="codefrag">test</span> conditions of nested <span class="codefrag">when</span> tags
+  evaluate to <span class="codefrag">true</span>, then the body of an <span class="codefrag">otherwise</span>
+  tag is evaluated, if present:</p>
+
+<pre class="code">      
+   &lt;choose&gt;
+     &lt;when test="Expression"&gt;
+        body
+     &lt;/when&gt;
+     &lt;otherwise&gt;
+        body
+     &lt;/otherwise&gt;
+   &lt;/choose&gt;
+</pre>      
+  
+<p>The <span class="codefrag">out</span> tag evaluates an expression and outputs
+  the result of the evaluation:</p>
+
+<pre class="code">      
+  &lt;out value="Expression"/&gt;
+</pre>      
+  
+<p>The <span class="codefrag">forEach</span> tag allows you to iterate over a collection
+  of objects:</p>
+
+<pre class="code">      
+    &lt;forEach [var="Name"] [items="Expression"]
+                 [begin="Number"] [end="Number"] [step="Number"]&gt;
+      body
+   &lt;/forEach&gt;
+</pre>      
+  
+<p>The <span class="codefrag">items</span> attribute specifies the list of items to iterate
+  over. The <span class="codefrag">var</span> attribute specifies the name of a variable to
+  hold the current item. The <span class="codefrag">begin</span> attribute specifies the
+  element to start with (<span class="codefrag">0</span> = first item,
+  <span class="codefrag">1</span> = second item, ...).
+  If unspecified it defaults to <span class="codefrag">0</span>. The <span class="codefrag">end</span>
+  attribute specifies the item to end with (<span class="codefrag">0</span> = first item,
+  <span class="codefrag">1</span> = second item, ...). If unspecified it defaults to the last
+  item in the list. Every <span class="codefrag">step</span> items are
+  processed (defaults to <span class="codefrag">1</span> if <span class="codefrag">step</span> is absent).
+  Either <span class="codefrag">items</span> or both <span class="codefrag">begin</span> and <span class="codefrag">end</span>
+  must be present.</p>
+ 
+  
+<p>
+  The <span class="codefrag">formatNumber</span> tag is used to display numeric data, including
+  currencies and percentages, in a locale-specific manner. The
+  <span class="codefrag">formatNumber</span> action determines from the locale, for example,
+  whether to use a period or a comma for delimiting the integer and decimal
+  portions of a number. Here is its syntax:
+  </p>
+
+<pre class="code">      
+  &lt;formatNumber value="Expression"
+      [type="Type"] [pattern="Expression"]
+      [currencyCode="Expression"] [currencySymbol="Expression"]
+      [maxIntegerDigits="Expression"] [minIntegerDigits="Expression"]
+      [maxFractionDigits="Expression"] [minFractionDigits="Expression"]
+      [groupingUsed="Expression"]
+      [var="Name"] [locale="Expression"]&gt;
+</pre>      
+ 
+  
+<p>The <span class="codefrag">formatDate</span> tag provides facilities to format Date values:</p>
+
+<pre class="code">      
+  &lt;formatDate value="Expression" [dateStyle="Style"]
+    [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"]
+    [locale="Expression"]&gt;
+</pre>      
+ 
+  
+<p>The <span class="codefrag">macro</span> tag allows you define a new custom tag.</p>
+ 
+
+<pre class="code">      
+  &lt;macro name="Name" [targetNamespace="Namespace"]&gt;
+    &lt;parameter name="Name" [optional="Boolean"] [default="Value"]/&gt;
+    body
+  &lt;/macro&gt;
+</pre>      
+ 
+ 
+<p>For example:</p>
+ 
+
+<pre class="code">      
+  &lt;c:macro name="d"&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;/c:macro&gt;
+</pre>      
+ 
+  
+<p>The tag being defined in this example is <span class="codefrag">&lt;d&gt;</span> and it
+  can be used like any other tag:</p>
+ 
+
+<pre class="code">      
+    &lt;d/&gt;
+</pre>      
+ 
+  
+<p>However, when this tag is used it will be replaced with a row containing
+  a single empty data cell.</p>
+  
+<p> When such a tag is used, the attributes and content of the tag become
+  available as variables in the body of the <span class="codefrag">macro</span>'s definition,
+  for example:</p>
+ 
+
+<pre class="code">      
+  &lt;c:macro name="tablerows"&gt;
+    &lt;c:parameter name="list"/&gt;
+    &lt;c:parameter name="color"/&gt;
+    &lt;c:forEach var="item" items="${list}"&gt;
+      &lt;tr&gt;&lt;td bgcolor="${color}"&gt;${item}&lt;/td&gt;&lt;/tr&gt;
+    &lt;/c:forEach&gt;
+  &lt;/c:macro&gt;
+</pre>      
+ 
+  
+<p>The <span class="codefrag">parameter</span> tags in the macro definition define formal
+  parameters, which are replaced with the actual attribute values of the
+  tag when it is used. The content of the tag is also available as a special
+  variable <span class="codefrag">${content}</span>.</p>
+  
+<p>Assuming you had this code in your
+  flowscript:</p>
+  
+<pre class="code">var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</pre>
+ 
+<p>
+<span class="codefrag"> sendPage(uri, {greatlakes: greatlakes});</span>
+ 
+</p>
+ 
+<p>and a template like this:</p>
+ 
+
+<pre class="code">      
+     &lt;tablerows list="${greatlakes}" color="blue"/&gt;
+  &lt;/table&gt;
+</pre>      
+ 
+  
+<p>When the <span class="codefrag">tablerows</span> tag is used in this situation the
+  following output would be generated:
+  </p>
+
+<pre class="code">      
+  &lt;table&gt;
+    &lt;tr&gt;&lt;td bgcolor="blue"&gt;Superior&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td bgcolor="blue"&gt;Michigan&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td bgcolor="blue"&gt;Huron&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td bgcolor="blue"&gt;Erie&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+</pre>
+    
+  
+</body>
+</html>

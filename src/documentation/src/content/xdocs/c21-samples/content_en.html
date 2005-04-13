@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>How to run and explore the Cocoon samples</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bertrand Delacr&eacute;taz" name="DC.Creator">
+</head>
+<body>
+
+        
+<h1>Overview</h1>
+            
+<p>
+                This How-To shows you how to run and explore the Cocoon samples. It requires no
+                prior knowledge of Cocoon.
+            </p>
+        
+
+        
+<h1>Purpose</h1>
+            
+<p>
+                You will learn how install and run Cocoon in the simplest way, in order to run the Cocoon samples, and
+                also how to study the samples from the inside to see how their are built.
+            </p>
+        
+
+        
+<h1>Intended Audience</h1>
+            
+<p>
+                Beginning Cocoon users or people evaluating Cocoon for the first time.
+            </p>
+        
+
+        
+<h1>Prerequisites</h1>
+            
+<p>You only need a JDK (1.3 or later) installed on your computer, and an Internet connection
+                to download Cocoon.</p>
+
+        
+
+        
+<h1>Steps</h1>
+            
+<p>
+                Here's how to proceed.
+            </p>
+
+            
+<h2>1. Get Cocoon</h2>
+<p>
+                    Download Cocoon from the location listed on the
+                    <a class="external" href="http://cocoon.apache.org">cocoon.apache.org</a>
+                    web site.
+                </p>
+<div class="note">
+                    If you want the latest bleeding edge version, you can get it from CVS, this is described on
+                    the site as well, but more complicated if you're not familiar with CVS.
+                </div>
+
+            
+<h2>2. Build and start Cocoon</h2>
+<p>
+                    Unpack the Cocoon distribution and follow the instructions found in the
+                    <em>INSTALL.txt</em> file to build
+                    Cocoon.
+                </p>
+<div class="note">
+                    If you have done this previously, make sure to remove any local.* configuration files that you
+                    might have created. You usually want to activate all Cocoon components to look at the samples,
+                    and local.* files might disable some components or even disable the samples.
+                </div>
+<div class="note">
+                    Also, if you have already built Cocoon with a different configuration before, you might need to
+                    do a "build clean" first, to prevent any conflicts between different configurations.
+
+                </div>
+<p>
+                    The INSTALL.txt file also contains instructions for starting Cocoon with the <em>cocoon.sh</em> or
+                    <em>cocoon.bat</em> script, which is the simplest way and is sufficient to explore the samples.
+                </p>
+
+            
+<h2>3. Access the samples</h2>
+<p>
+                    Once Cocoon starts (and assuming you have kept the standard configuration), point your browser
+                    at http://localhost:8888, this should show the "Welcome to Apache Cocoon" page. On this page,
+                    click the
+                    <em>samples</em> link.
+                </p>
+<p>
+                    You should now see a page with links to many samples (
+                    <em>Hello World!</em>, etc.), which show you what Cocoon is about.
+                    Note that there are several categories of samples: do not forget to look at the
+                    <em>blocks
+                        with samples</em> page, which contains samples based on components which are not part of the Cocoon core.
+                </p>
+<p>
+                    Another category is the
+                    <em>scratchpad</em> samples , these are based on experimental
+                    components that might or might not be included later in the Cocoon core or in a Cocoon block.
+                </p>
+
+            
+<h2>4. Study the samples</h2>
+<p>
+                    Now comes the interesting part: looking at the samples innards to find out how they are built.
+                </p>
+<p>
+                    This is fairly simple as the directory structure of the samples is similar to the URLs
+                    used to access the samples. These simple rules should help you find out much more about
+                    the samples:
+                </p>
+<ul>
+                        
+<li>If using the standard build configuration, samples are found under the
+                            <em>build/webapp/samples</em> directory. That's where you want to look
+                            to find out how a particular sample works.
+                        </li>
+                        
+<li>Under this directory, the pathnames are the same than after the
+                            <em>http://localhost:8888/samples</em> base URL. The
+                            midi block samples, for example, are accessed from
+                            <em>http://localhost:8888/samples/midi</em>
+                            and the corresponding files are found under
+                            <em>build/webapp/samples/midi</em>.
+                        </li>
+                        
+<li>
+                            When studying how a sample is built, it is recommended to first study its <em>sitemap.xmap</em>
+                            files, which map incoming requests to pipelines.
+                        </li>
+                    
+</ul>
+        
+
+        
+<h1>Conclusion</h1>
+            
+<p>
+                We hope that this How-To will help you explore the samples yourself, as this
+                is probably the best way of learning about Cocoon.
+            </p>
+            
+<p>
+                Do not forget to look at the reference documentation though, once you have found
+                out which Cocoon components you need for your application.
+            </p>
+        
+
+        
+<h1>Comments</h1>
+          
+<p>
+              Care to comment on this How-To?
+              Help keep this document relevant by passing along any constructive feedback to the
+              <a href="mailto:docs.at.cocoon.apache.org?subject=howto-explore-samples:">cocoon-docs</a>
+              mailing list.
+          </p>
+        
+
+    
+</body>
+</html>

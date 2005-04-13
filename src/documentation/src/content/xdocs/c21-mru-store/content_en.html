@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MRUMemoryStore and Swapping under Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Gerhard Froehlich" name="DC.Creator">
+<meta content="This document explains how the MRUMemoryStore and Swapping under 
+    Cocoon executes." name="DC.Description">
+</head>
+<body>
+  
+<h1>Goal</h1>
+    
+<p>This document explains how the MRUMemoryStore and Swapping under 
+    Cocoon executes.</p>
+  
+  
+<h1>Overview</h1>
+    
+<p>The MRUMemoryStore was developed to provide a standard algorithm to
+       store data in memory. For web-based applications the MRU (Most Recently Used) algorithm
+       is very suitable, because the object most frequently accessed is always on "top".
+    </p>
+    
+<p>If configured, the objects are also swapped to the filesystem if the
+    MRUMemoryStore reached its configured maximum object limit.
+    </p>
+  
+  
+<h1>Implementation</h1>
+    
+<h2>MRUMemoryStore</h2>
+<p> 
+    The heart of the MRUMemoryStore is a combination of a LinkedList and a HashMap:
+    </p>
+<p>
+    The LinkedList provides the queue mechanism, and the entries in the LinkedList 
+    contain the key to the data in the HashMap. When caching a new entry in to the list,
+    the entry is inserted to the front of the list.
+    If the list is already full, the oldest data entry is removed from the Cache.
+    When requesting a entry, the store returns the object by key and inserts the requested key 
+    on the top of the Cache.
+       
+    This implementation keeps the most recent used objects in the store and provides the best
+    use of the machines memory.
+    </p>
+    
+<h2>Swapping</h2>
+<p>
+    When the MRUMemoryStore is full or the JVM is at the heap size limit the 
+    objects in the MRUMemoryStore are swapped to the Filesystem. The default 
+    directory is "cache-dir" in the work-directory.
+    </p>
+<p>
+    NOTE: The keys under Cocoon are Strings at the moment. Therefore the
+    filenames of the swapped objects can be very long. Especially Windows OS
+    flavours have problems with long filenames. Use the JispFilesystemStore to
+    deal with that (see <a href="persistence.html">Persistent cache</a>).
+    </p>
+  
+  
+<h1>Configuration of the MRUMemoryStore in the cocoon.xconf</h1>
+  
+<pre class="code">
+&lt;store logger="core.store"&gt;
+  &lt;parameter name="maxobjects" value="100"/&gt;
+  &lt;parameter name="use-persistent-cache" value="true"/&gt;
+&lt;/store&gt;
+  </pre> 
+  
+<p>Explanation of the parameters:</p>
+    
+<ol> 
+      
+<li>
+<span class="codefrag">&lt;parameter name="maxobjects" value="100"/&gt;</span>:
+      Indicates how many objects will be held in MRUMemoryStore. When the number 
+      of maxobjects has been reached, the last object in the MRUMemoryStore will be 
+      thrown out.</li>
+      
+<li>
+<span class="codefrag">&lt;parameter name="use-persistent-cache" value="true"/&gt;</span>:
+      If this switch is set on true, objects are swapped out to the filesystem,
+      if the MRUMemoryStore has reached its maximum object limit, or the JVM 
+      memory consumption is over the heap size limit. See StoreJanitor user 
+      docs for more information.</li>
+  
+</ol>
+  
+  
+</body>
+</html>

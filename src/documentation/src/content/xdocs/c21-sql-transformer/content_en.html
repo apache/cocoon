@@ -1,0 +1,570 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SQL Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Sven Beauprez" name="DC.Creator">
+<meta content="Davanum Srinivas" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Introduction</h1>
+      
+<p>
+        The purpose of the SQLTransformer is to query a database and translate
+        the result to XML. To retrieve the information from the database, you
+        are not restricted to use simple SQL statements (e.g. select, insert,
+        update), it is also possible to use stored procedures. In combination
+        with other transformers (e.g. FilterTransformer), this one can be very
+        powerful.
+      </p>
+      
+<ul>
+        
+<li>Name: sql</li>
+        
+<li>Class: org.apache.cocoon.transformation.SQLTransformer</li>
+        
+<li>Cacheable: no</li>
+      
+</ul>
+    
+    
+<h1>Basic functionality</h1>
+      
+<p>
+        To be able to query a database, we need XML that describes exactly what
+        we want to do. The general structure of this input XML is as follows:
+      </p>
+      
+<pre class="code">
+      
+  &lt;page&gt;
+    &lt;execute-query xmlns="http://apache.org/cocoon/SQL/2.0"&gt; 
+      &lt;query&gt;
+      &lt;!-- here comes the SQL statement or stored procedure --&gt;
+      &lt;/query&gt;
+    &lt;/execute-query&gt;
+  &lt;/page&gt;
+   </pre>
+      
+<p>
+        Nothing prevents you from putting other XML around the
+        <span class="codefrag">execute-query</span> element. Any element not in the SQL namespace
+        will stay untouched. The format of the SQL statement or the stored
+        procedure is exactly the same as if you would call it directly from java
+        with a prepared statement or a callable statement.
+      </p>
+      
+<p>The query element has the following optional attributes:</p>
+      
+<ol>
+        
+<li>
+          
+<strong>name</strong>:
+          Naming a query implicates naming the corresponding rowset (see below).
+          When you have a sequence of queries you want to execute, it can be
+          handy give them a name. To process the retrieved data of a certain
+          query, you can use another transformer to check the name of the rowset
+          and to execute the necessary business logic on it.
+          <br>
+          usage: <span class="codefrag">&lt;query name="myName"&gt;</span>
+        
+</li>
+        
+<li>
+          
+<strong>isstoredprocedure</strong>:
+          When you want to use stored procedures, you have to explicitly add
+          this attribute to the query element. By default, the transformer
+          assumes that you want to execute a SQL statement.
+          <br>
+          usage: <span class="codefrag">&lt;query isstoredprocedure="true"&gt;</span>
+        
+</li>
+      
+</ol>
+      
+<p>Here is an example of how the input XML might look like:</p>
+      
+<pre class="code">
+      
+  &lt;page&gt;
+   &lt;title&gt;Hello&lt;/title&gt;
+   &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page filled with sql data!&lt;/para&gt;
+    &lt;execute-query xmlns="http://apache.org/cocoon/SQL/2.0"&gt; 
+     &lt;query name="department"&gt;
+          select id,name from department_table 
+     &lt;/query&gt;
+    &lt;/execute-query&gt;
+   &lt;/content&gt;
+  &lt;/page&gt;
+   </pre>
+      
+<p>
+        You can use the file generator to retrieve the XML from the filesystem.
+        To invoke the SQLTransformer you have to add following to the sitemap:
+      </p>
+      
+<pre class="code">
+      
+  &lt;map:transform type="sql"&gt;
+    &lt;map:parameter name="use-connection" value="personnel"/&gt;
+    &lt;map:parameter name="show-nr-of-rows" value="true"/&gt; 
+    &lt;map:parameter name="clob-encoding" value="UTF-8"/&gt; 
+  &lt;/map:transform&gt;
+   </pre>
+      
+<p>
+        The <span class="codefrag">use-connection</span> parameter defines which connection,
+        defined under the datasources element in <span class="codefrag">cocoon.xconf</span>, the
+        SQLTransformer has to use to retrieve the data.
+      </p>
+      
+<p>
+        The <span class="codefrag">show-nr-of-rows</span> instructs the transformer to count the
+        number of rows in the resultset explicitly and to set the result as
+        attribute to the rowset element. This attribute is only useful in
+        combination with a sql statement, not with stored procedures. If a
+        stored procedure returns a resultset and you want to know how many rows
+        it contains, you have to count the number of rows in another transformer
+        or your stored procedure has to return it also (last solution is the
+        best one).
+      </p>
+      
+<p>
+        The <span class="codefrag">clob-encoding</span> parameter defines what encoding should be
+        used in getting content from CLOB columns.
+      </p>
+      
+<p>The output XML will look as follows:</p>
+      
+<pre class="code">
+      
+  &lt;page&gt;
+   &lt;title&gt;Hello&lt;/title&gt;
+   &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page filled with sql data!&lt;/para&gt;
+    &lt;rowset nrofrows="2" name="department" 
+            xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+      &lt;row&gt;
+        &lt;id&gt;1&lt;/id&gt;
+        &lt;name&gt;Programmers&lt;/name&gt;
+      &lt;/row&gt;
+      &lt;row&gt;
+        &lt;id&gt;2&lt;/id&gt;
+        &lt;name&gt;Loungers&lt;/name&gt;
+      &lt;/row&gt;
+    &lt;/rowset&gt;
+   &lt;/content&gt;
+  &lt;/page&gt;
+   </pre>
+      
+<p>
+        If you use this in combination with the <span class="codefrag">simple-sql2html.xsl</span>
+        stylesheet,
+      </p>
+      
+<pre class="code">
+      
+  &lt;map:transform src="stylesheets/simple-sql2html.xsl"/&gt;
+   </pre>
+      
+<p>you will get a more visually attractive page.</p>
+      
+<p>See below for a more in depth example with stored procedures.</p>
+      
+<p>
+        By now you should be able to use the SQLTransformer, but there are some
+        more options you might find useful...
+      </p>
+    
+    
+<h1>Advanced functionality</h1>
+      
+<h2>Substitution</h2>
+<p>
+          Sometimes you need more information before you can execute a query,
+          e.g. the name of the user that is currently logged on your site. This
+          information is only available at runtime and hence can only be
+          substituted in the query when available.
+        </p>
+<p>
+          To pass this information to the SQL statement, the input XML has to
+          look like this:
+        </p>
+<pre class="code">
+        
+  &lt;page xmlns:sql="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;execute-query xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+      &lt;query&gt;
+       select id,name from employee_table where name =
+                '&lt;sql:substitute-value sql:name="username"/&gt;'
+      &lt;/query&gt;
+    &lt;/execute-query&gt;
+  &lt;/page&gt;
+     </pre>
+<p>
+          The substitution is done by the SQLTransformer before it executes the
+          query (before it calls the method <span class="codefrag">prepareStatement</span>!). For
+          this, the transformer has to be given the necessary values via the
+          sitemap (as parameter):
+        </p>
+<pre class="code">
+        
+  &lt;map:transform type="sql"&gt;
+    &lt;map:parameter name="use-connection" value="personnel"/&gt;
+    &lt;map:parameter name="show-nr-of-rows" value="true"/&gt; 
+    &lt;map:parameter name="username" value="Stefano Mazzocchi"/&gt;
+  &lt;/map:transform&gt;
+     </pre>
+<p>
+          Whenever the transformer encounters a <span class="codefrag">substitute-value</span>
+          element for which the attribute <span class="codefrag">name</span> contains the value
+          <span class="codefrag">username</span>, it will replace this element with the value
+          <span class="codefrag">Stefano Mazzocchi</span>.
+        </p>
+<p>The output XML will be as follow:</p>
+<pre class="code">
+        
+  &lt;page xmlns:sql="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;rowset nrofrows="1" xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+      &lt;row&gt;
+        &lt;id&gt;2&lt;/id&gt;
+        &lt;name&gt;Stefano Mazzocchi&lt;/name&gt;
+      &lt;/row&gt;
+    &lt;/rowset&gt;
+  &lt;/page&gt;
+     </pre>
+<p>
+          It is also possible to use substitution in combination with stored
+          procedures.
+        </p>
+      
+<h2>Ancestors</h2>
+<p>This functionality is best described by a simple example.</p>
+<p>Take following input XML:</p>
+<pre class="code">
+        
+  &lt;page xmlns:sql="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;execute-query xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+     &lt;query name="department"&gt;
+          select id,name from department_table
+     &lt;/query&gt;
+     &lt;execute-query&gt;
+      &lt;query name="employee"&gt;
+       select id,name from employee_table where department_id =
+                  &lt;ancestor-value sql:name="id" sql:level="1"/&gt;
+      &lt;/query&gt;
+     &lt;/execute-query&gt;
+    &lt;/execute-query&gt;
+  &lt;/page&gt;
+     </pre>
+<p>
+          The first query will retrieve all <span class="codefrag">id</span>'s and
+          <span class="codefrag">name</span>'s from the <span class="codefrag">department_table</span> table. For
+          each <span class="codefrag">id</span> that comes from the
+          <span class="codefrag">department_table</span>, the second query, in which the
+          <span class="codefrag">ancestor-value</span> element will be replaced by the
+          <span class="codefrag">id</span>, will be executed. The above example will be
+          transformed to the following XML:
+        </p>
+<pre class="code">
+        
+  &lt;page xmlns:sql="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;rowset nrofrows="2" name="department" 
+            xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+      &lt;row&gt;
+        &lt;id&gt;1&lt;/id&gt;
+        &lt;name&gt;Programmers&lt;/name&gt;
+        &lt;rowset nrofrows="2" name="employee"&gt;
+          &lt;row&gt;
+            &lt;id&gt;1&lt;/id&gt;
+            &lt;name&gt;Donald Ball&lt;/name&gt;
+          &lt;/row&gt;
+          &lt;row&gt;
+            &lt;id&gt;2&lt;/id&gt;
+            &lt;name&gt;Stefano Mazzocchi&lt;/name&gt;
+          &lt;/row&gt;
+        &lt;/rowset&gt;
+      &lt;/row&gt;
+      &lt;row&gt;
+        &lt;id&gt;2&lt;/id&gt;
+        &lt;name&gt;Loungers&lt;/name&gt;
+        &lt;rowset nrofrows="1" name="employee"&gt;
+          &lt;row&gt;
+            &lt;id&gt;3&lt;/id&gt;
+            &lt;name&gt;Pierpaolo Fumagalli&lt;/name&gt;
+          &lt;/row&gt;
+        &lt;/rowset&gt;
+      &lt;/row&gt;
+    &lt;/rowset&gt;
+  &lt;/page&gt;
+     </pre>
+      
+<h2>in- and out-parameters</h2>
+<p>
+          Stored procedures can return data as a parameter. To make use of this
+          functionality in java, you have to register these parameters as
+          <em>out parameters</em>. Since this information is application
+          specific, the SQLTransformer uses reflection to retrieve the data in
+          the right format. For this, an extra element is needed in the input
+          XML:
+        </p>
+<pre class="code">
+        
+  &lt;out-parameter sql:nr="1" sql:name="code"
+                 sql:type="java.sql.Types.INTEGER"/&gt;
+     </pre>
+<p>where:</p>
+<ol>
+          
+<li>
+            
+<strong>nr</strong>:
+            The targeted parameter number that will return data of a certain
+            type.
+          </li>
+          
+<li>
+            
+<strong>type</strong>:
+            The type of data that will be returned (defined in
+            <span class="codefrag">java.sql.Types</span> or in database specific drivers, e.g.
+            <span class="codefrag">oracle.jdbc.driver.OracleTypes</span>). Once the stored
+            procedure returns data in the parameters, the stored procedure tries
+            to process them. If the returned parameter is an instance of
+            <span class="codefrag">ResultSet</span>, it will be translated to XML as we saw
+            before. In all the other situations the SQLTransformer will convert
+            the parameter to a string.
+          </li>
+        
+</ol>
+<p>
+          This is an example of how to call an oracle stored procedure and
+          process it with the SQLTransformer:
+        </p>
+<pre class="code">
+        
+  &lt;page xmlns:sql="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;execute-query xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+      &lt;query isstoredprocedure="true" name="namesearch"&gt;
+          begin QUICK_SEARCH.FIND_NAME('&lt;sql:substitute-value
+                          sql:name="username"/&gt;',?,?,?); end;
+      &lt;/query&gt;
+      &lt;out-parameter sql:nr="1" sql:name="code"
+                     sql:type="java.sql.Types.INTEGER"/&gt;
+      &lt;out-parameter sql:nr="2" sql:name="nrofrows"
+                     sql:type="java.sql.Types.INTEGER"/&gt;
+      &lt;out-parameter sql:nr="3" sql:name="resultset"
+                     sql:type="oracle.jdbc.driver.OracleTypes.CURSOR"/&gt;
+    &lt;/execute-query&gt;
+  &lt;/page&gt;
+     </pre>
+<p>
+          The SQLTransformer will create 3 elements, respectively
+          <span class="codefrag">code</span>, <span class="codefrag">nrofrows</span> and <span class="codefrag">resultset</span>
+          under the element <span class="codefrag">namesearch</span>. Since the type
+          <span class="codefrag">oracle.jdbc.driver.OracleTypes.CURSOR</span> corresponds to a
+          <span class="codefrag">ResultSet</span>, a <span class="codefrag">rowset</span> element will be created,
+          containing all the data of the resultset. It is also possible to use
+          an <em>in-parameter</em> element, e.g.
+          <span class="codefrag">&lt;in-parameter sql:nr="1" sql:value="1"/&gt;</span>. This
+          functionality is only provided to be complete, because it is available
+          in Java itself. You can also use the <em>in-parameter</em> in
+          combination with a SQL statement. Used in combination with an
+          <em>out-parameter</em>, a <em>?-parameter</em> can be an
+          <em>in-parameter</em> and an <em>out-parameter</em> at the same time.
+        </p>
+    
+    
+<h1>Combined with other transformers</h1>
+      
+<h2>Filtertransformer</h2>
+<p>
+          When you query a database and it returns too many rows to process at
+          once, you might want to take a block of elements, process this block
+          and ignore the rest for now. You can best compare it to a search on
+          Google: they only return 10 results in one time, for more results you
+          have to click on another block (page). It wouldn't be wise to process
+          more than 10 elements in the pipeline if you only need to display 10
+          elements.
+        </p>
+<p>
+          Assume that a query returns 56 row elements (by using the
+          SQLTransformer) and that you only want to display the first 10
+          elements:
+        </p>
+<p>Output XML from the SQLTransformer:</p>
+<pre class="code">
+        
+  &lt;rowset nrofrows="56" name="test"
+          xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;row&gt;
+      &lt;!-- db record --&gt;
+    &lt;/row&gt;
+    &lt;row&gt;
+      &lt;!-- db record --&gt;
+    &lt;/row&gt;
+
+    ...
+
+    &lt;row&gt;
+      &lt;!-- db record --&gt;
+    &lt;/row&gt;
+  &lt;/rowset&gt;
+     </pre>
+<p>
+          By adding following lines to the sitemap, just under the
+          SQLTransformer, you restrict the results to 10 elements in the first
+          block:
+        </p>
+<pre class="code">
+        
+  &lt;map:transform type="filter"&gt;
+    &lt;map:parameter name="element-name" value="row"/&gt;
+    &lt;map:parameter name="count" value="10"/&gt;
+    &lt;map:parameter name="blocknr" value="1"/&gt;
+  &lt;/map:transform&gt;
+     </pre>
+<p>output XML:</p>
+<pre class="code">
+        
+  &lt;rowset nrofrows="56" name="test"
+          xmlns="http://apache.org/cocoon/SQL/2.0"&gt;
+    &lt;block id="1"&gt;
+      &lt;row&gt;
+        &lt;!-- db record --&gt;
+      &lt;/row&gt;
+
+      &lt;!-- total of 10 rows --&gt;
+
+      &lt;row&gt;
+        &lt;!-- db record --&gt;
+      &lt;/row&gt;
+    &lt;/block&gt;
+    &lt;block id="2"/&gt;
+    &lt;block id="3"/&gt;
+    &lt;block id="4"/&gt;
+    &lt;block id="5"/&gt;
+    &lt;block id="6"/&gt;
+  &lt;/rowset&gt;
+     </pre>
+<p>
+          To make it more dynamically, put something like
+          <span class="codefrag">{reqCount}</span> and <span class="codefrag">{reqBlock}</span> in the values for
+          <em>count</em> and <em>blocknr</em> respectively. These can be
+          parameters from the request and they can be passed to the sitemap with
+          an action.
+        </p>
+<p>
+          The FilterTransformer is a standalone component; you don't need to use
+          it in combination with the SQLTransformer.
+        </p>
+      
+<h2>WriteDOMSessionTransformer</h2>
+<p>
+          If you only use the FilterTransformer in combination with the
+          SQLTransformer, you have to query the database each time the user
+          wants to see another part of the result. You can better store the
+          result in the session after the first request and retrieve the result
+          from the session for the subsequent requests. This can be done by
+          using a selector, which checks if the data is available in the session
+          or not.
+        </p>
+<p>
+          WriteDOMSessionTransformer can build a DOM starting from a given
+          element (which will be the root of the DOM tree) and store it in the
+          session. If you want to store the result of a query, you have to add
+          following to the sitemap:
+        </p>
+<pre class="code">
+        
+  &lt;map:transform type="writeDOMsession"&gt;
+    &lt;map:parameter name="dom-name" value="DBresult"/&gt;
+    &lt;map:parameter name="dom-root-element" value="rowset"/&gt;
+  &lt;/map:transform&gt;
+     </pre>
+<p>
+          The transformer will build a DOM tree with <span class="codefrag">rowset</span> as root
+          element and will store it in the session with the name
+          <span class="codefrag">DBresult</span>.
+        </p>
+<div class="note">
+          Most of the times, it is not smart to keep the output XML of the
+          SQLTransformer in the session. Check if it is better to do the
+          necessary transformations first, so that you get a smaller DOM, and
+          then put the result in the session. You probably will be able to use
+          the FilterTransformer on the transformed XML also.
+        </div>
+<p>
+          The WriteDOMSessionTransformer is a standalone component, you don't
+          need to use it in combination with the SQLTransformer.
+        </p>
+      
+<h2>ReadDOMSessionTransformer</h2>
+<p>
+          Simply transforms a DOM to SAX events, which can be used further on in
+          the pipeline. Once you stored the result of a query in the session
+          with the WriteDOMSessionTransformer, you can read it again with the
+          ReadDOMSessionTransformer:
+        </p>
+<pre class="code">
+        
+  &lt;map:transform type="readDOMsession"&gt;
+    &lt;map:parameter name="dom-name" value="DBresult"/&gt;
+    &lt;map:parameter name="trigger-element" value="users"/&gt;
+    &lt;map:parameter name="position" value="after"/&gt;
+  &lt;/map:transform&gt;
+     </pre>
+<p>
+          In this example the SAX events, that come from the DOM tree stored in
+          the session with name <span class="codefrag">DBresult</span>, will be added after the
+          <span class="codefrag">users</span> element. This means as soon that the transformer
+          encounters the end element <span class="codefrag">users</span>, it will start to
+          generate SAX events from the DOM tree. There are three possible
+          positions, <span class="codefrag">before</span>, <span class="codefrag">in</span> and
+          <span class="codefrag">after</span>:
+        </p>
+<ol>
+          
+<li>
+            
+<strong><span class="codefrag">before</span></strong> means that when the transformer
+            encounters the <span class="codefrag">users</span> element, it will FIRST translate
+            the DOM tree to SAX events and THEN it will continue to forward the
+            other SAX events (starting with <span class="codefrag">users</span>).
+          </li>
+          
+<li>
+            
+<strong><span class="codefrag">in</span></strong> means that the transformer will
+            forward the start element event for <span class="codefrag">users</span> and that it
+            IMMEDIATELY starts to generate SAX events from the DOM tree. After
+            that, it will continue to forward the child elements of users and
+            then all the other elements.
+          </li>
+          
+<li>
+            
+<strong><span class="codefrag">after</span></strong> means that the transformer
+            starts to generate SAX events from the DOM tree just after it has
+            forwarded the end element <span class="codefrag">users</span>.
+          </li>
+        
+</ol>
+<p>
+          The ReadDOMSessionTransformer is a standalone component, you don't
+          need to use it in combination with the WriteDOMSessionTransformer.
+        </p>
+      
+<p>That's it,</p>
+      
+<p>Sven Beauprez</p>
+    
+  
+</body>
+</html>

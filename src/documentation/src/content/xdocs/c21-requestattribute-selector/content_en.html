@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RequestAttribute-Selector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the RequestAttributeSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>RequestAttributeSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">request-attribute</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">RequestAttributeSelector</span> component is used to
+            select appropriate sitemap processing depending on a request attribute
+            value.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where RequestAttributeSelector sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.RequestAttributeSelector</td>
+        
+</tr>
+        <!-- uncomment folling tr iff RequestAttributeSelector is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.0</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">RequestAttributeSelector</span> tests the value of request attribute
+        against the test attribute of the selector's when clause.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">RequestAttributeSelector</span> allows to control the 
+        sitemap processing depending on a request attribute.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>
+          The snippet below uses a <span class="codefrag">RequestAttributeSelector</span> named <span class="codefrag">request-attribute</span>.
+          It tests the value of request attribute named <span class="codefrag">command</span> against
+          <span class="codefrag">list</span>, <span class="codefrag">create</span>; finally it has a <span class="codefrag">otherwise</span> clause.
+        </p>
+<pre class="code">
+&lt;map:select type="request-attribute"&gt;
+  &lt;map:parameter name="attribute-name" value="command"/&gt;
+  &lt;map:when test="list"&gt;
+  ....
+  &lt;/map:when&gt;
+  &lt;map:when test="create"&gt;
+  ...
+  &lt;/map:when&gt;
+  ...
+  &lt;map:otherwise&gt;
+  ...
+  &lt;/map:otherwise&gt;
+&lt;/map:select&gt;
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+          The snippet below declares a <span class="codefrag">RequestAttributeSelector</span>
+          defining to use the request attribute <span class="codefrag">cmd</span>.
+        </p>
+<pre class="code">
+&lt;map:selectors...
+  &lt;map:selector name="request-attribute" 
+    src="org.apache.cocoon.selection.RequestAttributeSelector"
+    logger="sitemap.selector.requestattribute"&gt;
+    
+    &lt;attribute-name&gt;command&lt;/attribute-name&gt;
+  &lt;/map:selectors&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          <!-- Explain the sitemap selector configuration, options when declaring request-attribute selector -->
+          The configuration section of <span class="codefrag">RequestAttributeSelector</span> specifies
+          the default name of the request attribute, used for testing.
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          <!-- Explain the sitemap selector setup, ie options when using request-attribute selector -->
+          Setting up a <span class="codefrag">RequestAttributeSelector</span> includes
+        </p>
+<ul>
+          
+<li>Defining an optional sitemap paramter named <span class="codefrag">request-name</span>, it overrides
+            the attribute-name setting in the configuration section.
+          </li>
+          
+<li>choosing the <span class="codefrag">&lt;map:when&gt;</span> test expressions, and a 
+          optional <span class="codefrag">&lt;map:otherwise&gt;</span> clause.
+          </li>
+        
+</ul>
+<p>
+          The test attribute of the <span class="codefrag">&lt;map:when&gt;</span> clause shall match
+          the value of the request attribute.
+          If no test value matches, or the request attribute is not defined at all,
+          the <span class="codefrag">&lt;map:otherwise</span> clause is selected.
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+          The <span class="codefrag">RequestAttributeSelector</span> has no side effects on the object model, or 
+          any sitemap attributes. 
+        </p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+      
+</p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        28-12-02: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

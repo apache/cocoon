@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Regular-Expression-Header-Selector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Colin Adams" name="DC.Creator">
+<meta content="This document describes the RegexpHeaderSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>RegexpHeaderSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">regexp-header</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">RegexpHeaderSelector</span> component is used to
+            select appropriate sitemap processing depending on a particular header value.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where RegexpHeaderSelector sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.RegexpHeaderSelector</td>
+        
+</tr>
+        <!-- uncomment folling tr iff RegexpHeaderSelector is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.1.6</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">RegexpheaderSelector</span> tests a header field against
+        the test attribute of the selectors when clause.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">RegexpHeaderSelector</span> allows to define sitemap
+        processing based on the content of a particular header field.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p></p>
+<pre class="code">
+&lt;map:select type="regexp-header"&gt;
+  &lt;map:when test="xhtml"&gt;
+  ....
+  &lt;/map:when&gt;
+  ...
+  &lt;map:otherwise&gt;
+  ...
+  &lt;/map:otherwise&gt;
+&lt;/map:select&gt;
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+        
+</p>
+<pre class="code">
+&lt;map:selectors...
+  &lt;map:selector name="regexp-header" 
+    src="org.apache.cocoon.selection.RegexpHeaderSelector"
+    
+    &lt;pattern name="xhtml"&gt;application/xhtml\+xml&lt;/pattern&gt;
+    ...
+    &lt;header-name&gt;accept&lt;/header-name&gt;
+    
+  &lt;/map:selectors&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          <!-- Explain the sitemap selector configuration, options when declaring browser selector -->
+          The configuration section of <span class="codefrag">RegexpHeaderSelector</span> specifies
+          a mapping from header strings to symbolic pattern names.
+        </p>
+<p>
+          Each pattern element specifies a name attribute holding the symbolic pattern name
+          used in the test attribute expression. The contents contains 
+          a regular expression to match against the header value.
+        </p>
+<p>
+          The header concerned is named by the contents of the header-name element.
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          <!-- Explain the sitemap selector setup, ie options when using this selector -->
+          Setting up a <span class="codefrag">RegexpHeaderSelector</span> includes choosing the 
+          <span class="codefrag">&lt;map:when&gt;</span> test expressions, and a 
+         optional <span class="codefrag">&lt;map:otherwise&gt;</span> clause.
+        </p>
+<p>
+          The test attribute of the <span class="codefrag">&lt;map:when&gt;</span> clause must match
+          a pattern attribute name value. The value of the test attribute in a 
+          <span class="codefrag">&lt;map:when&gt;</span> clause must be declared in a 
+          <span class="codefrag">pattern</span> name attribute.
+        </p>
+<p>The header-name can be overridden by a parameter element.
+  </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+          The <span class="codefrag">RegexpHeaderSelector</span> has no side effects on the object model, or 
+          any sitemap parameters. 
+        </p>
+    
+    
+<h1>Notes</h1>
+      
+<p>
+      The main motivation for this selector is to do some simple content
+      negotiation to serve XHTML 1.1 pages where the browser indicates it
+      accepts application/xhtml+xml, and HTML pages otherwise.
+      However, this has many more uses, including automatic i18n according
+      to the accept-language header.
+      </p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        The <span class="codefrag">RegexpHeaderSelector</span> adds the response header attribute
+        <span class="codefrag">Vary</span> having a value of the header name, indicating
+        that the response differ for different user agents. This information
+        especially meaningfull for an http-proxy server.
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        26-07-04: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

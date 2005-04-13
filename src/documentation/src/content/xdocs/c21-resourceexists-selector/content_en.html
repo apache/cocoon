@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ResourceExistsSelector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Andrew Savory" name="DC.Creator">
+<meta content="This document describes the ResourceExistsSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>ResourceExistsSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">resource-exists</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">ResourceExistsSelector</span> component is used to 
+            select appropriate sitemap processing depending on the existence of a set of resources.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.ResourceExistsSelector</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.1</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">ResourceExistsSelector</span> selects the first of a set of
+        Resources (usually files) that exists in the context.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        Pipelines can be built based on the existence of files, for example
+        building a PDF from XSL-FO or a higher-level XML format.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p></p>
+<pre class="code">
+&lt;map:match pattern="**.html"&gt; 
+  &lt;map:select type="resource-exists"&gt;
+    &lt;map:when test="content/{1}.xml"&gt;
+      &lt;map:generate src="content/{1}.xml" /&gt;
+      &lt;map:transform src="stylesheets/page2html.xsl" /&gt;
+    &lt;/map:when&gt;
+    &lt;map:otherwise&gt;
+      &lt;map:generate src="resources/html/{1}.html" /&gt;
+    &lt;/map:otherwise&gt;
+  &lt;/map:select&gt;
+  &lt;map:serialize type="html"/&gt;
+&lt;/map:match&gt;
+        </pre>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p></p>
+<pre class="code">
+&lt;map:selectors...
+
+  &lt;map:selector name="resource-exists" 
+    src="org.apache.cocoon.selection.ResourceExistsSelector"
+    logger="sitemap.selector.resource-exists"
+  &gt;
+    &lt;map:parameter src="prefix" value="/"/&gt;
+  &lt;/map:selector&gt;
+    ...
+  &lt;/map:selectors&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          The optional <span class="codefrag">prefix</span> parameter is prepended to all test
+          expressions before evaluation. The default prefix is '/', meaning that
+          all expressions are relative to the context root, unless explicitly
+          overridden.
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          Setting up a <span class="codefrag">ResourceExistsSelector</span> includes choosing the
+          <span class="codefrag">&lt;map:when&gt;</span> test expressions, and an optional 
+          <span class="codefrag">&lt;map:otherwise&gt;</span> clause.
+        </p>
+<!--      <s2 title="Effect on Object Model and Sitemap Parameters">
+        <p>
+        
+        </p>
+      </s2>-->
+    
+<!--    <s1 title="Bugs/Caveats">
+      <p>
+        Describe limitation, bugs of ResourceExistsSelector 
+      </p>
+    </s1>-->
+    
+<h1>History</h1>
+      
+<p>
+        03-19-03: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        <!-- Links to related components pages. -->
+        A general documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+<meta content="Christopher Oliver" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Sitemap</h1>
+    
+<p>The Cocoon <a href="../concepts/sitemap.html">Sitemap</a> provides two elements to specify interactions with your Flowscripts: <a href="#flow">flow</a>, and <a href="#call">call</a>.</p>
+     
+<a name="flow"></a> 
+<h2>flow</h2>
+<p>The <span class="codefrag">flow</span> element defines a Flowscript interpreter for a sitemap. The <span class="codefrag">language</span> attribute specifies the target programming language. Currently the only supported language is <span class="codefrag">"javascript"</span>. Its embedded <span class="codefrag">script</span> elements allow you to specify the files that make up the flow for this sitemap. Each <span class="codefrag">script</span> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <span class="codefrag">src</span> attribute specifies the URI of the script.</p>
+<pre class="code">
+        &lt;map:flow language="Language"&gt;
+           &lt;map:script src="URI"/&gt;
+        &lt;/map:flow&gt;
+      </pre>
+<p>Example:</p>
+<pre class="code">
+        &lt;map:flow language="javascript"&gt;
+           &lt;map:script src="myApplication.js"/&gt;
+        &lt;/map:flow&gt;
+      </pre>
+      
+<p></p>
+      
+<a name="call"></a>
+<h2>call</h2>
+<p>The <span class="codefrag">call</span> element allows you to call a top-level function in your Flowscript or to invoke an existing continuation.</p>
+<h3>function</h3>
+<a name="callFunction"></a>
+<p>If the <span class="codefrag">function</span> attribute is present, then the Sitemap will invoke a top-level function defined in your Flowscript. The <span class="codefrag">function</span> attribute specifies the name of the function. Zero or more nested <span class="codefrag">parameter</span> elements may be provided to pass arguments to the function.</p>
+<pre class="code">
+        &lt;map:call function="FunctionName"&gt;
+           &lt;map:parameter name="Name" value="Value"/&gt;*
+        &lt;/map:call&gt;
+      </pre>
+<p>Example:</p>
+<pre class="code">
+        &lt;map:flow language="javascript"&gt;
+           &lt;map:script src="myApplication.js"/&gt;
+        &lt;/map:flow&gt;
+        &lt;map:pipelines&gt;
+           &lt;map:pipeline&gt;
+              &lt;map:match pattern="index.html"&gt;
+                 &lt;map:call function="showIndexPage"&gt;
+                   &lt;map:parameter name="paramName" value="Value"/&gt;
+                 &lt;/map:call&gt;
+              &lt;/map:match&gt;
+           &lt;/map:pipeline&gt;
+        &lt;/map:pipelines&gt;
+      </pre>
+<p>Then in <span class="codefrag">myApplication.js</span> you would define a JavaScript function called <span class="codefrag">showIndexPage()</span> such as:</p>
+<pre class="code">
+        function showIndexPage() { 
+            var param = cocoon.parameters.paramName;
+            sendPage("private/index.html", {param: param});
+        }
+      </pre>
+<p></p>
+<h3>continuation</h3>
+<a name="callContinuation"></a>
+<p>If the <span class="codefrag">continuation</span> attribute is present, then the Sitemap will invoke an existing continuation of your Flowscript. The <span class="codefrag">continuation</span> attribute specifies the unique id of the continuation.</p>
+<pre class="code">
+        &lt;map:call continuation="Id"/&gt;
+      </pre>
+<p>Example:</p>
+<pre class="code">
+        &lt;map:match pattern="*.form"&gt;
+          &lt;map:call continuation="{1}"/&gt;
+        &lt;/map:match&gt;
+      </pre>
+    
+  
+</body>
+</html>

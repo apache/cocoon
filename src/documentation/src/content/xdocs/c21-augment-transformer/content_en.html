@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Augment Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="in @doctitle@" name="DC.Subject">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the Augment transformer." name="DC.Description">
+</head>
+<body>
+  
+<h1>Augment Transformer</h1>
+   
+<p>
+    The AugmentTransformer 
+    augments all <span class="codefrag">href</span> attributes with the full path to the request.
+    If a <span class="codefrag">href</span> is already a full HTTP URL, or HTTPS URL the value of
+    href is not changed.
+   </p>
+   
+<p>
+    The AugmentTransformer has serveral configuration options. These options
+    may be specified by each request.
+   </p>
+   
+<dl>
+     
+<dt>mount</dt>
+     
+<dd>If this request parameter is specified it defines the URI relative
+       to the servlet's context-path. If no mount parameter is specified the 
+       resolution is calculated relative to the request URI.
+     </dd>
+   
+</dl>
+   
+   
+<ul>
+    
+<li>Name : augment</li>
+    
+<li>Class: org.apache.cocoon.transformation.AugmentTransformer</li>
+    
+<li>Cacheable: no.</li>
+   
+</ul>
+   
+<p>
+    A simple example might help to use the AugmentTransformer effectivly:
+   </p>
+   
+<p>
+    Add the AugmentTransformer to the components in your sitemap.xmap
+   </p>
+
+<pre class="code">
+...
+&lt;map:components&gt;
+...
+  &lt;map:transformers default="xslt"&gt;
+  ...
+    &lt;map:transformer name="augment"
+      src="org.apache.cocoon.transformation.AugmentTransformer"&gt;
+    &lt;/map:transformer&gt;
+  ...
+</pre>
+   
+<p>
+     Next define in your pipeline to use the AugmentTransformer
+   </p>
+
+<pre class="code">
+&lt;map:match pattern="**book-**.xml"&gt;
+  &lt;map:generate src="docs/{1}book.xml"/&gt;
+  &lt;map:transform type="augment"&gt;
+    &lt;map:parameter name="mount" value="samples/flow/"/&gt;
+  &lt;/map:transform&gt;
+  ...
+</pre>
+
+   
+<p>
+     In the example above all href attributes which do not start with <span class="codefrag">http</span>, or
+     <span class="codefrag">https</span> are augmented.
+   </p>
+   
+<p>
+     Assuming Cocoon is deployed at <span class="codefrag">http://localhost:8080/cocoon</span> a 
+     href <span class="codefrag">href="overview.html"</span> is augmented 
+     to <span class="codefrag">href="http://localhost:8080/cocoon/samples/flow/overview.html"</span>.
+   </p>
+  
+ 
+</body>
+</html>

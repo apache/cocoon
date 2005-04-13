@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>WildcardHeader-Matcher in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the WildcardHeaderMatcher of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>WildcardHeaderMatcher</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">header-match, referer-match</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">WildcardHeaderMatcher</span> matches a header value
+            against a wildcard expression..
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Matcher, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          <!-- choose Core, the block name, or Scratchpad 
+            depending on where WildcardHeaderMatcher sources live
+          -->
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.matching.WildcardHeaderMatcher</td>
+        
+</tr>
+        <!-- uncomment folling tr iff WildcardHeaderMatcher is deprecated -->
+        <!--tr>
+          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
+        </tr-->
+        
+<tr>
+          
+<td colspan="1" rowspan="1">SINCE</td><td colspan="1" rowspan="1">Cocoon 2.0</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The <span class="codefrag">WildcardHeaderMatcher</span> matches a wildcard pattern against a 
+        header value of the request.
+      </p>
+    
+    
+<h1>Usage</h1>
+      
+<p>
+        The <span class="codefrag">WildcardHeaderMatcher</span> is used to apply the same sitemap processing
+        to a group of requested URIs. A requested URI belongs to this group iff
+        the header value is matched by the specified pattern.  
+      </p>
+      
+<p>
+        The snippet below applies to all requested URIs having a header referer value matching
+        the wildcard pattern <span class="codefrag">http://foo.bar:8080/documentation/*.html</span> the specified pipeline processing.
+      </p>
+      
+<p>
+        The generator retrieves the xml document having extension <span class="codefrag">.xml</span>,
+        its basename is the request URI path, stripped off the prefix <span class="codefrag">page-</span>.
+      </p>
+      
+<h2>Sitemap pipeline examples</h2>
+<p>
+          The snippet below uses the <span class="codefrag">WildcardHeaderMatcher</span> for matching
+          the referer header value.
+        </p>
+<pre class="code">
+&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    ....
+    &lt;map:match type="referer-match" pattern=http://foo.bar:8080/documentation/*.html"&gt;
+      &lt;!-- pipeline processing generator, transformer, serializing
+      &lt;map:generator src="xdocs/{../1}.xml"/&gt;
+      &lt;map:transformer src="stylesheet/document2html"/&gt;
+        &lt;map:parameter name="prev" value="{1}.html"/&gt;
+      &lt;map:transformer/&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+    ...
+  &lt;/map:pipeline&gt;
+  ...
+        </pre>
+      
+<h2>Sitemap component configuration example</h2>
+<p>
+          The <span class="codefrag">WildcardHeaderMatcher</span> sitemap configuration consists of
+          choosing a name, and specifying the src attribute of the fully qualified name of the 
+          WildcardHeaderMatcher class.
+        </p>
+<p>
+          Moreover sub element name <span class="codefrag">header-name</span> specifies the name of the
+          header. Its value is matched against the specified pattern.
+        </p>
+<pre class="code">
+&lt;map:matchers...
+  &lt;map:matcher name="referer-match" 
+    src="org.apache.cocoon.matching.WildcardHeaderMatcher"
+    logger="sitemap.matcher.referer-match" 
+  /&gt;
+    &lt;header-name&gt;referer&lt;/header-name&gt;
+    ...
+  &lt;/map:matcher&gt;
+...
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          The <span class="codefrag">WildcardHeaderMatcher</span> is configured by the 
+          subelement <span class="codefrag">header-name</span>, specifying the name of the header attribute
+          name.
+        </p>
+      
+<h2>Setup</h2>
+<p>
+          The <span class="codefrag">WildcardHeaderMatcher</span> gets the wildcard pattern from
+          its pattern attribute.
+        </p>
+      
+<h2>Effect on Object Model and Sitemap Parameters</h2>
+<p>
+          See a detailed discussion in
+          <a href="wildcarduri-matcher.html">WildcardURIMatcher</a>
+        
+</p>
+    
+    
+<h1>Bugs/Caveats</h1>
+      
+<p>
+        The use of <span class="codefrag">parameter-name</span> instead of <span class="codefrag">header-name</span> is deprecated. 
+      </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        12-28-02: initial creation
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        A general documentation about matchers is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+      
+<p>
+        For a reference of available header names
+        see <a class="external" href="http://www.ietf.org/rfc/rfc2068.txt">RFC 2068</a>, especially
+        if Cocoon's run time environment is an http servlet environment. 
+      </p>
+    
+  
+</body>
+</html>

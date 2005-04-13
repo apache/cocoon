@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HTML Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the html serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>HTML Serializer</h1>
+      
+<p>
+        The HTML serializer serializes xml content to html.
+        It is the default serializer.
+      </p>
+      
+<ul>
+        
+<li>Name : html</li>
+        
+<li>Class: org.apache.cocoon.serialization.HtmlSerializer</li>
+        
+<li>Cacheable: yes.</li>
+      
+</ul>
+      
+<h2>Sitemap Configuration</h2>
+<p>
+          The HTML Serializer is declared in the sitemap serializers section.
+        </p>
+<pre class="code">
+&lt;map:serializers default="html"&gt;
+...
+  &lt;map:serializer name="html"
+    src="org.apache.cocoon.serialization.HTMLSerializer"
+    mime-type="text/html"  
+    logger="sitemap.serializer.html" 
+    pool-max="32"&gt;
+    &lt;!-- serializer configurations --&gt;
+...    
+  &lt;/map:serializer&gt;
+...
+        </pre>
+<p>
+          HTML Serializer can be configured, specifying elements inside of
+          the &lt;map:serializer&gt; body.
+        </p>
+<h3>Configuration Example</h3>
+<p>
+            The following HTML Serializer snippet is setting
+            doctype, and encoding configuration for the HTML Serializer
+          </p>
+<pre class="code">
+&lt;map:serializer name="html"         
+  src="org.apache.cocoon.serialization.HTMLSerializer"
+  mime-type="text/html"&gt;
+  &lt;doctype-public&gt;-//W3C//DTD HTML 4.01 Transitional//EN&lt;/doctype-public&gt;
+  &lt;encoding&gt;ISO-8859-1&lt;/encoding&gt;
+&lt;/map:serializer&gt;
+          </pre>
+<p>
+            This configuration will result in HTML output of the form
+          </p>
+<pre class="code">
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"&gt;
+&lt;title...
+...
+          </pre>
+<p>
+          The HTML Serializer accepts following configuration parameters.
+          These configurations are not Xalan specific.
+        </p>
+<table>
+          
+<tr>
+<th colspan="1" rowspan="1">Name</th><th colspan="1" rowspan="1">Xalan Default Value</th><th colspan="1" rowspan="1">Comment</th>
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">cdata-section-elements</td>
+            <td colspan="1" rowspan="1">none</td>
+            <td colspan="1" rowspan="1"><span class="codefrag">cdata-section-elements</span> specifies a whitespace delimited
+               list of the names of elements whose text node children should be output
+               using CDATA sections.
+               See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation.</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">doctype-public</td>
+            <td colspan="1" rowspan="1">none</td>
+            <td colspan="1" rowspan="1"><span class="codefrag">doctype-public</span> specifies the public identifier
+              to be used in the document type declaration.
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">doctype-system</td>
+            <td colspan="1" rowspan="1">none</td>
+            <td colspan="1" rowspan="1">
+              <span class="codefrag">doctype-system</span> specifies the system identifier
+              to be used in the document type declaration.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">encoding</td>
+            <td colspan="1" rowspan="1">none</td>
+            <td colspan="1" rowspan="1"><span class="codefrag">encoding</span> specifies the preferred character
+              encoding that the Transformer should use to encode sequences of
+              characters as sequences of bytes. The value of the attribute should be
+              treated case-insensitively. The value must only contain characters in
+              the range #x21 to #x7E (i.e., printable ASCII characters). The value
+              should either be a <span class="codefrag">charset</span> registered with the Internet
+              Assigned Numbers Authority <a href="#IANA">[IANA]</a>,
+              <a href="#RFC2278">[RFC2278]</a> or start with <span class="codefrag">X-</span>.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">indent</td>
+            <td colspan="1" rowspan="1">
+              yes
+            </td>
+            <td colspan="1" rowspan="1">
+              A Flag for toggling indent. This flag toggles only if some elements
+              should trigger a line break.
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">media-type</td>
+            <td colspan="1" rowspan="1">
+            </td>
+            <td colspan="1" rowspan="1">
+              <span class="codefrag">media-type</span> specifies the media type (MIME
+              content type) of the data that results from outputting the result
+              tree. The <span class="codefrag">charset</span> parameter should not be specified
+              explicitly; instead, when the top-level media type is
+              <span class="codefrag">text</span>, a <span class="codefrag">charset</span> parameter should be added
+              according to the character encoding actually used by the output
+              method.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">method</td>
+            <td colspan="1" rowspan="1">
+            </td>
+            <td colspan="1" rowspan="1">
+              The method attribute identifies the overall method that
+              should be used for outputting the result tree.  Other non-namespaced
+              values may be used, such as "xhtml", but, if accepted, the handling
+              of such values is implementation defined.  If any of the method values
+              are not accepted and are not namespace qualified,
+              then {@link javax.xml.transform.Transformer#setOutputProperty}
+              or {@link javax.xml.transform.Transformer#setOutputProperties} will
+              throw a {@link java.lang.IllegalArgumentException}.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">omit-xml-declaration</td>
+            <td colspan="1" rowspan="1"></td>
+            <td colspan="1" rowspan="1">
+              <span class="codefrag">omit-xml-declaration</span> specifies whether the XSLT
+              processor should output an XML declaration; the value must be
+              <span class="codefrag">yes</span> or <span class="codefrag">no</span>.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">standalone</td>
+            <td colspan="1" rowspan="1"></td>
+            <td colspan="1" rowspan="1">
+              <span class="codefrag">standalone</span> specifies whether the Transformer
+              should output a standalone document declaration; the value must be
+              <span class="codefrag">yes</span> or <span class="codefrag">no</span>.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+          
+<tr>
+<td colspan="1" rowspan="1">version</td>
+            <td colspan="1" rowspan="1">
+            </td>
+            <td colspan="1" rowspan="1">
+              <span class="codefrag">version</span> specifies the version of the output
+              method.
+              When the output method is "xml", the version value specifies the
+              version of XML to be used for outputting the result tree. The default
+              value for the xml output method is 1.0. When the output method is
+              "html", the version value indicates the version of the HTML.
+              The default value for the xml output method is 4.0, which specifies
+              that the result should be output as HTML conforming to the HTML 4.0
+              Recommendation [HTML].  If the output method is "text", the version
+              property is ignored.
+              See <a class="external" href="http://www.w3.org/TR/xslt#output">section 16 of the XSL Transformations (XSLT) W3C Recommendation</a>
+            </td>
+          
+</tr>
+        
+</table>
+<div class="note">
+          Former property <span class="codefrag">buffer-size</span> is deprecated, and is ignored.
+        </div>
+<p>
+          The HTML Serializer sets the <span class="codefrag">method</span> property
+          to <span class="codefrag">html</span>.
+        </p>
+      
+<h2>Pipeline Usage</h2>
+<pre class="code">
+...
+&lt;map:match pattern="*.html"&gt;
+&lt;map:generate...
+...
+&lt;map:serialize type="html"/&gt;
+...
+      </pre>
+      
+<h2>Further Reading</h2>
+    
+  
+</body>
+</html>

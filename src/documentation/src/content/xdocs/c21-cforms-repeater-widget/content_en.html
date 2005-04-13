@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: repeater widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>An fd:repeater widget is a widget that repeats a number of other widgets.
+      It can be used to create e.g. tables, repeating subforms, etc.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:repeater id="..." initial-size="..."&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:widgets&gt;
+    [...]
+  &lt;/fd:widgets&gt;
+  &lt;fd:validation&gt;
+     [...]
+  &lt;/fd:validation&gt;
+&lt;/fd:repeater&gt;</pre>
+
+      
+<p>The <strong>fd:widgets</strong> element should contain a number of other widgets to repeat.
+      This can be any of type of widget: field, multivaluefied, booleanfield,
+      or even repeater itself.</p>
+
+      
+<p>The optional <strong>initial-size</strong> attribute allows to specify how much rows should
+      be initially present on the repeater. It mostly avoids to display a table
+      with only table headers. Default value is zero.</p>
+
+      
+<p>For a description of the other elements, see the
+      <a href="widget_field.html">field widget</a>.</p>
+
+      
+<p>Note: The Forms Template Transformer has specific support for specifying
+      a template to use to render each of the rows of a repeater widget. See
+      the CForms samples for an example on how to use this.</p>
+    
+  
+</body>
+</html>

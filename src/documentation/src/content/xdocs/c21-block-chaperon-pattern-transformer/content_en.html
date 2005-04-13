@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Pattern Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Stephan Michels" name="DC.Creator">
+<meta content="This document describes the pattern transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>Pattern Transformer</h1>
+   
+<p>The pattern transformer recognizes special texts part using patterns,
+      and replaces them with XML elements. This transformer use a lexicon
+      file to specify the pattern.</p>
+
+   
+<ul>
+    
+<li>Name: pattern</li>
+    
+<li>Class: org.apache.cocoon.transformation.PatternTransformer</li>
+    
+<li>Cacheable: yes - uses the last modification date of the lexicon
+      document for validation.</li>
+   
+</ul>
+
+   
+<p>The pattern transformer parses all text elements from the SAX stream,
+    and replaces the special text parts.</p>
+
+   
+<pre class="code">
+&lt;myelement&gt;
+ bla blah Hello World bla
+&lt;/myelement&gt;
+</pre>
+
+   
+<p>The pattern transformer will replace these special text parts with
+     a lexeme (token).</p>
+
+   
+<pre class="code">
+&lt;myelement&gt;
+ bla blah &lt;lexeme xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0" 
+                  symbol="Hello World"
+                  text="Hello World"/&gt; bla
+&lt;/myelement&gt;
+</pre>
+
+   
+<p>A detailed explanation of function and the lexicon format can be found at <a class="external" href="http://chaperon.sourceforge.net/">Chaperon</a>.</p>
+
+  
+ 
+</body>
+</html>
