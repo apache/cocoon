@@ -1056,7 +1056,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // Get the cocoon engine instance
-        
+
         if (reloadCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM))) {
             disposeCocoon();
             initLogger();
@@ -1153,9 +1153,11 @@ public class CocoonServlet extends HttpServlet {
                                     null);
                     return;
                 }
-            } catch (ResourceNotFoundException rse) {
-                if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("The resource was not found", rse);
+            } catch (ResourceNotFoundException e) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().warn(e.getMessage(), e);
+                } else if (getLogger().isWarnEnabled()) {
+                    getLogger().warn(e.getMessage());
                 }
 
                 manageException(request, res, env, uri,
@@ -1163,7 +1165,7 @@ public class CocoonServlet extends HttpServlet {
                                 "Resource Not Found",
                                 "Resource Not Found",
                                 "The requested resource \"" + request.getRequestURI() + "\" could not be found",
-                                rse);
+                                e);
                 return;
 
             } catch (ConnectionResetException e) {
@@ -1376,7 +1378,7 @@ public class CocoonServlet extends HttpServlet {
      */
     protected synchronized void createCocoon()
     throws ServletException {
-        
+
         // Recheck that we need to create the cocoon object. It can have been created by
         // a concurrent invocation to this method.
         if (this.cocoon != null) {
@@ -1526,7 +1528,7 @@ public class CocoonServlet extends HttpServlet {
                 }
                 reload = true;
             }
-            
+
             return reload;
         } else {
             return false;
