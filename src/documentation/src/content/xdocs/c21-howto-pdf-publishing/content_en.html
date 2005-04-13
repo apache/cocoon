@@ -1,0 +1,455 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>How to Publish XML Documents in HTML and PDF</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Bertrand Delacr&eacute;taz" name="DC.Creator">
+</head>
+<body>
+
+
+<h1>Overview</h1>
+
+<p>
+This How-To shows you how to publish XML documents in HTML and PDF using Cocoon. It requires no 
+prior knowledge of Cocoon, XSLT or XSL-FO.
+</p>
+
+<p>
+It has been updated for Cocoon 2.1, which does not require the use of the <em>mount</em> directory anymore.
+</p>
+
+
+
+<h1>Purpose</h1>
+
+<p>
+You will learn how to build a simple pipeline that converts XML documents on-the-fly to HTML or PDF using simple 
+XSLT transforms. This is similar to the <span class="codefrag">hello.html</span> and <span class="codefrag">hello.pdf</span> samples of the standard Cocoon installation. However, this How-To teaches you how to build these mechanisms yourself. Thus, you will get a better feel of how Cocoon publishing really works.
+</p>
+
+
+
+<h1>Intended Audience</h1>
+
+<p>
+Beginning Cocoon users who want to learn how to publish HTML and/or PDF documents from XML data.
+</p>
+
+
+
+<h1>Prerequisites</h1>
+
+<p>Here's what you need:</p>  
+
+
+<ul>
+
+<li>Cocoon must be running on your system. The steps below have been tested with Cocoon 2.1m3-dev, but they should work with any 2.1 version.</li>
+
+<li>This document assumes a standard installation where Cocoon is started by the <em>cocoon.sh</em> (or cocoon.bat) script and where
+<span class="codefrag">http://localhost:8888/</span> points to the <em>Welcome to Apache Cocoon</em> page.
+<br>
+If your installation runs on a different URL, you will have to adjust
+the URLs provided throughout this How-To as necessary. 
+</li>
+
+<li>You must be able to create and edit XML files in the main directory of the Cocoon installation.
+When started from cocoon.sh, this directory is <span class="codefrag">build/webapp</span> under the directory that contains cocoon.sh.
+</li>
+
+</ul>
+
+<div class="note">You will not need a fancy XML editor for this How-To. Copying and pasting the sample code snippets into any text editor
+will do.</div>
+
+<div class="note">
+Running "build clean" deletes everything under build/webapp, make sure to save your example files if you
+need to do a clean build.
+ </div>
+
+
+
+
+<h1>Steps</h1>
+
+<p>
+Here's how to proceed.
+</p>
+
+
+<h2>1. Create the work directory</h2>
+<p>
+Under <span class="codefrag">build/webapp</span>, create a new directory and name it <span class="codefrag">html-pdf</span>.
+All files used by this How-To will reside in this directory.
+</p>
+<p>
+At this point, <span class="codefrag">http://localhost:8888/html-pdf/</span> should display an error page saying <em>Resource not found</em>,
+indicating that the file <em>build/webapp/html-pdf/sitemap.xmap</em> was not found. This is normal, as the newly
+created directory does not yet contain the required sitemap file.
+</p>
+
+
+<h2>2. Create the XML example documents</h2>
+<p>
+To keep it simple we will use two small XML files as our data sources.
+Later, you will probably use additional data sources like live XML feeds, databases, and others.</p>
+<p>
+In the <span class="codefrag">html-pdf</span> directory, create the following two files, and name them exactly as
+shown.
+</p>
+<p>
+Contents of file <strong>pageOne.xml</strong>:
+</p>
+<pre class="code">
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;page&gt;
+&lt;title&gt;This is the pageOne.xml example&lt;/title&gt;
+&lt;s1 title="Section one"&gt;
+    &lt;p&gt;This is the text of section one&lt;/p&gt;
+&lt;/s1&gt;
+&lt;/page&gt;
+        </pre>
+<p>
+Contents of file <strong>pageTwo.xml</strong>:
+</p>
+<pre class="code">
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;page&gt;
+&lt;title&gt;This is the pageTwo.xml example&lt;/title&gt;
+&lt;s1 title="Yes, it works"&gt;
+    &lt;p&gt;Now you're hopefully seeing pageTwo in HTML or PDF&lt;/p&gt;
+&lt;/s1&gt;
+&lt;/page&gt;
+        </pre>
+<div class="note">
+Be careful about the use of lower/uppercase in filenames if you're working on a Unix or Linux system. 
+On such systems, <span class="codefrag">thisFile.xml</span> is not the same as <span class="codefrag">Thisfile.xml</span>.
+</div>
+<div class="note">
+To avoid any errors, use copy/paste when creating XML documents from examples on this page.
+</div>
+<div class="note">
+Do not leave spaces at the start of XML files. The &lt;?xml... processing instruction must
+be the first character in the file.
+</div>
+
+
+<h2>3. Create the XSLT transform for HTML</h2>
+<p>
+The most common way of producing HTML in Cocoon is to use <strong>XSLT transforms</strong> to select and convert 
+the appropriate elements of the input documents.
+</p>
+<p>
+Copy the file shown below to the <span class="codefrag">html-pdf</span> directory alongside your XML documents, naming it
+<strong>doc2html.xsl</strong>
+
+</p>
+<pre class="code">
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+
+&lt;!-- generate HTML skeleton on root element --&gt;
+&lt;xsl:template match="/"&gt;
+  &lt;html&gt;
+    &lt;head&gt;
+      &lt;title&gt;&lt;xsl:apply-templates select="page/title"/&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;xsl:apply-templates/&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- story is used later by the Meerkat example --&gt;
+&lt;xsl:template match="p|story"&gt;
+    &lt;p&gt;&lt;xsl:apply-templates/&gt;&lt;/p&gt;
+&lt;/xsl:template&gt;
+
+&lt;!-- convert sections to HTML headings --&gt;
+&lt;xsl:template match="s1"&gt;
+    &lt;h1&gt;&lt;xsl:apply-templates select="@title"/&gt;&lt;/h1&gt;
+    &lt;xsl:apply-templates/&gt;
+&lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;     
+</pre>
+<div class="note">       
+Basically what this does is generate an HTML skeleton and convert the input markup to HTML. We won't go
+into details here. Rather, our goal is to show you how the components of the publishing chain are combined.  
+</div>
+
+
+<h2>4. Create the sitemap</h2>
+<p>
+We now have documents to publish and an XSLT transform to convert them to our HTML output format.
+What's left is to connect them in a <strong>processing pipeline</strong>. Then, the <strong>sitemap</strong> can select the pipeline based on the details of the browser request.
+</p>
+<p>
+To tell Cocoon how to process requests made to <span class="codefrag">html-pdf</span>, 
+copy the following snippet to a file named <strong>sitemap.xmap</strong> in the 
+<span class="codefrag">html-pdf</span> subdirectory.
+</p>
+<pre class="code">
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+
+    &lt;!-- define the Cocoon processing pipelines --&gt;
+    &lt;map:pipelines&gt;
+        &lt;map:pipeline&gt;
+            &lt;!-- respond to *.html requests with
+                 our docs processed by doc2html.xsl --&gt;
+            &lt;map:match pattern="*.html"&gt;
+                &lt;map:generate src="{1}.xml"/&gt;
+                &lt;map:transform src="doc2html.xsl"/&gt;
+                &lt;map:serialize type="html"/&gt;
+            &lt;/map:match&gt;
+
+            &lt;!-- later, respond to *.pdf requests with
+                 our docs processed by doc2pdf.xsl --&gt;
+            &lt;map:match pattern="*.pdf"&gt;
+                &lt;map:generate src="{1}.xml"/&gt;
+                &lt;map:transform src="doc2pdf.xsl"/&gt;
+                &lt;map:serialize type="fo2pdf"/&gt;
+            &lt;/map:match&gt;
+        &lt;/map:pipeline&gt;
+    &lt;/map:pipelines&gt;
+&lt;/map:sitemap&gt;
+        </pre>
+<div class="note">The important thing here is the first <strong>map:match</strong> element, which tells Cocoon how to process
+requests ending in *.html in this directory. Again, we won't go into details here, but that's where it happens.
+</div>
+<div class="note">The above sitemap is already configured for PDF publishing. However, this capability is not fully functional at this time because we haven't created the required XSLT transform yet.</div>
+
+
+<h2>5. Test the HTML publishing</h2>
+<p>
+At this point you should be able to display the results in HTML: 
+</p>
+<ul>
+
+<li>
+
+<span class="codefrag">http://localhost:8888/html-pdf/pageOne.html</span>
+should display the first page with "Section one" in big letters.
+</li>
+
+<li>
+
+<span class="codefrag">http://localhost:8888/html-pdf/pageTwo.html</span>
+should display the second page with "Yes it works" in big letters.
+</li>
+
+</ul>
+<div class="note">If this doesn't work, you might want to double check the above steps first, and then look at the Cocoon
+logs (see the Cocoon wiki for information about the logs).
+</div>
+<div class="note">
+To convince yourself that the HTML data is generated dynamically, you can try to edit the pageXXX.xml source documents
+(keeping them well-formed),
+and refresh the browser to see the effect of your changes.
+</div>
+
+
+
+<h2>6. Create the XSLT transform for PDF</h2>
+<p>
+PDF documents are created via XSL-FO documents which are XML documents that use a specific page-description
+vocabulary. (See <a href="#references">References</a> below for more info). The actual conversion to PDF is done by the 
+<span class="codefrag">PdfSerializer</span> which uses software from <a class="external" href="http://xml.apache.org/fop">FOP</a>, another Apache
+Software Foundation project.   
+</p>
+<p>
+To activate the PDF conversion, copy the code snippet shown below to the <span class="codefrag">html-pdf</span> directory along with your XML documents, and name it
+<strong>doc2pdf.xsl</strong>
+
+</p>
+<pre class="code">
+&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;xsl:stylesheet 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+    xmlns:fo="http://www.w3.org/1999/XSL/Format"
+&gt;
+    &lt;!-- generate PDF page structure --&gt;
+    &lt;xsl:template match="/"&gt;
+        &lt;fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"&gt;
+            &lt;fo:layout-master-set&gt;
+                &lt;fo:simple-page-master master-name="page"
+                  page-height="29.7cm" 
+                  page-width="21cm"
+                  margin-top="1cm" 
+                  margin-bottom="2cm" 
+                  margin-left="2.5cm" 
+                  margin-right="2.5cm"
+                &gt;
+                    &lt;fo:region-before extent="3cm"/&gt;
+                    &lt;fo:region-body margin-top="3cm"/&gt;
+                    &lt;fo:region-after extent="1.5cm"/&gt;
+                &lt;/fo:simple-page-master&gt;
+
+                &lt;fo:page-sequence-master master-name="all"&gt;
+                    &lt;fo:repeatable-page-master-alternatives&gt;
+                        &lt;fo:conditional-page-master-reference 
+                           master-reference="page" page-position="first"/&gt;
+                    &lt;/fo:repeatable-page-master-alternatives&gt;
+                &lt;/fo:page-sequence-master&gt;
+            &lt;/fo:layout-master-set&gt;
+
+            &lt;fo:page-sequence master-reference="all"&gt;
+                &lt;fo:flow flow-name="xsl-region-body"&gt;
+                    &lt;fo:block&gt;&lt;xsl:apply-templates/&gt;&lt;/fo:block&gt;
+                &lt;/fo:flow&gt;
+            &lt;/fo:page-sequence&gt;
+        &lt;/fo:root&gt;
+    &lt;/xsl:template&gt;
+
+    &lt;!-- process paragraphs --&gt;
+    &lt;xsl:template match="p"&gt;
+        &lt;fo:block&gt;&lt;xsl:apply-templates/&gt;&lt;/fo:block&gt;
+    &lt;/xsl:template&gt;
+
+    &lt;!-- convert sections to XSL-FO headings --&gt;
+    &lt;xsl:template match="s1"&gt;
+        &lt;fo:block font-size="24pt" color="red" font-weight="bold"&gt;
+            &lt;xsl:apply-templates select="@title"/&gt;
+        &lt;/fo:block&gt;
+        &lt;xsl:apply-templates/&gt;
+    &lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;
+
+       </pre>
+<div class="note">This file is already referenced by the sitemap we created, so no additional configuration is needed.</div>
+
+
+<h2>5. Test the PDF publishing</h2>
+<p>
+At this point you should be able to display the results in PDF in addition to the existing HTML versions: 
+</p>
+<ul>
+
+<li>
+
+<span class="codefrag">http://localhost:8888/html-pdf/pageOne.pdf</span>
+should display the first page with "Section one" in big red letters.
+</li>
+
+<li>
+
+<span class="codefrag">http://localhost:8888/html-pdf/pageTwo.pdf</span>
+should display the second page with "Yes it works" in big red letters.
+</li>
+
+</ul>
+
+
+
+
+<h1>Summary</h1>
+
+<p>
+I hope you're beginning to see that publishing PDF and HTML documents in Cocoon is not too complicated, once you know what goes where. 
+</p>
+
+<p>
+The nice thing is that all of our huge corpus
+of XML documents (actually, only two documents right now, but that's a start... ) is processed by just two XSLT transforms, one
+for each target format.
+</p>
+
+<p>
+If you need to change the appearance of the published documents, you have to change only these two XSLT transforms. There's no need to touch the source documents.
+</p>
+
+
+
+<h1>Tips</h1>
+
+<h2>Tip 1: Dynamic XML data</h2>
+<p>
+Using dynamic XML as the data source is very easy because the Cocoon FileGenerator can read URLs as well. 
+</p>
+<p>
+If you add the map:match element shown in bold below <strong>before</strong> the existing map:match elements in your sitemap.xmap file, requesting
+<span class="codefrag">http://localhost:8888/html-pdf/meerkat.html</span>
+should display real-time news from Meerkat (assuming an Internet connection to Meerkat is available).
+</p>
+<p>
+The news will be displayed in a very rough format. However, this can be improved by writing a 
+specific XSLT transform for this Meerkat data and using it, instead of doc2html.xsl, in the meerkat.html pipeline.  
+</p>
+<pre class="code">
+
+...
+&lt;map:pipeline&gt;
+
+<strong>
+
+&lt;map:match pattern="meerkat.html"&gt;
+    &lt;map:generate src="http://www.oreillynet.com/meerkat/?_fl=xml"/&gt;
+    &lt;map:transform src="doc2html.xsl"/&gt;
+    &lt;map:serialize type="html"/&gt;
+&lt;/map:match&gt;
+
+</strong>
+
+&lt;map:match pattern="*.html"&gt;
+etc...
+
+</pre>
+
+
+<h2>Tip 2: Two-step conversion</h2>
+<p>
+When you are generating multiple formats from a single data source, it is often a good idea to generate 
+an intermediate <strong>logical document</strong> that describes the output in a format-neutral way.
+</p>
+<p>
+This is obviously not needed in our simple example. If you're aiming for more complicated 
+publishing tasks, then you might want to read about this "publishing pattern" in Martin Fowler's 
+<a class="external" href="http://martinfowler.com/eaaCatalog/twoStepView.html">Two Step View</a>
+article.
+</p>
+
+
+
+
+<h1>References</h1>
+
+<a name="references"></a>
+
+<p>
+To go further, you will need to learn about the following technologies and tools.
+</p>
+
+<ul>
+
+<li>
+Learning  
+<a class="external" href="http://cocoon.apache.org/2.1/userdocs/concepts/index.html">
+Cocoon concepts</a> will help you understand how the sitemap, generators, transformers, and serializers work.
+</li> 
+
+<li>
+Learning about <a class="external" href="http://www.w3.org/Style/XSL/">XSLT</a> will enable you to write your own transforms to 
+generate HTML, PDF or other formats from XML data. 
+Information about XSL-FO is available at the same address.  
+</li>
+
+</ul>
+
+
+
+<h1>Comments</h1>
+
+<p>
+Care to comment on this How-To? Got another tip? 
+Help keep this How-To relevant by passing along any useful feedback to the author,
+<a href="mailto:bdelacretaz.at.apache.org">Bertrand Delacr&eacute;taz</a>.
+</p>
+
+
+
+</body>
+</html>

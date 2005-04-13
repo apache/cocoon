@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Refactoring of Cocoon Samples</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Planning Documentation" name="DC.Subject">
+<meta content="David Crossley" name="DC.Creator">
+</head>
+<body>
+ 
+<h1>Overview</h1>
+ 
+<p>
+  The Cocoon samples are now under <span class="codefrag">src/webapp/samples/</span> and have
+  been refactored to be self contained, to have their own sitemaps, and to
+  utilise some common resources.
+ </p>
+
+ 
+<p>
+  However, there are still some old samples that have not yet been moved into
+  this new structure. They are at <span class="codefrag">src/webapp/docs/samples/</span> and so
+  are not available from the samples page. Please help to bring them back.
+ </p>
+
+ 
+<p>
+  The main page of the samples is becoming rather cluttered again. The aim
+  is to have various samples pages, rather than just one big page.
+ </p>
+
+ 
+<p>There are some missing groups of samples, e.g.</p>
+
+
+<ul>
+
+<li>Welcome =&gt; Samples =&gt; More Samples =&gt; Static Content</li>
+
+<li>Welcome =&gt; Samples =&gt; More Samples =&gt; Server Pages</li>
+
+<li>Welcome =&gt; Samples =&gt; More Samples =&gt; Sources</li>
+
+<li>Welcome =&gt; Samples =&gt; More Samples =&gt; Web Applications</li>
+
+</ul>
+ 
+
+ 
+<h1>Procedure</h1>
+
+
+<ul>
+
+<li>Choose your favourite missing sample.</li>
+
+<li>Create a new directory under <span class="codefrag">webapp/samples</span>
+</li>
+
+<li>Follow the example of some other samples,
+e.g. <span class="codefrag">poi/</span> or <span class="codefrag">i18n/</span> or <span class="codefrag">misc/</span>
+</li>
+
+<li>
+<span class="codefrag">cp samples/misc/sitemap.xmap samples/yours/sitemap.xmap</span>
+and edit it to suit your own matches.
+</li>
+
+<li>
+<span class="codefrag">cp samples/misc/samples.xml samples/yours/samples.xml</span>
+and edit it to become the front page to your collection of samples.</li>
+
+<li>Move the documents from the old sample at <span class="codefrag">webapp/docs/samples</span>
+</li>
+
+<li>Make links to your new samples from other pages.</li>
+
+<li>Remove the old sample from <span class="codefrag">webapp/docs/samples</span>
+</li>
+
+<li>Ensure that the new sample works as expected.</li>
+
+<li>Send a <a href="../howto/index.html">patch via Bugzilla</a>
+</li>
+
+</ul>
+
+
+<div class="fixme">DC:
+      Explain how to retain CVS history when moving the files.</div>
+ 
+
+ 
+<h1>Other discussion</h1>
+ 
+<p>
+  There has been some discussion on cocoon-dev ...
+ </p>
+
+ 
+<ul>
+  
+<li>
+<a class="external" href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102259446212331">Samples Refactoring: Documentation Structure</a>
+</li>
+ 
+</ul>
+ 
+
+ 
+</body>
+</html>

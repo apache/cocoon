@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Caching</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document explains the basic caching algorithm of Apache Cocoon." name="DC.Description">
+</head>
+<body>
+   
+<h1>Goal</h1>
+    
+<p>This document explains the basic caching algorithm of Apache Cocoon.</p>
+   
+   
+<h1>Overview</h1>
+    
+<p>The caching algorithm of Cocoon has a very flexible and powerful design.
+           The algorithms and components used are not hard coded into the core of 
+           Cocoon. They can be configured in the sitemap.</p>
+            
+<p>This document describes the components available for caching,
+               how they can be configured and how to implement your own cacheable components.
+            </p>
+   
+   
+<h1>How to Configure Caching</h1>
+       
+<p>The caching can be turned on and off on a per pipeline setting in the sitemap.
+        This means, for each <em>map:pipeline</em> section in a sitemap, it's possible to
+        turn on/off caching and configure the caching algorithm.</p>
+        
+<p>The following example shows how to turn on caching for a pipeline:</p>
+    
+<pre class="code">
+     
+       &lt;map:pipeline type="caching"&gt;
+          ...
+       &lt;/map:pipeline&gt;
+     
+    </pre> 
+        
+<p>If you know that it doesn't make sense to turn on caching for some of 
+        your pipelines, put them together in their own section and use:</p>
+    
+<pre class="code">
+     
+       &lt;map:pipeline type="noncaching"&gt;
+          ...
+       &lt;/map:pipeline&gt;
+     
+    </pre>
+      
+<p>As you might guess from how the caching is turned on (via a type attribute), you
+         can have different caching (or better pipeline) implementation to choose from. This
+         is similar to choose from a set of generators the generator to use in your pipeline etc.
+         You will find in your main sitemap a section declaring all pipeline implementations.
+         It's in the <em>map:components</em> section:
+      </p>
+    
+<pre class="code">
+     
+       &lt;map:pipes default="caching"&gt;
+          &lt;map:pipe name="caching" src="..."/&gt;
+          &lt;map:pipe name="noncaching" src="..."/&gt;
+       &lt;/map:pipes&gt;
+     
+    </pre>
+      
+<p>Depending on your Cocoon installation you might have different implementations in
+      that section. As with all components, you can define a default for all pipelines and
+      override this whereever it makes sense.</p>
+   
+   
+<h1>The Default Caching Algorithm</h1>
+    
+<p>The default algorithm uses a very easy but effective approach
+           to cache a request: The pipeline process is cached up to the most 
+           possible point.</p>
+        
+<p>Therefore each component in the pipeline is queried by Cocoon if it
+        supports caching. Several components, like the file generator or the xslt
+        transformer support caching. However, dynamic components like the sql transformer
+        or the cinclude transformer do not. Let's have a look at some examples:</p>
+    
+<h2>Simple Examples</h2>
+<p>If you have the following pipeline:</p>
+<p>Generator[type=file|src=a.xml] -&gt; Transformer[type="xslt"|src=a.xsl] -&gt; Serializer</p>
+<p>The file generator is cacheable and generates a key which uses the src 
+             (or the filename) to build the key. The cache uses the last modification date of the xml file
+             to test if the cached content is valid.</p>
+<p>The xslt transformer is cacheable and generates a key which uses
+             the filename to build the unique key. The cache validity object
+             uses the last modification date of the xslt file.</p>
+<p>The default serializer (html) supports the caching as well.</p>
+<p>All three keys are used to build a unique key for this pipeline.
+             The first time it is invoked its response is cached. The second time
+             this pipeline is called, the cached content is get from the cache.
+             If it is still valid, the cached content is directly send to the client.</p>
+        
+<h2>Complex Example</h2>
+<p>Only part of the following pipeline is cached:</p>
+<p>Generator[type=file|src=a.xml] -&gt; Transformer[type="xslt"|src=a.xsl] -&gt; Transformer[type=sql] -&gt; Transformer[type="xslt"|src=b.xsl] -&gt; Serializer</p>
+<p>The file generator is cacheable and generates a key which uses the src 
+             (or the filename) to build the key. The cache uses the last modification date of the xml file
+             to test if the cached content is valid.</p>
+<p>The xslt transformer is cacheable and generates a key which uses
+             the filename to build the unique key. The cache validity object
+             uses the last modification date of the xslt file.</p>
+<p>The sql transformer is not cacheable, so the caching algorithm stops
+          at this point although the last transformer is cacheable again.</p>
+<p>The cached response is the output of the first xslt transformer, so when the
+         next request comes in and the cached content is valid, the cached content is
+         directly feed into the sql transformer. The generator and the first
+         xslt transformer are not executed.</p>
+      
+<h2>Making Components Cacheable</h2>
+<p>This chapter is only for developers of own sitemap components. It details what you have
+          to do when you want that your own sitemap components supports the caching.</p>
+<p>Each sitemap component (generator or transformer) which might be
+            cacheable must implement the CacheableProcessingComponent interface. When the
+            pipeline is processed each sitemap component starting with
+           the generator is asked if it implements this interface. This
+           test stops either when the first component does not implement
+           the CacheableProcessingComponent interface or when the first cacheable component is
+           currently not cacheable for any reasons (more about this in a moment).</p>
+<p>The CacheableProcessingComponent interface declares a method <span class="codefrag">getKey()</span>
+           which must produce a unique key for this sitemap component inside
+           the component space. For example the FileGenerator returns the
+           source argument (the xml document read). All parameters/values
+           which are used for the processing of the request by the generator must
+           be used for this key. If, e.g. the request parameters are used by
+           the component, it must build a key with respect to the current request
+           parameters. The key can be any serializable java object.</p>
+<p>If for any reason the sitemap component detects that the current request
+           is not cacheable it can simply return <span class="codefrag">null</span> as the key. This has
+          the same effect as not declaring the CacheableProcessingComponent interface.</p>
+<p>Now after the key is build for this particular request, it is looked up
+           in the cache if it exists. If not, the new request is generated and cached
+           for further requests.</p>
+<p>If a cached response is found for the key, the caching algorithm checks
+           if this response is still valid. For this check each cacheable component
+           returns a validity object when the method <span class="codefrag">getValidity</span>
+           is invoked. (If a cacheable component returns <span class="codefrag">null</span> it
+           is temporarily not cacheable, like returning <span class="codefrag">null</span> for the key.)</p>
+<p>A <span class="codefrag">SourceValidity</span> object contains all information the component
+           needs to verify if the cached content is still valid. For example the
+           file generator stores the last modification date of the xml document parsed
+           in the validity object.</p>
+<p>When a response is cached all validity objects are stored together with
+            the cached response in the cache. Actually the <span class="codefrag">CachedResponse</span>
+            is stored which encapsulates all this information.</p>
+<p>When a new response is generated and the key is build, the caching
+           algorithm also collects all uptodate cache validity objects. So if the
+           cached response is found in the cache these validity objects are compared.
+           If they are valid (or equal) the cached response is used and feed into
+           the pipeline. If they are not valid any more the cached response is removed
+           from the cache, the new response is generated and then stored together with
+           the new validity objects in the cache.</p>
+   
+   
+<h1>Configuration</h1>
+    
+<p>The caching of Cocoon can be completely configured by different Avalon
+               components. This chapter describes how the various components work
+               together.</p>            
+    
+<h2>Configuration of Pipelines</h2>
+<p>Each pipeline can be configured with a buffer size, and each
+        caching pipeline with the name of the Cache to use.</p>
+<h3>Expiration of Content</h3>
+<p>
+       Utilize the pipeline <span class="codefrag">expires</span> parameter to dramatically reduce
+       redundand requests. Even the most dynamic application pages have a 
+       reasonable period of time during which they are static. 
+       Even if a page doesn't change for just one minute, still use the 
+       <span class="codefrag">expires</span> parameter. Here is an example:
+       </p>
+<pre class="code">
+&lt;map:pipeline&gt;
+  &lt;map:parameter name="expires" value="access plus 1 minutes"/&gt;
+  ...
+&lt;/map:pipeline&gt; 
+</pre>
+<p>
+       The value of the parameter is in a format borrowed from the Apache HTTP module mod_expires.
+       Examples of other possible values are:
+       </p>
+<pre class="code">
+access plus 1 hours
+access plus 1 month
+access plus 4 weeks
+access plus 30 days
+access plus 1 month 15 days 2 hours
+</pre>
+<p>
+       Imagine 1'000 users hitting your web site at the same time.
+       Say that they are split into 5 groups, each of which has the same ISP.
+       Most ISPs use intermediate proxy servers to reduce traffic, hense
+       improving their end user experience and also reducing their operating costs.
+       In our case the 1'000 end user requests will result in just 5 requests to Cocoon.
+       </p>
+<p>
+       After the first request from each group reaches the server, the expires header will
+       be recognized by the proxy servers which will serve the following requests from their cache.
+       Keep in mind however that most proxies cache HTTP GET requests, but will not cache HTTP POST requests.
+       </p>
+<p>
+     To feel the difference, set an expires parameter on one of your pipelines and
+     load the page with the browser. Notice that after the first time, there are no 
+     access records in the server logs until the specified time expires.
+       </p>
+<p>This parameter has effect on all pipeline implementations, even on 
+       the non caching ones. Remember, the caching does not take place in Cocoon,
+       it's either in a proxy inbetween Cocoon and the client or in the client
+       itself.</p>
+<h3>Response Buffering</h3>
+<p>Each pipeline can buffer the response, before it is send to the client.
+            The default buffer size is unlimited (-1), which means when all bytes of
+            the response are available on the server, they are send with one
+            command directly to the client.</p>
+<p>Of course, this slows down the response as the whole response
+            is first buffered inside Cocoon and then send to the client instead of
+            directly sending the parts of the response when they are available.
+            But on the other hand this is very important for error handling. If you
+            don't buffer the response and an error occurs, you might get corrupt
+            pages. Example: you have a pipeline that already send some content
+            to the client and now an exception occurs. This exception "calls"
+            the error handler that generates a new response that is appended
+            to the already send content. If content is already send to the client
+            there is no way of reverting this! So buffering in these cases makes
+            sense.
+           </p>
+<p>If you have a stable application running in production where the
+           error handler is never invoked, you can turn off the buffering, by
+           setting the buffer to <em>0</em>.</p>
+<p>You can set the buffer to any other value higher than 0 which means
+           the content of the response is buffered in Cocoon until the buffer is
+           full. If the buffer is full it's flushed and the next part of the
+           response is buffered again. If you know the maximum size of your
+           content than you can fine tune the buffer handling with this.</p>
+<p>You can set the default buffer size for each pipeline implementation
+            at the declaration of the pipeline. Example:</p>
+<pre class="code">
+     
+        &lt;map:pipe name="noncaching" src="..."&gt;
+            &lt;parameter name="outputBufferSize" value="2048"/&gt;
+        &lt;/map:pipe&gt;
+     
+    </pre>
+<p>The above configuration sets the buffer size to <em>2048</em> for the
+          non caching pipeline. Please note, that the parameter element does not
+          have the sitemap namespace!</p>
+<p>You can override the buffer size in each <em>map:pipeline</em> section:</p>
+<pre class="code">
+     
+        &lt;map:pipeline type="noncaching"&gt;
+            &lt;map:parameter name="outputBufferSize" value="4096"/&gt;
+            ...
+        &lt;/map:pipeline&gt;
+     
+    </pre>
+<p>The above parameters sets the buffer size to <em>4096</em> for this
+          particular pipeline. Please note, that the parameter element does have
+          the sitemap namespace!</p>
+    
+<h2>Configuration of Caches</h2>
+<p>Each cache can be configured with the store to use.</p>
+    
+<h2>Configuration of Stores</h2>
+<p>Have a look at the store configuration.</p>
+    
+    
+<h1>Additional Information for Developers</h1>
+       
+<h2>Java APIs</h2>
+<p>For more information on the java apis refer directly to the
+               javadocs of Cocoon.</p>
+<p>The most important packages are:</p>
+<ol>
+      
+<li>
+<span class="codefrag">org.apache.cocoon.caching</span>: This package declares all interfaces for caching.</li>
+      
+<li>
+<span class="codefrag">org.apache.cocoon.components.pipeline</span>: The interfaces and implementations of the pipelines.</li>
+    
+</ol>
+    
+<h2>The XMLSerializer/XMLDeserializer</h2>
+<p>The caching of the sax events is implemented by two Avalon components: 
+                     The XMLSerializer and the XMLDeserializer. The XMLSerializer gets
+                     sax events and creates an object which is used by the XMLDeserializer
+                     to recreate these sax events.</p>
+<h3>org.apache.cocoon.components.sax.XMLByteStreamCompiler</h3>
+<p>The <span class="codefrag">XMLByteStreamCompiler</span>compiles sax events into a byte stream.</p>
+<h3>org.apache.cocoon.components.sax.XMLByteStreamInterpreter</h3>
+<p>The <span class="codefrag">XMLByteStreamInterpreter</span> is the counterpart of the 
+           <span class="codefrag">XMLByteStreamCompiler</span>. It interprets the byte
+                           stream and creates sax events.</p>
+<h3>Configuration</h3>
+<p>The XMLSerializer and XMLDeserialzer are two Avalon components which
+         can be configured in the cocoon.xconf:</p>
+<pre class="code">
+     
+&lt;xml-serializer
+    class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"/&gt;
+
+&lt;xml-deserializer
+    class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"/&gt;
+     
+    </pre>
+<p>You must assure that the correct (or matching) deserializer is 
+                     configured for the serializer.</p>
+<p>Both components are poolable, so make sure you set appropriate pool sizes
+               for these components. For more information on component pooling have a look
+               at the Avalon documentation.</p>
+    
+ 
+  
+</body>
+</html>

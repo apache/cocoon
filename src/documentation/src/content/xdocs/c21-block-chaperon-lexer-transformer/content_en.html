@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Lexical Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Stephan Michels" name="DC.Creator">
+<meta content="This document describes the lexical transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>Lexical Transformer</h1>
+   
+<p>The lexical transformer tokenizes the content of special marked
+     elements of a SAX stream, by using a lexicon file.</p>
+
+   
+<ul>
+    
+<li>Name: lexer</li>
+    
+<li>Class: org.apache.cocoon.transformation.LexicalTransformer</li>
+    
+<li>Cacheable: yes - uses the last modification date of the lexicon
+      document for validation.</li>
+   
+</ul>
+
+   
+<p>The lexer parses the following elements from the SAX stream, and
+      replaces them through generated documents.
+   </p>
+
+   
+<pre class="code">
+&lt;text xmlns="http://chaperon.sourceforge.net/schema/text/1.0"&gt;
+ [Text, which should be parsed]
+&lt;/text&gt;
+</pre>
+
+   
+<p>The lexical transformer will replace these elements by a list of
+    lexemes (tokens).
+   </p>
+
+   
+<pre class="code">
+&lt;lexemes xmlns="http://chaperon.sourceforge.net/schema/lexemes/1.0"&gt;
+ &lt;lexeme symbol="..." text="..."/&gt;
+ &lt;lexeme symbol="..." text="..."/&gt;
+ &lt;lexeme symbol="..." text="..."/&gt;
+&lt;/lexemes&gt;
+</pre>
+
+   
+<p>A detailed explanation of function and the lexicon format can be found at <a class="external" href="http://chaperon.sourceforge.net/">Chaperon</a>.</p>
+
+  
+ 
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Extending Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Tom Klaasen" name="DC.Creator">
+</head>
+<body>
+		
+<h1>Introduction</h1>
+			
+<p>If you want to extend the functionality of Apache Cocoon, it may be unclear
+		  how to achieve your goal. This page tries to indicate when to write what, and
+		  to give an overview of what already exists (so you don't duplicate other's
+		  efforts).</p>
+		
+		
+<h1>When to write a Generator</h1>
+			
+<p>From the sitemap documentation: "A <span class="codefrag">Generator</span> generates
+		  XML content as SAX events and initializes the pipeline processing. "</p>
+			
+<p>Thus a <span class="codefrag">Generator</span> is the starting point of a pipeline: it
+		  produces the first SAX events on which all other components of the pipeline are
+		  triggered.</p>
+			
+<p>You may want to write a <span class="codefrag">Generator</span> if you want some other
+		  basis for your SAX events (maybe you want a SAX event every time the
+		  temperature of your CPU changes?) However, before writing a
+		  <span class="codefrag">Generator</span> from scratch, it may be worthwhile to have a look at
+		  <a href="#xsp">XSP</a>, which can create a <span class="codefrag">Generator</span> for
+		you.</p>
+			
+<p>Existing <span class="codefrag">Generator</span>s are: </p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">DirectoryGenerator</span> - Generates an XML directory
+			 listing.</li>
+				
+<li>
+					
+<span class="codefrag">FileGenerator</span> - Does the job of an XML parser: read an
+			 XML file and outputs SAX events.</li>
+				
+<li>
+					
+<span class="codefrag">HTMLGenerator</span> - Takes an HTML URL, makes an XHTML of
+			 it, and outputs the SAX events caused by this XHTML.</li>
+				
+<li>
+					
+<span class="codefrag">ImageDirectoryGenerator</span> - An extension of
+			 DirectoryGenerators that adds extra attributes for image files. </li>
+				
+<li>
+					
+<span class="codefrag">PhpGenerator</span> - Allows PHP to be used as a generator.
+			 Builds upon the PHP servlet functionality. Overrides the output method in
+			 order to pipe the results into SAX events.</li>
+				
+<li>
+					
+<span class="codefrag">RequestGenerator</span> - [FIXME: This looks like just
+			 outputing the request headers, the request parameters and the configuration
+			 parameters. But I don't see any use of it (besides debugging and
+			 demonstration). Are there other situations in which you might want to use
+			 this?]</li>
+				
+<li>
+					
+<span class="codefrag">ServerPagesGenerator</span> - Makes a <span class="codefrag">Generator</span>
+			 at compile time, based on the <span class="codefrag">src</span> file you define in the sitemap.
+			 This one is responsible for making your XSP pages work.</li>
+				
+<li>
+					
+<span class="codefrag">StatusGenerator</span> - Generates an XML representation of
+			 the current status of Cocoon. This can be considered "for administration use",
+			 i.e. your application probably won't deal with this one.</li>
+			
+</ul>
+			
+<p>All these classes are in the <span class="codefrag">org.apache.cocoon.generation</span>
+		  package. In the same package, you find following helper classes and
+		  interfaces:</p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">Generator</span> - The interface you have to implement if you
+			 want to write a <span class="codefrag">Generator</span>.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractGenerator</span> - Extend this one for easier
+			 building of your own <span class="codefrag">Generator</span>.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractServerPage</span> - [FIXME: This seems to be intended
+			 as basis for the <span class="codefrag">ServerPagesGenerator</span>, but it seems to be obsolete
+			 now?]</li>
+				
+<li>
+					
+<span class="codefrag">ServiceableGenerator</span> - Can be used as base class if you
+			 want your <span class="codefrag">Generator</span> to be an <a href="avalon.html">Avalon
+		Serviceable</a>.</li>
+				
+<li>
+					
+<span class="codefrag">ServletGenerator</span> - If you want to generate servlets.
+		  This is the base class for the <span class="codefrag">ServerPagesGenerator</span>.</li>
+			
+</ul>
+		
+		
+<h1>When to write a Transformer</h1>
+			
+<p>Let's start again from the sitemap documentation: "A
+		  <span class="codefrag">Transformer</span> transforms SAX events in SAX events." In other words,
+		  a <span class="codefrag">Transformer</span> outputs SAX events based on SAX events it
+		  receives.</p>
+			
+<p>You can imagine a <span class="codefrag">Transformer</span> doing many things, from
+		  XSLT processing over database querying to sending mail (and much further, of
+		  course).</p>
+			
+<p>These <span class="codefrag">Transformer</span>s are standard available:</p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">LogTransformer</span> - This is a class that can be plugged
+			 into a pipeline to print the SAX events which passes through this
+			 <span class="codefrag">Transformer</span> in a readable form to a file. This
+			 <span class="codefrag">Transformer</span>'s main purpose is debugging.</li>
+				
+<li>
+					
+<span class="codefrag">SQLTransformer</span> - Can be used for querying a SQL
+			 database.</li>
+				
+<li>
+					
+<span class="codefrag">XalanTransformer</span> - Probably the most intuitive
+			 <span class="codefrag">Transformer</span>: it applies an XSL sheet to the SAX events it
+			 receives. It uses Xalan in the process.</li>
+				
+<li>
+					
+<span class="codefrag">XIncludeTransformer</span> - To include other XML documents
+			 in your "XML document" (which at transformation time exists in SAX
+			 events).</li>
+				
+<li>
+					
+<span class="codefrag">XTTransformer</span> - The same as
+			 <span class="codefrag">XalanTransformer</span>, but this one uses XT.</li>
+			
+</ul>
+			
+<p>All these classes can be found in
+		  <span class="codefrag">org.apache.cocoon.transformation</span>, along with these helper classes
+		  and interfaces:</p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">Transformer</span> - The interface each Transformer has to
+			 implement.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractTransformer</span> - A helper base class for
+			 implementing a <span class="codefrag">Transformer</span>.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractDOMTransformer</span> - An Abstract DOM Transformer
+			 (helper base class), for use when a transformer needs a DOM-based view of the
+			 document.</li>
+			
+</ul>
+		
+		
+<h1>When to write a Serializer</h1>
+			
+<p>No need for re-inventing the wheel, so let's start again with the
+		  sitemap documentation: "A <span class="codefrag">Serializer</span> transforms SAX events in
+		  binary or char streams for final client consumption." A <span class="codefrag">Serializer</span>
+		  is always the last step in a pipeline, and gives the client its final result:
+		  an HTML page, a nice PNG picture, a sound stream, or maybe just an XML
+		  document.</p>
+			
+<p>You should write a <span class="codefrag">Serializer</span> if you want to serve a  client with some format that hasn't been provided yet.</p>
+			
+<p>Existing <span class="codefrag">Serializer</span>s:</p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">FOPSerializer</span>- Make PDF files.</li>
+				
+<li>
+					
+<span class="codefrag">HTMLSerializer</span> - Generate an HTML document.</li>
+				
+<li>
+					
+<span class="codefrag">LinkSerializer</span>- Show the targets of the links in the document.</li>
+				
+<li>
+					
+<span class="codefrag">SVGSerializer</span>- To construct an SVG.</li>
+				
+<li>
+					
+<span class="codefrag">TextSerializer</span> - Generate a text document.</li>
+				
+<li>
+					
+<span class="codefrag">XMLSerializer</span> - Generate an XML document.</li>
+			
+</ul>
+			
+<p>Again, these can be found in the package <span class="codefrag">org.apache.cocoon.serialization</span>. And this package also includes following interfaces and helper classes:</p>
+			
+<ul>
+				
+<li>
+					
+<span class="codefrag">Serializer</span> - The interface every <span class="codefrag">Serializer</span> has to implement.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractTextSerializer</span> - Use this as base for your <span class="codefrag">Serializer</span> if you want to output a character stream.</li>
+				
+<li>
+					
+<span class="codefrag">AbstractSerializer</span> - A more general base class.</li>
+			
+</ul>
+		
+		
+<h1>About Action</h1>
+			
+<p>[FIXME: We have to wait until we can see what is going to happen here. Also, I wonder if this belongs here or should deserve a separate page.]</p>
+			
+<p>The Action part will be used for making Cocoon able to react on form input. This will make Cocoon no longer a simple basis for web publishing, but will make it apt for web interaction as well.</p>
+			
+<p>See <a href="../userdocs/concepts/actions.html">Actions</a>.</p>
+		
+		
+<h1>About XSP</h1>
+			
+<a name="xsp"></a>
+			
+<p>XSP stands for "eXtensible Server Pages". It is the idea to program <span class="codefrag">Generator</span>s by means of XML. The basic idea is to put XML tags like <span class="codefrag">&lt;xsp:logic&gt;</span> in your XML file, with in those tags Java code.</p>
+			
+<div class="note">This is not the proper way to use XSP's. I just mentioned them here so you wouldn't forget their existence. Look to the <a href="../userdocs/xsp/xsp.html">XSP page</a> for more information.</div>
+		
+	
+</body>
+</html>

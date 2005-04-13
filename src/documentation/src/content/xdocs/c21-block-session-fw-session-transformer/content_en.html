@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Session Management</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+</head>
+<body>
+  
+<h1>Introduction</h1>
+     
+<p>This chapter describes the basic Cocoon session management using
+        the session transformer.</p>    
+
+     
+<p>The chapter "Special Contexts" explains some special
+        contexts which do not require a session. They are available everytime. These
+        special contexts are the request context and the
+        temporary context.</p>
+  
+  
+<h1>Session Tracking</h1>
+    
+<p>If a user has a session, Cocoon is able to connect new requests from this user
+       to the session of the user. This is done by session tracking. Basically,
+       the session tracking of Cocoon uses the session tracking of the environment,
+       which is usually the servlet engine.
+    </p>
+    
+<p>There are two methods for session tracking: cookies and url rewriting. If you
+       use cookies, you don't have to care about session tracking. Just refer to
+       the documentation of your servlet engine on how to turn on cookies for session
+       handling.</p>
+    
+<p>URL rewriting instead is a little bit complicated. For url rewriting, each link
+       the user can select, needs a special session ID appended to this link. 
+       Unfortunately, this is not done automatically by Cocoon or the servlet engine.
+       You can either do this by hand or you can use the <em>encodeURL</em> transformer
+       just before the <em>html serializer</em>.
+    </p>
+  
+  
+<h1>Sessions</h1>
+     
+<p>The session action is responsible for creating and
+        terminating a session. It is controlled by a sitemap parameter named "action".
+        This parameter can have the values "create" and "terminate". If no parameter is
+        set, it defaults to "create".</p>
+     
+<p>The action either creates a new session immediately (if not already
+        available), or terminates it (if available).</p>
+  
+
+</body>
+</html>

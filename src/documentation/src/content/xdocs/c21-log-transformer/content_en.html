@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Log Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the Log transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Log Transformer</h1>
+      
+<p>This transformations main purpose is debugging.
+The <span class="codefrag">LogTransformer</span> is a class that can be plugged into a pipeline
+to print the SAX events which passes through this transformer in a readable form
+to a file.</p>
+
+<p>
+ The file will be specified in a parameter tag in the sitemap pipeline to the
+ transformer as follows:</p>
+
+<pre class="code">
+  &lt;map:transform type="log"&gt;
+  &nbsp;&nbsp;&lt;map:parameter name="logfile" value="logfile.log"/&gt;
+  &nbsp;&nbsp;&lt;map:parameter name="append" value="no"/&gt;
+  &lt;/map:transform&gt;
+</pre>
+
+<p>
+ Because the log file will be hardcoded into the sitemap this LOGTransformer will
+ not be thread save! If you don't specify the logfile the output is send to
+ the standard output of your servlet engine.</p>
+      
+<ul>
+        
+<li>Name : log</li>
+        
+<li>Class: org.apache.cocoon.transformation.LogTransformer</li>
+        
+<li>Cacheable: no.</li>
+      
+</ul>
+    
+  
+</body>
+</html>

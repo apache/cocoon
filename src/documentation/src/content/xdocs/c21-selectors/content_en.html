@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Selectors</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Gianugo Rabellino" name="DC.Creator">
+<meta content="Diana Shannon, ed." name="DC.Creator">
+<meta content="This document describes all of the available selectors of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Goal</h1>
+      
+<p>
+      This document lists all of the available selectors of Apache Cocoon and
+      describes their purpose.
+      You may also wish to read  
+      <a href="../concepts/matchers_selectors.html">Using and Implementing
+      Matchers and Selectors</a>.
+      </p>
+     
+     
+<h1>Overview</h1>
+      
+<p>
+      Selectors in Apache Cocoon have a role similar to matchers 
+      with additional flexibility. If you haven't learned about
+      matchers yet, read about them <a href="../matchers/matchers.html">here</a>
+      before continuing. Selectors are designed to evaluate a 
+      generally simple boolean expression regarding some
+      part of the environment (request URI, headers, or cookies, for example). 
+      The result of this evaluation determines which pipeline fragments 
+      should be combined within a given pipeline. Unlike matchers, 
+      selectors can be active decision-driving components.
+      For example, a matcher makes only simple 
+      "yes/no" decisions. If a match is successful, a 
+      pipeline is executed. If not, it is ignored. 
+      Selectors go further by allowing more complex, multiple-choice
+      use cases. In short, consider matchers to be simple "if" 
+      statements. By extension, consider selectors to have all
+      the power of an "if-else if-else" or "switch-case" constructs.
+      The selector syntax should be familiar to anyone who
+      uses XSLT's <span class="codefrag">&lt;xsl:choose&gt;</span> statement.
+      </p>
+      
+<p>
+      As an example, consider the typical scenario in which a page should
+      be rendered differently based on the client browser. 
+      Given the large number and diversity of available browsers, 
+      it would be awkward and counterintuitive to address this need
+      with a set of matchers. The BrowserSelector tests a given parameter
+      against the user-agent request header. Using this single selector, 
+      we can deploy a consistent and readable setup.
+      </p>
+
+<pre class="code">
+
+&lt;map:match pattern="docs/*.html"&gt;
+  &lt;map:generate src="xdocs/{1}.xml"/&gt;
+ 
+  &lt;map:select type="browser"&gt;
+    &lt;map:when test="netscape"&gt;
+      &lt;map:transform src="stylesheets/netscape.xsl" /&gt;
+    &lt;/map:when&gt;
+    &lt;map:when test="explorer"&gt;
+      &lt;map:transform src="stylesheets/ie.xsl" /&gt;
+    &lt;/map:when&gt;
+    &lt;map:when test="lynx"&gt;
+      &lt;map:transform src="stylesheets/text-based.xsl" /&gt;
+    &lt;/map:when&gt;
+    &lt;map:otherwise&gt;
+      &lt;map:transform src="stylesheets/html.xsl" /&gt;
+    &lt;/map:otherwise&gt;
+  &lt;/map:select&gt;
+
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+
+</pre>
+      
+     
+     
+<h1>The Selectors in Cocoon</h1>
+      
+<p>
+      Available Selectors in Cocoon include the following:
+      </p>
+      
+<ul>
+        
+<li>
+<strong>BrowserSelector</strong>: matches the value of the "test"
+        parameter against the HTTP User-Agent header, allowing it to 
+        recognize the browser issuing the request;</li>
+        
+        
+<li>
+<strong>CodeSelector</strong>: matches a snippet of Java code
+        given as the "test" parameter against the environment;</li>
+
+        
+<li>
+<strong>HostSelector</strong>: matches the "test" parameter value
+        against the Host request header</li>
+
+        
+<li>
+<a href="parameter-selector.html">ParameterSelector</a>: matches the string specified
+        in the "test" parameter against a specified Cocoon internal
+        (e.g. sitemap) parameter;</li>
+
+        
+<li>
+<strong>HeaderSelector</strong>: same as the Parameter selector,
+        but matches against the request headers;</li>
+
+        
+<li>
+<a href="regular-expression-header-selector.html">RegexpHeaderSelector</a>: same as the Header selector,
+        but uses a regular expression for matching;</li>
+
+        
+<li>
+<strong>RequestSelector</strong>: again, same as the Parameter selector,
+        but matches against the Request parameters;</li>
+
+        
+<li>
+<strong>SessionSelector</strong>: finally, this selector is used as
+        the Parameter selector to match against an arbitrary session
+        attribute;</li>
+
+      
+</ul>
+    
+  
+</body>
+</html>

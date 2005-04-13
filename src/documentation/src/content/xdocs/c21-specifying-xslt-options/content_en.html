@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Specifying Different XSLT Processor Options</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Vadim Gritsenko" name="DC.Creator">
+<meta content="Diana Shannon" name="DC.Creator">
+</head>
+<body>
+
+  
+<h1>Overview</h1>
+
+<p>
+This Snippet shows how to specify different options of the same XSLT processor when processing different pipeline requests. The following example is based on the need to turn incremental processing both off and on. This is useful in situations when processing requests for both PDF and HTML output. For example, you may want to turn incremental processing "off" for PDF requests but leave it "on" for HTML requests. In addition, you can follow the <strong>same</strong> approach in order to utilize two <strong>different</strong> XSLT processors when processing requests.
+</p>
+  
+
+  
+<h1>Version</h1>
+
+<p>
+At the time of this writing, this Snippet was tested against the Cocoon version 2.0.3. Please note that this approach does not work with Cocoon 2.1. Stay tuned for an upcoming Snippet which illustrates a different approach for version 2.1.
+</p>
+  
+  
+  
+<h1>cocoon.xconf</h1>
+
+<p>
+Here is a snippet from cocoon.xconf which declares a default XSLT processor. It assumes the use of Xalan. You can see that the default XSLT processor is configured to allow the incremental processing of SAX events. Check your cocoon.xconf file, as the value for incremental-processing may be different from what is shown here.
+</p>
+
+
+<pre class="code">
+&lt;xslt-processor class="org.apache.cocoon.components.xslt.XSLTProcessorImpl"
+   logger="core.xslt-processor"&gt;
+ &lt;parameter name="use-store" value="true"/&gt;
+ &lt;parameter name="incremental-processing" value="true"/&gt;
+&lt;/xslt-processor&gt;
+</pre>
+  
+
+<p>
+As discussed above, we need the ability to turn incremental processing of our XSLT processor both on and off. Even though we are using the same XSLT processor implementation, we need to declare an additional component in our cocoon.xconf file in order to use the XSLT processor differently. So, in the next snippet, we add a new component (as a child element of the root cocoon element) to cocoon.xconf. Don't be concerned if you don't see any other component declarations like this in the particular cocoon.xconf file you happen to be using.
+</p>
+  
+   
+<pre class="code">
+&lt;component 
+    role="org.apache.cocoon.components.xslt.XSLTProcessor/NotIncremental"
+    class="org.apache.cocoon.components.xslt.XSLTProcessorImpl"&gt;
+  &lt;parameter name="use-store" value="true"/&gt;
+  &lt;parameter name="incremental-processing" value="false"/&gt; 
+&lt;/component&gt;
+</pre>
+
+    
+<p>
+In the snippet above, the component is identified by the role it plays. Note the value for the role attribute: "org.apache.cocoon.components.xslt.XSLTProcessor/NotIncremental". We will use this value in additional snippets below. Note also that the incremental-processing parameter and its value of "false" is also specified in this particular snippet. 
+  </p>
+
+
+
+  
+<h1>sitemap.xmap</h1>
+
+<p>Next, we need to add one more XSLT transformer component to the components declaration section of our sitemap.xmap file.</p>
+
+   
+<pre class="code">
+&lt;map:components&gt;
+
+  &lt;!-- other map:components here --&gt;
+  
+&lt;map:transformers&gt;
+
+  &lt;!-- other map:transformers here --&gt;
+  
+  &lt;map:transformer 
+    name="xslt-notinc"
+    src="org.apache.cocoon.transformation.TraxTransformer"
+    logger="sitemap.transformer.xslt"
+    pool-max="32"&gt;
+    &lt;use-request-parameters&gt;false&lt;/use-request-parameters&gt;
+    &lt;use-browser-capabilities-db&gt;false&lt;/use-browser-capabilities-db&gt;
+    &lt;use-deli&gt;false&lt;/use-deli&gt;
+    &lt;xslt-processor-role&gt;
+org.apache.cocoon.components.xslt.XSLTProcessor/NotIncremental
+    &lt;/xslt-processor-role&gt;
+  &lt;/map:transformer&gt;
+  
+  &lt;!-- other map:transformers here --&gt;
+
+&lt;/map:transformers&gt;
+
+&lt;!-- other map:components here --&gt;
+
+&lt;/map:components&gt;
+</pre>
+
+    
+<p>
+In the snippet above, we are using the value for the role attribute, specified earlier in the cocoon.xconf snippet, for the value of xslt-processor-role element. Note also that we are giving this transformer the name "xslt-notinc". Please note that the text node for xslt-processor-role was manually broken across several lines for page viewing purposes only. Do not do this in your sitemap.xmap file.
+  </p>
+
+
+<p>Finally, in the relevant map:match elements in our sitemap.xmap, we can specify exactly which xslt transformer component to use by supplying its name as map:transformer's type attribute. Remember that the default xslt transformer, as declared in cocoon.xconf, has incremental processing turned on. Because it's the <em>default</em> transformer, you don't need to specify its name in map:transform's type attribute. In fact, you don't have to supply a type attribute at all when you use default components.</p>
+
+
+<pre class="code">
+&lt;map:pipeline&gt;
+
+   &lt;!-- incremental processing = false --&gt;
+   &lt;map:match pattern="*.pdf"&gt;
+    &lt;map:generate src="docs/{1}.xml"/&gt;
+    &lt;map:transform type="xslt-notinc" src="stylesheets/page2fo.xsl"/&gt;
+    &lt;map:serialize type="fo2pdf"/&gt;
+   &lt;/map:match&gt;
+   
+   &lt;!-- incremental processing = true --&gt;
+   &lt;map:match pattern="*.html"&gt;
+    &lt;map:generate src="docs/{1}.xml"/&gt;
+    &lt;map:transform src="stylesheets/page2html.xsl"/&gt;
+    &lt;map:serialize type="html"/&gt;
+   &lt;/map:match&gt;
+   
+&lt;/map:pipeline&gt;
+</pre>
+
+
+
+  
+<h1>Comments</h1>
+
+<p>
+Care to comment on this Snippet? Got another tip? Help keep this Snippet relevant by passing along any useful feedback to the <a href="mailto:users.at.cocoon.apache.org">cocoon users list.</a>
+
+</p>
+
+
+
+
+</body>
+</html>

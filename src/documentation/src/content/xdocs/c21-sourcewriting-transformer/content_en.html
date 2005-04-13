@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Source Writing Transformer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Jeremy Quinn" name="DC.Creator">
+<meta content="This document describes the Source Writing transformer of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Source Writing Transformer</h1>
+      
+<p>Diverts xml from a pipeline, writing it to a Source (or
+      deleting it).</p>
+      
+<p>Thankfully, <span class="codefrag">FileSource</span> is no longer the only <span class="codefrag">Source</span> that currently implements <span class="codefrag">WritableSource</span>; there are implementations of WebDAV and Apache Slide WritableSources in the scratchpad. Hopefully further <span class="codefrag">ModifiableSource</span> implementations (XMLDB, CVS, Email, SQL, etc.) will be appear in the future.</p>
+      
+<p>See the transformer in action with the Cocoon Samples for webdav block,
+      and Wiki about it at
+      <a class="external" href="http://wiki.apache.org/cocoon/WebDAVCMS">WebDAVCMS</a>.
+      </p>
+      
+<ul>
+        
+<li>Name : write-source</li>
+        
+<li>Class: org.apache.cocoon.transformation.SourceWritingTransformer</li>
+        
+<li>Cacheable: no.</li>
+      
+</ul>
+    
+    
+<h1>The Tags</h1>
+        
+<pre class="code">
+          
+    &lt;source:write&gt;
+      [&lt;source:path/&gt;]
+      &lt;source:source/&gt;
+      &lt;source:fragment/&gt;
+    &lt;/source:write&gt;
+    
+    &lt;source:insert/&gt;
+      &lt;source:path/&gt;
+      &lt;source:source/&gt;
+      &lt;source:fragment/&gt;
+      [&lt;source:replace/&gt;]
+      [&lt;source:reinsert/&gt;]
+    &lt;/source:insert&gt;
+
+    &lt;source:delete/&gt;
+      &lt;source:source/&gt;
+      [&lt;source:path/&gt;] - Ignored
+      [&lt;source:fragment/&gt;] - Ignored
+      [&lt;source:replace/&gt;] - Ignored
+      [&lt;source:reinsert/&gt;] - Ignored
+    &lt;/source:insert&gt;
+          
+        </pre>
+      
+<p>In the namespace <span class="codefrag">xmlns:source="http://apache.org/cocoon/source/1.0"</span>.</p>
+      
+<p>The contents of the <span class="codefrag">&lt;source:fragment/&gt;</span>
+      tag are written to the specified ModifiableSource when the
+      document containing it is transformed by SourceWritingTransformer
+      (or deleted if you are using the <span class="codefrag">delete </span>instruction).</p>
+    
+    
+<h1>Definition</h1>
+        
+<pre class="code">
+          
+ &lt;map:transformer name="write-source" 
+    src="org.apache.cocoon.transformation.SourceWritingTransformer"&gt;
+    &lt;map:parameter name="serializer" value="xml"/&gt;  
+ &lt;/map:transformer/&gt;
+          
+        </pre>
+      
+<p>The SourceWritingTransformer is predefined for you in the main SiteMap.</p>
+    
+    
+<h1>Invocation</h1>
+      
+<p>This invokes the SourceWritingTransformer on your pipeline.</p>
+        
+<pre class="code">
+          
+ &lt;map:transform type="write-source"/&gt;
+          
+        </pre>
+      
+<p>Or you can over-ride the default serializer here.</p>
+        
+<pre class="code">
+          
+ &lt;map:transform type="write-source"&gt;
+   &lt;map:parameter name="serializer" value="my-special-serializer"/&gt;   
+ &lt;/map:transform&gt;
+          
+        </pre>
+    
+
+    
+<h1>The Tags in detail</h1>
+      
+<h2>source:write</h2>
+<p>The source:write tag can take optional attributes, <span class="codefrag">create</span> (defaults to 'true') and <span class="codefrag">serializer</span> (defaults to the serializer set up in the definition or invocation of the transformer).</p>
+<p>Replaces the entire content of a <span class="codefrag">Source</span> (specified by the <span class="codefrag">&lt;source:source/&gt;</span> tag) with the contents of the <span class="codefrag">&lt;source:fragment/&gt;</span> tag, if @create is 'true', a new asset will be created if one does not already exist.</p>
+<p>The <span class="codefrag">&lt;source:source/&gt;</span> and <span class="codefrag">&lt;source:fragment/&gt;</span> tags are required, a <span class="codefrag">&lt;source:path/&gt;</span> tag is optional, if specified, the value is used as an XPath to generate xml in your <span class="codefrag">Source</span>, in which to wrap your content.</p>
+<h3>source:source</h3>
+<p>The System ID of the <span class="codefrag">Source</span> to be written to.</p>
+<p>e.g. <span class="codefrag">&lt;source:source&gt;docs/blah.xml&lt;/source:source&gt;</span> or <span class="codefrag">&lt;source:source&gt;context:/blah.xml&lt;/source:source&gt;</span> etc.</p>
+<h3>source:fragment</h3>
+<p>The XML Fragment to be written.</p>
+<p>For example:</p>
+<pre class="code">
+              
+  &lt;source:fragment&gt;&lt;foo&gt;
+      &lt;bar id="dogcow"/&gt;
+    &lt;/foo&gt;&lt;/source:fragment&gt;
+              
+            </pre>
+<p>or</p>
+<pre class="code">
+              
+  &lt;source:fragment&gt;
+    &lt;foo/&gt;
+    &lt;bar&gt;
+      &lt;dogcow/&gt;
+    &lt;bar/&gt;
+  &lt;/source:fragment&gt;
+              
+            </pre>
+<p>etc.</p>
+<div class="note">The second example type, can only be used when the <span class="codefrag">&lt;source:path/&gt;</span> tag has been specified.</div>
+<h3>source:path</h3>
+<p>[Optional] XPath to specify how your content is wrapped</p>
+<p>e.g. <span class="codefrag">&lt;source:path&gt;doc&lt;/source:path&gt;</span> - your content is placed inside a <span class="codefrag">&lt;doc/&gt;</span> root tag.</p>
+<div class="note">If this parameter is omitted, your content MUST have only ONE top-level node.</div>
+
+      
+<h2>source:insert</h2>
+<p>The source:insert tag can take optional attributes, <span class="codefrag">create</span> (defaults to 'true') and <span class="codefrag">serializer</span> (defaults to the serializer set up in the definition or invocation of the transformer).</p>
+<p>Inserts into a <span class="codefrag">Source</span> (specified by the <span class="codefrag">&lt;source:source/&gt;</span> tag) the contents of the tag <span class="codefrag">&lt;source:fragment/&gt;</span> at the XPath location specified in the <span class="codefrag">&lt;source:path/&gt;</span> tag, if @create is 'true', a new <span class="codefrag">Source</span> will be created if one does not already exist.</p>
+<p>The <span class="codefrag">&lt;source:source/&gt;</span>, <span class="codefrag">&lt;source:path/&gt;</span> and <span class="codefrag">&lt;source:fragment/&gt;</span> tags are all required, the <span class="codefrag">&lt;source:replace/&gt;</span> and <span class="codefrag">&lt;source:reinsert/&gt;</span> tags are optional.</p>
+<h3>source:source</h3>
+<p>The System ID of the <span class="codefrag">Source</span> to be inserted into.</p>
+<p>e.g. <span class="codefrag">&lt;source:source&gt;docs/blah.xml&lt;/source:source&gt;</span> or <span class="codefrag">&lt;source:source&gt;context:/blah.xml&lt;/source:source&gt;</span> etc.</p>
+<h3>source:fragment</h3>
+<p>The XML Fragment to be written.</p>
+<p>e.g.</p>
+<pre class="code">
+              
+  &lt;source:fragment&gt;
+    &lt;foo&gt;
+      &lt;bar id="dogcow"/&gt;
+    &lt;/foo&gt;
+  &lt;/source:fragment&gt;
+              
+            </pre>
+<p>or</p>
+<pre class="code">
+              
+  &lt;source:fragment&gt;
+    &lt;foo/&gt;
+    &lt;bar&gt;
+      &lt;dogcow/&gt;
+    &lt;bar/&gt;
+  &lt;/source:fragment&gt;
+              
+            </pre>
+<p>etc.</p>
+<h3>source:path</h3>
+<p></p>
+<h3>source:replace</h3>
+<p>[Optional] XPath (from <span class="codefrag">&lt;source:path/&gt;</span>) to select the node that is replaced by your new content</p>
+<p>e.g. <span class="codefrag">&lt;source:replace&gt;foo/bar/dogcow/@status='cut'&lt;/source:replace&gt;</span> (is equivalent to this in XSLT: <span class="codefrag">select="foo[bar/dogcow/@status='cut']"</span>), what gets replaced is the <span class="codefrag">&lt;foo/&gt;</span> which has a <span class="codefrag">&lt;bar/&gt;</span> with a <span class="codefrag">&lt;dogcow status="cut"/&gt;</span> in it.</p>
+<p>The <span class="codefrag">overwrite</span> attribute of the parent <span class="codefrag">&lt;source:insert/&gt;</span> is used to check if replacing is allowed. If <span class="codefrag">overwrite</span> is 'true' (the default) the node is replaced. If <span class="codefrag">overwrite</span> is 'false' the node is only inserted if the replace node is found.</p>
+<h3>source:reinsert</h3>
+<p>[Optional] The XPath (relative to <span class="codefrag">&lt;source:replace/&gt;</span>) to backup the contents of the overwritten node to.</p>
+<p>e.g. <span class="codefrag">&lt;source:reinsert&gt;foo/versions&lt;/source:reinsert&gt;</span> or <span class="codefrag">&lt;source:reinsert&gt;/doc/versions/foo&lt;/source:reinsert&gt;</span>.</p>
+<p>If specified and a node is replaced, all children of this replaced node will be reinserted at the given path.</p>
+      
+<h2>Notes</h2>
+<ul>
+            
+<li>if 'replace' is not specified, your 'fragment' is appended as a child of 'path'.</li>
+            
+<li>if 'replace' is specified and it exists and 'overwrite' is true, your 'fragment' is inserted in 'path', before 'replace' and then 'replace' is deleted.</li>
+            
+<li>if 'replace' is specified and it exists and 'overwrite' is false, no action occurs.</li>
+            
+<li>if 'replace' is specified and it does not exist and 'overwrite' is true, your 'fragment' is appended as a child of 'path'.</li>
+            
+<li>if 'replace' is specified and it does not exist and 'overwrite' is false, your 'fragment' is appended as a child of 'path'.</li>
+            
+<li>if 'reinsert' is specified and it does not exist, no action occurs.</li>
+          
+</ul>
+      
+<h2>source:delete</h2>
+<p>This instruction takes only a <span class="codefrag">&lt;source:source/&gt;</span>
+         parameter (as a child tag) and deletes the corresponding
+         source. All other <span class="codefrag">source:*</span> tags are ignored, if
+         present: this allows for easy source-write instructions to be
+         generated on the fly (e.g. by a stylesheet). Just change 
+         <span class="codefrag">source:write</span> to <span class="codefrag">source:delete</span> and
+         you're set.
+         </p>
+    
+    
+    
+<h1>Examples</h1>
+      
+<h2>Simple Write</h2>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;source:write xmlns:source="http://apache.org/cocoon/source/1.0"&gt;
+     &lt;source:source&gt;context://doc/editable/my.xml&lt;/source:source&gt;      
+     &lt;source:fragment&gt;&lt;page&gt;
+       &lt;title&gt;Hello World&lt;/title&gt;
+       &lt;content&gt;
+         &lt;p&gt;This is my first paragraph.&lt;/p&gt;
+       &lt;/content&gt;
+     &lt;/page&gt;&lt;/source:fragment&gt;
+   &lt;/source:write&gt;
+   ...
+ &lt;/page&gt;
+            
+          </pre>
+      
+<h2>Insert at end</h2>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;source:insert xmlns:source="http://apache.org/cocoon/source/1.0"&gt;
+     &lt;source:source&gt;context://doc/editable/my.xml&lt;/source:source&gt;      
+     &lt;source:path&gt;page/content&lt;/source:path&gt;      
+     &lt;source:fragment&gt;
+       &lt;p&gt;This paragraph gets &lt;emp&gt;inserted&lt;/emp&gt;.&lt;/p&gt;
+       &lt;p&gt;With this one, at the end of the content.&lt;/p&gt;
+     &lt;/source:fragment&gt;
+   &lt;/source:insert&gt;
+   ...
+ &lt;/page&gt;
+            
+          </pre>
+      
+<h2>Replace</h2>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;source:insert xmlns:source="http://apache.org/cocoon/source/1.0"&gt;
+     &lt;source:source&gt;context://doc/editable/my.xml"&lt;/source:source&gt;      
+     &lt;source:path&gt;page/content&lt;/source:path&gt;      
+     &lt;source:replace&gt;p[1]&lt;/source:replace&gt;      
+     &lt;source:fragment&gt;
+       &lt;p&gt;This paragraph &lt;emp&gt;replaces&lt;/emp&gt; the first paragraph.&lt;/p&gt;
+     &lt;/source:fragment&gt;
+   &lt;/source:insert&gt;
+   ...
+ &lt;/page&gt;
+            
+          </pre>
+      
+<h2>Insert at the beginning</h2>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;source:insert&gt;
+     &lt;source:source&gt;context://doc/editable/my.xml&lt;/source:source&gt;
+     &lt;source:path&gt;page&lt;/source:path&gt;
+     &lt;source:replace&gt;content&lt;/source:replace&gt;
+     &lt;source:reinsert&gt;content&lt;/source:reinsert&gt;
+     &lt;source:fragment&gt;
+       &lt;content&gt;
+         &lt;p&gt;This new paragraph gets inserted &lt;emp&gt;before&lt;/emp&gt; the other ones.&lt;/p&gt;
+       &lt;/content&gt;
+     &lt;/source:fragment&gt;
+    &lt;source:insert&gt;
+   ...
+ &lt;/page&gt;
+            
+          </pre>
+<p>This sample does not currently work, see the tests in the scratchpad at <span class="codefrag">http://localhost:8080/cocoon/mount/editor/tests</span>.</p>
+<div class="note">You must have built Cocoon with the scratchpad included for this link to work.</div>
+      
+<h2>Delete a source</h2>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;source:delete&gt;
+     &lt;source:source&gt;context://doc/editable/my.xml&lt;/source:source&gt;
+   &lt;source:delete&gt;
+   ...
+ &lt;/page&gt;
+            
+            </pre>
+      
+<h2>Sample of the output of these tags</h2>
+<p>This is the kind of information that the <span class="codefrag">SourceWritingTransformer</span> outputs to the pipeline, replacing the original <span class="codefrag">source:write</span> and <span class="codefrag">source:insert</span> tags</p>
+<pre class="code">
+            
+ &lt;page&gt;
+   ...
+   &lt;sourceResult&gt;
+     &lt;action&gt;new|overwritten|none&lt;/action&gt;
+     &lt;behaviour&gt;write|insert&lt;behaviour&gt;
+     &lt;execution&gt;success|failure&lt;/execution&gt;
+     &lt;serializer&gt;xml&lt;/serializer&gt;
+     &lt;source&gt;source:specific/path/to/context/doc/editable/my.xml&lt;/source&gt;
+     &lt;message&gt;a message about what happened&lt;/message&gt;
+   &lt;/sourceResult&gt;
+   ...
+ &lt;/page&gt;
+            
+          </pre>
+    
+    
+<h1>Known Problems</h1>
+      
+<p>I cannot get the 'insert before' example working, which uses the <span class="codefrag">&lt;source:reinsert/&gt;</span> tag.</p>
+    
+    
+<h1>Warning</h1>
+      
+<p>It is not known how robust this transformer is under even moderate load, especially when it comes to more than one person modifying the same file at the same time.</p>
+    
+  
+</body>
+</html>

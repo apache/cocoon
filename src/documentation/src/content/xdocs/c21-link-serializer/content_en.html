@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Link Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Torsten Knodt" name="DC.Creator">
+<meta content="This document describes the link serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Link Serializer</h1>
+      
+<p>The link serializer generates a list of links
+                   using <a class="external" href="http://www.w3.org/TR/xlink/">XLink</a>
+                   from the sax events.
+                   Most <a class="external" href="http://www.w3.org/MarkUp/">XHTML</a>
+                   attributes are also supported (href, src, longdesc,
+                   background). The mime-type of the output is 
+                   <span class="codefrag">application/x-cocoon-links</span>. This serializer is
+                   required by the link status generator and the command line
+                   mode to follow links.</p>
+       
+<ul>
+         
+<li>Name: links</li>
+         
+<li>Class: org.apache.cocoon.serialization.LinkSerializer</li>
+               
+<li>Cacheable: no</li>
+       
+</ul>
+    
+                
+<h1>Usage</h1>
+      
+<p>To use the link serializer for the command-line or the
+                    link status generator, you need the following entries in
+                    your sitemap:</p>
+
+<pre class="code">
+&lt;map:components&gt;
+  &lt;map:serializers&gt;
+    &lt;map:serializer logger="sitemap.serializer.links" name="links"
+                    src="org.apache.cocoon.serialization.LinkSerializer" /&gt;
+  &lt;/map:serializers&gt;
+&lt;/map:components&gt;
+
+&lt;map:views&gt;
+  &lt;map:view from-position="last" name="links"&gt;
+    &lt;map:serialize type="links" /&gt;
+  &lt;/map:view&gt;
+&lt;/map:views&gt;
+</pre>
+                
+  
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>How to Contribute a Patch via Bugzilla</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="David Crossley" name="DC.Creator">
+</head>
+<body>
+
+  
+<h1>Overview</h1>
+
+<p>
+Bugzilla is the Internet-based mechanism to facilitate contributions to any
+Apache project. This includes changes to code and documents
+(Patches), and also reports of flaws in the system (Bugs), and suggestions
+for enhancement.
+</p>
+
+<p>
+In this How-to we will concentrate on the Patch tracking capabilities of
+Bugzilla. We will explain how to create your Bugzilla account,
+how to enter a patch description, and finally how to attach the actual patch
+file.
+</p>
+
+
+  
+<h1>Intended Audience</h1>
+
+<p>
+This document is meant for first-time users of Bugzilla.
+The web interface can be daunting, so this concise explanation will help
+you to start. After your first patch submission, you can proceed to make more
+substantial contributions.
+</p>
+
+
+<p>
+As our example we use the contribution of a simple documentation patch for
+the Apache Cocoon project. The principles apply to any project.
+</p>
+
+
+  
+<h1>Prerequisites</h1>
+
+<p>
+Bugzilla contributors should:
+</p>
+
+<ul>
+
+<li>Understand what a Patch is and how to make one
+(see <a href="howto-patch.html">How to Prepare a Patch</a>).
+Note that a new complete document is still just a "patch",
+though it does need separate treatment to a normal "diff".
+</li>
+
+<li>Understand that Bugzilla is the Apache Bug Database. Bugzilla does not
+distinguish between a Bug report, a Patch submission, and an Enhancement suggestion. They are all <em>"Bugs"</em> as far as Bugzilla is concerned.
+</li>
+
+</ul>
+
+
+
+	
+<h1>Steps</h1>
+
+<p>
+Here is how to proceed. Go to
+<a class="external" href="http://issues.apache.org/bugzilla/">Bugzilla</a>
+in another browser window.
+</p>
+
+	
+<h2>1. Create your Bugzilla Account</h2>
+<p>
+Follow the link the home page to "Open a new Bugzilla account".
+Do not worry, you will not be sent spam email nor bombarded with advertisements
+by setting up this account. It is purely a workgroup tool.
+</p>
+<p>
+Note that you can conduct queries in Bugzilla and review submissions without
+having an account. However, to make a contribution you must have an account.
+This ensures legitimacy. It also enables the system to send you
+email automatically when your patch is applied by a Cocoon committer.
+</p>
+
+	
+<h2>2. Enter a new bug report</h2>
+<p>
+Follow the "Enter a new bug report" link from the Bugzilla home page. First,
+you will be asked to select the relevant project ... choose Cocoon 2 of course.
+Next, you will be asked to provide your account details. Following that, you
+will be presented an input form for the various details ...
+</p>
+
+	
+<h2>3. Specify Version</h2>
+<p>
+This is the version of Cocoon that you prepared your patch against. Choose
+<span class="codefrag">Current CVS</span> if you have an up-to-date local working copy
+of HEAD branch or a very recent nightly build. Otherwise choose the relevant
+release version. This is a very important step, as you will confuse the
+committer if your changes do not match the repository. If you are unsure, then
+please say so in the description at step 12.
+</p>
+
+	
+<h2>4. Specify Component</h2>
+<p>
+Follow the "Component" link for description of the available
+components. If you do not know which component is relevant, then just use
+<span class="codefrag">core</span>.
+</p>
+
+	
+<h2>5. Specify Platform</h2>
+<p>
+This is really meant for bug reporting. Perhaps it could be relevant for a
+patch. You would usually specify the <span class="codefrag">All</span> option.
+</p>
+
+	
+<h2>6. Specify Operating System (OS)</h2>
+<p>
+Really meant for bug reporting. Perhaps it could be relevant for a patch.
+You would usually specify the <span class="codefrag">All</span> option.
+</p>
+
+	
+<h2>7. Specify Severity</h2>
+<p>
+The impact that would arise if your patch is not applied. For a documentation
+patch, the severity would usually be the default <span class="codefrag">Normal</span>.
+However, if it addressed some serious lack or fixed a misguided configuration
+statement, then the impact could be <span class="codefrag">major</span>.
+</p>
+<p>
+(The <span class="codefrag">enhancement</span> option would not be used for a patch, as it is
+intended for suggesting something that should be done. Use this option wisely.
+It would be better to discuss it on the mailing list first.)
+</p>
+
+	
+<h2>8. Specify Initial State</h2>
+<p>
+Use the <span class="codefrag">New</span> option.
+</p>
+
+	
+<h2>9. Specify Assigned To</h2>
+<p>
+Leave it blank. Your patch will be automatically assigned to the
+<span class="codefrag">cocoon-dev</span> mailing list. When a committer takes on your patch,
+that committer will assign the bug to their own email address. This pevents
+duplication of effort by other committers.
+</p>
+<p>
+The Cc field can be used if you need the bug reports, and any follow-up, to be
+copied to some other person. Remember that your report will be sent
+automatically to the <span class="codefrag">cocoon-dev</span> mailing list, so you do not need
+to Cc anyone there.
+</p>
+
+	
+<h2>10. Specify URL</h2>
+<p>
+If the patch refers to a particular document, then provide the website URL.
+If it refers to an issue with one of the local Cocoon Samples, then provide
+the localhost URL.
+</p>
+
+	
+<h2>11. Carefully choose the Summary</h2>
+<p>
+The summary will become the all-important title of the bug. Use it wisely. You want
+to draw attention to your patch. Just as with posting email to the listervers,
+choosing a poor title may cause your posting to be easily overlooked.
+Use up all the characters available ... about 60 maximum.
+</p>
+<p>
+Start the Summary with the <span class="codefrag">[PATCH]</span> tag. This will ensure that it
+is included in the Cocoon automated patch queue summary posted to the mailing
+lists. The patch queue summary reminds people what patches are pending. If you
+omit this tag, then your patch may easily be overlooked.
+</p>
+
+	
+<h2>12. Description</h2>
+<p>
+Provide a brief explanation of what your patch does. Supply any instructions
+to help the committer apply your patch efficiently. Note any issues that may
+remain. It may help to list each file that you are submitting and briefly
+describe what it is. A committer will need to provide a descriptive log message
+when committing your work. Providing a clear description here will help them.
+</p>
+<p>
+Consider writing the Description and Summary text before you start entering
+your patch report. You could save it in a local text file beforehand and
+then copy-and-paste it when the time comes.
+</p>
+<p>
+If this were a bug report, then it would need extensive description.
+</p>
+
+	
+<h2>13. Send the patch report</h2>
+<p>
+Review your options, then press the <strong>Commit</strong> button. This will
+add an entry to the bug database and email a report to the 
+<span class="codefrag">cocoon-dev</span> mailing list and a copy to you. Your submission will be
+assigned a unique Bug Number which you can use to review its progress.
+</p>
+<p>
+The next steps will show you how to attach your patch to the report that you
+have just created ...
+</p>
+
+	
+<h2>14. Create an attachment of the actual patch</h2>
+<p>
+You will be presented with a status screen saying that your bug report
+was accepted and that email was sent to <span class="codefrag">cocoon-dev</span> mailing list.
+</p>
+<p>
+Now you have a choice ... proceed to review your bug report by selecting the
+link "Back to Bug #XXXXX". If you forgot to mention something,
+then you can add more comments. From that screen, follow the link
+"Create a new attachment".
+Otherwise follow the link from this status screen to "Attach a file to
+this bug".
+</p>
+
+	
+<h2>15. Specify the file to be uploaded</h2>
+<p>
+Provide the local pathname to your patchfile, e.g.
+<span class="codefrag">/home/me/work/cocoon/patch/howto-bugzilla.tar.gz</span>
+
+</p>
+
+	
+<h2>16. Describe the attachment</h2>
+<p>
+Provide a concise one line description, e.g.
+<span class="codefrag">Gzipped TAR archive with new docs and diffs</span>
+
+</p>
+
+	
+<h2>17. Specify the contentType of the attachment</h2>
+<p>
+If it is a Gzipped TAR archive (*.tar.gz) or a .zip archive, then select
+"<span class="codefrag">Binary file (application/octet-stream)</span>".
+If it is just a single xml document, then select
+"<span class="codefrag">Plain text (text/plain)</span>".
+If the patch is just a single diff file, then select
+"<span class="codefrag">Patch file (text/plain, diffs)</span>".
+</p>
+
+	
+<h2>18. Submit the attachment</h2>
+<p>
+When you are ready, press the <strong>Submit</strong> button. As for Step 13,
+you will be presented with a status screen saying that your attachment
+was accepted and that email was sent to <span class="codefrag">cocoon-dev</span> mailing list.
+</p>
+
+	
+<h2>19. Be patient</h2>
+<p>
+Now your patch will wait inside Bugzilla until one of the Cocoon committers
+assigns the patch to their own email address and starts to process it to apply
+it to the master CVS repository. As the registered owner of the Bug, you will
+be sent an automatic email at each of these stages.
+</p>
+
+	
+<h2>20. Add more description or attachments if necessary</h2>
+<p>
+Until the patch is applied by the committer and the Bug report is closed, you
+can still add more to your bug report. However, only do this when
+absolutely necessary because the patch should not be
+changing while the committer is trying to commit it. If you just want to make
+further changes, then it would be better to wait until your patch is
+applied. Then you can make a new patch. Remember that the committer has full
+veto and may decide to make some slight modifications to your patch. So it
+is far better to wait.
+</p>
+
+	
+<h2>21. Adding subsequent patches to the same document or program</h2>
+<p>
+If you want to make more patches to the same file, then please open a new Bug
+rather than re-open the old one. After all, once the original patch is
+applied by the committer, its corresponding Bug report is closed.
+</p>
+
+	
+
+  
+<h1>Real World Extension</h1>
+
+<p>Contributing patches, in the form of documentation or code, is a vital way to give back to the Cocoon community. For example, you might consider contributing a timely patch in the form of a new FAQ, how-to, or tutorial. Or, you may also consider submitting a patch which updates Cocoon's existing user and developer guides. </p>
+	
+
+  
+<h1>Tips</h1>
+
+  
+<h2>Setting user preferences</h2>
+<p>
+You can configure certain preferences, though the Bugzilla defaults work just
+fine.
+</p>
+
+  
+<h2>Review the bugzilla documentation</h2>
+<p>
+There are various explanations of terminology and procedures ... follow the
+links should you need to know more.
+</p>
+
+  
+<h2>Search Bugzilla</h2>
+<p>
+Bugzilla has a very powerful search interface. Now that you have a login
+account, Bugzilla can remember customized queries which you can run with a
+single click.
+</p>
+
+	
+
+  
+<h1>References</h1>
+	
+<ul>
+
+<li>
+Bugzilla is at 
+<a class="external" href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</a>
+
+</li>
+
+<li>
+Helpful Bug Writing Guidelines are available directly from the
+Bug entry interface.
+</li>
+	
+</ul>
+	
+	
+
+
+</body>
+</html>

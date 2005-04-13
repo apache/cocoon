@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Forms: output widget</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="The Apache Cocoon Team" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Concept</h1>
+      
+<p>An fd:output widget is similar to a field widget, but its value
+      is not editable. The value of an output widget must be set programmatically
+      (or through binding). An output widget does not read its value from
+      the request, so is most useful in the case where the form is stored
+      accross requests (automatically the case when using flowscript). An
+      output widget does not perform any validation, it is always considered
+      to be valid.</p>
+
+      
+<div class="note">It is likely that we'll add a generalized 'readonly' capability
+      to all widgets. When we do that, fd:output will become obsolete and
+      can be replaced by a 'readonly' field wiget. In the meantime you can
+      safely use fd:output since this change won't have much impact.</div>
+
+      
+<p>
+<strong>Possible alternative:</strong> On each widget you can
+      also store additional information
+      (i.e. arbitrary Java objects) in attributes. See the Java API
+      of the Widget interface, methods setAttribute and getAttribute.
+      You can then retrieve these attributes using the JXTemplate generator.</p>
+    
+
+    
+<h1>Configuration</h1>
+      
+<pre class="code">&lt;fd:output id="..."&gt;
+  &lt;fd:label&gt;...&lt;/fd:label&gt;
+  &lt;fd:help&gt;...&lt;/fd:help&gt;
+  &lt;fd:hint&gt;...&lt;/fd:hint&gt;
+  &lt;fd:datatype base="..."&gt;
+     [...]
+  &lt;/fd:datatype&gt;
+&lt;/fd:output&gt;</pre>
+
+      
+<p>See <a href="widget_field.html">field widget</a> for a description
+      of the configuration elements.</p>
+    
+  
+</body>
+</html>

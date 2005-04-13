@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Zip archive Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Sylvain Wallez" name="DC.Creator">
+<meta content="This document describes the Zip archive serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Zip archive Serializer</h1>
+      
+<p>The Zip archive serializer generates a zip archive by aggregating several sources.</p>
+    
+ 
+<p>The input document should describe entries of the archive by means of
+ their name (which can be a path) and their content either as URLs or
+ inline data :</p>
+ 
+<ul>
+   
+<li>URLs, given by the "src" attribute, are Cocoon sources and as such
+       can use any of the protocols handled by Cocoon, including "cocoon:" to
+       include dynamically generated content in the archive.</li>
+   
+<li>inline data is represented by an XML document that is serialized to the
+       zip entry using the serializer identified by the "serializer" attribute.</li>
+   
+</ul>
+ 
+<p>
+   Example :
+ </p>
+
+<pre class="code">
+&lt;zip:archive xmlns:zip="http://apache.org/cocoon/zip-archive/1.0"&gt;
+  &lt;zip:entry name="foo.html" src="cocoon://dynFoo.html"/&gt;
+  &lt;zip:entry name="images/bar.jpeg" src="bar.jpeg"/&gt;
+  &lt;zip:entry name="index.html" serializer="html"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Index page&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        Please go &lt;a href="foo.html"&gt;there&lt;/a&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/zip:entry&gt;
+&lt;/zip:archive&gt;
+</pre>
+
+       
+<ul>
+         
+<li>Name: zip</li>
+         
+<li>Class: org.apache.cocoon.serialization.ZipArchiveSerializer</li>
+               
+<li>Cacheable: no</li>
+       
+</ul>
+    
+  
+</body>
+</html>

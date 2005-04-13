@@ -1,0 +1,528 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cocoon Features</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Cocoon community" name="DC.Creator">
+</head>
+<body>
+    
+<h1>General information</h1>
+      
+<ul>
+        
+<li>
+          Apache Cocoon is a web development framework built around the concepts 
+          of component-based web development and separation of concerns, ensuring 
+          that people can interact and collaborate on a project without stepping 
+          on each other toes.
+        </li>
+        
+<li>
+          Cocoon implements these concepts around the notion of <strong>component pipelines</strong>, 
+          each component on the pipeline specializing in a particular operation 
+          (usual pipeline uses a Generator, Transformers and a Serializer). This 
+          makes it possible to use a Lego(tm)-like approach in building web solutions, 
+          hooking together components into pipelines without requiring programming.
+        </li>
+        
+<li>
+          
+<strong>Advanced Control Flow</strong>: continuation-based page flow hides 
+          the complexity of request/response processing and is cleanly separated from 
+          the view and data components.
+        </li>
+        
+<li>
+          Cocoon is open source software (based on the 
+          <a href="license.html">Apache Software License</a>).
+        </li>
+        
+<li>
+          Cocoon does not duplicate efforts but tightly integrates many technologies.
+        </li>
+        
+<li>
+          Cocoon is in use at many live sites and on many company networks.
+        </li>
+        
+<li>
+          Cocoon has a strong community, with many active developers and more 
+          than <a href="who.html">15 active committers</a>!
+        </li>
+        
+<li>
+          There is free support from the thousands of people on our
+          <a class="external" href="http://cocoon.apache.org/community/mail-lists.html">mailing lists</a> 
+          and commercial support is available from various companies and consultants.
+        </li>
+        
+<li>
+          There are many Cocoon sessions at different conferences:
+          <ul>
+            
+<li>
+              
+<a class="external" href="http://www.orixo.com/events/gt2003/">Cocoon GetTogether</a>
+            
+</li>
+            
+<li>
+              
+<a class="external" href="http://apachecon.com/">ApacheCon</a>
+            
+</li>
+            
+<li>
+              
+<a class="external" href="http://cocoon.ifs.tuwien.ac.at/">Austrian Cocoon Day</a>  
+            
+</li>
+            
+<li>
+              
+<a class="external" href="http://www.wjax.de/">WJAX</a>
+            
+</li>
+            
+<li>
+              
+<a class="external" href="http://www.jax2003.de/">JAX</a>
+            
+</li>
+          
+</ul>
+        
+</li>
+        
+<li>
+          To get started see the <a href="tracks/first-steps-track.html">"first steps" 
+          documentation track</a>. 
+          Basically you only need to <a class="external" href="http://cocoon.apache.org/mirror.cgi">download</a> 
+          Cocoon, unpack it and follow the simple INSTALL.txt instructions. 
+          A minimal version of the Jetty servlet container is included with Cocoon.
+        </li>
+      
+</ul>
+    
+    
+<h1>Usage scenarios</h1>
+      
+<p>
+      As you would expect, all of these scenarios can be combined.
+    </p>
+      
+<ul>
+        
+<li>
+          Dynamic multi-channel web publishing (see below for the possible 
+          datasources and output formats)
+        </li>
+        
+<li>
+          Create static content (automatically) by separating data from view</li>
+        
+<li>
+          Offline generation modes with Cocoon's own
+          <a href="userdocs/offline/">offline facilities</a>:
+          command-line interface (CLI), ant task, bean. Also with
+          <a class="external" href="http://forrest.apache.org/">Apache Forrest</a>
+          which utilises Cocoon.
+        </li>
+        
+<li>
+          Dynamic document preparation with
+          <a class="external" href="http://forrest.apache.org/">Apache Forrest</a>,
+          the '<span class="codefrag">forrest run</span>' mode. Use many different data input
+          formats, see the transformed result immediately in the browser.
+        </li>
+        
+<li>
+          Advanced web applications with J2EE integration
+          (with separation of your data, the view and the 
+          <a href="userdocs/flow/index.html">flow logic</a> --&gt; this really means you 
+          can change one of the parts without touching another)
+        </li>
+        
+<li>
+          Develop your company portal using the Cocoon Portal framework
+        </li>
+        
+<li>
+          Support multiple clients, layouts and languages (i18n) without code duplication
+        </li>
+        
+<li>
+          Integrate Cocoon with your existing web applications or use it to put 
+          a better face on them (page scraping)
+        </li>
+        
+<li>
+          Add full-text search to any datasource that can be converted to XML (see below)
+        </li>
+        
+<li>
+          Use Cocoon as the base for Enterprise Application Integration (EAI)
+        </li>
+        
+<li>
+          Use Cocoon as the base for your Content Management System (CMS) 
+          (see <a class="external" href="http://cocoon.apache.org/lenya/">Apache Lenya</a>
+          for a Cocoon based CMS)
+        </li>
+        
+<li>
+          Use Cocoon for producing mobile content (mobile phones, pdas)
+        </li>
+        
+<li>
+          Datawarehouse reporting across multiple formats (see xReporter) 
+        </li>
+      
+</ul>
+    
+    
+<h1>Connect your datasources</h1>
+      
+<p>
+       Out of the box, the following data can be converted to XML to be processed 
+       by Cocoon pipelines.
+    </p>
+      
+<ul>
+        
+<li>
+          XML Files
+        </li>
+        
+<li>
+          XML based (Web) services
+        </li>
+        
+<li>
+          RDBMS (via <a class="external" href="http://java.sun.com/products/jdbc/">JDBC</a>, including connection pooling)
+        </li>
+        
+<li>
+          XML databases
+        </li>
+        
+<li>
+          SAP (r) Systems by adding the SAP JavaConnector see 
+          <a class="external" href="http://service.sap.com/connectors/">http://service.sap.com/connectors/</a>
+          (accessible for all SAP (r) customers)
+        </li>
+        
+<li>
+          
+<a class="external" href="http://www.webdav.org/">WebDAV</a>
+        
+</li>
+        
+<li>
+          CVS (supported by the external project <a class="external" href="http://cocoondev.org/projects/cvssource.html">CVSSource</a>)
+        </li>
+        
+<li>
+          Text-based file formats, either using the integrated <a class="external" href="http://chaperon.sourceforge.net/">Chaperon </a>
+          parser for a yacc-like approach to parsing, or the "slop" 
+          component (Simple Line Oriented Parser).
+        </li>
+        
+<li>
+          
+<a class="external" href="http://jakarta.apache.org/velocity/">Velocity templates</a>
+        
+</li>
+        
+<li>
+          
+<a target="_blank" href="userdocs/flow/jxtemplate.html">JXPath/Jexl templates</a>
+        
+</li>
+        
+<li>
+          
+<a target="_blank" href="userdocs/xsp/index.html">eXtensible Server Pages (XSP)</a> with wide range of 
+          logicsheets (database, mailing, ...)
+        </li>
+        
+<li>
+          
+<a class="external" href="http://www.jython.org/">Python (Jython</a>) and generic <a class="external" href="http://jakarta.apache.org/bsf/">BSF support</a>
+        
+</li>
+        
+<li>
+          
+<a class="external" href="http://java.sun.com/products/jsp/">JSP</a>
+        
+</li>
+        
+<li>
+          Filesystem (traversing directory hierarchies)
+        </li>
+        
+<li>
+          Any information provided by environment (request, session)
+        </li>
+        
+<li>
+          
+<a class="external" href="http://www.macromedia.com/">Flash</a>
+        
+</li>
+        
+<li>
+          
+<a class="external" href="http://www.palserv.com/XMidi/">XMidi</a>
+        
+</li>
+        
+<li>
+          
+<a class="external" href="http://www.ietf.org/rfc/rfc1777.txt?number=1777">LDAP - Lightweight Directory Access Protocol</a>
+        
+</li>
+        
+<li>
+          Easily aggregate different datasources
+      </li>
+      
+</ul>
+    
+    
+<h1>Transform your XML based on standards</h1>
+      
+<ul>
+        
+<li>
+          
+<a class="external" href="http://www.w3.org/TR/xslt">XSLT</a> (The default XSLT-Engine is Apache Xalan, XSLTC is included in the 
+          Cocoon distribution, other XSLT-Engines like Saxon can be easily 
+          integrated)        
+        </li>
+        
+<li>
+          
+<a class="external" href="http://stx.sourceforge.net/documents/spec-stx-20030505.html">STX (Streaming Transformations for XML)</a>
+        
+</li>
+        
+<li>
+          
+<a class="external" href="http://www.w3.org/TR/xinclude/">XInclude</a> with 
+          <a class="external" href="http://www.w3.org/TR/xptr/">XPointer</a> framework support  
+      </li>
+      
+</ul>
+    
+    
+<h1>Serialize your XML to various output formats</h1>
+      
+<ul>
+        
+<li>
+         
+<a class="external" href="http://www.w3.org/XML/">XML</a>
+       
+</li>
+        
+<li>
+         
+<a class="external" href="http://www.w3.org/MarkUp/">HTML</a>
+       
+</li>
+       
+<li>
+         
+<a class="external" href="http://www.w3.org/XHTML/">XHTML</a>
+       
+</li>
+        
+<li>
+         
+<a class="external" href="http://www.adobe.com/products/acrobat/adobepdf.html">PDF</a>
+       
+</li>
+        
+<li>
+         
+<a class="external" href="http://www.openoffice.org/">OpenOffice.org/StarOffice</a>
+       
+</li>
+        
+<li>
+         MS Excel
+       </li>
+        
+<li>
+         
+<a class="external" href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnrtfspec/html/rtfspec.asp">RTF</a>
+       
+</li>
+        
+<li>
+         Postscript
+       </li>
+        
+<li>
+         Charts (see external project 
+         <a class="external" href="http://www.cocoondev.org/projects/fins.html">Fins</a>)
+       </li>
+        
+<li>
+         
+<a class="external" href="http://www.macromedia.com/">Flash</a>
+       
+</li>
+        
+<li>
+         Plain text
+       </li>
+        
+<li>
+         
+<a class="external" href="http://www.w3.org/TR/SVG/">Scalable Vector Graphics (SVG)</a>
+       
+</li>
+        
+<li>
+         MIDI
+       </li>
+        
+<li>
+         ZIP archives
+       </li>
+      
+</ul>
+    
+    
+<h1>What else we can do for you</h1>
+      
+<ul>
+        
+<li>
+          Coexist and interoperate side-by-side with your existing J2EE solutions 
+          (<a class="external" href="http://java.sun.com/products/ejb/">EJB</a>, 
+           <a class="external" href="http://java.sun.com/products/jms/">JMS</a>, 
+           ...)
+        </li>
+        
+<li>
+          Build your <a href="developing/portal/index.html">Portals</a> based on Cocoon (expect support for JSR168 soon)
+        </li>
+        
+<li>
+          Scheduler - Run background tasks for maintenance, etc.
+        </li>
+        
+<li>
+          Caching on many levels
+        </li>
+        
+<li>
+          Integrated search engine (using
+          <a class="external" href="http://jakarta.apache.org/lucene/">Lucene</a>)
+        </li>
+        
+<li>
+          
+<a href="developing/deli.html">DELI</a> (detect client configuration)
+        </li>
+        
+<li>
+          Catalog Entity Resolver to map to local copies of DTDs and other resources
+        </li>
+        
+<li>
+          Publish your own WebServices
+          (<a class="external" href="http://xml.apache.org/axis/">Apache Axis</a> is integrated)
+        </li>
+        
+<li>
+          
+<a class="external" href="http://java.sun.com/products/javamail/">Java Mail</a> support
+        </li>
+        
+<li>
+          Easy integration of object-relational frameworks
+          (<a class="external" href="http://db.apache.org/ojb/">OJB</a>,
+          <a class="external" href="http://www.hibernate.org/">Hibernate</a>, ...)
+        </li>
+        
+<li>
+          I18n support (translation support)
+        </li>
+        
+<li>
+          Easily extensible by clear interfaces (write your own components 
+          following <a class="external" href="http://avalon.apache.org/">Avalon</a> patterns)
+        </li>
+        
+<li>
+          Many, many examples and samples
+        </li>
+        
+<li>
+          Configurable build mechanism based on
+          <a class="external" href="http://ant.apache.org/">Ant</a>
+          (you decide which parts of Cocoon you need)
+        </li>
+        
+<li>
+          Integration of Java data binding frameworks
+          (<a class="external" href="http://www.castor.org/">Castor</a>, 
+          <a class="external" href="http://jakarta.apache.org/commons/betwixt/">Betwixt</a>)
+      </li>
+      
+</ul>
+    
+    
+<h1>Form handling frameworks</h1>
+      
+<ul>
+        
+<li>
+           Enhanced form handling with strong validation through 
+           <a href="userdocs/forms/index.html">Cocoon Forms</a>
+        
+</li>
+        
+<li>
+           Easy integration of (future) <a class="external" href="http://www.w3.org/TR/xforms/">XForms</a> clients
+        </li>
+      
+</ul>
+    
+    
+<h1>Cocoon deployment and integration</h1>
+      
+<ul>
+        
+<li>
+           Cocoon can be run in every servlet container or J2EE application server that
+           supports Java Servlets 2.3 and above, e.g. 
+           <a class="external" href="http://jakarta.apache.org/tomcat/">Tomcat</a>, 
+           <a class="external" href="http://jetty.mortbay.org/jetty/">Jetty</a>, 
+           <a class="external" href="http://www.jboss.org/">JBoss</a>
+           <a class="external" href="http://www.macromedia.com/software/jrun/">JRun</a>, 
+           <a class="external" href="http://www.caucho.com/">Resin</a>,
+           <a class="external" href="http://www.ibm.com/software/webservers/">Websphere</a>,
+           <a class="external" href="http://www.bea.com/">Weblogic</a>, ...
+        </li>
+        
+<li>
+           Command line execution, without requiring a servlet container
+        </li>
+        
+<li>
+           Embeddable in any Java application
+        </li>
+       
+</ul>
+        
+  
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Readers in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes all of the available readers of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+    
+<h1>Goal</h1>
+      
+<p>
+        This document lists all of the available readers of Apache Cocoon and
+        describes their purpose.
+      </p>
+    
+    
+<h1>Overview</h1>
+      
+<p>
+        A reader is the starting, and end point of an xml pipeline. 
+        It collapses the features of a generator, transformer, and serializer.
+        Readers are useful for delivering binary content like images; more
+        general readers deliver content as-is.
+      </p>
+      
+<p>
+        In the sitemap file, each reader has a unique name which is mapped 
+        to a java class. 
+        One reader name must be declared as the default reader. 
+        Each reader may have additional configuration information specified in 
+        child elements.
+      </p>
+      
+<p>
+        For conceptual information on readers see the user's guide document 
+        <a href="../concepts/sitemap.html">The Sitemap</a>.
+      </p>
+    
+    
+<h1>The Readers in Apache Cocoon</h1>
+      
+<ul>
+        
+<li>
+<a href="axisrpc-reader.html">AxisRPC Reader</a> (Optional: Axis block)</li>
+        
+<li>
+<a href="database-reader.html">Database Reader</a> (Optional: Database block)</li>
+        
+<li>
+<a href="directoryziparchiver-reader.html">Directory ZIP Archiver</a> (Scratchpad)</li>
+        
+<li>
+<a href="image-reader.html">Image Reader</a>
+</li>
+        
+<li>
+<a href="jsp-reader.html">JSP Reader</a> (Optional: JSP block)</li>
+        
+<li>
+<a href="resource-reader.html">Resource Reader</a> (The default reader)</li>
+      
+</ul>
+    
+  
+</body>
+</html>

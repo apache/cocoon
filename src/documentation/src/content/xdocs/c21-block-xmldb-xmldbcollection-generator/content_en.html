@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XML:DB Collection Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Gianugo Rabellino" name="DC.Creator">
+<meta content="This document describes the XML:DB
+     Collection generator of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Warning!</h1>
+      
+<p>
+        The XML:DB generators are currently unmaintained and going to be 
+        deprecated soon. Please use the XML:DB pseudo-protocol instead.
+      </p>  
+    
+    
+<h1>XML:DB Collection Generator</h1>
+      
+<p>
+        As for the filesystem there are two generators provided (a file
+        generator and a directory generator), so is for XML:DB, which 
+        can roughly be tought as an XML filesystem, where Collections
+        stand for directories and Resources stand for (XML) files.
+      </p>
+      
+<p>
+        This generator outputs a list of collections and resources
+        given a starting collection. It can be used together with
+        the XMLDBGeneratot, and coupled with the appropriate XSLT, 
+        to easily navigate any XML:DB compliant database. 
+      </p>
+      
+<ul>
+        
+<li>Name: xmldbcollection</li>
+        
+<li>Class: org.apache.cocoon.generation.XMLDBCollectionGenerator</li>
+        
+<li>Cacheable: no</li>
+      
+</ul>
+      
+<p>
+         The configuration is the same of the XMLDBGenerator: it needsi
+         a driver (a class name) and base URI. An example
+         configuration, based on the stock dbXML implementation, will look like 
+         this:
+      </p>
+
+<pre class="code">
+&lt;map:generator name="xmldbcollection"
+               src="org.apache.cocoon.generation.XMLDBGenerator"
+               label="content"&gt;
+  &lt;driver&gt;org.dbxml.client.xmldb.DatabaseImpl&lt;/driver&gt;
+  &lt;base&gt;xmldb:dbxml:///db/&lt;/base&gt;
+&lt;/map:generator&gt;
+</pre>
+      
+<p>
+         Note that the content of the "base" tag will be prepended to the 
+         requested resource. It's important to keep a trailing slash at the
+         end of the <span class="codefrag">base</span> tag.
+      </p>
+    
+  
+</body>
+</html>

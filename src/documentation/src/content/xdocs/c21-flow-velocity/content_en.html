@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christopher Oliver" name="DC.Creator">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+</head>
+<body>
+  
+<h1>Velocity Generator</h1>
+   
+<p>If called from a Flowscript, the Cocoon
+    <a class="external" href="http://jakarta.apache.org/velocity">Velocity</a>
+    <a href="../generators/velocity-generator.html">Generator</a>
+    provides access to the immediate properties of the context object passed to
+    <a href="api.html#sendPage"><span class="codefrag">cocoon.sendPage</span></a> and
+    <a href="api.html#sendPageAndWait"><span class="codefrag">cocoon.sendPageAndWait</span></a>. In addition, the current <a href="api.html#WebContinuation"><span class="codefrag">WebContinuation</span></a>
+    is also available as a variable named <span class="codefrag">$continuation</span>. You would typically access
+    its <span class="codefrag">id</span>:</p>
+   
+<pre class="code">
+  &lt;form action="$continuation.id"&gt;
+   </pre>
+   
+<p>You can also reach previous continuations by using the <span class="codefrag">getParent()</span> function:</p>
+   
+<pre class="code">
+  &lt;form action="$continuation.getParent().id" &gt;
+   </pre>
+   
+<p>In addition the following implicit objects are always available in the Velocity context:</p>
+   
+<dl>
+    
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Request.html">Request</a> <span class="codefrag">$request</span> 
+</dt>
+    
+<dd>The current Cocoon request</dd>
+    
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Response.html">Response</a> <span class="codefrag">$response</span> 
+</dt>
+    
+<dd>The Cocoon response associated with the current request</dd>
+    
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Session.html">Session</a> <span class="codefrag">$session</span> 
+</dt>
+    
+<dd>The Cocoon session associated with the current request</dd>
+    
+<dt>
+<a href="../../../apidocs/org/apache/cocoon/environment/Context.html">Context</a> <span class="codefrag">$context</span> 
+</dt>
+    
+<dd>The Cocoon context associated with the current request</dd>
+    
+<dt>
+<span class="codefrag">org.apache.avalon.framework.parameters.Parameters</span> <span class="codefrag">$parameters</span> 
+</dt>
+    
+<dd>Any parameters passed to the generator in the pipeline</dd>
+   
+</dl>
+   
+<p>
+   Cocoon installs a Velocity introspector that makes it possible for you
+   to access JavaScript objects and arrays in your templates, as well as Java objects. For example, assuming you had a Flowscript like this:</p>
+   
+<pre class="code">
+    sendPage("myTemplate.vm", {colors: ["red", "blue", "yellow"]});
+   </pre>
+   
+<p>
+    You could do this in <span class="codefrag">myTemplate.vm</span>:</p>
+    
+<pre class="code">
+    &lt;select name="colors"&gt;
+    #foreach ($color in $colors) 
+      &lt;option value="$color"&gt;$color&lt;/option&gt;
+    #end
+    &lt;/select&gt;
+    </pre>
+  
+ 
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>File Generator</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document describes the file generator of Cocoon." name="DC.Description">
+</head>
+<body>
+     
+<h1>File Generator</h1>
+      
+<p>The file generator reads an xml document from the local file system or from any url.
+                 While url generator may appear to be a more suitable name, it's known as the file generator for historical reasons.</p>
+              
+<p>The file generator is the default generator.</p>
+      
+<p>The location of the source xml document is specified in
+                     the pipeline by the src attribute.</p>
+
+<pre class="code">
+     
+  &lt;map:generate src="document.xml" type="file"/&gt;
+  &lt;!-- The type attribute can be omitted as it is the default generator. --&gt;
+     
+</pre>
+   
+<p>
+    You can also use an absolute filesystem pathname. See the explanation of
+    <a href="../concepts/sitemap.html#file-url">file: URLs</a>
+   
+</p>
+   
+<p>
+     Be careful to only request xml or xhtml documents, and not html documents.
+     You would get surprising results, including network trips for HTML DTDs
+     that are not provided by Cocoon, and xml parsing errors.
+     Use the "HTMLGenerator instead.
+   </p>
+    
+  
+</body>
+</html>

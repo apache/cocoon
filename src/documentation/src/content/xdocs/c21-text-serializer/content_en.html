@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Text Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="Bernhard Huber" name="DC.Creator">
+<meta content="This document describes the text serializer of Cocoon." name="DC.Description">
+</head>
+<body>
+  
+<h1>Text Serializer</h1>
+    
+<p>
+      The Text serializer serializes xml into plain text..
+    </p>
+    
+<ul>
+      
+<li>Name : text</li>
+      
+<li>Class: org.apache.cocoon.serialization.TextSerializer</li>
+      
+<li>Cacheable: yes.</li>
+    
+</ul>
+    
+<h2>Sitemap Configuration</h2>
+<p>
+        The text Serializer is declared in the sitemap serializers section.
+      </p>
+<pre class="code">
+&lt;map:serializers...
+...
+ &lt;map:serializer name="text" 
+   src="org.apache.cocoon.serialization.TextSerializer"
+   mime-type="text/plain" 
+   logger="sitemap.serializer.text" 
+ /&gt;
+...
+      </pre>
+<p>
+          The text Serializer sets the <span class="codefrag">method</span> property
+          of the XML serializer to the value <span class="codefrag">text</span>.
+        </p>
+    
+<h2>Pipeline Usage</h2>
+<p>
+        Using the text Serializer in a pipeline is just setting the 
+        serializer type to text. 
+        The following code snippet uses the text Serializer:
+      </p>
+<pre class="code">
+...
+&lt;map:match pattern="announcement.txt"&gt;
+&lt;map:generate...
+...
+&lt;map:serialize type="text"/&gt;
+...
+      </pre>
+<p>
+        The pipeline snippet above serializes the SAX events of the
+        announcment document resource to plain text. 
+      </p>
+<p>
+        Input document of the text serializer must be valid XML document. It
+        should have at least one element, root element, which will contain
+        all the text of the document. Root element will be ignored by text
+        serializer and will not go into the output stream.
+      </p>
+    
+<h2>Further Reading</h2>
+<p>
+        As text Serializer uses the XML serializer internally, you might 
+        want to read the complete list of valid XML configuration parameters.
+        It is available at <a href="xml-serializer.html">XML serializer</a>
+        user documentation.
+      </p>
+  
+
+</body>
+</html>

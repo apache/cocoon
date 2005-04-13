@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Avalon for Apache Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Tom Klaasen" name="DC.Creator">
+<meta content="Berin Loritsch" name="DC.Creator">
+<meta content="Carsten Ziegeler" name="DC.Creator">
+<meta content="This document tries to give the basic knowledge of Avalon that is
+      necessary to understand Apache Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>Goal</h1>
+      
+<p>This document tries to provide you with the basic knowledge of Avalon
+        that is necessary to understand Cocoon.</p>
+      
+<p>People trying to understand Avalon in depth, will probably not be much
+        helped by this document. But, if you want to understand Cocoon, you have
+        to have a basic grasp of Avalon.</p>
+      
+<p>The document also outlines the basic steps for configuring Avalon
+        components within Cocoon.</p>
+      
+<p>Much of this document is copied and pasted from original Avalon
+        documentation. However, I hope that by putting all things relevant to
+        Cocoon together in one place I can help you to understand Cocoon more
+        quickly.</p>
+      
+<p>For people wishing to learn Avalon in-depth,
+        <a class="external" href="http://avalon.apache.org/developing/index.html">this
+        is your starting point</a>.</p>
+    
+    
+<h1>Overview</h1>
+      
+<p>For a mission statement of Apache Avalon, please read
+        <a class="external" href="http://avalon.apache.org/index.html">the Avalon
+        homepage</a>.</p>
+      
+<p>In short, Avalon tries to take design efforts away from server-side
+        programmers by providing a framework that </p>
+      
+<ul>
+        
+<li>provides basic working classes;</li>
+        
+<li>provides interfaces to allow different efforts to be integrated
+          more easily.</li>
+      
+</ul>
+    
+    
+<h1>The classes and interfaces</h1>
+      
+<p>These classes and interfaces are extensively used by Cocoon:</p>
+      
+<h2>ServiceManager</h2>
+<p>
+          
+<span class="codefrag">org.apache.avalon.framework.service.ServiceManager</span>
+        
+</p>
+<p>A <span class="codefrag">ServiceManager</span> selects <span class="codefrag">Component</span>s based
+          on a role. The contract is that all the <span class="codefrag">Component</span>s
+          implement the differing roles and there is one <span class="codefrag">Component</span>
+          per role. If you need to select one of many <span class="codefrag">Component</span>s
+          that implement the same role, then you need to use a
+          <span class="codefrag">ServiceSelector</span>. Roles are the full interface name.</p>
+<p>To understand roles better let's use the the analogy of a play. There
+          are many different roles in a script. Any actor or actress can play
+          any given part and you get broadly the same results (same phrases
+          spoken, same movements made, etc.), but with each actor the exact
+          nuances of the performance are different.</p>
+      
+<h2>Serviceable</h2>
+<p>
+          
+<span class="codefrag">org.apache.avalon.framework.service.Serviceable</span>
+        
+</p>
+<p>A <span class="codefrag">Serviceable</span> is a class that needs to connect to
+          software components using a "role" abstraction, thus not depending on
+          particular implementations but on behavioral interfaces. This means,
+          if you need to use other components in your implementation, you
+          have to implement <span class="codefrag">Serviceable</span> to be able to get other
+          components.</p>
+      
+<h2>Configuration</h2>
+<p>
+          
+<span class="codefrag">org.apache.avalon.framework.configuration.Configuration</span>
+        
+</p>
+<p>
+          
+<span class="codefrag">Configuration</span> is an interface encapsulating a
+          configuration node used to retrieve configuration values. This is a
+          "read only" interface preventing applications from modifying their own
+          configurations. The contract surrounding the
+          <span class="codefrag">Configuration</span> is that once it is created, information
+          never changes. The <span class="codefrag">Configuration</span> is built by the
+          <span class="codefrag">ConfigurationBuilder</span>.
+        </p>
+      
+<h2>Configurable</h2>
+<p>
+          
+<span class="codefrag">org.apache.avalon.framework.configuration.Configurable</span>
+        
+</p>
+<p>
+          
+<span class="codefrag">Configurable</span> is an interface describing a component which
+          can be configured. This component gets a <span class="codefrag">Configuration</span>
+          object as input.</p>
+      
+<h2>ConfigurationBuilder</h2>
+<p>
+          
+<span class="codefrag">org.apache.avalon.ConfigurationBuilder</span>
+        
+</p>
+<p>A <span class="codefrag">ConfigurationBuilder</span> builds
+          <span class="codefrag">Configuration</span>s.</p>
+    
+    
+<h1>Configuration</h1>
+      
+<p>Most available Avalon components are configured in the cocoon.xconf.</p>
+      
+<h2>Pooling configuration</h2>
+<p>Avalon now incorporates a couple of modifiers for a Component
+          definition that allows you to control the number of Components in a
+          pool.  This is especially helpful in Cocoon
+          where the defaults don't always work well.</p>
+<p>The magic attribute is "pool-max".
+          The defaults are:</p>
+<ol>
+          
+<li>pool-max: 8</li>
+        
+</ol>
+<p>What this means is that the pool for the default component initially
+          contains zero instances. If demand exceeds this then the pool will
+          increase, one component at a time, up to 8 instances. Beyond that the
+          pool turns into a factory.  That is, new <span class="codefrag">Component</span>
+          instances are created, but destroyed when they are returned. This is a
+          performance issue - but it does manage the number of instances
+          available at one time.</p>
+    
+  
+</body>
+</html>

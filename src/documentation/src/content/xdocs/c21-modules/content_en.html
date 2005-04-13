@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Modules</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Christian Haul" name="DC.Creator">
+</head>
+<body>
+    
+<h1>Introduction</h1>
+      
+<p>
+        Many sitemap components serve a purpose regardless how the input is
+        obtained. Still, to provide a wide range of components to quickly get
+        you up to speed, variants for different inputs exist. Modules allow to
+        create generic components and plug-in input or output later.
+      </p>
+      
+<p>
+        This document will explain how modules work and how to make use of
+        them. If you plan on writing your own modules, it is highly recommended
+        to read <a class="external" href="http://jakarta.apache.org/avalon/developing/index.html">
+          Developing With Apache Avalon</a>. It is a very good description
+        of the underlying rationale and principles.
+      </p>
+    
+    
+<h1>Types of Modules</h1>
+      
+<p>
+        Currently, three different types of modules exist: Input modules
+        provide means to enumerate attributes and to retrieve them, output
+        modules allow storing of data and exhibit transaction like semantics,
+        database modules encapsulate different mechanisms for auto increment
+        columns of various database management systems. Please refer to the
+        javadoc documentation of these interfaces.
+      </p>
+      
+<p>
+        Input modules are modelled after request attributes. The main
+        difference is, that every method takes two additional arguments, the
+        request object and a configuration object. The configuration object is
+        used to allow arbitrarily complex instructions for the input module.
+        Apart from that, input modules are more or less a drop-in replacement.
+      </p>
+      
+<p>
+        Output modules are again very similar to using request
+        attributes. Basically, they provide a method to set an attribute to a
+        value. Again, a request and a configuration object is the only change
+        to request attributes. A fundamental difference is, however, that
+        output modules should exhibit transactional behaviour. Thus setting an
+        attributes implicitly starts a transaction that must be ended by
+        calling rollback or commit. Only if the transaction is completed by
+        calling commit, the values set should be visible. This is needed
+        e.g. by the database actions.
+      </p>
+      
+<p>
+        Database modules, actually named AutoIncrementModule, contains
+        configuration information how to retrieve a value for an auto increment
+        column. It is possible to obtain the value before inserting a row,
+        while inserting as part of the SQL or after successful insert. If the
+        value is obtained before inserting, it can be generated
+        externally. Currently, supported database management systems include
+        HSQL, Informix, MySQL, and querying the database for the current max
+        value. 
+      </p>
+    
+    
+<h1>Using modules</h1>
+      
+<p>
+        Using any of these modules requires a two step setup process. Step one
+        has already been done for your for all modules that come with Apache
+        Cocoon. Exception to this rule are the auto increment modules: only the
+        HSQL module is already setup.
+      </p>
+      
+<h2>Step 1: Making a new module known to Apache Cocoon</h2>
+<p>
+          Like other core components of Apache Cocoon, modules are declared in
+          <span class="codefrag">cocoon.xconf</span>. There are already too many to list here.
+        </p>
+<pre class="code">
+
+&lt;input-modules&gt;
+  &lt;component-instance name="request"   
+  class="org.apache.cocoon.components.modules.input.RequestParameterModule"/&gt;
+
+  &lt;component-instance name="attribute" 
+  class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/&gt;
+
+  &lt;component-instance name="URI"       
+  class="org.apache.cocoon.components.modules.input.RequestURIModule"/&gt;
+
+  &lt;component-instance name="context"       
+  class="org.apache.cocoon.components.modules.input.RequestContextPathModule"/&gt;
+
+  &lt;component-instance name="header"    
+  class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/&gt;
+
+  &lt;component-instance name="session"   
+  class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/&gt;
+
+  &lt;component-instance name="date"      
+  class="org.apache.cocoon.components.modules.input.DateInputModule"/&gt;
+
+  &lt;component-instance name="defaults"  
+  class="org.apache.cocoon.components.modules.input.DefaultsModule"&gt;
+    &lt;input-module name="request"/&gt;
+    &lt;values&gt;
+      &lt;skin&gt;defaultSkin&lt;/skin&gt;
+      &lt;base-url&gt;http://localhost:8080/cocoon&lt;/base-url&gt;
+    &lt;/values&gt;
+  &lt;/component-instance&gt;
+&lt;/input-modules&gt;
+
+&lt;output-modules&gt;
+  &lt;component-instance name="attribute" 
+  class="org.apache.cocoon.components.modules.output.RequestAttributeOutputModule"/&gt;
+
+  &lt;component-instance name="session"   
+  class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/&gt;
+&lt;/output-modules&gt;
+
+&lt;autoincrement-modules&gt;
+  &lt;component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.HsqlIdentityAutoIncrementModule"/&gt;
+
+  &lt;!--
+  &lt;component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/&gt;
+  &lt;component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/&gt;
+  &lt;component-instance name="auto" 
+  class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/&gt;
+  --&gt;
+&lt;/autoincrement-modules&gt;
+        </pre>
+<p>
+          The above snippet declares a number of modules. After this, the
+          modules are accessible through the given name. Thus, when an
+          <span class="codefrag">input-module</span> is expected, it is sufficient to give the
+          name of a module, like <span class="codefrag">header</span>.
+        </p>
+<p>
+          For the auto increment modules only one is declared as the name
+          <span class="codefrag">"auto"</span> has special meaning to the modular database
+          actions. If more than one is needed at the same time, the
+          configuration of the database actions needs to explicitly specify
+          which one to use.
+        </p>
+      
+<h2>Step 2: Use it</h2>
+<p>
+          The following alternatives for using modules exist:
+        </p>
+<h3>Step 2a: Use it as sitemap variable</h3>
+<p>
+            Input modules can be used in a sitemap almost like a sitemap
+            variable. If the variable name contains a colon (":"), the
+            preceeding string is used as the name of the module to use and the
+            trailing string is passed to the module. The expression is replaced
+            with the string value returned from the module.
+          </p>
+<pre class="code">
+
+&lt;map:transform src="resources/stylesheets/{../skin}.xsl"/&gt;
+          </pre>
+<p>
+            The above example uses the variable <span class="codefrag">skin</span> declared
+            e.g. by an action for the stylesheet to apply to the page. The
+            example below uses an input module instead. The way this module was
+            declared above allows to override the skin with a request parameter
+            named "skin".
+          </p>
+<pre class="code">
+
+&lt;map:transform src="resources/stylesheets/{default:skin}.xsl"/&gt;
+          </pre>
+<p>
+            Some of the input modules are JXPath-enabled, so you can use
+            XPath expressions to access values (see Input Modules sample for details).
+            The following example demonstrates the use of XPath function 
+            with <span class="codefrag">system-property</span> module.
+          </p>
+<pre class="code">
+
+&lt;map:parameter name="users-home-base"
+  value="{system-property:substring-before(user.home, user.name)}"/&gt;
+    </pre>
+<h3>Step 2b: Use it on an XSP</h3>
+<p>
+            The input logicsheet allows easy use of InputModules from an
+            XSP. Currently, it provides tags for getting one value, an
+            array of values, and an Iterator for a Collection of
+            parameter names.
+          </p>
+<pre class="code">
+
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+
+&lt;xsp:page language="java"
+    xmlns:xsp="http://apache.org/xsp"  
+    xmlns:input="http://apache.org/cocoon/xsp/input/1.0"&gt;
+
+  &lt;page&gt;
+    &lt;title&gt;Testing InputModules&lt;/title&gt;
+
+    &lt;p&gt;
+      Parameter name=&lt;input:get-attribute module="request-param"
+                       as="string" name="module" default="John Doe"/&gt;;
+    &lt;/p&gt;
+    &lt;p&gt;
+      Parameter cars=&lt;input:get-attribute-values module="request-param" 
+                       as="xml" name="car"/&gt;;
+    &lt;/p&gt;
+  &lt;/page&gt;
+&lt;/xsp:page&gt;
+          </pre>
+<h3>Step 2c: Have sitemap components use a module</h3>
+<p>
+            This depends on the component that is to be used. As an example the
+            <span class="codefrag">CachingWildcardMatcher</span> requires to set the
+            <span class="codefrag">input-module</span> on declaration.
+          </p>
+<pre class="code">
+
+&lt;map:matchers default="wildcard"&gt;
+  &lt;map:matcher name="cached-uri" 
+      src="org.apache.cocoon.matching.modular.CachingWildcardMatcher"&gt;
+    &lt;input-module name="URI"/&gt;
+  &lt;/map:matcher&gt;
+&lt;/map:matchers&gt;
+          </pre>
+<p>
+            By replacing the input module name with any of the other declared
+            input modules, this matcher can be used to match e.g. on session
+            attributes, request headers or even dates!
+          </p>
+    
+  
+</body>
+</html>

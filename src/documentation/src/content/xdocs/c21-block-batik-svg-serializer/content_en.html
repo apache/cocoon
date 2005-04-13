@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>The SVG Serializer</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Ross Burton" name="DC.Creator">
+</head>
+<body>
+    
+<h1>SVG Serializer</h1>
+      
+<h2>Introduction</h2>
+<p>
+          The SVG Serializer is an advanced serializer which accepts
+          valid Scalable Vector Graphic documents (currently to the
+          2000-08-02 Candidate Recommendation specification) and
+          renders it to an image which is served just like any other
+          document in Cocoon.
+        </p>
+<p>
+          Why would you want to do this? Well, charts can be produced from the
+          same data which generates tables, graphical images with text labels
+          all following a standard theme can be generated or normal pages can be
+          beautified.
+        </p>
+<div class="note">
+          For examples of this serializer, see the Cocoon welcome
+          page in the distribution (<span class="codefrag">[cocoon
+          root]/welcome</span>).
+        </div>
+<p>
+          So how does this serializer work?
+        </p>
+<ol>
+          
+<li>Parse and validate SVG document</li>
+          
+<li>Call Batik's <span class="codefrag">Transcoder</span> to encode this image as an image file, and return it to the user.</li>
+        
+</ol>
+<p>
+          The SVG xml document must have a root element &lt;svg&gt;, using xml namespace
+          it is recommended to use the prefix <em>em</em>, and the namespace uri
+          <em>http://www.w3.org/2000/svg</em>.
+        </p>
+  
+      
+<h2>Usage</h2>
+<p>The best way to explain how this serializer works is to show some examples.</p>
+<h3>Basic Example</h3>
+<p>This is a basic example of the serializer.</p>
+<pre class="code">
+&lt;map:serializers&gt;
+  &lt;map:serializer&gt;
+    &lt;map:serializer name="svg2jpeg" mime-type="image/jpeg" 
+        src="org.apache.cocoon.serialization.SVGSerializer"&gt;
+      &lt;parameter name="transcoder" 
+          value="org.apache.batik.transcoder.image.JPEGTranscoder"/&gt;
+  &lt;/map:serializer&gt;
+&lt;map:serializers&gt;
+...
+&lt;map:pipeline&gt;
+  &lt;map:match pattern="sample.jpeg"&gt;
+    &lt;map:generate type="file" src="sample.svg"/&gt; 
+    &lt;map:serialize type="svg2jpeg"/&gt;
+  &lt;/map:match&gt;  
+&lt;/map:pipeline&gt;
+       </pre>
+<p>
+            When the resource <span class="codefrag">sample.jpeg</span> is requested, a SAX event
+            stream is generated from the file <span class="codefrag">sample.svg</span>, which is
+            serialized using the <span class="codefrag">svg2jpeg</span> serializer. This
+            serializer is configured to use a specific transcoder. The MIME type
+            is specified so that Cocoon can tell the client which type the
+            document is. It can be seen that in general the use of this
+            serializer is identical to that of the other serializers.
+          </p>
+<p>
+            The parameter <em>transcoder</em> selects explicitly a batik transcoder.
+            You may want to rely on the default <em>mime-type</em> to 
+            transcoder association, omitting the transcoder parameter
+          </p>
+<table>
+            
+<tr>
+<th colspan="1" rowspan="1">mime-type</th><th colspan="1" rowspan="1">transcoder-class</th>
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">image/jpeg</td><td colspan="1" rowspan="1">org.apache.batik.transcoder.image.JPEGTranscoder</td>
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">image/jpg</td><td colspan="1" rowspan="1">org.apache.batik.transcoder.image.JPEGTranscoder</td>
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">image/png</td><td colspan="1" rowspan="1">org.apache.batik.transcoder.image.PNGTranscoder</td>
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">image/tiff</td><td colspan="1" rowspan="1">org.apache.batik.transcoder.image.TIFFTranscoder</td>
+</tr>
+          
+</table>
+<h3>Advanced Example</h3>
+<p>This is a more advanced sample of using the SVG Serializer.</p>
+<pre class="code">
+&lt;map:serializers&gt;
+  &lt;map:serializer&gt;
+    &lt;map:serializer name="svg2jpeg" mime-type="image/jpeg" 
+        src="org.apache.cocoon.serialization.SVGSerializer"&gt;
+      &lt;parameter name="transcoder" 
+          value="org.apache.batik.transcoder.image.JPEGTranscoder"/&gt;
+      &lt;parameter name="background_color" type="color" value="#00FF00"/&gt;
+  &lt;/map:serializer&gt;
+&lt;map:serializers&gt;
+...
+&lt;map:pipeline&gt;
+  &lt;map:match pattern="sample.jpeg"&gt;
+    &lt;map:generate type="file" src="sample.svg"/&gt; 
+    &lt;map:serialize type="svg2jpeg"/&gt;
+  &lt;/map:match&gt;  
+&lt;/map:pipeline&gt;
+       </pre>
+<p>
+            In this example another parameter is given to the serializer,
+            <span class="codefrag">background_color</span>. This parameter is passed to the
+            transcoder. The <span class="codefrag">type</span> argument specifies the type of
+            data to convert the <span class="codefrag">value</span> to. In this example the
+            string "#00FF00" is converted to a <span class="codefrag">Color</span> object, which
+            is passed to the transcoder as the background colour to
+            use.
+          </p>
+<p>
+            For a list of the parameters available for each transcoder, refer to
+            the Batik API docs.
+          </p>
+<div class="fixme">rossb@apache.org:
+      
+                  Create a document summarising the transcoder hints
+          </div>
+<p>
+            The following table summarizes most useful general SVG ImageTranscoder parameters,
+            all of these parameters are mapped to Batik's SVG ImageTranscoder hints.
+          </p>
+<table>
+            
+<tr>
+<td colspan="1" rowspan="1">width</td><td colspan="1" rowspan="1">float</td><td colspan="1" rowspan="1">Specifies the width of the rasterized image explictly.
+              If no height is specified the aspect ratio is kept.</td>
+            
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">height</td><td colspan="1" rowspan="1">float</td><td colspan="1" rowspan="1">Specifies the width of the rasterized image explictly.
+              If no width is specified the aspect ration is kept.</td>
+            
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">background_color</td><td colspan="1" rowspan="1">color</td><td colspan="1" rowspan="1">
+              Defines the background color
+              to use for opaque image formats, or the background color that may
+              be used for image formats that support alpha channel.
+              A color value of format <span class="codefrag">RRGGBB</span>, 
+              or <span class="codefrag">#RRGGBB</span> sets the background color of the rasterized image, by default
+              the background color is white.</td>
+            
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">language</td><td colspan="1" rowspan="1">string</td><td colspan="1" rowspan="1">to set the default language to use 
+              (may be used by a &lt;switch&gt; SVG element for example), by default language is
+              set to <span class="codefrag">en</span>.</td>
+            
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">user_stylesheet_ur</td><td colspan="1" rowspan="1">string</td><td colspan="1" rowspan="1">to fix the URI of a user stylesheet</td>
+            
+</tr>
+            
+<tr>
+<td colspan="1" rowspan="1">pixel_to_mm</td><td colspan="1" rowspan="1">float</td><td colspan="1" rowspan="1">to specify the pixel to millimeter conversion factor, by default
+              its value is <span class="codefrag">0.264583</span> (96dpi).</td>
+            
+</tr>
+          
+</table>
+<p>
+            For this to work reliably with any transcoder, some magic must be
+            done.
+          </p>
+<ol>
+            
+<li>First, the parameter name is transformed to upper-case and then "KEY_" is
+            prepended. This is to match the internal naming scheme of the hints
+            in the Batik <span class="codefrag">Transcoder</span> interfaces.
+            </li>
+            
+<li>This name is then
+            looked up via Reflection to ensure it is a valid parameter on the
+            specified transcoder.
+            </li>
+            
+<li>Then the value is converted to the type
+            specified in the <span class="codefrag">type</span> attribute (currently supported
+            types are string, float, integer, boolean and color) and passed to
+            the transcoder.
+            </li>
+          
+</ol>
+  
+
+</body>
+</html>

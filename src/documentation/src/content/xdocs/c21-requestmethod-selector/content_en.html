@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RequestMethodSelector in Cocoon</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Cocoon Community" name="DC.Creator">
+<meta content="This document describes the RequestMethodSelector of Cocoon." name="DC.Description">
+</head>
+<body>
+    
+<h1>RequestMethodSelector</h1>
+      
+<table>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">NAME</td><td colspan="1" rowspan="1">RequestMethod</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">WHAT</td><td colspan="1" rowspan="1">The <span class="codefrag">RequestMethodSelector</span> component is used to 
+            select appropriate sitemap processing depending on the request method, 
+            for example, <span class="codefrag">GET</span> or <span class="codefrag">POST</span>.
+          </td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">TYPE</td><td colspan="1" rowspan="1">Selector, Sitemap Component</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">BLOCK</td><td colspan="1" rowspan="1">Core</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CLASS</td><td colspan="1" rowspan="1">org.apache.cocoon.selection.RequestMethodSelector</td>
+        
+</tr>
+        
+<tr>
+          
+<td colspan="1" rowspan="1">CACHEABLE</td><td colspan="1" rowspan="1">not applicable</td>
+        
+</tr>
+      
+</table>
+    
+    
+<h1>Description</h1>
+      
+<p>
+        The RequestMethodSelector allows pipeline creation to be influenced by the method of
+        the request. For example, in a Cocoon Forms environment, a <span class="codefrag">GET</span> request
+        could be forwarded to a new FlowScript function, whilst a <span class="codefrag">POST</span> could be 
+        forwarded to a continuation, for example:
+      </p>
+      
+<pre class="code">
+&lt;map:match pattern="myform"&gt;
+  &lt;map:select type="request-method"&gt;
+    &lt;map:when test="GET"&gt;
+       &lt;map:call function="myform"/&gt;
+    &lt;/map:when&gt;
+    &lt;map:when test="POST"&gt;
+      &lt;map:call continuation="request-param:continuation-id"/&gt;
+    &lt;/map:when&gt;
+  &lt;/map:select&gt;
+&lt;/map:match&gt;
+</pre>
+    
+    
+<h1>Configuration</h1>
+      
+      
+<h2>Sitemap component configuration example</h2>
+<p></p>
+<pre class="code">
+&lt;map:selectors...
+  &lt;map:selector name="request-method" 
+                logger="sitemap.selector.request-method" 
+                src="org.apache.cocoon.selection.RequestMethodSelector"/&gt;
+  ...
+&lt;/map:selectors&gt;
+</pre>
+      
+<h2>Configuration</h2>
+<p>
+          The request method selector does not require any specific configuration, other than
+          specifying a name and an implementing class, as in the example above.
+        </p>
+    
+    
+<h1>History</h1>
+      
+<p>
+        2004-12-16: Created this document
+      </p>
+    
+    
+<h1>See also</h1>
+      
+<p>
+        General documentation about selectors is available at
+        <a href="../concepts/matchers_selectors.html">Matchers and Selectors</a>.
+      </p>
+    
+  
+</body>
+</html>

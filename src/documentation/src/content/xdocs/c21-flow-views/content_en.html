@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Advanced Control Flow</title>
+<link href="http://purl.org/DC/elements/1.0/" rel="schema.DC">
+<meta content="Ovidiu Predescu" name="DC.Creator">
+<meta content="Christopher Oliver" name="DC.Creator">
+</head>
+<body>
+  
+<h1>Flowscript-aware Generators</h1>
+   
+<p>The second argument to <a href="api.html#sendPage"><span class="codefrag">cocoon.sendPage()</span></a> and
+    <a href="api.html#sendPageAndWait"><span class="codefrag">cocoon.sendPageAndWait()</span></a> is a context object,
+    which can be a simple dictionary with values that need to be displayed by the page. More
+    generally any Java or JavaScript object can be passed here, as long as the necessary <em>get</em>
+    methods for the important values are provided.</p>
+   
+<p>The page specified by the URL is processed by the sitemap, using the normal sitemap rules.</p>
+   
+<p>Several Cocoon generators are provided that allow you to access the context object and inject
+    its values into a pipeline. Currently, these are the
+    <a href="jxtemplate.html">JXTemplate Generator</a>,
+    <a href="jpath.html">JPath XSP Logic Sheet</a> and
+    <a href="velocity.html">Velocity Generator</a>.
+   </p>
+  
+ 
+</body>
+</html>
