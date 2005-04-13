@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -26,6 +27,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -36,6 +38,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -49,17 +52,18 @@ import java.util.Map;
  * @version $Id$
  */
 public class DefaultContentAggregator
-extends ContentHandlerWrapper
-implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregator {
+        extends ContentHandlerWrapper
+        implements Generator, CacheableProcessingComponent, Serviceable,
+                   ContentAggregator {
 
-    /** the root element of the aggregated content */
+    /** The root element of the aggregated content */
     protected Element rootElement;
 
-    /** the parts */
+    /** The aggregated parts */
     protected ArrayList parts = new ArrayList();
 
-    /** Empty Attributes */
-    private AttributesImpl emptyAttrs = new AttributesImpl();
+    /** Empty attributes */
+    private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     /** Indicates the position in the stack of the root element of the aggregated content */
     private int rootElementIndex;
@@ -70,9 +74,9 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
     /** The SourceResolver */
     protected SourceResolver resolver;
 
-    /** The component manager */
+    /** The service manager */
     protected ServiceManager manager;
-    
+
     /** This object holds the part parts :) */
     protected final class Part {
         public String uri;
@@ -101,7 +105,7 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
     }
 
     /**
-     * generates the content
+     * Generates the content
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
@@ -109,14 +113,15 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
             getLogger().debug("Generating aggregated content");
         }
         this.contentHandler.startDocument();
-        this.startElem(this.rootElement);
+        startElem(this.rootElement);
+
         try {
             for (int i = 0; i < this.parts.size(); i++) {
-                final Part part = (Part)this.parts.get(i);
-                this.rootElementIndex = (part.stripRootElement ? -1 : 0);
+                final Part part = (Part) this.parts.get(i);
+                this.rootElementIndex = part.stripRootElement ? -1 : 0;
                 if (part.element != null) {
                     this.currentElement = part.element;
-                    this.startElem(part.element);
+                    startElem(part.element);
                 } else {
                     this.currentElement = this.rootElement;
                 }
@@ -125,12 +130,12 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
                     SourceUtil.parse(this.manager, part.source, this);
                 } finally {
                     if (part.element != null) {
-                        this.endElem(part.element);
+                        endElem(part.element);
                     }
                 }
             }
         } finally {
-            this.endElem(this.rootElement);
+            endElem(this.rootElement);
             this.contentHandler.endDocument();
         }
         getLogger().debug("Finished aggregating content");
@@ -142,30 +147,32 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         try {
-            StringBuffer buffer = new StringBuffer();
+            StringBuffer buffer = new StringBuffer(64);
             buffer.append("CA(")
-                  .append(this.rootElement.prefix).append(':')
-                  .append(this.rootElement.name).append('<')
-                  .append(this.rootElement.namespace).append(">)");
-            Source current;
+                    .append(this.rootElement.prefix).append(':')
+                    .append(this.rootElement.name).append('<')
+                    .append(this.rootElement.namespace).append(">)");
+
             for (int i = 0; i < this.parts.size(); i++) {
-                final Part part = (Part)this.parts.get(i);
-                current = part.source;
+                final Part part = (Part) this.parts.get(i);
+                final Source source = part.source;
+
                 if (part.element == null) {
                     buffer.append("P=")
-                          .append(part.stripRootElement).append(':')
-                          .append(current.getURI()).append(';');
+                            .append(part.stripRootElement).append(':')
+                            .append(source.getURI()).append(';');
                 } else {
                     buffer.append("P=")
-                          .append(part.element.prefix).append(':')
-                          .append(part.element.name)
-                          .append('<').append(part.element.namespace).append(">:")
-                          .append(part.stripRootElement).append(':')
-                          .append(current.getURI()).append(';');
+                            .append(part.element.prefix).append(':')
+                            .append(part.element.name)
+                            .append('<').append(part.element.namespace).append(">:")
+                            .append(part.stripRootElement).append(':')
+                            .append(source.getURI()).append(';');
                 }
             }
+
             return buffer.toString();
         } catch (Exception e) {
             getLogger().error("Could not generateKey", e);
@@ -182,16 +189,17 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
     public SourceValidity getValidity() {
         try {
             AggregatedValidity v = new AggregatedValidity();
-            Source current;
             for (int i = 0; i < this.parts.size(); i++) {
-                current = ((Part)this.parts.get(i)).source;
-                SourceValidity sv = current.getValidity();
+                final Source current = ((Part) this.parts.get(i)).source;
+                final SourceValidity sv = current.getValidity();
+
                 if (sv == null) {
                     return null;
                 } else {
                     v.add(sv);
                 }
             }
+
             return v;
         } catch (Exception e) {
             getLogger().error("Could not getValidity", e);
@@ -244,13 +252,14 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
+     *
      * <br>
      * This method will simply call <code>setContentHandler(consumer)</code>
      * and <code>setLexicalHandler(consumer)</code>.
      */
     public void setConsumer(XMLConsumer consumer) {
-        this.setContentHandler(consumer);
-        this.setLexicalHandler(consumer);
+        setContentHandler(consumer);
+        setLexicalHandler(consumer);
     }
 
     /**
@@ -258,12 +267,13 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
      */
     public void recycle() {
         super.recycle();
+
         this.rootElement = null;
-        for(int i=0; i<this.parts.size();i++) {
-            final Part current = (Part)this.parts.get(i);
+        for (int i = 0; i < this.parts.size(); i++) {
+            final Part current = (Part) this.parts.get(i);
             if (current.source != null) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Releasing " + String.valueOf(current.source));
+                    getLogger().debug("Releasing " + current.source);
                 }
                 this.resolver.release(current.source);
             }
@@ -282,8 +292,8 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
         this.resolver = resolver;
         // get the Source for each part
         try {
-            for(int i=0; i<this.parts.size();i++) {
-                final Part current = (Part)this.parts.get(i);
+            for (int i = 0; i < this.parts.size(); i++) {
+                final Part current = (Part) this.parts.get(i);
                 current.source = resolver.resolveURI(current.uri);
             }
         } catch (SourceException se) {
@@ -301,7 +311,7 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
         if (!element.namespace.equals("")) {
             this.contentHandler.startPrefixMapping(element.prefix, element.namespace);
         }
-        this.contentHandler.startElement(element.namespace, element.name, qname, this.emptyAttrs);
+        this.contentHandler.startElement(element.namespace, element.name, qname, EMPTY_ATTRS);
     }
 
     /**
@@ -362,7 +372,7 @@ implements Generator, CacheableProcessingComponent, Serviceable, ContentAggregat
             this.contentHandler.endElement(namespaceURI, localName, raw);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
