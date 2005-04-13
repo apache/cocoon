@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,13 +54,13 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class SitemapSource
-extends AbstractLogEnabled
-implements Source, XMLizable {
+        extends AbstractLogEnabled
+        implements Source, XMLizable {
 
-    /** validities for the internal pipeline */
+    /** The internal event pipeline validities */
     private SitemapSourceValidity validity;
 
     /** The system id */
@@ -266,6 +266,7 @@ implements Source, XMLizable {
             } finally {
                 CocoonComponentManager.leaveEnvironment();
             }
+
             return new ByteArrayInputStream(os.toByteArray());
 
         } catch (ResourceNotFoundException e) {
@@ -280,14 +281,14 @@ implements Source, XMLizable {
     }
 
     /**
-     * Return the unique identifer for this source
+     * Returns the unique identifer for this source
      */
     public String getURI() {
         return this.systemIdForCaching;
     }
 
     /**
-     *
+     * Returns true always.
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
@@ -295,13 +296,11 @@ implements Source, XMLizable {
     }
 
     /**
-     *  Get the Validity object. This can either wrap the last modification
-     *  date or the expires information or...
-     *  If it is currently not possible to calculate such an information
-     *  <code>null</code> is returned.
+     * Get the validity object. This wraps validity of the enclosed event
+     * pipeline. If pipeline is not cacheable, <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        return this.validity;
+        return this.validity.getNestedValidity() == null? null: this.validity;
     }
 
     /**
@@ -497,34 +496,33 @@ implements Source, XMLizable {
      */
     public static final class SitemapSourceValidity implements SourceValidity, Serializable {
 
-        private SourceValidity nested_validity = null;
+        private SourceValidity validity;
 
         private SitemapSourceValidity() {
             super();
         }
 
         void set(SourceValidity validity) {
-            this.nested_validity = validity;
+            this.validity = validity;
         }
 
         public int isValid() {
-            return(this.nested_validity != null?
-                   this.nested_validity.isValid():
-                   SourceValidity.INVALID);
+            return (this.validity != null ?
+                    this.validity.isValid() :
+                    SourceValidity.INVALID);
         }
 
         public int isValid(SourceValidity validity) {
             if (validity instanceof SitemapSourceValidity) {
-                return(this.nested_validity != null?
-                        this.nested_validity.isValid(((SitemapSourceValidity) validity).getNestedValidity()):
+                return (this.validity != null ?
+                        this.validity.isValid(((SitemapSourceValidity) validity).getNestedValidity()) :
                         SourceValidity.INVALID);
             }
             return SourceValidity.INVALID;
         }
 
         public SourceValidity getNestedValidity() {
-            return this.nested_validity;
+            return this.validity;
         }
-
     }
 }
