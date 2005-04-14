@@ -1368,7 +1368,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/optional"/>
-    <jar name="jdtcore-3.0.1.jar"/>
+    <jar name="jdtcore-3.0.2.jar"/>
   </project>
 
   <project name="xreporter-expression">
@@ -1417,7 +1417,7 @@
 
   <project name="commons-jci">
     <package>org.apache.jci</package>
-    <home nested="lib/optional"/>
+    <home nested="lib/core"/>
     <jar name="commons-jci-r159148.jar"/>
   </project>      
 
