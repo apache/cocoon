@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.forms;
 
-import java.io.IOException;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -27,9 +25,13 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.commons.collections.FastHashMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Component implementing the {@link CacheManager} role.
@@ -37,12 +39,17 @@ import org.apache.excalibur.source.SourceValidity;
  * @version $Id$
  */
 public class DefaultCacheManager
-  extends AbstractLogEnabled
-  implements CacheManager, ThreadSafe, Serviceable, Disposable, Configurable, Component {
+        extends AbstractLogEnabled
+        implements CacheManager, ThreadSafe, Serviceable, Disposable,
+                   Configurable, Component {
 
     protected ServiceManager manager;
     protected Configuration configuration;
-    protected FastHashMap cache = new FastHashMap();
+    protected Map cache;
+
+    public DefaultCacheManager() {
+        this.cache = new FastHashMap();
+    }
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
@@ -56,34 +63,25 @@ public class DefaultCacheManager
     }
 
     public Object get(Source source, String prefix) {
-        String key = prefix + source.getURI();
-        SourceValidity newValidity = source.getValidity();
+        // Create a cache key
+        final String key = prefix + source.getURI();
 
-        // If source is not valid then remove object from cache and return null
-        if (newValidity == null) {
-            this.cache.remove(key);
-            return null;
-        }
-
-        // If object is not in cache then return null
+        // If object is not in the cache then return null
         Object[] objectAndValidity = (Object[]) this.cache.get(key);
         if (objectAndValidity == null) {
             return null;
         }
 
-        // Check stored validity against current source validity
-        SourceValidity storedValidity = (SourceValidity) objectAndValidity[1];
-        int valid = storedValidity.isValid();
-        boolean isValid;
+        // If object is in the cache, check stored object validity
+        final SourceValidity validity = (SourceValidity) objectAndValidity[1];
+        int valid = validity.isValid();
         if (valid == SourceValidity.UNKNOWN) {
-            valid = storedValidity.isValid(newValidity);
-            isValid = (valid == SourceValidity.VALID);
-        } else {
-            isValid = (valid == SourceValidity.VALID);
+            // Compare against current source validity
+            valid = validity.isValid(source.getValidity());
         }
 
         // If stored object is not valid then remove object from cache and return null
-        if (!isValid) {
+        if (valid != SourceValidity.VALID) {
             this.cache.remove(key);
             return null;
         }
@@ -93,11 +91,11 @@ public class DefaultCacheManager
     }
 
     public void set(Object object, Source source, String prefix) throws IOException {
-        String key = prefix + source.getURI();
-        SourceValidity validity = source.getValidity();
+        final String key = prefix + source.getURI();
+        final SourceValidity validity = source.getValidity();
         if (validity != null) {
             Object[] objectAndValidity = {object,  validity};
-            cache.put(key, objectAndValidity);
+            this.cache.put(key, objectAndValidity);
         }
     }
 
