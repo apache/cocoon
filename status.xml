@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="fix" fixes-bug="34400" due-to="Markus Bussemer" due-to-email="markus.bussemer@voeb-zvd.de">
+      Faces Block: ValidateLongRangeTag, ValidateDoubleRangeTag should use long
+      and double to set minimum and maximum, not int.
+    </action>
     <action dev="VG" type="fix">
       Fixed caching of a pipeline aggregating non cacheable pipelines via
       <code>cocoon:</code> protocol.
