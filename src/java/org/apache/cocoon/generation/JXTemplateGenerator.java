@@ -55,6 +55,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -2482,7 +2483,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     private void performGeneration(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext,
                 StartElement macroCall, Event startEvent, Event endEvent) throws SAXException {
         cocoon.put("consumer", consumer);
-        execute(this.xmlConsumer, globalJexlContext, jxpathContext, null,
+        execute(new RedundantNamespacesFilter(this.xmlConsumer), globalJexlContext, jxpathContext, null,
                 startEvent, null);
     }
 
