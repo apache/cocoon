@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import javax.faces.validator.DoubleRangeValidator;
 import javax.faces.validator.Validator;
 
 /**
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ValidateDoubleRangeTag extends ValidatorTag {
 
@@ -49,10 +49,10 @@ public class ValidateDoubleRangeTag extends ValidatorTag {
         DoubleRangeValidator validator = (DoubleRangeValidator) super.createValidator();
 
         if (maximum != null) {
-            validator.setMaximum(tag.evaluateInteger(maximum));
+            validator.setMaximum(tag.evaluateDouble(maximum));
         }
         if (minimum != null) {
-            validator.setMinimum(tag.evaluateInteger(minimum));
+            validator.setMinimum(tag.evaluateDouble(minimum));
         }
 
         return validator;

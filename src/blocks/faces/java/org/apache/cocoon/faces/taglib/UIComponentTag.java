@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class UIComponentTag extends XMLProducerTagSupport {
 
@@ -110,11 +110,29 @@ public abstract class UIComponentTag extends XMLProducerTagSupport {
 
     protected final int evaluateInteger(String value) {
         if (FacesUtils.isExpression(value)) {
-            Integer obj = (Integer) createValueBinding(value).getValue(getFacesContext());
+            Number obj = (Number) createValueBinding(value).getValue(getFacesContext());
             return obj.intValue();
         }
 
         return Integer.parseInt(value);
+    }
+
+    protected final long evaluateLong(String value) {
+        if (FacesUtils.isExpression(value)) {
+            Number obj = (Number) createValueBinding(value).getValue(getFacesContext());
+            return obj.longValue();
+        }
+
+        return Long.parseLong(value);
+    }
+
+    protected final double evaluateDouble(String value) {
+        if (FacesUtils.isExpression(value)) {
+            Number obj = (Number) createValueBinding(value).getValue(getFacesContext());
+            return obj.doubleValue();
+        }
+
+        return Double.parseDouble(value);
     }
 
     //
