@@ -60,7 +60,7 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
             generateSmallSAX(sb);
             sb.recycle();
         }
-        long stop = System.currentTimeMillis();
+        long stop = System.currentTimeMillis() + 1;
 
         double r = 1000*loop/(stop-start);
         System.out.println("consuming: "+ r + " documents per second");
@@ -86,7 +86,7 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
             bis.reset();
             p.parse(bis,wrapper);
         }
-        long stop = System.currentTimeMillis();
+        long stop = System.currentTimeMillis() + 1;
 
         double r = 1000*loop/(stop-start);
         System.out.println("parsed:" + r + " documents per second");
@@ -98,7 +98,7 @@ public final class SaxBufferTestCase extends AbstractXMLTestCase {
         for(int i=0;i<loop;i++) {
             b.toSAX(ch);
         }
-        stop = System.currentTimeMillis();
+        stop = System.currentTimeMillis() + 1;
 
         r = 1000*loop/(stop-start);
         System.out.println("recalling: " + r + " documents per second");
