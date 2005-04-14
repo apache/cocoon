@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -66,19 +66,23 @@
           | <format> indicates how the log event should be serialized.
           | Note that newlines are *not* automatic: you have to specify the
           | newline as '\n' or everything will appear on a single line!
+          |
           | The first format below is less verbose because it won't print out
           | the error stacktrace (which tend to be very verbose and for little value).
           | If you need the stacktraces, uncomment the second format below.
+          |
+          | Please mind that the default format logs request uri along with
+          | query string. This may log confidential data (passwords etc.).
           +-->
-      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
-      <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n</format>
+      <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
 
       <!--+
           | <append> if set to 'true' will make cocoon append the events
           | to the existing file, if set to 'false' cocoon will override
           | the existing ones at every new start.
           +-->
-      <append>false</append>
+      <append>@logappend@</append>
 
       <!--+
           | <rotation> allows you to rotate log files one they meet certain
@@ -95,8 +99,8 @@
 
     <cocoon id="deprecation">
       <filename>${context-root}/WEB-INF/logs/deprecation.log</filename>
-      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
-      <append>true</append>
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n</format>
+      <append>@logappend@</append>
     </cocoon>
 
     <servlet id="servlet">
