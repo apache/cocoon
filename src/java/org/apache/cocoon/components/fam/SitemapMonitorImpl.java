@@ -53,22 +53,24 @@ public final class SitemapMonitorImpl extends AbstractLogEnabled implements Site
             String name = child.getName();
             Source src = null;
             try {
-                src = resolver.resolveURI(child.getAttribute("src"));
-
                 if ("class-dir".equals(name)) {
+                    src = resolver.resolveURI(child.getAttribute("src"));
                     String dir = src.getURI();
+                    resolver.release(src);
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("class-dir:" + dir);
                     }
                     urlList.add(new File(dir.substring(5)));
                 } else if ("lib-dir".equals(name)) {
+                    src = resolver.resolveURI(child.getAttribute("src"));
                     String dir = src.getURI();
+                    resolver.release(src);
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("lib-dir:" + dir);
                     }
                     urlList.add(new File(dir.substring(5)));
                 } else {
-                    throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
+                    // ignore for now include and exclude patterns
                 }
             } catch(ConfigurationException ce) {
                 resolver.release(src);
