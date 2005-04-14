@@ -47,7 +47,6 @@
             <!-- prepare the various paths that will form the project -->
             <path id="srcs">
                 <!-- main source dir -->
-                <pathelement path="${{src.core}}"/>
                 <pathelement path="${{java}}"/>
                 <!-- samples source dir -->
                 <!-- FIXME: Load based on local.build.properties -->
@@ -56,7 +55,6 @@
                 <!-- FIXME: Load based on local.build.properties -->
                 <pathelement path="${{src}}/deprecated/java"/>
                 <!-- test source dir -->
-                <pathelement path="${{src.core.test}}"/>
                 <pathelement path="${{src}}/test"/>
             </path>
             <!--core mocks -->
