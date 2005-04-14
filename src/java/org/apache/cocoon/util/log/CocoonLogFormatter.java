@@ -15,18 +15,21 @@
  */
 package org.apache.cocoon.util.log;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.LogKitLogger;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
 import org.apache.log.Logger;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * An extended pattern formatter. New patterns defined by this class are:
@@ -41,6 +44,8 @@ import org.apache.log.Logger;
  * <li><code>thread</code>: Outputs the name of the current thread (first element
  *     on the context stack).</li>
  * <li><code>host</code>: Outputs the request host header.<li>
+ * <li><code>rootThrowable</code>: Outputs the root throwable message and
+ *     stacktrace.<li>
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
@@ -60,14 +65,16 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
     protected final static int     TYPE_THREAD = MAX_TYPE + 3;
     protected final static int     TYPE_HOST   = MAX_TYPE + 4;
     protected final static int     TYPE_QUERY  = MAX_TYPE + 5;
+    protected final static int     TYPE_ROOTTHROWABLE = MAX_TYPE + 6;
 
     protected final static String  TYPE_CLASS_STR       = "class";
     protected final static String  TYPE_CLASS_SHORT_STR = "short";
 
     protected final static String  TYPE_URI_STR         = "uri";
-    protected final static String  TYPE_QUERY_STR       = "query";
     protected final static String  TYPE_THREAD_STR      = "thread";
     protected final static String  TYPE_HOST_STR        = "host";
+    protected final static String  TYPE_QUERY_STR       = "query";
+    protected final static String  TYPE_ROOTTHROWABLE_STR = "rootThrowable";
 
     protected final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
 
@@ -140,7 +147,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
         } else if (type.equalsIgnoreCase(TYPE_HOST_STR)) {
             return TYPE_HOST;
         } else if (type.equalsIgnoreCase(TYPE_QUERY_STR)) {
-            return TYPE_QUERY;  
+            return TYPE_QUERY;
+        } else if (type.equalsIgnoreCase(TYPE_ROOTTHROWABLE_STR)) {
+            return TYPE_ROOTTHROWABLE;
         } else {
             return super.getTypeIdFor(type);
         }
@@ -160,6 +169,8 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 return getHost(event.getContextMap());
             case TYPE_QUERY:
                 return getQueryString(event.getContextMap());
+            case TYPE_ROOTTHROWABLE:
+                return getStackTrace(ExceptionUtils.getRootCause(event.getThrowable()), run.m_format);
         }
         return super.formatPatternRun(event, run);
     }
@@ -227,7 +238,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
         }
         return "";
     }
-    
+
     /**
      * Find the host header of the request that is being processed.
      */
