@@ -1402,7 +1402,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/core"/>
-    <jar name="jdtcore-3.0.1.jar"/>
+    <jar name="jdtcore-3.0.2.jar"/>
   </project>
 
   <project name="spark">
