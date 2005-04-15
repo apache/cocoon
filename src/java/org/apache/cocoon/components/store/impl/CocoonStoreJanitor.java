@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,16 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.thread.RunnableManager;
 
+import org.apache.cocoon.components.thread.RunnableManager;
 
 /**
  * The CocoonStoreJanitor class just subclasses the {@link StoreJanitorImpl} to
@@ -30,14 +34,19 @@ import org.apache.cocoon.components.thread.RunnableManager;
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
-public class CocoonStoreJanitor
-    extends StoreJanitorImpl
-    implements Serviceable
-{
+public class CocoonStoreJanitor extends StoreJanitorImpl
+                                implements Parameterizable, Serviceable, Disposable, Component {
+
     //~ Instance fields --------------------------------------------------------
 
+    /** Name of the thread pool to use. Defaults to 'daemon'. */
+    private String threadPool;
+
     /** Our {@link ServiceManager} */
-    private ServiceManager m_serviceManager;
+    private ServiceManager serviceManager;
+
+    /** Our {@link RunnableManager} */
+    private RunnableManager runnableManager;
 
     /** Flags to ignore memory bursts in the startup */
     private boolean m_firstRun = true;
@@ -47,45 +56,55 @@ public class CocoonStoreJanitor
 
     //~ Methods ----------------------------------------------------------------
 
+    public void parameterize(Parameters params) throws ParameterException {
+        super.parameterize(params);
+        this.threadPool = params.getParameter("thread-pool", "daemon");
+    }
+
+    /**
+     * Get the <code>RunnableManager</code>
+     *
+     * @param serviceManager The <code>ServiceManager</code>
+     * @throws ServiceException If RunnableManager is not available
+     */
+    public void service(final ServiceManager serviceManager)
+    throws ServiceException {
+        this.serviceManager = serviceManager;
+        this.runnableManager = (RunnableManager) serviceManager.lookup(RunnableManager.ROLE);
+    }
+
+    /**
+     * Release <code>RunnableManager</code>
+     */
+    public void dispose() {
+        this.serviceManager.release(this.runnableManager);
+        this.runnableManager = null;
+        this.serviceManager = null;
+    }
+
     /**
      * The "checker" thread checks if memory is running low in the jvm.
      */
-    public void run(  )
-    {
-        // ignoring memory bursts in the first two invokations
-        if( m_firstRun || m_secondRun )
-        {
-            super.inUse = super.memoryInUse(  );
+    public void run() {
+        // Ignoring memory bursts in the first two invokations
+        if (m_firstRun || m_secondRun) {
+            super.inUse = super.memoryInUse();
             m_secondRun = m_firstRun;
             m_firstRun = false;
         }
 
-        super.checkMemory(  );
+        super.checkMemory();
 
         // Relaunch
-        relaunch( super.interval );
-    }
-
-    /**
-     * Get the <code>ServiceManager</code>
-     *
-     * @param serviceManager The <code>ServiceManager</code>
-     *
-     * @throws ServiceException Should not happen
-     */
-    public void service( final ServiceManager serviceManager )
-        throws ServiceException
-    {
-        m_serviceManager = serviceManager;
+        relaunch(super.interval);
     }
 
     /**
      * Start this instance using a default thread from the
      * <code>RunnableManager</code>
      */
-    public void start(  )
-    {
-        relaunch( 0 );
+    public void start() {
+        relaunch(0);
     }
 
     /**
@@ -93,28 +112,9 @@ public class CocoonStoreJanitor
      * the<code>RunnableManager</code> with a delay
      *
      * @param delay the delay to apply before next run
-     *
-     * @throws CascadingRuntimeException in case we cannot get a
-     *         <code>RunnableManager</code>
      */
-    private void relaunch( final long delay )
-    {
-        try
-        {
-            if( getLogger(  ).isDebugEnabled(  ) )
-            {
-                getLogger(  ).debug( "(Re-)Start CocoonStoreJaitor" );
-            }
-
-            final RunnableManager runnableManager =
-                (RunnableManager)m_serviceManager.lookup( RunnableManager.ROLE );
-            runnableManager.execute( this, delay, 0 );
-            m_serviceManager.release( runnableManager );
-        }
-        catch( final ServiceException se )
-        {
-            throw new CascadingRuntimeException( "Cannot lookup RunnableManager",
-                                                 se );
-        }
+    private void relaunch(final long delay) {
+        getLogger().debug("(Re-)Start CocoonStoreJaitor");
+        this.runnableManager.execute(this.threadPool, this, delay, 0);
     }
 }
