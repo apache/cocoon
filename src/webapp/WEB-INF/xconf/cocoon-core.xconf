@@ -503,6 +503,11 @@
         | If not specified, defaults to false.
         +-->
     <parameter name="invokegc" value="false"/>
+    <!--+
+        | Name of the thread pool to use.
+        | If not specified, defaults to 'daemon'.
+        +-->
+    <parameter name="thread-pool" value="daemon"/>
 
     <!--+
         | What should be the priority of the cleanup thread?
@@ -675,7 +680,7 @@
         <max-pool-size>5</max-pool-size>
         <min-pool-size>5</min-pool-size>
         <keep-alive-time-ms>60000</keep-alive-time-ms>
-        <block-policy>RUN</block-policy>
+        <block-policy>ABORT</block-policy>
         <shutdown-graceful>false</shutdown-graceful>
         <shutdown-wait-time-ms>-1</shutdown-wait-time-ms>
       </thread-pool>
