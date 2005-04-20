@@ -85,18 +85,24 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
-public class XMLFileModule extends AbstractJXPathModule implements Serviceable, ThreadSafe {
+public class XMLFileModule extends AbstractJXPathModule
+                           implements Serviceable, ThreadSafe {
 
     /** Static (cocoon.xconf) configuration location, for error reporting */
     String staticConfLocation;
+
     /** Cached documents */
-    Map documents = null;
-    /** Default value for reloadability of sources */
+    Map documents;
+
+    /** Default value for reloadability of sources. Defaults to false. */
     boolean reloadAll;
-    /** Default value for cachability of sources */
-    boolean cacheAll = true;
-    /** Default value for cachability of xpath expressions. */
+
+    /** Default value for cachability of sources. Defaults to true. */
+    boolean cacheAll;
+
+    /** Default value for cachability of xpath expressions. Defaults to true. */
     boolean cacheExpressions = true;
+
     /** Default src */
     String src;
 
@@ -106,10 +112,13 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
     //
     // need two caches for Object and Object[]
     //
+
     /** XPath expression cache for single attribute values. */
     private Map expressionCache;
+
     /** XPath expression cache for multiple attribute values. */
     private Map expressionValuesCache;
+
 
     /**
      * Takes care of (re-)loading and caching of sources.
@@ -117,12 +126,16 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
     protected class DocumentHelper {
         private boolean reloadable;
         private boolean cacheable;
+
         /** Source location */
         private String uri;
+
         /** Source validity */
         private SourceValidity validity;
+
         /** Source content cached as DOM Document */
         private Document document;
+
         /** Remember who created us (and who's caching us) */
         private XMLFileModule instance;
 
@@ -188,8 +201,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
                              *             clear everything for each configured document.
                              *             (this is a quick fix, no time to do the whole)
                              */
-                            this.instance.expressionCache.clear();
-                            this.instance.expressionValuesCache.clear();
+                            this.instance.flushCache();
                         }
                     }
                 }
@@ -217,7 +229,6 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
     }
 
 
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -226,16 +237,20 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
         this.resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
     }
 
-    /* (non-Javadoc)
-    * @see org.apache.avalon.framework.activity.Disposable#dispose()
-    */
+    /**
+     * Dispose this component
+     */
     public void dispose() {
         super.dispose();
         if (this.manager != null) {
             this.manager.release(this.resolver);
-            this.manager = null;
             this.resolver = null;
+            this.manager = null;
         }
+
+        this.documents = null;
+        this.expressionCache = null;
+        this.expressionValuesCache = null;
     }
 
     /**
@@ -257,21 +272,20 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
      */
     public void configure(Configuration config)
     throws ConfigurationException {
-        this.staticConfLocation = config.getLocation();
         super.configure(config);
-        this.reloadAll = config.getChild("reloadable").getValueAsBoolean(this.reloadAll);
+        this.staticConfLocation = config.getLocation();
+        this.reloadAll = config.getChild("reloadable").getValueAsBoolean(false);
+
         if (config.getChild("cachable", false) != null) {
             throw new ConfigurationException("Bzzt! Wrong spelling at " +
                                              config.getChild("cachable").getLocation() +
                                              ": please use 'cacheable', not 'cachable'");
         }
-        this.cacheAll = config.getChild("cacheable").getValueAsBoolean(this.cacheAll);
+        this.cacheAll = config.getChild("cacheable").getValueAsBoolean(true);
+
+        this.documents = Collections.synchronizedMap(new HashMap());
 
         Configuration[] files = config.getChildren("file");
-        if (this.documents == null) {
-            this.documents = Collections.synchronizedMap(new HashMap());
-        }
-
         for (int i = 0; i < files.length; i++) {
             boolean reload = files[i].getAttributeAsBoolean("reloadable", this.reloadAll);
             boolean cache = files[i].getAttributeAsBoolean("cacheable", this.cacheAll);
@@ -283,30 +297,15 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
         }
 
         // init caches
-        this.expressionCache = Collections.synchronizedMap(new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT));
-        this.expressionValuesCache =
-            Collections.synchronizedMap(new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT));
+        this.expressionCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
+        this.expressionValuesCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
     }
 
     /**
-     * Get the DOM object that JXPath will operate on when evaluating
-     * attributes.  This DOM is loaded from a Source, specified in the
-     * modeConf, or (if modeConf is null) from the
-     * {@link #configure(Configuration)}.
-     * @param modeConf The dynamic configuration for the current operation. May
-     * be <code>null</code>, in which case static (cocoon.xconf) configuration
-     * is used.  Configuration is expected to have a &lt;file> child node, and
-     * be of the form:
-     * &lt;...>
-     *   &lt;file src="..." reloadable="true|false"/>
-     * &lt;/...>
-     * @param objectModel Object Model for the current module operation.
+     * Retrieve document helper
      */
-    protected Object getContextObject(Configuration modeConf, Map objectModel)
+    private DocumentHelper getDocumentHelper(Configuration modeConf)
     throws ConfigurationException {
-        String src = this.src;
-        boolean reload = this.reloadAll;
-        boolean cache = this.cacheAll;
         boolean hasDynamicConf = false; // whether we have a <file src="..."> dynamic configuration
         Configuration fileConf = null;  // the nested <file>, if any
 
@@ -321,12 +320,9 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
             }
         }
 
+        String src = this.src;
         if (hasDynamicConf) {
             src = fileConf.getAttribute("src");
-        }
-
-        if (this.documents == null) {
-            this.documents = Collections.synchronizedMap(new HashMap());
         }
 
         if (src == null) {
@@ -338,6 +334,8 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
         }
 
         if (!this.documents.containsKey(src)) {
+            boolean reload = this.reloadAll;
+            boolean cache = this.cacheAll;
             if (hasDynamicConf) {
                 reload = fileConf.getAttributeAsBoolean("reloadable", reload);
                 cache = fileConf.getAttributeAsBoolean("cacheable", cache);
@@ -347,13 +345,34 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
                             + fileConf.getLocation()
                             + ": please use 'cacheable', not 'cachable'");
                 }
-
             }
+
             this.documents.put(src, new DocumentHelper(reload, cache, src, this));
         }
 
+        return (DocumentHelper) this.documents.get(src);
+    }
+
+    /**
+     * Get the DOM object that JXPath will operate on when evaluating
+     * attributes.  This DOM is loaded from a Source, specified in the
+     * modeConf, or (if modeConf is null) from the
+     * {@link #configure(Configuration)}.
+     * @param modeConf The dynamic configuration for the current operation. May
+     * be <code>null</code>, in which case static (cocoon.xconf) configuration
+     * is used.  Configuration is expected to have a &lt;file> child node, and
+     * be of the form:
+     * &lt;...&gt;
+     *   &lt;file src="..." reloadable="true|false"/&gt;
+     * &lt;/...&gt;
+     * @param objectModel Object Model for the current module operation.
+     */
+    protected Object getContextObject(Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
+        DocumentHelper helper = getDocumentHelper(modeConf);
+
         try {
-            return ((DocumentHelper) this.documents.get(src)).getDocument(this.manager, this.resolver, getLogger());
+            return helper.getDocument(this.manager, this.resolver, getLogger());
         } catch (Exception e) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Error using source " + src + "\n" + e.getMessage(), e);
@@ -364,17 +383,16 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
 
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        return this.getAttribute(name, modeConf, objectModel, false);
+        return getAttribute(name, modeConf, objectModel, false);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        Object result = this.getAttribute(name, modeConf, objectModel, true);
+        Object result = getAttribute(name, modeConf, objectModel, true);
         return (result != null ? (Object[]) result : null);
     }
 
-
-    public Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues)
+    private Object getAttribute(String name, Configuration modeConf, Map objectModel, boolean getValues)
     throws ConfigurationException {
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
@@ -385,11 +403,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
         Map cache = null;
         boolean hasBeenCached = false;
         if (this.cacheExpressions) {
-            if (getValues){
-                cache = this.getValuesCache(contextObj);
-            } else {
-                cache = this.getCache(contextObj);
-            }
+            cache = getExpressionCache(getValues? this.expressionValuesCache: this.expressionCache, contextObj);
             hasBeenCached = cache.containsKey(name);
             if (hasBeenCached) {
                 result = cache.get(name);
@@ -421,32 +435,23 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
         return result;
     }
 
-
-    private Map getCache(Object key) {
-        Map cache = (Map) this.expressionCache.get(key);
-        if (cache == null) {
-            cache = this.initSubExpressionCache(key);
+    protected void flushCache() {
+        synchronized(this.expressionCache) {
+            this.expressionCache.clear();
         }
-        return cache;
+        synchronized(this.expressionValuesCache) {
+            this.expressionValuesCache.clear();
+        }
     }
 
-    private Map getValuesCache(Object key) {
-        Map cache = (Map) this.expressionValuesCache.get(key);
-        if (cache == null) {
-            cache = this.initSubExpressionCache(key);
+    private Map getExpressionCache(Map cache, Object key) {
+        synchronized (cache) {
+            Map map = (Map) cache.get(key);
+            if (map == null) {
+                map = Collections.synchronizedMap(new HashMap());
+                cache.put(key, map);
+            }
+            return map;
         }
-        return cache;
-    }
-
-    private synchronized Map initSubExpressionCache(Object key) {
-        // check whether some other thread did all the work while we were waiting
-        Map cache = (Map) this.expressionCache.get(key);
-        if (cache == null) {
-            // need to use HashMap here b/c we need to be able to store nulls
-            // which are prohibited for the ReferenceMap
-            cache = Collections.synchronizedMap(new HashMap());
-            this.expressionCache.put(key, cache);
-        }
-        return cache;
     }
 }
