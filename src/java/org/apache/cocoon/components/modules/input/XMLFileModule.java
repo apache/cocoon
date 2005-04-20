@@ -67,18 +67,18 @@ import java.util.Map;
  * Sources can be held in memory for better performance and reloaded if
  * changed.
  *
- * <p>Caching and reloading can be turned on / off (default: on)
- * through <code>&lt;reloadable&gt;false&lt;/reloadable&gt;</code> and
- * <code>&lt;cacheable&gt;false&lt;/cacheable&gt;</code>. The file
+ * <p>Caching and reloading can be turned on / off (default: caching on,
+ * reloading off) through <code>&lt;reloadable&gt;false&lt;/reloadable&gt;</code>
+ * and <code>&lt;cacheable&gt;false&lt;/cacheable&gt;</code>. The file
  * (source) to use is specified through <code>&lt;file
  * src="protocol:path/to/file.xml" reloadable="true"
  * cacheable="true"/&gt;</code> optionally overriding defaults for
- * caching and or reloading.</p>
+ * caching and/or reloading.</p>
  *
  * <p>In addition, xpath expressions are cached for higher performance.
  * Thus, if an expression has been evaluated for a file, the result
  * is cached and will be reused, the expression is not evaluated
- * a second time. This can be turned off using the <code>cache-xpaths</code>
+ * a second time. This can be turned off using the <code>cache-expressions</code>
  * configuration option.</p>
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
@@ -97,11 +97,11 @@ public class XMLFileModule extends AbstractJXPathModule
     /** Default value for reloadability of sources. Defaults to false. */
     boolean reloadAll;
 
-    /** Default value for cachability of sources. Defaults to true. */
+    /** Default value for cacheability of sources. Defaults to true. */
     boolean cacheAll;
 
-    /** Default value for cachability of xpath expressions. Defaults to true. */
-    boolean cacheExpressions = true;
+    /** Default value for cacheability of xpath expressions. Defaults to true. */
+    boolean cacheExpressions;
 
     /** Default src */
     String src;
@@ -238,33 +238,18 @@ public class XMLFileModule extends AbstractJXPathModule
     }
 
     /**
-     * Dispose this component
-     */
-    public void dispose() {
-        super.dispose();
-        if (this.manager != null) {
-            this.manager.release(this.resolver);
-            this.resolver = null;
-            this.manager = null;
-        }
-
-        this.documents = null;
-        this.expressionCache = null;
-        this.expressionValuesCache = null;
-    }
-
-    /**
      * Static (cocoon.xconf) configuration.
      * Configuration is expected to be of the form:
-     * &lt;...>
-     *   &lt;reloadable>true|<b>false</b>&lt;/reloadable>
-     *   &lt;cacheable><b>true</b>|false&lt;/cacheable>
-     *   &lt;file src="<i>src1</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/>
-     *   &lt;file src="<i>src2</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/>
+     * &lt;...&gt;
+     *   &lt;reloadable&gt;true|<b>false</b>&lt;/reloadable&gt;
+     *   &lt;cacheable&gt;<b>true</b>|false&lt;/cacheable&gt;
+     *   &lt;file src="<i>src1</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/&gt;
+     *   &lt;file src="<i>src2</i>" reloadable="true|<b>false</b>" cacheable="<b>true</b>|false"/&gt;
      *   ...
-     * &lt;/...>
-     * Each &lt;file> pre-loads an XML DOM for querying. Typically only one
-     * &lt;file> is specified, and its <i>src</i> is used as a default if not
+     * &lt;/...&gt;
+     *
+     * Each &lt;file/&gt; element pre-loads an XML DOM for querying. Typically only one
+     * &lt;file&gt; is specified, and its <i>src</i> is used as a default if not
      * overridden in the {@link #getContextObject(Configuration, Map)}
      *
      * @param config a <code>Configuration</code> value, as described above.
@@ -284,7 +269,6 @@ public class XMLFileModule extends AbstractJXPathModule
         this.cacheAll = config.getChild("cacheable").getValueAsBoolean(true);
 
         this.documents = Collections.synchronizedMap(new HashMap());
-
         Configuration[] files = config.getChildren("file");
         for (int i = 0; i < files.length; i++) {
             boolean reload = files[i].getAttributeAsBoolean("reloadable", this.reloadAll);
@@ -297,9 +281,29 @@ public class XMLFileModule extends AbstractJXPathModule
         }
 
         // init caches
-        this.expressionCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
-        this.expressionValuesCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
+        this.cacheExpressions = config.getChild("cache-expressions").getValueAsBoolean(true);
+        if (this.cacheExpressions) {
+            this.expressionCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
+            this.expressionValuesCache = new ReferenceMap(AbstractReferenceMap.SOFT, AbstractReferenceMap.SOFT);
+        }
     }
+
+    /**
+     * Dispose this component
+     */
+    public void dispose() {
+        super.dispose();
+        if (this.manager != null) {
+            this.manager.release(this.resolver);
+            this.resolver = null;
+            this.manager = null;
+        }
+
+        this.documents = null;
+        this.expressionCache = null;
+        this.expressionValuesCache = null;
+    }
+
 
     /**
      * Retrieve document helper
@@ -436,11 +440,13 @@ public class XMLFileModule extends AbstractJXPathModule
     }
 
     protected void flushCache() {
-        synchronized(this.expressionCache) {
-            this.expressionCache.clear();
-        }
-        synchronized(this.expressionValuesCache) {
-            this.expressionValuesCache.clear();
+        if (this.cacheExpressions) {
+            synchronized(this.expressionCache) {
+                this.expressionCache.clear();
+            }
+            synchronized(this.expressionValuesCache) {
+                this.expressionValuesCache.clear();
+            }
         }
     }
 
