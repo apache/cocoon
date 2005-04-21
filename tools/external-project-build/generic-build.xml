@@ -16,7 +16,7 @@
 -->
 <project name="Cocoon build system" default="cocoon:init">
 
-    <target name="cocoon:core-setProperties">
+    <target name="cocoon:core-setProperties" depends="cocoon:before-setProperties">
         <!-- get the properties of properties configuration files -->
         <property name="cocoon.server" value="localhost"/>
         <property file="${cocoon.server}.build.properties"/>
@@ -47,11 +47,19 @@
         <property name="cocoon.rep.cocoon.db.dir" value="${cocoon.rep.cocoon.webapp.dir}/WEB-INF/db"/>
         <property name="cocoon.rep.container.dir" value="${cocoon.rep}/container/${cocoon.container.version}"/>
     	
-		    <!-- container properties -->
+		<!-- container properties -->
         <property file="${cocoon.rep.container.dir}/server.properties"/>
         	
         <!-- target directory structure -->
         <property name="cocoon.build.dir" value="build"/>
+        <property name="cocoon.build.java" value="${cocoon.build.dir}/java"/>   
+        <property name="cocoon.build.java.classes" value="${cocoon.build.java}/classes"/>           
+        <property name="cocoon.build.junit" value="${cocoon.build.dir}/test/junit"/>    
+        <property name="cocoon.build.junit.classes" value="${cocoon.build.junit}/classes"/>                     
+        <property name="cocoon.build.junit.output" value="${cocoon.build.junit}/output"/>         
+        <property name="cocoon.build.htmlunit" value="${cocoon.build.dir}/test/htmlunit"/>       
+        <property name="cocoon.build.htmlunit.classes" value="${cocoon.build.htmlunit}/classes"/>            
+        <property name="cocoon.build.htmlunit.output" value="${cocoon.build.htmlunit}/output"/>                    
         <property name="cocoon.build.webapp.war.dir" value="${cocoon.build.dir}/${cocoon.server}_webapp"/>
         <property name="cocoon.build.webapp.dir" value="${cocoon.build.dir}/${cocoon.server}_webapp/ROOT"/>
         <property name="cocoon.build.container.dir" value="${cocoon.build.dir}/${cocoon.server}_container"/>
@@ -59,6 +67,7 @@
         <!-- local directories -->
         <property name="cocoon.local.webapp.dir" value="webapp"/>
         <property name="cocoon.local.src.dir" value="java"/>
+        <property name="cocoon.local.junit.dir" value="test/junit"/>   
         <property name="cocoon.local.lib.dir" value="lib"/>
         <property name="cocoon.local.conf.dir" value="conf"/>
 
@@ -70,7 +79,17 @@
         <property name="cocoon.compiler.nowarn" value="on"/>
         <property name="cocoon.compiler.source.vm" value="1.3"/>
         <property name="cocoon.compiler.target.vm" value="1.3"/>
-
+     
+        <!-- classpaths -->
+        <path id="cocoon:classpath">
+            <fileset dir="${cocoon.rep.cocoon.lib.dir}">
+                <include name="*.jar" />
+            </fileset>
+            <fileset dir="${cocoon.local.lib.dir}">
+                <include name="*.jar" />
+            </fileset>
+            <dirset dir="${cocoon.rep.cocoon.classes.dir}" />
+        </path>
     </target>
 
     <target name="cocoon:init" depends="cocoon:setProperties, cocoon:setFilters">
@@ -150,23 +169,16 @@
         <ant antfile="${cocoon.rep.container.dir}/container-build.xml"
             target="cocoon:stop" inheritall="true"/>
     </target>
-
-    <target name="cocoon:core-compile" depends="cocoon:before-compile" if="cocoon.cond.webapp.in.context">
-        
+    
+    <target name="cocoon:core-compile" depends="cocoon:before-compile">
         <!-- TODO support more than one directory with Java classes -->
-        <path id="cocoon:classpath">
-            <fileset dir="${cocoon.rep.cocoon.lib.dir}">
-                <include name="*.jar" />
-            </fileset>
-            <fileset dir="${cocoon.local.lib.dir}">
-                <include name="*.jar" />
-            </fileset>
-            <dirset dir="${cocoon.rep.cocoon.classes.dir}" />
-        </path>
+        <mkdir dir="${cocoon.build.java}"/>
+        <mkdir dir="${cocoon.build.java.classes}"/>   
         <mkdir dir="${cocoon.build.webapp.dir}/WEB-INF/classes"/>
-        <copy todir="${cocoon.build.webapp.dir}/WEB-INF/classes" filtering="on">
+        <copy todir="${cocoon.build.java.classes}" filtering="on">
             <fileset dir="${cocoon.local.src.dir}">
                 <exclude name="**/*.java"/>
+                <exclude name="**/.svn"/>   
             </fileset>
         </copy>
         <javac classpathref="cocoon:classpath"
@@ -177,8 +189,14 @@
                deprecation="${cocoon.compiler.deprecation}"
                optimize="${cocoon.compiler.optimize}"
                debug="${cocoon.compiler.debug}"
-               destdir="${cocoon.build.webapp.dir}/WEB-INF/classes"
+               destdir="${cocoon.build.java.classes}"
                srcdir="${cocoon.local.src.dir}" />
+        <copy todir="${cocoon.build.webapp.dir}/WEB-INF/classes" filtering="off">
+            <fileset dir="${cocoon.build.java.classes}">
+                <exclude name="**/*.java"/>
+                <exclude name="**/.svn"/>   
+            </fileset>
+        </copy>
     </target>
 
     <target name="cocoon:core-clean" depends="cocoon:before-clean">
@@ -195,7 +213,7 @@
     </target>
 
     <!-- interception targets -->
-    <target name="cocoon:before-setProperties" depends="cocoon:init"/>
+    <target name="cocoon:before-setProperties"/>
     <target name="cocoon:after-setProperties" depends="cocoon:core-setProperties"/>
     <target name="cocoon:before-webapp" depends="cocoon:init"/>
     <target name="cocoon:after-webapp" depends="cocoon:core-webapp"/>
