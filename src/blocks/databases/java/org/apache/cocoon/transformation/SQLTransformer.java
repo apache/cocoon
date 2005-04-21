@@ -52,9 +52,9 @@ import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -302,7 +302,6 @@ public class SQLTransformer extends AbstractSAXTransformer
             super.startPrefixMapping(this.outPrefix, this.outUri);
         }
 
-        AttributesImpl attr = new AttributesImpl();
         Query query = (Query) queries.elementAt(index);
         boolean query_failure = false;
         Connection conn = null;
@@ -324,16 +323,17 @@ public class SQLTransformer extends AbstractSAXTransformer
                 query.execute();
             } catch (SQLException e) {
                 getLogger().debug("executeQuery failed", e);
-                AttributesImpl my_attr = new AttributesImpl();
-                this.start(query.rowset_name, my_attr);
-                this.start(MAGIC_ERROR, my_attr);
-                this.data(e.getMessage());
-                this.end(MAGIC_ERROR);
-                this.end(query.rowset_name);
+                AttributesImpl attr = new AttributesImpl();
+                start(query.rowset_name, attr);
+                start(MAGIC_ERROR, attr);
+                data(e.getMessage());
+                end(MAGIC_ERROR);
+                end(query.rowset_name);
                 query_failure = true;
             }
 
             if (!query_failure) {
+                AttributesImpl attr = new AttributesImpl();
                 if (this.showNrOfRows) {
                     attr.addAttribute(NAMESPACE, query.nr_of_rows, query.nr_of_rows, "CDATA",
                                       String.valueOf(query.getNrOfRows()));
@@ -343,37 +343,36 @@ public class SQLTransformer extends AbstractSAXTransformer
                     attr.addAttribute(NAMESPACE, query.name_attribute, query.name_attribute, "CDATA",
                                       name);
                 }
-                this.start(query.rowset_name, attr);
-                attr = new AttributesImpl();
+                start(query.rowset_name, attr);
 
                 if (!query.isStoredProcedure()) {
                     while (query.next()) {
-                        this.start(query.row_name, attr);
+                        start(query.row_name, attr);
                         query.serializeRow(this.manager);
                         if (index + 1 < queries.size()) {
                             executeQuery(index + 1);
                         }
-                        this.end(query.row_name);
+                        end(query.row_name);
                     }
                 } else {
                     query.serializeStoredProcedure(this.manager);
                 }
 
-                this.end(query.rowset_name);
+                end(query.rowset_name);
             }
 
         } catch (SQLException e) {
             getLogger().debug("SQLTransformer.executeQuery()", e);
             throw new SAXException(e);
         } finally {
-            try {
-                query.close();
-                if (index > 0) {
-                    // close the connection used by a sub query
+            query.close();
+            if (index > 0) {
+                try {
+                    // Close the connection used by a sub query
                     conn.close();
+                } catch (SQLException e) {
+                    getLogger().warn("Unable to close JDBC connection", e);
                 }
-            } catch (SQLException e) {
-                getLogger().warn("Unable to close JDBC connection", e);
             }
         }
 
@@ -1113,9 +1112,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 getTheLogger().error("Caught a SQLException", e);
                 throw e;
             } finally {
-                // Not closing the connection here fixes bug 12173!
-                // conn.close();
-                // conn = null;        // To make sure we don't use this connection again.
+                // Connection is not closed here, but later on. See bug #12173.
             }
         }
 
@@ -1188,7 +1185,6 @@ public class SQLTransformer extends AbstractSAXTransformer
 
             try {
                 if (rs == null || !rs.next()) {
-                    //close();
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -1199,31 +1195,44 @@ public class SQLTransformer extends AbstractSAXTransformer
             return true;
         }
 
-        protected void close() throws SQLException {
+        /**
+         * Closes all the resources, ignores (but logs) exceptions.
+         */
+        protected void close() {
             try {
                 if (rs != null) {
                     try {
                         rs.close();
-                        // This prevents us from using the resultset again.
-                        rs = null;
                     } catch (NullPointerException e) {
                         getTheLogger().debug("NullPointer while closing the resultset.", e);
+                    } catch (SQLException e) {
+                        getTheLogger().info("SQLException while closing the ResultSet.", e);
                     }
+                    // This prevents us from using the resultset again.
+                    rs = null;
                 }
 
                 if (pst != null && pst != cst) {
-                    pst.close();
+                    try {
+                        pst.close();
+                    } catch (SQLException e) {
+                        getTheLogger().info("SQLException while closing the Statement.", e);
+                    }
                 }
-
                 // Prevent using pst again.
                 pst = null;
 
                 if (cst != null) {
-                    cst.close();
+                    try {
+                        cst.close();
+                    } catch (SQLException e) {
+                        getTheLogger().info("SQLException while closing the Statement.", e);
+                    }
                 }
                 // Prevent using cst again.
                 cst = null;
             } finally {
+                // Prevent using conn again.
                 conn = null;
             }
         }
@@ -1344,7 +1353,9 @@ public class SQLTransformer extends AbstractSAXTransformer
                                     transformer.end(this.row_name);
                                 }
                             } finally {
-                                rs.close();
+                                try {
+                                    rs.close();
+                                } catch (SQLException ignored) { }
                                 rs = null;
                             }
                             transformer.end((String) outParametersNames.get(counter));
@@ -1355,7 +1366,6 @@ public class SQLTransformer extends AbstractSAXTransformer
                     }
                 }
             } finally {
-                //close();
             }
         }
 
