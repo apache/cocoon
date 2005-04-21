@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,16 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.10 2004/06/18 12:38:31 vgritsenko Exp $
+ * @version $Id$
  */
 public class XMLUtils {
 
-    public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
+    /**
+     * Empty attributes immutable object.
+     */
+    public static final Attributes EMPTY_ATTRIBUTES = new ImmutableAttributesImpl();
 
+    private static final SAXTransformerFactory FACTORY = (SAXTransformerFactory) TransformerFactory.newInstance();
     private static final Properties XML_FORMAT = createDefaultPropertiesForXML(false);
     private static final Properties XML_FORMAT_NODECL = createDefaultPropertiesForXML(true);
 
@@ -199,9 +203,10 @@ public class XMLUtils {
             if (node == null) {
                 return "";
             }
+
             StringWriter writer = new StringWriter();
             TransformerHandler transformerHandler;
-            transformerHandler = ((SAXTransformerFactory)TransformerFactory.newInstance()).newTransformerHandler();
+            transformerHandler = FACTORY.newTransformerHandler();
             transformerHandler.getTransformer().setOutputProperties(format);
             transformerHandler.setResult(new StreamResult(writer));
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
@@ -212,13 +217,44 @@ public class XMLUtils {
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.endDocument();
             }
+
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException("TransformerException: " + local,
-                                          local);
-        } catch (SAXException local) {
-            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + local,
-                                          local);
+        } catch (javax.xml.transform.TransformerException e) {
+            throw new ProcessingException("TransformerException: " + e, e);
+        } catch (SAXException e) {
+            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
+        }
+    }
+
+    /**
+     * Serialize a XMLizable into a string.
+     * If the object is null the empty string is returned.
+     *
+     * @param format The format of the output to be used by SAX transformer.
+     * @see OutputKeys
+     */
+    public static String serialize(org.apache.excalibur.xml.sax.XMLizable xml, Properties format)
+    throws ProcessingException {
+        
+        try {
+            if (xml == null) {
+                return "";
+            }
+
+            StringWriter writer = new StringWriter();
+            TransformerHandler transformerHandler;
+            transformerHandler = FACTORY.newTransformerHandler();
+            transformerHandler.getTransformer().setOutputProperties(format);
+            transformerHandler.setResult(new StreamResult(writer));
+            transformerHandler.startDocument();
+            xml.toSAX(new EmbeddedXMLPipe(transformerHandler));
+            transformerHandler.endDocument();
+
+            return writer.toString();
+        } catch (javax.xml.transform.TransformerException e) {
+            throw new ProcessingException("TransformerException: " + e, e);
+        } catch (SAXException e) {
+            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
         }
     }
 
