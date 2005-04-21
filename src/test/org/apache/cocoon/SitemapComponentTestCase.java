@@ -40,8 +40,6 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -108,7 +106,6 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
         context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
         context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
-        context.put(Core.CONTEXT_SETTINGS, new Settings());
     }
 
     /* (non-Javadoc)

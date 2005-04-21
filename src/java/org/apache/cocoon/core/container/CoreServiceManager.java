@@ -133,6 +133,13 @@ public class CoreServiceManager
         // Always create a role manager, it can be filled several times either through
         // the root "roles" attribute or through loading of includes
         this.roleManager = new RoleManager(parentRoleManager);
+        
+        // get settings
+        try {
+            this.settings = ((Core)parent.lookup(Core.ROLE)).getSettings();
+        } catch (ServiceException ignore) {
+            // this can never happen!
+        }
     }
 
     //=============================================================================================
@@ -152,7 +159,6 @@ public class CoreServiceManager
      */
     public void contextualize( final Context context ) {
         this.context = context;
-        this.settings = Core.getSettings(context);
     }
 
     /**
@@ -735,8 +741,7 @@ public class CoreServiceManager
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
-                    final Settings settings = Core.getSettings(context);
-                    ConfigurationBuilder builder = new ConfigurationBuilder(settings);
+                    ConfigurationBuilder builder = new ConfigurationBuilder(this.settings);
                     includeConfig = builder.build(src.getInputStream(), uri);
                 } catch (ConfigurationException ce) {
                     throw ce;
