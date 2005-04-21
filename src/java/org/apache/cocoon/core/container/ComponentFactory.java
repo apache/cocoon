@@ -23,7 +23,10 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 
 /**
  * Factory for Avalon based components.
@@ -50,6 +53,8 @@ public class ComponentFactory {
     protected final Method destroyMethod;
     protected final Method poolInMethod;
     protected final Method poolOutMethod;
+    protected Method configureSettingsMethod;
+    protected Core core;
 
     /**
      * Construct a new component factory for the specified component.
@@ -61,6 +66,11 @@ public class ComponentFactory {
     public ComponentFactory( final ComponentEnvironment environment,
                              final ComponentInfo info) 
     throws Exception {
+        try {
+            this.core = (Core)environment.serviceManager.lookup(Core.ROLE);
+        } catch (ServiceException ignore) {
+            // this can never happen
+        }
         this.environment = environment;
         this.serviceInfo = info;
         
@@ -108,6 +118,11 @@ public class ComponentFactory {
         } else {
             this.poolOutMethod = null;
         }
+        try {
+            this.configureSettingsMethod = this.serviceClass.getMethod("configure", new Class[] {Settings.class});
+        } catch (NoSuchMethodException ignore) {
+            this.configureSettingsMethod = null;
+        }
     }
     
     /**
@@ -135,6 +150,9 @@ public class ComponentFactory {
         ContainerUtil.enableLogging(component, this.componentLogger);
         ContainerUtil.contextualize( component, this.environment.context );
         ContainerUtil.service( component, this.environment.serviceManager );
+        if ( this.configureSettingsMethod != null ) {
+            this.configureSettingsMethod.invoke( component, new Object[] {this.core.getSettings()});
+        }
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 
         if( component instanceof Parameterizable ) {

@@ -36,6 +36,9 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.util.log.DeprecationLogger;
 
 /**
@@ -296,8 +299,12 @@ public class ContainerTestCase extends TestCase {
         roleManager.enableLogging( this.getLogger() );
         roleManager.configure( confRM );
 
+        // Set up root manager for Core
+        Core core = new Core(new Settings(), this.context);
+        CoreUtil.RootServiceManager rsm = new CoreUtil.RootServiceManager(null, core);
+ 
         // Set up the ComponentLocator
-        CoreServiceManager ecManager = new CoreServiceManager(null);
+        CoreServiceManager ecManager = new CoreServiceManager(rsm);
         ecManager.enableLogging( this.getLogger() );
         ecManager.contextualize( this.context );
         ecManager.setRoleManager( roleManager );

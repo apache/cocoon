@@ -107,7 +107,6 @@ public class CoreUtil {
 
         // create settings
         this.settings = this.createSettings();
-        this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
 
         if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly

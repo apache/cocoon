@@ -22,6 +22,7 @@ import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
@@ -42,7 +43,8 @@ public class ComponentEnvironment {
     public final RoleManager roleManager;
     public final LoggerManager loggerManager;
     private final ClassLoader classLoader;
-    
+    private Core core;
+
     public ComponentEnvironment(ClassLoader classLoader, Logger logger, RoleManager roleManager, LoggerManager loggerManager,
             Context context, ServiceManager serviceManager) {
 
@@ -60,6 +62,11 @@ public class ComponentEnvironment {
         this.loggerManager = loggerManager;
         this.context = context;
         this.serviceManager = serviceManager;
+        try {
+            this.core = (Core)this.serviceManager.lookup(Core.ROLE);
+        } catch (ServiceException ignore) {
+            // this can never happen
+        }
     }
 
     public Class loadClass(String name) throws ClassNotFoundException {
@@ -73,7 +80,7 @@ public class ComponentEnvironment {
         ComponentInfo ci = null;
         final InputStream is = this.classLoader.getResourceAsStream(bu.toString());
         if ( is != null ) {
-            final Settings settings = Core.getSettings(this.context);
+            final Settings settings = this.core.getSettings();
             final ConfigurationBuilder cb = new ConfigurationBuilder(settings);
             final Configuration conf = cb.build(is);
             ci = new ComponentInfo();

@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
@@ -40,16 +39,10 @@ import org.apache.cocoon.configuration.Settings;
  * @version SVN $Id$
  * @since 2.2
  */
-public class Core
-    implements Contextualizable {
+public class Core {
 
     /** The key to lookup the component. */
     public static String ROLE = Core.class.getName();
-
-    /** Application <code>Context</code> Key for the settings. Please don't
-     * use this constant to lookup the settings object. Lookup the core
-     * component and use {@link #getSettings()} instead. */
-    public static final String CONTEXT_SETTINGS = "settings";
 
     /**
      * The cleanup threads that are invoked after the processing of a
@@ -58,20 +51,13 @@ public class Core
     private static final ThreadLocal cleanup = new ThreadLocal();
 
     /** The component context. */
-    private Context context;
+    private final Context context;
 
     private final Settings settings;
     
     public Core(Settings s, Context c) {
         this.settings = s;
         this.context = c;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
     }
 
     public static void addCleanupTask(CleanupTask task) {
@@ -160,22 +146,4 @@ public class Core
             throw new CascadingRuntimeException("Unable to get the cache directory from the context.", ce);
         }        
     }
-
-    /**
-     * Return the current settings.
-     * Please don't use this method directly, look up the Core component
-     * and use {@link #getSettings()} instead.
-     * @param context The component context.
-     * @return The settings.
-     * FIXME - will be removed before the release
-     */
-    public static final Settings getSettings(Context context) {
-        // the settings object is always present
-        try {
-            return (Settings)context.get(CONTEXT_SETTINGS);
-        } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the settings object from the context.", ce);
-        }
-    }
-    
 }

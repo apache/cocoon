@@ -116,6 +116,9 @@ public class Cocoon
     /** An optional Avalon Component that is called before and after processing all requests. */
     protected RequestListener requestListener;
 
+    /** The Cocoon Core */
+    protected Core core;
+
     /**
      * Creates a new <code>Cocoon</code> instance.
      *
@@ -144,6 +147,7 @@ public class Cocoon
     public void service(ServiceManager manager)
     throws ServiceException {
         this.parentServiceManager = manager;
+        this.core = (Core)this.parentServiceManager.lookup(Core.ROLE);
     }
 
     /* (non-Javadoc)
@@ -152,17 +156,6 @@ public class Cocoon
     public void contextualize(Context context) throws ContextException {
         this.context = new ComponentContext(context);
         ((DefaultContext)this.context).makeReadOnly();
-
-        final Settings settings = Core.getSettings(this.context);
-        try {
-            URLSource urlSource = new URLSource();
-            urlSource.init(new URL(settings.getConfiguration()), null);
-            this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                                                                     settings.getConfigurationReloadDelay());
-
-        } catch (IOException e) {
-            throw new ContextException("Could not open configuration file: " + settings.getConfiguration(), e);
-        }
     }
 
     /**
@@ -180,15 +173,27 @@ public class Cocoon
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
+        getLogger().debug("Initializing new Cocoon object.");
+        final Settings settings = this.core.getSettings();
+        try {
+            URLSource urlSource = new URLSource();
+            urlSource.init(new URL(settings.getConfiguration()), null);
+            this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
+                                                                     settings.getConfigurationReloadDelay());
+
+        } catch (IOException e) {
+            throw new ConfigurationException(
+                    "Could not open configuration file: " + settings.getConfiguration(), e);
+        }
+
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
-        getLogger().debug("Initializing new Cocoon object.");
 
         // Log the System Properties.
         dumpSystemProperties();
 
-        configure();
+        this.configure();
 
         // add the logger manager to the component locator
 
@@ -236,7 +241,7 @@ public class Cocoon
     private void configure() throws Exception {
         InputSource is = SourceUtil.getInputSource(this.configurationFile);
 
-        final Settings settings = Core.getSettings(context);
+        final Settings settings = this.core.getSettings();
         ConfigurationBuilder builder = new ConfigurationBuilder(settings);
         Configuration conf = builder.build(is);
 

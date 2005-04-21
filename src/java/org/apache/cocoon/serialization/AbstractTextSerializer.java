@@ -18,13 +18,9 @@ package org.apache.cocoon.serialization;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
@@ -60,7 +56,7 @@ import java.util.Properties;
  * @version CVS $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
-        implements Configurable, CacheableProcessingComponent, Contextualizable {
+        implements Configurable, CacheableProcessingComponent {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
@@ -166,15 +162,11 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //  }
     }
 
-    /**
-     * Uses the context to retrieve a default encoding for the serializers.
-     */
-    public void contextualize(Context context) throws ContextException {
-        final Settings s = Core.getSettings(context);
-        String defaultEncoding  = s.getFormEncoding();
+    public void configure(Settings settings) {
+        String defaultEncoding  = settings.getFormEncoding();
         if (defaultEncoding != null) {
             this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);
-        }
+        }        
     }
 
     /**
