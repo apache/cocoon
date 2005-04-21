@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,23 +15,14 @@
  */
 package org.apache.cocoon.xml.dom;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXResult;
+import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.apache.cocoon.xml.EmbeddedXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Element;
@@ -44,6 +35,16 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The <code>DOMStreamer</code> is a utility class that will generate SAX
@@ -61,12 +62,15 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id$
+ * @version $Id$
  */
-public class DOMStreamer implements XMLProducer {
+public class DOMStreamer implements XMLProducer, Recyclable {
+
+    /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
+    private static final TransformerFactory FACTORY = TransformerFactory.newInstance();
 
     /** Default value for normalizeNamespaces. */
-    private final static boolean DEFAULT_NORMALIZE_NAMESPACES = true;
+    private static final boolean DEFAULT_NORMALIZE_NAMESPACES = true;
 
     /** Indicates whether namespace normalization should happen. */
     protected boolean normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
@@ -77,14 +81,20 @@ public class DOMStreamer implements XMLProducer {
     /** DOMStreamer used when namespace normalization should not explicitely happen. */
     protected DefaultDOMStreamer defaultDOMStreamer = new DefaultDOMStreamer();
 
-    /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
-    protected final static TransformerFactory factory = TransformerFactory.newInstance();
-
     /**
      * Create a new <code>DOMStreamer</code> instance.
      */
     public DOMStreamer() {
         super();
+    }
+
+    /**
+     * Create a new <code>DOMStreamer</code> instance.
+     */
+    public DOMStreamer(ContentHandler content, LexicalHandler lexical) {
+        this();
+        setContentHandler(content);
+        setLexicalHandler(lexical);
     }
 
     /**
@@ -98,32 +108,15 @@ public class DOMStreamer implements XMLProducer {
      * Create a new <code>DOMStreamer</code> instance.
      */
     public DOMStreamer(ContentHandler content) {
-        this(content, null);
-        if (content instanceof LexicalHandler) {
-            defaultDOMStreamer.setLexicalHandler((LexicalHandler) content);
-            namespaceNormalizingDOMStreamer.setLexicalHandler((LexicalHandler) content);
-        }
-    }
-
-    /**
-     * Create a new <code>DOMStreamer</code> instance.
-     */
-    public DOMStreamer(ContentHandler content, LexicalHandler lexical) {
-        this();
-        defaultDOMStreamer.setContentHandler(content);
-        defaultDOMStreamer.setLexicalHandler(lexical);
-        namespaceNormalizingDOMStreamer.setContentHandler(content);
-        namespaceNormalizingDOMStreamer.setLexicalHandler(lexical);
+        this(content, content instanceof LexicalHandler ? (LexicalHandler) content : null);
     }
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
      */
     public void setConsumer(XMLConsumer consumer) {
-        defaultDOMStreamer.setContentHandler(consumer);
-        defaultDOMStreamer.setLexicalHandler(consumer);
-        namespaceNormalizingDOMStreamer.setContentHandler(consumer);
-        namespaceNormalizingDOMStreamer.setLexicalHandler(consumer);
+        setContentHandler(consumer);
+        setLexicalHandler(consumer);
     }
 
     /**
@@ -192,10 +185,10 @@ public class DOMStreamer implements XMLProducer {
          * modify the DOM-tree itself. The currentElementInfo has a pointer to its parent
          * elementInfo.
          */
-        protected NamespaceNormalizingDOMStreamer.ElementInfo currentElementInfo = null;
+        protected NamespaceNormalizingDOMStreamer.ElementInfo currentElementInfo;
 
         /** Counter used when generating new namespace prefixes. */
-        protected int newPrefixCounter = 0;
+        protected int newPrefixCounter;
 
         public void recycle() {
             super.recycle();
@@ -214,7 +207,6 @@ public class DOMStreamer implements XMLProducer {
          * SAX listener.
          *
          * @param pos Node in the tree where to start traversal
-         *
          */
         protected void stream(Node pos) throws SAXException {
 
@@ -704,7 +696,7 @@ public class DOMStreamer implements XMLProducer {
         throws SAXException {
             if (this.transformer == null) {
                 try {
-                    this.transformer = factory.newTransformer();
+                    this.transformer = FACTORY.newTransformer();
                 } catch (TransformerConfigurationException e) {
                     throw new SAXException(e);
                 }
