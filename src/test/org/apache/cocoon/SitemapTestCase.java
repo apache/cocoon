@@ -29,7 +29,6 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
 
 public class SitemapTestCase extends SitemapComponentTestCase {
 
-    protected Processor processor;
     protected String classDir;
     protected URL classDirURL;
 
@@ -37,12 +36,6 @@ public class SitemapTestCase extends SitemapComponentTestCase {
         this.classDirURL = getClassDirURL();
         this.classDir = this.classDirURL.toExternalForm();
         super.setUp();
-        this.processor = (Processor)this.lookup(Processor.ROLE);
-    }
-
-    public void tearDown() throws Exception {
-        this.release(this.processor);
-        super.tearDown();
     }
 
     protected void prepare()
@@ -66,8 +59,9 @@ public class SitemapTestCase extends SitemapComponentTestCase {
         prepare(context, roles, components);
     }
 
-
-    // Hack to get the URL to the directory that this class is in
+    /**
+     * Utility method for geting the URL to the directory that this class is in
+     */
     protected URL getClassDirURL() throws RuntimeException {
         String className = getClass().getName().replace( '.', '/' ) + ".class";
         try {
@@ -92,19 +86,21 @@ public class SitemapTestCase extends SitemapComponentTestCase {
     }
 
     protected byte[] process(String uri) throws Exception {
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
         MockEnvironment env = new MockEnvironment();
         env.setURI("", uri);
         getRequest().setEnvironment(env);
         env.setObjectModel(getObjectModel());
 
-        EnvironmentHelper.enterProcessor(this.processor, this.getManager(), env);
+        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
         try {
-            this.processor.process(env);
+            processor.process(env);
             getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
 
             return env.getOutput();
         } finally {
             EnvironmentHelper.leaveProcessor();
+            this.release(processor);
         }
     }
 

@@ -106,6 +106,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
         context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
         context.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectmodel);
+        context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, getContext());
     }
 
     /* (non-Javadoc)
