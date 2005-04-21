@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,19 +44,23 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLUtils {
 
-    public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
+    /**
+     * Empty attributes immutable object.
+     */
+    public static final Attributes EMPTY_ATTRIBUTES = new ImmutableAttributesImpl();
 
+    private static final SAXTransformerFactory FACTORY = (SAXTransformerFactory) TransformerFactory.newInstance();
     private static final Properties XML_FORMAT = createDefaultPropertiesForXML(false);
     private static final Properties XML_FORMAT_NODECL = createDefaultPropertiesForXML(true);
 
 
     // FIXME: parent parameter not used anymore
     // Using parent because some dom implementations like jtidy are bugged,
-    //cannot get parent or delete child
+    // cannot get parent or delete child
     public static void stripDuplicateAttributes(Node node, Node parent) {
 
         // The output depends on the type of the node
@@ -212,7 +216,7 @@ public class XMLUtils {
     public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
         return new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
     }
-    
+
     /**
      * Serialize a DOM node into a string using format created by
      * <code>createPropertiesForXML(false)</code>.
@@ -239,27 +243,59 @@ public class XMLUtils {
             if (node == null) {
                 return "";
             }
+
             StringWriter writer = new StringWriter();
             TransformerHandler transformerHandler;
-            transformerHandler = ((SAXTransformerFactory)TransformerFactory.newInstance()).newTransformerHandler();
+            transformerHandler = FACTORY.newTransformerHandler();
             transformerHandler.getTransformer().setOutputProperties(format);
             transformerHandler.setResult(new StreamResult(writer));
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.startDocument();
-            } 
+            }
             DOMStreamer domStreamer = new DOMStreamer(transformerHandler, transformerHandler);
             domStreamer.stream(node);
             if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.endDocument();
-            } 
+            }
+
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException("TransformerException: " + local,
-                                          local);
-        } catch (SAXException local) {
-            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + local,
-                                          local);
-        }        
+        } catch (javax.xml.transform.TransformerException e) {
+            throw new ProcessingException("TransformerException: " + e, e);
+        } catch (SAXException e) {
+            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
+        }
+    }
+
+    /**
+     * Serialize a XMLizable into a string.
+     * If the object is null the empty string is returned.
+     *
+     * @param format The format of the output to be used by SAX transformer.
+     * @see OutputKeys
+     */
+    public static String serialize(org.apache.excalibur.xml.sax.XMLizable xml, Properties format)
+    throws ProcessingException {
+        
+        try {
+            if (xml == null) {
+                return "";
+            }
+
+            StringWriter writer = new StringWriter();
+            TransformerHandler transformerHandler;
+            transformerHandler = FACTORY.newTransformerHandler();
+            transformerHandler.getTransformer().setOutputProperties(format);
+            transformerHandler.setResult(new StreamResult(writer));
+            transformerHandler.startDocument();
+            xml.toSAX(new EmbeddedXMLPipe(transformerHandler));
+            transformerHandler.endDocument();
+
+            return writer.toString();
+        } catch (javax.xml.transform.TransformerException e) {
+            throw new ProcessingException("TransformerException: " + e, e);
+        } catch (SAXException e) {
+            throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
+        }
     }
 
     /**
@@ -516,7 +552,7 @@ public class XMLUtils {
         data(contentHandler, stringValue);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
+
     /**
      * Create a start and endElement
      *
@@ -538,7 +574,7 @@ public class XMLUtils {
         startElement(contentHandler, namespaceURI, localName, atts);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
+
     /**
      * Create a start and endElement with a empty Namespace
      * The content of the Element is set to the stringValue parameter
@@ -564,8 +600,8 @@ public class XMLUtils {
         data(contentHandler, stringValue);
         endElement(contentHandler, namespaceURI, localName);
     }
-    
-   
+
+
     /**
      * Create endElement with empty Namespace
      *
@@ -581,7 +617,7 @@ public class XMLUtils {
 
         contentHandler.endElement("", localName, localName);
     }
-    
+
     /**
      * Create endElement
      * Prefix must be mapped to empty String
@@ -599,7 +635,7 @@ public class XMLUtils {
 
         contentHandler.endElement(namespaceURI, localName, localName);
     }
-    
+
     /**
      * Create a startElement with a empty Namespace and without Attributes
      *
