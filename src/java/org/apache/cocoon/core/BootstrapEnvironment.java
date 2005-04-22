@@ -22,7 +22,6 @@ import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.log.LogTarget;
 
 /**
@@ -33,7 +32,7 @@ import org.apache.log.LogTarget;
 * A BootstrapEnvironment can be used to create a new Cocoon system using
 * the {@link CoreUtil}.
 *
-* @version SVN $Id:$
+* @version SVN $Id$
 * @since 2.2
 */
 public interface BootstrapEnvironment {

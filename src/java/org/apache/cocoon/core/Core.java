@@ -27,7 +27,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.configuration.Settings;
 
 /**
  * This is the core Cocoon component.

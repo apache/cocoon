@@ -48,7 +48,6 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
@@ -252,6 +251,9 @@ public class CoreUtil {
 
         // create parent service manager
         this.parentManager = this.getParentServiceManager(core);
+        
+        // settings can't be changed anymore
+        settings.makeReadOnly();
     }
 
     public Core getCore() {

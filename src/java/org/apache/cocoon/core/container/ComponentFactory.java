@@ -25,8 +25,8 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 
 /**
  * Factory for Avalon based components.
