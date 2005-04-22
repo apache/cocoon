@@ -24,7 +24,7 @@ import java.io.PushbackInputStream;
  *
  * A newline is espected after each boundary and is parsed away.
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: TokenStream.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 class TokenStream extends PushbackInputStream {
 
@@ -178,17 +178,17 @@ class TokenStream extends PushbackInputStream {
                     state = STATE_ENDOFSTREAM;
                 }
                 return written;
-            } else {                                   // did not match boundary
-                // bytes skipped, write first skipped byte, push back the rest
-                if (b != -1) {                         // b may be -1
-                    in.unread(b);                      // the non-matching byte
-                }
-                in.unread(boundary, 1,
-                        boundaryIndex - 1);          // unread skipped boundary data
-                out[written++] = boundary[0];
-                if (written == out.length) {
-                    return written;
-                }
+            }
+            // did not match boundary
+            // bytes skipped, write first skipped byte, push back the rest
+            if (b != -1) {                         // b may be -1
+                in.unread(b);                      // the non-matching byte
+            }
+            in.unread(boundary, 1,
+                    boundaryIndex - 1);          // unread skipped boundary data
+            out[written++] = boundary[0];
+            if (written == out.length) {
+                return written;
             }
             b = in.read();
         }
@@ -252,8 +252,7 @@ class TokenStream extends PushbackInputStream {
 
         if (read == 0) {
             return -1;
-        } else {
-            return buf[0];
         }
+        return buf[0];
     }
 }

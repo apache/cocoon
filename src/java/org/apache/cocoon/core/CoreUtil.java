@@ -96,6 +96,11 @@ public class CoreUtil {
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
+    /**
+     * Setup a new instance.
+     * @param environment The hook back to the environment.
+     * @throws Exception
+     */
     public CoreUtil(BootstrapEnvironment environment)
     throws Exception {
         this.env = environment;

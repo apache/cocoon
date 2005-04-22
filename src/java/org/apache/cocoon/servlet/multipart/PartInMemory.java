@@ -65,9 +65,8 @@ public class PartInMemory extends Part {
     public InputStream getInputStream() throws Exception {
         if (this.in != null) {
             return this.in;
-        } else {
-            throw new IllegalStateException("This part has already been disposed.");
         }
+        throw new IllegalStateException("This part has already been disposed.");
     }
     
     /**

@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.8 2004/03/11 18:21:48 joerg Exp $
+ * @version CVS $Id$
  */
 public class MultipartParser {
 
@@ -317,9 +317,8 @@ public class MultipartParser {
         int start = hdr.toLowerCase().indexOf("boundary=");
         if (start > -1) {
             return "--" + hdr.substring(start + 9);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
