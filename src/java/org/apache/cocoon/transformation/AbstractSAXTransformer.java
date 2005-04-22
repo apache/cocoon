@@ -32,6 +32,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -55,6 +57,9 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.TransformerFactory;
 
 /**
  * This class is the basis for all transformers. It provides various useful
@@ -101,6 +106,11 @@ import org.xml.sax.helpers.AttributesImpl;
 public abstract class AbstractSAXTransformer
         extends AbstractTransformer
         implements Serviceable, Configurable, Recyclable {
+
+    /**
+     * The trax <code>TransformerFactory</code> used by this transformer.
+     */
+    private SAXTransformerFactory tfactory;
 
     /**
      * Controlls SAX event handling.
@@ -150,31 +160,56 @@ public abstract class AbstractSAXTransformer
      * The stack is important for collection information especially when
      * the tags can be nested.
      */
-    protected Stack stack = new Stack();
+    protected final Stack stack = new Stack();
 
     /**
      * The stack of current used recorders
      */
-    protected Stack recorderStack = new Stack();
+    protected final Stack recorderStack = new Stack();
 
-    /** The current Request object */
-    protected Request            request;
-    /** The current Response object */
-    protected Response           response;
-    /** The current Context object */
-    protected Context            context;
-    /** The current objectModel of the environment */
-    protected Map                objectModel;
-    /** The parameters specified in the sitemap */
-    protected Parameters         parameters;
-    /** The source attribute specified in the sitemap */
-    protected String             source;
-    /** The Avalon ServiceManager for getting Components */
-    protected ServiceManager   manager;
-    /** The SourceResolver for this request */
-    protected SourceResolver     resolver;
+    /**
+     * The current Request object
+     */
+    protected Request request;
 
-    /** Are we already initialized for the current request? */
+    /**
+     * The current Response object
+     */
+    protected Response response;
+
+    /**
+     * The current Context object
+     */
+    protected Context context;
+
+    /**
+     * The current objectModel of the environment
+     */
+    protected Map objectModel;
+
+    /**
+     * The parameters specified in the sitemap
+     */
+    protected Parameters parameters;
+
+    /**
+     * The source attribute specified in the sitemap
+     */
+    protected String source;
+
+    /**
+     * The Avalon ServiceManager for getting Components
+     */
+    protected ServiceManager manager;
+
+    /**
+     * The SourceResolver for this request
+     */
+    protected SourceResolver resolver;
+
+    /**
+     * Are we already initialized for the current request?
+     */
     private boolean isInitialized;
 
     /**
@@ -184,10 +219,14 @@ public abstract class AbstractSAXTransformer
      */
     protected AttributesImpl emptyAttributes = new AttributesImpl();
 
-    /** The namespaces and their prefixes */
-    private List namespaces = new ArrayList(5);
+    /**
+     * The namespaces and their prefixes
+     */
+    private final List namespaces = new ArrayList(5);
 
-    /** The current prefix for our namespace */
+    /**
+     * The current prefix for our namespace
+     */
     private String ourPrefix;
 
 
@@ -195,6 +234,21 @@ public abstract class AbstractSAXTransformer
      * @see Configurable#configure(Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
+        String tFactoryClass = configuration.getChild("transformer-factory").getValue(null);
+        if (tFactoryClass != null) {
+            try {
+                this.tfactory = (SAXTransformerFactory) ClassUtils.newInstance(tFactoryClass);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using transformer factory " + tFactoryClass);
+                }
+            } catch (Exception e) {
+                throw new ConfigurationException("Cannot load transformer factory " + tFactoryClass, e);
+            }
+        } else {
+            // Standard TrAX behaviour
+            this.tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+        }
+        tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
     }
 
     /* (non-Javadoc)
@@ -242,6 +296,7 @@ public abstract class AbstractSAXTransformer
      */
     public void recycle() {
         super.recycle();
+
         this.namespaceURI = null;
         this.objectModel = null;
         this.request = null;
@@ -273,14 +328,15 @@ public abstract class AbstractSAXTransformer
     throws SAXException {
         if (!this.isInitialized) {
             try {
-                this.setupTransforming();
-            } catch (ProcessingException local) {
-                throw new SAXException("ProcessingException: " + local, local);
-            } catch (IOException ioe) {
-                throw new SAXException("IOException: " + ioe, ioe);
+                setupTransforming();
+            } catch (ProcessingException e) {
+                throw new SAXException("ProcessingException: " + e, e);
+            } catch (IOException e) {
+                throw new SAXException("IOException: " + e, e);
             }
             this.isInitialized = true;
         }
+
         if (this.ignoreEventsCount == 0) {
             super.startDocument();
         }
@@ -420,25 +476,26 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     * Start recording of SAX events
-     * All incomming events are recorded and not forwarded. The result
-     * can be obtained by the matching endSAXRecording() call.
+     * Start recording of SAX events.
+     * All incoming events are recorded and not forwarded. The resulting
+     * XMLizable can be obtained by the matching {@link #endSAXRecording} call.
      * @since 2.1.5
      */
     public void startSAXRecording()
     throws SAXException {
         addRecorder(new SaxBuffer());
+        sendStartPrefixMapping();
     }
 
     /**
-     * Stop DocumentFragment recording.
-     * All incomming events are recorded and not forwarded. This method returns
-     * the resulting DocumentFragment.
+     * Stop recording of SAX events.
+     * This method returns the resulting XMLizable.
      * @since 2.1.5
      */
     public XMLizable endSAXRecording()
     throws SAXException {
-        return (XMLizable) this.removeRecorder();
+        sendEndPrefixMapping();
+        return (XMLizable) removeRecorder();
     }
 
     /**
@@ -452,7 +509,6 @@ public abstract class AbstractSAXTransformer
             getLogger().debug("Start text recording");
         }
         addRecorder(new TextRecorder());
-
         sendStartPrefixMapping();
     }
 
@@ -485,7 +541,7 @@ public abstract class AbstractSAXTransformer
             getLogger().debug("Start serialized XML recording. Format=" + format);
         }
         this.stack.push(format == null? XMLUtils.createPropertiesForXML(false): format);
-        startRecording();
+        startSAXRecording();
     }
 
     /**
@@ -495,8 +551,8 @@ public abstract class AbstractSAXTransformer
      */
     public String endSerializedXMLRecording()
     throws SAXException, ProcessingException {
-        DocumentFragment fragment = endRecording();
-        String text = XMLUtils.serializeNode(fragment, (Properties) this.stack.pop());
+        XMLizable xml = endSAXRecording();
+        String text = XMLUtils.serialize(xml, (Properties) this.stack.pop());
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End serialized XML recording. XML=" + text);
         }
@@ -516,7 +572,6 @@ public abstract class AbstractSAXTransformer
             getLogger().debug("Start parameters recording");
         }
         addRecorder(new ParametersRecorder());
-
         sendStartPrefixMapping();
     }
 
@@ -559,65 +614,70 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     * Start DocumentFragment recording.
-     * All incomming events are recorded and not forwarded. The resulting
-     * DocumentFragment can be obtained by the matching endRecording() call.
+     * Start DOM DocumentFragment recording.
+     * All incoming events are recorded and not forwarded. The resulting
+     * DocumentFragment can be obtained by the matching {@link #endRecording} call.
      */
     public void startRecording()
     throws SAXException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start recording");
         }
-        DOMBuilder builder = new DOMBuilder();
+        DOMBuilder builder = new DOMBuilder(this.tfactory);
         addRecorder(builder);
         builder.startDocument();
         builder.startElement("", "cocoon", "cocoon", new AttributesImpl());
-
         sendStartPrefixMapping();
     }
 
     /**
-     * Stop DocumentFragment recording.
-     * All incomming events are recorded and not forwarded. This method returns
-     * the resulting DocumentFragment.
+     * Stop DOM DocumentFragment recording.
+     * This method returns the resulting DocumentFragment, normalized.
      */
     public DocumentFragment endRecording()
     throws SAXException {
         sendEndPrefixMapping();
 
-        DOMBuilder builder = (DOMBuilder)removeRecorder();
+        DOMBuilder builder = (DOMBuilder) removeRecorder();
         builder.endElement("", "cocoon", "cocoon");
         builder.endDocument();
 
         // Create Document Fragment
         final Document doc = builder.getDocument();
-        final DocumentFragment recordedDocFrag = doc.createDocumentFragment();
+        final DocumentFragment fragment = doc.createDocumentFragment();
         final Node root = doc.getDocumentElement();
+
+        // Remove empty text nodes and collapse neighbouring text nodes
         root.normalize();
 
-        boolean appendedNode = false;
-        while (root.hasChildNodes() == true) {
+        // Move all nodes into the fragment
+        boolean space = true;
+        while (root.hasChildNodes()) {
             Node child = root.getFirstChild();
             root.removeChild(child);
-            // Leave out empty text nodes before any other node
-            if (appendedNode == true
-                || child.getNodeType() != Node.TEXT_NODE
-                || child.getNodeValue().trim().length() > 0) {
-                recordedDocFrag.appendChild(child);
-                appendedNode = true;
+
+            // Leave out leading whitespace nodes
+            // FIXME: Why leading spaces are trimmed at all? Why not trailing spaces?
+            if (space && child.getNodeType() == Node.TEXT_NODE
+                    && child.getNodeValue().trim().length() == 0) {
+                continue;
             }
+            space = false;
+
+            fragment.appendChild(child);
         }
 
         if (getLogger().isDebugEnabled()) {
             Object serializedXML = null;
             try {
-                serializedXML = recordedDocFrag == null? "null": XMLUtils.serializeNode(recordedDocFrag);
+                serializedXML = fragment == null? "null": XMLUtils.serializeNode(fragment);
             } catch (ProcessingException ignore) {
-                serializedXML = recordedDocFrag;
+                serializedXML = fragment;
             }
             getLogger().debug("End recording. Fragment=" + serializedXML);
         }
-        return recordedDocFrag;
+
+        return fragment;
     }
 
     // ************
@@ -824,11 +884,10 @@ public abstract class AbstractSAXTransformer
      */
     protected void sendStartPrefixMapping()
     throws SAXException {
-
         final int l = this.namespaces.size();
-        for(int i = 0; i < l; i++) {
-           String[] prefixAndUri = (String[])this.namespaces.get(i);
-           super.contentHandler.startPrefixMapping(prefixAndUri[0], prefixAndUri[1]);
+        for (int i = 0; i < l; i++) {
+            String[] prefixAndUri = (String[]) this.namespaces.get(i);
+            super.contentHandler.startPrefixMapping(prefixAndUri[0], prefixAndUri[1]);
         }
     }
 
@@ -837,11 +896,10 @@ public abstract class AbstractSAXTransformer
      */
     protected void sendEndPrefixMapping()
     throws SAXException {
-
         final int l = this.namespaces.size();
-        for(int i=0; i<l; i++) {
-           String[] prefixAndUri = (String[])this.namespaces.get(i);
-           super.contentHandler.endPrefixMapping(prefixAndUri[0]);
+        for (int i = 0; i < l; i++) {
+            String[] prefixAndUri = (String[]) this.namespaces.get(i);
+            super.contentHandler.endPrefixMapping(prefixAndUri[0]);
         }
     }
 
