@@ -32,20 +32,12 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
-<<<<<<< .mine
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuationDataBean;
-import org.apache.cocoon.configuration.Settings;
-=======
->>>>>>> .r164238
 import org.apache.cocoon.core.Core;
-<<<<<<< .mine
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ServiceableGenerator;
-=======
 import org.apache.cocoon.core.Settings;
->>>>>>> .r164238
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
@@ -74,7 +66,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *     cocoon-version CDATA #IMPLIED
  * &gt;
  *
- * &lt;!ELEMENT group (group|value|cont)*&gt;
+ * &lt;!ELEMENT group (group|value)*&gt;
  * &lt;!ATTLIST group
  *     name CDATA #IMPLIED
  * &gt;
@@ -93,16 +85,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @version $Id$
  */
-public class StatusGenerator extends ServiceableGenerator {
+public class StatusGenerator 
+    extends ServiceableGenerator {
 
+    
     private static final String SHOW_CONTINUATIONS_INFO = "show-cont";    
     
-    /**
-     * The StoreJanitor used to get cache statistics
-     */
-    protected StoreJanitor storejanitor;
-    protected Store store_persistent;
-
     /**
      * The ContinuationManager
      */
@@ -114,20 +102,27 @@ public class StatusGenerator extends ServiceableGenerator {
     protected boolean showContinuationsInformation = false;
     
     /**
+     * The StoreJanitor used to get cache statistics
+     */
+    protected StoreJanitor storejanitor;
+    protected Store store_persistent;
+
+    /**
      * The XML namespace for the output document.
      */
-    protected static final String namespace =  "http://apache.org/cocoon/status/2.0";
+    protected static final String namespace =
+        "http://apache.org/cocoon/status/2.0";
 
     /**
      * The XML namespace for xlink
      */
-    protected static final String xlinkNamespace = "http://www.w3.org/1999/xlink";
+    protected static final String xlinkNamespace =
+        "http://www.w3.org/1999/xlink";
 
     /**
      * The namespace prefix for xlink namespace
      */
     protected static final String xlinkPrefix = "xlink";
-
 
     /**
      * Set the current <code>ServiceManager</code> instance used by this
@@ -150,9 +145,18 @@ public class StatusGenerator extends ServiceableGenerator {
             continuationsManager = (ContinuationsManager) this.manager.lookup(ContinuationsManager.ROLE);
         } else {
             getLogger().info("ContinuationsManager is not available. Sorry no overview of created continuations");
-        }
+        }        
     }
 
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
+        throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, parameters);
+        this.showContinuationsInformation = parameters.getParameterAsBoolean(SHOW_CONTINUATIONS_INFO, false);
+    }   
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.manager != null) {
             this.manager.release(this.store_persistent);
@@ -161,13 +165,6 @@ public class StatusGenerator extends ServiceableGenerator {
             this.storejanitor = null;
         }
         super.dispose();
-    }
-    
-    
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
-        throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, parameters);
-        this.showContinuationsInformation = parameters.getParameterAsBoolean(SHOW_CONTINUATIONS_INFO, false);
     }
 
     /** Generate the status information in XML format.
@@ -214,18 +211,18 @@ public class StatusGenerator extends ServiceableGenerator {
         atts.addAttribute(namespace, "host", "host", "CDATA", localHost);
         atts.addAttribute(namespace, "cocoon-version", "cocoon-version", "CDATA", Constants.VERSION);
         this.xmlConsumer.startElement(namespace, "statusinfo", "statusinfo", atts);
-        
+
         if(this.showContinuationsInformation) {
             genContinuationsTree();        
-        }  
+        }          
         genSettings();
         genVMStatus();
         genProperties();
-      
+
         // End root element.
         this.xmlConsumer.endElement(namespace, "statusinfo", "statusinfo");
     }
-
+    
     private void genContinuationsTree() throws SAXException {
         startGroup("Continuations");
         List continuationsAsDataBeansList = this.continuationsManager.getWebContinuationsDataBeanList();
@@ -251,7 +248,7 @@ public class StatusGenerator extends ServiceableGenerator {
         }        
         this.xmlConsumer.endElement(namespace, "cont", "cont");
     }       
-    
+
     private void genVMStatus() throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
@@ -417,9 +414,6 @@ public class StatusGenerator extends ServiceableGenerator {
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
         this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
-        
-        this.endGroup();
-        
     }
 
     private void genProperties() throws SAXException {
