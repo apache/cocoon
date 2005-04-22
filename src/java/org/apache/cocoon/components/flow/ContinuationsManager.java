@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.flow;
 
+import java.util.List;
+
 /**
  * The interface of the Continuations manager.
  *
@@ -89,4 +91,9 @@ public interface ContinuationsManager {
      * @see WebContinuation#display()
      */
     public void displayAllContinuations();
+    
+    /**
+     * Get a list of all continuations as <code>WebContinuationDataBean</code> objects. 
+     */
+    public List getWebContinuationsDataBeanList();    
 }
