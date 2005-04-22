@@ -38,6 +38,7 @@ import org.apache.excalibur.instrument.Instrumentable;
 import org.apache.excalibur.instrument.ValueInstrument;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -597,5 +598,16 @@ public class ContinuationsManagerImpl
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;        
+    }
+
+    /**
+     * Get a list of all web continuations (data only)
+     */
+    public List getWebContinuationsDataBeanList() {
+        List beanList = new ArrayList();
+        for(Iterator it = this.forest.iterator(); it.hasNext();) {
+            beanList.add(new WebContinuationDataBean((WebContinuation) it.next()));
+        }
+        return beanList;
     }
 }
