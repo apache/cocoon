@@ -113,6 +113,14 @@
       This page shows the current internal status of cocoon, along with
       information on the cache and the object stores.
     </sample>
+    <sample name="Status Page (with continuations)" href="status-with-continuations.html">
+      This page shows the current internal status of cocoon, along with
+      information on the cache and the object stores and the continuations.
+    </sample>    
+    <sample name="Status Page (with continuations - XML)" href="status-with-continuations.xml">
+      This page shows the current internal status of cocoon, along with
+      information on the cache and the object stores and the continuations.
+    </sample>        
     <sample name="Clear Cache" href="clearcache.html">
       Empties the Cocoon in-memory cache.
     </sample>

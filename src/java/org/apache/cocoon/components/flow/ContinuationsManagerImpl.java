@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.flow;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+
 
 /**
  * The default implementation of {@link ContinuationsManager}. <br/>There are
@@ -180,6 +182,17 @@ public class ContinuationsManagerImpl
         }
 
         return wk;
+    }
+    
+    /**
+     * Get a list of all web continuations (data only)
+     */
+    public List getWebContinuationsDataBeanList() {
+        List beanList = new ArrayList();
+        for(Iterator it = this.forest.iterator(); it.hasNext();) {
+            beanList.add(new WebContinuationDataBean((WebContinuation) it.next()));
+        }
+        return beanList;
     }
 
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
@@ -480,7 +493,7 @@ public class ContinuationsManagerImpl
      * A holder for WebContinuations. When bound to session notifies the
      * continuations manager of session invalidation.
      */
-    private class WebContinuationsHolder implements HttpSessionBindingListener {
+    public class WebContinuationsHolder implements HttpSessionBindingListener {
         private final static String CONTINUATIONS_HOLDER = 
                                        "o.a.c.c.f.SCMI.WebContinuationsHolder";
 
