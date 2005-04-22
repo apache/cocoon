@@ -26,8 +26,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 
 /**
  * The component enviromnent contains all objects necessary to create

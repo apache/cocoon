@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.configuration;
+package org.apache.cocoon.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +31,8 @@ import org.apache.commons.lang.math.NumberUtils;
  * @version SVN $Id$
  */
 public class Settings {
+
+    protected boolean readOnly = false;
 
     /** Prefix for properties */
     protected static final String KEYPREFIX = "org.apache.cocoon.";
@@ -291,6 +293,7 @@ public class Settings {
      * Fill from a properties object
      */
     public void fill(Properties props) {
+        this.checkWriteable();
         if ( props != null ) {
             final Iterator i = props.entrySet().iterator();
             while ( i.hasNext() ) {
@@ -365,8 +368,10 @@ public class Settings {
      * @param hideShowTime The hideShowTime to set.
      */
     public void setHideShowTime(boolean hideShowTime) {
+        this.checkWriteable();
         this.hideShowTime = hideShowTime;
     }
+
     /**
      * @return Returns the allowReload.
      */
@@ -377,78 +382,97 @@ public class Settings {
      * @param allowReload The allowReload to set.
      */
     public void setAllowReload(boolean allowReload) {
+        this.checkWriteable();
         this.allowReload = allowReload;
     }
+
     /**
      * @return Returns the autosaveUploads.
      */
     public boolean isAutosaveUploads() {
         return this.autosaveUploads;
     }
+
     /**
      * @param autosaveUploads The autosaveUploads to set.
      */
     public void setAutosaveUploads(boolean autosaveUploads) {
+        this.checkWriteable();
         this.autosaveUploads = autosaveUploads;
     }
+
     /**
      * @return Returns the cacheDirectory.
      */
     public String getCacheDirectory() {
         return this.cacheDirectory;
     }
+
     /**
      * @param cacheDirectory The cacheDirectory to set.
      */
     public void setCacheDirectory(String cacheDirectory) {
+        this.checkWriteable();
         this.cacheDirectory = cacheDirectory;
     }
+
     /**
      * @return Returns the cocoonLogger.
      */
     public String getCocoonLogger() {
         return this.cocoonLogger;
     }
+    
     /**
      * @param cocoonLogger The cocoonLogger to set.
      */
     public void setCocoonLogger(String cocoonLogger) {
+        this.checkWriteable();
         this.cocoonLogger = cocoonLogger;
     }
+
     /**
      * @return Returns the configuration.
      */
     public String getConfiguration() {
         return this.configuration;
     }
+    
     /**
      * @param configuration The configuration to set.
      */
     public void setConfiguration(String configuration) {
+        this.checkWriteable();
         this.configuration = configuration;
     }
+
     /**
      * @return Returns the enableUploads.
      */
     public boolean isEnableUploads() {
         return this.enableUploads;
     }
+    
     /**
      * @param enableUploads The enableUploads to set.
      */
     public void setEnableUploads(boolean enableUploads) {
+        this.checkWriteable();
         this.enableUploads = enableUploads;
     }
+
     /**
      * @return Returns the extraClasspaths.
      */
     public List getExtraClasspaths() {
         return this.extraClasspaths;
     }
+    
     /**
      * @param extraClasspath The extraClasspaths to set.
      */
     public void addToExtraClasspaths(String extraClasspath) {
+        this.checkWriteable();
         this.extraClasspaths.add(extraClasspath);
     }
 
@@ -464,6 +488,7 @@ public class Settings {
      * @param value The forceProperties value to set.
      */
     public void addToForceProperties(String key, String value) {
+        this.checkWriteable();
         this.forceProperties.put(key, value);
     }
 
@@ -473,22 +498,27 @@ public class Settings {
     public String getFormEncoding() {
         return this.formEncoding;
     }
+
     /**
      * @param formEncoding The formEncoding to set.
      */
     public void setFormEncoding(String formEncoding) {
+        this.checkWriteable();
         this.formEncoding = formEncoding;
     }
+
     /**
      * @return Returns the initClassloader.
      */
     public boolean isInitClassloader() {
         return this.initClassloader;
     }
+    
     /**
      * @param initClassloader The initClassloader to set.
      */
     public void setInitClassloader(boolean initClassloader) {
+        this.checkWriteable();
         this.initClassloader = initClassloader;
     }
 
@@ -503,6 +533,7 @@ public class Settings {
      * @param className The loadClasses to set.
      */
     public void addToLoadClasses(String className) {
+        this.checkWriteable();
         this.loadClasses.add(className);
     }
 
@@ -512,119 +543,148 @@ public class Settings {
     public String getLoggerClassName() {
         return this.loggerClassName;
     }
+
     /**
      * @param loggerClassName The loggerClassName to set.
      */
     public void setLoggerClassName(String loggerClassName) {
+        this.checkWriteable();
         this.loggerClassName = loggerClassName;
     }
+
     /**
      * @return Returns the loggingConfiguration.
      */
     public String getLoggingConfiguration() {
         return this.loggingConfiguration;
     }
+    
     /**
      * @param loggingConfiguration The loggingConfiguration to set.
      */
     public void setLoggingConfiguration(String loggingConfiguration) {
+        this.checkWriteable();
         this.loggingConfiguration = loggingConfiguration;
     }
+
     /**
      * @return Returns the logLevel.
      */
     public String getBootstrapLogLevel() {
         return this.bootstrapLogLevel;
     }
+    
     /**
      * @param logLevel The logLevel to set.
      */
     public void setBootstrapLogLevel(String logLevel) {
+        this.checkWriteable();
         this.bootstrapLogLevel = logLevel;
     }
+
     /**
      * @return Returns the manageExceptions.
      */
     public boolean isManageExceptions() {
         return this.manageExceptions;
     }
+    
     /**
      * @param manageExceptions The manageExceptions to set.
      */
     public void setManageExceptions(boolean manageExceptions) {
+        this.checkWriteable();
         this.manageExceptions = manageExceptions;
     }
+
     /**
      * @return Returns the maxUploadSize.
      */
     public int getMaxUploadSize() {
         return this.maxUploadSize;
     }
+    
     /**
      * @param maxUploadSize The maxUploadSize to set.
      */
     public void setMaxUploadSize(int maxUploadSize) {
+        this.checkWriteable();
         this.maxUploadSize = maxUploadSize;
     }
+
     /**
      * @return Returns the overwriteUploads.
      */
     public String getOverwriteUploads() {
         return this.overwriteUploads;
     }
+    
     /**
      * @param overwriteUploads The overwriteUploads to set.
      */
     public void setOverwriteUploads(String overwriteUploads) {
+        this.checkWriteable();
         this.overwriteUploads = overwriteUploads;
     }
+    
     /**
      * @return Returns the parentServiceManagerClassName.
      */
     public String getParentServiceManagerClassName() {
         return this.parentServiceManagerClassName;
     }
+
     /**
      * @param parentServiceManagerClassName The parentServiceManagerClassName to set.
      */
     public void setParentServiceManagerClassName(
             String parentServiceManagerClassName) {
+        this.checkWriteable();
         this.parentServiceManagerClassName = parentServiceManagerClassName;
     }
+
     /**
      * @return Returns the showTime.
      */
     public boolean isShowTime() {
         return this.showTime;
     }
+    
     /**
      * @param showTime The showTime to set.
      */
     public void setShowTime(boolean showTime) {
+        this.checkWriteable();
         this.showTime = showTime;
     }
+
     /**
      * @return Returns the uploadDirectory.
      */
     public String getUploadDirectory() {
         return this.uploadDirectory;
     }
+    
     /**
      * @param uploadDirectory The uploadDirectory to set.
      */
     public void setUploadDirectory(String uploadDirectory) {
+        this.checkWriteable();
         this.uploadDirectory = uploadDirectory;
     }
+
     /**
      * @return Returns the workDirectory.
      */
     public String getWorkDirectory() {
         return this.workDirectory;
     }
+    
     /**
      * @param workDirectory The workDirectory to set.
      */
     public void setWorkDirectory(String workDirectory) {
+        this.checkWriteable();
         this.workDirectory = workDirectory;
     }
 
@@ -634,10 +694,12 @@ public class Settings {
     public String getLog4jConfiguration() {
         return this.log4jConfiguration;
     }
+
     /**
      * @param log4jConfiguration The log4jConfiguration to set.
      */
     public void setLog4jConfiguration(String log4jConfiguration) {
+        this.checkWriteable();
         this.log4jConfiguration = log4jConfiguration;
     }
 
@@ -647,10 +709,12 @@ public class Settings {
     public String getAccessLogger() {
         return this.accessLogger;
     }
+
     /**
      * @param servletLogger The servletLogger to set.
      */
     public void setAccessLogger(String servletLogger) {
+        this.checkWriteable();
         this.accessLogger = servletLogger;
     }
 
@@ -665,6 +729,7 @@ public class Settings {
      * @param overrideLogLevel The overrideLogLevel to set.
      */
     public void setOverrideLogLevel(String overrideLogLevel) {
+        this.checkWriteable();
         this.overrideLogLevel = overrideLogLevel;
     }
 
@@ -701,6 +766,7 @@ public class Settings {
      * @param configurationReloadDelay The configurationReloadDelay to set.
      */
     public void setConfigurationReloadDelay(long configurationReloadDelay) {
+        this.checkWriteable();
         this.configurationReloadDelay = configurationReloadDelay;
     }
 
@@ -715,10 +781,11 @@ public class Settings {
      * @param lazyMode The lazyMode to set.
      */
     public void setLazyMode(boolean lazyMode) {
+        this.checkWriteable();
         this.lazyMode = lazyMode;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
@@ -812,7 +879,7 @@ public class Settings {
             } else if ( sKey.equals(KEY_LAZY_MODE) ) {
                 value = String.valueOf(this.lazyMode);
             }
-       }
+        }
 
         int i = 0;
         while ( i < this.properties.size() && value == null ) {
@@ -825,4 +892,25 @@ public class Settings {
         }
         return value;
     }
+
+    /**
+     * Mark this object as read-only.
+     */
+    public void makeReadOnly() {
+        this.readOnly = false;
+    }
+
+    /**
+     * check if this configuration is writeable.
+     *
+     * @throws IllegalStateException if this setting is read-only
+     */
+    protected final void checkWriteable()
+    throws IllegalStateException {
+        if( this.readOnly ) {
+            throw new IllegalStateException
+                ( "Settings is read only and can not be modified" );
+        }
+    }
+
 }

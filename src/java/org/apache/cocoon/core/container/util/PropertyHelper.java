@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.core.container.util;
 
-import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Settings;
 
 /**
  * Helper class for replacing property references with the value of the

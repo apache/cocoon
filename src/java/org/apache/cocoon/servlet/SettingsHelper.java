@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 
-import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
