@@ -72,14 +72,14 @@ public class CoreUtil {
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    /** The callback to the real environment */
+    /** The callback to the real environment. */
     protected final BootstrapEnvironment env;
 
-    /** "legacy" support: create an avalon context */
+    /** "legacy" support: create an avalon context. */
     protected final DefaultContext appContext = new DefaultContext();
-    
-    /** The settings */
-    protected final Settings settings;
+
+    /** The settings. */
+    protected Settings settings;
 
     /** The parent service manager. */
     protected ServiceManager parentManager;
@@ -92,16 +92,18 @@ public class CoreUtil {
 
     /** The Cocoon instance (the root processor). */
     protected Cocoon cocoon;
-    
-    /**
-     * The time the cocoon instance was created
-     */
+
+    /** The time the cocoon instance was created. */
     protected long creationTime;
 
-    public CoreUtil(BootstrapEnvironment environment) 
+    public CoreUtil(BootstrapEnvironment environment)
     throws Exception {
         this.env = environment;
+        this.init();
+    }
 
+    protected void init()
+    throws Exception {
         // create settings
         this.settings = this.createSettings();
 
@@ -117,14 +119,14 @@ public class CoreUtil {
 
         // add root url
         try {
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL, 
-                           new URL(this.env.getContextURL()));            
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL,
+                           new URL(this.env.getContextURL()));        
         } catch (MalformedURLException ignore) {
             // we simply ignore this
         }
 
         // add environment context
-        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, 
+        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT,
                             this.env.getEnvironmentContext());
 
         // now add environment specific information
@@ -249,11 +251,12 @@ public class CoreUtil {
 
         // create parent service manager
         this.parentManager = this.getParentServiceManager(core);
-        
+
         // settings can't be changed anymore
         settings.makeReadOnly();
-        
-        // put the core into the context
+
+        // put the core into the context - this is for internal use only
+        // The Cocoon container fetches the Core object using the context.
         this.appContext.put(Core.ROLE, core);
     }
 
@@ -266,6 +269,11 @@ public class CoreUtil {
         }
     }
 
+    /**
+     * Create a new core instance.
+     * This method can be overwritten in sub classes.
+     * @return A new core object.
+     */
     protected Core createCore() {
         final Core c = new Core(this.settings, this.appContext);
         return c;
@@ -310,15 +318,15 @@ public class CoreUtil {
     }
 
     /**
-     * Get the settings for Cocoon
-     * @param env This provides access to various parts of the used environment.
+     * Get the settings for Cocoon.
+     * @return A new Settings object
      */
     protected Settings createSettings() {
         // create an empty settings objects
         final Settings s = new Settings();
 
         String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
-        
+
         // read cocoon-settings.properties - if available
         InputStream propsIS = env.getInputStream("cocoon-settings.properties");
         if ( propsIS != null ) {
@@ -336,7 +344,7 @@ public class CoreUtil {
         }
         // fill from the environment configuration, like web.xml etc.
         env.configure(s);
-        
+
         // read additional properties file
         if ( additionalPropertyFile != null ) {
             env.log("Reading user settings from '" + additionalPropertyFile + "'");
@@ -559,7 +567,7 @@ public class CoreUtil {
 
     public static final class RootServiceManager 
     implements ServiceManager, Disposable {
-        
+
         protected final ServiceManager parent;
         protected final Core cocoon;
 
@@ -658,8 +666,8 @@ public class CoreUtil {
     }
 
     /**
-     * Gets the current cocoon object.  Reload cocoon if configuration
-     * changed or we are reloading.
+     * Gets the current cocoon object.  
+     * Reload cocoon if configuration changed or we are reloading.
      */
     public Cocoon getCocoon(final String pathInfo, final String reloadParam)
     throws Exception {
@@ -686,7 +694,7 @@ public class CoreUtil {
             }
 
             if (reload) {
-                this.initLogger();
+                this.init();
                 this.createCocoon();
             }
         }
@@ -696,7 +704,7 @@ public class CoreUtil {
     /**
      * Destroy Cocoon
      */
-    public final void disposeCocoon() {
+    protected final void disposeCocoon() {
         if (this.cocoon != null) {
             if (this.log.isDebugEnabled()) {
                 this.log.debug("Disposing Cocoon");
@@ -790,7 +798,7 @@ public class CoreUtil {
     }
 
     /**
-     * Dispose Cocoon when servlet is destroyed
+     * Dispose Cocoon when environment is destroyed
      */
     public void destroy() {
         if (this.settings.isInitClassloader()) {
@@ -852,6 +860,5 @@ public class CoreUtil {
         }
         return "";
     }
-
 
 }

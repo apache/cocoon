@@ -59,7 +59,7 @@ public class FileGeneratorFactory extends AbstractLogEnabled
                                   implements GeneratorFactory, Serviceable {
 
     /** The service manager */
-    private ServiceManager manager;
+    protected ServiceManager manager;
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;

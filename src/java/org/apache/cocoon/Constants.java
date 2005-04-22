@@ -117,9 +117,6 @@ public final class Constants {
      */
     public static final String LINK_VIEW = "links";
 
-    /** Don't know exactly what this is for (and it is not used in the code base) */
-    public static final String LINK_CRAWLING_ROLE = "static";
-
     /**
      * Key of the Map of index translation table.
      * <p>Presence of this Map in the ObjectModel indicates to the Sitemap that link
