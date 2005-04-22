@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,45 +56,37 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, CacheableProcessingComponent, Contextualizable {
 
     /**
+     * Cache for avoiding unnecessary checks of namespaces abilities.
+     * It associates a Boolean to the transformer class name.
+     */
+    private static final Map needsNamespaceCache = new HashMap();
+
+    /**
      * The trax <code>TransformerFactory</code> used by this serializer.
      */
-    private SAXTransformerFactory tfactory = null;
+    private SAXTransformerFactory tfactory;
 
     /**
      * The <code>Properties</code> used by this serializer.
      */
-    protected Properties format = new Properties();
-
-    /**
-     * The default output buffer size.
-     */
-    //private static final int DEFAULT_BUFFER_SIZE = 8192;
-
-    /**
-     * The output buffer size to use.
-     */
-    //private int outputBufferSize = DEFAULT_BUFFER_SIZE;
-
-    /**
-     * Cache for avoiding unnecessary checks of namespaces abilities.
-     * It associates a Boolean to the transformer class name.
-     */
-    private static Map needsNamespaceCache = new HashMap();
+    protected final Properties format = new Properties();
 
     /**
      * The pipe that adds namespaces as xmlns attributes.
      */
     private NamespaceAsAttributes namespacePipe;
 
-    /** The caching key */
+    /**
+     * The caching key
+     */
     private String cachingKey = "1";
-    
+
 
     /**
      * Interpose namespace pipe if needed.
@@ -197,7 +189,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         String version = conf.getChild("version").getValue(null);
 
         final StringBuffer buffer = new StringBuffer();
-        
+
         if (cdataSectionElements != null) {
             format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements);
             buffer.append(";cdata-section-elements=").append(cdataSectionElements);
@@ -238,14 +230,13 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             format.put(OutputKeys.VERSION, version);
             buffer.append(";version=").append(version);
         }
-        
+
         if ( buffer.length() > 0 ) {
             this.cachingKey = buffer.toString();
         }
 
-        Configuration tFactoryConf = conf.getChild("transformer-factory", false);
-        if (tFactoryConf != null) {
-            String tFactoryClass = tFactoryConf.getValue();
+        String tFactoryClass = conf.getChild("transformer-factory").getValue(null);
+        if (tFactoryClass != null) {
             try {
                 this.tfactory = (SAXTransformerFactory) ClassUtils.newInstance(tFactoryClass);
                 if (getLogger().isDebugEnabled()) {
@@ -258,7 +249,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             // Standard TrAX behaviour
             this.tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
         }
-
         tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
 
         // Check if we need namespace as attributes.
