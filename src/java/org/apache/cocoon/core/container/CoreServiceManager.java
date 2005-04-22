@@ -133,13 +133,6 @@ public class CoreServiceManager
         // Always create a role manager, it can be filled several times either through
         // the root "roles" attribute or through loading of includes
         this.roleManager = new RoleManager(parentRoleManager);
-        
-        // get settings
-        try {
-            this.settings = ((Core)parent.lookup(Core.ROLE)).getSettings();
-        } catch (ServiceException ignore) {
-            // this can never happen!
-        }
     }
 
     //=============================================================================================
@@ -157,8 +150,10 @@ public class CoreServiceManager
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize( final Context context ) {
+    public void contextualize( final Context context ) 
+    throws ContextException {
         this.context = context;
+        this.settings = ((Core)context.get(Core.ROLE)).getSettings();
     }
 
     /**

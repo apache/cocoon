@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
@@ -67,8 +67,8 @@ public class ComponentFactory {
                              final ComponentInfo info) 
     throws Exception {
         try {
-            this.core = (Core)environment.serviceManager.lookup(Core.ROLE);
-        } catch (ServiceException ignore) {
+            this.core = (Core)environment.context.get(Core.ROLE);
+        } catch (ContextException ignore) {
             // this can never happen
         }
         this.environment = environment;
@@ -120,7 +120,9 @@ public class ComponentFactory {
         }
         try {
             this.configureSettingsMethod = this.serviceClass.getMethod("configure", new Class[] {Settings.class});
-        } catch (NoSuchMethodException ignore) {
+        } catch (Throwable ignore) {
+            // we have to catch throwable here, as the above test can
+            // result in NoClassDefFound exceptions etc.
             this.configureSettingsMethod = null;
         }
     }

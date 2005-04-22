@@ -21,8 +21,8 @@ import java.io.InputStream;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
@@ -63,8 +63,8 @@ public class ComponentEnvironment {
         this.context = context;
         this.serviceManager = serviceManager;
         try {
-            this.core = (Core)this.serviceManager.lookup(Core.ROLE);
-        } catch (ServiceException ignore) {
+            this.core = (Core)this.context.get(Core.ROLE);
+        } catch (ContextException ignore) {
             // this can never happen
         }
     }
