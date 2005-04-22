@@ -24,7 +24,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartOnDisk.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PartOnDisk extends Part {
 
@@ -77,9 +77,8 @@ public class PartOnDisk extends Part {
     public InputStream getInputStream() throws Exception {
         if (this.file != null) {
             return new FileInputStream(file);
-        } else {
-            throw new IllegalStateException("This part has already been disposed.");
         }
+        throw new IllegalStateException("This part has already been disposed.");
     }
 
     /**
