@@ -104,11 +104,6 @@ public class CocoonServlet extends HttpServlet {
      */
     protected Exception exception;
 
-    /**
-     * Avalon application context
-     */
-    protected org.apache.avalon.framework.context.Context appContext;
-
     private String containerEncoding;
 
     protected ServletContext servletContext;
@@ -139,6 +134,8 @@ public class CocoonServlet extends HttpServlet {
 
     /** The logger */
     protected Logger log;
+
+    protected Context environmentContext;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -211,7 +208,7 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             this.coreUtil = new CoreUtil(env);
-            this.appContext = coreUtil.getCore().getContext();
+            this.environmentContext = env.getEnvironmentContext();
             this.log = env.logger;
         } catch (Exception e) {
             if ( e instanceof ServletException ) {
@@ -577,7 +574,7 @@ public class CocoonServlet extends HttpServlet {
                                   req,
                                   res,
                                   this.servletContext,
-                                  (HttpContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
+                                  this.environmentContext,
                                   this.containerEncoding,
                                   formEncoding);
         env.enableLogging(getLogger());
@@ -642,6 +639,7 @@ public class CocoonServlet extends HttpServlet {
         private final File          writeableContextPath;
         private final String        contextPath;
         public Logger logger;
+        private final HttpContext   environmentContext;
 
         public ServletBootstrapEnvironment(ServletConfig config, 
                                            ClassLoader   cl, 
@@ -655,6 +653,7 @@ public class CocoonServlet extends HttpServlet {
                 this.writeableContextPath = new File(writeablePath);
             }
             this.contextPath = path;
+            this.environmentContext = new HttpContext(this.config.getServletContext());
         }
 
         /**
@@ -708,7 +707,7 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getEnvironmentContext()
          */
         public Context getEnvironmentContext() {
-            return new HttpContext(this.config.getServletContext());
+            return this.environmentContext;
         }
 
         /**

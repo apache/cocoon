@@ -72,8 +72,6 @@ public class CoreUtil {
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    protected final static String CORE_KEY = Core.class.getName();
-
     /** The callback to the real environment */
     protected final BootstrapEnvironment env;
 
@@ -254,11 +252,14 @@ public class CoreUtil {
         
         // settings can't be changed anymore
         settings.makeReadOnly();
+        
+        // put the core into the context
+        this.appContext.put(Core.ROLE, core);
     }
 
     public Core getCore() {
         try {
-            return (Core)this.parentManager.lookup(CORE_KEY);
+            return (Core)this.parentManager.lookup(Core.ROLE);
         } catch (ServiceException ignore) {
             // this can never happen!
             throw new RuntimeException("Fatal error: no Cocoon core available.");
@@ -571,7 +572,7 @@ public class CoreUtil {
          * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
          */
         public boolean hasService(String key) {
-            if ( CORE_KEY.equals(key) ) {
+            if ( Core.ROLE.equals(key) ) {
                 return true;
             }
             if ( this.parent != null ) {
@@ -584,7 +585,7 @@ public class CoreUtil {
          * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
          */
         public Object lookup(String key) throws ServiceException {
-            if ( CORE_KEY.equals(key) ) {
+            if ( Core.ROLE.equals(key) ) {
                 return this.cocoon;
             }
             if ( this.parent != null ) {

@@ -93,16 +93,6 @@ public class Core {
     }
 
     /**
-     * Return the component context.
-     * This method allows access to the component context for other components
-     * that are not created by an Avalon based container.
-     * FIXME - will be removed before the release
-     */
-    public Context getContext() {
-        return this.context;
-    }
-
-    /**
      * Return the environment context object.
      * @return The environment context.
      */

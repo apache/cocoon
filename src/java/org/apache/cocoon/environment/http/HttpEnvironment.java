@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.NetUtils;
 
@@ -44,9 +45,6 @@ public class HttpEnvironment extends AbstractEnvironment {
     /** The HttpResponse */
     private HttpResponse response;
 
-    /** The HttpContext */
-    private HttpContext webcontext;
-
     /** Cache content type as there is no getContentType() in reponse object */
     private String contentType;
 
@@ -59,7 +57,7 @@ public class HttpEnvironment extends AbstractEnvironment {
                            HttpServletRequest req,
                            HttpServletResponse res,
                            ServletContext servletContext,
-                           HttpContext context,
+                           Context context,
                            String containerEncoding,
                            String defaultFormEncoding)
     throws IOException {
@@ -69,14 +67,13 @@ public class HttpEnvironment extends AbstractEnvironment {
         this.request.setCharacterEncoding(defaultFormEncoding);
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
-        this.webcontext = context;
 
         setView(extractView(this.request));
         setAction(extractAction(this.request));
 
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, this.webcontext);
+        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, context);
 
         // This is a kind of a hack for the components that need
         // the real servlet objects to pass them along to other
