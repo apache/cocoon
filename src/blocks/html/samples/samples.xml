@@ -29,4 +29,16 @@
       Shows how to get remote resource and convert it to valid XHTML using HTMLGenerator.
     </sample>
   </group>
+
+  <group name="HTMLTransformer">
+    <sample name="XML input" href="HTMLTransformer/input.xml">
+      XML document containing escaped HTML, blocks of HTML code written
+      as strings inside elements (as often found in RSS feeds)
+    </sample>
+    <sample name="Parsed output" href="HTMLTransformer/parsed.xml">
+      HTMLTransformer applied to input.xml: escaped
+      HTML markup is converted to XHTML
+    </sample>
+  </group>
+
 </samples>
