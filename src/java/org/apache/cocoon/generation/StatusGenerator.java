@@ -295,7 +295,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
         // BEGIN Cache
         if (this.storejanitor != null) {
-            startGroup("Store-Janitorrrr");
+            startGroup("Store-Janitor");
 
             // For each element in StoreJanitor
             Iterator i = this.storejanitor.iterator();
