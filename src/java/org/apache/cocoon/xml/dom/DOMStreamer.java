@@ -67,7 +67,7 @@ import java.util.Map;
 public class DOMStreamer implements XMLProducer, Recyclable {
 
     /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
-    private static final TransformerFactory FACTORY = TransformerFactory.newInstance();
+    protected static final TransformerFactory FACTORY = TransformerFactory.newInstance();
 
     /** Default value for normalizeNamespaces. */
     private static final boolean DEFAULT_NORMALIZE_NAMESPACES = true;

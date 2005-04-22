@@ -112,6 +112,9 @@ public class Core {
         return ContextHelper.getObjectModel(this.context);
     }
 
+    /**
+     * Return the work directory.
+     */
     public File getWorkDirectory() {
         try {
             return (File)this.context.get(Constants.CONTEXT_WORK_DIR);
@@ -120,6 +123,9 @@ public class Core {
         }        
     }
 
+    /**
+     * Return the upload directory.
+     */
     public File getUploadDirectory() {
         try {
             return (File)this.context.get(Constants.CONTEXT_UPLOAD_DIR);
@@ -128,6 +134,9 @@ public class Core {
         }        
     }
 
+    /**
+     * Return the cache directory.
+     */
     public File getCacheDirectory() {
         try {
             return (File)this.context.get(Constants.CONTEXT_CACHE_DIR);
