@@ -72,7 +72,6 @@
     <map:generator label="content" logger="sitemap.generator.request" name="request" pool-max="16" src="org.apache.cocoon.generation.RequestGenerator"/>
     <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-max="16" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="content" logger="sitemap.generator.status" name="status" pool-max="16" src="org.apache.cocoon.generation.StatusGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-max="16" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
     <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
          representation of the exception that caused the error handler to be executed -->
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
@@ -133,7 +132,6 @@
     <map:transformer logger="sitemap.transformer.writeDOMsession" name="writeDOMsession" src="org.apache.cocoon.transformation.WriteDOMSessionTransformer"/>
     <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
     <map:transformer logger="sitemap.transformer.log" name="log" pool-max="16" src="org.apache.cocoon.transformation.LogTransformer"/>
-    <map:transformer logger="sitemap.transformer.jx" name="jx" pool-max="16" src="org.apache.cocoon.transformation.JXTemplateTransformer"/>
     <map:transformer logger="sitemap.transformer.paginate" name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
   </map:transformers>
 

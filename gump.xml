@@ -165,6 +165,7 @@
     <depend project="cocoon-block-repository"/>
     <depend project="cocoon-block-faces" type="samples"/>
     <depend project="cocoon-block-axis" type="samples"/>
+    <depend project="cocoon-block-template" type="samples"/>
     
     <library name="velocity"/>
     <library name="castor"/>
@@ -215,6 +216,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon"/>
     <depend project="castor"/>
+    <depend project="cocoon-block-template" type="samples"/>
 
     <library name="chaperon"/>
     <library name="castor"/>
@@ -444,6 +446,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jakarta-lucene"/>
+    <depend project="cocoon-block-template" type="samples"/>
 
     <library name="lucene"/>
 
@@ -592,6 +595,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
     <depend project="cocoon-block-jms"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="jta"/>
     <depend project="jakarta-slide"/>
     <depend project="jdom"/>
@@ -791,6 +795,7 @@
     <depend project="daisy-util"/>
     <depend project="daisy-htmlcleaner"/>
     <depend project="icu4j"/>
+    <depend project="cocoon-block-template"/>
 
     <library name="xreporter-expression"/>
     <library name="jakarta-oro"/>
@@ -844,6 +849,7 @@
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
@@ -876,6 +882,7 @@
     <depend project="cocoon-block-hsqldb"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-forms"/>
+    <depend project="cocoon-block-template"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -918,6 +925,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="jakarta-slide"/>
 
     <library name="commons-httpclient"/>
@@ -944,7 +952,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-jms"/>
     <depend project="jms"/>
-    <depend project="jms"/>
+    <depend project="cocoon-block-template" type="samples"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
@@ -985,6 +993,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="cocoon-block-lucene"/>
     <depend project="cocoon-block-ojb"/>
     <depend project="jakarta-lucene"/>
@@ -1044,6 +1053,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="quartz"/>
     <depend project="excalibur-datasource"/>
+    <depend project="cocoon-block-template" type="samples"/>
 
     <library name="quartz"/>
     <library name="excalibur-datasource"/>
@@ -1195,6 +1205,7 @@
     <depend project="commons-jci"/>
     <depend project="commons-io"/>
     <depend project="jdtcore"/>
+    <depend project="cocoon-block-template" type="samples"/>
 
     <library name="commons-javaflow"/>
     <library name="commons-jci"/>
@@ -1242,6 +1253,7 @@
     <depend project="cocoon-block-fop"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-slop"/>
+    <depend project="cocoon-block-template"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
