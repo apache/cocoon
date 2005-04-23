@@ -42,7 +42,6 @@ import org.mozilla.javascript.ScriptableObject;
  * @version CVS $Id$
  */
 public class TemplateObjectModelHelper {
-
     /** Avoid instantiation */
     private TemplateObjectModelHelper() {}
 
