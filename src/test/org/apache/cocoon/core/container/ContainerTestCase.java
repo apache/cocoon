@@ -301,6 +301,7 @@ public class ContainerTestCase extends TestCase {
 
         // Set up root manager for Core
         Core core = new Core(new Settings(), this.context);
+        ((DefaultContext)this.context).put(Core.ROLE, core);
         CoreUtil.RootServiceManager rsm = new CoreUtil.RootServiceManager(null, core);
  
         // Set up the ComponentLocator
