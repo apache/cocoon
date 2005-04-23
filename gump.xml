@@ -1523,6 +1523,29 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-jcr" status="unstable" dir="src/blocks/jcr">
+    <package>org.apache.cocoon</package>
+
+    <description>A "jcr:" protocol for Cocoon</description>
+
+    <ant target="jcr-block">
+      <property name="block-name" value="jcr"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <library name="jcr"/>
+    <library name="jackrabbit"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/jcr-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -1667,5 +1690,16 @@
     <package>org.outerj.daisy.xmlutil</package>
     <jar name="lib/optional/daisy-util-1.1.jar"/>
   </project>     
+
+  <project name="jcr">
+    <package>javax.jcr</package>
+    <jar name="lib/optional/jcr-0.16.4.jar"/>
+  </project>
+
+  <project name="jackrabbit">
+    <url href="http://incubator.apache.org/jackrabbit"/>
+    <package>org.apache.jackrabbit</package>
+    <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
+  </project>
 
 </module>
