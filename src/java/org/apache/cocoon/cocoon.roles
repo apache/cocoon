@@ -16,6 +16,7 @@
 -->
 <!DOCTYPE role-list [
 <!ELEMENT role-list (role+)>
+<!ATTLIST role-list cocoon-version CDATA #REQUIRED>
 <!ELEMENT role (hint*)>
 <!ELEMENT hint EMPTY>
 <!ATTLIST role name CDATA #REQUIRED
@@ -27,7 +28,9 @@
 >
 ]>
 
-<role-list>
+<!-- Defininition of component roles. The "cocoon-version" attribute is used by some xroles patch
+     files that depend on the actual Cocoon version -->
+<role-list cocoon-version="2.1">
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"

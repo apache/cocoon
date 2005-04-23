@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+     <action dev="SW" type="add">
+       New JCR block that adds a "jcr:" protocol to access and modify repository contents.
+     </action>
     <action dev="BD" type="add">
       New HTMLTransformer sample in html block
     </action>
