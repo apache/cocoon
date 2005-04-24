@@ -62,10 +62,13 @@ public class ComponentEnvironment {
         this.loggerManager = loggerManager;
         this.context = context;
         this.serviceManager = serviceManager;
-        try {
-            this.core = (Core)this.context.get(Core.ROLE);
-        } catch (ContextException ignore) {
-            // this can never happen
+        // FIXME - we should ensure that the context is never null!
+        if ( this.context != null ) {
+            try {
+                this.core = (Core)this.context.get(Core.ROLE);
+            } catch (ContextException ignore) {
+                // this can never happen
+            }
         }
     }
 
@@ -80,7 +83,7 @@ public class ComponentEnvironment {
         ComponentInfo ci = null;
         final InputStream is = this.classLoader.getResourceAsStream(bu.toString());
         if ( is != null ) {
-            final Settings settings = this.core.getSettings();
+            final Settings settings = (this.core == null ? null : this.core.getSettings());
             final ConfigurationBuilder cb = new ConfigurationBuilder(settings);
             final Configuration conf = cb.build(is);
             ci = new ComponentInfo();

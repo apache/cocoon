@@ -66,10 +66,13 @@ public class ComponentFactory {
     public ComponentFactory( final ComponentEnvironment environment,
                              final ComponentInfo info) 
     throws Exception {
-        try {
-            this.core = (Core)environment.context.get(Core.ROLE);
-        } catch (ContextException ignore) {
-            // this can never happen
+        // FIXME - we should ensure that the context is never null!
+        if ( environment.context != null ) {
+            try {
+                this.core = (Core)environment.context.get(Core.ROLE);
+            } catch (ContextException ignore) {
+                // this can never happen
+            }
         }
         this.environment = environment;
         this.serviceInfo = info;
@@ -152,7 +155,7 @@ public class ComponentFactory {
         ContainerUtil.enableLogging(component, this.componentLogger);
         ContainerUtil.contextualize( component, this.environment.context );
         ContainerUtil.service( component, this.environment.serviceManager );
-        if ( this.configureSettingsMethod != null ) {
+        if ( this.configureSettingsMethod != null && this.core != null) {
             this.configureSettingsMethod.invoke( component, new Object[] {this.core.getSettings()});
         }
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
