@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * ContextRealPathModule provides a real filesystem path for a virtual
+ * ContextPathModule provides a real filesystem path for a virtual
  * context-relative path.  If this mapping cannot be performed (e.g. Cocoon is
  * running in a .war file), <code>null</code> will be returned. Compared to
  * the {@link RealPathModule} this module is able to provide the "real" absolute 
@@ -45,9 +45,9 @@ import java.util.Vector;
  * keep our images:
  * </p>
  * <p>
- * A absolute path argument like {contextrealpath:/resources} will be resolved 
+ * A absolute path argument like {contextpath:/resources} will be resolved  
  * from the root context path (ie. COCOON_HOME/build/webapp) whereas a relative
- * path attribute like {contextrealpath:./resources} will be resolved from the
+ * path attribute like {contextpath:./resources} will be resolved from the
  * location of the sitemap that uses it. If that sitemap is mounted outside the
  * usual COCOON_HOME/build/webapp the path resolved with this modules points to
  * the correct location.
@@ -55,7 +55,7 @@ import java.util.Vector;
  * <p>
  * <pre>
  * <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl">
- *    <map:parameter name="basedir" value="{contextrealpath:resources}/"/>
+ *    <map:parameter name="basedir" value="{contextpath:resources}/"/>
  * </map:transform>
  *
  * And then prepend this to all image paths:
