@@ -130,19 +130,19 @@ public class MockEnvironment implements Environment {
     }
 
     public boolean tryResetResponse() throws IOException {
-        throw new AssertionFailedError("Not implemented");
+        return false;
     }
 
     public void commitResponse() throws IOException {
-        throw new AssertionFailedError("Not implemented");
+        // do nothing
     }
     
     public void startingProcessing() {
-        throw new AssertionFailedError("Not implemented");
+        // do nothing
     }
     
     public void finishingProcessing() {
-        throw new AssertionFailedError("Not implemented");
+        // do nothing
     }
 
     /**

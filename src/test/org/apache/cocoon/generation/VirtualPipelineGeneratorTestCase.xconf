@@ -15,7 +15,10 @@
   limitations under the License.
 -->
 
-<components>
+<cocoon version="2.2">
+
+  <include src="resource://org/apache/cocoon/cocoon.roles"/>
+
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
     <parameter name="validate" value="false"/>
     <parameter name="namespace-prefixes" value="false"/>
@@ -43,4 +46,4 @@
        give exceptions during decommissioning -->
   <sitemap file="resource://org/apache/cocoon/generation/vpc-sitemap.xmap"/>
 
-</components>
+</cocoon>
