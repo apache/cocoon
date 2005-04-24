@@ -285,8 +285,7 @@ public class SourceWritingTransformer
     protected XPathProcessor xpathProcessor;
 
     /**
-     * Constructor.
-     * Sets the namespace.
+     * Constructor. Set the namespace.
      */
     public SourceWritingTransformer() {
         this.defaultNamespaceURI = SWT_URI;
@@ -298,7 +297,7 @@ public class SourceWritingTransformer
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
-        super.configure( configuration );
+        super.configure(configuration);
         this.configuredSerializerName = configuration.getChild(SERIALIZER_ATTRIBUTE).getValue(DEFAULT_SERIALIZER);
     }
 
@@ -578,12 +577,12 @@ public class SourceWritingTransformer
         // no sync req
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Insert fragment. systemID=" + systemID +
-                              ", path="+path+
-                              ", replace="+replacePath+
-                              ", create="+create+
-                              ", overwrite="+overwrite+
-                              ", reinsert="+reinsertPath+
-                              ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
+                              ", path=" + path +
+                              ", replace=" + replacePath +
+                              ", create=" + create +
+                              ", overwrite=" + overwrite +
+                              ", reinsert=" + reinsertPath +
+                              ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment)));
         }
 
         // test parameter
@@ -813,7 +812,7 @@ public class SourceWritingTransformer
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             this.manager.release(this.xpathProcessor);
             this.xpathProcessor = null;
         }
