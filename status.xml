@@ -426,8 +426,11 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="34591" due-to="Jorg Heymans" due-to-email="jh@domek.be">
+      Fix ContextPathModule name in javadocs.
+    </action>
     <action dev="BD" type="add">
-      New HTMLTransformer sample in html block
+      New HTMLTransformer sample in html block.
     </action>
     <action dev="VG" type="fix" fixes-bug="34400" due-to="Markus Bussemer" due-to-email="markus.bussemer@voeb-zvd.de">
       Faces Block: ValidateLongRangeTag, ValidateDoubleRangeTag should use long
