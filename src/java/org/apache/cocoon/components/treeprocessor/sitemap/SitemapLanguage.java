@@ -133,7 +133,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
                 final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
                 // Go through the component lifecycle
-                LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, config);
+                LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, appContainer);
 
                 this.applicationContainer = cl;
 
