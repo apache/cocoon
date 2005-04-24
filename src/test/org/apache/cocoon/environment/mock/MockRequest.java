@@ -49,7 +49,7 @@ public class MockRequest implements Request {
     private String queryString;
     private String method = "GET";
     private String contentType;
-    private Locale locale;
+    private Locale locale = Locale.US;
     private Principal principal;
     private String remoteAddr;
     private String remoteHost;
@@ -339,7 +339,7 @@ public class MockRequest implements Request {
         queryString = null;
         method = "GET";
         contentType = null;
-        locale = null;
+        locale = Locale.US;
         principal = null;
         remoteAddr = null;
         remoteHost = null;
