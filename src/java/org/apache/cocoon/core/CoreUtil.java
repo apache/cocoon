@@ -47,6 +47,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
@@ -76,7 +77,7 @@ public class CoreUtil {
     protected final BootstrapEnvironment env;
 
     /** "legacy" support: create an avalon context. */
-    protected final DefaultContext appContext = new DefaultContext();
+    protected final DefaultContext appContext = new ComponentContext();
 
     /** The settings. */
     protected Settings settings;
