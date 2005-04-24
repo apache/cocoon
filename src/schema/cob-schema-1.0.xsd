@@ -53,7 +53,7 @@
   
   <xs:simpleType name="community">
 	  <xs:restriction base="xs:string">
-	  	<xs:pattern value="committed|supported|deprecated"/>
+	  	<xs:pattern value="committed|supported|deprecated|core"/>
 	  </xs:restriction>  	
   </xs:simpleType>
 
