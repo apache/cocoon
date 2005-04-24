@@ -582,7 +582,7 @@ public class SourceWritingTransformer
                               ", create=" + create +
                               ", overwrite=" + overwrite +
                               ", reinsert=" + reinsertPath +
-                              ", fragment=" + (fragment == null? "null": XMLUtils.serializeNode(fragment)));
+                              ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment)));
         }
 
         // test parameter
