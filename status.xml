@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="fix" fixes-bug="33100" due-to="Juan Jose Pablos" due-to-email="cheche@apache.org">
+      form(NOT_FOUND is not a function) error caused by wrong documentation.
+    </action>
     <action dev="AG" type="fix" fixes-bug="34591" due-to="Jorg Heymans" due-to-email="jh@domek.be">
       Fix ContextPathModule name in javadocs.
     </action>
