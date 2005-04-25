@@ -43,7 +43,7 @@
       <p>Simply remove the FormsTemplateTransformer from your publishing pipeline,
       and instead include the following jx statement into your template file:</p>
 
-      <source xml:space="preserve"><![CDATA[<jx:import uri="resource://org/apache/cocoon/forms/generation/template.jx"/>]]></source>
+      <source xml:space="preserve"><![CDATA[<jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>]]></source>
 
       <p>Note that these macros only work when calling the pipeline from flowscript.</p>
     </s1>
