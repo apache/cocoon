@@ -67,15 +67,16 @@
           | Note that newlines are *not* automatic: you have to specify the
           | newline as '\n' or everything will appear on a single line!
           |
-          | The first format below is less verbose because it won't print out
-          | the error stacktrace (which tend to be very verbose and for little value).
-          | If you need the stacktraces, uncomment the second format below.
+          | The first format below is verbose: it includes error stacktraces.
+          | If you want something even more verbose use %{throwable} which will
+          | show a full chain of exceptions. Using the second format won't
+          | output stacktraces at all.
           |
           | Please mind that the default format logs request uri along with
           | query string. This may log confidential data (passwords etc.).
           +-->
-      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{throwable}</format>
-      <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{rootThrowable}</format>
+      <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%</format-->
 
       <!--+
           | <append> if set to 'true' will make cocoon append the events
