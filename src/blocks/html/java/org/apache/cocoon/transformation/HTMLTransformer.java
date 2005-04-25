@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * Converts (escaped) HTML snippets into JTidied HTML. 
+ * Converts (escaped) HTML snippets into JTidied HTML.
  * This transformer expects a list of elements, passed as comma separated
  * values of the "tags" parameter. It records the text enclosed in such
  * elements and pass it thru JTidy to obtain valid XHTML.
@@ -61,7 +61,7 @@ public class HTMLTransformer
      * Properties for Tidy format
      */
     private Properties properties;
-    
+
     /**
      * Tags that must be normalized
      */
@@ -109,6 +109,8 @@ public class HTMLTransformer
      * a jtidy configuration file location.
      */
     public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+
         String configUrl = config.getChild("jtidy-config").getValue(null);
         if (configUrl != null) {
             org.apache.excalibur.source.SourceResolver resolver = null;
@@ -200,10 +202,10 @@ public class HTMLTransformer
         Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        String tagsParam = par.getParameter("tags", "");        
+        String tagsParam = par.getParameter("tags", "");
         if (getLogger().isDebugEnabled()) {
         	getLogger().debug("tags: " + tagsParam);
-        }        
+        }
         this.tags = new HashMap();
         StringTokenizer tokenizer = new StringTokenizer(tagsParam, ",");
         while (tokenizer.hasMoreElements()) {
