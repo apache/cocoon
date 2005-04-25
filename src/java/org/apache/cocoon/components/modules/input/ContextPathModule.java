@@ -71,7 +71,7 @@ import java.util.Vector;
  *  </p>
  *
  * @author <a href="mailto:giacomo at apache dor org">Giacomo Pati</a>
- * @version CVS $Id: RealPathModule.java 30932 2004-07-29 17:35:38Z vgritsenko $
+ * @version $Id$
  */
 public class ContextPathModule extends AbstractInputModule implements Serviceable, ThreadSafe {
 
