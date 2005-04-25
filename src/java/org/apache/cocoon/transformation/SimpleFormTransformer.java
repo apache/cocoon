@@ -350,6 +350,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * Avalon Configurable Interface
      */
     public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+
         this.defaultInputConf = config.getChild("input-module");
         this.defaultInput = this.defaultInputConf.getAttribute("name", this.defaultInput);
         this.separator = config.getChild("separator").getValue(this.separator);
