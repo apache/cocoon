@@ -74,7 +74,7 @@
           | Please mind that the default format logs request uri along with
           | query string. This may log confidential data (passwords etc.).
           +-->
-      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n</format>
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{throwable}</format>
       <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}%{query}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
 
       <!--+
