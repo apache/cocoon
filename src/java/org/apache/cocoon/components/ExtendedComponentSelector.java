@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,10 +30,8 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-
-public class ExtendedComponentSelector 
-    extends ExcaliburComponentSelector 
-    implements ParentAware {
+public class ExtendedComponentSelector extends ExcaliburComponentSelector
+                                       implements ParentAware {
 
     /** The role manager */
     protected RoleManager roles;
@@ -56,17 +54,18 @@ public class ExtendedComponentSelector
     /** This selector's location (used for debugging purposes) */
     private String location;
 
+
+    /** Create the ComponentSelector with the Thread context ClassLoader */
     public ExtendedComponentSelector() {
         this.classLoader = Thread.currentThread().getContextClassLoader();
     }
 
-    /** Create the ComponentSelector with a Classloader */
+    /** Create the ComponentSelector with a ClassLoader */
     public ExtendedComponentSelector(ClassLoader loader) {
         super(loader);
 
         if (loader == null) {
             this.classLoader = Thread.currentThread().getContextClassLoader();
-
         } else {
             this.classLoader = loader;
         }
@@ -132,6 +131,7 @@ public class ExtendedComponentSelector
         this.parentComponents = new HashSet();
     }
 */
+
     /**
      * Get the role name for this selector. This is called by <code>configure()</code>
      * to set the value of <code>this.roleName</code>.
@@ -191,7 +191,6 @@ public class ExtendedComponentSelector
         Configuration[] instances = config.getChildren();
 
         for (int i = 0; i < instances.length; i++) {
-
             Configuration instance = instances[i];
 
             Object hint = instance.getAttribute("name").trim();
@@ -228,10 +227,9 @@ public class ExtendedComponentSelector
                 Class clazz = this.classLoader.loadClass(className);
                 addComponent(hint, clazz, instance);
 
-            } catch(Exception e) {
-
+            } catch (Exception e) {
                 String message = "Could not load class " + className + " for component named '" +
-                    hint + "' at " + instance.getLocation();
+                                 hint + "' at " + instance.getLocation();
 
                 getLogger().error(message, e);
                 throw new ConfigurationException(message, e);
@@ -250,25 +248,36 @@ public class ExtendedComponentSelector
      * @see org.apache.avalon.framework.component.ComponentSelector#select(java.lang.Object)
      */
     public Component select(Object hint) throws ComponentException {
-
         if (hint == null) {
             hint = this.defaultHint;
         }
 
         if (parentSelector == null) {
-            // No parent : default behaviour
+            // No parent: default behaviour
             return super.select(hint);
+        }
 
-        } else {
+        try {
+            // Try in this selector first
+            final Component component = super.select(hint);
+            return component;
 
-            // Try here first
+        } catch (ComponentException original) {
             try {
-                return super.select(hint);
-
-            } catch(ComponentException ce) {
-                // Doesn't exist here : try in parent selector
+                // Doesn't exist here: try in parent selector
                 final Component component = this.parentSelector.select(hint);
                 return component;
+
+            } catch (ComponentException nested) {
+                // Doesn't exist in parent too: throw exception.
+
+                if (nested.getCause() != null) {
+                    // Nested exception has a cause; let's throw it instead of original.
+                    throw nested;
+                }
+
+                // Throw original exception
+                throw original;
             }
         }
     }
@@ -278,11 +287,11 @@ public class ExtendedComponentSelector
      */
     public void release(Component component) {
         // Was it selected on the parent ?
-        if ( this.parentSelector != null &&
-             this.parentSelector.canRelease(component) ) {
+        if (this.parentSelector != null && this.parentSelector.canRelease(component)) {
+            // Yes
             this.parentSelector.release(component);
-
         } else {
+            // No
             super.release(component);
         }
     }
@@ -291,17 +300,17 @@ public class ExtendedComponentSelector
      * Does this selector or its parent have the given hint ?
      */
     public boolean hasComponent(Object hint) {
-        boolean exists = super.hasComponent( hint );
-        if ( !exists && this.parentSelector != null ) {
-            exists = this.parentSelector.hasComponent( hint );
+        boolean exists = super.hasComponent(hint);
+        if (!exists && this.parentSelector != null) {
+            exists = this.parentSelector.hasComponent(hint);
         }
         return exists;
     }
-    
+
     /**
      * Does this selector declare a given hint? Check is performed on the components declared for this
      * selector only, and <strong>not</strong> those potentially inherited from the parent selector.
-     * 
+     *
      * @param hint the hint to check for
      * @return <code>true</code> if this selector has the specified hint
      */
@@ -326,8 +335,8 @@ public class ExtendedComponentSelector
      */
     public void dispose() {
         super.dispose();
-        if ( this.parentLocator != null ) {
-            this.parentLocator.release( this.parentSelector );
+        if (this.parentLocator != null) {
+            this.parentLocator.release(this.parentSelector);
             this.parentLocator = null;
             this.parentSelector = null;
         }
@@ -337,11 +346,10 @@ public class ExtendedComponentSelector
      * @see org.apache.avalon.excalibur.component.ExcaliburComponentSelector#canRelease(org.apache.avalon.framework.component.Component)
      */
     protected boolean canRelease(Component component) {
-        if ( this.parentSelector != null &&
-             this.parentSelector.canRelease(component) ) {
+        if (this.parentSelector != null && this.parentSelector.canRelease(component)) {
             return true;
         }
+
         return super.canRelease(component);
     }
-
 }
