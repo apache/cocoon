@@ -426,6 +426,13 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      AbstractSAXTransformer gets <code>transformer-factory</code> configuration
+      parameter.
+    </action>
+    <action dev="VG" type="update">
+      XMLFileModule gets <code>cache-expressions</code> configuration parameter.
+    </action>
     <action dev="AG" type="fix" fixes-bug="34591" due-to="Jorg Heymans" due-to-email="jh@domek.be">
       Fix ContextPathModule name in javadocs.
     </action>
