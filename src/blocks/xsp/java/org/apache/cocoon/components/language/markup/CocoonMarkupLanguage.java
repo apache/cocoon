@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,13 +19,14 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.xml.XMLUtils;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -47,7 +48,7 @@ import java.util.Set;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonMarkupLanguage.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
 {
@@ -432,7 +433,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
                         Iterator iter = CocoonMarkupLanguage.this.dependencies.iterator();
                         while(iter.hasNext()) {
                             super.startElement(
-                                (String)rootElement[0], "dependency", localPrefix + ":dependency", new AttributesImpl()
+                                (String) rootElement[0], "dependency", localPrefix + ":dependency", XMLUtils.EMPTY_ATTRIBUTES
                             );
                             locationChars = ((String) iter.next()).toCharArray();
                             super.characters(locationChars, 0 , locationChars.length);

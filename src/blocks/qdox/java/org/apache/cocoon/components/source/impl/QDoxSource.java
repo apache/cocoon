@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,6 +42,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.serialization.XMLSerializer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -51,7 +53,6 @@ import org.apache.excalibur.source.impl.AbstractSource;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -60,11 +61,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Id$ $Date: 2004/04/30 22:50:39 $
+ * @version $Id$ $Date: 2004/04/30 22:50:39 $
  */
-public final class QDoxSource
-    extends AbstractSource
-    implements XMLizable, Recyclable {
+public final class QDoxSource extends AbstractSource
+                              implements XMLizable, Recyclable {
 
     protected final static String ROOT_CLASSNAME = "java.lang.Object";
 
@@ -72,7 +72,6 @@ public final class QDoxSource
     protected final static String NS_URI = "http://apache.org/cocoon/javadoc/1.0";
     protected final static String NS_PREFIX = "jd";
     protected final static String ATTR_TYPE = "NMTOKEN";
-    protected final static Attributes EMPTY_ATTRS = new AttributesImpl();
 
     protected final static String CLASS_ELEMENT = "class";
     protected final static String CLASSNAME_ATTRIBUTE = "name";
@@ -1168,7 +1167,7 @@ public final class QDoxSource
      * @param localName
      */
     private void saxStartElement(ContentHandler handler, String localName) throws SAXException {
-        handler.startElement(NS_URI, localName, NS_PREFIX + ':' + localName, EMPTY_ATTRS);
+        handler.startElement(NS_URI, localName, NS_PREFIX + ':' + localName, XMLUtils.EMPTY_ATTRIBUTES);
     }
 
     /**

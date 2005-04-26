@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,11 +123,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class CIncludeTransformer
-extends AbstractSAXTransformer
-implements Disposable, CacheableProcessingComponent {
+public class CIncludeTransformer extends AbstractSAXTransformer
+                                 implements Disposable, CacheableProcessingComponent {
 
     public static final String CINCLUDE_NAMESPACE_URI = "http://apache.org/cocoon/include/1.0";
     public static final String CINCLUDE_INCLUDE_ELEMENT = "include";
@@ -506,14 +505,13 @@ implements Disposable, CacheableProcessingComponent {
 
         // usual no caching stuff
         if (!"".equals(element)) {
-            AttributesImpl attrs = new AttributesImpl();
             if (!ns.equals("")) {
                 super.startPrefixMapping(prefix, ns);
             }
             super.startElement(ns,
                                element,
                                (!ns.equals("") && !prefix.equals("") ? prefix+":"+element : element),
-                               attrs);
+                               XMLUtils.EMPTY_ATTRIBUTES);
         }
 
         Source source = null;

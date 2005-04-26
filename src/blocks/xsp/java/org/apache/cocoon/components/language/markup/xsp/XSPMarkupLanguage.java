@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,10 @@ package org.apache.cocoon.components.language.markup.xsp;
 import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.XMLUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.Stack;
 
@@ -32,7 +32,7 @@ import java.util.Stack;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSPMarkupLanguage.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version $Id$
  */
 public class XSPMarkupLanguage extends CocoonMarkupLanguage {
 
@@ -117,7 +117,7 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
                 String value = String.valueOf(ch, start, length);
                 // Create a new element <xsp:text> that wrap the quoted PCDATA
                 super.startElement(XSPMarkupLanguage.this.getURI(), "text",
-                        localPrefix + ":text", new AttributesImpl());
+                        localPrefix + ":text", XMLUtils.EMPTY_ATTRIBUTES);
                 super.characters(value.toCharArray(), 0, value.length());
                 super.endElement(XSPMarkupLanguage.this.getURI(), "text",
                         localPrefix + ":text");

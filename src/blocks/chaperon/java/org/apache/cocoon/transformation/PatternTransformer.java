@@ -1,19 +1,18 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.transformation;
 
 import net.sourceforge.chaperon.build.LexicalAutomatonBuilder;
@@ -35,6 +34,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
@@ -57,7 +57,7 @@ import java.util.Map;
 
 /**
  * This transfomer transforms text pattern of a XML file into lexemes by using a lexicon file.
- * 
+ *
  * <p>
  * Input:
  * </p>
@@ -66,7 +66,7 @@ import java.util.Map;
  *  Text 123 bla
  * &lt;/section&gt;
  * </pre>
- * 
+ *
  * <p>
  * can be transformed into the following output:
  * </p>
@@ -79,13 +79,12 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class PatternTransformer extends AbstractTransformer implements LogEnabled, Serviceable,
-                                                                       Recyclable, Disposable,
-                                                                       Parameterizable,
-                                                                       CacheableProcessingComponent
-{
+public class PatternTransformer extends AbstractTransformer
+                                implements LogEnabled, Serviceable, Recyclable,
+                                           Disposable, Parameterizable, CacheableProcessingComponent {
+
   /** Namespace for the SAX events. */
   public static final String NS = "http://chaperon.sourceforge.net/schema/lexemes/2.0";
   private String lexicon = null;
@@ -425,15 +424,13 @@ public class PatternTransformer extends AbstractTransformer implements LogEnable
           atts.addAttribute("", "text", "text", "CDATA", lexemetext);
           contentHandler.startElement(NS, "lexeme", "lexeme", atts);
 
-          if (this.groups)
-          {
-            for (int group = 0; group<groups.length; group++)
-            {
-              contentHandler.startElement(NS, "group", "group", new AttributesImpl());
-              contentHandler.characters(groups[group].toCharArray(), 0, groups[group].length());
-              contentHandler.endElement(NS, "group", "group");
+            if (this.groups) {
+                for (int group = 0; group<groups.length; group++) {
+                    contentHandler.startElement(NS, "group", "group", XMLUtils.EMPTY_ATTRIBUTES);
+                    contentHandler.characters(groups[group].toCharArray(), 0, groups[group].length());
+                    contentHandler.endElement(NS, "group", "group");
+                }
             }
-          }
 
           contentHandler.endElement(NS, "lexeme", "lexeme");
           contentHandler.endPrefixMapping("");

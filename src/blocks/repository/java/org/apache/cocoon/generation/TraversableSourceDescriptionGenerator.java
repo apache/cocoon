@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.LockableSource;
 import org.apache.cocoon.components.source.RestrictableSource;
@@ -36,7 +37,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * 
  * This Generator augments the output of the TraversableGenerator.
  * <p>
  * It adds:
@@ -50,27 +50,28 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *  Sitemap parameters that can be specified to control processing are:
  *  <ul>
- *   <li><code>version</code> (<code>true</code>) 
+ *   <li><code>version</code> (<code>true</code>)
  *       whether to generate versioning information.</li>
- *   <li><code>locking</code> (<code>true</code>) 
+ *   <li><code>locking</code> (<code>true</code>)
  *       whether to generate locking information.</li>
- *   <li><code>permission</code> (<code>true</code>) 
+ *   <li><code>permission</code> (<code>true</code>)
  *       whether to generate permission information.</li>
- *   <li><code>properties</code> (<code>true</code>) 
+ *   <li><code>properties</code> (<code>true</code>)
  *       whether to generate source property information.</li>
  *  </ul>
  * </p>
- * 
+ *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
+ * @version $Id$
  */
 public class TraversableSourceDescriptionGenerator extends TraversableGenerator {
-    
+
     protected static final String MIME_TYPE_ATTR_NAME = "mimeType";
-    
+
     private static final String REVISION_ATTR_NAME = "revision";
     private static final String REVISIONBRANCH_ATTR_NAME = "branch";
-    
+
     private static final String PROPERTIES_NODE_NAME = "properties";
     private static final String PROPERTIES_NODE_QNAME = PREFIX + ":" + PROPERTIES_NODE_NAME;
 
@@ -83,7 +84,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
     private static final String LOCKS_NODE_QNAME = PREFIX + ":" + LOCKS_NODE_NAME;
     private static final String LOCK_NODE_NAME = "lock";
     private static final String LOCK_NODE_QNAME = PREFIX + ":" + LOCK_NODE_NAME;
-    
+
     private static final String PRINCIPAL_ATTR_NAME = "principal";
     private static final String GROUP_ATTR_NAME = "group";
     private static final String PRIVILEGE_ATTR_NAME = "privilege";
@@ -93,8 +94,8 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
     private static final String TYPE_ATTR_NAME = "type";
     private static final String EXPIRATION_ATTR_NAME = "expiration";
     private static final String EXCLUSIVE_ATTR_NAME = "exclusive";
-    
-    
+
+
     /** Include properties into the description */
     private boolean properties = true;
 
@@ -106,8 +107,8 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
 
     /** Include version into the description */
     private boolean version = true;
-    
-    
+
+
     /**
      * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
@@ -119,23 +120,23 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
      */
     public void setup(SourceResolver resolver, Map objectModel,
                       String location,
-                      Parameters parameters) 
+                      Parameters parameters)
         throws ProcessingException, SAXException, IOException {
-        
+
         super.setup(resolver, objectModel, location, parameters);
 
         this.properties = parameters.getParameterAsBoolean("properties", true);
         super.cacheKeyParList.add(String.valueOf(this.permissions));
-        
+
         this.permissions = parameters.getParameterAsBoolean("permissions", true);
         super.cacheKeyParList.add(String.valueOf(this.permissions));
 
         this.locks = parameters.getParameterAsBoolean("locks", true);
         super.cacheKeyParList.add(String.valueOf(this.locks));
-        
+
         this.version = parameters.getParameterAsBoolean("version", true);
         super.cacheKeyParList.add(String.valueOf(this.version));
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("properties: " + this.properties);
             getLogger().debug("permissions: " + this.permissions);
@@ -143,15 +144,15 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
             getLogger().debug("version: " + this.version);
         }
     }
-    
+
     /**
      * Augments source nodes with additional information.
-     * 
+     *
      * @param source  the Source to describe.
      */
     protected final void addContent(TraversableSource source)
         throws SAXException, ProcessingException {
-        
+
         super.addContent(source);
         try {
             if (this.properties && (source instanceof InspectableSource)) {
@@ -168,14 +169,14 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
         }
 
     }
-    
+
     /**
      * Augments source node elements with additional attributes describing the Source.
-     * The additional attributes are a <code>mimeType</code> attribute, 
-     * and iff the Source is an instance of VersionableSource and the generator 
-     * is configured to output versioning information two attributes: 
+     * The additional attributes are a <code>mimeType</code> attribute,
+     * and iff the Source is an instance of VersionableSource and the generator
+     * is configured to output versioning information two attributes:
      * <code>revision</code> and <code>branch</code>.
-     * 
+     *
      * @param source  the Source to describe.
      */
     protected void setNodeAttributes(TraversableSource source) throws SAXException, ProcessingException {
@@ -198,7 +199,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
                                                 REVISION_ATTR_NAME, "CDATA",
                                                 versionablesource.getSourceRevision());
                     }
-                
+
                     if ((versionablesource.getSourceRevisionBranch()!=null) &&
                         (versionablesource.getSourceRevisionBranch().length()>
                          0)) {
@@ -214,7 +215,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
             }
         }
     }
-    
+
     /**
      * Push a XML description about all properties, which
      * the source owns.
@@ -222,16 +223,14 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
      * @param source  the Source to describe.
      */
     private void pushSourceProperties(InspectableSource source)
-        throws SAXException, SourceException {
-        
+    throws SAXException, SourceException {
+
         SourceProperty[] properties = source.getSourceProperties();
         if (properties != null && properties.length > 0) {
-            SourceProperty property;
-            AttributesImpl attributes = new AttributesImpl();
             this.contentHandler.startElement(URI, PROPERTIES_NODE_NAME,
-                                             PROPERTIES_NODE_QNAME, attributes);
+                                             PROPERTIES_NODE_QNAME, XMLUtils.EMPTY_ATTRIBUTES);
             for (int i = 0; i < properties.length; i++) {
-                property = properties[i];
+                SourceProperty property = properties[i];
                 property.toSAX(this.contentHandler);
             }
             this.contentHandler.endElement(URI, PROPERTIES_NODE_NAME,
@@ -253,7 +252,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
             this.contentHandler.startElement(URI,
                                              PERMISSIONS_NODE_NAME,
                                              PERMISSIONS_NODE_QNAME,
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
 
             for (int i = 0; i < permissions.length; i++) {
                 AttributesImpl attributes = new AttributesImpl();
@@ -304,14 +303,12 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
         if (locks != null && locks.length > 0) {
             this.contentHandler.startElement(URI, LOCKS_NODE_NAME,
                                              LOCKS_NODE_QNAME,
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
 
             for (int i = 0; locks.length > 0; i++) {
                 SourceLock lock = locks[i];
 
                 AttributesImpl attributes = new AttributesImpl();
-
-                attributes = new AttributesImpl();
                 attributes.addAttribute("", PRINCIPAL_ATTR_NAME,
                                         PRINCIPAL_ATTR_NAME, "CDATA",
                                         lock.getSubject());
@@ -331,12 +328,11 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
                                                  LOCK_NODE_QNAME, attributes);
                 this.contentHandler.endElement(URI, LOCK_NODE_NAME,
                                                LOCK_NODE_QNAME);
-
             }
 
             this.contentHandler.endElement(URI, LOCKS_NODE_NAME,
                                            LOCKS_NODE_QNAME);
         }
     }
-    
+
 }

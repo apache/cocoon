@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.components.source.helpers;
 
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,18 +33,18 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.3 2004/03/27 21:49:09 unico Exp $
+ * @version $Id$
  */
 public class SourceProperty implements XMLizable {
 
     private static final String URI = "http://www.w3.org/2000/xmlns/";
     private static final String NS_PREFIX = "property";
     private static final String D_PREFIX = NS_PREFIX+":";
-    
+
     private String namespace;
     private String name;
     private Element value;
-    
+
     /**
      * Creates a new property for a source
      *
@@ -166,9 +168,9 @@ public class SourceProperty implements XMLizable {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i<nodeslist.getLength(); i++) {
             if ((nodeslist.item(i).getNodeType()==Node.TEXT_NODE) ||
-                (nodeslist.item(i).getNodeType()==Node.CDATA_SECTION_NODE)) 
+                (nodeslist.item(i).getNodeType()==Node.CDATA_SECTION_NODE))
             {
-                
+
                 buffer.append(nodeslist.item(i).getNodeValue());
             }
         }
@@ -185,7 +187,7 @@ public class SourceProperty implements XMLizable {
         try {
             DOMBuilder builder = new DOMBuilder();
             builder.startDocument();
-            builder.startElement(namespace, name, name, new AttributesImpl());
+            builder.startElement(namespace, name, name, XMLUtils.EMPTY_ATTRIBUTES);
             DOMStreamer stream = new DOMStreamer(builder);
             for (int i = 0; i<values.getLength(); i++) {
                 stream.stream(values.item(i));

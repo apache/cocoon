@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,16 +15,10 @@
  */
 package org.apache.cocoon.webapps.authentication.context;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -36,7 +30,9 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
+
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
@@ -47,16 +43,21 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.AttributesImpl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * This is the implementation for the authentication context
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
 */
-public class AuthenticationContext
-implements SessionContext {
+public class AuthenticationContext implements SessionContext {
 
     protected String          name;
     protected UserHandler     handler;
@@ -68,14 +69,14 @@ implements SessionContext {
     protected SourceResolver  resolver;
     /** A list of roles the user is in */
     protected List            roles;
-    
+
     /** Constructor */
     public AuthenticationContext(Context context, XPathProcessor processor, SourceResolver resolver) {
         this.context = context;
         this.xpathProcessor = processor;
         this.resolver = resolver;
     }
-    
+
     /**
      * Initialize the context. This method has to be called right after
      * the constructor.
@@ -91,25 +92,25 @@ implements SessionContext {
             throw new CascadingRuntimeException("Unable to create simple context.", pe);
         }
     }
-    
+
     /**
      * Return the current authentication state
      */
     protected RequestState getState() {
         return DefaultAuthenticationManager.getRequestState( this.context );
     }
-    
+
     /**
      * Initialize this context
      */
-    public void init(Document doc) 
+    public void init(Document doc)
     throws ProcessingException {
         if ( initialized ) {
             throw new ProcessingException("The context can only be initialized once.");
         }
         this.authContext.setNode("/", doc.getFirstChild());
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.session.context.SessionContext#setup(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -135,7 +136,7 @@ implements SessionContext {
         if (!path.startsWith("/")) path = '/' + path;
 
         final String applicationName = this.getState().getApplicationName();
-        
+
         DocumentFragment frag = null;
 
         if ( path.equals("/") ) {
@@ -222,7 +223,7 @@ implements SessionContext {
             this.cleanParametersCache();
             this.authContext.setXML(path, fragment);
 
-        } else if (path.equals("/application") 
+        } else if (path.equals("/application")
                    || path.startsWith("/application/") ) {
 
             if (applicationName == null) {
@@ -302,7 +303,7 @@ implements SessionContext {
             this.cleanParametersCache();
             this.authContext.removeXML(path);
 
-        } else if (path.equals("/application") 
+        } else if (path.equals("/application")
                    || path.startsWith("/application/") ) {
             if (applicationName == null) {
                 throw new ProcessingException("removeXML: Application is required for path " + path);
@@ -398,12 +399,12 @@ implements SessionContext {
 
         if (path.equals("/") ) {
             // get all: first authentication then application
-            contentHandler.startElement("", "authentication", "authentication", new AttributesImpl());
+            contentHandler.startElement("", "authentication", "authentication", XMLUtils.EMPTY_ATTRIBUTES);
             this.authContext.streamXML("/authentication", contentHandler, lexicalHandler);
             contentHandler.endElement("", "authentication", "authentication");
 
             if (applicationName != null) {
-                contentHandler.startElement("", "application", "application", new AttributesImpl());
+                contentHandler.startElement("", "application", "application", XMLUtils.EMPTY_ATTRIBUTES);
                 this.authContext.streamXML("/applications/" + applicationName, contentHandler, lexicalHandler);
                 contentHandler.endElement("", "application", "application");
             }
@@ -561,7 +562,7 @@ implements SessionContext {
     throws ProcessingException {
         String authLoadResource = this.handler.getHandlerConfiguration().getLoadResource();
         SourceParameters authLoadResourceParameters = this.handler.getHandlerConfiguration().getLoadResourceParameters();
-        
+
         if (authLoadResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support loading.");
         }
@@ -576,14 +577,14 @@ implements SessionContext {
             }
             parameters = this.createParameters(parameters,
                                                path,
-                                               false); 
+                                               false);
             DocumentFragment frag;
-            
-            frag = SourceUtil.readDOM(authLoadResource, 
-                                      null, 
-                                      parameters, 
+
+            frag = SourceUtil.readDOM(authLoadResource,
+                                      null,
+                                      parameters,
                                       resolver);
-            
+
             this.setXML(path, frag);
 
         } // end synchronized
@@ -617,9 +618,9 @@ implements SessionContext {
                                                path,
                                                true);
             DocumentFragment fragment;
-            fragment = SourceUtil.readDOM(loadResource, 
-                                          null, 
-                                          parameters, 
+            fragment = SourceUtil.readDOM(loadResource,
+                                          null,
+                                          parameters,
                                           resolver);
             this.authContext.setXML("/applications/" + applicationName + '/', fragment);
 
@@ -745,7 +746,7 @@ implements SessionContext {
         }
     }
 
-    public Map getContextInfo() 
+    public Map getContextInfo()
     throws ProcessingException {
         Map map = (Map)this.authContext.getAttribute( "cachedmap" );
         if (map == null) {
@@ -765,8 +766,8 @@ implements SessionContext {
         }
         return map;
     }
-    
-    public SourceParameters getContextInfoAsParameters() 
+
+    public SourceParameters getContextInfoAsParameters()
     throws ProcessingException {
         SourceParameters pars = (SourceParameters)this.authContext.getAttribute( "cachedpar" );
         if (pars == null) {
@@ -779,14 +780,14 @@ implements SessionContext {
     /**
      * Load XML of an application
      */
-    public void loadApplicationXML(ApplicationConfiguration appConf, 
+    public void loadApplicationXML(ApplicationConfiguration appConf,
                                     SourceResolver resolver)
     throws ProcessingException {
         String loadResource = appConf.getLoadResource();
         SourceParameters loadResourceParameters = appConf.getLoadResourceParameters();
         if ( !this.handler.isApplicationLoaded(appConf) && loadResource != null ) {
             synchronized (this.authContext) {
-        
+
                 SourceParameters parameters;
                 if (loadResourceParameters != null) {
                     parameters = (SourceParameters)loadResourceParameters.clone();
@@ -797,12 +798,12 @@ implements SessionContext {
                                                    null,
                                                    true);
                 DocumentFragment fragment;
-                fragment = SourceUtil.readDOM(loadResource, 
-                                              null, 
-                                              parameters, 
+                fragment = SourceUtil.readDOM(loadResource,
+                                              null,
+                                              parameters,
                                               resolver);
                 this.authContext.setXML("/applications/" + appConf.getName() + '/', fragment);
-        
+
             } // end synchronized
         }
         this.handler.setApplicationIsLoaded(appConf);

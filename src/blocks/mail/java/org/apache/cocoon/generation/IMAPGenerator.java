@@ -1,5 +1,5 @@
 /*
-* Copyright 1999-2004 The Apache Software Foundation
+* Copyright 1999-2005 The Apache Software Foundation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,21 +15,23 @@
 */
 package org.apache.cocoon.generation;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
+import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.XMLUtils;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
-
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Generates an XML listing of messages from an IMAP mail server.
@@ -44,51 +46,49 @@ import org.xml.sax.helpers.AttributesImpl;
  * and password parameters to the generator.</p>
  *
  * Instructions: get the JavaMail API jar from http://java.sun.com/products/javamail/, and
- * the JAF activation.jar from http://java.sun.com/beans/glasgow/jaf.html.  Put mail.jar 
+ * the JAF activation.jar from http://java.sun.com/beans/glasgow/jaf.html.  Put mail.jar
  * and activation.jar in xml-cocoon2/lib/local/, and recompile.  These jars could actually be
  * moved to lib/optional and added to jars.xml in the future.
  *
- * TODO Refactor all of this to use the MailCommandManager, etc...
+ * <br>TODO Refactor all of this to use the MailCommandManager, etc...
  *
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>
- * @version CVS $Id: IMAPGenerator.java,v 1.6 2004/03/06 02:26:09 antonio Exp $
+ * @version $Id$
  */
 public class IMAPGenerator extends AbstractGenerator {
-    
+
     static final String URI = "http://apache.org/cocoon/imap/1.0/";
     static final String PREFIX = "imap";
 
     private String host;
     private String user;
     private String pass;
-    
+
     private Properties props = new Properties();
-    private Message message[] = null;
-    
+    private Message message[];
+
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
-    
+    throws ProcessingException, SAXException, IOException {
+
         // TODO: the default values should be something else...
         this.host = par.getParameter("host", "none");
         this.user = par.getParameter("user", "none");
         this.pass = par.getParameter("pass", "none");
 
-        if (this.host.equals("none") || 
-            this.user.equals("none") || 
+        if (this.host.equals("none") ||
+            this.user.equals("none") ||
             this.pass.equals("none")) {
 
             throw new ProcessingException("You must configure this generator with host, user, and pass parameters.");
         }
     }
-    
+
     public void generate()
     throws SAXException, ProcessingException {
-    
+
         try {
             Session sess = Session.getDefaultInstance(this.props, null);
             Store st = sess.getStore("imap");
-
-            AttributesImpl attr = new AttributesImpl();
 
             log("Connecting to IMAP server @ " + this.host);
             st.connect(this.host, this.user, this.pass);
@@ -107,34 +107,32 @@ public class IMAPGenerator extends AbstractGenerator {
             this.contentHandler.startDocument();
             this.contentHandler.startPrefixMapping(PREFIX, URI);
 
-            start("imap", attr);
-
-            start("messages", attr);
+            start("imap", XMLUtils.EMPTY_ATTRIBUTES);
+            start("messages", XMLUtils.EMPTY_ATTRIBUTES);
 
             for (i = 0; i < this.message.length; i++) {
+                // Loop through the messages and output XML.
+                // TODO: actually use the attributes...
 
-            // loop through the messages and output XML.
-            // TODO: actually use the attributes...
+                start("msg", XMLUtils.EMPTY_ATTRIBUTES);
 
-            start("msg", attr);
+                start("subject", XMLUtils.EMPTY_ATTRIBUTES);
+                data(this.message[i].getSubject());
+                end("subject");
 
-            start("subject", attr);
-            data( this.message[i].getSubject() );
-            end("subject");
+                start("from", XMLUtils.EMPTY_ATTRIBUTES);
+                data(this.message[i].getFrom()[0].toString());
+                end("from");
 
-            start("from", attr);
-            data( this.message[i].getFrom()[0].toString() );
-            end("from");
+                start("sentDate", XMLUtils.EMPTY_ATTRIBUTES);
+                data(this.message[i].getSentDate().toString());
+                end("sentDate");
 
-            start("sentDate", attr);
-            data( this.message[i].getSentDate().toString() );
-            end("sentDate");
+                start("num", XMLUtils.EMPTY_ATTRIBUTES);
+                data(Integer.toString(this.message[i].getMessageNumber()));
+                end("num");
 
-            start("num", attr);
-            data( Integer.toString( this.message[i].getMessageNumber() ) );
-            end("num");
-
-            end("msg");
+                end("msg");
             }
 
             end("messages");
@@ -148,9 +146,8 @@ public class IMAPGenerator extends AbstractGenerator {
         } catch (AuthenticationFailedException afe) {
             throw new ProcessingException("Failed to authenticate with the IMAP server.");
         } catch (Exception e) {
-
             // TODO: be more specific when catching this exception...
-            throw new ProcessingException( e.toString() );
+            throw new ProcessingException(e.toString());
         }
     }
 
@@ -158,7 +155,6 @@ public class IMAPGenerator extends AbstractGenerator {
      * Recycle the generator by removing references
      */
     public void recycle() {
-
         this.host = null;
         this.user = null;
         this.pass = null;
@@ -167,33 +163,24 @@ public class IMAPGenerator extends AbstractGenerator {
         this.message = null;
 
         super.recycle();
-
     }
 
-    private void start(String name, AttributesImpl attr)
-    throws SAXException 
-    {
+    private void start(String name, Attributes attr)
+    throws SAXException {
         super.contentHandler.startElement(URI, name, PREFIX + ":" + name, attr);
-        attr.clear();
     }
 
-    private void end(String name) 
-    throws SAXException
-    {
+    private void end(String name)
+    throws SAXException {
         super.contentHandler.endElement(URI, name, PREFIX + ":" + name);
     }
-    
-    private void data(String data) 
-    throws SAXException
-    {
+
+    private void data(String data)
+    throws SAXException {
         super.contentHandler.characters( data.toCharArray(), 0, data.length() );
     }
-    
-    private void log(String msg)
-    {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug(msg);
-        }
+
+    private void log(String msg) {
+        getLogger().debug(msg);
     }
-    
 }

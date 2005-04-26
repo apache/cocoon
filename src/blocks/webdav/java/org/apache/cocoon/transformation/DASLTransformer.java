@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,15 +40,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * This transformer performs DASL queries on DASL-enabled WebDAV servers.  
+ * This transformer performs DASL queries on DASL-enabled WebDAV servers.
  * It expects a "query" element in the  "http://cocoon.apache.org/webdav/dasl/1.0"
  * namespace containing the DASL query to execute, with a "target" attribute specifiyng
  * the webdav:// or http:// URL for the target WebDAV server. It will then replace
- * it  with a "query-result" element containing the WebDAV results. 
- * 
- * Each result will be contained in a "result"  element with a "path" attribute pointing at it 
- * and all WebDAV properties presented as (namespaced) children elements. 
- * 
+ * it  with a "query-result" element containing the WebDAV results.
+ *
+ * Each result will be contained in a "result"  element with a "path" attribute pointing at it
+ * and all WebDAV properties presented as (namespaced) children elements.
+ *
  * Sample invocation:
  * lt;dasl:query xmlns:dasl="http://cocoon.apache.org/webdav/dasl/1.0"
  *   target="webdav://localhost/repos/"gt;
@@ -86,10 +86,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *   lt;/D:basicsearchgt;
  * lt;/D:searchrequestgt;
  * lt;/dasl:querygt;
- * 
+ *
  * Features
  * - Substitution of a value: with this feature it's possible to pass value from sitemap
- * that are substituted into a query. 
+ * that are substituted into a query.
  * sitemap example:
  *        lt;map:transformer type="dasl"gt;
  *          lt;parameter name="repos" value="/repos/"gt;
@@ -99,7 +99,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *        lt;D:hrefgt;lt;substitute-value name="repos"/gt;lt;/D:hrefgt;
  *        ....
  * This feature is like substitute-value of SQLTransformer
- * 
+ *
  * TODO: the SWCL Search method doesn't preserve the result order, which makes
  * order-by clauses useless.
  *
@@ -107,6 +107,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto: gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com>Daniele Madama</a>
+ * @version $Id$
  */
 public class DASLTransformer extends AbstractSAXTransformer {
 
@@ -124,7 +125,7 @@ public class DASLTransformer extends AbstractSAXTransformer {
     /** The tag name of root_tag for result */
     static final String RESULT_ROOT_TAG = "query-result";
     /** The tag name for substitution of query parameter */
-    static final String SUBSTITUTE_TAG = "substitute-value";	
+    static final String SUBSTITUTE_TAG = "substitute-value";
     /** The tag name for substitution of query parameter */
     static final String SUBSTITUTE_TAG_NAME_ATTRIBUTE = "name";
 
@@ -136,7 +137,7 @@ public class DASLTransformer extends AbstractSAXTransformer {
 
     /**
      *  Intercept the <dasl:query> start tag.
-     * 
+     *
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     public void startElement(
@@ -173,9 +174,9 @@ public class DASLTransformer extends AbstractSAXTransformer {
     }
 
     /**
-     * Intercept the <dasl:query> end tag, convert buffered input to a String, build and execute the 
+     * Intercept the <dasl:query> end tag, convert buffered input to a String, build and execute the
      * DASL query.
-     * 
+     *
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endElement(String uri, String name, String raw)
@@ -208,7 +209,7 @@ public class DASLTransformer extends AbstractSAXTransformer {
             HttpState state = new HttpState();
             state.setCredentials(null, new UsernamePasswordCredentials(
                     url.getUser(),
-                    url.getPassword()));                       
+                    url.getPassword()));
             HttpConnection conn = new HttpConnection(url.getHost(), url.getPort());
             WebdavResource resource = new WebdavResource(new HttpURL(this.targetUrl));
             if(!resource.exists()) {
@@ -219,12 +220,12 @@ public class DASLTransformer extends AbstractSAXTransformer {
                 throw new SAXException("The server don't support the SEARCH method");
             }
             searchMethod.execute(state, conn);
+
             Enumeration enumeration = searchMethod.getAllResponseURLs();
-            this.contentHandler.startElement(
-                DASL_QUERY_NS,
-                RESULT_ROOT_TAG,
-                PREFIX + ":" + RESULT_ROOT_TAG,
-                new AttributesImpl());
+            this.contentHandler.startElement(DASL_QUERY_NS,
+                                             RESULT_ROOT_TAG,
+                                             PREFIX + ":" + RESULT_ROOT_TAG,
+                                             XMLUtils.EMPTY_ATTRIBUTES);
             while (enumeration.hasMoreElements()) {
                 String path = (String) enumeration.nextElement();
                 Enumeration properties = searchMethod.getResponseProperties(path);
@@ -240,15 +241,14 @@ public class DASLTransformer extends AbstractSAXTransformer {
                     Element propertyElement = metadata.getElement();
                     propertyStreamer.stream(propertyElement);
                 }
-                    
+
                 this.contentHandler.endElement(DASL_QUERY_NS,
                     RESOURCE_NODE_NAME,
                     PREFIX + ":" + RESOURCE_NODE_NAME);
             }
-            this.contentHandler.endElement(
-                DASL_QUERY_NS,
-                RESULT_ROOT_TAG,
-                PREFIX + ":" + RESULT_ROOT_TAG);
+            this.contentHandler.endElement(DASL_QUERY_NS,
+                                           RESULT_ROOT_TAG,
+                                           PREFIX + ":" + RESULT_ROOT_TAG);
         } catch (SAXException e) {
             throw new SAXException("Unable to fetch the query data:", e);
         } catch (HttpException e1) {
@@ -260,8 +260,7 @@ public class DASLTransformer extends AbstractSAXTransformer {
             throw new SAXException("Unable to fetch the query data:", e);
         } catch (Exception e) {
             throw new SAXException("Generic Error:", e);
-    		}
+        }
     }
 
 }
-

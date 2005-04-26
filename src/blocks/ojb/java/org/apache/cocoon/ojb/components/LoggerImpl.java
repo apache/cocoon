@@ -23,6 +23,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.ojb.broker.util.configuration.Configuration;
 import org.apache.ojb.broker.util.configuration.ConfigurationException;
 import org.apache.ojb.broker.util.logging.Logger;
+import org.apache.ojb.broker.util.logging.LoggingConfiguration;
 
 /**
  * OJB logger implementation delegating to the Avalon logger
@@ -51,10 +52,17 @@ public class LoggerImpl extends AbstractLogEnabled
     }
 
     /**
-     * Constructor used by OJB to create a logger instance
+     * Constructor used by OJB 1.0 to create a logger instance
      */
     public LoggerImpl(String name) {
         this.name = name.startsWith("org.apache.ojb.")? name.substring(15): name;
+    }
+
+    /**
+     * Constructor used by OJB 1.1 to create a logger instance
+     */
+    public LoggerImpl(String name, LoggingConfiguration config) {
+        this(name);
     }
 
     /**

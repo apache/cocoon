@@ -19,7 +19,6 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.excalibur.source.Source;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheValidity;
@@ -28,10 +27,11 @@ import org.apache.cocoon.caching.IncludeCacheValidity;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 
+import org.apache.excalibur.source.Source;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
 import java.util.Map;
@@ -54,13 +54,13 @@ import java.util.Map;
  * of new validity will be the same as of old one. Only timestamps have to be
  * recalculated and compared.</p>
  *
- * @see IncludeTransformer
+ * @see IncludeTransformer (scratchpad)
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
  * @deprecated This transformer violates the avalon/cocoon design principles. Use IncludeTransformer.
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CachingCIncludeTransformer extends AbstractTransformer
-implements Composable, Cacheable {
+                                        implements Composable, Cacheable {
 
     public static final String CINCLUDE_NAMESPACE_URI = "http://apache.org/cocoon/include/1.0";
     public static final String CINCLUDE_INCLUDE_ELEMENT = "include";
@@ -170,14 +170,13 @@ implements Composable, Cacheable {
         }
 
         if (!"".equals(element)) {
-            AttributesImpl attrs = new AttributesImpl();
             if (!ns.equals("")) {
                 super.startPrefixMapping(prefix, ns);
             }
             super.startElement(ns,
                                element,
                                (!ns.equals("") && !prefix.equals("") ? prefix+":"+element : element),
-                               attrs);
+                               XMLUtils.EMPTY_ATTRIBUTES);
         }
 
         Source source = null;

@@ -1,45 +1,46 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.slop.parsing;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.slop.interfaces.SlopParser;
 import org.apache.cocoon.slop.interfaces.SlopConstants;
 
-/** Simplistic SLOP parser, recognizes the following constructs:
+/**
+ * Simplistic SLOP parser, recognizes the following constructs:
  *
  *      Field: a line starting with letters and : is considered a field
  *
  *      Empty lines are detected.
  *      Other lines are output as line elements
  *
- *  This is sufficient for basic parsing of RFC 822 headers,
- *  but a configurable rfc822 mode would be good to differentiate
- *  between the header and body of the email message and parse them
- *  with different rules.
+ * This is sufficient for basic parsing of RFC 822 headers,
+ * but a configurable rfc822 mode would be good to differentiate
+ * between the header and body of the email message and parse them
+ * with different rules.
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SimpleSlopParser.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class SimpleSlopParser implements SlopParser,SlopConstants {
+
     private ContentHandler contentHandler;
 
     /** chars that can be part of a field name (other than letters) */
@@ -97,17 +98,16 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
 
     /** must be called before any call to processLine() */
     public void startDocument(ContentHandler destination)
-        throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         contentHandler = destination;
         contentHandler.startDocument();
         contentHandler.startPrefixMapping("", SLOP_NAMESPACE_URI);
-        final AttributesImpl atts = new AttributesImpl();
-        contentHandler.startElement(SLOP_NAMESPACE_URI, SLOP_ROOT_ELEMENT, SLOP_ROOT_ELEMENT, atts);
+        contentHandler.startElement(SLOP_NAMESPACE_URI, SLOP_ROOT_ELEMENT, SLOP_ROOT_ELEMENT, XMLUtils.EMPTY_ATTRIBUTES);
     }
 
     /** must be called once all calls to processLine() are done */
     public void endDocument()
-        throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         contentHandler.endElement(SLOP_NAMESPACE_URI, SLOP_ROOT_ELEMENT, SLOP_ROOT_ELEMENT);
         contentHandler.endPrefixMapping("");
         contentHandler.endDocument();
@@ -122,7 +122,7 @@ public class SimpleSlopParser implements SlopParser,SlopConstants {
 
     /** call this to process input lines, does the actual parsing */
     public void processLine(String line)
-        throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         if(contentHandler == null) {
             throw new ProcessingException("SimpleSlopParser content handler is null (startDocument not called?)");
         }
