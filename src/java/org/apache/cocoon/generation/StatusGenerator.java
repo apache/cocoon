@@ -28,6 +28,8 @@ import java.util.StringTokenizer;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
@@ -338,7 +340,7 @@ public class StatusGenerator extends ServiceableGenerator {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
-        ch.startElement(namespace, "line", "line", new AttributesImpl());
+        ch.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
 
         if (value != null) {
             ch.characters(value.toCharArray(), 0, value.length());
@@ -364,7 +366,7 @@ public class StatusGenerator extends ServiceableGenerator {
         for (int i = 0; i < values.size(); i++) {
             String value = (String) values.get(i);
             if (value != null) {
-                ch.startElement(namespace, "line", "line", new AttributesImpl());
+                ch.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
                 ch.characters(value.toCharArray(), 0, value.length());
                 ch.endElement(namespace, "line", "line");
             }

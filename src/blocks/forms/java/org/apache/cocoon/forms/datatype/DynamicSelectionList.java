@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.w3c.dom.Element;
 
@@ -189,7 +190,7 @@ public class DynamicSelectionList implements SelectionList {
                 if (localName.equals("item")) {
                     if (!hasLabel) {
                         // make the label now
-                        super.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, new AttributesImpl());
+                        super.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
                         super.characters(currentValueAsString.toCharArray(), 0, currentValueAsString.length());
                         super.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
                     }

@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -44,7 +46,7 @@ import java.util.Set;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerGenerator.java,v 1.6 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ProfilerGenerator extends ServiceableGenerator {
 
@@ -158,7 +160,7 @@ public class ProfilerGenerator extends ServiceableGenerator {
             } else {
                 this.contentHandler.startDocument();
                 this.contentHandler.startPrefixMapping(PREFIX, PROFILER_NS);
-                this.contentHandler.startElement(PROFILER_NS, "fragment-error", PREFIX_COLON + "fragment-error", new AttributesImpl());
+                this.contentHandler.startElement(PROFILER_NS, "fragment-error", PREFIX_COLON + "fragment-error", XMLUtils.EMPTY_ATTRIBUTES);
                 char[] message = "Fragment is not available.".toCharArray();
                 this.contentHandler.characters(message, 0, message.length);
                 this.contentHandler.endElement(PROFILER_NS, "fragment-error", PREFIX_COLON + "fragment-error");
@@ -188,7 +190,6 @@ public class ProfilerGenerator extends ServiceableGenerator {
         String dateTime = DateFormat.getDateTimeInstance().format(new Date());
 
         AttributesImpl atts = new AttributesImpl();
-
         atts.addAttribute("", "date", "date", "CDATA", dateTime);
         this.contentHandler.startElement(PROFILER_NS, PROFILERINFO_ELEMENT,
                                          PREFIX_COLON + PROFILERINFO_ELEMENT, atts);
@@ -211,11 +212,12 @@ public class ProfilerGenerator extends ServiceableGenerator {
     /**
      *
      *
-     * @param key        
-     * @param result     
+     * @param key
+     * @param result
      */
     private void generateResults(Long key,
-                                 ProfilerResult result) throws SAXException {
+                                 ProfilerResult result)
+    throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
         int count = result.getCount();
@@ -231,8 +233,9 @@ public class ProfilerGenerator extends ServiceableGenerator {
         // Total time of all requests
         long totalTimeSum = 0;
 
-        for (int i = 0; i<count; i++)
+        for (int i = 0; i<count; i++) {
             totalTimeSum += totalTime[i];
+        }
 
         atts.addAttribute("", "uri", "uri", "CDATA", result.getURI());
         atts.addAttribute("", "count", "count", "CDATA",
@@ -311,10 +314,10 @@ public class ProfilerGenerator extends ServiceableGenerator {
                                 EnvironmentInfo environmentInfo,
                                 long totalTime, long[] setupTimes,
                                 long[] processingTimes,
-                                Object[] fragments) throws SAXException {
+                                Object[] fragments)
+    throws SAXException {
 
         AttributesImpl atts = new AttributesImpl();
-
         atts.addAttribute("", "time", "time", "CDATA",
                           Long.toString(totalTime));
         atts.addAttribute("", "index", "index", "CDATA",
@@ -338,10 +341,10 @@ public class ProfilerGenerator extends ServiceableGenerator {
     private void generateComponent(int componentIndex, String role,
                                    String source, long setupTime,
                                    long processingTime,
-                                   Object fragment) throws SAXException {
+                                   Object fragment)
+    throws SAXException {
 
         AttributesImpl atts = new AttributesImpl();
-
         atts.addAttribute("", "index", "index", "CDATA",
                           String.valueOf(componentIndex));
 
@@ -369,7 +372,7 @@ public class ProfilerGenerator extends ServiceableGenerator {
         if (this.componentIndex==componentIndex) {
             this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT,
                                              PREFIX_COLON + FRAGMENT_ELEMENT,
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
             generateSAXFragment(fragment, true);
             this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT,
                                            PREFIX_COLON + FRAGMENT_ELEMENT);
@@ -383,14 +386,14 @@ public class ProfilerGenerator extends ServiceableGenerator {
       throws SAXException {
         this.contentHandler.startElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT,
                                          PREFIX_COLON + ENVIROMENTINFO_ELEMENT,
-                                         new AttributesImpl());
+                                         XMLUtils.EMPTY_ATTRIBUTES);
 
         if (environmentInfo!=null) {
             // Generate SAX events for the request parameters
             this.contentHandler.startElement(PROFILER_NS,
                                              REQUESTPARAMETERS_ELEMENT,
                                              PREFIX_COLON + REQUESTPARAMETERS_ELEMENT,
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
 
             Map requestParameters = environmentInfo.getRequestParameters();
             Set requestParamEntries = requestParameters.entrySet();
@@ -420,7 +423,7 @@ public class ProfilerGenerator extends ServiceableGenerator {
             this.contentHandler.startElement(PROFILER_NS,
                                              SESSIONATTRIBUTES_ELEMENT,
                                              PREFIX_COLON + SESSIONATTRIBUTES_ELEMENT,
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
 
             Map sessionAttributes = environmentInfo.getSessionAttributes();
             Set sessionAttrEntries = sessionAttributes.entrySet();
@@ -448,7 +451,7 @@ public class ProfilerGenerator extends ServiceableGenerator {
 
             // And the rest
             this.contentHandler.startElement(PROFILER_NS, "uri", PREFIX_COLON + "uri",
-                                             new AttributesImpl());
+                                             XMLUtils.EMPTY_ATTRIBUTES);
             this.contentHandler.characters(environmentInfo.getURI().toCharArray(),
                                            0, environmentInfo.getURI().length());
             this.contentHandler.endElement(PROFILER_NS, "uri", PREFIX_COLON + "uri");

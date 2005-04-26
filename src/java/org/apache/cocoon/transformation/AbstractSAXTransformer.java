@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,11 +101,19 @@ import javax.xml.transform.TransformerFactory;
  * is invoked.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
 */
 public abstract class AbstractSAXTransformer
         extends AbstractTransformer
         implements Serviceable, Configurable, Recyclable {
+
+
+    /**
+     * Empty attributes (for performance). This can be used
+     * do create own attributes, but make sure to clean them
+     * afterwords.
+     */
+    protected static final Attributes EMPTY_ATTRIBUTES = XMLUtils.EMPTY_ATTRIBUTES;
 
     /**
      * The trax <code>TransformerFactory</code> used by this transformer.
@@ -211,13 +219,6 @@ public abstract class AbstractSAXTransformer
      * Are we already initialized for the current request?
      */
     private boolean isInitialized;
-
-    /**
-     * Empty attributes (for performance). This can be used
-     * do create own attributes, but make sure to clean them
-     * afterwords.
-     */
-    protected AttributesImpl emptyAttributes = new AttributesImpl();
 
     /**
      * The namespaces and their prefixes
@@ -626,7 +627,7 @@ public abstract class AbstractSAXTransformer
         DOMBuilder builder = new DOMBuilder(this.tfactory);
         addRecorder(builder);
         builder.startDocument();
-        builder.startElement("", "cocoon", "cocoon", new AttributesImpl());
+        builder.startElement("", "cocoon", "cocoon", EMPTY_ATTRIBUTES);
         sendStartPrefixMapping();
     }
 
@@ -755,7 +756,7 @@ public abstract class AbstractSAXTransformer
      */
     public void sendStartElementEvent(String localname)
     throws SAXException {
-        startElement("", localname, localname, emptyAttributes);
+        startElement("", localname, localname, EMPTY_ATTRIBUTES);
     }
 
     /**
@@ -769,7 +770,7 @@ public abstract class AbstractSAXTransformer
     public void sendStartElementEventNS(String localname)
     throws SAXException {
         startElement(this.namespaceURI,
-                     localname, this.ourPrefix + ':' + localname, emptyAttributes);
+                     localname, this.ourPrefix + ':' + localname, EMPTY_ATTRIBUTES);
     }
 
     /**

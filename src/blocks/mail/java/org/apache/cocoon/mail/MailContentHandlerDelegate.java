@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Bernhard Huber
  * @since 24. Oktober 2002
- * @version CVS $Id: MailContentHandlerDelegate.java,v 1.6 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version $Id$
  */
 
 /*
@@ -303,7 +303,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
         this.contentHandler.startPrefixMapping(PREFIX, URI);
 
         attributes = new AttributesImpl();
-        attributes.clear();
         attributes.addAttribute("", PREFIX, "xmlns:" + PREFIX, "CDATA", URI);
         startElement("mail", attributes);
     }
@@ -801,7 +800,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.6 2004/03/05 13:02:00 bdelacretaz Exp $
+     *@version    CVS Version: $Id$
      */
     static class FolderXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -852,7 +851,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.6 2004/03/05 13:02:00 bdelacretaz Exp $
+     *@version    CVS Version: $Id$
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -928,7 +927,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.6 2004/03/05 13:02:00 bdelacretaz Exp $
+     *@version    CVS Version: $Id$
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable {

@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,11 @@
  */
 package org.apache.cocoon.webapps.authentication.generation;
 
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Map;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -39,6 +35,7 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
@@ -48,17 +45,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.9 2004/03/19 13:59:22 cziegeler Exp $
+ * @version $Id$
 */
-public final class ConfigurationGenerator
-extends ServiceableGenerator {
+public final class ConfigurationGenerator extends ServiceableGenerator {
 
     /** Request parameter */
     public static final String REQ_PARAMETER_STATE = "authstate";
@@ -70,7 +69,7 @@ extends ServiceableGenerator {
 
     /** The XPath Processor */
     protected XPathProcessor xpathProcessor;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -101,15 +100,15 @@ extends ServiceableGenerator {
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
             state = authManager.getState();
-            
+
         } catch (Exception ignore) {
         }
-        
+
         this.xmlConsumer.startDocument();
         if ( state != null ) {
             try {
                 UserHandler userhandler = state.getHandler();
-                
+
                 Configuration conf = state.getModuleConfiguration("single-role-user-management");
                 if (conf == null) {
                     throw new ProcessingException("Module configuration 'single-role-user-management' for authentication user management generator not found.");
@@ -117,7 +116,7 @@ extends ServiceableGenerator {
                 UserManagementHandler handler = new UserManagementHandler(conf,
                                                                           state.getApplicationName());
                 this.showConfiguration(this.xmlConsumer, this.source, handler, userhandler.getContext());
-            
+
             } catch (ConfigurationException ex) {
                 throw new ProcessingException("ConfigurationException: " + ex, ex);
             }
@@ -147,32 +146,31 @@ extends ServiceableGenerator {
         Request request = ObjectModelHelper.getRequest(this.objectModel);
         Response response = ObjectModelHelper.getResponse(this.objectModel);
         Session session = request.getSession();
-        
+
         boolean isAdmin = (src == null || src.equals("admin"));
 
         // now start producing xml:
-        AttributesImpl attr = new AttributesImpl();
-        consumer.startElement("", "configuration", "configuration", attr);
+        consumer.startElement("", "configuration", "configuration", XMLUtils.EMPTY_ATTRIBUTES);
 
         // set the conf uri:
         // This is a bug in the servlet 2.2 API!!!
         // It does not contain the context:  String uri = HttpUtils.getRequestURL(this.request).toString();
         // So: ABSOLUTELY USELESS
         String uri = response.encodeURL(request.getRequestURI());
-        consumer.startElement("", "uri", "uri", attr);
+        consumer.startElement("", "uri", "uri", XMLUtils.EMPTY_ATTRIBUTES);
         consumer.characters(uri.toCharArray(), 0, uri.length());
         consumer.endElement("", "uri", "uri");
 
         if (isAdmin == true) {
             // build the menue
-            consumer.startElement("", "menue", "menue", attr);
+            consumer.startElement("", "menue", "menue", XMLUtils.EMPTY_ATTRIBUTES);
 
             if (handler.getNewRoleResource() != null) {
-                consumer.startElement("", "addrole", "addrole", attr);
+                consumer.startElement("", "addrole", "addrole", XMLUtils.EMPTY_ATTRIBUTES);
                 consumer.endElement("", "addrole", "addrole");
             }
             if (handler.getDeleteRoleResource() != null) {
-                consumer.startElement("", "delrole", "delrole", attr);
+                consumer.startElement("", "delrole", "delrole", XMLUtils.EMPTY_ATTRIBUTES);
                 consumer.endElement("", "delrole", "delrole");
             }
 
@@ -180,7 +178,7 @@ extends ServiceableGenerator {
         }
 
 
-        synchronized (session) { 
+        synchronized (session) {
 
             String state = request.getParameter(REQ_PARAMETER_STATE);
             if (state == null) {
@@ -256,7 +254,7 @@ extends ServiceableGenerator {
                         }
                         addingNewUserFailed = !this.addUser(role, id, pars, handler);
                         if (addingNewUserFailed == false) {
-                            consumer.startElement("", "addeduser", "addeduser", attr);
+                            consumer.startElement("", "addeduser", "addeduser", XMLUtils.EMPTY_ATTRIBUTES);
                             consumer.characters(id.toCharArray(), 0, id.length());
                             consumer.endElement("", "addeduser", "addeduser");
                         }
@@ -308,7 +306,7 @@ extends ServiceableGenerator {
                     } catch (javax.xml.transform.TransformerException local) {
                         throw new ProcessingException("TransformerException: " + local, local);
                     }
-                    consumer.startElement("", "uservalues", "uservalues", attr);
+                    consumer.startElement("", "uservalues", "uservalues", XMLUtils.EMPTY_ATTRIBUTES);
                     if (users != null && users.hasChildNodes() == true) {
                         NodeList childs = users.getChildNodes();
                         for(int i = 0; i < childs.getLength(); i++) {
@@ -318,11 +316,11 @@ extends ServiceableGenerator {
                     }
                     consumer.endElement("", "uservalues", "uservalues");
                 }
-                consumer.startElement("", "user", "user", attr);
+                consumer.startElement("", "user", "user", XMLUtils.EMPTY_ATTRIBUTES);
                 consumer.characters("old".toCharArray(), 0, 3);
                 consumer.endElement("", "user", "user");
                 if (isAdmin == false) {
-                    consumer.startElement("", "role", "role", attr);
+                    consumer.startElement("", "role", "role", XMLUtils.EMPTY_ATTRIBUTES);
                     consumer.characters(role.toCharArray(), 0, role.length());
                     consumer.endElement("", "role", "role");
                }
@@ -351,7 +349,7 @@ extends ServiceableGenerator {
                     } catch (javax.xml.transform.TransformerException local) {
                         throw new ProcessingException("TransformerException: " + local, local);
                     }
-                    consumer.startElement("", "uservalues", "uservalues", attr);
+                    consumer.startElement("", "uservalues", "uservalues", XMLUtils.EMPTY_ATTRIBUTES);
                     if (users != null && users.hasChildNodes() == true) {
                         NodeList childs = users.getChildNodes();
                         for(int i = 0; i < childs.getLength(); i++) {
@@ -361,18 +359,18 @@ extends ServiceableGenerator {
                     }
                     consumer.endElement("", "uservalues", "uservalues");
                 }
-                consumer.startElement("", "user", "user", attr);
+                consumer.startElement("", "user", "user", XMLUtils.EMPTY_ATTRIBUTES);
                 consumer.characters("error".toCharArray(), 0, 5);
                 consumer.endElement("", "user", "user");
                 if (isAdmin == false) {
-                    consumer.startElement("", "role", "role", attr);
+                    consumer.startElement("", "role", "role", XMLUtils.EMPTY_ATTRIBUTES);
                     consumer.characters(role.toCharArray(), 0, role.length());
                     consumer.endElement("", "role", "role");
                }
             }
 
             if (state.equals("adduser") == true) {
-                consumer.startElement("", "user", "user", attr);
+                consumer.startElement("", "user", "user", XMLUtils.EMPTY_ATTRIBUTES);
                 consumer.characters("new".toCharArray(), 0, 3);
                 consumer.endElement("", "user", "user");
             }
@@ -405,7 +403,7 @@ extends ServiceableGenerator {
                 // include selected role
                 String role = (String)session.getAttribute(SESSION_CONTEXT_ATTRIBUTE_ADMIN_ROLE);
                 if (role != null) {
-                    consumer.startElement("", "role", "role", attr);
+                    consumer.startElement("", "role", "role", XMLUtils.EMPTY_ATTRIBUTES);
                     consumer.characters(role.toCharArray(), 0, role.length());
                     consumer.endElement("", "role", "role");
                 }
@@ -671,18 +669,18 @@ extends ServiceableGenerator {
     throws IOException, ProcessingException, SAXException {
         Source source = null;
         try {
-            source = SourceUtil.getSource(resource, 
-                                          null, 
-                                          parameters, 
+            source = SourceUtil.getSource(resource,
+                                          null,
+                                          parameters,
                                           this.resolver);
-            SourceUtil.parse(this.manager, source, new DefaultHandler());                                          
+            SourceUtil.parse(this.manager, source, new DefaultHandler());
         } catch (SourceException se) {
             throw SourceUtil.handle(se);
         } finally {
             this.resolver.release(source);
         }
     }
-    
+
     /**
      * Load XML resource
      */
@@ -691,9 +689,9 @@ extends ServiceableGenerator {
     throws IOException, ProcessingException, SAXException {
         Source source = null;
         try {
-            source = SourceUtil.getSource(resource, 
-                                          null, 
-                                          parameters, 
+            source = SourceUtil.getSource(resource,
+                                          null,
+                                          parameters,
                                           this.resolver);
             return SourceUtil.toDOM(source);
         } catch (SourceException se) {
@@ -708,11 +706,11 @@ final class UserManagementHandler {
 
     /** The name of the current application */
     private String applicationName;
-    
+
     /** The load-users resource */
     private String loadUsersResource;
     private SourceParameters loadUsersResourceParameters;
-    
+
     /** The load-roles resource */
     private String loadRolesResource;
     private SourceParameters loadRolesResourceParameters;
@@ -744,9 +742,9 @@ final class UserManagementHandler {
                                   String          appName)
     throws ConfigurationException {
         Configuration child;
-        
+
         this.applicationName = appName;
-        
+
         // get load-users resource (optional)
         child = conf.getChild("load-users", false);
         if (child != null) {
@@ -801,7 +799,7 @@ final class UserManagementHandler {
      * Get the name of the current application
      */
     public String getApplicationName() { return this.applicationName; }
-    
+
     /**
      * Get the load users resource
      */

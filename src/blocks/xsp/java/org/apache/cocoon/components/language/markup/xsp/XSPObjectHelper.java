@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
@@ -31,13 +33,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
  *         (Cocoon1 <code>xspExpr()</code> methods port)
- * @version CVS $Id: XSPObjectHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version $Id$
  */
 public class XSPObjectHelper {
-    /**
-     * Empty attributes used for contentHandler.startElement()
-     */
-    protected static final AttributesImpl emptyAttr = new AttributesImpl();
 
     /**
      * Output an element containing text only and no attributes
@@ -46,13 +44,12 @@ public class XSPObjectHelper {
      * @param name The element name
      * @param data The data contained by the element
      */
-    protected static void elementData(
-        String uri,
-        String prefix,
-        ContentHandler contentHandler,
-        String name,
-        String data)
-        throws SAXException {
+    protected static void elementData(String uri,
+                                      String prefix,
+                                      ContentHandler contentHandler,
+                                      String name,
+                                      String data)
+    throws SAXException {
         start(uri, prefix, contentHandler, name);
         data(contentHandler, data);
         end(uri, prefix, contentHandler, name);
@@ -66,14 +63,13 @@ public class XSPObjectHelper {
      * @param data The data contained by the element
      * @param attr The element attributes
      */
-    protected static void elementData(
-        String uri,
-        String prefix,
-        ContentHandler contentHandler,
-        String name,
-        String data,
-        AttributesImpl attr)
-        throws SAXException {
+    protected static void elementData(String uri,
+                                      String prefix,
+                                      ContentHandler contentHandler,
+                                      String name,
+                                      String data,
+                                      AttributesImpl attr)
+    throws SAXException {
         start(uri, prefix, contentHandler, name, attr);
         data(contentHandler, data);
         end(uri, prefix, contentHandler, name);
@@ -86,17 +82,12 @@ public class XSPObjectHelper {
      * @param contentHandler The SAX content handler
      * @param name The element name
      */
-    protected static void start(
-        String uri,
-        String prefix,
-        ContentHandler contentHandler,
-        String name)
-        throws SAXException {
-        contentHandler.startElement(
-            uri,
-            name,
-            new StringBuffer(prefix).append(":").append(name).toString(),
-            emptyAttr);
+    protected static void start(String uri,
+                                String prefix,
+                                ContentHandler contentHandler,
+                                String name)
+    throws SAXException {
+        contentHandler.startElement(uri, name, prefix + ":" + name, XMLUtils.EMPTY_ATTRIBUTES);
     }
 
     /**
@@ -107,18 +98,13 @@ public class XSPObjectHelper {
      * @param name The element name
      * @param attr The element attributes
      */
-    protected static void start(
-        String uri,
-        String prefix,
-        ContentHandler contentHandler,
-        String name,
-        AttributesImpl attr)
-        throws SAXException {
-        contentHandler.startElement(
-            uri,
-            name,
-            new StringBuffer(prefix).append(":").append(name).toString(),
-            attr);
+    protected static void start(String uri,
+                                String prefix,
+                                ContentHandler contentHandler,
+                                String name,
+                                AttributesImpl attr)
+    throws SAXException {
+        contentHandler.startElement(uri, name, prefix + ":" + name, attr);
     }
 
     /**
@@ -127,16 +113,12 @@ public class XSPObjectHelper {
      * @param contentHandler The SAX content handler
      * @param name The element name
      */
-    protected static void end(
-        String uri,
-        String prefix,
-        ContentHandler contentHandler,
-        String name)
-        throws SAXException {
-        contentHandler.endElement(
-            uri,
-            name,
-            new StringBuffer(prefix).append(":").append(name).toString());
+    protected static void end(String uri,
+                              String prefix,
+                              ContentHandler contentHandler,
+                              String name)
+    throws SAXException {
+        contentHandler.endElement(uri, name, prefix + ":" + name);
     }
 
     /**
@@ -146,11 +128,10 @@ public class XSPObjectHelper {
      * @param name The attribute name
      * @param value The attribute value
      */
-    protected static void addAttribute(
-        AttributesImpl attr,
-        String name,
-        String value)
-        throws SAXException {
+    protected static void addAttribute(AttributesImpl attr,
+                                       String name,
+                                       String value)
+    throws SAXException {
         attr.addAttribute("", name, name, "CDATA", value);
     }
 
@@ -161,7 +142,7 @@ public class XSPObjectHelper {
      * @param data The string data
      */
     protected static void data(ContentHandler contentHandler, String data)
-        throws SAXException {
+    throws SAXException {
         contentHandler.characters(data.toCharArray(), 0, data.length());
     }
 
@@ -175,7 +156,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, char v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -187,7 +168,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, byte v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -199,7 +180,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, boolean v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -211,7 +192,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, int v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -223,7 +204,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, long v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -235,7 +216,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, float v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -247,7 +228,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, double v)
-        throws SAXException {
+    throws SAXException {
         data(contentHandler, String.valueOf(v));
     }
 
@@ -259,7 +240,7 @@ public class XSPObjectHelper {
      * @param text the value
      */
     public static void xspExpr(ContentHandler contentHandler, String text)
-        throws SAXException {
+    throws SAXException {
         if (text != null) {
             data(contentHandler, text);
         }
@@ -289,7 +270,7 @@ public class XSPObjectHelper {
      * @param v the XML fragment
      */
     public static void xspExpr(ContentHandler contentHandler, XMLizable v)
-        throws SAXException {
+    throws SAXException {
         if (v != null) {
             v.toSAX(contentHandler);
         }
@@ -303,7 +284,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, Node v)
-        throws SAXException {
+    throws SAXException {
         if (v != null) {
             DOMStreamer streamer = new DOMStreamer(contentHandler);
             streamer.stream(v);
@@ -319,7 +300,7 @@ public class XSPObjectHelper {
      * @param v the XML fragment
      */
     public static void xspExpr(ContentHandler contentHandler, Collection v)
-        throws SAXException {
+    throws SAXException {
         if (v != null) {
             Iterator iterator = v.iterator();
             while (iterator.hasNext()) {
@@ -340,7 +321,7 @@ public class XSPObjectHelper {
      * @param v the value
      */
     public static void xspExpr(ContentHandler contentHandler, Object v)
-        throws SAXException {
+    throws SAXException {
         if (v == null) {
             return;
         }

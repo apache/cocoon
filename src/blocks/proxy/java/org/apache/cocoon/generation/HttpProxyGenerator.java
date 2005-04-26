@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,11 +51,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * The <code>HttpProxyGenerator</code> is a Cocoon generator using the
  * <b>Jakarta Commons HTTPClient Library</b> to access an XML stream
  * over HTTP.
- * 
+ *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2002
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HttpProxyGenerator.java,v 1.7 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {
 
@@ -293,19 +293,19 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         if (this.method instanceof PostMethod) {
             String body = ((PostMethod) this.method).getRequestBodyAsString();
 
-            attributes = new AttributesImpl();
+            attributes.clear();
             attributes.addAttribute("", "name", "name", "CDATA", "Content-Type");
             attributes.addAttribute("", "value", "value", "CDATA", "application/x-www-form-urlencoded");
             super.xmlConsumer.startElement("", "header", "header", attributes);
             super.xmlConsumer.endElement("", "header", "header");
 
-            attributes = new AttributesImpl();
+            attributes.clear();
             attributes.addAttribute("", "name", "name", "CDATA", "Content-Length");
             attributes.addAttribute("", "value", "value", "CDATA", Integer.toString(body.length()));
             super.xmlConsumer.startElement("", "header", "header", attributes);
             super.xmlConsumer.endElement("", "header", "header");
 
-            attributes = new AttributesImpl();
+            attributes.clear();
             super.xmlConsumer.startElement("", "body", "body", attributes);
             super.xmlConsumer.characters(body.toCharArray(), 0, body.length());
             super.xmlConsumer.endElement("", "body", "body");
@@ -348,7 +348,7 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
                 if (value != null) list.add(new NameValuePair(name, value));
             }
         }
-        
+
         return (list);
     }
 

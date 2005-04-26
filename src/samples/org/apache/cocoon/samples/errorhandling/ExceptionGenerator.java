@@ -20,10 +20,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.cocoon.xml.XMLUtils;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
 import java.util.Map;
@@ -59,11 +58,10 @@ public class ExceptionGenerator extends AbstractGenerator {
      */
     public void generate()
     throws ProcessingException , SAXException, IOException {
-        Attributes noAttrs = new AttributesImpl();
         this.contentHandler.startDocument();
-        this.contentHandler.startElement("", "html", "html", noAttrs);
-        this.contentHandler.startElement("", "body", "body", noAttrs);
-        this.contentHandler.startElement("", "p", "p", noAttrs);
+        this.contentHandler.startElement("", "html", "html", XMLUtils.EMPTY_ATTRIBUTES);
+        this.contentHandler.startElement("", "body", "body", XMLUtils.EMPTY_ATTRIBUTES);
+        this.contentHandler.startElement("", "p", "p", XMLUtils.EMPTY_ATTRIBUTES);
 
         String text = ExceptionAction.exception(this.exception, this.code);
         this.contentHandler.characters(text.toCharArray(), 0, text.length());
