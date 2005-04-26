@@ -197,6 +197,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="VG" type="update">
+      OJB Block: Added support for OJB 1.1.
+    </action>
+    <action dev="VG" type="update">
       AbstractSAXTransformer gets <code>transformer-factory</code> configuration
       parameter.
     </action>
