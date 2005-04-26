@@ -230,9 +230,13 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
             final Object context = ctxMap.get("objectModel");
             if (context != null && context instanceof Map) {
                 // Get the request
-                final Request request = ObjectModelHelper.getRequest((Map) context);
+                final Request request = ObjectModelHelper
+                        .getRequest((Map) context);
                 if (request != null) {
-                    return "?" + request.getQueryString();
+                    String queryString = request.getQueryString();
+                    return (queryString != null) 
+                           ? ("?" + request.getQueryString()) 
+                           : "";
                 }
             }
         }
