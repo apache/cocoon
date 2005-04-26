@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,22 @@ public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable
     /** The <code>ServiceSelector</code> to be used */
     private static ServiceSelector datasources;
 
+    /** The <code>JdbcConnectionDescriptor</code> */
+    private JdbcConnectionDescriptor conDesc;
+
+    /**
+     * Default constructor
+     */
+    public ConnectionFactoryImpl() {
+    }
+
+    /**
+     * OJB 1.1 constructor
+     */
+    public ConnectionFactoryImpl(JdbcConnectionDescriptor conDesc) {
+        this.conDesc = conDesc;
+    }
+
     public void service(ServiceManager manager) throws ServiceException {
         ConnectionFactoryImpl.manager = manager;
         ConnectionFactoryImpl.datasources = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
@@ -62,9 +78,31 @@ public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ojb.broker.accesslayer.ConnectionFactory#lookupConnection(org.apache.ojb.broker.metadata.JdbcConnectionDescriptor)
-     */
+    //
+    // OJB 1.1 ConnectionFactory Implementation
+    //
+
+    public Connection lookupConnection()
+    throws LookupException {
+        return lookupConnection(this.conDesc);
+    }
+
+    public void releaseConnection(Connection connection) {
+        releaseConnection(this.conDesc, connection);
+    }
+
+    public int getActiveConnections() {
+        return 0;
+    }
+
+    public int getIdleConnections() {
+        return 0;
+    }
+
+    //
+    // OJB 1.0 ConnectionFactory Implementation
+    //
+
     public Connection lookupConnection(final JdbcConnectionDescriptor conDesc)
     throws LookupException {
         if (ConnectionFactoryImpl.manager == null) {
@@ -82,22 +120,16 @@ public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ojb.broker.accesslayer.ConnectionFactory#releaseConnection(org.apache.ojb.broker.metadata.JdbcConnectionDescriptor, java.sql.Connection)
-     */
-    public void releaseConnection(JdbcConnectionDescriptor conDesc, Connection con) {
+    public void releaseConnection(JdbcConnectionDescriptor conDesc, Connection connection) {
         try {
             // The DataSource of this connection will take care of pooling
-            con.close();
+            connection.close();
         } catch (final SQLException e) {
             // This should not happen, but in case
             throw new CascadingRuntimeException("Cannot release SQL Connection to DataSource", e);
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ojb.broker.accesslayer.ConnectionFactory#releaseAllResources()
-     */
     public void releaseAllResources() {
         // Nothing to do here
     }

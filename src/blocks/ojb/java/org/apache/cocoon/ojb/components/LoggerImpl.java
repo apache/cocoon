@@ -32,8 +32,8 @@ import org.apache.ojb.broker.util.logging.LoggingConfiguration;
  * @version $Id$
  */
 public class LoggerImpl extends AbstractLogEnabled
-                                 implements Component, ThreadSafe, Initializable,
-                                            Logger {
+                        implements Component, ThreadSafe, Initializable,
+                                   Logger {
 
     /**
      * Root logger for all OJB loggers
@@ -162,13 +162,13 @@ public class LoggerImpl extends AbstractLogEnabled
 
     public void error(Object message) {
         if (ERROR >= getLevel()) {
-            logger.fatalError(toString(message));
+            logger.error(toString(message));
         }
     }
 
     public void error(Object message, Throwable t) {
         if (ERROR >= getLevel()) {
-            logger.fatalError(toString(message), t);
+            logger.error(toString(message), t);
         }
     }
 
