@@ -27,6 +27,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
@@ -35,7 +36,6 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -51,19 +51,15 @@ import java.util.Map;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
-public class DefaultContentAggregator
-        extends ContentHandlerWrapper
-        implements Generator, CacheableProcessingComponent, Serviceable,
-                   ContentAggregator {
+public class DefaultContentAggregator extends ContentHandlerWrapper
+                                      implements Generator, CacheableProcessingComponent,
+                                                 Serviceable, ContentAggregator {
 
     /** The root element of the aggregated content */
     protected Element rootElement;
 
     /** The aggregated parts */
     protected ArrayList parts = new ArrayList();
-
-    /** Empty attributes */
-    private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     /** Indicates the position in the stack of the root element of the aggregated content */
     private int rootElementIndex;
@@ -311,7 +307,7 @@ public class DefaultContentAggregator
         if (!element.namespace.equals("")) {
             this.contentHandler.startPrefixMapping(element.prefix, element.namespace);
         }
-        this.contentHandler.startElement(element.namespace, element.name, qname, EMPTY_ATTRS);
+        this.contentHandler.startElement(element.namespace, element.name, qname, XMLUtils.EMPTY_ATTRIBUTES);
     }
 
     /**

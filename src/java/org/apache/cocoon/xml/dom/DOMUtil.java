@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,22 +15,9 @@
  */
 package org.apache.cocoon.xml.dom;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.SourceParameters;
@@ -48,14 +35,28 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  *  This class is a utility class for miscellaneous DOM functions, like
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.11 2004/05/25 14:24:01 cziegeler Exp $
+ * @version $Id$
 */
 public final class DOMUtil {
 
@@ -267,7 +268,7 @@ public final class DOMUtil {
 
             DOMBuilder builder = new DOMBuilder();
             builder.startDocument();
-            builder.startElement("", "root", "root", new AttributesImpl());
+            builder.startElement("", "root", "root", XMLUtils.EMPTY_ATTRIBUTES);
 
             IncludeXMLConsumer filter = new IncludeXMLConsumer(builder, builder);
             parser.parse(input, filter);
@@ -493,8 +494,8 @@ public final class DOMUtil {
     /**
      * Implementation for <code>java.util.Map</code> :
      * For each entry an element is created with the childs key and value
-     * Outputs the value and the key by calling {@link #valueOf(Node, Object)} 
-     * on each value and key of the Map. 
+     * Outputs the value and the key by calling {@link #valueOf(Node, Object)}
+     * on each value and key of the Map.
      *
      * @param parent The node getting the value
      * @param v      the Map
@@ -504,19 +505,19 @@ public final class DOMUtil {
             Iterator iterator = v.keySet().iterator();
             Node mapNode = parent.getOwnerDocument().createElementNS(null, "java.util.map");
             parent.appendChild(mapNode);
-            while (iterator.hasNext()) {
-                Object key = iterator.next();
+            for (Iterator iter = v.entrySet().iterator(); iter.hasNext();) {
+                final Map.Entry me = (Map.Entry) iter.next();
 
                 Node entryNode = mapNode.getOwnerDocument().createElementNS(null, "entry");
                 mapNode.appendChild(entryNode);
 
                 Node keyNode = entryNode.getOwnerDocument().createElementNS(null, "key");
                 entryNode.appendChild(keyNode);
-                valueOf(keyNode, key);
+                valueOf(keyNode, me.getKey());
 
                 Node valueNode = entryNode.getOwnerDocument().createElementNS(null, "value");
                 entryNode.appendChild(valueNode);
-                valueOf(valueNode, v.get(key));
+                valueOf(valueNode, me.getValue());
             }
         }
     }
@@ -589,12 +590,12 @@ public final class DOMUtil {
      *
      * @throws TransformerException
      */
-    public static Node getSingleNode(Node contextNode, String str, 
-                                     XPathProcessor processor) 
+    public static Node getSingleNode(Node contextNode, String str,
+                                     XPathProcessor processor)
     throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
-            return processor.selectSingleNode(contextNode, str); 
+            return processor.selectSingleNode(contextNode, str);
         } else {
             return getFirstNodeFromPath(contextNode, pathComponents, false);
         }
@@ -834,7 +835,7 @@ public final class DOMUtil {
      * @throws ProcessingException If the node is not found.
      */
     public static boolean getValueAsBooleanOf(Node root, String path,
-                                              XPathProcessor processor) 
+                                              XPathProcessor processor)
     throws ProcessingException {
         String value = getValueOf(root, path, processor);
         if (value == null) {
@@ -863,7 +864,7 @@ public final class DOMUtil {
         if (value != null) {
             return Boolean.valueOf(value).booleanValue();
         }
-        return defaultValue;        
+        return defaultValue;
     }
 
     /**
@@ -898,7 +899,7 @@ public final class DOMUtil {
         if (pathComponents != null) {
             return getNodeListFromPath(contextNode, pathComponents);
         }
-       return processor.selectNodeList(contextNode, str); 
+       return processor.selectNodeList(contextNode, str);
     }
 
     /**

@@ -25,6 +25,8 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -320,7 +322,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             // Output a single element
             handler.startDocument();
             handler.startPrefixMapping(prefix, uri);
-            handler.startElement(uri, "element", "", new AttributesImpl());
+            handler.startElement(uri, "element", "", XMLUtils.EMPTY_ATTRIBUTES);
             handler.endPrefixMapping(prefix);
             handler.endDocument();
 

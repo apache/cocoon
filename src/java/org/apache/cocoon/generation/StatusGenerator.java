@@ -38,6 +38,8 @@ import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
@@ -510,7 +512,7 @@ public class StatusGenerator
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         this.xmlConsumer.startElement(namespace, "value", "value", ai);
-        this.xmlConsumer.startElement(namespace, "line", "line", new AttributesImpl());
+        this.xmlConsumer.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
 
         if (value != null) {
             this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
@@ -536,7 +538,7 @@ public class StatusGenerator
         for (int i = 0; i < values.size(); i++) {
             String value = (String) values.get(i);
             if (value != null) {
-                this.xmlConsumer.startElement(namespace, "line", "line", new AttributesImpl());
+                this.xmlConsumer.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
                 this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
                 this.xmlConsumer.endElement(namespace, "line", "line");
             }
