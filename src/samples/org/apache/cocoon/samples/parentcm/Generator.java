@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.xml.sax.SAXException;
@@ -35,7 +36,7 @@ import java.util.Map;
  * <code>Time</code> component.
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Generator.java,v 1.3 2004/05/24 12:42:44 cziegeler Exp $
+ * @version $Id$
  */
 public class Generator extends ServiceableGenerator implements Poolable {
 
@@ -64,13 +65,12 @@ public class Generator extends ServiceableGenerator implements Poolable {
     /**
      * Generate XML data.
      */
-    public void generate() throws SAXException, ProcessingException {
-        AttributesImpl emptyAttributes = new AttributesImpl();
+    public void generate()
+    throws SAXException, ProcessingException {
         contentHandler.startDocument();
-        contentHandler.startElement("", "time", "time", emptyAttributes);
+        contentHandler.startElement("", "time", "time", XMLUtils.EMPTY_ATTRIBUTES);
 
         char[] text = this.time.toString().toCharArray();
-
         contentHandler.characters(text, 0, text.length);
 
         contentHandler.endElement("", "time", "time");

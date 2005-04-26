@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,12 +33,12 @@ import java.util.Map;
 
 /**
  * @cocoon.sitemap.component.documentation
- * Generates a document from a session attribute. 
- * 
+ * Generates a document from a session attribute.
+ *
  * @cocoon.sitemap.component.name   sessionattribute
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.sessionattribute
- * 
+ *
  * Generates a document from a session attribute. The attribute may be a DOM
  * node, an <code>XMLizable</code>, or any other object, and is streamed using
  * the same rules as for &lt;xsp:expr&gt; in XSPs (see {@link
@@ -73,7 +73,7 @@ import java.util.Map;
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
  * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeGenerator.java,v 1.5 2004/05/26 14:11:34 cziegeler Exp $
+ * @version $Id$
  */
 public class SessionAttributeGenerator extends AbstractGenerator {
 
@@ -91,12 +91,12 @@ public class SessionAttributeGenerator extends AbstractGenerator {
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
       throws ProcessingException, SAXException, IOException {
-        
+
         super.setup(resolver, objectModel, src, par);
-        
+
         // Get the element name (can be null if the object is a DOM or an XMLizable)
         this.elementName = par.getParameter(ELEMENT_NAME, null);
-        
+
         // Get the attribute name
         String attrName = par.getParameter(ATTR_NAME, src);
         if (attrName == null) {
@@ -111,7 +111,7 @@ public class SessionAttributeGenerator extends AbstractGenerator {
         if (session != null) {
             this.attrObject = session.getAttribute(attrName);
         }
-        
+
         // Controls
         if (this.attrObject == null) {
             if (this.elementName == null) {
@@ -132,7 +132,7 @@ public class SessionAttributeGenerator extends AbstractGenerator {
                 ! (this.attrObject instanceof XMLizable) &&
                 ! (this.attrObject instanceof Node)) {
 
-                String msg = "Session attribute '" + attrName + "' needs an enclosing element : class is " + 
+                String msg = "Session attribute '" + attrName + "' needs an enclosing element : class is " +
                     this.attrObject.getClass().getName();
 
                 getLogger().warn(msg);
@@ -144,17 +144,18 @@ public class SessionAttributeGenerator extends AbstractGenerator {
     /**
      * Generate XML data
      */
-    public void generate() throws IOException, SAXException, ProcessingException {
+    public void generate()
+    throws IOException, SAXException, ProcessingException {
         xmlConsumer.startDocument();
 
         if (this.elementName != null) {
-            xmlConsumer.startElement("", this.elementName, this.elementName, new AttributesImpl());
+            xmlConsumer.startElement("", this.elementName, this.elementName, XMLUtils.EMPTY_ATTRIBUTES);
             XMLUtils.valueOf(new IncludeXMLConsumer(xmlConsumer), this.attrObject);
             xmlConsumer.endElement("", this.elementName, this.elementName);
         } else {
             XMLUtils.valueOf(new IncludeXMLConsumer(xmlConsumer), this.attrObject);
         }
-        
+
         xmlConsumer.endDocument();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.notification;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.ContentHandler;
@@ -32,7 +33,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Notifier {
 
@@ -134,16 +135,15 @@ public class Notifier {
         }
 
         ch.endElement(URI, "message", PREFIX + ":message");
-        ch.startElement(URI, "description", PREFIX + ":description",
-                        new AttributesImpl());
+        ch.startElement(URI, "description", PREFIX + ":description", XMLUtils.EMPTY_ATTRIBUTES);
         ch.characters(n.getDescription().toCharArray(), 0, n.getDescription().length());
         ch.endElement(URI, "description", PREFIX + ":description");
 
         Map extraDescriptions = n.getExtraDescriptions();
-        Iterator keyIter = extraDescriptions.keySet().iterator();
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-            String value = String.valueOf(extraDescriptions.get(key));
+        for (Iterator i = extraDescriptions.entrySet().iterator(); i.hasNext(); ) {
+            final Map.Entry me = (Map.Entry) i.next();
+            String key = (String) me.getKey();
+            String value = String.valueOf(me.getValue());
             atts = new AttributesImpl();
 
             atts.addAttribute(URI, "description", PREFIX + ":description", "CDATA", key);
