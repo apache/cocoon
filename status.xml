@@ -427,6 +427,9 @@
   </release>
   <release version="2.1.8" date="TBD">
     <action dev="VG" type="update">
+      OJB Block: Added support for OJB 1.1.
+    </action>
+    <action dev="VG" type="update">
       AbstractSAXTransformer gets <code>transformer-factory</code> configuration
       parameter.
     </action>
