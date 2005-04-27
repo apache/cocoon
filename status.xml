@@ -195,6 +195,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="LG" type="update">
+     Removed o.a.c.generation.JXTemplateGenerator from core. 
+     Introduced o.a.c.template.jxtg.JXTemplateGenerator as the official templating language.
+   </action>
    <action dev="VG" type="remove">
      Removed EventRecorder (in o.a.c.t.helpers package).
    </action>
