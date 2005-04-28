@@ -241,6 +241,11 @@ public class ExtendedComponentSelector extends ExcaliburComponentSelector
      * Get the default hint, if any for this selector.
      */
     public String getDefaultHint() {
+        // Inherit parent default hint if have no own
+        if (this.defaultHint == null && this.parentSelector != null) {
+            return this.parentSelector.getDefaultHint();
+        }
+
         return this.defaultHint;
     }
 
