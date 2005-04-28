@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,9 +16,9 @@
 package org.apache.cocoon.forms.transformation;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
+
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.AggregateField;
-import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Group;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Struct;
@@ -30,8 +30,8 @@ import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.commons.jxpath.JXPathException;
 
+import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -165,17 +165,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         classes = new HashMap();
     }
 
-    protected String getLocation() {
-        String location = null;
-        if (locator != null) {
-            location = " (" + locator.getSystemId() + ":"
-            + locator.getLineNumber() + ":" + locator.getColumnNumber() + ")";
-        } else {
-            location = "unknown";
-        }
-        return location;
-    }
-
     protected String getWidgetId(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
         if (widgetId == null || widgetId.equals("")) {
@@ -185,7 +174,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     }
 
     protected Widget getWidget(String widgetPath) throws SAXException {
-        Widget widget = ((ContainerWidget)contextWidget).lookupWidget(widgetPath);
+        Widget widget = contextWidget.lookupWidget(widgetPath);
         if (widget == null) {
             if (contextWidget.getRequestParameterName().equals("")) {
                 throwSAXException("No widget exists at the path \"" + widgetPath + "\", relative to the form container.");
@@ -204,7 +193,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             throwWrongWidgetType("RepeaterWidgetLabelHandler", input.loc, "repeater");
         }
     }
-    
+
     protected boolean isVisible(Widget widget) {
         return widget.getCombinedState().isDisplayingValues();
     }
@@ -336,10 +325,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                         pipeContext.setLocale(Locale.getDefault());
                     }
                 }
-                
+
                 out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
-                // we need to merge input.attrs with possible overruling attributes 
+                // we need to merge input.attrs with possible overruling attributes
                 // from the pipeContext
                 input.addAttributes(pipeContext.getFormAttributes());
 
@@ -599,7 +588,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     //Don't output fi:struct
                     // out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
                     // out.attributes();
-                    // out.startElement();      
+                    // out.startElement();
                    return this;
                 } else {
                     return nullHandler;
@@ -631,8 +620,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                     contextWidgets.addFirst(contextWidget);
                     contextWidget = widget;
                     // Don't output fi:union
-                    //out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");      
-                    //out.startElement();      
+                    //out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
+                    //out.startElement();
                     return this;
                 } else {
                     return nullHandler;
@@ -844,7 +833,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-
     private Attributes translateAttributes(Attributes attributes, String[] names) {
         AttributesImpl newAtts = new AttributesImpl(attributes);
         if (names!= null) {
@@ -857,56 +845,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
         return newAtts;
     }
-
-//    /**
-//     * Replaces JXPath expressions embedded inside #{ and } by their value.
-//     */
-//    private String translateText(String original) {
-//        StringBuffer expression;
-//        StringBuffer translated = new StringBuffer();
-//        StringReader in = new StringReader(original);
-//        int chr;
-//        try {
-//            while ((chr = in.read()) != -1) {
-//                char c = (char) chr;
-//                if (c == '#') {
-//                    chr = in.read();
-//                    if (chr != -1) {
-//                        c = (char) chr;
-//                        if (c == '{') {
-//                            expression = new StringBuffer();
-//                            boolean more = true;
-//                            while ( more ) {
-//                                more = false;
-//                                if ((chr = in.read()) != -1) {
-//                                    c = (char)chr;
-//                                    if (c != '}') {
-//                                        expression.append(c);
-//                                        more = true;
-//                                    } else {
-//                                        translated.append(evaluateExpression(expression.toString()));
-//                                    }
-//                                } else {
-//                                    translated.append('#').append('{').append(expression);
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        translated.append((char) chr);
-//                    }
-//                } else {
-//                    translated.append(c);
-//                }
-//            }
-//        } catch (IOException ignored) {
-//            ignored.printStackTrace();
-//        }
-//        return translated.toString();
-//    }
-
-//    private String evaluateExpression(String expression) {
-//        return pipeContext.evaluateExpression(expression).toString();
-//    }
 
     public void recycle() {
         super.recycle();
