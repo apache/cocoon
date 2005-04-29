@@ -93,9 +93,13 @@ public final class SourceUtil {
             source.toSAX(handler);
         } catch (SAXException e) {
             // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
+            // Handle SourceException.
             // See also handleSAXException
             final Exception cause = e.getException();
             if (cause != null) {
+                if (cause instanceof SourceException) {
+                    handle((SourceException) cause);
+                }
                 if (cause instanceof ProcessingException) {
                     throw (ProcessingException) cause;
                 }
@@ -371,6 +375,11 @@ public final class SourceUtil {
         final Exception cause = e.getException();
         if (cause != null) {
             // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
+            // Handle SourceException.
+            // See also toSax(XMLizable, ContentHandler
+            if (cause instanceof SourceException) {
+                handle((SourceException) cause);
+            }
             if (cause instanceof ProcessingException) {
                 throw (ProcessingException) cause;
             }
