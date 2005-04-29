@@ -157,9 +157,8 @@ public class EnvironmentWrapper
             && os instanceof BufferedOutputStream) {
             ((BufferedOutputStream)os).clearBuffer();
             return true;
-        } else {
-            return super.tryResetResponse();
         }
+        return super.tryResetResponse();
     }
 
     /* (non-Javadoc)

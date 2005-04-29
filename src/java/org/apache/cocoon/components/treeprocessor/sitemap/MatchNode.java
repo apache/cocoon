@@ -29,7 +29,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class MatchNode extends SimpleSelectorProcessingNode
@@ -85,9 +85,8 @@ public class MatchNode extends SimpleSelectorProcessingNode
 
             // Invoke children with the matcher results
             return this.invokeNodes(children, env, context, name, result);
-        } else {
-            // Matcher failed
-            return false;
         }
+        // Matcher failed
+        return false;
     }
 }

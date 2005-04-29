@@ -31,6 +31,7 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
     }
 
     public AbstractParentProcessingNode() {
+        this(null);
     }
 
     /**

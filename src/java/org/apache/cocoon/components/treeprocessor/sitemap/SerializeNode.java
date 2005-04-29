@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.9 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
@@ -133,9 +133,8 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
             // Process pipeline
             return pipeline.process(env);
 
-        } else {
-            // Return true : pipeline is finished.
-            return true;
         }
+        // Return true : pipeline is finished.
+        return true;
     }
 }

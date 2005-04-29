@@ -182,9 +182,8 @@ public class CommandLineRequest implements Request {
     public Object getAttribute(String name, int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return this.attributes.get(name);
-        } else {
-            return this.globalAttributes.get(name);
         }
+        return this.globalAttributes.get(name);
     }
     
     /* (non-Javadoc)
@@ -193,9 +192,8 @@ public class CommandLineRequest implements Request {
     public Enumeration getAttributeNames(int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
-        } else {
-            return IteratorUtils.asEnumeration(this.globalAttributes.keySet().iterator());
         }
+        return IteratorUtils.asEnumeration(this.globalAttributes.keySet().iterator());
     }
     
     /* (non-Javadoc)
@@ -247,9 +245,8 @@ public class CommandLineRequest implements Request {
         final Object value = this.parameters.get(name);
         if (value instanceof String) {
             return new String[] { (String)value };
-        } else {
-            return (String[]) value;
         }
+        return (String[]) value;
     }
 
     public String getHeader(String name) {
@@ -275,9 +272,8 @@ public class CommandLineRequest implements Request {
     public Enumeration getHeaderNames() {
         if (headers != null) {
             return IteratorUtils.asEnumeration(headers.keySet().iterator());
-        } else {
-            return new EmptyEnumeration();
         }
+        return new EmptyEnumeration();
     }
 
     public String getCharacterEncoding() { return characterEncoding; }
@@ -426,5 +422,16 @@ public class CommandLineRequest implements Request {
 	public InputStream getInputStream() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
+
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        if ( result == null ) {
+            result = this.getAttribute(name, GLOBAL_SCOPE);
+        }
+        return result;
+    }
 
 }

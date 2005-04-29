@@ -93,9 +93,8 @@ public final class RequestWrapper extends AbstractRequestWrapper {
         String value = this.parameters.getParameter(name);
         if (value == null && !this.rawMode) {
             return this.req.getParameter(name);
-        } else {
-            return value;
         }
+        return value;
     }
 
     /* (non-Javadoc)
@@ -114,9 +113,8 @@ public final class RequestWrapper extends AbstractRequestWrapper {
                 parameterNames.add(names.nextElement());
             }
             return new EnumerationFromIterator(parameterNames.iterator());
-        } else {
-            return this.parameters.getParameterNames();
         }
+        return this.parameters.getParameterNames();
     }
 
     final class EnumerationFromIterator implements Enumeration {
@@ -144,9 +142,8 @@ public final class RequestWrapper extends AbstractRequestWrapper {
             System.arraycopy(values, 0, allValues, 0, values.length);
             System.arraycopy(inherited, 0, allValues, values.length, inherited.length);
             return allValues;
-        } else {
-            return this.parameters.getParameterValues(name);
         }
+        return this.parameters.getParameterValues(name);
     }
 
     /* (non-Javadoc)
@@ -191,9 +188,8 @@ public final class RequestWrapper extends AbstractRequestWrapper {
     public Object getAttribute(String name, int scope) {
         if ( scope == Request.GLOBAL_SCOPE ) {
             return super.getAttribute(name, scope);
-        } else {
-            return this.requestAttributes.get( name );
         }
+        return this.requestAttributes.get( name );
     }
         
     /* (non-Javadoc)
@@ -202,9 +198,8 @@ public final class RequestWrapper extends AbstractRequestWrapper {
     public Enumeration getAttributeNames(int scope) {
         if ( scope == Request.GLOBAL_SCOPE ) {
             return super.getAttributeNames(scope);
-        } else {
-            return IteratorUtils.asEnumeration(this.requestAttributes.keySet().iterator());
         }
+        return IteratorUtils.asEnumeration(this.requestAttributes.keySet().iterator());
     }
 
     /* (non-Javadoc)
@@ -229,4 +224,17 @@ public final class RequestWrapper extends AbstractRequestWrapper {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        if ( result == null ) {
+            result = this.getAttribute(name, GLOBAL_SCOPE);
+            if ( result == null ) {
+                result = this.req.getAttribute(name, REQUEST_SCOPE);
+            }
+        }
+        return result;
+    }
 }

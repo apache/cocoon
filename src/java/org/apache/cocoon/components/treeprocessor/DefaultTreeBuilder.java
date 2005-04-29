@@ -291,9 +291,8 @@ public class DefaultTreeBuilder
     public ProcessingNode getRegisteredNode(String name) {
         if (this.canGetNode) {
             return (ProcessingNode)this.registeredNodes.get(name);
-        } else {
-            throw new IllegalArgumentException("Categories are only available during buildNode()");
         }
+        throw new IllegalArgumentException("Categories are only available during buildNode()");
     }
 
     public ProcessingNodeBuilder createNodeBuilder(Configuration config) throws Exception {
@@ -312,11 +311,10 @@ public class DefaultTreeBuilder
             if (this.itsBuilders.isSelectable(nodeName)) {
                 // No : rethrow
                 throw ce;
-            } else {
-                // Throw a more meaningful exception
-                String msg = "Unknown element '" + nodeName + "' at " + config.getLocation();
-                throw new ConfigurationException(msg);
             }
+            // Throw a more meaningful exception
+            String msg = "Unknown element '" + nodeName + "' at " + config.getLocation();
+            throw new ConfigurationException(msg);
         }
 
         builder.setBuilder(this);

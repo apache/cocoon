@@ -111,9 +111,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
             // Invoke children with the matcher results
             return this.invokeNodes(children, env, context, name, result);
 
-        } else {
-            // Matcher failed
-            return false;
         }
+        // Matcher failed
+        return false;
     }
 }

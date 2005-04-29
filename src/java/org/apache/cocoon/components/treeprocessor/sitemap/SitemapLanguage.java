@@ -173,14 +173,13 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         final String role = config.getAttribute("role", null);
         if ( role != null ) {
             return new TreeBuilder.EventComponent(manager.lookup(role), true);
-        } else {
-            final String className = config.getAttribute("class");
-            final Object component = ClassUtils.newInstance(className);
-
-            LifecycleHelper.setupComponent(component, this.getLogger(), context, manager, config);
-
-            return new TreeBuilder.EventComponent(component, false);
         }
+        final String className = config.getAttribute("class");
+        final Object component = ClassUtils.newInstance(className);
+
+        LifecycleHelper.setupComponent(component, this.getLogger(), context, manager, config);
+
+        return new TreeBuilder.EventComponent(component, false);
     }
 
     /**

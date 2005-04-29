@@ -22,7 +22,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.5 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public abstract class AbstractProcessingNode 
@@ -42,6 +42,7 @@ public abstract class AbstractProcessingNode
     }
     
     public AbstractProcessingNode() {
+        this(null);
     }
 
     /**

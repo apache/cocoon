@@ -102,56 +102,54 @@ public class MockRequest implements Request {
     public String getCharacterEncoding() {
         return charEncoding;
     }
-    
+
     public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
         charEncoding = enc;
     }
-    
+
     public int getContentLength() {
         return -1;
     }
-    
+
     public String getContentType() {
         return contentType;
     }
-    
+
     public String getParameter(String name) {
         return (String)parameters.get(name);
     }
-    
+
     public Enumeration getParameterNames() {
         return parameters.keys();
     }
-    
+
     public String[] getParameterValues(String name) {
         Object param = parameters.get(name);
-        if( null == param )
+        if ( null == param ) {
             return null;
-        else {
-            if (param.getClass().isArray()) {
-                return (String[]) param;
-            } else {
-                return new String[] {(String) param};
-            }
         }
+        if (param.getClass().isArray()) {
+            return (String[]) param;
+        }
+        return new String[] {(String) param};
     }
-    
+
     public void addParameter(String name, String value) {
         parameters.put(name, value);
     }
-    
+
     public String getProtocol() {
         return protocol;
     }
-    
+
     public String getScheme() {
         return scheme;
     }
-    
+
     public String getServerName() {
         return serverName;
     }
-    
+
     public int getServerPort() {
         return port;
     }
@@ -173,26 +171,24 @@ public class MockRequest implements Request {
     }
     
     public boolean isSecure() {
-        if(scheme==null){
+        if (scheme==null) {
             return false;
-        } else{
-            return scheme.equalsIgnoreCase("HTTPS");
         }
+        return scheme.equalsIgnoreCase("HTTPS");
     }
     
     public Cookie[] getCookies() {
-        if (cookies.isEmpty())
+        if (cookies.isEmpty()) {
             return null;
-        else {
-            Cookie[] cookieArray = new Cookie[cookies.size()];
-            return (Cookie []) cookies.values().toArray(cookieArray);
         }
+        Cookie[] cookieArray = new Cookie[cookies.size()];
+        return (Cookie []) cookies.values().toArray(cookieArray);
     }
-    
+
     public Map getCookieMap() {
         return cookies;
     }
-    
+
     public long getDateHeader(String name) {
         String s1 = getHeader(name);
         if (s1 == null) {
@@ -206,11 +202,11 @@ public class MockRequest implements Request {
             throw new IllegalArgumentException("Cannot parse date: " + s1);
         }
     }
-    
+
     public String getHeader(String name) {
         return (String) headers.get(name);
     }
-    
+
     public Enumeration getHeaders(String name) {
         throw new AssertionFailedError("Not implemented");
     }
@@ -264,10 +260,10 @@ public class MockRequest implements Request {
     }
     
     public String getRequestURI() {
-        if (this.environment == null)
+        if (this.environment == null) {
             return requestURI;
-        else
-            return this.environment.getURI();
+        }
+        return this.environment.getURI();
     }
     
     public void setRequestURI(String uri) {
@@ -275,23 +271,23 @@ public class MockRequest implements Request {
     }
     
     public String getSitemapURI() {
-        if (this.environment == null)
+        if (this.environment == null) {
             return requestURI;
-        else
-            return this.environment.getURI();
+        }
+        return this.environment.getURI();
     }
     
     public String getSitemapPath() {
-        if (this.environment == null)
+        if (this.environment == null) {
             return "";
-        else
-            return this.environment.getURIPrefix();
+        }
+        return this.environment.getURIPrefix();
     }
 
     public String getServletPath() {
         return servletPath;
     }
-    
+
     public Session getSession(boolean create) {
         if ((session == null) && (create)) {
             this.session = new MockSession();
@@ -300,15 +296,14 @@ public class MockRequest implements Request {
         }
         if ((session != null) && ((session).isValid())) {
             return this.session;
-        } else {
-            return null;
         }
+        return null;
     }
-    
+
     public Session getSession() {
         return getSession(true);
     }
-    
+
     public boolean isRequestedSessionIdValid() {
         if (session != null) {
             try {
@@ -317,16 +312,18 @@ public class MockRequest implements Request {
             } catch (IllegalStateException e) {
                 return false;
             }
-        } else
-            return false;
+        }
+        return false;
     }
-    
+
     public boolean isRequestedSessionIdFromCookie() {
         return isRequestedSessionIdFromCookie;
     }
+
     public boolean isRequestedSessionIdFromURL() {
         return isRequestedSessionIdFromURL;
     }
+
     public void reset() {
         attributes.clear();
         globalAttributes.clear();
@@ -409,9 +406,8 @@ public class MockRequest implements Request {
     public Object getAttribute(String name, int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return this.attributes.get(name);
-        } else {
-            return this.globalAttributes.get(name);
         }
+        return this.globalAttributes.get(name);
     }
     
     /* (non-Javadoc)
@@ -420,9 +416,8 @@ public class MockRequest implements Request {
     public Enumeration getAttributeNames(int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return this.attributes.keys();
-        } else {
-            return this.globalAttributes.keys();
         }
+        return this.globalAttributes.keys();
     }
     
     /* (non-Javadoc)
@@ -447,14 +442,26 @@ public class MockRequest implements Request {
         }
     }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.environment.Request#getInputStream()
-         */
-        public InputStream getInputStream() throws IOException, UnsupportedOperationException {
-                return this.inputStream;
-        }
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getInputStream()
+     */
+    public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+        return this.inputStream;
+    }
 
     public void setInputStream(InputStream is) {
-                this.inputStream = is;
+        this.inputStream = is;
     }
+
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        if ( result == null ) {
+            result = this.getAttribute(name, GLOBAL_SCOPE);
+        }
+        return result;
+    }
+
 }

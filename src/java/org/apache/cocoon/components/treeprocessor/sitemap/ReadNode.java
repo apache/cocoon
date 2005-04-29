@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ReadNode.java,v 1.4 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class ReadNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
@@ -95,9 +95,8 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
             // Process pipeline
             return pipeline.process(env);
 
-        } else {
-            // Return true : pipeline is finished.
-            return true;
         }
+        // Return true : pipeline is finished.
+        return true;
     }
 }
