@@ -26,7 +26,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Base class for processing nodes that are based on a component in a Selector (act, match, select, etc).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode
@@ -72,9 +72,8 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
     protected Object getComponent() throws ServiceException {
         if (this.threadSafeComponent != null) {
             return this.threadSafeComponent;
-        } else {
-            return this.selector.select(this.componentName);
         }
+        return this.selector.select(this.componentName);
     }
     
     /**

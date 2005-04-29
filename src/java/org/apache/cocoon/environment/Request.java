@@ -167,6 +167,23 @@ public interface Request {
     Object getAttribute(String name, int scope);
 
     /**
+     * Returns the value of the named attribute searching both scopes
+     * as an <code>Object</code>, or <code>null</code> if no attribute 
+     * of the given name exists. This method first searches in the 
+     * request scope and then, if no object is found, in the global scope.
+     *
+     * @param name        a <code>String</code> specifying the name of
+     *                        the attribute
+     *
+     * @return                an <code>Object</code> containing the value
+     *                        of the attribute, or <code>null</code> if
+     *                        the attribute does not exist
+     *
+     * @since 2.2
+     */
+    Object searchAttribute(String name);
+
+    /**
      * Returns an <code>Enumeration</code> containing the
      * names of the attributes available to this request in the scope.
      * This method returns an empty <code>Enumeration</code>

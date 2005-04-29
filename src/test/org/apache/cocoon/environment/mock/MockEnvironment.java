@@ -38,6 +38,7 @@ public class MockEnvironment implements Environment {
     private Hashtable attributes = new Hashtable();
 
     public MockEnvironment() {
+        // empty constructor
     }
 
     public String getURI() {
@@ -111,6 +112,7 @@ public class MockEnvironment implements Environment {
     }
 
     public void setResponseIsNotModified() {
+        // nothing to do
     }
 
     public void setAttribute(String name, Object value) {

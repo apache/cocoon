@@ -56,12 +56,12 @@ public final class HttpRequest implements Request {
 
     /** The default form encoding of the servlet container */
     private String container_encoding;
-    
+
     /** The current session */
     private HttpSession session;
-    
+
     private final Map attributes = new HashMap();
-    
+
     /**
      * Creates a HttpRequest based on a real HttpServletRequest object
      */
@@ -78,21 +78,20 @@ public final class HttpRequest implements Request {
         // if the request has been wrapped then access its method
         if (req instanceof MultipartHttpServletRequest) {
             return ((MultipartHttpServletRequest) req).get(name);
-        } else {
-            String[] values = req.getParameterValues(name);
-            if (values == null) {
-                return null;
+        }
+        String[] values = req.getParameterValues(name);
+        if (values == null) {
+            return null;
+        }
+        if (values.length == 1) {
+            return values[0];
+        }
+        if (values.length > 1) {
+            Vector vect = new Vector(values.length);
+            for (int i = 0; i < values.length; i++) {
+                vect.add(values[i]);
             }
-            if (values.length == 1) {
-                return values[0];
-            }
-            if (values.length > 1) {
-                Vector vect = new Vector(values.length);
-                for (int i = 0; i < values.length; i++) {
-                    vect.add(values[i]);
-                }
-                return vect;
-            }
+            return vect;
         }
         return null;
     }
@@ -282,7 +281,7 @@ public final class HttpRequest implements Request {
     public Object getAttribute(String name) {
         return this.getAttribute(name, Request.GLOBAL_SCOPE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getAttributeNames()
      */
@@ -296,7 +295,7 @@ public final class HttpRequest implements Request {
     public void setAttribute(String name, Object value) {
         this.setAttribute(name, value, Request.GLOBAL_SCOPE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
      */
@@ -310,22 +309,20 @@ public final class HttpRequest implements Request {
     public Object getAttribute(String name, int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return this.attributes.get(name);
-        } else {
-            return this.req.getAttribute(name);
         }
+        return this.req.getAttribute(name);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
      */
     public Enumeration getAttributeNames(int scope) {
         if ( scope == Request.REQUEST_SCOPE ) {
             return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
-        } else {
-            return this.req.getAttributeNames();
         }
+        return this.req.getAttributeNames();
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
      */
@@ -336,7 +333,7 @@ public final class HttpRequest implements Request {
             this.req.setAttribute(name, value);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
      */
@@ -351,9 +348,8 @@ public final class HttpRequest implements Request {
     public String getCharacterEncoding() {
         if (this.form_encoding == null) {
             return this.req.getCharacterEncoding();
-        } else {
-            return this.form_encoding;
         }
+        return this.form_encoding;
     }
 
     public void setCharacterEncoding(String form_encoding)
@@ -467,5 +463,16 @@ public final class HttpRequest implements Request {
      */
     public String getRealPath(String path) {
         return this.req.getRealPath(path);
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        if ( result == null ) {
+            result = this.getAttribute(name, GLOBAL_SCOPE);
+        }
+        return result;
     }
 }

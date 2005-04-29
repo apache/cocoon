@@ -102,25 +102,24 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
                 throw e;
             }
 
-		} else {
-		    // A 'type' attribute is present : add the implicit generator
-            context.getProcessingPipeline().setGenerator("<notifier>", "", Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
+		}
+	    // A 'type' attribute is present : add the implicit generator
+        context.getProcessingPipeline().setGenerator("<notifier>", "", Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
 
-            try {
-                return invokeNodes(this.children, env, context);
-            } catch (ProcessingException e) {
-                if (e.getMessage().indexOf("Generator already set") != -1){
+        try {
+            return invokeNodes(this.children, env, context);
+        } catch (ProcessingException e) {
+            if (e.getMessage().indexOf("Generator already set") != -1){
 
-                    env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
-                    throw new ProcessingException(
-                            "Error: 'handle-error' with a 'type' attribute has an implicit generator, at " +
-                            getLocation() + System.getProperty("line.separator") +
-                            "Please remove the 'type' attribute on 'handle-error'");
-                }
-
-                // Rethrow the exception
-                throw e;
+                env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
+                throw new ProcessingException(
+                        "Error: 'handle-error' with a 'type' attribute has an implicit generator, at " +
+                        getLocation() + System.getProperty("line.separator") +
+                        "Please remove the 'type' attribute on 'handle-error'");
             }
+
+            // Rethrow the exception
+            throw e;
         }
     }
 }

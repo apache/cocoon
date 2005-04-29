@@ -94,10 +94,9 @@ public abstract class AbstractParentProcessingNodeBuilder extends AbstractProces
         if (name.equals("parameter")) {
             if (this.hasParameters()) {
                 return true;
-            } else {
-                String msg = "Element '" + name + "' has no parameters at " + config.getLocation();
-                throw new ConfigurationException(msg);
             }
+            String msg = "Element '" + name + "' has no parameters at " + config.getLocation();
+            throw new ConfigurationException(msg);
         }
         return false;
     }

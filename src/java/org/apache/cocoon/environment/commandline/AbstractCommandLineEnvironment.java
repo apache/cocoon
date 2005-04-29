@@ -183,9 +183,8 @@ extends AbstractEnvironment {
     public OutputStream getOutputStream(int bufferSize) throws IOException {
         if (this.outputStream == null) {
             return null;
-        } else {
-            return super.getOutputStream(bufferSize);
         }
+        return super.getOutputStream(bufferSize);
     }
 
 }

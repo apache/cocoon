@@ -32,7 +32,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.24 2004/06/25 15:36:38 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -115,19 +115,17 @@ public abstract class AbstractEnvironment
         if (action != null) {
             /* TC: still support the deprecated syntax */
             return action;
-        } else {
-            for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
-                String name = (String)e.nextElement();
-                if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
-                    if (name.endsWith(".x") || name.endsWith(".y")) {
-                        return name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2);
-                    } else {
-                        return name.substring(Constants.ACTION_PARAM_PREFIX.length());
-                    }
-                }
-            }
-            return null;
         }
+        for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
+            String name = (String)e.nextElement();
+            if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
+                if (name.endsWith(".x") || name.endsWith(".y")) {
+                    return name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2);
+                }
+                 return name.substring(Constants.ACTION_PARAM_PREFIX.length());
+            }
+        }
+        return null;
     }
 
     /* (non-Javadoc)

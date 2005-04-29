@@ -22,11 +22,12 @@ package org.apache.cocoon.environment;
  * used for Cocoon sitemap components.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SourceResolver.java,v 1.4 2004/05/24 11:26:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public interface SourceResolver
 extends org.apache.excalibur.source.SourceResolver {
 
+    // no methods to add
 }
 

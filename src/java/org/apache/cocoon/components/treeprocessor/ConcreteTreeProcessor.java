@@ -144,9 +144,16 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
     }
 
+    /**
+     * @see org.apache.commons.jci.monitor.FilesystemAlterationListener#onStart()
+     */
     public void onStart() {
+        // nothing to do
     }
 
+    /**
+     * @see org.apache.commons.jci.monitor.FilesystemAlterationListener#onStop()
+     */
     public void onStop() {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Now tracking classpath changes");
@@ -279,9 +286,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         try {
             if (process(environment, context)) {
                 return context.getInternalPipelineDescription(environment);
-            } else {
-                return null;
             }
+            return null;
         } finally {
             context.dispose();
         }
@@ -308,7 +314,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         try {
             // invoke listeners
-            if ( this.enterSitemapEventListeners.size() > 0 ) {
+            // only invoke if pipeline is not internally
+            if ( !context.isBuildingPipelineOnly() && this.enterSitemapEventListeners.size() > 0 ) {
                 final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
                 final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
                 while ( enterSEI.hasNext() ) {
@@ -339,7 +346,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             // invoke listeners
-            if ( this.leaveSitemapEventListeners.size() > 0 ) {
+            // only invoke if pipeline is not internally
+            if ( !context.isBuildingPipelineOnly() && this.leaveSitemapEventListeners.size() > 0 ) {
                 final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
                 final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
                 while ( leaveSEI.hasNext() ) {

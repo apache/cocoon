@@ -104,13 +104,11 @@ public class MountNode extends AbstractProcessingNode
                 if (pp != null) {
                     context.setInternalPipelineDescription(pp);
                     return true;
-                } else {
-                    return false;
                 }
-            } else {
-                // Processor will create its own pipelines
-                return processor.process(env);
+                return false;
             }
+            // Processor will create its own pipelines
+            return processor.process(env);
         } finally {
             // Restore context
             env.setURI(oldPrefix, oldURI);

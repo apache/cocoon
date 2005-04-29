@@ -432,11 +432,11 @@ public final class SitemapSource
 
         private SourceValidity validity;
 
-        private SitemapSourceValidity() {
+        protected SitemapSourceValidity() {
             super();
         }
 
-        private void set(SourceValidity validity) {
+        protected void set(SourceValidity validity) {
             this.validity = validity;
         }
 

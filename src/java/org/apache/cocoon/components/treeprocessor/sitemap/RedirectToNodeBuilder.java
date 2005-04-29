@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToNodeBuilder.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
@@ -69,16 +69,14 @@ public class RedirectToNodeBuilder extends AbstractProcessingNodeBuilder
             }
             return this.callNode;
             
-        } else {
-            ProcessingNode URINode = new RedirectToURINode(
-                VariableResolverFactory.getResolver(config.getAttribute("uri"), this.manager),
-                config.getAttributeAsBoolean("session", false),
-                config.getAttributeAsBoolean("global", false),
-                config.getAttributeAsBoolean("permanent", false)
-            );
-            return this.treeBuilder.setupNode(URINode, config);
-
         }
+        ProcessingNode URINode = new RedirectToURINode(
+            VariableResolverFactory.getResolver(config.getAttribute("uri"), this.manager),
+            config.getAttributeAsBoolean("session", false),
+            config.getAttributeAsBoolean("global", false),
+            config.getAttributeAsBoolean("permanent", false)
+        );
+        return this.treeBuilder.setupNode(URINode, config);
     }
 
     public void linkNode() throws Exception {

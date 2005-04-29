@@ -28,7 +28,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActNodeBuilder.java,v 1.6 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
                             implements LinkedProcessingNodeBuilder {
@@ -72,23 +72,22 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
 
             return actTypeNode;
 
-        } else {
-
-            if (inActionSet) {
-                throw new ConfigurationException("Cannot call an action set from an action set at " + config.getLocation());
-            }
-
-            // Action set call
-            if (config.getAttribute("src", null) != null) {
-                getLogger().warn("The 'src' attribute is ignored for action-set call at " + config.getLocation());
-            }
-            this.actSetNode = new ActSetNode();
-            this.treeBuilder.setupNode(this.actSetNode, config);
-
-            this.actSetNode.setChildren(buildChildNodes(config));
-
-            return this.actSetNode;
         }
+
+        if (inActionSet) {
+            throw new ConfigurationException("Cannot call an action set from an action set at " + config.getLocation());
+        }
+
+        // Action set call
+        if (config.getAttribute("src", null) != null) {
+            getLogger().warn("The 'src' attribute is ignored for action-set call at " + config.getLocation());
+        }
+        this.actSetNode = new ActSetNode();
+        this.treeBuilder.setupNode(this.actSetNode, config);
+
+        this.actSetNode.setChildren(buildChildNodes(config));
+
+        return this.actSetNode;
     }
 
     public void linkNode() throws Exception {

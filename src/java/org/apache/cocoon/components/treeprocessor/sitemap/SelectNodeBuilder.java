@@ -31,7 +31,7 @@ import org.apache.cocoon.selection.SwitchSelector;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNodeBuilder.java,v 1.4 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
 public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {
@@ -106,11 +106,10 @@ public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {
             this.treeBuilder.setupNode(node, config);
             node.setCases(whenChildrenNodes, whenResolvers, otherwiseNodes);
             return node;
-        } else {
-            SelectNode node = new SelectNode(type);
-            this.treeBuilder.setupNode(node, config);
-            node.setCases(whenChildrenNodes, whenResolvers, otherwiseNodes);
-            return node;
         }
+        SelectNode node = new SelectNode(type);
+        this.treeBuilder.setupNode(node, config);
+        node.setCases(whenChildrenNodes, whenResolvers, otherwiseNodes);
+        return node;
     }
 }
