@@ -23,6 +23,8 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * Implementation of a {@link Source} that gets its content
  * by invoking a pipeline.
  *
+ * @deprecated This class is not used and will be removed in 2.2.
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
