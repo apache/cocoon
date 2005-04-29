@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class SourceUtil {
 
@@ -82,6 +82,37 @@ public final class SourceUtil {
 
     /** Avoid instantiation */
     protected SourceUtil() {
+    }
+
+    /**
+     * Generates SAX events from the XMLizable and handle SAXException.
+     *
+     * @param  source    the data
+     */
+    static public void toSAX(XMLizable source,
+                             ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        try {
+            source.toSAX(handler);
+        } catch (SAXException e) {
+            // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
+            // See also handleSAXException
+            final Exception cause = e.getException();
+            if (cause != null) {
+                if (cause instanceof ProcessingException) {
+                    throw (ProcessingException) cause;
+                }
+                if (cause instanceof IOException) {
+                    throw (IOException) cause;
+                }
+                if (cause instanceof SAXException) {
+                    throw (SAXException) cause;
+                }
+            }
+
+            // Throw original SAX exception
+            throw e;
+        }
     }
 
     /**
@@ -138,25 +169,7 @@ public final class SourceUtil {
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
-            try {
-                ((XMLizable) source).toSAX(handler);
-            } catch (SAXException e) {
-                // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
-                // See also handleSAXException
-                final Exception cause = e.getException();
-                if (cause != null) {
-                    if (cause instanceof ProcessingException) {
-                        throw (ProcessingException) cause;
-                    }
-                    if (cause instanceof IOException) {
-                        throw (IOException) cause;
-                    }
-                    if (cause instanceof SAXException) {
-                        throw (SAXException) cause;
-                    }
-                }
-                throw e;
-            }
+            toSAX((XMLizable) source, handler);
         } else {
             String mimeType = source.getMimeType();
             if (null == mimeType) {
@@ -196,7 +209,7 @@ public final class SourceUtil {
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
-            ((XMLizable) source).toSAX(handler);
+            toSAX((XMLizable) source, handler);
         } else {
             String mimeType = source.getMimeType();
             if (null == mimeType) {
@@ -236,7 +249,7 @@ public final class SourceUtil {
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
-            ((XMLizable) source).toSAX(handler);
+            toSAX((XMLizable) source, handler);
         } else {
             SAXParser parser = null;
             try {
@@ -267,7 +280,7 @@ public final class SourceUtil {
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
-            ((XMLizable) source).toSAX(handler);
+            toSAX((XMLizable) source, handler);
         } else {
             SAXParser parser = null;
             try {
