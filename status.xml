@@ -430,6 +430,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+      Updated ant to 1.6.3.
+    </action>
     <action dev="VG" type="update">
       OJB Block: Added support for OJB 1.1.
     </action>
