@@ -29,16 +29,15 @@ import org.apache.commons.lang.SystemUtils;
  * Specifically, code for testing the parsing of mime.types files.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtilsTestCase.java,v 1.4 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class MIMEUtilsTestCase extends TestCase
 {
-
     final String NL = SystemUtils.LINE_SEPARATOR;
     Map mimeMap;
     Map extMap;
-    final String M2E = "MIME to extension mappings";
-    final String E2M = "Extension to MIME mappings";
+    static final String M2E = "MIME to extension mappings";
+    static final String E2M = "Extension to MIME mappings";
 
     public MIMEUtilsTestCase(String name) {
         super(name);
@@ -48,12 +47,14 @@ public class MIMEUtilsTestCase extends TestCase
         junit.textui.TestRunner.run(MIMEUtilsTestCase.class);
     }
 
-    public void setUp() {
+    public void setUp() throws Exception {
+        super.setUp();
         mimeMap = new HashMap();
         extMap = new HashMap();
     }
 
-    public void tearDown() {
+    public void tearDown() throws Exception {
+        super.tearDown();
         mimeMap = null;
         extMap = null;
     }
@@ -71,13 +72,13 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void testTypicalUsage() throws Exception {
-        String mime_types="# MIME type mappings"+NL+
-            "text/plain  txt text "+NL+
-            "text/html   html htm"+NL+
-            "   "+NL+
-            "text/xml    xml"+NL+
-            "text/css    css"+NL+
-            "text/javascript		js "+NL+
+        String mime_types="# MIME type mappings"+ NL +
+            "text/plain  txt text "+ NL +
+            "text/html   html htm"+ NL +
+            "   "+ NL +
+            "text/xml    xml"+ NL +
+            "text/css    css"+ NL +
+            "text/javascript		js "+ NL +
             "application/x-javascript	js";
 
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
@@ -108,9 +109,8 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstCommentsAndWhitespace() throws Exception {
-        String NL = SystemUtils.LINE_SEPARATOR;
         String mime_types="## A commented line"+NL+
-            "   "+NL+
+            "   "+ NL +
             "# Another comment";
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
         assertEquals(M2E, 0, extMap.size());
@@ -118,10 +118,9 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstMimeTypeWithoutExtension() throws Exception {
-        String NL = SystemUtils.LINE_SEPARATOR;
         String mime_types=
-            "text/plain  txt text"+NL+
-            "application/octet-stream"+NL+NL;
+            "text/plain  txt text"+ NL +
+            "application/octet-stream"+ NL + NL;
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
         assertEquals(".txt", extMap.get("text/plain"));
         assertEquals("text/plain", mimeMap.get(".txt"));
@@ -129,5 +128,4 @@ public class MIMEUtilsTestCase extends TestCase
         assertEquals(M2E, 1, extMap.size());
         assertEquals(E2M, 2, mimeMap.size());
     }
-
 }
