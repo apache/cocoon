@@ -72,13 +72,13 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void testTypicalUsage() throws Exception {
-        String mime_types="# MIME type mappings"+NL+
-            "text/plain  txt text "+NL+
-            "text/html   html htm"+NL+
-            "   "+NL+
-            "text/xml    xml"+NL+
-            "text/css    css"+NL+
-            "text/javascript		js "+NL+
+        String mime_types="# MIME type mappings"+ NL +
+            "text/plain  txt text "+ NL +
+            "text/html   html htm"+ NL +
+            "   "+ NL +
+            "text/xml    xml"+ NL +
+            "text/css    css"+ NL +
+            "text/javascript		js "+ NL +
             "application/x-javascript	js";
 
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
@@ -109,9 +109,8 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstCommentsAndWhitespace() throws Exception {
-        String NL = System.getProperty("line.separator");
         String mime_types="## A commented line"+NL+
-            "   "+NL+
+            "   "+ NL +
             "# Another comment";
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
         assertEquals(M2E, 0, extMap.size());
@@ -119,10 +118,9 @@ public class MIMEUtilsTestCase extends TestCase
     }
 
     public void tstMimeTypeWithoutExtension() throws Exception {
-        String NL = System.getProperty("line.separator");
         String mime_types=
-            "text/plain  txt text"+NL+
-            "application/octet-stream"+NL+NL;
+            "text/plain  txt text"+ NL +
+            "application/octet-stream"+ NL + NL;
         MIMEUtils.loadMimeTypes(new StringReader(mime_types), extMap, mimeMap);
         assertEquals(".txt", extMap.get("text/plain"));
         assertEquals("text/plain", mimeMap.get(".txt"));
@@ -130,5 +128,4 @@ public class MIMEUtilsTestCase extends TestCase
         assertEquals(M2E, 1, extMap.size());
         assertEquals(E2M, 2, mimeMap.size());
     }
-
 }
