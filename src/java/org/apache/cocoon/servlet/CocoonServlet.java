@@ -52,6 +52,7 @@ import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -1030,8 +1031,9 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        // remember when we started (used for timing the processing)
-        long start = System.currentTimeMillis();
+        // used for timing the processing
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         // add the cocoon header timestamp
         res.addHeader("X-Cocoon-Version", Constants.VERSION);
@@ -1194,10 +1196,10 @@ public class CocoonServlet extends HttpServlet {
                 return;
             }
 
-            long end = System.currentTimeMillis();
+            stopWatch.stop();
             String timeString = null;
             if (getLogger().isInfoEnabled()) {
-                timeString = processTime(end - start);
+                timeString = processTime(stopWatch.getTime());
                 getLogger().info("'" + uri + "' " + timeString);
             }
 
@@ -1208,8 +1210,8 @@ public class CocoonServlet extends HttpServlet {
                     show = !showTime.equalsIgnoreCase("no");
                 }
                 if (show) {
-                    if ( timeString == null ) {
-                        timeString = processTime(end - start);
+                    if (timeString == null) {
+                        timeString = processTime(stopWatch.getTime());
                     }
                     boolean hide = this.hiddenShowTime;
                     if (showTime != null) {
