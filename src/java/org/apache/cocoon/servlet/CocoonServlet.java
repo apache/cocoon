@@ -85,6 +85,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -988,7 +989,7 @@ public class CocoonServlet extends HttpServlet {
         if (this.forceSystemProperty != null) {
             StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
 
-            java.util.Properties systemProps = System.getProperties();
+            Properties systemProps = System.getProperties();
             while (tokenizer.hasMoreTokens()) {
                 final String property = tokenizer.nextToken().trim();
                 if (property.indexOf('=') == -1) {
