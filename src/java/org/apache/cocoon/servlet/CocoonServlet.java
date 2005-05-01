@@ -61,6 +61,7 @@ import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.log.ContextMap;
 import org.apache.log.LogTarget;
 import org.apache.log.output.ServletOutputLogTarget;
@@ -276,8 +277,9 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        // remember when we started (used for timing the processing)
-        long start = System.currentTimeMillis();
+        // used for timing the processing
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         // add the cocoon header timestamp
         res.addHeader("X-Cocoon-Version", Constants.VERSION);
@@ -440,10 +442,10 @@ public class CocoonServlet extends HttpServlet {
                 return;
             }
 
-            long end = System.currentTimeMillis();
+            stopWatch.stop();
             String timeString = null;
             if (getLogger().isInfoEnabled()) {
-                timeString = processTime(end - start);
+                timeString = processTime(stopWatch.getTime());
                 getLogger().info("'" + uri + "' " + timeString);
             }
 
@@ -455,7 +457,7 @@ public class CocoonServlet extends HttpServlet {
                 }
                 if (show) {
                     if ( timeString == null ) {
-                        timeString = processTime(end - start);
+                        timeString = processTime(stopWatch.getTime());
                     }
                     boolean hide = this.coreUtil.getCore().getSettings().isHideShowTime();
                     if (showTime != null) {
