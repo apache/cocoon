@@ -16,12 +16,20 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -29,6 +37,9 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.components.container.CocoonServiceManager;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.SAXException;
 
@@ -37,16 +48,25 @@ import org.xml.sax.SAXException;
  */
 public class BlocksManager
     extends AbstractLogEnabled
-    implements Configurable, Disposable, Serviceable, ThreadSafe { 
+    implements Configurable, Contextualizable, Disposable, Initializable, Serviceable, ThreadSafe { 
 
     public static String ROLE = BlocksManager.class.getName();
-
-    private ServiceManager manager;
+    public static String CORE_COMPONENTS_XCONF =
+        "resource://org/apache/cocoon/components/blocks/core-components.xconf";
+    private ServiceManager serviceManager;
     private SourceResolver resolver;
+    private Context context;
+
+    private HashMap blockConfs = new HashMap();
+    private HashMap blocks = new HashMap();
 
     public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        this.serviceManager = manager;
+        this.resolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
+    }
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
 
     public void configure(Configuration config)
@@ -75,14 +95,58 @@ public class BlocksManager
             getLogger().debug("BlocksManager configure: " + block.getName() +
                               " id=" + block.getAttribute("id") +
                               " location=" + block.getAttribute("location"));
+            this.blockConfs.put(block.getAttribute("id"), block);
+        }
+    }
+
+    public void initialize() throws Exception {
+        getLogger().debug("Initializing the Blocks Manager");
+
+        // Create a root service manager for blocks. This should be
+        // the minimal number of components that are needed for any
+        // block. Only components that not are context dependent
+        // should be defined here. Block that depends on e.g. the root
+        // context path should be defined in the BlockManager instead.
+
+        Core core = (Core)this.serviceManager.lookup(Core.ROLE);
+        ServiceManager blockParentServiceManager =
+            new CoreUtil.RootServiceManager(null, core);
+        CocoonServiceManager blockServiceManager =
+            new CocoonServiceManager(blockParentServiceManager);
+        ContainerUtil.enableLogging(blockServiceManager, this.getLogger());
+        ContainerUtil.contextualize(blockServiceManager, this.context);
+
+        Source coreComponentsSource =
+            this.resolver.resolveURI(CORE_COMPONENTS_XCONF);
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        Configuration coreComponentsConf =
+            builder.build( coreComponentsSource.getInputStream() );
+
+        ContainerUtil.configure(blockServiceManager, coreComponentsConf);
+        ContainerUtil.initialize(blockServiceManager);
+
+        // Create and store all blocks
+
+        Iterator confIter = this.blockConfs.entrySet().iterator();
+        while (confIter.hasNext()) {
+            Map.Entry entry = (Map.Entry)confIter.next();
+            Configuration blockConf = (Configuration)entry.getValue();
+            getLogger().debug("Creating " + blockConf.getName() +
+                              " id=" + blockConf.getAttribute("id"));
+            BlockManager blockManager = new BlockManager();
+            ContainerUtil.enableLogging(blockManager, this.getLogger());
+            ContainerUtil.contextualize(blockManager, this.context);
+            ContainerUtil.configure(blockManager, blockConf);
+            ContainerUtil.initialize(blockManager);
+            this.blocks.put(entry.getKey(), blockManager);
         }
     }
 
     public void dispose() {
-        if (this.manager != null) {
-            this.manager.release(this.resolver);
+        if (this.serviceManager != null) {
+            this.serviceManager.release(this.resolver);
             this.resolver = null;
-            this.manager = null;
+            this.serviceManager = null;
         }
     }
 }
