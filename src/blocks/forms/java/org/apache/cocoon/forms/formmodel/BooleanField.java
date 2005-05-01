@@ -25,6 +25,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -111,7 +112,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // value element
         contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        String stringValue = String.valueOf(value != null && value.booleanValue() == true? "true": "false");
+        String stringValue = String.valueOf(BooleanUtils.toBoolean(value));
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         // validation message element: only present if the value is not valid
