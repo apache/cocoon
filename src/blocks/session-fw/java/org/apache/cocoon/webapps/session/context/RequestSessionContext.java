@@ -29,6 +29,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.transformation.CIncludeTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
@@ -258,13 +259,13 @@ implements SessionContext {
         node.appendChild(this.createTextNode(doc, this.request.getServletPath()));
         root.appendChild(node);
         node = doc.createElementNS(null, "isRequestedSessionIdFromCookie");
-        node.appendChild(doc.createTextNode(this.request.isRequestedSessionIdFromCookie() ? "true" : "false"));
+        node.appendChild(doc.createTextNode(BooleanUtils.toStringTrueFalse(this.request.isRequestedSessionIdFromCookie())));
         root.appendChild(node);
         node = doc.createElementNS(null, "isRequestedSessionIdFromURL");
-        node.appendChild(doc.createTextNode(this.request.isRequestedSessionIdFromURL() ? "true" : "false"));
+        node.appendChild(doc.createTextNode(BooleanUtils.toStringTrueFalse(this.request.isRequestedSessionIdFromURL())));
         root.appendChild(node);
         node = doc.createElementNS(null, "isRequestedSessionIdValid");
-        node.appendChild(doc.createTextNode(this.request.isRequestedSessionIdValid() ? "true" : "false"));
+        node.appendChild(doc.createTextNode(BooleanUtils.toStringTrueFalse(this.request.isRequestedSessionIdValid())));
         root.appendChild(node);
     }
 
@@ -320,7 +321,7 @@ implements SessionContext {
                 node.appendChild(this.createTextNode(doc, current.getDomain()));
                 parent.appendChild(node);
                 node = doc.createElementNS(null, "maxAge");
-                node.appendChild(this.createTextNode(doc, ""+current.getMaxAge()));
+                node.appendChild(this.createTextNode(doc, "" + current.getMaxAge()));
                 parent.appendChild(node);
                 node = doc.createElementNS(null, "name");
                 node.appendChild(this.createTextNode(doc, current.getName()));
@@ -329,13 +330,13 @@ implements SessionContext {
                 node.appendChild(this.createTextNode(doc, current.getPath()));
                 parent.appendChild(node);
                 node = doc.createElementNS(null, "secure");
-                node.appendChild(doc.createTextNode(current.getSecure() ? "true" : "false"));
+                node.appendChild(doc.createTextNode(BooleanUtils.toStringTrueFalse(current.getSecure())));
                 parent.appendChild(node);
                 node = doc.createElementNS(null, "value");
                 node.appendChild(this.createTextNode(doc, current.getValue()));
                 parent.appendChild(node);
                 node = doc.createElementNS(null, "version");
-                node.appendChild(this.createTextNode(doc, ""+current.getVersion()));
+                node.appendChild(this.createTextNode(doc, "" + current.getVersion()));
                 parent.appendChild(node);
             }
         }
