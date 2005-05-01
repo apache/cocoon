@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
@@ -92,6 +93,9 @@ final public class ImageReader extends ResourceReader {
     private static final boolean GRAYSCALE_DEFAULT = false;
     private static final boolean ENLARGE_DEFAULT = true;
     private static final boolean FIT_DEFAULT = false;
+
+    /* See http://developer.java.sun.com/developer/bugParade/bugs/4502892.html */
+    private static final boolean JVMBugFixed = SystemUtils.isJavaVersionAtLeast(1.4f);
 
     private int width;
     private int height;
@@ -270,10 +274,11 @@ final public class ImageReader extends ResourceReader {
                     colorFilter.filter(currentImage, currentImage);
                 }
 
-                if (!handleJVMBug()) {
+                // JVM Bug handling
+                if (JVMBugFixed) {
                     JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
                     encoder.encode(currentImage);
-                } else {
+                } else { 
                     ByteArrayOutputStream bstream = new ByteArrayOutputStream();
                     JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
                     encoder.encode(currentImage);
@@ -318,39 +323,5 @@ final public class ImageReader extends ResourceReader {
                 + ":" + this.offsetColor[2]
                 + ":" + ((null == this.grayscaleFilter) ? "color" : "grayscale")
                 + ":" + super.getKey();
-    }
-
-    /**
-     * Determine if workaround for Bug Id 4502892 is neccessary.
-     * This method assumes that Bug is present if
-     * java.version is undeterminable, and for java.version
-     * 1.1, 1.2, 1.3, all other java.version do not need the Bug handling
-     *
-     * @return true if we should handle the JVM bug, else false
-     */
-    protected boolean handleJVMBug() {
-        // java.version=1.4.0
-        String java_version = System.getProperty( "java.version", "0.0.0" );
-        boolean handleJVMBug = true;
-
-        char major = java_version.charAt(0);
-        char minor = java_version.charAt(2);
-
-        // make 0.0, 1.1, 1.2, 1.3 handleJVMBug = true
-        if (major == '0' || major == '1') {
-            if (minor == '0' || minor == '1' || minor == '2' || minor == '3') {
-                handleJVMBug = true;
-            } else {
-                handleJVMBug = false;
-            }
-        } else {
-            handleJVMBug = true;
-        }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Running java " + String.valueOf(java_version) +
-                              " need to handle JVM bug " + String.valueOf(handleJVMBug));
-        }
-
-        return handleJVMBug;
     }
 }
