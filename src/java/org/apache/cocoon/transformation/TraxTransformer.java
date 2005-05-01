@@ -48,12 +48,14 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
+import org.apache.regexp.RE;
 
 import org.xml.sax.SAXException;
 
@@ -85,13 +87,13 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * The &lt;use-request-parameter&gt; configuration forces the transformer to make all
- * request parameters available in the XSLT stylesheet. Note that this might have issues
- * concerning cachability of the generated output of this transformer.<br>
+ * request parameters available in the XSLT stylesheet. Note that this has
+ * implications for caching of the generated output of this transformer.<br>
  * This property is false by default.
  * <p>
  * The &lt;use-cookies&gt; configuration forces the transformer to make all
- * cookies from the request available in the XSLT stylesheetas.
- * Note that this might have issues concerning cachability of the generated output of this
+ * cookies from the request available in the XSLT stylesheets.
+ * Note that this has implications for caching of the generated output of this
  * transformer.<br>
  * This property is false by default.
  * <p>
@@ -101,8 +103,8 @@ import org.xml.sax.SAXException;
  * session-id-from-cookie, session-id-from-url, session-valid, session-id.<br>
  * This property is false by default.
  *
- * <p>Note that these properties might introduces issues concerning
- * cacheability of the generated output of this transformer.<br>
+ * <p>Note that this has implications for caching of the generated output of
+ * this transformer.<br>
  *
  *
  * The &lt;xslt-processor-role&gt; configuration allows to specify the TrAX processor (defined in
@@ -114,11 +116,11 @@ import org.xml.sax.SAXException;
  *
  * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
  * implementation that will be used to obtain the XSLT processor. This is only usefull for
- * compatibility reasons. Please configure the xslt processor in the cocoon.xconf properly
+ * compatibility reasons. Please configure the XSLT processor in the cocoon.xconf properly
  * and use the xslt-processor-role configuration mentioned above.
  *
  * The &lt;check-includes&gt; configuration specifies if the included stylesheets are
- * also checked for changes during chaching. If this is set to true (default), the
+ * also checked for changes during caching. If this is set to true (default), the
  * included stylesheets are also checked for changes; if this is set to false, only
  * the main stylesheet is checked. Setting this to false improves the performance,
  * and should be used whenever no includs are in the stylesheet. However, if
@@ -143,6 +145,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * 
  * @version CVS $Id$
  */
 public class TraxTransformer extends AbstractTransformer
@@ -161,11 +164,11 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
     private boolean useParameters = false;
     private boolean _useParameters = false;
 
-    /** Should we make the cookies availalbe in the stylesheet? (default is off) */
+    /** Should we make the cookies available in the stylesheet? (default is off) */
     private boolean useCookies = false;
     private boolean _useCookies = false;
 
-    /** Should we info about the session availalbe in the stylesheet? (default is off) */
+    /** Should we info about the session available in the stylesheet? (default is off) */
     private boolean useSessionInfo = false;
     private boolean _useSessionInfo = false;
 
@@ -196,7 +199,10 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
 
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
-    
+
+    /** Check if an expression is a valid XSLT Parameter Name **/
+    private static final RE reValidXSLTParameterName = new RE("^[\\w][\\w\\d\\.-]*");
+
     /**
      * Configure this transformer.
      */
@@ -414,7 +420,7 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
                         String value = par.getParameter(name,null);
                         if (value != null) {
                             if (map == null) {
-                                map = new HashMap();
+                                map = new HashMap(params.length);
                             }
                             map.put(name,value);
                         }
@@ -427,7 +433,7 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
             Request request = ObjectModelHelper.getRequest(objectModel);
 
             Enumeration parameters = request.getParameterNames();
-            if ( parameters != null ) {
+            if (parameters != null) {
                 while (parameters.hasMoreElements()) {
                     String name = (String) parameters.nextElement();
                     if (isValidXSLTParameterName(name)) {
@@ -443,18 +449,20 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
 
         if (this._useSessionInfo) {
             final Request request = ObjectModelHelper.getRequest(objectModel);
-            if (map == null) map = new HashMap(5);
+            if (map == null) {
+                map = new HashMap(6);
+            }
 
             final Session session = request.getSession(false);
             if (session != null) {
-                map.put("session-available","true");
-                map.put("session-is-new",session.isNew()?"true":"false");
-                map.put("session-id-from-cookie",request.isRequestedSessionIdFromCookie()?"true":"false");
-                map.put("session-id-from-url",request.isRequestedSessionIdFromURL()?"true":"false");
-                map.put("session-valid",request.isRequestedSessionIdValid()?"true":"false");
-                map.put("session-id",session.getId());
+                map.put("session-available", "true");
+                map.put("session-is-new", BooleanUtils.toStringTrueFalse(session.isNew()));
+                map.put("session-id-from-cookie", BooleanUtils.toStringTrueFalse(request.isRequestedSessionIdFromCookie()));
+                map.put("session-id-from-url", BooleanUtils.toStringTrueFalse(request.isRequestedSessionIdFromURL()));
+                map.put("session-valid", BooleanUtils.toStringTrueFalse(request.isRequestedSessionIdValid()));
+                map.put("session-id", session.getId());
             } else {
-                map.put("session-available","false");
+                map.put("session-available", "false");
             }
         }
 
@@ -462,19 +470,18 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
             Request request = ObjectModelHelper.getRequest(objectModel);
             Cookie cookies[] = request.getCookies();
             if (cookies != null) {
-                for (int i=0; i<cookies.length; i++) {
+                for (int i = 0; i < cookies.length; i++) {
                     String name = cookies[i].getName();
                     if (isValidXSLTParameterName(name)) {
                         String value = cookies[i].getValue();
                         if (map == null) {
-                            map = new HashMap();
+                            map = new HashMap(cookies.length);
                         }
                         map.put(name,value);
                     }
                 }
             }
         }
-
         this.logicSheetParameters = map;
         return this.logicSheetParameters;
     }
@@ -483,26 +490,7 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
      * Test if the name is a valid parameter name for XSLT
      */
     static boolean isValidXSLTParameterName(String name) {
-        if (name.length() == 0) {
-            return false;
-        }
-
-        char c = name.charAt(0);
-        if (!(Character.isLetter(c) || c == '_')) {
-            return false;
-        }
-
-        for (int i = name.length()-1; i > 1; i--) {
-            c = name.charAt(i);
-            if (!(Character.isLetterOrDigit(c) ||
-                c == '-' ||
-                c == '_' ||
-                c == '.')) {
-                return false;
-            }
-        }
-
-        return true;
+        return reValidXSLTParameterName.match(name);
     }
 
     /**
@@ -573,5 +561,4 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
         this.finishedDocument = false;
         super.startDocument();
     }
-
 }
