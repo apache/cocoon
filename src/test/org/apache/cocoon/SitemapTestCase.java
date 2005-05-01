@@ -177,12 +177,17 @@ public class SitemapTestCase extends TestCase {
 
     }
 
-    protected byte[] process(String uri) throws Exception {
+    protected MockEnvironment getEnvironment(String uri) {
         MockEnvironment env = new MockEnvironment();
         env.setURI("", uri);
         this.request.setEnvironment(env);
         env.setObjectModel(this.objectmodel);
 
+	return env;
+    }
+
+    protected byte[] process(String uri) throws Exception {
+        MockEnvironment env = getEnvironment(uri);
         this.cocoon.process(env);
         getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
 

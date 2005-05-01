@@ -29,6 +29,10 @@
 
   <xmlizer/>
 
+  <source-resolver/>
+
+  <fam/>
+
   <source-factories>
     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
@@ -38,7 +42,7 @@
 
   <component role="org.apache.cocoon.components.blocks.BlockManager"
              class="org.apache.cocoon.components.blocks.BlockManager"
-             id="test1id" location="test1">
+             id="test1id" location="test1/">
     <mount path="/test1/"/>
     <connections>
       <connection name="test2" block="test2id"/>

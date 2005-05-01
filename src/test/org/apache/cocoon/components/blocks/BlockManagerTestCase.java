@@ -17,10 +17,19 @@ package org.apache.cocoon.components.blocks;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.environment.mock.MockEnvironment;
 
 public class BlockManagerTestCase extends SitemapTestCase {
-    public void testConfigure() throws ServiceException {
+    public void testCreate() throws ServiceException {
         BlockManager block = (BlockManager)this.lookup(BlockManager.ROLE);
+        this.release(block);
+    }
+
+    public void testPipeline() throws Exception {
+        BlockManager block = (BlockManager)this.lookup(BlockManager.ROLE);
+        MockEnvironment env = getEnvironment("test");
+        block.process(env);
+        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
         this.release(block);
     }
 }
