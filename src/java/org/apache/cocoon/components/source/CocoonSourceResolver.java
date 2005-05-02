@@ -62,17 +62,13 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
     /** The base URL */
     protected URL baseURL;
 
-    /** The component context */
-    protected Context context;
-
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize( Context context )
     throws ContextException {
-        this.context = context;
         try {
-            if( context.get( "context-root" ) instanceof URL ) {
+            if ( context.get( "context-root" ) instanceof URL ) {
                 this.baseURL = (URL)context.get( "context-root" );
             } else {
                 this.baseURL = ( (File)context.get( "context-root" ) ).toURL();
