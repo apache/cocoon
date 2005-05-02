@@ -208,24 +208,21 @@ public class HelloWorldGenerator extends AbstractGenerator
                The only direct implementation of this of interest to us is
                <code>AbstractGenerator</code>, which gives a basic level of
                functionality. Another option would have been
-               <code>ComposerGenerator</code>, which would give us the added
+               <code>ServiceableGenerator</code>, which would give us the added
                functionality of implenting the Avalon interface 
-               <code>Composable</code>
-
-               , which would signal the container that handles all the
-               components including our generator to give us a handle back to
-               the <code>ComponentManager</code>
+               <code>Serviceable</code>, which would signal the container that 
+               handles all the components including our generator to give us 
+               a handle back to the <code>ServiceManager</code>
                during the startup of the container. If we needed to lookup a
                pooled database connection, or some other standard or custom
                Cocoon component, this is what we would do. Most of the out
-               of the box Generators extend <code>ComposerGenerator</code>.
-               Other abstract Generators you may choose to extend include the
-               poorly named (IMHO) <code>ServletGenerator</code>
-
-               , and <code>AbstractServerPage</code>
-               . While these both introduce functionality specific to their
-               eventual purpose - the JSP and XSP generators, they do make a
-               convenient starting place for many other Generators.</p>
+               of the box Generators extend <code>ServiceableGenerator</code>.
+               Other abstract Generators you may look to for inspiration 
+               (or choose to extend) include the <code>ServletGenerator</code>, 
+               and <code>AbstractServerPage</code>. While these both introduce 
+               functionality specific to their eventual purpose - the JSP and 
+               XSP generators, they do make a convenient starting place for many 
+               other Generators.</p>
             </s3>
 
             <s3 title="Running The Sample">
@@ -251,6 +248,9 @@ public class HelloWorldGenerator extends AbstractGenerator
                    point to <code>lib\core\</code> for them. If you have only
                    the binary version, you can find them in
                    <code>WEB-INF\lib\</code></p>
+                  <note>There are several references to xml-apis.jar in this 
+                  tutorial which should no longer be necessary with JDK 1.4+ 
+                  which ships with the xml apis.</note>
                </s4>
 
                <s4 title="Deploy">
@@ -265,7 +265,9 @@ public class HelloWorldGenerator extends AbstractGenerator
                   <code>jar</code>-ing them up and place them in
                   <code>WEB-INF\lib\</code> instead. That is probably where
                   your real generators would go anyway - with a whole package
-                  of all your custom classes in one jar.</note>
+                  of all your custom classes in one jar.  UPDATE May 2005: 
+                  I have no idea now what I was talking about when I originally 
+                  wrote this note.</note>
                </s4>
 
                <s4 title="Sitemap Modifications">
@@ -438,14 +440,13 @@ public class RequestExampleGenerator extends AbstractGenerator
 			<s3 title="Compile and Test">
 			<p>Save this code as
                          <code>RequestExampleGenerator.java</code>
-                         and compile as before.  You will need to add both
-                         <code>avalon-framework.jar</code> and
-                         <code>avalon-excalibur.jar</code> to your classpath
-                        this time.  Besides finding the exact name of the jar
-                        as described above, you may now also have to ensure
-                        that you have the version of excalibur targeted to your
-			jvm version - there is currently a version for JDK 1.4
-                        and one for 1.2/1.3</p>
+                         and compile as before.  You will need to add 
+                         <code>avalon-framework.jar</code>, 
+                         <code>excalibur-pool-api.jar</code>, 
+						<code>excalibur-datasource.jar</code>, and 
+						<code>excalibur-sourceresolve.jar</code> to your classpath
+                        this time.  (Not all of these may be necessary at this point,
+                        but will be later so you might as well add them now.)</p>
 			<p>For your sitemap, you will need to add a definition
                         for this generator like 
 <code><![CDATA[<map:generator name="requestExample" src="RequestExampleGenerator"/>]]></code>
@@ -567,164 +568,166 @@ and in sitemap.xmap,
            this specific task is handled in the ESQL XSP example in just a few
            lines of code.  If your task is really this simple, there may be no
            need to create your own generator.</p>
-<source xml:space="preserve"><![CDATA[import org.apache.cocoon.generation.ComposerGenerator;
-import org.apache.avalon.framework.component.ComponentManager;
+<source xml:space="preserve"><![CDATA[
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.Map;
+
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.caching.Cacheable;
-import org.apache.cocoon.caching.CacheValidity;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.xml.sax.ContentHandler;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
- 
-import java.sql.*;
-import java.util.Map;
-import java.util.Date;
-import org.apache.avalon.framework.activity.Disposable;
 
-public class EmployeeGeneratorExample extends ComposerGenerator
-   implements Cacheable, Disposable
-{
+public class EmployeeGeneratorExample extends ServiceableGenerator implements
+CacheableProcessingComponent, Disposable {
 
 	public void dispose() {
-	    super.dispose();
-	    manager.release(datasource);
-	    datasource = null;
+		super.dispose();
+		manager.release(datasource);
+		datasource = null;
 	}
 
 	public void recycle() {
-	    myAttr.clear();
-	    super.recycle();
+		myAttr.clear();
+		super.recycle();
 	}
 
-	public void setup(SourceResolver resolver, Map objectModel,
-                          String src, Parameters par) {
-	    // Not neeed for this example, but you would get request
-            // and/or sitemap parameters here.
+	public void setup(SourceResolver resolver, Map objectModel, String src,
+			Parameters par) {
+		// Not neeed for this example, but you would get request
+		// and/or sitemap parameters here.
 	}
 
-	
-	public void compose(ComponentManager manager) 
-	throws ComponentException{
-	  super.compose(manager);
-	  ComponentSelector selector = (ComponentSelector)
-            manager.lookup(DataSourceComponent.ROLE + "Selector");
-	  this.datasource = (DataSourceComponent) selector.select("personnel");
+	public void service(ServiceManager manager) throws ServiceException {
+		super.service(manager);
+		ComponentSelector selector = (ComponentSelector) manager
+				.lookup(DataSourceComponent.ROLE + "Selector");
+		try {
+			this.datasource = (DataSourceComponent) selector
+					.select("personnel");
+		} catch (ComponentException e) {
+			throw new ServiceException("personnel",
+					"Could not find datasource.", e);
+		}
 	}
 
-	public void generate() 
-	throws SAXException, ProcessingException {
+	public void generate() throws SAXException, ProcessingException {
 		try {
 
 			Connection conn = this.datasource.getConnection();
-			Statement stmt = conn.createStatement(); 
-			
-			ResultSet res = stmt.executeQuery(EMPLOYEE_QUERY);
-			
-                        //open the SAX event stream
-			contentHandler.startDocument();
-			myAttr.addAttribute("","date","date","",
-                            (new Date()).toString());
-                        //open root element
-			contentHandler.startElement("","content",
-                            "content",myAttr);
+			Statement stmt = conn.createStatement();
 
-			
+			ResultSet res = stmt.executeQuery(EMPLOYEE_QUERY);
+
+			//open the SAX event stream
+			contentHandler.startDocument();
+			myAttr
+					.addAttribute("", "date", "date", "", (new Date())
+							.toString());
+			//open root element
+			contentHandler.startElement("", "content", "content", myAttr);
+
 			String currentDept = "";
 			boolean isFirstRow = true;
 			boolean moreRowsExist = res.next() ? true : false;
-			
+
 			while (moreRowsExist) {
-			    String thisDept = attrFromDB(res, "name");
-			    if (!thisDept.equals(currentDept)) {
-				newDept(res,thisDept,isFirstRow);
-				currentDept = thisDept;
-			    }
-			    addEmployee(res,attrFromDB(res,"id"),
-                              attrFromDB(res,"empName"));
-			    isFirstRow = false;
-			    
-			    if (!res.next()) {
-				endDept();
-				moreRowsExist = false;
-			    }
+				String thisDept = attrFromDB(res, "name");
+				if (!thisDept.equals(currentDept)) {
+					newDept(res, thisDept, isFirstRow);
+					currentDept = thisDept;
+				}
+				addEmployee(res, attrFromDB(res, "id"), attrFromDB(res,
+						"empName"));
+				isFirstRow = false;
+
+				if (!res.next()) {
+					endDept();
+					moreRowsExist = false;
+				}
 			}
-			
-                        //close root element
-			contentHandler.endElement("","content","content");
-                        //close the SAX event stream
+
+			//close root element
+			contentHandler.endElement("", "content", "content");
+			//close the SAX event stream
 			contentHandler.endDocument();
-			
+
 			res.close();
 			stmt.close();
 			conn.close();
-	  	} catch (SQLException e) { 
-  			throw new ProcessingException(e); 
-  		} 
+		} catch (SQLException e) {
+			throw new ProcessingException(e);
+		}
 	}
 
-	public long generateKey()
-	{
-		// Default non-caching behaviour. We will implement this later.
-		return 0;
-	}
-
-	public CacheValidity generateValidity()
-	{
-		// Default non-caching behaviour. We will implement this later.
+	public Serializable getKey() {
+		// Default non-caching behaviour. We could implement this later.
 		return null;
 	}
 
+	public SourceValidity getValidity() {
+		// Default non-caching behaviour. We could implement this later.
+		return null;
+	}
 
-  private DataSourceComponent datasource;
-  private AttributesImpl myAttr = new AttributesImpl();
-  
-  private String EMPLOYEE_QUERY = 
-  "SELECT department.name, employee.id, employee.name as empName " +
-  "FROM department, employee " + 
-  "WHERE department.id = employee.department_id  ORDER BY department.name";
-  
-  private void endDept() throws SAXException {
-      contentHandler.endElement("","dept","dept");
-  }
-  
-  private void newDept(ResultSet res, String dept, boolean isFirstRow)
-      throws SAXException {
-    if (!isFirstRow) {
-	endDept();
-    }
-    myAttr.clear();
-    myAttr.addAttribute("","name","name","",dept);
-    contentHandler.startElement("","dept","dept",myAttr);
-  }    
-  
-  private void addEmployee(ResultSet res, String id, String name)
-      throws SAXException {
-      myAttr.clear();
-      myAttr.addAttribute("","id","id","",id);
-      contentHandler.startElement("","employee","employee",myAttr);
-      contentHandler.characters(name.toCharArray(),0,name.length());
-      contentHandler.endElement("","employee","employee");
-  }
-  
-  private String attrFromDB(ResultSet res, String column)
-      throws SQLException {
-  		String value = res.getString(column);
-		return (res.wasNull())?"":value;
-  }
+	private DataSourceComponent datasource;
+
+	private AttributesImpl myAttr = new AttributesImpl();
+
+	private String EMPLOYEE_QUERY = "SELECT department.name, employee.id, employee.name as empName "
+			+ "FROM department, employee "
+			+ "WHERE department.id = employee.department_id  ORDER BY department.name";
+
+	private void endDept() throws SAXException {
+		contentHandler.endElement("", "dept", "dept");
+	}
+
+	private void newDept(ResultSet res, String dept, boolean isFirstRow)
+			throws SAXException {
+		if (!isFirstRow) {
+			endDept();
+		}
+		myAttr.clear();
+		myAttr.addAttribute("", "name", "name", "", dept);
+		contentHandler.startElement("", "dept", "dept", myAttr);
+	}
+
+	private void addEmployee(ResultSet res, String id, String name)
+			throws SAXException {
+		myAttr.clear();
+		myAttr.addAttribute("", "id", "id", "", id);
+		contentHandler.startElement("", "employee", "employee", myAttr);
+		contentHandler.characters(name.toCharArray(), 0, name.length());
+		contentHandler.endElement("", "employee", "employee");
+	}
+
+	private String attrFromDB(ResultSet res, String column) throws SQLException {
+		String value = res.getString(column);
+		return (res.wasNull()) ? "" : value;
+	}
 
 }]]></source></s3>
 	<s3 title="Compile and Test">
 	<p>To compile this, you will now need the following on your classpath:
-         <code>avalon-excalibur.jar, avalon-framework.jar, cocoon.jar,
-         xml-apis.jar</code> (using whatever names they have in your
-         distribution).  When you compile this, you may receive some
+       <code>avalon-framework.jar</code>, 
+       <code>excalibur-pool-api.jar</code>, 
+	   <code>excalibur-datasource.jar</code>, and 
+	   <code>excalibur-sourceresolve.jar</code> (using whatever names they 
+	   have in your distribution).  When you compile this, you may receive some
          deprecation warnings.  Do not worry about them - we will discuss 
          that later.</p>
 	<p>To test it, copy it over to your <code>WEB-INF\classes\</code>
@@ -741,13 +744,13 @@ public class EmployeeGeneratorExample extends ComposerGenerator
       </s3>
 
       <s3 title="New Concepts">
-	<s4 title="Composable and Disposable">
-	<p>We've implemented the Avalon lifecycle interfaces Composable and 
+	<s4 title="Serviceable and Disposable">
+	<p>We've implemented the Avalon lifecycle interfaces Serviceable and 
     Disposable.  When Cocoon starts up (which happens when the servlet 
-    container starts up) the <code>ComponentManager</code> will call 
-    <code>compose(ComponentManager m)</code> for our component as it works 
+    container starts up) the <code>ServiceManager</code> will call 
+    <code>service(ServiceManager m)</code> for our component as it works 
     its way through all the components declared in the sitemap.  The handle 
-    to <code>ComponentManager</code> is used to look up any other Avalon 
+    to <code>ServiceManager</code> is used to look up any other Avalon 
     components that we need.  Lookups happen in an abstracted way using a 
     ROLE which enables us to change out implementations of each component 
     without affecting previously written code.  Our generator's ROLE by the 
@@ -757,8 +760,8 @@ public class EmployeeGeneratorExample extends ComposerGenerator
     clean up any resources we held on to between invocations.  Note that 
     components can be pooled by the container.  If we thought that our employee 
     generator was going to see a lot of traffic, we might change its definition 
-    at the top of sitemap.xmap to include attributes like <code>pool-max="16"</code> so that multiple overlapping requests 
-    could be serviced without a log jam.</p>
+    at the top of sitemap.xmap to include attributes like <code>pool-max="16"</code> 
+    so that multiple overlapping requests could be serviced without a log jam.</p>
 	</s4>
 	<s4 title="Datasource">
     <p>We look up our HSQL database here by its name given in cocoon.xconf. 
@@ -774,16 +777,72 @@ public class EmployeeGeneratorExample extends ComposerGenerator
     support the pooling of statements.</note> 
     </s4>
 	<s4 title="Caching">
-<fixme author="open">Need more content here, or links to other docs.</fixme>
-<note>FIXME: This is still coming.</note>
-    <p>Introduce new code to implement Caching, discuss basic logic, and
-    deprecation/move to Avalon. I could use some help here from Carsten,
-    or someone who can quickly give an overview of the changes and plan.
-    </p>
+    <p>To get started implementing Caching, first read the 
+    <link href="../userdocs/concepts/caching.html">Caching concepts 
+    documentation</link>.  Basically, we would replace our versions of 
+    <code>getKey()</code> and <code>getValidity()</code> to return a non-null 
+    result.</p>
+    <p>Briefly, the <code>key</code> is any Serializable object that uniquely identifies 
+    the result within the scope of this component (our Generator).  In our case, 
+    since we are not returning different results based on request parameters, etc. 
+    all results from our Generator will be the same, given the same database state.  
+    We don't need to make this key globally unique, just unique to us.  So, we 
+    could implement getKey() as follows:</p>
+    <source xml:space="preserve"><![CDATA[...
+public Serializable getKey() {
+	return "doesn't matter here";
+}]]></source>
+	<p>The trouble in our example comes when we go to implement <code>getValidity()</code>.
+	This is meant to return an <code>org.apache.excalibur.source.SourceValidity</code> 
+	which is responsible for informing the Cocoon pipeline internals whether or not a 
+	cached response found at some point in the future is still valid (should be served) 
+	or not.  In the case of a file system resource this would be easy to determine, for instance.  
+	In fact, there is a SourceValidity implementation built already for this case (
+	<code>org.apache.excalibur.source.impl.FileTimeStampValidity</code>).
+	</p>
+	<p>In the case of database information, one option would be to devise some system for tracking 
+	last-modified times on a per-row or per-table basis.  We would still need to query the 
+	database for each request to determine if our cached version is still useful.  Another 
+	option (by far the most common in my experience) would be to decide on some time-period 
+	during which we will serve the same result whether or not the database has changed in 
+	the meantime.  To do this, people will usually pick some length of time long enough to 
+	realize benefit from caching, but short enough to minimize the appearance of outdated 
+	data.  There are pre-built options for this as well 
+	(<code>org.apache.excalibur.source.impl.ExpiresValidity</code> for example). To keep 
+	our results around for five minutes we could implement:
+	</p>
+    <source xml:space="preserve"><![CDATA[...
+public SourceValidity getValidity() {
+    // valid for 600 seconds
+	return new ExpiresValidity(1000*600);
+}]]></source>
+	<p>A third more intruiging option is to utilize some event-based system to 
+	signal that a given result is invalid when the database (or table or row) is actually 
+	updated, and not before.  This has the benefit of greatest cacheability, and least 
+	chance for outdated data, with the disadvantage that it is somewhat complex.  The 
+	"eventcache" block in Cocoon (see also the "jms" block) is intended to provide a 
+	framework to apply this model in Cocoon pipelines.  If your database implements 
+	triggers and stored procedures, and enables interaction with JMS or http calls, 
+	this approach may worth considering.
+	</p>
     </s4>
 	</s3>
-	 </s2>
-      </s1>
+	</s2>
+    </s1>
+    <s1 title="Conclusion">
+    <p>We have covered a lot of ground which should provide a great head start in 
+    implementing not only your own Generators, but any Transformers or Serializers you 
+    may need as well.  Of course, you should also now have an improved insight into some 
+    of the workings of the Cocoon core, and its interaction with the Avalon-based framework 
+    which would have application for implementing any component whether for interaction 
+    with the sitemap, or more general use in your application.  As is always the case in 
+    Open Source Software, you will find the best examples and insight by investigating the 
+    existing sources, both those in Cocoon and in its Avalon and Excalibur counterparts 
+    as well.  Armed with this knowledge you should also be able to ask more educated and 
+    focused questions on the public mailing lists which you may find will yield better 
+    and faster responses.
+    </p>
+    </s1>
    </body>
 </document>
 
