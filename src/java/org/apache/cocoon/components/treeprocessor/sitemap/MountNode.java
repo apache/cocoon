@@ -42,7 +42,7 @@ public class MountNode extends AbstractProcessingNode
                        implements Composable, Disposable {
 
     /** The key to get the pass_through value from the Environment */
-    protected final static String COCOON_PASS_THROUGH = "COCOON_PASS_THROUGH";
+    public final static String COCOON_PASS_THROUGH = "COCOON_PASS_THROUGH";
 
     /** The 'uri-prefix' attribute */
     private final VariableResolver prefix;
