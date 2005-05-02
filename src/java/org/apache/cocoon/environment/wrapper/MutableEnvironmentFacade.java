@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Map;
 
+import org.apache.cocoon.components.treeprocessor.sitemap.MountNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -43,6 +44,10 @@ public class MutableEnvironmentFacade implements Environment {
 
     public MutableEnvironmentFacade(EnvironmentWrapper env) {
         this.env = env;
+        // Ensure we start with a false passthrough flag.
+        // FIXME: this should really be part of the Processor contract rather
+        // than an environment attribute
+        env.setAttribute(MountNode.COCOON_PASS_THROUGH, Boolean.FALSE);
     }
 
     public EnvironmentWrapper getDelegate() {
