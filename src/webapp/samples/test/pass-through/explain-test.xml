@@ -36,5 +36,11 @@
             	   <li><link href="aggregate">Aggregation of the above</link></li>
             </ul>
         </para>
+        <para>
+           A "cocoon:" called within a pass-trough mount leading to no match reported an NPE
+           rather than a ResourceNotFound. With the bugfix, the RNFE is catched, and the "welcome"
+	   page is displayed.
+        </para>
+        <para><link href="another-welcome">Test link</link></para>
     </content>
 </page>
