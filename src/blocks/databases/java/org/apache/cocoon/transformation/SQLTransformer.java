@@ -31,11 +31,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 import java.util.Vector;
-
-import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
@@ -63,21 +60,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * Executes SQL queries from the incoming SAX stream and outputs their results.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
  * @version $Id$
  */
 public class SQLTransformer extends AbstractSAXTransformer
                             implements Disposable, Configurable {
 
-    /** The SQL namespace **/
+    /** The SQL transformer namespace */
     public static final String NAMESPACE = "http://apache.org/cocoon/SQL/2.0";
 
-    /** The SQL namespace element names **/
+    // The SQL trasformer namespace element names
     public static final String MAGIC_EXECUTE_QUERY = "execute-query";
     public static final String MAGIC_CONNECTION = "use-connection";
     public static final String MAGIC_DBURL = "dburl";
@@ -112,7 +105,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     public static final String MAGIC_UPDATE_ATTRIBUTE = "isupdate";
     public static final String CLOB_ENCODING = "clob-encoding";
 
-    /** The states we are allowed to be in **/
+    // The states we are allowed to be in
     protected static final int STATE_OUTSIDE = 0;
     protected static final int STATE_INSIDE_EXECUTE_QUERY_ELEMENT = 1;
     protected static final int STATE_INSIDE_VALUE_ELEMENT = 2;
@@ -128,13 +121,13 @@ public class SQLTransformer extends AbstractSAXTransformer
     //
 
     /** Is the old-driver turned on? (default is off) */
-    protected boolean oldDriver = false;
+    protected boolean oldDriver;
 
     /** How many connection attempts to do? (default is 5 times) */
-    protected int connectAttempts = 5;
+    protected int connectAttempts;
 
     /** How long wait between connection attempts? (default is 5000 ms) */
-    protected int connectWaittime = 5;
+    protected int connectWaittime;
 
     //
     // State
@@ -161,18 +154,12 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** The database selector */
     protected ServiceSelector dbSelector;
 
-    /** The format for serializing xml */
-    protected Properties format;
-
     protected XMLSerializer compiler;
     protected XMLDeserializer interpreter;
     protected SAXParser parser;
 
     /** Encoding we use for CLOB field */
 	protected String clobEncoding;
-
-    /** The default encoding for xml */
-    protected String xmlDefaultEncoding;
 
     /** The connection used by all top level queries */
     protected Connection conn;
@@ -181,9 +168,6 @@ public class SQLTransformer extends AbstractSAXTransformer
      * Constructor
      */
     public SQLTransformer() {
-        this.format = new Properties();
-        this.format.put(OutputKeys.METHOD, "text");
-        this.format.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         this.defaultNamespaceURI = NAMESPACE;
     }
 
@@ -250,8 +234,6 @@ public class SQLTransformer extends AbstractSAXTransformer
 
         this.connectAttempts = conf.getChild("connect-attempts").getValueAsInteger(5);
         this.connectWaittime = conf.getChild("connect-waittime").getValueAsInteger(5000);
-
-        this.xmlDefaultEncoding = conf.getChild("xml-encoding").getValue("ISO-8859-1");
     }
 
     /**
@@ -261,9 +243,6 @@ public class SQLTransformer extends AbstractSAXTransformer
                       String source, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, source, parameters);
-
-        // Set encoding
-        this.format.put(OutputKeys.ENCODING, parameters.getParameter("xml-encoding", this.xmlDefaultEncoding));
 
         // Setup instance variables
         this.current_query_index = -1;
@@ -292,7 +271,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     protected void executeQuery(int index)
     throws SAXException {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("SQLTransformer executing query nr " + index);
+            getLogger().debug("Executing query nr " + index);
         }
 
         this.outUri = getCurrentQuery().properties.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, NAMESPACE);
@@ -362,7 +341,7 @@ public class SQLTransformer extends AbstractSAXTransformer
             }
 
         } catch (SQLException e) {
-            getLogger().debug("SQLTransformer.executeQuery()", e);
+            getLogger().debug("Exception in executeQuery()", e);
             throw new SAXException(e);
         } finally {
             query.close();
@@ -418,7 +397,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     throws SAXException {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
-                startSerializedXMLRecording(format);
+                startTextRecording();
                 Query q = getCurrentQuery();
                 current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
 
@@ -447,7 +426,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     throws ProcessingException, SAXException {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
-                final String value = endSerializedXMLRecording();
+                final String value = endTextRecording();
                 if (value.length() > 0) {
                     getCurrentQuery().addQueryPart(value);
                     if (getLogger().isDebugEnabled()) {
@@ -507,7 +486,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     level = Integer.parseInt(attributes.getValue(NAMESPACE,
                                                                  SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
-                    getLogger().debug("SQLTransformer", e);
+                    getLogger().debug("Exception in startAncestorValueElement", e);
                     throwIllegalStateException("Ancestor value elements must have a " +
                                                SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
@@ -522,7 +501,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     getLogger().debug("ANCESTOR VALUE " + level + " " + name);
                 }
 
-                final String value = this.endSerializedXMLRecording();
+                final String value = endTextRecording();
                 if (value.length() > 0) {
                     getCurrentQuery().addQueryPart(value);
                     if (getLogger().isDebugEnabled()) {
@@ -530,7 +509,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     }
                 }
                 getCurrentQuery().addQueryPart(av);
-                startSerializedXMLRecording(format);
+                startTextRecording();
 
                 current_state = SQLTransformer.STATE_INSIDE_ANCESTOR_VALUE_ELEMENT;
                 break;
@@ -560,7 +539,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     getLogger().debug("SUBSTITUTE VALUE " + substitute);
                 }
 
-                final String value = endSerializedXMLRecording();
+                final String value = endTextRecording();
                 if (value.length() > 0) {
                     getCurrentQuery().addQueryPart(value);
                     if (getLogger().isDebugEnabled()) {
@@ -568,7 +547,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     }
                 }
                 getCurrentQuery().addQueryPart(substitute);
-                startSerializedXMLRecording(format);
+                startTextRecording();
 
                 current_state = SQLTransformer.STATE_INSIDE_SUBSTITUTE_VALUE_ELEMENT;
                 break;
@@ -586,7 +565,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     throws ProcessingException, SAXException {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
-                final String value = endSerializedXMLRecording();
+                final String value = endTextRecording();
                 if (value.length() > 0) {
                     getCurrentQuery().addQueryPart(value);
                     if (getLogger().isDebugEnabled()) {
@@ -616,7 +595,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                         getLogger().debug("QUERY IS \"" + value + "\"");
                     }
                 }
-                startSerializedXMLRecording(format);
+                startTextRecording();
                 current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
                 break;
 
@@ -720,10 +699,6 @@ public class SQLTransformer extends AbstractSAXTransformer
     public void startTransformingElement(String uri, String name, String raw,
                                          Attributes attributes)
     throws ProcessingException, SAXException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("RECEIVED START ELEMENT " + name);
-        }
-
         if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
             startExecuteQueryElement();
         } else if (name.equals(SQLTransformer.MAGIC_QUERY)) {
@@ -749,10 +724,6 @@ public class SQLTransformer extends AbstractSAXTransformer
     public void endTransformingElement(String uri, String name,
                                        String raw)
     throws ProcessingException, IOException, SAXException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("RECEIVED END ELEMENT " + name + "(" + uri + ")");
-        }
-
         if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
             endExecuteQueryElement();
         } else if (name.equals(SQLTransformer.MAGIC_QUERY)) {
@@ -1264,6 +1235,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                         if (transformer.interpreter == null) {
                             transformer.interpreter = (XMLDeserializer) manager.lookup(XMLDeserializer.ROLE);
                         }
+
                         transformer.parser.parse(new InputSource(new StringReader("<root>" + stripped + "</root>")),
                                                  transformer.compiler);
 
@@ -1296,12 +1268,12 @@ public class SQLTransformer extends AbstractSAXTransformer
                 for (int i = 1; i <= md.getColumnCount(); i++) {
                     String columnName = getColumnName(md.getColumnName(i));
                     transformer.start(columnName, attr);
-                    this.serializeData(manager, getColumnValue(i));
+                    serializeData(manager, getColumnValue(i));
                     transformer.end(columnName);
                 }
             } else if (isupdate && !isstoredprocedure) {
                 transformer.start("returncode", attr);
-                this.serializeData(manager, String.valueOf(rv));
+                serializeData(manager, String.valueOf(rv));
                 transformer.end("returncode");
                 rv = -1; // we only want the return code shown once.
             }
@@ -1321,11 +1293,11 @@ public class SQLTransformer extends AbstractSAXTransformer
                     Integer counter = (Integer) itOutKeys.next();
                     try {
                         if (cst == null) {
-                            getTheLogger().debug("SQLTransformer: cst is null");
+                            getTheLogger().debug("cst is null");
                         }
 
                         if (counter == null) {
-                            getTheLogger().debug("SQLTransformer: counter is null");
+                            getTheLogger().debug("counter is null");
                         }
 
                         Object obj = cst.getObject(counter.intValue());

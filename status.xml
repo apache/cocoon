@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="remove">
+      Databases: Removed xml-encoding parameter from the SQLTransformer configuration.
+      The latest SQLTransformer has no byte to character conversions.
+    </action>
     <action dev="AG" type="update">
       Updated ant to 1.6.3.
     </action>
