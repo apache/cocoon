@@ -430,6 +430,22 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      Databases: Changes in SQLTransformer:
+      <ul>
+        <li>By default, output resulting XML using 'sql' namespace prefix.</li>
+        <li>Accept non-namespaced attributes in the input XML,
+        and prefer them over attributes in SQLTransformer namespace.</li>
+        <li>Support configured namespace, instead of hardcoded value.</li>
+      </ul>
+    </action>
+    <action dev="VG" type="fix" fixes-bug="31634" due-to="Martin Holz" due-to-email="holz@fiz-chemie.de">
+      Databases: SQLTransformer: Output attributes on rowset element with
+      empty namespace.
+    </action>
+    <action dev="VG" type="fix" fixes-bug="25203">
+      Databases: SQLTransformer: Avoid declaring duplicate namespaces.
+    </action>
     <action dev="VG" type="remove">
       Databases: Removed xml-encoding parameter from the SQLTransformer configuration.
       The latest SQLTransformer has no byte to character conversions.
