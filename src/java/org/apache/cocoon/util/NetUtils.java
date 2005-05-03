@@ -216,8 +216,7 @@ public class NetUtils {
         if (i > -1) {
             return uri.substring(0, i);
         }
-        i = uri.indexOf(':');
-        return (i > -1) ? uri.substring(i + 1, uri.length()) : "";
+        return StringUtils.substringAfter(uri, ":");
     }
 
     /**
@@ -231,27 +230,18 @@ public class NetUtils {
         int dot = uri.lastIndexOf('.');
         if (dot > -1) {
             uri = uri.substring(dot);
-            int slash = uri.lastIndexOf('/');
-            if (slash > -1) {
-                return null;
-            } else {
-                int sharp = uri.lastIndexOf('#');
-                if (sharp > -1) {
-                    // uri starts with dot already
-                    return uri.substring(0, sharp);
+            if (StringUtils.containsNone(uri, "/")) {
+                final char [] chars = {'#', '?'};
+                int end = StringUtils.indexOfAny(uri, chars);
+                // uri starts with dot already
+                if (end > -1) {
+                    return uri.substring(0, end);
                 } else {
-                    int mark = uri.lastIndexOf('?');
-                    if (mark > -1) {
-                        // uri starts with dot already
-                        return uri.substring(0, mark);
-                    } else {
-                        return uri;
-                    }
+                    return uri;
                 }
             }
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -273,11 +263,11 @@ public class NetUtils {
 
         boolean slash = (path.charAt(path.length() - 1) == '/');
         
-        StringBuffer b = new StringBuffer();
+        StringBuffer b = new StringBuffer(path.length() + resource.length() + 1);
         b.append(path);
         if (!slash) {
             b.append('/');
-        } 
+        }
         b.append(resource);
         return b.toString();
     }
@@ -304,19 +294,14 @@ public class NetUtils {
         } else {
             // resource is not direct descendant
             int index = StringUtils.indexOfDifference(path, absoluteResource);
-            if (index > 0 && path.charAt(index-1) != '/') {
-                index = path.substring(0, index).lastIndexOf('/');
+            if (index > 0 && path.charAt(index - 1) != '/') {
+                index = StringUtils.lastIndexOf(path, '/', index);
                 index++;
             }
             String pathDiff = path.substring(index);
             String resource = absoluteResource.substring(index);
             int levels = StringUtils.countMatches(pathDiff, "/");
-            StringBuffer b = new StringBuffer();
-            for (int i = 0; i < levels; i++) {
-                b.append("../");
-            }
-            b.append(resource);
-            return b.toString();
+            return StringUtils.repeat("../", levels) + resource;
         }
     }
 
@@ -330,7 +315,7 @@ public class NetUtils {
         if ("".equals(uri)) {
             return uri;
         }
-        int leadingSlashes = 0;
+        int leadingSlashes;
         for (leadingSlashes = 0 ; leadingSlashes < uri.length()
                 && uri.charAt(leadingSlashes) == '/' ; ++leadingSlashes) {}
         boolean isDir = (uri.charAt(uri.length() - 1) == '/');
@@ -501,7 +486,7 @@ public class NetUtils {
             urlEncode = null;
             urlDecode = null;    
         }
-        } 
+    }
 
     /**
      * Pass through to the {@link java.net.URLEncoder}. If running under JDK &lt; 1.4,
