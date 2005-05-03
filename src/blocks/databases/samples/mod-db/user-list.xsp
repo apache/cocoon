@@ -16,32 +16,28 @@
 -->
 
 <xsp:page language="java"
-     xmlns:xsp="http://apache.org/xsp"
-     xmlns:esql="http://apache.org/cocoon/SQL/v2"
-     xmlns:xsp-request="http://apache.org/xsp/request/2.0"
->
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
 
   <xsp:structure>
     <xsp:include>java.util.Enumeration</xsp:include>
   </xsp:structure>
-    
-  <page>
 
+  <page>
     <resources>
        <resource type="file" href="database.xml?cocoon-view=pretty-content">Descriptor</resource>
-       <resource type="file" href="schema.sql">Schema</resource>
+       <resource type="file" href="../schema.sql">Schema</resource>
        <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
        <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
     </resources>
 
     <title>user-list</title>
-    
+
     <content>
-        
+      <h1>Modular Database Actions</h1>
 
-      <h1>Modular Database Actions</h1> 
-
-      <hr/> 
+      <hr/>
 
       <p>The intention is to factor out those parts that are dependent on
       the utilised DBMS as well as the methods used to obtain the values
@@ -50,7 +46,7 @@
 
       <ol>
         <li>Input Modules read data from some source (e.g. the request
-            object or session attributes or whatever)</li> 
+            object or session attributes or whatever)</li>
 
        <li>Output Modules send the data to an arbitrary
            destination. Again, this could be request attributes or
@@ -71,16 +67,16 @@
 
       <h2>Current database content</h2>
 
-      <esql:connection>         
+      <esql:connection>
         <esql:pool>personnel</esql:pool>
-              
+
         <p>
           <sqltbl>
             <esql:execute-query>
               <esql:query>select * from user order by name, firstname, uname, uid</esql:query>
               <esql:results>
                 <esql:row-results>
-                       
+
                   <sqltblrow>
                     <name>
                       <esql:get-string column="name"/>
@@ -106,7 +102,7 @@
                       </form>
                     </action>
                   </sqltblrow>
-                       
+
                 </esql:row-results>
               </esql:results>
               <esql:error-results>
@@ -136,7 +132,7 @@
                       <esql:query>select gid, gname from groups order by gname</esql:query>
                       <esql:results>
                         <esql:row-results>
-                          <option>                  
+                          <option>
                             <xsp:attribute name="value"><esql:get-string column="gid"/></xsp:attribute>
                             <esql:get-string column="gname"/>
                           </option>
@@ -146,7 +142,7 @@
                   </select>
                   <input type="submit" name="add-user-groups" value="new user"/>
                 </action>
-              </sqltblrow>   
+              </sqltblrow>
             </form>
           </sqltbl>
         </p>
@@ -221,7 +217,7 @@
           </form>
         </p>
       </esql:connection>
-       
+
       <hr/>
 
 
@@ -268,7 +264,7 @@
       </p>
 
       <hr/>
-      
+
     </content>
   </page>
 </xsp:page>
