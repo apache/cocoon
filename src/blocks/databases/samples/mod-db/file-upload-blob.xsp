@@ -24,11 +24,11 @@
   <xsp:structure>
     <xsp:include>java.util.Enumeration</xsp:include>
   </xsp:structure>
-  
+
   <page>
     <resources>
        <resource type="file" href="database.xml?cocoon-view=pretty-content">Descriptor</resource>
-       <resource type="file" href="schema.sql">Schema</resource>
+       <resource type="file" href="../schema.sql">Schema</resource>
        <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
        <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
     </resources>
@@ -36,12 +36,12 @@
     <title>file-upload-blob</title>
 
    <!-- create image tags out of the images stored in the database, the browser will subsequently
-        request those images and they will be served by a special pipeline in the sitemap using 
+        request those images and they will be served by a special pipeline in the sitemap using
         the database reader component
-   -->    
+   -->
    <esql:connection>
       <esql:pool>personnel</esql:pool>
-    
+
       <esql:execute-query>
              <esql:query>select media.id from media</esql:query>
              <esql:results>
@@ -53,17 +53,17 @@
              <esql:no-results>no images yet</esql:no-results>
       </esql:execute-query>
     </esql:connection>
-     
+
 
       <h1>Upload Media</h1>
-      <p>What's happening?  This example interacts with a simple database schema, set up by 
-      default in the sample "personnel" hsql database installed with the database block.  There 
-      is one table "media" with two fields: a primary key, and a binary field "image".  
-      When a file upload is received from the simple form on this page, the modular db action 
+      <p>What's happening?  This example interacts with a simple database schema, set up by
+      default in the sample "personnel" hsql database installed with the database block.  There
+      is one table "media" with two fields: a primary key, and a binary field "image".
+      When a file upload is received from the simple form on this page, the modular db action
       auto increments the primary key, and loads the binary file contents into the column (declared
       as type="binary" in database.xml).  That's it.</p>
-      <p>Additionally, when this page is loaded, esql queries the media table and places an image tag 
-      for each row, using "primarykeyvalue".jpg for the src.  The sitemap is configured to serve 
+      <p>Additionally, when this page is loaded, esql queries the media table and places an image tag
+      for each row, using "primarykeyvalue".jpg for the src.  The sitemap is configured to serve
 	  *.jpg using the database reader (declared in the root database samples sitemap) which simply
 	  retrieves the binary data from the database and streams it to the browser.</p>
 

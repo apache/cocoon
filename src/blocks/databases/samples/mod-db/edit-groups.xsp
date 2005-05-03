@@ -15,32 +15,29 @@
   limitations under the License.
 -->
 
-<xsp:page
-          language="java"
+<xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
-	  xmlns:esql="http://apache.org/cocoon/SQL/v2"
-          xmlns:xsp-request="http://apache.org/xsp/request/2.0"
-  >
-  <!--
-       -->
+	        xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
   <xsp:structure>
     <xsp:include>java.util.Enumeration</xsp:include>
   </xsp:structure>
-  
+
   <page>
     <resources>
        <resource type="file" href="database.xml?cocoon-view=pretty-content">Descriptor</resource>
-       <resource type="file" href="schema.sql">Schema</resource>
+       <resource type="file" href="../schema.sql">Schema</resource>
        <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
        <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
     </resources>
 
     <title>edit-groups</title>
-    
+
 
     <esql:connection>
       <esql:pool>personnel</esql:pool>
-    
+
       <xsp:logic>
          String user = <xsp-request:get-parameter name="user.uid"/>;
          if ( user == null ) {
@@ -71,7 +68,7 @@
                </esql:row-results>
              </esql:results>
            </esql:execute-query>
-         }  
+         }
       </xsp:logic>
 
 
@@ -129,7 +126,7 @@
                                   <esql:query>select gid, gname from user_groups, groups where user_groups.gid = groups.gid and uid=<esql:parameter type="int"><xsp:expr>uid</xsp:expr></esql:parameter> order by gname</esql:query>
                                   <esql:results>
                                     <esql:row-results>
-                                      <option>			        
+                                      <option>
                                         <xsp:attribute name="value"><esql:get-string column="gid"/></xsp:attribute>
                                         <esql:get-string column="gname"/>
                                       </option>
@@ -173,7 +170,7 @@
                                   <esql:query>select gid, gname from groups where gid not in (select gid from user_groups where uid=<esql:parameter type="int"><xsp:expr>uid</xsp:expr></esql:parameter>) order by gname</esql:query>
                                   <esql:results>
                                     <esql:row-results>
-                                      <option>			        
+                                      <option>
                                         <xsp:attribute name="value"><esql:get-string column="gid"/></xsp:attribute>
                                         <esql:get-string column="gname"/>
                                       </option>

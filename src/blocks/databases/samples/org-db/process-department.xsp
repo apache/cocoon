@@ -15,17 +15,17 @@
   limitations under the License.
 -->
 
-<xsp:page
-          language="java"
+<xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"
           xmlns:esql="http://apache.org/cocoon/SQL/v2"
-          xmlns:xsp-request="http://apache.org/xsp/request/2.0"
->
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
   <xsp:logic>
     String process = null;
     String name = null;
     int currId = -1;
   </xsp:logic>
+
   <page>
     <xsp:logic>
       process = <xsp-request:get-parameter name="process"/>;
@@ -33,10 +33,10 @@
     </xsp:logic>
 
     <resources>
-       <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
-       <resource type="file" href="../transform/sql-page.xml.sql">Schema</resource>
-       <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
-       <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
+      <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
+      <resource type="file" href="../schema.sql">Schema</resource>
+      <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
+      <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
     </resources>
 
     <title><xsp:expr>process</xsp:expr> Department Processed</title>
@@ -45,13 +45,13 @@
         <esql:pool>personnel</esql:pool>
         <esql:execute-query>
           <esql:query>
-	    select max(id) as maxid from department
-	  </esql:query>
+	          select max(id) as maxid from department
+          </esql:query>
           <esql:results>
-	    <esql:row-results>
-	      <xsp:logic>
+            <esql:row-results>
+              <xsp:logic>
                 currId = <esql:get-int column="maxid"/>;
-	      </xsp:logic>
+              </xsp:logic>
               <esql:execute-query>
                 <esql:query>
                   insert into department (id, name) values (
@@ -60,7 +60,7 @@
                   )
                 </esql:query>
               </esql:execute-query>
-	    </esql:row-results>
+            </esql:row-results>
           </esql:results>
         </esql:execute-query>
       </esql:connection>
