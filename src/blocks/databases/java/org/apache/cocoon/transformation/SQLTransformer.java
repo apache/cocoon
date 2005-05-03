@@ -145,18 +145,14 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** Check if nr of rows need to be written out. **/
     protected boolean showNrOfRows;
 
-    /** Namespace prefix to output */
-    protected String outPrefix;
-
-    /** Namespace uri to output */
+    /** The namespace uri of the XML output. Defaults to {@link #namespaceURI}. */
     protected String outUri;
+
+    /** The namespace prefix of the XML output. Defaults to 'sql'. */
+    protected String outPrefix;
 
     /** The database selector */
     protected ServiceSelector dbSelector;
-
-    protected XMLSerializer compiler;
-    protected XMLDeserializer interpreter;
-    protected SAXParser parser;
 
     /** Encoding we use for CLOB field */
 	protected String clobEncoding;
@@ -164,11 +160,16 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** The connection used by all top level queries */
     protected Connection conn;
 
+    // Used to parse XML from database.
+    protected XMLSerializer compiler;
+    protected XMLDeserializer interpreter;
+    protected SAXParser parser;
+
     /**
      * Constructor
      */
     public SQLTransformer() {
-        this.defaultNamespaceURI = NAMESPACE;
+        super.defaultNamespaceURI = NAMESPACE;
     }
 
     /**
@@ -250,6 +251,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
         this.showNrOfRows = parameters.getParameterAsBoolean(SQLTransformer.MAGIC_NR_OF_ROWS, false);
         this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
+
         if (getLogger().isDebugEnabled()) {
             if (this.parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null) != null) {
                 getLogger().debug("CONNECTION: " + this.parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null));
@@ -259,11 +261,23 @@ public class SQLTransformer extends AbstractSAXTransformer
             }
             getLogger().debug("DOC-ELEMENT: " + parameters.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset"));
             getLogger().debug("ROW-ELEMENT: " + parameters.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row"));
-            getLogger().debug("NS-URI: " + parameters.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, NAMESPACE));
-            getLogger().debug("NS-PREFIX: " + parameters.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, ""));
-            getLogger().debug("CLOB_ENCODING: " + clobEncoding);
+            getLogger().debug("Using CLOB encoding: " + clobEncoding);
         }
-   }
+    }
+
+    /**
+     * Return attribute value.
+     * First try non-namespaced attribute, then try this transformer namespace.
+     * @param name local attribute name
+     */
+    private String getAttributeValue(Attributes attr, String name) {
+        String value = attr.getValue("", name);
+        if (value == null) {
+            value = attr.getValue(this.namespaceURI, name);
+        }
+
+        return value;
+    }
 
     /**
      * This will be the meat of SQLTransformer, where the query is run.
@@ -274,10 +288,13 @@ public class SQLTransformer extends AbstractSAXTransformer
             getLogger().debug("Executing query nr " + index);
         }
 
-        this.outUri = getCurrentQuery().properties.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, NAMESPACE);
-        this.outPrefix = getCurrentQuery().properties.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "");
+        this.outUri = getCurrentQuery().properties.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, namespaceURI);
+        this.outPrefix = getCurrentQuery().properties.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "sql");
 
-        if (!"".equals(this.outUri)) {
+        // Start prefix mapping for output namespace
+        // only if its URI is not empty, and if it is not this transformer namespace.
+        final boolean startPrefixMapping = !"".equals(this.outUri) && !namespaceURI.equals(this.outUri);
+        if (startPrefixMapping) {
             super.startPrefixMapping(this.outPrefix, this.outUri);
         }
 
@@ -314,13 +331,11 @@ public class SQLTransformer extends AbstractSAXTransformer
             if (!query_failure) {
                 AttributesImpl attr = new AttributesImpl();
                 if (this.showNrOfRows) {
-                    attr.addAttribute(NAMESPACE, query.nr_of_rows, query.nr_of_rows, "CDATA",
-                                      String.valueOf(query.getNrOfRows()));
+                    attr.addAttribute("", query.nr_of_rows, query.nr_of_rows, "CDATA", String.valueOf(query.getNrOfRows()));
                 }
                 String name = query.getName();
                 if (name != null) {
-                    attr.addAttribute(NAMESPACE, query.name_attribute, query.name_attribute, "CDATA",
-                                      name);
+                    attr.addAttribute("", query.name_attribute, query.name_attribute, "CDATA", name);
                 }
                 start(query.rowset_name, attr);
 
@@ -339,7 +354,6 @@ public class SQLTransformer extends AbstractSAXTransformer
 
                 end(query.rowset_name);
             }
-
         } catch (SQLException e) {
             getLogger().debug("Exception in executeQuery()", e);
             throw new SAXException(e);
@@ -355,7 +369,7 @@ public class SQLTransformer extends AbstractSAXTransformer
             }
         }
 
-        if (!"".equals(this.outUri)) {
+        if (startPrefixMapping) {
             super.endPrefixMapping(this.outPrefix);
         }
     }
@@ -483,15 +497,13 @@ public class SQLTransformer extends AbstractSAXTransformer
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 int level = 0;
                 try {
-                    level = Integer.parseInt(attributes.getValue(NAMESPACE,
-                                                                 SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
+                    level = Integer.parseInt(getAttributeValue(attributes, SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
                     getLogger().debug("Exception in startAncestorValueElement", e);
                     throwIllegalStateException("Ancestor value elements must have a " +
                                                SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
-                String name = attributes.getValue(NAMESPACE,
-                                                  SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE);
+                String name = getAttributeValue(attributes, SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE);
                 if (name == null) {
                     throwIllegalStateException("Ancestor value elements must have a " +
                                                SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE + " attribute");
@@ -526,8 +538,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     throws ProcessingException, SAXException {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
-                String name = attributes.getValue(NAMESPACE,
-                                                  SQLTransformer.MAGIC_SUBSTITUTE_VALUE_NAME_ATTRIBUTE);
+                String name = getAttributeValue(attributes, SQLTransformer.MAGIC_SUBSTITUTE_VALUE_NAME_ATTRIBUTE);
                 if (name == null) {
                     throwIllegalStateException("Substitute value elements must have a " +
                                                SQLTransformer.MAGIC_SUBSTITUTE_VALUE_NAME_ATTRIBUTE + " attribute");
@@ -607,10 +618,8 @@ public class SQLTransformer extends AbstractSAXTransformer
     protected void startInParameterElement(Attributes attributes) {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
-                String nr = attributes.getValue(NAMESPACE,
-                                                SQLTransformer.MAGIC_IN_PARAMETER_NR_ATTRIBUTE);
-                String value = attributes.getValue(NAMESPACE,
-                                                   SQLTransformer.MAGIC_IN_PARAMETER_VALUE_ATTRIBUTE);
+                String nr = getAttributeValue(attributes, SQLTransformer.MAGIC_IN_PARAMETER_NR_ATTRIBUTE);
+                String value = getAttributeValue(attributes, SQLTransformer.MAGIC_IN_PARAMETER_VALUE_ATTRIBUTE);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("IN PARAMETER NR " + nr + "; VALUE " + value);
                 }
@@ -632,12 +641,9 @@ public class SQLTransformer extends AbstractSAXTransformer
     protected void startOutParameterElement(Attributes attributes) {
         switch (current_state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
-                String name = attributes.getValue(NAMESPACE,
-                                                  SQLTransformer.MAGIC_OUT_PARAMETER_NAME_ATTRIBUTE);
-                String nr = attributes.getValue(NAMESPACE,
-                                                SQLTransformer.MAGIC_OUT_PARAMETER_NR_ATTRIBUTE);
-                String type = attributes.getValue(NAMESPACE,
-                                                  SQLTransformer.MAGIC_OUT_PARAMETER_TYPE_ATTRIBUTE);
+                String name = getAttributeValue(attributes, SQLTransformer.MAGIC_OUT_PARAMETER_NAME_ATTRIBUTE);
+                String nr = getAttributeValue(attributes, SQLTransformer.MAGIC_OUT_PARAMETER_NR_ATTRIBUTE);
+                String type = getAttributeValue(attributes, SQLTransformer.MAGIC_OUT_PARAMETER_TYPE_ATTRIBUTE);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("OUT PARAMETER NAME" + name + ";NR " + nr + "; TYPE " + type);
                 }

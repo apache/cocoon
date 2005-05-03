@@ -32,7 +32,7 @@
       </sql:query>
       <sql:execute-query>
         <sql:query>
-          select id, name from employee where department_id = <sql:ancestor-value sql:name="id" sql:level="1"/>
+          select id, name from employee where department_id = <sql:ancestor-value name="id" level="1"/>
         </sql:query>
       </sql:execute-query>
     </sql:execute-query>

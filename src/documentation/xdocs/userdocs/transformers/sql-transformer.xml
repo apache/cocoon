@@ -48,11 +48,11 @@
       <source>
       <![CDATA[
   <page>
-    <execute-query xmlns="http://apache.org/cocoon/SQL/2.0"> 
-      <query>
+    <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0"> 
+      <sql:query>
       <!-- here comes the SQL statement or stored procedure -->
-      </query>
-    </execute-query>
+      </sql:query>
+    </sql:execute-query>
   </page>
    ]]></source>
       <p>
@@ -72,7 +72,7 @@
           query, you can use another transformer to check the name of the rowset
           and to execute the necessary business logic on it.
           <br/>
-          usage: <code>&lt;query name="myName"&gt;</code>
+          usage: <code>&lt;sql:query name="myName"&gt;</code>
         </li>
         <li>
           <strong>isstoredprocedure</strong>:
@@ -80,7 +80,7 @@
           this attribute to the query element. By default, the transformer
           assumes that you want to execute a SQL statement.
           <br/>
-          usage: <code>&lt;query isstoredprocedure="true"&gt;</code>
+          usage: <code>&lt;sql:query isstoredprocedure="true"&gt;</code>
         </li>
       </ol>
       <p>Here is an example of how the input XML might look like:</p>
@@ -90,11 +90,11 @@
    <title>Hello</title>
    <content>
     <para>This is my first Cocoon page filled with sql data!</para>
-    <execute-query xmlns="http://apache.org/cocoon/SQL/2.0"> 
-     <query name="department">
-          select id,name from department_table 
-     </query>
-    </execute-query>
+    <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0"> 
+     <sql:query name="department">
+       select id,name from department_table 
+     </sql:query>
+    </sql:execute-query>
    </content>
   </page>
    ]]></source>
@@ -136,17 +136,17 @@
    <title>Hello</title>
    <content>
     <para>This is my first Cocoon page filled with sql data!</para>
-    <rowset nrofrows="2" name="department" 
-            xmlns="http://apache.org/cocoon/SQL/2.0">
-      <row>
-        <id>1</id>
-        <name>Programmers</name>
-      </row>
-      <row>
-        <id>2</id>
-        <name>Loungers</name>
-      </row>
-    </rowset>
+    <sql:rowset nrofrows="2" name="department" 
+                xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:row>
+        <sql:id>1</sql:id>
+        <sql:name>Programmers</sql:name>
+      </sql:row>
+      <sql:row>
+        <sql:id>2</sql:id>
+        <sql:name>Loungers</sql:name>
+      </sql:row>
+    </sql:rowset>
    </content>
   </page>
    ]]></source>
@@ -179,13 +179,13 @@
         </p>
         <source>
         <![CDATA[
-  <page xmlns:sql="http://apache.org/cocoon/SQL/2.0">
-    <execute-query xmlns="http://apache.org/cocoon/SQL/2.0">
-      <query>
-       select id,name from employee_table where name =
-                '<sql:substitute-value sql:name="username"/>'
-      </query>
-    </execute-query>
+  <page>
+    <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:query>
+        select id,name from employee_table where name =
+            '<sql:substitute-value name="username"/>'
+      </sql:query>
+    </sql:execute-query>
   </page>
      ]]></source>
         <p>
@@ -211,13 +211,13 @@
         <p>The output XML will be as follow:</p>
         <source>
         <![CDATA[
-  <page xmlns:sql="http://apache.org/cocoon/SQL/2.0">
-    <rowset nrofrows="1" xmlns="http://apache.org/cocoon/SQL/2.0">
-      <row>
-        <id>2</id>
-        <name>Stefano Mazzocchi</name>
-      </row>
-    </rowset>
+  <page>
+    <sql:rowset nrofrows="1" xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:row>
+        <sql:id>2</sql:id>
+        <sql:name>Stefano Mazzocchi</sql:name>
+      </sql:row>
+    </sql:rowset>
   </page>
      ]]></source>
         <p>
@@ -230,18 +230,18 @@
         <p>Take following input XML:</p>
         <source>
         <![CDATA[
-  <page xmlns:sql="http://apache.org/cocoon/SQL/2.0">
-    <execute-query xmlns="http://apache.org/cocoon/SQL/2.0">
-     <query name="department">
-          select id,name from department_table
-     </query>
-     <execute-query>
-      <query name="employee">
-       select id,name from employee_table where department_id =
-                  <ancestor-value sql:name="id" sql:level="1"/>
-      </query>
-     </execute-query>
-    </execute-query>
+  <page>
+    <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:query name="department">
+        select id, name from department_table
+      </sql:query>
+      <sql:execute-query>
+        <sql:query name="employee">
+          select id, name from employee_table where department_id =
+              <sql:ancestor-value name="id" level="1"/>
+        </sql:query>
+      </sql:execute-query>
+    </sql:execute-query>
   </page>
      ]]></source>
         <p>
@@ -255,34 +255,34 @@
         </p>
         <source>
         <![CDATA[
-  <page xmlns:sql="http://apache.org/cocoon/SQL/2.0">
-    <rowset nrofrows="2" name="department" 
-            xmlns="http://apache.org/cocoon/SQL/2.0">
-      <row>
-        <id>1</id>
-        <name>Programmers</name>
-        <rowset nrofrows="2" name="employee">
-          <row>
-            <id>1</id>
-            <name>Donald Ball</name>
-          </row>
-          <row>
-            <id>2</id>
-            <name>Stefano Mazzocchi</name>
-          </row>
-        </rowset>
-      </row>
-      <row>
-        <id>2</id>
-        <name>Loungers</name>
-        <rowset nrofrows="1" name="employee">
-          <row>
-            <id>3</id>
-            <name>Pierpaolo Fumagalli</name>
-          </row>
-        </rowset>
-      </row>
-    </rowset>
+  <page>
+    <sql:rowset nrofrows="2" name="department" 
+                xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:row>
+        <sql:id>1</sql:id>
+        <sql:name>Programmers</sql:name>
+        <sql:rowset nrofrows="2" name="employee">
+          <sql:row>
+            <sql:id>1</sql:id>
+            <sql:name>Donald Ball</sql:name>
+          </sql:row>
+          <sql:row>
+            <sql:id>2</sql:id>
+            <sql:name>Stefano Mazzocchi</sql:name>
+          </sql:row>
+        </sql:rowset>
+      </sql:row>
+      <sql:row>
+        <sql:id>2</sql:id>
+        <sql:name>Loungers</sql:name>
+        <sql:rowset nrofrows="1" name="employee">
+          <sql:row>
+            <sql:id>3</sql:id>
+            <sql:name>Pierpaolo Fumagalli</sql:name>
+          </sql:row>
+        </sql:rowset>
+      </sql:row>
+    </sql:rowset>
   </page>
      ]]></source>
       </s2>
@@ -297,8 +297,9 @@
         </p>
         <source>
         <![CDATA[
-  <out-parameter sql:nr="1" sql:name="code"
-                 sql:type="java.sql.Types.INTEGER"/>
+  <sql:out-parameter nr="1"
+                     name="code"
+                     type="java.sql.Types.INTEGER"/>
      ]]></source>
         <p>where:</p>
         <ol>
@@ -325,19 +326,19 @@
         </p>
         <source>
         <![CDATA[
-  <page xmlns:sql="http://apache.org/cocoon/SQL/2.0">
-    <execute-query xmlns="http://apache.org/cocoon/SQL/2.0">
-      <query isstoredprocedure="true" name="namesearch">
-          begin QUICK_SEARCH.FIND_NAME('<sql:substitute-value
-                          sql:name="username"/>',?,?,?); end;
-      </query>
-      <out-parameter sql:nr="1" sql:name="code"
-                     sql:type="java.sql.Types.INTEGER"/>
-      <out-parameter sql:nr="2" sql:name="nrofrows"
-                     sql:type="java.sql.Types.INTEGER"/>
-      <out-parameter sql:nr="3" sql:name="resultset"
-                     sql:type="oracle.jdbc.driver.OracleTypes.CURSOR"/>
-    </execute-query>
+  <page>
+    <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+      <sql:query isstoredprocedure="true" name="namesearch">
+        begin QUICK_SEARCH.FIND_NAME('<sql:substitute-value
+            name="username"/>',?,?,?); end;
+      </sql:query>
+      <sql:out-parameter nr="1" name="code"
+                         type="java.sql.Types.INTEGER"/>
+      <sql:out-parameter nr="2" name="nrofrows"
+                         type="java.sql.Types.INTEGER"/>
+      <sql:out-parameter nr="3" name="resultset"
+                         type="oracle.jdbc.driver.OracleTypes.CURSOR"/>
+    </sql:execute-query>
   </page>
      ]]></source>
         <p>
@@ -348,7 +349,7 @@
           <code>ResultSet</code>, a <code>rowset</code> element will be created,
           containing all the data of the resultset. It is also possible to use
           an <em>in-parameter</em> element, e.g.
-          <code>&lt;in-parameter sql:nr="1" sql:value="1"/&gt;</code>. This
+          <code>&lt;sql:in-parameter nr="1" value="1"/&gt;</code>. This
           functionality is only provided to be complete, because it is available
           in Java itself. You can also use the <em>in-parameter</em> in
           combination with a SQL statement. Used in combination with an
@@ -358,7 +359,7 @@
       </s2>
     </s1>
     <s1 title="Combined with other transformers">
-      <s2 title="Filtertransformer">
+      <s2 title="FilterTransformer">
         <p>
           When you query a database and it returns too many rows to process at
           once, you might want to take a block of elements, process this block
@@ -376,21 +377,21 @@
         <p>Output XML from the SQLTransformer:</p>
         <source>
         <![CDATA[
-  <rowset nrofrows="56" name="test"
-          xmlns="http://apache.org/cocoon/SQL/2.0">
-    <row>
+  <sql:rowset nrofrows="56" name="test"
+              xmlns:sql="http://apache.org/cocoon/SQL/2.0">
+    <sql:row>
       <!-- db record -->
-    </row>
-    <row>
+    </sql:row>
+    <sql:row>
       <!-- db record -->
-    </row>
+    </sql:row>
 
     ...
 
-    <row>
+    <sql:row>
       <!-- db record -->
-    </row>
-  </rowset>
+    </sql:row>
+  </sql:rowset>
      ]]></source>
         <p>
           By adding following lines to the sitemap, just under the
@@ -408,25 +409,25 @@
         <p>output XML:</p>
         <source>
         <![CDATA[
-  <rowset nrofrows="56" name="test"
-          xmlns="http://apache.org/cocoon/SQL/2.0">
+  <sql:rowset nrofrows="56" name="test"
+              xmlns:sql="http://apache.org/cocoon/SQL/2.0">
     <block id="1">
-      <row>
+      <sql:row>
         <!-- db record -->
-      </row>
+      </sql:row>
 
       <!-- total of 10 rows -->
 
-      <row>
+      <sql:row>
         <!-- db record -->
-      </row>
+      </sql:row>
     </block>
     <block id="2"/>
     <block id="3"/>
     <block id="4"/>
     <block id="5"/>
     <block id="6"/>
-  </rowset>
+  </sql:rowset>
      ]]></source>
         <p>
           To make it more dynamically, put something like
