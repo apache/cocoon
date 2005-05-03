@@ -56,7 +56,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.TransformerFactory;
@@ -515,7 +514,7 @@ public abstract class AbstractSAXTransformer
 
     /**
      * Stop recording of text and return the recorded information.
-     * @return The String.
+     * @return The String, trimmed.
      */
     public String endTextRecording()
     throws SAXException {
@@ -936,42 +935,35 @@ public abstract class AbstractSAXTransformer
     throws SAXException {
 
         if (prefix != null) {
-            // search the namespace prefix
+            // Find and remove the namespace prefix
             boolean found = false;
-            int l = this.namespaces.size();
-            int i = l-1;
-            while (!found && i >= 0) {
-                String currentPrefix = ((String[])this.namespaces.get(i))[0];
-                if (currentPrefix.equals(prefix)) {
+            for (int i = this.namespaces.size() - 1; i >= 0; i--) {
+                final String[] prefixAndUri = (String[]) this.namespaces.get(i);
+                if (prefixAndUri[0].equals(prefix)) {
+                    this.namespaces.remove(i);
                     found = true;
-                } else {
-                    i--;
+                    break;
                 }
             }
             if (!found) {
-                throw new SAXException("Namespace for prefix '"+ prefix + "' not found.");
+                throw new SAXException("Namespace for prefix '" + prefix + "' not found.");
             }
 
-            this.namespaces.remove(i);
             if (prefix.equals(this.ourPrefix)) {
+                // Reset our current prefix
                 this.ourPrefix = null;
-                // now search if we have a different prefix for our namespace
-                found = false;
-                l = this.namespaces.size();
-                i = l-1;
-                while (!found && i >= 0) {
-                    String currentNS = ((String[])this.namespaces.get(i))[1];
-                    if (namespaceURI.equals(currentNS)) {
-                        found = true;
-                    } else {
-                        i--;
+
+                // Now search if we have a different prefix for our namespace
+                for (int i = this.namespaces.size() - 1; i >= 0; i--) {
+                    final String[] prefixAndUri = (String[]) this.namespaces.get(i);
+                    if (namespaceURI.equals(prefixAndUri[1])) {
+                        this.ourPrefix = prefixAndUri[0];
+                        break;
                     }
-                }
-                if (found) {
-                    this.ourPrefix = ((String[])this.namespaces.get(i))[0];
                 }
             }
         }
+
         if (this.ignoreEventsCount == 0) {
             super.endPrefixMapping(prefix);
         }
