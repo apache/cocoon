@@ -273,7 +273,7 @@ public class NetUtils {
 
         boolean slash = (path.charAt(path.length() - 1) == '/');
         
-        StringBuffer b = new StringBuffer();
+        StringBuffer b = new StringBuffer(path.length() + 1 + resource.length());
         b.append(path);
         if (!slash) {
             b.append('/');
@@ -311,7 +311,7 @@ public class NetUtils {
             String pathDiff = path.substring(index);
             String resource = absoluteResource.substring(index);
             int levels = StringUtils.countMatches(pathDiff, "/");
-            StringBuffer b = new StringBuffer();
+            StringBuffer b = new StringBuffer(levels * 3 + resource.length());
             for (int i = 0; i < levels; i++) {
                 b.append("../");
             }
