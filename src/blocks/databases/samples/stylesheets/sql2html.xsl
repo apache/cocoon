@@ -52,9 +52,9 @@
 
   <xsl:template match="sql:name">
     <td>
-      <xsl:value-of select="."/>
+      <xsl:copy-of select="node()"/>
       <br/>
-      <xsl:copy-of select="../sql:description/*"/>
+      <xsl:copy-of select="../sql:description/node()"/>
     </td>
   </xsl:template>
 
