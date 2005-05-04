@@ -232,7 +232,10 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 // Get the request
                 final Request request = ObjectModelHelper.getRequest((Map) context);
                 if (request != null) {
-                    return "?" + request.getQueryString();
+                    final String queryString = request.getQueryString();
+                    if (queryString != null) {
+                        return "?" + queryString;
+                    }
                 }
             }
         }
