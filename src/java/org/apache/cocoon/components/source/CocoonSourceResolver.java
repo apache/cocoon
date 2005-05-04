@@ -32,9 +32,13 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -61,6 +65,9 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
 
     /** The base URL */
     protected URL baseURL;
+
+    /** The core */
+    protected Core core;
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -138,7 +145,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
             }
         }
 
-        final ServiceManager m = this.getServiceManager();
+        final ComponentLocator m = this.getComponentLocator();
 
         Source source = null;
         // search for a SourceFactory implementing the protocol
@@ -150,7 +157,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
                 getLogger().debug( "Resolved to systemID : " + systemID );
             }
             source = factory.getSource( systemID, parameters );
-        } catch( final ServiceException ce ) {
+        } catch( final ProcessingException ce ) {
             // no selector available, use fallback
         } finally {
             m.release( factory );
@@ -164,7 +171,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
                     getLogger().debug( "Resolved to systemID : " + systemID );
                 }
                 source = factory.getSource( systemID, parameters );
-            } catch (ServiceException se ) {
+            } catch (ProcessingException se ) {
                 throw new SourceException( "Unable to select source factory for " + systemID, se );
             } finally {
                 m.release(factory);
@@ -193,6 +200,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
             this.customResolver = (org.apache.excalibur.source.SourceResolver)
                      this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE+"/Cocoon");
         }
+        this.core = (Core)this.manager.lookup(Core.ROLE);
     }
 
     /**
@@ -202,27 +210,29 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
         if ( this.manager != null ) {
             this.manager.release( this.customResolver );
             this.customResolver = null;
+            this.manager.release(this.core);
+            this.core = null;
             this.manager = null;
         }
     }
 
     /**
-     * Get the service manager.
+     * Get the component locator.
      */
-    protected ServiceManager getServiceManager() {
-        ServiceManager m = EnvironmentHelper.getSitemapServiceManager();
-        if ( m == null ) {
-            m = this.manager;
+    protected ComponentLocator getComponentLocator() {
+        ComponentLocator l = this.core.getSitemapComponentLocator();
+        if ( l == null ) {
+            l = new ComponentLocatorWrapper(this.manager);
         }
-        return m;
+        return l;
     }
 
     /**
      * Get the SourceFactory
      */
-    protected SourceFactory getSourceFactory(ServiceManager m, String scheme) 
-    throws ServiceException {
-        return (SourceFactory)m.lookup(SourceFactory.ROLE + '/' + scheme);
+    protected SourceFactory getSourceFactory(ComponentLocator m, String scheme) 
+    throws ProcessingException {
+        return (SourceFactory)m.getComponent(SourceFactory.ROLE + '/' + scheme);
     }
 
     /**
@@ -234,7 +244,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
         if ( this.customResolver != null ) {
             this.customResolver.release( source );
         } else {
-            final ServiceManager m = this.getServiceManager();
+            final ComponentLocator m = this.getComponentLocator();
             
             // search for a SourceFactory implementing the protocol
             final String scheme = source.getScheme();
@@ -243,11 +253,11 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
             try {
                 factory = this.getSourceFactory(m, scheme);
                 factory.release(source);
-            } catch (ServiceException se ) {
+            } catch (ProcessingException se ) {
                 try {
                     factory = this.getSourceFactory(m, "*");
                     factory.release(source);
-                } catch (ServiceException sse ) {
+                } catch (ProcessingException sse ) {
                     throw new CascadingRuntimeException( "Unable to select source factory for " + source.getURI(), se );
                 }
             } finally {

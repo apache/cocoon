@@ -18,6 +18,7 @@ package org.apache.cocoon.sitemap.impl;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.ComponentLocator;
 
 
@@ -32,7 +33,7 @@ import org.apache.cocoon.sitemap.ComponentLocator;
  * the component in question, the service manager is asked.
  *
  * @since 2.2
- * @version $Id:$
+ * @version $Id$
  */
 public class ComponentManager implements ServiceManager, ComponentLocator {
 
@@ -76,23 +77,41 @@ public class ComponentManager implements ServiceManager, ComponentLocator {
     public boolean hasComponent(String key) {
         return this.hasService(key);
     }
+
     /**
-     * @see org.apache.cocoon.sitemap.ComponentLocator#lookup(java.lang.String)
      * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
      */
-    public Object lookup(String key) {
+    public Object lookup(String key) 
+    throws ServiceException {
+        try {
+            return this.doLookup(key);
+        } catch (ProcessingException se) {
+            throw new ServiceException("ComponentLocator", 
+                                       "Unable to lookup component for key: " + key, se);
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#getComponent(java.lang.String)
+     */
+    public Object getComponent(String key) throws ProcessingException {
+        try {
+            return this.doLookup(key);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Unable to lookup component for key: " + key, se);
+        }
+    }
+
+    protected Object doLookup(String key)
+    throws ProcessingException, ServiceException {
         Object component = null;
         if ( this.componentLocator != null ) {
             if ( this.componentLocator.hasComponent(key) ) {
-                component = this.componentLocator.lookup(key);
+                component = this.componentLocator.getComponent(key);
             }
         }
         if ( component == null && this.serviceManager.hasService(key) ) {
-            try {
-                component = this.serviceManager.lookup(key);
-            } catch (ServiceException se) {
-                throw new CascadingRuntimeException("Unable to lookup component: " + key, se);
-            }
+            component = this.serviceManager.lookup(key);
         }
         return component;
     }

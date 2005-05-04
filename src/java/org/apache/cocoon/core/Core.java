@@ -25,8 +25,12 @@ import java.util.Map;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.core.container.ComponentLocatorWrapper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.sitemap.ComponentLocator;
 
 /**
  * This is the core Cocoon component.
@@ -143,5 +147,22 @@ public class Core {
         } catch (ContextException ce) {
             throw new CascadingRuntimeException("Unable to get the cache directory from the context.", ce);
         }        
+    }
+    
+    /**
+     * Return the locator of the current sitemap.
+     * @return The current locator or null if no request is currently processed
+     */
+    public ComponentLocator getSitemapComponentLocator() {
+        final ServiceManager m = EnvironmentHelper.getSitemapServiceManager();
+        ComponentLocator l = null;
+        if ( m != null ) {
+            if ( !(m instanceof ComponentLocator) ) {
+                l = new ComponentLocatorWrapper(m);
+            } else {
+                l = (ComponentLocator)m;
+            }
+        }
+        return l;
     }
 }
