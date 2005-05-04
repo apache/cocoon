@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.9 2004/04/22 07:33:45 crossley Exp $ -->
+<!-- CVS: $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Databases Block Samples">
 
@@ -36,6 +36,9 @@
      </sample>
      <sample name="SQL Transformer" href="transform/sql-page" xlink:role="dynamic">
        Simple example using the SQL transformer.
+     </sample>
+     <sample name="Nested Queries" href="transform/sql-page2" xlink:role="dynamic">
+       Example with two queries nested into the third one.
      </sample>
   </group>
 
