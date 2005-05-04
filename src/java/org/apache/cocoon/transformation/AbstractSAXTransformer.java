@@ -106,11 +106,9 @@ public abstract class AbstractSAXTransformer
         extends AbstractTransformer
         implements Serviceable, Configurable, Recyclable {
 
-
     /**
-     * Empty attributes (for performance). This can be used
-     * do create own attributes, but make sure to clean them
-     * afterwords.
+     * Empty immutable attributes (for performance). Use them
+     * whenever creating an element with no attributes.
      */
     protected static final Attributes EMPTY_ATTRIBUTES = XMLUtils.EMPTY_ATTRIBUTES;
 
