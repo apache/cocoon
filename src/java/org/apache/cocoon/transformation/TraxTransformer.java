@@ -55,7 +55,6 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
-import org.apache.regexp.RE;
 
 import org.xml.sax.SAXException;
 
@@ -199,9 +198,6 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
 
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
-
-    /** Check if an expression is a valid XSLT Parameter Name **/
-    private static final RE reValidXSLTParameterName = new RE("^[\\w][\\w\\d\\.-]*");
 
     /**
      * Configure this transformer.
@@ -490,7 +486,25 @@ implements Transformer, Serviceable, Configurable, CacheableProcessingComponent,
      * Test if the name is a valid parameter name for XSLT
      */
     static boolean isValidXSLTParameterName(String name) {
-        return reValidXSLTParameterName.match(name);
+        if (name.length() == 0) {
+            return false;
+        }
+
+        char c = name.charAt(0);
+        if (!(Character.isLetter(c) || c == '_')) {
+            return false;
+        }
+
+        for (int i = name.length()-1; i > 1; i--) {
+            c = name.charAt(i);
+            if (!(Character.isLetterOrDigit(c) ||
+                    c == '-' ||
+                    c == '_' ||
+                    c == '.')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
