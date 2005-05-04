@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.sitemap;
 
+import org.apache.cocoon.ProcessingException;
+
 
 /**
  * TODO WORK IN PROGRESS!!
@@ -23,11 +25,11 @@ package org.apache.cocoon.sitemap;
  * and an optional application/sitemap container.
  *
  * @since 2.2
- * @version $Id:$
+ * @version $Id$
  */
 public interface ComponentLocator {
 
-    Object lookup(String key);
+    Object getComponent(String key) throws ProcessingException;
 
     void release(Object component);
 
