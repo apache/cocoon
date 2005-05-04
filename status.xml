@@ -430,6 +430,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="27440" due-to="Philipp Matthias Hahn" due-to-email="pmhahn@titan.lahn.de">
+      Databases: SQLTransformer: Support multiple nested queries within one query.
+    </action>
     <action dev="VG" type="update">
       Databases: Changes in SQLTransformer:
       <ul>
