@@ -23,18 +23,17 @@ import org.apache.cocoon.transformation.AbstractSAXTransformer;
 /**
  * This is the base class for all basket transformers
  *
- * @version CVS $Id: BasketTransformer.java 47047 2004-09-22 12:27:27Z vgritsenko $
+ * @version $Id: BasketTransformer.java 47047 2004-09-22 12:27:27Z vgritsenko $
  */
-public abstract class AbstractBasketTransformer
-    extends AbstractSAXTransformer
-    implements Disposable {
+public abstract class AbstractBasketTransformer extends AbstractSAXTransformer
+                                               implements Disposable {
 
     /** The namespace URI to listen for. */
     public static final String NAMESPACE_URI = "http://apache.org/cocoon/portal/basket/1.0";
 
     /** The basket manager */
     protected BasketManager basketManager;
-    
+
     /**
      * Constructor
      */
@@ -47,16 +46,16 @@ public abstract class AbstractBasketTransformer
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.basketManager = (BasketManager)this.manager.lookup(BasketManager.ROLE);
+        this.basketManager = (BasketManager) this.manager.lookup(BasketManager.ROLE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             this.manager.release(this.basketManager);
         }
+        super.dispose();
     }
-    
 }

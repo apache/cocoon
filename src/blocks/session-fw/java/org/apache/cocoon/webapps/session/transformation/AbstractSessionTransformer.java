@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,15 +27,14 @@ import org.apache.cocoon.webapps.session.SessionManager;
  *  This class is the basis for all session transformers.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSessionTransformer.java,v 1.4 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version $Id$
 */
-public abstract class AbstractSessionTransformer
-extends AbstractSAXTransformer {
+public abstract class AbstractSessionTransformer extends AbstractSAXTransformer {
 
-    private SessionManager     sessionManager;
-    private FormManager        formManager;
-    private ContextManager     contextManager;
-    
+    private SessionManager sessionManager;
+    private FormManager    formManager;
+    private ContextManager contextManager;
+
     /**
      * Get the SessionManager component
      */
@@ -85,13 +84,14 @@ extends AbstractSAXTransformer {
      *  Recycle this component.
      */
     public void recycle() {
-        super.recycle();
         this.manager.release( this.sessionManager);
         this.manager.release( this.formManager);
         this.manager.release( this.contextManager);
         this.sessionManager = null;
         this.formManager = null;
         this.contextManager = null;
+
+        super.recycle();
     }
 
     /**
@@ -102,5 +102,4 @@ extends AbstractSAXTransformer {
     throws ProcessingException {
         return this.getSessionManager().getSession(false);
     }
-
 }

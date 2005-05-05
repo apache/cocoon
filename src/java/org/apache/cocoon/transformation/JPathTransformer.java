@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class JPathTransformer
-extends AbstractSAXTransformer implements Initializable {
+public class JPathTransformer extends AbstractSAXTransformer
+                              implements Initializable {
 
     /** namespace constant */
     public static final String JPATH_NAMESPACE_URI  = "http://apache.org/xsp/jpath/1.0";
@@ -360,10 +360,10 @@ extends AbstractSAXTransformer implements Initializable {
      * Release all held resources.
      */
     public void recycle() {
-        super.recycle();
-
         m_cache.clear();
         m_kont = null;
         m_jxpathContext = null;
+
+        super.recycle();
     }
 }
