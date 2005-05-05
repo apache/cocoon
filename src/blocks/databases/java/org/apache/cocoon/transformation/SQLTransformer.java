@@ -79,13 +79,16 @@ import org.xml.sax.helpers.AttributesImpl;
  * It can be used in the sitemap pipeline as follows:
  * <code>
  * &lt;map:transform type="sql"&gt;
+ *   <!-- True to force each query to create its own connection: -->
+ *   &lt;map:parameter name="own-connection" value="..."/&gt;
  *   <!-- Specify either name of datasource: -->
  *   &lt;map:parameter name="use-connection" value="..."/&gt;
  *   <!-- Or connection parameters: -->
  *   &lt;map:parameter name="dburl" value="..."/&gt;
  *   &lt;map:parameter name="username" value="..."/&gt;
  *   &lt;map:parameter name="password" value="..."/&gt;
- *   <!-- Common parameters: -->
+ *
+ *   <!-- Default query parameters: -->
  *   &lt;map:parameter name="show-nr-or-rows" value="false"/&gt;
  *   &lt;map:parameter name="doc-element" value="rowset"/&gt;
  *   &lt;map:parameter name="row-element" value="row"/&gt;
@@ -99,8 +102,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  * The following DTD is valid:
  * <code>
- * &lt;!ENTITY % param  "((use-connection|(dburl,username,password))?,show-nr-or-rows?,doc-element?,row-element?,namespace-uri?,namespace-prefix?,clob-encoding?)"&gt;<br>
+ * &lt;!ENTITY % param  "(own-connection?,(use-connection|(dburl,username,password))?,show-nr-or-rows?,doc-element?,row-element?,namespace-uri?,namespace-prefix?,clob-encoding?)"&gt;<br>
  * &lt;!ELEMENT execute-query (query,(in-parameter|out-parameter)*,execute-query?, %param;)&gt;<br>
+ * &lt;!ELEMENT own-connection (#PCDATA)&gt;<br>
  * &lt;!ELEMENT use-connection (#PCDATA)&gt;<br>
  * &lt;!ELEMENT query (#PCDATA | substitute-value | ancestor-value | escape-string)*&gt;<br>
  * &lt;!ATTLIST query name CDATA #IMPLIED isstoredprocedure (true|false) "false" isupdate (true|false) "false"&gt;<br>
@@ -114,6 +118,18 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;!ATTLIST out-parameter nr CDATA #REQUIRED name CDATA #REQUIRED type CDATA #REQUIRED&gt;<br>
  * &lt;!ELEMENT escape-string (#PCDATA)&gt;<br>
  * </code>
+ * </p>
+ *
+ * <p>
+ * Each query can override default transformer parameters. Nested queries do not inherit parent
+ * query parameters, but only transformer parameters. Each query can have connection to different
+ * database, directly or using the connection pool. If database connection parameters are the same
+ * as for any of the ancestor queries, nested query will re-use ancestor query connection.
+ * </p>
+ *
+ * <p>
+ * Connection sharing between queries can be disabled, globally or on per-query basis, using
+ * <code>own-connection</code> parameter.
  * </p>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -134,6 +150,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     // The SQL trasformer namespace element names
     public static final String MAGIC_EXECUTE_QUERY = "execute-query";
+    private static final String MAGIC_OWN_CONNECTION = "own-connection";
     public static final String MAGIC_CONNECTION = "use-connection";
     public static final String MAGIC_DBURL = "dburl";
     public static final String MAGIC_USERNAME = "username";
@@ -199,25 +216,16 @@ public class SQLTransformer extends AbstractSAXTransformer
     protected Query query;
 
     /** The current state of the event receiving FSM */
-    protected int current_state;
+    protected int state;
 
-    /** Check if nr of rows need to be written out. */
-    protected boolean showNrOfRows;
+    /** The datasource component selector */
+    protected ServiceSelector datasources;
 
-    /** The namespace uri of the XML output. Defaults to {@link #namespaceURI}. */
-    protected String outUri;
+    /** The "name" of the connection shared by top level queries (if configuration allows) */
+    protected String connName;
 
-    /** The namespace prefix of the XML output. Defaults to 'sql'. */
-    protected String outPrefix;
-
-    /** The database selector */
-    protected ServiceSelector dbSelector;
-
-    /** Encoding we use for CLOB field */
-	protected String clobEncoding;
-
-    /** The connection used by all top level queries */
-    protected Connection connection;
+    /** The connection shared by top level queries (if configuration allows) */
+    protected Connection conn;
 
     // Used to parse XML from database.
     protected XMLSerializer compiler;
@@ -231,15 +239,19 @@ public class SQLTransformer extends AbstractSAXTransformer
         super.defaultNamespaceURI = NAMESPACE;
     }
 
+    //
+    // Lifecycle Methods
+    //
+
     /**
      * Serviceable
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         try {
-            this.dbSelector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
-        } catch (ServiceException cme) {
-            getLogger().warn("Could not get the DataSource Selector", cme);
+            this.datasources = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+        } catch (ServiceException e) {
+            getLogger().warn("DataSource component selector is not available.", e);
         }
     }
 
@@ -264,22 +276,33 @@ public class SQLTransformer extends AbstractSAXTransformer
     }
 
     /**
+     * Setup for the current request.
+     */
+    public void setup(SourceResolver resolver, Map objectModel,
+                      String source, Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, source, parameters);
+
+        // Setup instance variables
+        this.state = SQLTransformer.STATE_OUTSIDE;
+        this.connName = name(super.parameters);
+    }
+
+    /**
      * Recycle this component
      */
     public void recycle() {
+        this.query = null;
         try {
             // Close the connection used by all top level queries
-            if (this.connection != null) {
-                this.connection.close();
-                this.connection = null;
+            if (this.conn != null) {
+                this.conn.close();
+                this.conn = null;
             }
         } catch (SQLException e) {
-            getLogger().warn("Could not close the connection", e);
+            getLogger().info("Could not close connection", e);
         }
-
-        this.query = null;
-        this.outUri = null;
-        this.outPrefix = null;
+        this.connName = null;
 
         this.manager.release(this.parser);
         this.parser = null;
@@ -295,37 +318,11 @@ public class SQLTransformer extends AbstractSAXTransformer
      * Dispose
      */
     public void dispose() {
-        if (this.dbSelector != null) {
-            this.manager.release(this.dbSelector);
-            this.dbSelector = null;
+        if (this.datasources != null) {
+            this.manager.release(this.datasources);
+            this.datasources = null;
         }
-    }
-
-    /**
-     * Setup for the current request.
-     */
-    public void setup(SourceResolver resolver, Map objectModel,
-                      String source, Parameters parameters)
-    throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, source, parameters);
-
-        // Setup instance variables
-        this.current_state = SQLTransformer.STATE_OUTSIDE;
-
-        this.showNrOfRows = parameters.getParameterAsBoolean(SQLTransformer.MAGIC_NR_OF_ROWS, false);
-        this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
-
-        if (getLogger().isDebugEnabled()) {
-            if (this.parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null) != null) {
-                getLogger().debug("CONNECTION: " + this.parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null));
-            } else {
-                getLogger().debug("DBURL: " + parameters.getParameter(SQLTransformer.MAGIC_DBURL, null));
-                getLogger().debug("USERNAME: " + parameters.getParameter(SQLTransformer.MAGIC_USERNAME, null));
-            }
-            getLogger().debug("DOC-ELEMENT: " + parameters.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset"));
-            getLogger().debug("ROW-ELEMENT: " + parameters.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row"));
-            getLogger().debug("Using CLOB encoding: " + clobEncoding);
-        }
+        super.dispose();
     }
 
     /**
@@ -342,98 +339,9 @@ public class SQLTransformer extends AbstractSAXTransformer
         return value;
     }
 
-    /**
-     * This will be the meat of SQLTransformer, where the query is run.
-     */
-    protected void executeQuery(Query query)
-    throws SAXException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Executing query " + query);
-        }
-
-        this.outUri = query.properties.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, super.namespaceURI);
-        this.outPrefix = query.properties.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "sql");
-
-        // Start prefix mapping for output namespace
-        // only if its URI is not empty, and if it is not this transformer namespace.
-        final boolean startPrefixMapping = !"".equals(this.outUri) && !namespaceURI.equals(this.outUri);
-        if (startPrefixMapping) {
-            super.startPrefixMapping(this.outPrefix, this.outUri);
-        }
-
-        boolean success = false;
-        Connection conn = null;
-        try {
-            try {
-                if (query.parent == null) {
-                    if (this.connection == null) {
-                        // The first top level execute-query
-                        this.connection = query.getConnection();
-                    }
-                    // Reuse the global connection for all top level queries
-                    conn = this.connection;
-                } else {
-                    // Sub queries are always executed in an own connection
-                    conn = query.getConnection();
-                }
-
-                query.setConnection(conn);
-                query.execute();
-                success = true;
-            } catch (SQLException e) {
-                getLogger().info("Failed to execute query " + query, e);
-                start(query.rowset_name, EMPTY_ATTRIBUTES);
-                start(MAGIC_ERROR, EMPTY_ATTRIBUTES);
-                data(e.getMessage());
-                end(MAGIC_ERROR);
-                end(query.rowset_name);
-            }
-
-            if (success) {
-                AttributesImpl attr = new AttributesImpl();
-                if (this.showNrOfRows) {
-                    attr.addAttribute("", query.nr_of_rows, query.nr_of_rows, "CDATA", String.valueOf(query.getNrOfRows()));
-                }
-                String name = query.getName();
-                if (name != null) {
-                    attr.addAttribute("", query.name_attribute, query.name_attribute, "CDATA", name);
-                }
-                start(query.rowset_name, attr);
-
-                if (!query.isStoredProcedure()) {
-                    while (query.next()) {
-                        start(query.row_name, EMPTY_ATTRIBUTES);
-                        query.serializeRow(this.manager);
-                        for (Iterator i = query.nested(); i.hasNext();) {
-                            executeQuery((Query) i.next());
-                        }
-                        end(query.row_name);
-                    }
-                } else {
-                    query.serializeStoredProcedure(this.manager);
-                }
-
-                end(query.rowset_name);
-            }
-        } catch (SQLException e) {
-            getLogger().debug("Exception in executeQuery()", e);
-            throw new SAXException(e);
-        } finally {
-            query.close();
-            if (query.parent != null) {
-                try {
-                    // Close the connection used by a sub query
-                    conn.close();
-                } catch (SQLException e) {
-                    getLogger().warn("Unable to close JDBC connection", e);
-                }
-            }
-        }
-
-        if (startPrefixMapping) {
-            super.endPrefixMapping(this.outPrefix);
-        }
-    }
+    //
+    // SAX Events Handlers
+    //
 
     protected static void throwIllegalStateException(String message) {
         throw new IllegalStateException("Illegal state: " + message);
@@ -441,13 +349,13 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;execute-query&gt; */
     protected void startExecuteQueryElement() {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_OUTSIDE:
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 // Create root query (if query == null), or child query
-                this.query = new Query(this, this.query);
+                this.query = new Query(this.query);
                 this.query.enableLogging(getLogger().getChildLogger("query"));
-                current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
 
             default:
@@ -458,11 +366,11 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;*&gt; */
     protected void startValueElement(String name)
     throws SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 this.stack.push(name);
                 startTextRecording();
-                current_state = SQLTransformer.STATE_INSIDE_VALUE_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_VALUE_ELEMENT;
                 break;
 
             default:
@@ -473,10 +381,10 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;query&gt; */
     protected void startQueryElement(Attributes attributes)
     throws SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 startTextRecording();
-                current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
 
                 String isUpdate = attributes.getValue("", SQLTransformer.MAGIC_UPDATE_ATTRIBUTE);
                 if (isUpdate != null && !isUpdate.equalsIgnoreCase("false")) {
@@ -502,13 +410,13 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;/query&gt; */
     protected void endQueryElement()
     throws ProcessingException, SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 final String value = endTextRecording();
                 if (value.length() > 0) {
                     query.addQueryPart(value);
                 }
-                current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
 
             default:
@@ -519,12 +427,12 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;/*&gt; */
     protected void endValueElement()
     throws SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_VALUE_ELEMENT:
                 final String name = (String) this.stack.pop();
                 final String value = endTextRecording();
                 query.setParameter(name, value);
-                this.current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                this.state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
 
             default:
@@ -534,16 +442,16 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;/execute-query&gt; */
     protected void endExecuteQueryElement() throws SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 if (query.parent == null) {
-                    executeQuery(query);
+                    query.executeQuery();
                     query = null;
-                    current_state = SQLTransformer.STATE_OUTSIDE;
+                    state = SQLTransformer.STATE_OUTSIDE;
                 } else {
                     query.parent.addNestedQuery(query);
                     query = query.parent;
-                    current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                    state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 }
                 break;
 
@@ -555,7 +463,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;ancestor-value&gt; */
     protected void startAncestorValueElement(Attributes attributes)
     throws ProcessingException, SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 int level = 0;
                 try {
@@ -579,7 +487,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 query.addQueryPart(new AncestorValue(level, name));
                 startTextRecording();
 
-                current_state = SQLTransformer.STATE_INSIDE_ANCESTOR_VALUE_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_ANCESTOR_VALUE_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting a start ancestor value element");
@@ -588,13 +496,13 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;/ancestor-value&gt; */
     protected void endAncestorValueElement() {
-        current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
+        state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
     }
 
     /** &lt;substitute-value&gt; */
     protected void startSubstituteValueElement(Attributes attributes)
     throws ProcessingException, SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 String name = getAttributeValue(attributes, SQLTransformer.MAGIC_SUBSTITUTE_VALUE_NAME_ATTRIBUTE);
                 if (name == null) {
@@ -612,7 +520,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 query.addQueryPart(substitute);
                 startTextRecording();
 
-                current_state = SQLTransformer.STATE_INSIDE_SUBSTITUTE_VALUE_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_SUBSTITUTE_VALUE_ELEMENT;
                 break;
 
             default:
@@ -622,13 +530,13 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;/substitute-value&gt; */
     protected void endSubstituteValueElement() {
-        current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
+        state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
     }
 
     /** &lt;escape-string&gt; */
     protected void startEscapeStringElement(Attributes attributes)
     throws ProcessingException, SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 final String value = endTextRecording();
                 if (value.length() > 0) {
@@ -636,7 +544,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 }
                 startTextRecording();
 
-                current_state = SQLTransformer.STATE_INSIDE_ESCAPE_STRING;
+                state = SQLTransformer.STATE_INSIDE_ESCAPE_STRING;
                 break;
 
             default:
@@ -647,7 +555,7 @@ public class SQLTransformer extends AbstractSAXTransformer
     /** &lt;/escape-string&gt; */
     protected void endEscapeStringElement()
     throws SAXException {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_ESCAPE_STRING:
                 String value = endTextRecording();
                 if (value.length() > 0) {
@@ -656,7 +564,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     query.addQueryPart(value);
                 }
                 startTextRecording();
-                current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
                 break;
 
             default:
@@ -666,7 +574,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;in-parameter&gt; */
     protected void startInParameterElement(Attributes attributes) {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 String nr = getAttributeValue(attributes, SQLTransformer.MAGIC_IN_PARAMETER_NR_ATTRIBUTE);
                 String value = getAttributeValue(attributes, SQLTransformer.MAGIC_IN_PARAMETER_VALUE_ATTRIBUTE);
@@ -676,7 +584,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
                 int position = Integer.parseInt(nr);
                 query.setInParameter(position, value);
-                current_state = SQLTransformer.STATE_INSIDE_IN_PARAMETER_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_IN_PARAMETER_ELEMENT;
                 break;
 
             default:
@@ -686,12 +594,12 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;/in-parameter&gt; */
     protected void endInParameterElement() {
-        current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+        state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
     }
 
     /** &lt;out-parameter&gt; */
     protected void startOutParameterElement(Attributes attributes) {
-        switch (current_state) {
+        switch (state) {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 String name = getAttributeValue(attributes, SQLTransformer.MAGIC_OUT_PARAMETER_NAME_ATTRIBUTE);
                 String nr = getAttributeValue(attributes, SQLTransformer.MAGIC_OUT_PARAMETER_NR_ATTRIBUTE);
@@ -702,7 +610,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
                 int position = Integer.parseInt(nr);
                 query.setOutParameter(position, type, name);
-                current_state = SQLTransformer.STATE_INSIDE_OUT_PARAMETER_ELEMENT;
+                state = SQLTransformer.STATE_INSIDE_OUT_PARAMETER_ELEMENT;
                 break;
 
             default:
@@ -712,25 +620,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
     /** &lt;/out-parameter&gt; */
     protected void endOutParameterElement() {
-        current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
-    }
-
-    /**
-     * Qualifies an element name by giving it a prefix.
-     * @param name the element name
-     * @param prefix the prefix to qualify with
-     * @return a namespace qualified name that is correct
-     */
-    protected String nsQualify(String name, String prefix) {
-        if (StringUtils.isEmpty(name)) {
-            return name;
-        }
-
-        if (StringUtils.isNotEmpty(prefix)) {
-            return prefix + ":" + name;
-        }
-
-        return name;
+        state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
     }
 
     /**
@@ -781,13 +671,35 @@ public class SQLTransformer extends AbstractSAXTransformer
         }
     }
 
+    //
+    // Helper methods for the Query
+    //
+
+    /**
+     * Qualifies an element name by giving it a prefix.
+     * @param name the element name
+     * @param prefix the prefix to qualify with
+     * @return a namespace qualified name that is correct
+     */
+    protected String nsQualify(String name, String prefix) {
+        if (StringUtils.isEmpty(name)) {
+            return name;
+        }
+
+        if (StringUtils.isNotEmpty(prefix)) {
+            return prefix + ":" + name;
+        }
+
+        return name;
+    }
+
     /**
      * Helper method for generating SAX events
      */
-    protected void start(String name, Attributes attr)
+    protected void start(String uri, String prefix, String name, Attributes attr)
     throws SAXException {
         try {
-            super.startTransformingElement(outUri, name, nsQualify(name, outPrefix), attr);
+            super.startTransformingElement(uri, name, nsQualify(name, prefix), attr);
         } catch (IOException e) {
             throw new SAXException(e);
         } catch (ProcessingException e) {
@@ -798,9 +710,9 @@ public class SQLTransformer extends AbstractSAXTransformer
     /**
      * Helper method for generating SAX events
      */
-    protected void end(String name) throws SAXException {
+    protected void end(String uri, String prefix, String name) throws SAXException {
         try {
-            super.endTransformingElement(outUri, name, nsQualify(name, outPrefix));
+            super.endTransformingElement(uri, name, nsQualify(name, prefix));
         } catch (IOException e) {
             throw new SAXException(e);
         } catch (ProcessingException e) {
@@ -818,48 +730,223 @@ public class SQLTransformer extends AbstractSAXTransformer
     }
 
     /**
-     * Convert object to string represenation
+     * Get 'name' for the connection which can be obtained using provided
+     * connection parameters.
      */
-    protected static String getStringValue(Object object) {
-        if (object instanceof byte[]) {
-            // FIXME Encoding?
-            return new String((byte[]) object);
-        } else if (object instanceof char[]) {
-            return new String((char[]) object);
-        } else if (object != null) {
-            return object.toString();
+    private String name(Parameters params) {
+        final boolean ownConnection = params.getParameterAsBoolean(SQLTransformer.MAGIC_OWN_CONNECTION, false);
+        if (ownConnection) {
+            return null;
         }
 
+        final String datasourceName = params.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
+        if (datasourceName != null) {
+            return "ds:" + datasourceName;
+        }
+
+        final String dburl = params.getParameter(SQLTransformer.MAGIC_DBURL, null);
+        if (dburl != null) {
+            final String username = params.getParameter(SQLTransformer.MAGIC_USERNAME, null);
+            final String password = params.getParameter(SQLTransformer.MAGIC_PASSWORD, null);
+
+            if (username == null || password == null) {
+                return "db:@" + dburl;
+            } else {
+                return "db:" + username + ":" + password + "@" + dburl;
+            }
+        }
+
+        // Nothing configured
         return "";
+    }
+
+    /**
+     * Open database connection using provided parameters.
+     * Return null if neither datasource nor jndi URL configured.
+     */
+    private Connection open(Parameters params) throws SQLException {
+        Connection result = null;
+
+        // First check datasource name parameter
+        final String datasourceName = params.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
+        if (datasourceName != null) {
+            // Use datasource components
+            if (this.datasources == null) {
+                throw new SQLException("Unable to get connection from datasource '" + datasourceName + "': " +
+                                       "No datasources configured in cocoon.xconf.");
+            }
+
+            DataSourceComponent datasource = null;
+            try {
+                datasource = (DataSourceComponent) this.datasources.select(datasourceName);
+                for (int i = 0; i < this.connectAttempts && result == null; i++) {
+                    try {
+                        result = datasource.getConnection();
+                    } catch (Exception e) {
+                        final long waittime = this.connectWaittime;
+                        getLogger().debug("Unable to get connection; waiting " +
+                                          waittime + "ms to try again.");
+                        try {
+                            Thread.sleep(waittime);
+                        } catch (InterruptedException ignored) {
+                        }
+                    }
+                }
+            } catch (ServiceException e) {
+                throw new SQLException("Unable to get connection from datasource '" + datasourceName + "': " +
+                                       "No such datasource.");
+            } finally {
+                if (datasource != null) {
+                    this.datasources.release(datasource);
+                }
+            }
+
+            if (result == null) {
+                throw new SQLException("Failed to obtain connection from datasource '" + datasourceName + "'. " +
+                                       "Made " + this.connectAttempts + " attempts with "
+                                       + this.connectWaittime + "ms interval");
+            }
+        } else {
+            // Then, check connection URL parameter
+            final String dburl = params.getParameter(SQLTransformer.MAGIC_DBURL, null);
+            if (dburl != null) {
+                final String username = params.getParameter(SQLTransformer.MAGIC_USERNAME, null);
+                final String password = params.getParameter(SQLTransformer.MAGIC_PASSWORD, null);
+
+                if (username == null || password == null) {
+                    result = DriverManager.getConnection(dburl);
+                } else {
+                    result = DriverManager.getConnection(dburl, username, password);
+                }
+            } else {
+                // Nothing configured
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Attempt to parse string value
+     */
+    private void stream(String value) throws ServiceException, SAXException, IOException {
+        try {
+            // Strip off the XML Declaration if there is one!
+            if (value.startsWith("<?xml ")) {
+                value = value.substring(value.indexOf("?>") + 2);
+            }
+
+            // Lookup components
+            if (this.parser == null) {
+                this.parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+            }
+            if (this.compiler == null) {
+                this.compiler = (XMLSerializer) manager.lookup(XMLSerializer.ROLE);
+            }
+            if (this.interpreter == null) {
+                this.interpreter = (XMLDeserializer) manager.lookup(XMLDeserializer.ROLE);
+            }
+
+            this.parser.parse(new InputSource(new StringReader("<root>" + value + "</root>")),
+                              this.compiler);
+
+            IncludeXMLConsumer filter = new IncludeXMLConsumer(this, this);
+            filter.setIgnoreRootElement(true);
+
+            this.interpreter.setConsumer(filter);
+            this.interpreter.deserialize(this.compiler.getSAXFragment());
+        } finally {
+            // otherwise serializer won't be reset
+            if (this.compiler != null) {
+                manager.release(this.compiler);
+                this.compiler = null;
+            }
+        }
     }
 
     /**
      * One of the queries in the query tree formed from nested queries.
      */
-    class Query extends AbstractLogEnabled {
-        /** Who's your daddy? */
-        protected SQLTransformer transformer;
+    private class Query extends AbstractLogEnabled {
 
         /** Parent query, or null for top level query */
         protected Query parent;
 
         /** Nested sub-queries we have. */
-        protected List nested = new ArrayList();
+        protected final List nested = new ArrayList();
 
-        /** SQL configuration information */
-        protected Parameters properties;
+        /** The parts of the query */
+        protected final List parts = new ArrayList();
 
-        /** Dummy static variables for the moment **/
-        protected String rowset_name;
-        protected String row_name;
-        protected String nr_of_rows = "nrofrows";
-        protected String name_attribute = "name";
+        //
+        // Query Configuration
+        //
+
+        /** Name of the query */
+        protected String name;
+
+        /** If this query is actually an update (insert, update, delete) */
+        protected boolean isUpdate;
+
+        /** If this query is actually a stored procedure */
+        protected boolean isStoredProcedure;
+
+        /** Query configuration parameters */
+        protected Parameters params;
+
+        /** The namespace uri of the XML output. Defaults to {@link SQLTransformer#namespaceURI}. */
+        protected String outUri;
+
+        /** The namespace prefix of the XML output. Defaults to 'sql'. */
+        protected String outPrefix;
+
+        /** rowset element name */
+        protected String rowsetElement;
+
+        /** row element name */
+        protected String rowElement;
+
+        /** number of rows attribute name */
+        protected String nrOfRowsAttr = "nrofrows";
+
+        /** Query name attribute name */
+        protected String nameAttr = "name";
+
+        /** Handling of case of column names in results */
+        protected int columnCase;
+
+        /** Registered IN parameters */
+        protected HashMap inParameters;
+
+        /** Registered OUT parameters */
+        protected HashMap outParameters;
+
+        /** Mapping out parameters - objectModel */
+        protected HashMap outParametersNames;
+
+        /** Check if nr of rows need to be written out. */
+        protected boolean showNrOfRows;
+
+        /** Encoding we use for CLOB field */
+        protected String clobEncoding;
+
+        //
+        // Query State
+        //
 
         /** The connection */
         protected Connection conn;
 
-        /** And the statements */
+        /** The 'name' of the connection */
+        protected String connName;
+
+        /** Is it our own connection? */
+        protected boolean ownConn;
+
+        /** Prepared statement */
         protected PreparedStatement pst;
+
+        /** Callable statement */
         protected CallableStatement cst;
 
         /** The results, of course */
@@ -868,49 +955,26 @@ public class SQLTransformer extends AbstractSAXTransformer
         /** And the results' metadata */
         protected ResultSetMetaData md;
 
-        /** If this query is actually an update (insert, update, delete) */
-        protected boolean isupdate;
-
-        /** If this query is actually a stored procedure */
-        protected boolean isstoredprocedure;
-
-        /** Name of the query */
-        protected String name;
-
         /** If it is an update/etc, the return value (num rows modified) */
         protected int rv = -1;
 
-        /** The parts of the query */
-        protected List query_parts = new ArrayList();
 
-        /** In parameters */
-        protected HashMap inParameters;
-
-        /** Out parameters */
-        protected HashMap outParameters;
-
-        /** Mapping out parameters - objectModel */
-        protected HashMap outParametersNames;
-
-        /** Handling of case of column names in results */
-        protected int columnCase;
-
-
-        protected Query(SQLTransformer transformer, Query parent) {
-            this.transformer = transformer;
+        protected Query(Query parent) {
             this.parent = parent;
-            this.properties = new Parameters();
-            this.properties.merge(transformer.parameters);
-        }
-
-        /** Return iterator over nested sub-queries. */
-        protected Iterator nested() {
-            return this.nested.iterator();
+            this.params = new Parameters();
+            this.params.merge(SQLTransformer.this.parameters);
         }
 
         /** Add nested sub-query. */
         protected void addNestedQuery(Query query) {
-            this.nested.add(query);
+            nested.add(query);
+        }
+
+        protected void addQueryPart(Object value) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Adding query part \"" + value + "\"");
+            }
+            parts.add(value);
         }
 
         protected String getName() {
@@ -925,19 +989,15 @@ public class SQLTransformer extends AbstractSAXTransformer
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Adding parameter name {" + name + "} value {" + value + "}");
             }
-            properties.setParameter(name, value);
+            params.setParameter(name, value);
         }
 
         protected void setUpdate(boolean flag) {
-            isupdate = flag;
+            isUpdate = flag;
         }
 
         protected void setStoredProcedure(boolean flag) {
-            isstoredprocedure = flag;
-        }
-
-        protected boolean isStoredProcedure() {
-            return isstoredprocedure;
+            isStoredProcedure = flag;
         }
 
         protected void setInParameter(int pos, String val) {
@@ -956,7 +1016,7 @@ public class SQLTransformer extends AbstractSAXTransformer
             outParametersNames.put(new Integer(pos), name);
         }
 
-        protected void setColumnCase(String columnCase) {
+        private void setColumnCase(String columnCase) {
             if (columnCase.equals("lowercase")) {
                 this.columnCase = -1;
             } else if (columnCase.equals("uppercase")) {
@@ -970,7 +1030,7 @@ public class SQLTransformer extends AbstractSAXTransformer
             }
         }
 
-        private void registerInParameters(PreparedStatement pst) throws SQLException {
+        private void registerInParameters() throws SQLException {
             if (inParameters == null) {
                 return;
             }
@@ -1018,83 +1078,133 @@ public class SQLTransformer extends AbstractSAXTransformer
             }
         }
 
-        protected void setConnection(Connection conn) {
-            this.conn = conn;
+        /**
+         * Open database connection
+         */
+        private void open() throws SQLException {
+            this.connName = SQLTransformer.this.name(this.params);
+
+            // Check first if connection sharing disabled
+            if (this.connName == null) {
+                this.conn = SQLTransformer.this.open(this.params);
+                this.ownConn = true;
+                return;
+            }
+
+            // Iterate through parent queries and get appropriate connection
+            Query query = this.parent;
+            while (query != null) {
+                if (this.connName.equals(query.connName)) {
+                    this.conn = query.conn;
+                    this.ownConn = false;
+                    return;
+                }
+                query = query.parent;
+            }
+
+            // Check 'global' connection
+            if (this.connName.equals(SQLTransformer.this.connName)) {
+                // Use SQLTransformer configuration: it has same connection parameters
+                if (SQLTransformer.this.conn == null) {
+                    SQLTransformer.this.conn = SQLTransformer.this.open(SQLTransformer.this.parameters);
+                }
+
+                this.conn = SQLTransformer.this.conn;
+                this.ownConn = false;
+                return;
+            }
+
+            // Create own connection
+            this.conn = SQLTransformer.this.open(this.params);
+            this.ownConn = true;
         }
 
         /**
-         * Get a Connection. Made this a separate method to separate the logic from the actual execution.
+         * This will be the meat of SQLTransformer, where the query is run.
          */
-        protected Connection getConnection() throws SQLException {
-            Connection result = null;
-
-            final String connection = properties.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
-            if (connection != null) {
-                // Use datasource components
-                if (this.transformer.dbSelector == null) {
-                    throw new SQLException("Failed to obtain connection from datasource '" + connection + "'. " +
-                                           "No datasources configured in cocoon.xconf.");
-                }
-
-                DataSourceComponent datasource = null;
-                try {
-                    datasource = (DataSourceComponent) this.transformer.dbSelector.select(connection);
-                    for (int i = 0; i < transformer.connectAttempts && result == null; i++) {
-                        try {
-                            result = datasource.getConnection();
-                        } catch (Exception e) {
-                            final long waittime = transformer.connectWaittime;
-                            getLogger().debug("Unable to get connection; waiting " +
-                                                 waittime + "ms to try again.");
-                            try {
-                                Thread.sleep(waittime);
-                            } catch (InterruptedException ignored) {
-                            }
-                        }
-                    }
-                } catch (ServiceException cme) {
-                    getLogger().error("Could not use connection: " + connection, cme);
-                } finally {
-                    if (datasource != null) {
-                        this.transformer.dbSelector.release(datasource);
-                    }
-                }
-
-                if (result == null) {
-                    throw new SQLException("Failed to obtain connection from datasource '" + connection + "'. " +
-                                           "Made " + transformer.connectAttempts + " attempts with "
-                                           + transformer.connectWaittime + "ms interval");
-                }
-            } else {
-                // Create connection manually
-                final String dburl = properties.getParameter(SQLTransformer.MAGIC_DBURL, null);
-                final String username = properties.getParameter(SQLTransformer.MAGIC_USERNAME, null);
-                final String password = properties.getParameter(SQLTransformer.MAGIC_PASSWORD, null);
-
-                if (username == null || password == null) {
-                    result = DriverManager.getConnection(dburl);
-                } else {
-                    result = DriverManager.getConnection(dburl, username, password);
-                }
+        protected void executeQuery() throws SAXException {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Executing query " + this);
             }
 
-            return result;
+            this.outUri = this.params.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, SQLTransformer.this.namespaceURI);
+            this.outPrefix = this.params.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "sql");
+
+            this.showNrOfRows = parameters.getParameterAsBoolean(SQLTransformer.MAGIC_NR_OF_ROWS, false);
+            this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
+
+            // Start prefix mapping for output namespace, only if it's not mapped yet
+            final String prefix = SQLTransformer.this.findPrefixMapping(this.outUri);
+            if (prefix == null) {
+                SQLTransformer.this.startPrefixMapping(this.outPrefix, this.outUri);
+            } else {
+                this.outPrefix = prefix;
+            }
+
+            boolean success = false;
+            try {
+                try {
+                    open();
+                    execute();
+                    success = true;
+                } catch (SQLException e) {
+                    getLogger().info("Failed to execute query " + this, e);
+                    start(this.rowsetElement, EMPTY_ATTRIBUTES);
+                    start(MAGIC_ERROR, EMPTY_ATTRIBUTES);
+                    data(e.getMessage());
+                    end(MAGIC_ERROR);
+                    end(this.rowsetElement);
+                }
+
+                if (success) {
+                    AttributesImpl attr = new AttributesImpl();
+                    if (this.showNrOfRows) {
+                        attr.addAttribute("", this.nrOfRowsAttr, this.nrOfRowsAttr, "CDATA", String.valueOf(getNrOfRows()));
+                    }
+                    String name = getName();
+                    if (name != null) {
+                        attr.addAttribute("", this.nameAttr, this.nameAttr, "CDATA", name);
+                    }
+                    start(this.rowsetElement, attr);
+
+                    if (!isStoredProcedure) {
+                        while (next()) {
+                            start(this.rowElement, EMPTY_ATTRIBUTES);
+                            serializeRow();
+                            for (Iterator i = this.nested.iterator(); i.hasNext();) {
+                                ((Query) i.next()).executeQuery();
+                            }
+                            end(this.rowElement);
+                        }
+                    } else {
+                        serializeStoredProcedure();
+                    }
+
+                    end(this.rowsetElement);
+                }
+            } catch (SQLException e) {
+                getLogger().debug("Exception in executeQuery()", e);
+                throw new SAXException(e);
+            } finally {
+                close();
+            }
+
+            if (prefix == null) {
+                SQLTransformer.this.endPrefixMapping(this.outPrefix);
+            }
         }
 
         /**
          * Execute the query. Connection must be set already.
          */
-        protected void execute() throws SQLException {
-            if (this.conn == null) {
-                throw new SQLException("A connection must be set before executing a query");
-            }
+        private void execute() throws SQLException {
+            this.rowsetElement = params.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset");
+            this.rowElement = params.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row");
+            setColumnCase(params.getParameter(SQLTransformer.MAGIC_COLUMN_CASE, "lowercase"));
 
-            this.rowset_name = properties.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset");
-            this.row_name = properties.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row");
-            setColumnCase(properties.getParameter(SQLTransformer.MAGIC_COLUMN_CASE, "lowercase"));
-
+            // Construct query string
             StringBuffer sb = new StringBuffer();
-            for (Iterator i = query_parts.iterator(); i.hasNext();) {
+            for (Iterator i = parts.iterator(); i.hasNext();) {
                 Object object = i.next();
                 if (object instanceof String) {
                     sb.append((String) object);
@@ -1111,49 +1221,42 @@ public class SQLTransformer extends AbstractSAXTransformer
 
             String query = StringUtils.replace(sb.toString().trim(), "\r", " ", -1);
             // Test, if this is an update (by comparing with select)
-            if (!isstoredprocedure && !isupdate) {
+            if (!isStoredProcedure && !isUpdate) {
                 if (query.length() > 6 && !query.substring(0, 6).equalsIgnoreCase("SELECT")) {
-                    isupdate = true;
+                    isUpdate = true;
                 }
             }
+
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Executing " + query);
             }
-
-            try {
-                if (!isstoredprocedure) {
-                    if (oldDriver) {
-                        pst = conn.prepareStatement(query);
-                    } else {
-                        pst = conn.prepareStatement(query,
-                                                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                                    ResultSet.CONCUR_READ_ONLY);
-                    }
+            if (!isStoredProcedure) {
+                if (oldDriver) {
+                    pst = conn.prepareStatement(query);
                 } else {
-                    if (oldDriver) {
-                        cst = conn.prepareCall(query);
-                    } else {
-                        cst = conn.prepareCall(query,
-                                               ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                               ResultSet.CONCUR_READ_ONLY);
-                    }
-                    registerOutParameters(cst);
-                    pst = cst;
+                    pst = conn.prepareStatement(query,
+                                                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                                                ResultSet.CONCUR_READ_ONLY);
                 }
-
-                registerInParameters(pst);
-                boolean result = pst.execute();
-                if (result) {
-                    rs = pst.getResultSet();
-                    md = rs.getMetaData();
+            } else {
+                if (oldDriver) {
+                    cst = conn.prepareCall(query);
                 } else {
-                    rv = pst.getUpdateCount();
+                    cst = conn.prepareCall(query,
+                                           ResultSet.TYPE_SCROLL_INSENSITIVE,
+                                           ResultSet.CONCUR_READ_ONLY);
                 }
-            } catch (SQLException e) {
-                getLogger().error("Caught a SQLException", e);
-                throw e;
-            } finally {
-                // Connection is not closed here, but later on. See bug #12173.
+                registerOutParameters(cst);
+                pst = cst;
+            }
+
+            registerInParameters();
+            boolean result = pst.execute();
+            if (result) {
+                rs = pst.getResultSet();
+                md = rs.getMetaData();
+            } else {
+                rv = pst.getUpdateCount();
             }
         }
 
@@ -1186,7 +1289,7 @@ public class SQLTransformer extends AbstractSAXTransformer
             String retval;
 
             if (rs.getMetaData().getColumnType(i) == java.sql.Types.DOUBLE) {
-                retval = SQLTransformer.getStringValue(rs.getBigDecimal(i));
+                retval = getStringValue(rs.getBigDecimal(i));
             } else if (rs.getMetaData().getColumnType(i) == java.sql.Types.CLOB) {
                 Clob clob = rs.getClob(i);
                 InputStream inputStream = clob.getAsciiStream();
@@ -1194,7 +1297,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 StringBuffer buffer = new StringBuffer();
                 try {
                     while (inputStream.read(readByte) > -1) {
-                        String string = new String(readByte, clobEncoding);
+                        String string = new String(readByte, this.clobEncoding);
                         buffer.append(string);
                     }
                 } catch (IOException e) {
@@ -1202,7 +1305,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                 }
                 retval = buffer.toString();
             } else {
-                retval = SQLTransformer.getStringValue(rs.getObject(i));
+                retval = getStringValue(rs.getObject(i));
             }
             return retval;
         }
@@ -1211,25 +1314,20 @@ public class SQLTransformer extends AbstractSAXTransformer
         // for a given "name" versus number.  That being said this shouldn't be an issue
         // as this function is only called for ancestor lookups.
         protected String getColumnValue(String name) throws SQLException {
-            String retval = SQLTransformer.getStringValue(rs.getObject(name));
+            String retval = getStringValue(rs.getObject(name));
             // if (rs.getMetaData().getColumnType( name ) == 8)
             // retval = transformer.getStringValue( rs.getBigDecimal( name ) );
             return retval;
         }
 
         protected boolean next() throws SQLException {
-            // if rv is not -1, then an SQL insert, update, etc, has
+            // If rv is not -1, then an SQL insert, update, etc, has
             // happened (see JDBC docs - return codes for executeUpdate)
             if (rv != -1) {
                 return false;
             }
 
-            try {
-                if (rs == null || !rs.next()) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-                getLogger().debug("NullPointerException, returning false.", e);
+            if (rs == null || !rs.next()) {
                 return false;
             }
 
@@ -1240,118 +1338,84 @@ public class SQLTransformer extends AbstractSAXTransformer
          * Closes all the resources, ignores (but logs) exceptions.
          */
         protected void close() {
-            try {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (NullPointerException e) {
-                        getLogger().debug("NullPointer while closing the resultset.", e);
-                    } catch (SQLException e) {
-                        getLogger().info("SQLException while closing the ResultSet.", e);
-                    }
-                    // This prevents us from using the resultset again.
-                    rs = null;
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    getLogger().info("Unable to close the result set.", e);
                 }
+                // This prevents us from using the resultset again.
+                rs = null;
+            }
 
-                if (pst != null && pst != cst) {
-                    try {
-                        pst.close();
-                    } catch (SQLException e) {
-                        getLogger().info("SQLException while closing the Statement.", e);
-                    }
+            if (pst != null && pst != cst) {
+                try {
+                    pst.close();
+                } catch (SQLException e) {
+                    getLogger().info("Unable to close the statement.", e);
                 }
-                // Prevent using pst again.
-                pst = null;
+            }
+            // Prevent using pst again.
+            pst = null;
 
-                if (cst != null) {
-                    try {
-                        cst.close();
-                    } catch (SQLException e) {
-                        getLogger().info("SQLException while closing the Statement.", e);
-                    }
+            if (cst != null) {
+                try {
+                    cst.close();
+                } catch (SQLException e) {
+                    getLogger().info("Unable to close the statement.", e);
                 }
                 // Prevent using cst again.
                 cst = null;
-            } finally {
-                // Prevent using conn again.
-                conn = null;
             }
+
+            try {
+                if (ownConn && conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                getLogger().info("Unable to close the connection", e);
+            }
+            // Prevent using conn again.
+            conn = null;
         }
 
-        protected void addQueryPart(Object value) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Adding query part \"" + value + "\"");
-            }
-            query_parts.add(value);
-        }
-
-        protected void serializeData(ServiceManager manager, String value)
+        protected void serializeData(String value)
         throws SQLException, SAXException {
             if (value != null) {
                 value = value.trim();
                 // Could this be XML ?
                 if (value.length() > 0 && value.charAt(0) == '<') {
                     try {
-                        String stripped = value;
-
-                        // Strip off the XML Declaration if there is one!
-                        if (stripped.startsWith("<?xml ")) {
-                            stripped = stripped.substring(stripped.indexOf("?>") + 2);
-                        }
-
-                        if (transformer.parser == null) {
-                            transformer.parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-                        }
-                        if (transformer.compiler == null) {
-                            transformer.compiler = (XMLSerializer) manager.lookup(XMLSerializer.ROLE);
-                        }
-                        if (transformer.interpreter == null) {
-                            transformer.interpreter = (XMLDeserializer) manager.lookup(XMLDeserializer.ROLE);
-                        }
-
-                        transformer.parser.parse(new InputSource(new StringReader("<root>" + stripped + "</root>")),
-                                                 transformer.compiler);
-
-                        IncludeXMLConsumer filter = new IncludeXMLConsumer(transformer, transformer);
-                        filter.setIgnoreRootElement(true);
-
-                        transformer.interpreter.setConsumer(filter);
-                        transformer.interpreter.deserialize(transformer.compiler.getSAXFragment());
-                    } catch (Exception local) {
+                        stream(value);
+                    } catch (Exception ignored) {
                         // FIXME: bad coding "catch(Exception)"
-                        // if an exception occured the data was not xml
-                        transformer.data(value);
-                    } finally {
-                        // otherwise serializer won't be reset
-                        if (transformer.compiler != null) {
-                            manager.release(transformer.compiler);
-                            transformer.compiler = null;
-                        }
+                        // If an exception occured the data was not (valid) xml
+                        data(value);
                     }
                 } else {
-                    transformer.data(value);
+                    data(value);
                 }
             }
         }
 
-        protected void serializeRow(ServiceManager manager)
+        protected void serializeRow()
         throws SQLException, SAXException {
-            if (!isupdate && !isstoredprocedure) {
+            if (!isUpdate && !isStoredProcedure) {
                 for (int i = 1; i <= md.getColumnCount(); i++) {
                     String columnName = getColumnName(md.getColumnName(i));
-                    transformer.start(columnName, EMPTY_ATTRIBUTES);
-                    serializeData(manager, getColumnValue(i));
-                    transformer.end(columnName);
+                    start(columnName, EMPTY_ATTRIBUTES);
+                    serializeData(getColumnValue(i));
+                    end(columnName);
                 }
-            } else if (isupdate && !isstoredprocedure) {
-                transformer.start("returncode", EMPTY_ATTRIBUTES);
-                serializeData(manager, String.valueOf(rv));
-                transformer.end("returncode");
+            } else if (isUpdate && !isStoredProcedure) {
+                start("returncode", EMPTY_ATTRIBUTES);
+                serializeData(String.valueOf(rv));
+                end("returncode");
                 rv = -1; // we only want the return code shown once.
             }
         }
 
-        protected void serializeStoredProcedure(ServiceManager manager)
+        protected void serializeStoredProcedure()
         throws SQLException, SAXException {
             if (outParametersNames == null || cst == null) {
                 return;
@@ -1364,34 +1428,34 @@ public class SQLTransformer extends AbstractSAXTransformer
                 try {
                     Object obj = cst.getObject(counter.intValue());
                     if (!(obj instanceof ResultSet)) {
-                        transformer.start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
-                        serializeData(manager, SQLTransformer.getStringValue(obj));
-                        transformer.end((String) outParametersNames.get(counter));
+                        start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
+                        serializeData(getStringValue(obj));
+                        end((String) outParametersNames.get(counter));
                     } else {
                         ResultSet rs = (ResultSet) obj;
                         try {
-                            transformer.start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
+                            start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
                             ResultSetMetaData md = rs.getMetaData();
                             while (rs.next()) {
-                                transformer.start(this.row_name, EMPTY_ATTRIBUTES);
+                                start(this.rowElement, EMPTY_ATTRIBUTES);
                                 for (int i = 1; i <= md.getColumnCount(); i++) {
                                     String columnName = getColumnName(md.getColumnName(i));
-                                    transformer.start(columnName, EMPTY_ATTRIBUTES);
+                                    start(columnName, EMPTY_ATTRIBUTES);
                                     if (md.getColumnType(i) == 8) {  // prevent nasty exponent notation
-                                        serializeData(manager, SQLTransformer.getStringValue(rs.getBigDecimal(i)));
+                                        serializeData(getStringValue(rs.getBigDecimal(i)));
                                     } else {
-                                        serializeData(manager, SQLTransformer.getStringValue(rs.getObject(i)));
+                                        serializeData(getStringValue(rs.getObject(i)));
                                     }
-                                    transformer.end(columnName);
+                                    end(columnName);
                                 }
-                                transformer.end(this.row_name);
+                                end(this.rowElement);
                             }
                         } finally {
                             try {
                                 rs.close();
                             } catch (SQLException ignored) { }
                         }
-                        transformer.end((String) outParametersNames.get(counter));
+                        end((String) outParametersNames.get(counter));
                     }
                 } catch (SQLException e) {
                     getLogger().error("Caught a SQLException", e);
@@ -1412,6 +1476,35 @@ public class SQLTransformer extends AbstractSAXTransformer
                     // Do nothing
             }
             return columnName;
+        }
+
+        /**
+         * Convert object to string represenation
+         */
+        private String getStringValue(Object object) {
+            if (object instanceof byte[]) {
+                // FIXME Encoding?
+                return new String((byte[]) object);
+            } else if (object instanceof char[]) {
+                return new String((char[]) object);
+            } else if (object != null) {
+                return object.toString();
+            }
+
+            return "";
+        }
+
+        private void start(String name, Attributes attr)
+        throws SAXException {
+            SQLTransformer.this.start(this.outUri, this.outPrefix, name, attr);
+        }
+
+        private void end(String name) throws SAXException {
+            SQLTransformer.this.end(this.outUri, this.outPrefix, name);
+        }
+
+        private void data(String data) throws SAXException {
+            SQLTransformer.this.data(data);
         }
     }
 
