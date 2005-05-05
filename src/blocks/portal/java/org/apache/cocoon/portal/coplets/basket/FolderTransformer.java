@@ -34,10 +34,9 @@ import org.xml.sax.SAXException;
  * This transformer supports the basket feature. It can generate links to
  * add content and to upload files into the basket.
  *
- * @version CVS $Id: BasketTransformer.java 47047 2004-09-22 12:27:27Z vgritsenko $
+ * @version $Id: BasketTransformer.java 47047 2004-09-22 12:27:27Z vgritsenko $
  */
-public class FolderTransformer
-    extends AbstractBasketTransformer {
+public class FolderTransformer extends AbstractBasketTransformer {
 
     /** Element to upload an item */
     protected static final String UPLOAD_ITEM_ELEMENT = "upload-item";
@@ -52,8 +51,8 @@ public class FolderTransformer
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        super.recycle();
         this.uploadElements.clear();
+        super.recycle();
     }
 
     /* (non-Javadoc)

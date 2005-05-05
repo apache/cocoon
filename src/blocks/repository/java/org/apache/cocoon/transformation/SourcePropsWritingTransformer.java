@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,10 +52,9 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class SourcePropsWritingTransformer
-        extends AbstractSAXTransformer {
+public class SourcePropsWritingTransformer extends AbstractSAXTransformer {
 
     public static final String SPWT_URI = "http://apache.org/cocoon/propwrite/1.0";
 
@@ -83,8 +82,8 @@ public class SourcePropsWritingTransformer
     }
 
     public void recycle() {
-        super.recycle();
         this.state = STATE_OUTSIDE;
+        super.recycle();
     }
 
     /**
@@ -235,7 +234,7 @@ public class SourcePropsWritingTransformer
     }
 
     private void setProperty(String src, Element element)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
         if (src != null && element != null) {
             try {
                 Source source = this.resolver.resolveURI(src);
@@ -244,19 +243,19 @@ public class SourcePropsWritingTransformer
                     ((InspectableSource)source).setSourceProperty(property);
 
                 } else {
-                    this.getLogger().error("Cannot set properties on " + src +
-                                           ": not an inspectable source");
+                    getLogger().error("Cannot set properties on " + src +
+                                      ": not an inspectable source");
                 }
             } catch (Exception e) {
                 throw new ProcessingException("Error setting properties on "+src, e);
             }
         } else {
-            this.getLogger().error("Error setting properties on "+src);
+            getLogger().error("Error setting properties on "+src);
         }
     }
 
     private void removeProperty(String src, Element element)
-    throws ProcessingException, IOException, SAXException {
+    throws ProcessingException {
 
         if (src != null && element != null) {
             try {
@@ -266,14 +265,14 @@ public class SourcePropsWritingTransformer
                         element.getNamespaceURI(),element.getLocalName());
 
                 } else {
-                    this.getLogger().error("Cannot remove properties on " + src +
-                                           ": not an inspectable source");
+                    getLogger().error("Cannot remove properties on " + src +
+                                      ": not an inspectable source");
                 }
             } catch (Exception e) {
                 throw new ProcessingException("Error removing properties on "+src, e);
             }
         } else {
-            this.getLogger().error("Error removing properties on "+src);
+            getLogger().error("Error removing properties on "+src);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,9 +171,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *   <dt>bad-link-str</dt>
  *   <dd>String to use for links with a correct InputModule prefix, but no value
  *   therein.  Defaults to the original URI.</dd>
- *   
+ *
  *   <dt>namespace-uri</dt>
- *   <dd>The namespace uri of elements whose attributes are considered for 
+ *   <dd>The namespace uri of elements whose attributes are considered for
  *   transformation. Defaults to the empty namespace ("").</dd>
  * </dl>
  *
@@ -216,10 +216,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * <p>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LinkRewriterTransformer extends AbstractSAXTransformer
-    implements Initializable, Disposable {
+                                     implements Initializable, Disposable {
 
     private final static String NAMESPACE = "";
 
@@ -360,7 +360,7 @@ public class LinkRewriterTransformer extends AbstractSAXTransformer
                                                   this.origBadLinkStr); // else fall back to per-instance config
 
         this.namespaceURI = parameters.getParameter("namespace-uri", this.origNamespaceURI);
-        
+
         this.inSchemes = split(parameters.getParameter("schemes", this.origInSchemes), " ");
         this.outSchemes = split(parameters.getParameter("exclude-schemes", this.origOutSchemes), " ");
 
@@ -394,8 +394,6 @@ public class LinkRewriterTransformer extends AbstractSAXTransformer
 
     /** Recycle this component for use in another map:transform. */
     public void recycle() {
-        super.recycle();
-
         // Note: configure() and initialize() are not called after every
         //       recycle, so don't null origConf, origLinkAttrs, etc.
         this.conf = null;
@@ -403,6 +401,8 @@ public class LinkRewriterTransformer extends AbstractSAXTransformer
         this.linkAttrs = null;
         this.inSchemes = null;
         this.outSchemes = null;
+
+        super.recycle();
     }
 
     /**
@@ -605,5 +605,6 @@ public class LinkRewriterTransformer extends AbstractSAXTransformer
             this.modHelper.releaseAll();
             this.modHelper = null;
         }
+        super.dispose();
     }
 }

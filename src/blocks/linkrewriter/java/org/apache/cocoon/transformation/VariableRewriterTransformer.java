@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,11 +134,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class VariableRewriterTransformer
-        extends AbstractSAXTransformer
-        implements Initializable, Disposable {
+public class VariableRewriterTransformer extends AbstractSAXTransformer
+                                         implements Initializable, Disposable {
 
     private static final String NAMESPACE = "";
 
@@ -330,7 +329,6 @@ public class VariableRewriterTransformer
 
     /** Recycle this component for use in another map:transform. */
     public void recycle() {
-        super.recycle();
         this.resolver = null;
         this.linkAttrs = null;
         this.inSchemes = null;
@@ -338,15 +336,17 @@ public class VariableRewriterTransformer
         this.conf = null;
         // Note: configure() and initialize() are not called after every
         //recycle, so don't null origConf
+        super.recycle();
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.modHelper != null ) {
+        if (this.modHelper != null) {
             this.modHelper.releaseAll();
             this.modHelper = null;
         }
+        super.dispose();
     }
 }
