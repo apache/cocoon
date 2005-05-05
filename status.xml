@@ -430,6 +430,17 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="fix">
+      Databases: SQLTransformer: Each query can now have connection with own
+      database connection configuration parameters. Queries with same configuration
+      will share single database connection. You can force queries to create private
+      connection using <code>own-connection</code> configuration parameter.
+    </action>
+    <action dev="VG" type="fix">
+      Databases: SQLTransformer: Each query can now have own output namespace and
+      prefix. If desired output namespace already in use, existing prefix will be
+      used.
+    </action>
     <action dev="VG" type="fix" fixes-bug="27440" due-to="Philipp Matthias Hahn" due-to-email="pmhahn@titan.lahn.de">
       Databases: SQLTransformer: Support multiple nested queries within one query.
     </action>
