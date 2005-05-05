@@ -15,15 +15,8 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
-
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -31,9 +24,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -41,11 +33,14 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.ParametersRecorder;
 import org.apache.cocoon.transformation.helpers.TextRecorder;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Document;
@@ -57,8 +52,15 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
-import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
 
 /**
  * This class is the basis for all transformers. It provides various useful
@@ -102,9 +104,8 @@ import javax.xml.transform.TransformerFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
 */
-public abstract class AbstractSAXTransformer
-        extends AbstractTransformer
-        implements Serviceable, Configurable, Recyclable {
+public abstract class AbstractSAXTransformer extends AbstractTransformer
+                                             implements Serviceable, Configurable, Recyclable, Disposable {
 
     /**
      * Empty immutable attributes (for performance). Use them
@@ -227,6 +228,16 @@ public abstract class AbstractSAXTransformer
      */
     private String ourPrefix;
 
+    //
+    // Lifecycle
+    //
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
 
     /* (non-Javadoc)
      * @see Configurable#configure(Configuration)
@@ -293,8 +304,6 @@ public abstract class AbstractSAXTransformer
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
-        super.recycle();
-
         this.namespaceURI = null;
         this.objectModel = null;
         this.request = null;
@@ -307,20 +316,32 @@ public abstract class AbstractSAXTransformer
         this.source = null;
         this.namespaces.clear();
         this.ourPrefix = null;
+
+        super.recycle();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
+    public void dispose() {
+        this.manager = null;
+    }
+
+    //
+    // SAX ContentHandler methods
+    //
+
+    /**
+     * Process the SAX event.
+     * @see ContentHandler#setDocumentLocator
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void setDocumentLocator(Locator locator) {
+        if (this.ignoreEventsCount == 0) {
+            super.setDocumentLocator(locator);
+        }
     }
 
     /**
-     *  Process the SAX event. A new document is processed. The hook (method)
-     *  <code>setupTransforming()</code> is invoked.
-     *
-     *  @see org.xml.sax.ContentHandler#startDocument()
+     * Process the SAX event. A new document is processed. The hook method
+     * {@link #setupTransforming} is invoked.
+     * @see ContentHandler#startDocument
      */
     public void startDocument()
     throws SAXException {
@@ -341,8 +362,8 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     *  Process the SAX event. The processing of the document is finished.
-     *  @see org.xml.sax.ContentHandler#endDocument()
+     * Process the SAX event. The processing of the document is finished.
+     * @see org.xml.sax.ContentHandler#endDocument
      */
     public void endDocument()
     throws SAXException {
@@ -353,8 +374,68 @@ public abstract class AbstractSAXTransformer
 
     /**
      * Process the SAX event.
-     * The namespace of the event is checked. If it is the defined namespace
-     * for this transformer the startTransformingElement() hook is called.
+     * @see org.xml.sax.ContentHandler#startPrefixMapping
+     */
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        if (prefix != null) {
+            this.namespaces.add(new String[] {prefix, uri});
+        }
+        if (namespaceURI.equals(uri)) {
+            this.ourPrefix = prefix;
+        }
+        if (this.ignoreEventsCount == 0) {
+            super.startPrefixMapping(prefix, uri);
+        }
+    }
+
+    /**
+     * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#endPrefixMapping
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+
+        if (prefix != null) {
+            // Find and remove the namespace prefix
+            boolean found = false;
+            for (int i = this.namespaces.size() - 1; i >= 0; i--) {
+                final String[] prefixAndUri = (String[]) this.namespaces.get(i);
+                if (prefixAndUri[0].equals(prefix)) {
+                    this.namespaces.remove(i);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new SAXException("Namespace for prefix '" + prefix + "' not found.");
+            }
+
+            if (prefix.equals(this.ourPrefix)) {
+                // Reset our current prefix
+                this.ourPrefix = null;
+
+                // Now search if we have a different prefix for our namespace
+                for (int i = this.namespaces.size() - 1; i >= 0; i--) {
+                    final String[] prefixAndUri = (String[]) this.namespaces.get(i);
+                    if (namespaceURI.equals(prefixAndUri[1])) {
+                        this.ourPrefix = prefixAndUri[0];
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (this.ignoreEventsCount == 0) {
+            super.endPrefixMapping(prefix);
+        }
+    }
+
+    /**
+     * Process the SAX event. The namespace of the event is checked.
+     * If it is the defined namespace for this transformer,
+     * the {@link #startTransformingElement} hook is called.
+     * @see org.xml.sax.ContentHandler#startElement
      */
     public void startElement(String uri,
                              String name,
@@ -378,9 +459,10 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     * Process the SAX event.
-     * The namespace of the event is checked. If it is the defined namespace
-     * for this transformer the endTransformingElement() hook is called.
+     * Process the SAX event. The namespace of the event is checked.
+     * If it is the defined namespace for this transformer,
+     * the {@link #endTransformingElement} hook is called.
+     * @see org.xml.sax.ContentHandler#endElement
      */
     public void endElement(String uri, String name, String raw)
     throws SAXException {
@@ -402,6 +484,7 @@ public abstract class AbstractSAXTransformer
 
     /**
      * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#characters
      */
     public void characters(char[] p0, int p1, int p2)
     throws SAXException {
@@ -419,11 +502,105 @@ public abstract class AbstractSAXTransformer
 
     /**
      * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#ignorableWhitespace
      */
     public void ignorableWhitespace(char[] p0, int p1, int p2)
     throws SAXException {
         if (ignoreWhitespaces == false && ignoreEventsCount == 0) {
             super.ignorableWhitespace(p0, p1, p2);
+        }
+    }
+
+    /**
+     * Process the SAX event.
+     * @see ContentHandler#processingInstruction
+     */
+    public void processingInstruction(String target, String data)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.processingInstruction(target, data);
+        }
+    }
+
+    /**
+     * Process the SAX event.
+     * @see ContentHandler#skippedEntity
+     */
+    public void skippedEntity(String name)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.skippedEntity(name);
+        }
+    }
+
+    //
+    // SAX LexicalHandler methods
+    //
+
+    /**
+     * @see LexicalHandler#startDTD
+     */
+    public void startDTD(String name, String public_id, String system_id)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.startDTD(name, public_id, system_id);
+        }
+    }
+
+    /**
+     * @see LexicalHandler#endDTD
+     */
+    public void endDTD() throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.endDTD();
+        }
+    }
+
+    /**
+     * @see LexicalHandler#startEntity
+     */
+    public void startEntity (String name)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.startEntity(name);
+        }
+    }
+
+    /**
+     * @see LexicalHandler#endEntity
+     */
+    public void endEntity (String name)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.endEntity(name);
+        }
+    }
+
+    /**
+     * @see LexicalHandler#startCDATA
+     */
+    public void startCDATA() throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.startCDATA();
+        }
+    }
+
+    /**
+     * @see LexicalHandler#endCDATA
+     */
+    public void endCDATA() throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.endCDATA();
+        }
+    }
+
+    /**
+     * @see LexicalHandler#comment
+     */
+    public void comment(char ary[], int start, int length)
+    throws SAXException {
+        if (this.ignoreEventsCount == 0) {
+            super.comment(ary, start, length);
         }
     }
 
@@ -678,9 +855,9 @@ public abstract class AbstractSAXTransformer
         return fragment;
     }
 
-    // ************
+    //
     // Hooks
-    // ************
+    //
 
     /**
      * Setup the transformation of an xml document.
@@ -858,26 +1035,6 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     * SAX Event handling
-     */
-    public void startEntity (String name)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.startEntity(name);
-        }
-    }
-
-    /**
-     * SAX Event handling
-     */
-    public void endEntity (String name)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.endEntity(name);
-        }
-    }
-
-    /**
      * Send all start prefix mapping events to the current content handler
      */
     protected void sendStartPrefixMapping()
@@ -902,135 +1059,18 @@ public abstract class AbstractSAXTransformer
     }
 
     /**
-     * SAX Event handling
+     * Find prefix mapping for the given namespace URI.
+     * @return Prefix mapping or null if no prefix defined
      */
-    public void setDocumentLocator(Locator locator) {
-        if (this.ignoreEventsCount == 0) {
-            super.setDocumentLocator(locator);
-        }
-    }
-
-    /**
-     * SAX Event handling
-     */
-    public void startPrefixMapping(String prefix, String uri)
-    throws SAXException {
-        if (prefix != null) {
-            this.namespaces.add(new String[] {prefix, uri});
-        }
-        if (namespaceURI.equals(uri)) {
-            this.ourPrefix = prefix;
-        }
-        if (this.ignoreEventsCount == 0) {
-            super.startPrefixMapping(prefix, uri);
-        }
-    }
-
-    /**
-     * SAX Event handling
-     */
-    public void endPrefixMapping(String prefix)
-    throws SAXException {
-
-        if (prefix != null) {
-            // Find and remove the namespace prefix
-            boolean found = false;
-            for (int i = this.namespaces.size() - 1; i >= 0; i--) {
-                final String[] prefixAndUri = (String[]) this.namespaces.get(i);
-                if (prefixAndUri[0].equals(prefix)) {
-                    this.namespaces.remove(i);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                throw new SAXException("Namespace for prefix '" + prefix + "' not found.");
-            }
-
-            if (prefix.equals(this.ourPrefix)) {
-                // Reset our current prefix
-                this.ourPrefix = null;
-
-                // Now search if we have a different prefix for our namespace
-                for (int i = this.namespaces.size() - 1; i >= 0; i--) {
-                    final String[] prefixAndUri = (String[]) this.namespaces.get(i);
-                    if (namespaceURI.equals(prefixAndUri[1])) {
-                        this.ourPrefix = prefixAndUri[0];
-                        break;
-                    }
-                }
+    protected String findPrefixMapping(String uri) {
+        final int l = this.namespaces.size();
+        for (int i = 0; i < l; i++) {
+            String[] prefixAndUri = (String[]) this.namespaces.get(i);
+            if (prefixAndUri[1].equals(uri)) {
+                return prefixAndUri[0];
             }
         }
 
-        if (this.ignoreEventsCount == 0) {
-            super.endPrefixMapping(prefix);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
-     */
-    public void processingInstruction(String target, String data)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.processingInstruction(target, data);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
-     */
-    public void skippedEntity(String name)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.skippedEntity(name);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ext.LexicalHandler#startDTD(java.lang.String, java.lang.String, java.lang.String)
-     */
-    public void startDTD(String name, String public_id, String system_id)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.startDTD(name, public_id, system_id);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ext.LexicalHandler#endDTD()
-     */
-    public void endDTD() throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.endDTD();
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ext.LexicalHandler#startCDATA()
-     */
-    public void startCDATA() throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.startCDATA();
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ext.LexicalHandler#endCDATA()
-     */
-    public void endCDATA() throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.endCDATA();
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
-     */
-    public void comment(char ary[], int start, int length)
-    throws SAXException {
-        if (this.ignoreEventsCount == 0) {
-            super.comment(ary, start, length);
-        }
+        return null;
     }
 }

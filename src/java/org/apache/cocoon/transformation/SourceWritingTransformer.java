@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -229,11 +229,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class SourceWritingTransformer
-    extends AbstractSAXTransformer
-    implements Disposable {
+public class SourceWritingTransformer extends AbstractSAXTransformer
+                                      implements Disposable {
 
     public static final String SWT_URI = "http://apache.org/cocoon/source/1.0";
     public static final String DEFAULT_SERIALIZER = "xml";
@@ -816,5 +815,6 @@ public class SourceWritingTransformer
             this.manager.release(this.xpathProcessor);
             this.xpathProcessor = null;
         }
+        super.dispose();
     }
 }
