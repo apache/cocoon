@@ -221,10 +221,11 @@ public class CIncludeTransformer extends AbstractSAXTransformer
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( null != this.manager ) {
-            this.manager.release( this.cacheManager );
+        if (null != this.manager) {
+            this.manager.release(this.cacheManager);
             this.manager = null;
         }
+        super.dispose();
     }
 
     /**
@@ -239,7 +240,7 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.manager.release( this.recorder );
             this.recorder = null;
         }
-        super.recycle();
+
         this.configurationParameters = null;
         this.resourceParameters = null;
         if (getLogger().isDebugEnabled()) {
@@ -248,6 +249,8 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.startTime = 0;
         }
         this.filter = null;
+
+        super.recycle();
     }
 
     public void startTransformingElement(String uri, String name, String raw, Attributes attr)

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,7 +145,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -235,46 +235,46 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     }
 
     /** current element's request parameter values */
-    protected Object[] values = null;
+    protected Object[] values;
 
     /** current request's validation results (all validated elements) */
-    protected Map validationResults = null;
+    protected Map validationResults;
 
     /** Should we skip inserting values? */
-    private boolean fixed = false;
+    private boolean fixed;
     /** Is the complete document protected? */
-    private boolean documentFixed = false;
+    private boolean documentFixed;
 
     private String fixedName = "fixed";
-    private String prefix = null;
-    private String suffix = null;
-    private String defaultPrefix = null;
-    private String defaultSuffix = null;
-    private String separator = null;
-    private String formName = null;
-    private boolean useFormName = false;
-    private boolean useFormNameTwice = false;
-    private boolean ignoreValidation = false;
+    private String prefix;
+    private String suffix;
+    private String defaultPrefix;
+    private String defaultSuffix;
+    private String separator;
+    private String formName;
+    private boolean useFormName;
+    private boolean useFormNameTwice;
+    private boolean ignoreValidation;
     private int decorationSize = 1;
 
     private String defaultInput = "request-param";
-    private Configuration defaultInputConf = null;
-    private Configuration inputConf = null;
-    private InputModule input = null;
-    private ServiceSelector inputSelector = null;
-    private String inputName = null;
+    private Configuration defaultInputConf;
+    private Configuration inputConf;
+    private InputModule input;
+    private ServiceSelector inputSelector;
+    private String inputName;
 
     /** Skip element's content only. Otherwise skip also surrounding element. */
-    protected boolean skipChildrenOnly = false;
+    protected boolean skipChildrenOnly;
 
     /** Count nested repeat elements. */
-    protected int recordingCount = 0;
+    protected int recordingCount;
 
     /** List of {@link RepeaterStatus} elements keeping track of nested repeat blocks. */
-    protected List repeater = null;
+    protected List repeater;
 
     /** Map of {@link ValueList} to track multiple parameters. */
-    protected Map formValues = null;
+    protected Map formValues;
 
 
     /**
@@ -466,8 +466,8 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      *  Recycle this component.
      */
     public void recycle() {
+        reset();
         super.recycle();
-        this.reset();
     }
 
     /**
