@@ -60,6 +60,13 @@
 
   <xsl:template match="sql:description"/>
 
+  <xsl:template match="sql:returncode">
+    <td>
+      <xsl:copy-of select="node()"/>
+      rows updated.
+    </td>
+  </xsl:template>
+
   <xsl:template match="sql:id">
     <!-- ignore -->
   </xsl:template>

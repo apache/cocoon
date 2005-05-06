@@ -41,7 +41,8 @@
        Example with two queries nested into the third one.
      </sample>
      <sample name="XML Test" href="transform/sql-page3" xlink:role="dynamic">
-       Example with inserting XML into a database.
+       Example with inserting XML into a database and with a select statement
+       nested into the insert statement.
      </sample>
   </group>
 
@@ -68,7 +69,7 @@
        modular package which supports auto increments and more.
      </sample>
      <sample name="File Upload to Blob" href="mod-db/file-upload-blob">
-       A simple example demonstrating of populating a binary database column 
+       A simple example demonstrating of populating a binary database column
        via a multipart form file upload.
      </sample>
   </group>
@@ -107,5 +108,5 @@
        Start the tutorial application.
      </sample>
   </group>
-  
+
 </samples>

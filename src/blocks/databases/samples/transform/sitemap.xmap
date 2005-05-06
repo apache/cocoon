@@ -36,8 +36,8 @@
 <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
-
     <map:pipeline>
+
       <map:match pattern="*">
         <map:generate src="{1}.xml"/>
         <!--
@@ -55,7 +55,7 @@
           <map:parameter name="contextPath" value="{request:contextPath}"/>
           <map:parameter name="file" value=".xml"/>
         </map:transform>
-        <map:serialize/>
+        <map:serialize type="html"/>
       </map:match>
 
       <map:match pattern="">
