@@ -24,18 +24,32 @@
   </resources>
 
   <content>
-    <para>This is my first Cocoon2 page filled with SQL data!</para>
+    <para>This page inserts a row into the table.</para>
 
     <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0">
       <sql:query>
-        select max(id) as maxid from department
+        select (max(id)+1) as maxid from department
       </sql:query>
       <sql:execute-query>
+        <!--
+          - Don't do this in real applications: use sequences or auto increment fields.
+          -->
         <sql:query>
-         insert into department (id, name, description) 
-             values(<sql:ancestor-value name="maxid" level="1"/> + 1, 'XML Test',
-            '<span>An XML Test</span>')
+          insert into department (id, name, description)
+          values(<sql:ancestor-value name="maxid" level="1"/>,
+                 'XML Test <sql:ancestor-value name="maxid" level="1"/>',
+                 '&lt;span&gt;A <sql:ancestor-value name="maxid" level="1"/>th attempt to insert &lt;i&gt;XML&lt;/i&gt; into the database.&lt;/span&gt;')
         </sql:query>
+
+        <!--
+          - Output data after update is complete.
+          -->
+        <sql:execute-query>
+          <sql:query>
+            select id, name, description from department
+          </sql:query>
+        </sql:execute-query>
+
       </sql:execute-query>
     </sql:execute-query>
   </content>

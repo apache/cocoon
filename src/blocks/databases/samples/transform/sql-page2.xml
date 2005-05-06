@@ -24,7 +24,7 @@
   </resources>
 
   <content>
-    <para>This is my first Cocoon2 page filled with SQL data!</para>
+    <para>This is another page filled with SQL data.</para>
 
     <sql:execute-query xmlns:sql="http://apache.org/cocoon/SQL/2.0">
       <sql:query>

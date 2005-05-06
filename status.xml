@@ -196,6 +196,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="fix" fixes-bug="25098">
+      Databases: SQLTransformer: Support queries nested into insert/delete/update
+      queries. Return number of rows updated by insert/delete/update queries as
+      <code>returncode</code> element.
+    </action>
     <action dev="VG" type="fix">
       Databases: SQLTransformer: Each query can now have connection with own
       database connection configuration parameters. Queries with same configuration

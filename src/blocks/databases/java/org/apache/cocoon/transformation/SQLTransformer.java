@@ -132,6 +132,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * <code>own-connection</code> parameter.
  * </p>
  *
+ * <p>
+ * TODO: Support inserting of the XML data into the database without need to escape it.
+ *       Can be implemented by introducing new &lt;sql:xml/&gt; tag to indicate that
+ *       startSerializedXMLRecording(...) should be used.
+ * </p>
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
@@ -1158,7 +1164,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
                 if (success) {
                     AttributesImpl attr = new AttributesImpl();
-                    if (this.showNrOfRows) {
+                    if (showNrOfRows) {
                         attr.addAttribute("", this.nrOfRowsAttr, this.nrOfRowsAttr, "CDATA", String.valueOf(getNrOfRows()));
                     }
                     String name = getName();
@@ -1167,7 +1173,9 @@ public class SQLTransformer extends AbstractSAXTransformer
                     }
                     start(this.rowsetElement, attr);
 
-                    if (!isStoredProcedure) {
+                    if (isStoredProcedure) {
+                        serializeStoredProcedure();
+                    } else {
                         while (next()) {
                             start(this.rowElement, EMPTY_ATTRIBUTES);
                             serializeRow();
@@ -1176,8 +1184,6 @@ public class SQLTransformer extends AbstractSAXTransformer
                             }
                             end(this.rowElement);
                         }
-                    } else {
-                        serializeStoredProcedure();
                     }
 
                     end(this.rowsetElement);
@@ -1262,6 +1268,7 @@ public class SQLTransformer extends AbstractSAXTransformer
 
         protected int getNrOfRows() throws SQLException {
             int nr = 0;
+
             if (rs != null) {
                 if (oldDriver) {
                     nr = -1;
@@ -1324,10 +1331,12 @@ public class SQLTransformer extends AbstractSAXTransformer
             // If rv is not -1, then an SQL insert, update, etc, has
             // happened (see JDBC docs - return codes for executeUpdate)
             if (rv != -1) {
-                return false;
+                // Output row with return code. Once.
+                return true;
             }
 
             if (rs == null || !rs.next()) {
+                // No more rows.
                 return false;
             }
 
@@ -1400,18 +1409,20 @@ public class SQLTransformer extends AbstractSAXTransformer
 
         protected void serializeRow()
         throws SQLException, SAXException {
-            if (!isUpdate && !isStoredProcedure) {
+            if (rv != -1) {
+                start("returncode", EMPTY_ATTRIBUTES);
+                serializeData(String.valueOf(rv));
+                end("returncode");
+                // We only want the return code shown once.
+                // Reset rv so next() returns false next time.
+                rv = -1;
+            } else {
                 for (int i = 1; i <= md.getColumnCount(); i++) {
                     String columnName = getColumnName(md.getColumnName(i));
                     start(columnName, EMPTY_ATTRIBUTES);
                     serializeData(getColumnValue(i));
                     end(columnName);
                 }
-            } else if (isUpdate && !isStoredProcedure) {
-                start("returncode", EMPTY_ATTRIBUTES);
-                serializeData(String.valueOf(rv));
-                end("returncode");
-                rv = -1; // we only want the return code shown once.
             }
         }
 
