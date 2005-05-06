@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@
       <xsl:for-each select="src-dirs/item | mock-dirs/item">
         <!-- alphabetical sorting, complete path -->
         <xsl:sort select="."/>
-        <classpathentry kind="src" path="{.}"/>
+        <classpathentry excluding="htmlunit/" kind="src" path="{.}"/>
       </xsl:for-each>
 
       <!-- 2. libraries -->
