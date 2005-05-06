@@ -30,36 +30,12 @@ import org.apache.commons.lang.math.NumberUtils;
  *
  * @version SVN $Id$
  */
-public class Settings {
+public class Settings implements BaseSettings, DynamicSettings{
 
     protected boolean readOnly = false;
 
     /** Prefix for properties */
     protected static final String KEYPREFIX = "org.apache.cocoon.";
-
-    /** Name of the property specifying a user properties file */
-    public static final String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
-
-    /**
-     * Default value for {@link #isAllowReload()} parameter (false)
-     */
-    public static final boolean ALLOW_RELOAD = false;
-
-    /**
-     * Default value for {@link #isEnableUploads()} parameter (false)
-     */
-    public static final boolean ENABLE_UPLOADS = false;
-    public static final boolean SAVE_UPLOADS_TO_DISK = true;
-    public static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
-
-    /**
-     * Default value for {@link #isInitClassloader()} setting (false)
-     */
-    public static final boolean INIT_CLASSLOADER = false;
-
-    public static final boolean SHOW_TIME = false;
-    public static final boolean HIDE_SHOW_TIME = false;
-    public static final boolean MANAGE_EXCEPTIONS = true;
 
     /**
      * The list of properties used to configure Cocoon
@@ -72,14 +48,11 @@ public class Settings {
      * try setting this parameter to "true".
      */
     protected boolean initClassloader = INIT_CLASSLOADER;
-    public static final String KEY_INIT_CLASSLOADER = "classloader.init";
 
     /**
      * This parameter allows to set system properties
      */
     protected Map forceProperties = new HashMap();
-    /** FIXME - implement the support for this key: */
-    public static final String KEY_FORCE_PROPERTIES = "system.properties";
 
     /**
      * This parameter points to the main configuration file for Cocoon.
@@ -87,20 +60,17 @@ public class Settings {
      * resolved relative to the application context path.
      */
     protected String configuration;
-    public static final String KEY_CONFIGURATION = "configuration";
 
     /**
      * This parameter indicates the configuration file of the LogKit management
      */
     protected String loggingConfiguration;
-    public static final String KEY_LOGGING_CONFIGURATION = "logging.configuration";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
     protected String accessLogger;
-    public static final String KEY_LOGGING_ACCESS_LOGGER = "logging.logger.access.category";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -110,7 +80,6 @@ public class Settings {
      * logger="..." attribute in the component configuration file.
      */
     protected String cocoonLogger;
-    public static final String KEY_LOGGING_COCOON_LOGGER = "logging.logger.cocoon.category";
 
     /**
      * This parameter indicates the log level to use throughout startup of the
@@ -119,14 +88,12 @@ public class Settings {
      * not readable/available this log level is of importance.
      */
     protected String bootstrapLogLevel;
-    public static final String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.loglevel";
 
     /**
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
      * Log4J has to be configured already.
      */
     protected String loggerClassName;
-    public static final String KEY_LOGGING_MANAGER_CLASS = "logging.manager.class";
 
     /**
      * If you want to configure log4j using Cocoon, then you can define
@@ -138,7 +105,6 @@ public class Settings {
      * for example.
      */
     protected String log4jConfiguration;
-    public static final String KEY_LOGGING_LOG4J_CONFIGURATION = "logging.log4j.configuration";
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -147,7 +113,6 @@ public class Settings {
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
     protected boolean allowReload = ALLOW_RELOAD;
-    public static final String KEY_ALLOW_RELOAD = "allow.reload";
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -156,15 +121,12 @@ public class Settings {
      * depending on your build properties.
      */
     protected List loadClasses = new ArrayList();
-    /** FIXME: Implement support for this: */
-    public static final String KEY_LOAD_CLASSES = "classloader.load.classes";
 
     /**
      * Causes all files in multipart requests to be processed.
      * Default is false for security reasons.
      */
     protected boolean enableUploads = ENABLE_UPLOADS;
-    public static final String KEY_UPLOADS_ENABLE = "uploads.enable";
 
     /**
      * This parameter allows to specify where Cocoon should put uploaded files.
@@ -173,14 +135,12 @@ public class Settings {
      * with volume: C:\Path\To\Upload\Directory.
      */
     protected String uploadDirectory;
-    public static final String KEY_UPLOADS_DIRECTORY = "uploads.directory";
 
     /**
      * Causes all files in multipart requests to be saved to upload-dir.
      * Default is true for security reasons.
      */
     protected boolean autosaveUploads = SAVE_UPLOADS_TO_DISK;
-    public static final String KEY_UPLOADS_AUTOSAVE = "uploads.autosave";
 
     /**
      * Specify handling of name conflicts when saving uploaded files to disk.
@@ -189,13 +149,11 @@ public class Settings {
      * filename unique.
      */
     protected String overwriteUploads;
-    public static final String KEY_UPLOADS_OVERWRITE = "uploads.overwrite";
 
     /**
      * Specify maximum allowed size of the upload. Defaults to 10 Mb.
      */
     protected int maxUploadSize = MAX_UPLOAD_SIZE;
-    public static final String KEY_UPLOADS_MAXSIZE = "uploads.maxsize";
 
     /**
      * This parameter allows to specify where Cocoon should create its page
@@ -204,7 +162,6 @@ public class Settings {
      * absolute directory must start with volume: C:\Path\To\Cache\Directory.
      */
     protected String cacheDirectory;
-    public static final String KEY_CACHE_DIRECTORY = "cache.directory";
 
     /**
      * This parameter allows to specify where Cocoon should put it's
@@ -213,7 +170,6 @@ public class Settings {
      * absolute directory must start with volume: C:\Path\To\Work\Directory.
      */
     protected String workDirectory;
-    public static final String KEY_WORK_DIRECTORY = "work.directory";
 
     /**
      * This parameter allows to specify additional directories or jars
@@ -222,8 +178,6 @@ public class Settings {
      * are rooted at the context root of the Cocoon servlet.
      */
     protected List extraClasspaths = new ArrayList();
-    /** FIXME: Implement support for this: */
-    public static final String KEY_EXTRA_CLASSPATHS = "extra.classpaths";
 
     /**
      * This parameter allows you to select the parent service manager.
@@ -234,33 +188,28 @@ public class Settings {
      * this class, if it implements them.
      */
     protected String parentServiceManagerClassName;
-    public static final String KEY_PARENT_SERVICE_MANAGER = "parentservicemanager";
 
     /**
      * Allow adding processing time to the response
      */
     protected boolean showTime = SHOW_TIME;
-    public static final String KEY_SHOWTIME = "showtime";
 
     /**
      * If true, processing time will be added as an HTML comment
      */
     protected boolean hideShowTime = HIDE_SHOW_TIME;
-    public static final String KEY_HIDE_SHOWTIME = "hideshowtime";
 
     /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
      */
     protected boolean manageExceptions = MANAGE_EXCEPTIONS;
-    public static final String KEY_MANAGE_EXCEPTIONS = "manageexceptions";
 
     /**
      * Set form encoding. This will be the character set used to decode request
      * parameters. If not set the ISO-8859-1 encoding will be assumed.
     */
     protected String formEncoding;
-    public static final String KEY_FORM_ENCODING = "formencoding";
 
     /**
      * If this value is specified, it will be interpreted as a log level and
@@ -268,19 +217,16 @@ public class Settings {
      * definition in the logging configuration.
      */
     protected String overrideLogLevel;
-    public static final String KEY_LOGGING_OVERRIDE_LOGLEVEL = "override.loglevel";
 
     /**
      * Delay between reload checks for the configuration
      */
     protected long configurationReloadDelay = 1000;
-    public static final String KEY_CONFIGURATION_RELOAD_DELAY = "configuration.reloaddelay";
 
     /**
      * Lazy mode for component loading
      */
     protected boolean lazyMode = false;
-    public static final String KEY_LAZY_MODE = "core.LazyMode";
 
     /**
      * Create a new settings object
