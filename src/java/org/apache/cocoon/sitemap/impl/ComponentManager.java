@@ -15,10 +15,12 @@
  */
 package org.apache.cocoon.sitemap.impl;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.core.container.CoreServiceManager;
+import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.sitemap.ComponentLocator;
 
 
@@ -115,4 +117,12 @@ public class ComponentManager implements ServiceManager, ComponentLocator {
         }
         return component;
     }
+    
+    public ServiceManager getServiceManager() {
+        if ( this.serviceManager instanceof ComponentManager ) {
+            return ((ComponentManager)this.serviceManager).getServiceManager();
+        }
+        return this.serviceManager;
+    }
+
 }

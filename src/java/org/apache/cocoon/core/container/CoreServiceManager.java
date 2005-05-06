@@ -53,6 +53,7 @@ import org.apache.cocoon.core.container.handler.InstanceComponentHandler;
 import org.apache.cocoon.core.container.handler.LazyHandler;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.sitemap.impl.ComponentManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -124,10 +125,15 @@ public class CoreServiceManager
         this.classloader = classloader;
 
         RoleManager parentRoleManager = null;
+        // FIXME - We should change this to a cleaner way!
+        ServiceManager coreServicemanager = parent;
+        if ( parent instanceof ComponentManager ) {
+            coreServicemanager = ((ComponentManager)parent).getServiceManager();
+        }
         // get role manager and logger manager
-        if ( parent instanceof CoreServiceManager ) {
-            parentRoleManager = ((CoreServiceManager)parent).roleManager;
-            this.loggerManager = ((CoreServiceManager)parent).loggerManager;
+        if ( coreServicemanager instanceof CoreServiceManager ) {
+            parentRoleManager = ((CoreServiceManager)coreServicemanager).roleManager;
+            this.loggerManager = ((CoreServiceManager)coreServicemanager).loggerManager;
         }
 
         // Always create a role manager, it can be filled several times either through
