@@ -40,6 +40,9 @@
      <sample name="Nested Queries" href="transform/sql-page2" xlink:role="dynamic">
        Example with two queries nested into the third one.
      </sample>
+     <sample name="XML Test" href="transform/sql-page3" xlink:role="dynamic">
+       Example with inserting XML into a database.
+     </sample>
   </group>
 
   <group name="XSP">
@@ -86,6 +89,9 @@
      </sample>
      <sample name="Insert Employees" href="org-db/add-employee" xlink:role="dynamic">
        Adds new Employees to the employees table.
+     </sample>
+     <sample name="Show Departments" href="org-db/departments" xlink:role="dynamic">
+       Show all departments.
      </sample>
   </group>
 
