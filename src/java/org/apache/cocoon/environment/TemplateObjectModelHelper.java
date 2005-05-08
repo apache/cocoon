@@ -42,9 +42,23 @@ import org.mozilla.javascript.ScriptableObject;
  * @version CVS $Id$
  */
 public class TemplateObjectModelHelper {
+    private static Scriptable rootScope = null;
+    
     /** Avoid instantiation */
     private TemplateObjectModelHelper() {}
 
+    public static Scriptable getRootScope() {
+        if (rootScope == null) {
+            // Create it if never used up to now
+            Context ctx = Context.enter();
+            try {
+                rootScope = ctx.initStandardObjects(null);
+            } finally {
+                Context.exit();
+            }
+        }
+        return rootScope;
+    }
     public static void fillContext(Object contextObject, Map map) {
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
@@ -102,23 +116,20 @@ public class TemplateObjectModelHelper {
         // Needed for the FOM wrappers
         Context cx = Context.enter();
         try {
-            //FIXME: we surely need to share the scope as this operation is time consuming
-            Scriptable scope = cx.initStandardObjects();
-        
             // cocoon.request
             final Request request = ObjectModelHelper.getRequest( objectModel );
-            cocoon.put("request", new FOM_Cocoon.FOM_Request(scope, request));
+            cocoon.put("request", new FOM_Cocoon.FOM_Request(getRootScope(), request));
             
             // cocoon.session
             final Session session = request.getSession(false);
             if (session != null) {
-                cocoon.put("session", new FOM_Cocoon.FOM_Session(scope, session));
+                cocoon.put("session", new FOM_Cocoon.FOM_Session(getRootScope(), session));
             }
         
             // cocoon.context
             final org.apache.cocoon.environment.Context context =
                 ObjectModelHelper.getContext( objectModel );
-            cocoon.put("context", new FOM_Cocoon.FOM_Context(scope, context));
+            cocoon.put("context", new FOM_Cocoon.FOM_Context(getRootScope(), context));
 
         } finally {
             Context.exit();
@@ -164,17 +175,14 @@ public class TemplateObjectModelHelper {
         } else { 
             Context cx = Context.enter();
             try {
-                //FIXME: we surely need to share the scope as this operation is time consuming
-                Scriptable scope = cx.initStandardObjects();
-
                 final String JAVA_PACKAGE = "JavaPackage";
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 Scriptable newPackages = new NativeJavaPackage( "", cl );
-                newPackages.setParentScope( scope );
-                newPackages.setPrototype( ScriptableObject.getClassPrototype(   scope,
+                newPackages.setParentScope( getRootScope() );
+                newPackages.setPrototype( ScriptableObject.getClassPrototype(   getRootScope(),
                                                                                 JAVA_PACKAGE ) );
                 objectModel.put( "Packages", newPackages );
-                objectModel.put( "java", ScriptableObject.getProperty( scope, "java" ) );
+                objectModel.put( "java", ScriptableObject.getProperty( getRootScope(), "java" ) );
             } finally {
                 Context.exit();
             }
