@@ -195,6 +195,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="BD" type="add" fixes-bug="25352" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
+     The new "annotations" namespace (http://apache.org/cocoon/sitemap/annotations/1.0)
+     can be used to add information to sitemaps. The sitemap processor ignores this information,
+     which can be used for documentation purposes.
+   </action>
    <action dev="LG" type="update">
      Removed o.a.c.generation.JXTemplateGenerator from core. 
      Introduced o.a.c.template.jxtg.JXTemplateGenerator as the official templating language.

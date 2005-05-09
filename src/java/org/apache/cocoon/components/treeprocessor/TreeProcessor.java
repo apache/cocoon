@@ -393,7 +393,8 @@ public class TreeProcessor extends AbstractLogEnabled
 
             // Build a namespace-aware configuration object
             NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
-            SourceUtil.toSAX(this.source, handler);
+            AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
+            SourceUtil.toSAX(this.source, annotationsFilter );
             Configuration sitemapProgram = handler.getConfiguration();
             newLastModified = this.source.getLastModified();
 
