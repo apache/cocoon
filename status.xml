@@ -203,6 +203,8 @@
    <action dev="LG" type="update">
      Removed o.a.c.generation.JXTemplateGenerator from core. 
      Introduced o.a.c.template.jxtg.JXTemplateGenerator as the official templating language.
+     New commands available: <jx:call macro="${macroName"}/> 
+     and <jx:attribute name="${attributeName}" value="${attributeValue}"/>
    </action>
    <action dev="VG" type="remove">
      Removed EventRecorder (in o.a.c.t.helpers package).
