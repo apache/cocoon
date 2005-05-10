@@ -989,7 +989,6 @@ public class CocoonServlet extends HttpServlet {
         if (this.forceSystemProperty != null) {
             StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
 
-            Properties systemProps = System.getProperties();
             while (tokenizer.hasMoreTokens()) {
                 final String property = tokenizer.nextToken().trim();
                 if (property.indexOf('=') == -1) {
@@ -1004,7 +1003,7 @@ public class CocoonServlet extends HttpServlet {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Setting " + key + "=" + value);
                     }
-                    systemProps.setProperty(key, value);
+                    System.setProperty(key, value);
                 } catch (Exception e) {
                     if (getLogger().isWarnEnabled()) {
                         getLogger().warn("Could not set property: " + property, e);
@@ -1012,7 +1011,6 @@ public class CocoonServlet extends HttpServlet {
                     // Do not throw an exception, because it is not a fatal error.
                 }
             }
-            System.setProperties(systemProps);
         }
     }
 

@@ -579,7 +579,7 @@ public final class SourceUtil {
         resolverParameters.put(SourceResolver.METHOD, method);
         if (typeParameters != null) {
             String encoding = typeParameters.getParameter("encoding",
-                 System.getProperties().getProperty("file.encoding", "ISO-8859-1"));
+                 System.getProperty("file.encoding", "ISO-8859-1"));
             if (encoding != null && !"".equals(encoding)) {
                 resolverParameters.put(SourceResolver.URI_ENCODING, encoding);
             }
