@@ -65,7 +65,7 @@ import org.apache.log4j.LogManager;
 /**
  * This is an utility class to create a new Cocoon instance.
  *
- * @version SVN $Id$
+ * @version $Id$
  * @since 2.2
  */
 public class CoreUtil {
@@ -126,7 +126,7 @@ public class CoreUtil {
         // add root url
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL,
-                           new URL(this.env.getContextURL()));        
+                           new URL(this.env.getContextURL()));
         } catch (MalformedURLException ignore) {
             // we simply ignore this
         }
@@ -319,7 +319,7 @@ public class CoreUtil {
                     this.log.error("Could not initialize parent component manager.", e);
                 }
             }
-        }        
+        }
         return new RootServiceManager(parentServiceManager, core);
     }
 
@@ -367,7 +367,7 @@ public class CoreUtil {
         // now overwrite with system properties
         s.fill(System.getProperties());
 
-        return s;        
+        return s;
     }
 
     protected void initLogger() {
@@ -568,10 +568,10 @@ public class CoreUtil {
         if ( pos != -1 ) {
             uri = uri.substring(pos+1);
         }
-        return WildcardHelper.match(null, uri, parsedPattern);      
+        return WildcardHelper.match(null, uri, parsedPattern);
     }
 
-    public static final class RootServiceManager 
+    public static final class RootServiceManager
     implements ServiceManager, Disposable {
 
         protected final ServiceManager parent;
@@ -628,7 +628,7 @@ public class CoreUtil {
     /**
      * Creates the Cocoon object and handles exception handling.
      */
-    public synchronized Cocoon createCocoon() 
+    public synchronized Cocoon createCocoon()
     throws Exception {
 
         /* HACK for reducing class loader problems.                                     */
@@ -672,7 +672,7 @@ public class CoreUtil {
     }
 
     /**
-     * Gets the current cocoon object.  
+     * Gets the current cocoon object.
      * Reload cocoon if configuration changed or we are reloading.
      */
     public Cocoon getCocoon(final String pathInfo, final String reloadParam)
@@ -769,7 +769,6 @@ public class CoreUtil {
      */
     protected void forceProperty() {
         if (this.settings.getForceProperties().size() > 0) {
-            Properties systemProps = System.getProperties();
             final Iterator i = this.settings.getForceProperties().entrySet().iterator();
             while (i.hasNext()) {
                 final Map.Entry current = (Map.Entry)i.next();
@@ -777,7 +776,7 @@ public class CoreUtil {
                     if (this.log.isDebugEnabled()) {
                         this.log.debug("Setting: " + current.getKey() + "=" + current.getValue());
                     }
-                    systemProps.setProperty(current.getKey().toString(), current.getValue().toString());
+                    System.setProperty(current.getKey().toString(), current.getValue().toString());
                 } catch (Exception e) {
                     if (this.log.isWarnEnabled()) {
                         this.log.warn("Could not set property: " + current.getKey(), e);
@@ -785,7 +784,6 @@ public class CoreUtil {
                     // Do not throw an exception, because it is not a fatal error.
                 }
             }
-            System.setProperties(systemProps);
         }
     }
 

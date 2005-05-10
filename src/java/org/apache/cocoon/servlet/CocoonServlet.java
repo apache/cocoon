@@ -643,8 +643,8 @@ public class CocoonServlet extends HttpServlet {
         public Logger logger;
         private final HttpContext   environmentContext;
 
-        public ServletBootstrapEnvironment(ServletConfig config, 
-                                           ClassLoader   cl, 
+        public ServletBootstrapEnvironment(ServletConfig config,
+                                           ClassLoader   cl,
                                            String        writeablePath,
                                            String        path) {
             this.config = config;

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation
+ * Copyright 1999-2005 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,19 +28,21 @@ import java.util.Map;
  *
  * JXPath allows to apply XPath functions to system properties.
  *
- * If there is a security manager, its <code>checkPropertiesAccess</code>
+ * <p>If there is a security manager, its <code>checkPropertiesAccess</code>
  * method is called with no arguments. This may result in a security exception
- * which is wrapped into a configuration exception and re-thrown.
+ * which is wrapped into a configuration exception and re-thrown.</p>
  *
  * @author Konstantin Piroumian
- * @version CVS $Id: SystemPropertyModule.java,v 1.5 2004/06/16 20:00:07 vgritsenko Exp $
+ * @version $Id$
  */
 public class SystemPropertyModule extends AbstractJXPathModule
-    implements ThreadSafe {
+                                  implements ThreadSafe {
 
+    /**
+     * @throws SecurityException if access is denied
+     */
     protected Object getContextObject(Configuration modeConf,
                                       Map objectModel) {
-
         return System.getProperties();
     }
 }
