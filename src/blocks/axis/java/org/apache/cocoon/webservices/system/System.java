@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.apache.commons.lang.SystemUtils;
  * Class which provides JVM system related SOAP services.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class System {
 
@@ -30,6 +30,7 @@ public class System {
      * <code>getProperties</code> returns the current System Properties object.
      *
      * @return a <code>Properties</code> instance
+     * @throws SecurityException if access is denied
      */
     public Properties getProperties() {
         return java.lang.System.getProperties();
