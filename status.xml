@@ -195,6 +195,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="LG" type="update">
+     JXTemplateGenerator's ScriptManager uses transient store to cache parsed templates.
+   </action>
    <action dev="BD" type="add" fixes-bug="25352" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
      The new "annotations" namespace (http://apache.org/cocoon/sitemap/annotations/1.0)
      can be used to add information to sitemaps. The sitemap processor ignores this information,
