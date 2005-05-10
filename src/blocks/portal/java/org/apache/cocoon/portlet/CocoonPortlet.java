@@ -1026,7 +1026,6 @@ public class CocoonPortlet extends GenericPortlet {
         if (this.forceSystemProperty != null) {
             StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
 
-            java.util.Properties systemProps = System.getProperties();
             while (tokenizer.hasMoreTokens()) {
                 final String property = tokenizer.nextToken().trim();
                 if (property.indexOf('=') == -1) {
@@ -1041,7 +1040,7 @@ public class CocoonPortlet extends GenericPortlet {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("setting " + key + "=" + value);
                     }
-                    systemProps.setProperty(key, value);
+                    System.setProperty(key, value);
                 } catch (Exception e) {
                     if (getLogger().isWarnEnabled()) {
                         getLogger().warn("Could not set property: " + property, e);
@@ -1049,7 +1048,6 @@ public class CocoonPortlet extends GenericPortlet {
                     // Do not throw an exception, because it is not a fatal error.
                 }
             }
-            System.setProperties(systemProps);
         }
     }
 
