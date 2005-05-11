@@ -376,7 +376,7 @@ public class FOM_Cocoon extends ScriptableObject {
              this.getServiceManager(),
              null,// configuration
              true);
-         return obj;
+         return org.mozilla.javascript.Context.javaToJS(obj, getParentScope());
     }
 
     /**
