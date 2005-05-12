@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!--
   Copyright 1999-2005 The Apache Software Foundation
 
@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix">
+      Enabled the synchronization on Cocoon's session wrapper by assuring that only
+      one wrapper exists per servlet session.
+    </action>
     <action dev="VG" type="fix" fixes-bug="25098">
       Databases: SQLTransformer: Support queries nested into insert/delete/update
       queries. Return number of rows updated by insert/delete/update queries as
