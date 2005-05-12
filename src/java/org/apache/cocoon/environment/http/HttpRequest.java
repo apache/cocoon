@@ -230,11 +230,11 @@ public final class HttpRequest implements Request {
             // synch on server session assures only one wrapper per session 
             synchronized (serverSession) {
                 // retrieve existing wrapper
-                session = (HttpSession)sessions.get(serverSession);
+                session = (HttpSession)((WeakReference)sessions.get(serverSession)).get();
                 if (session == null) {
                     // create new wrapper
                     session = new HttpSession(serverSession);
-                    sessions.put(serverSession, session);
+                    sessions.put(serverSession, new WeakReference(session));
                 }
             }
         } else {
