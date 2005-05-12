@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+import java.util.WeakHashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
@@ -32,6 +33,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.http.HttpSession;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 
 /**
@@ -55,10 +57,10 @@ public final class HttpRequest implements Request {
 
     /** The default form encoding of the servlet container */
     private String container_encoding;
-    
-    /** The current session */
-    private HttpSession session;
-    
+
+    /** The map to assure 1:1-mapping of server sessions and Cocoon session wrappers */
+    private static final Map sessions = Collections.synchronizedMap(new WeakHashMap());
+
     /**
      * Creates a HttpRequest based on a real HttpServletRequest object
      */
@@ -212,26 +214,34 @@ public final class HttpRequest implements Request {
         return this.req.getServletPath();
     }
 
-    /* (non-Javadoc)
+    /**
+     * Creates a wrapper implementing {@link Session} for
+     * {@link javax.servlet.http.HttpSession}.
+     * The method must assure 1:1-mapping of
+     * {@link javax.servlet.http.HttpSession}s to Cocoon's session wrappers.
+     * 
      * @see org.apache.cocoon.environment.Request#getSession(boolean)
      */
     public Session getSession(boolean create) {
         javax.servlet.http.HttpSession serverSession = this.req.getSession(create);
-        if ( null != serverSession) {
-            if ( null != this.session ) {
-                if ( this.session.wrappedSession != serverSession ) {
-                    // update wrapper
-                    this.session.wrappedSession = serverSession;
+        HttpSession session;
+        if (serverSession != null) {
+            // no need to lock the map - it is synchronized
+            // synch on server session assures only one wrapper per session 
+            synchronized (serverSession) {
+                // retrieve existing wrapper
+                session = (HttpSession)sessions.get(serverSession);
+                if (session == null) {
+                    // create new wrapper
+                    session = new HttpSession(serverSession);
+                    sessions.put(serverSession, session);
                 }
-            } else {
-                // new wrapper
-                this.session = new HttpSession( serverSession );
             }
         } else {
             // invalidate
-            this.session = null;
+            session = null;
         }
-        return this.session;
+        return session;
     }
 
     public Session getSession() {
