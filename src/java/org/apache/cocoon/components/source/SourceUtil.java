@@ -18,6 +18,8 @@ package org.apache.cocoon.components.source;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -226,6 +228,35 @@ public final class SourceUtil {
     }
 
     /**
+     * Generates character SAX events from the given source.
+     *
+     * @param source The data
+     * @param encoding The character encoding of the data
+     */
+    static public void toCharacters(Source source,
+                                    String encoding,
+                                    ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        try {
+            Reader r = encoding == null?
+                    new InputStreamReader(source.getInputStream()):
+                    new InputStreamReader(source.getInputStream(), encoding);
+
+            int len;
+            char[] chr = new char[4096];
+            try {
+                while ((len = r.read(chr)) > 0) {
+                    handler.characters(chr, 0, len);
+                }
+            } finally {
+                r.close();
+            }
+        } catch (SAXException e) {
+            handleSAXException(source.getURI(), e);
+        }
+    }
+
+    /**
      * Generates SAX events from the given source by parsing it.
      *
      * <p><b>NOTE</b>: If the implementation can produce lexical events,
@@ -376,7 +407,7 @@ public final class SourceUtil {
         if (cause != null) {
             // Unwrap ProcessingException, IOException, and extreme cases of SAXExceptions.
             // Handle SourceException.
-            // See also toSax(XMLizable, ContentHandler
+            // See also toSax(XMLizable, ContentHandler)
             if (cause instanceof SourceException) {
                 throw handle((SourceException) cause);
             }
@@ -407,7 +438,7 @@ public final class SourceUtil {
      *                             processing.
      */
     static public InputSource getInputSource(Source source)
-      throws IOException, ProcessingException {
+    throws IOException, ProcessingException {
         try {
             final InputSource newObject = new InputSource(source.getInputStream());
 
@@ -450,9 +481,9 @@ public final class SourceUtil {
                 StringBuffer buffer = new StringBuffer(uri.substring(0, queryPos));
                 char separator = '?';
 
-                Iterator iter = queries.getParameterNames();
-                while (iter.hasNext()==true) {
-                    String current = (String) iter.next();
+                Iterator i = queries.getParameterNames();
+                while (i.hasNext()) {
+                    String current = (String) i.next();
                     Iterator values = queries.getParameterValues(current);
                     while (values.hasNext()) {
                         buffer.append(separator)
@@ -474,26 +505,26 @@ public final class SourceUtil {
                 !resourceParameters.hasParameters())) {
             method = "GET";
         }
+
         if (uri.startsWith("cocoon:") && resourceParameters != null &&
                 resourceParameters.hasParameters()) {
             int pos = uri.indexOf(";jsessionid=");
 
-            if (uri.startsWith("cocoon:")==false) {
+            if (!uri.startsWith("cocoon:")) {
                 // It looks like this block is never called (JT)
                 if (pos!=-1) {
                     uri = uri.substring(0, pos);
                 }
-                uri = org.apache.excalibur.source.SourceUtil.appendParameters(uri,
-                    resourceParameters);
+                uri = org.apache.excalibur.source.SourceUtil.appendParameters(uri, resourceParameters);
             } else {
                 StringBuffer buf;
 
-                if (pos==-1) {
+                if (pos == -1) {
                     buf = new StringBuffer(uri);
                 } else {
                     buf = new StringBuffer(uri.substring(0, pos));
                 }
-                buf.append(((uri.indexOf('?')==-1) ? '?' : '&'));
+                buf.append(((uri.indexOf('?') == -1) ? '?' : '&'));
                 buf.append(resourceParameters.getEncodedQueryString());
                 uri = buf.toString();
             }
