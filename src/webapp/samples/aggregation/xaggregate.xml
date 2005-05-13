@@ -15,16 +15,19 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
-<page xmlns:i="http://apache.org/cocoon/include/1.0">
-  <slashdot>
-    <i:include src="cocoon:/slashdot"/>
-  </slashdot>
-  <moreover>
-    <i:include src="cocoon:/moreover"/>
-  </moreover>
-  <xmlhack>
-    <i:include src="cocoon:/xmlhack"/>
-  </xmlhack>
+<!-- 
+  - Example showing aggrgation of 3 sources using XInclude.
+  -
+  - $Id$
+  -->
+<page xmlns:x="http://www.w3.org/2001/XInclude">
+    <slashdot>
+        <x:include href="cocoon:/slashdot"/>
+    </slashdot>
+    <moreover>
+        <x:include href="cocoon:/moreover"/>
+    </moreover>
+    <xmlhack>
+        <x:include href="cocoon:/xmlhack"/>
+    </xmlhack>
 </page>

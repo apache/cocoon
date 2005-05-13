@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.4 2004/03/06 02:26:02 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -49,7 +49,10 @@
         <map:serialize/>
       </map:match>
 
-      <!-- ================  NEWS  =========================== -->
+      <!--
+        - News sources, post processed using XSLT, for content aggregation
+        - samples.
+        -->
 
       <map:match pattern="slashdot">
         <map:generate src="http://slashdot.org/slashdot.xml"/>
@@ -77,6 +80,12 @@
         <map:serialize/>
       </map:match>
 
+
+      <!--
+        - Content aggregation samples
+        -->
+
+      <!-- Aggregation using the sitemap aggregator -->
       <map:match pattern="aggregate">
         <map:aggregate element="page">
           <!--+
@@ -118,17 +127,64 @@
         <map:serialize/>
       </map:match>
 
-      <!-- Aggregation using the Cocoon Include transformer -->
+      <!-- Aggregation using the include transformer -->
       <map:match pattern="aggregate2">
+        <map:generate src="aggregate.xml"/>
+        <map:transform type="include"/>
+        <map:transform type="xsltc" src="stylesheets/news.xsl"/>
+        <map:serialize/>
+      </map:match>
+
+      <!-- Aggregation using the include transformer, done in parallel threads -->
+      <map:match pattern="aggregate3">
+        <map:generate src="aggregate.xml"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="true"/>
+        </map:transform>
+        <map:transform type="xsltc" src="stylesheets/news.xsl"/>
+        <map:serialize/>
+      </map:match>
+
+      <!-- Aggregation using the CInclude transformer -->
+      <map:match pattern="aggregate4">
         <map:generate src="aggregate.xml"/>
         <map:transform type="cinclude"/>
         <map:transform type="xsltc" src="stylesheets/news.xsl"/>
         <map:serialize/>
       </map:match>
-
-      <!-- TODO: Aggregation using the XInclude transformer -->
   
-      <!-- XInclude Samples -->
+      <!-- Aggregation using the XInclude transformer -->
+      <map:match pattern="aggregate5">
+        <map:generate src="xaggregate.xml"/>
+        <map:transform type="xinclude"/>
+        <map:transform type="xsltc" src="stylesheets/news.xsl"/>
+        <map:serialize/>
+      </map:match>
+  
+
+      <!--
+        - Include Samples
+        -->
+      <map:match pattern="include-*-*-*">
+        <map:generate src="content/i{3}.xml"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="{1}"/>
+          <map:parameter name="recursive" value="{2}"/>
+        </map:transform>
+        <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+          <map:parameter name="servletPath" value="{request:servletPath}"/>
+          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+          <map:parameter name="file" value="content/test.xml"/>
+          <map:parameter name="remove" value="{0}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+
+      <!--
+        - XInclude Samples
+        -->
       <map:match pattern="*.html">
         <map:generate src="content/{1}.xml"/>
         <map:transform type="xinclude"/>
