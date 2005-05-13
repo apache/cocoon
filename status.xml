@@ -196,6 +196,18 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="add">
+      IncludeTransformer moved from the scratchpad into the core. It has following
+      features:
+      <ul>
+        <li>Supports caching, with configurable caching key.</li>
+        <li>Supports parallel include processing in multiple threads.</li>
+        <li>Included source URIs resolved relative to the document URI.</li>
+        <li>Supports recursive include processing (includes in included files).</li>
+        <li>Supports fallback element processing.</li>
+        <li>Supports inclusion of files as text.</li>
+      </ul>
+    </action>
     <action dev="JH" type="fix">
       Enabled the synchronization on Cocoon's session wrapper by assuring that only
       one wrapper exists per servlet session.

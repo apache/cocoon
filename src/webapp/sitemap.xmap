@@ -117,6 +117,7 @@
       <check-includes>true</check-includes>
     </map:transformer>
 
+    <map:transformer logger="sitemap.transformer.include" name="include" pool-max="16" src="org.apache.cocoon.transformation.IncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-max="16" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-max="16" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
