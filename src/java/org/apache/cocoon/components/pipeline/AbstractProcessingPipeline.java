@@ -183,9 +183,9 @@ public abstract class AbstractProcessingPipeline
     public void release() {
         try {
             CocoonComponentManager.removeFromAutomaticRelease(this);
-        } catch (ProcessingException pe) {
+        } catch (ProcessingException e) {
             // ignore this
-            getLogger().error("Unabled to release processing component.", pe);
+            getLogger().error("Unable to release self from automatic release.", e);
         }
     }
 
