@@ -48,6 +48,8 @@
             the xconf format to allow greater flexibility. If you require a stable and
             consistent method for accessing the CLI, it is recommended that you use the 
             command line parameter method.</note>
+      <p>Copy <code>$COCOON/lib/optional/servlet-2_3.jar</code> to your lib directory
+        (for example, WEB-INF/lib).</p>
       <s2 title="Using an Xconf file">
         <p>To start the CLI using an xconf file, on Unix do <code>./cocoon.sh cli -x &lt;xconf file&gt;</code>
            or on Windows: <code>cocoon cli -x &lt;xconf file&gt;</code>.</p>
