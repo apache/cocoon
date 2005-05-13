@@ -17,6 +17,7 @@ package org.apache.cocoon.environment.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
