@@ -63,18 +63,6 @@
         result.</b></para>
     <para><b><![CDATA[<xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>]]></b></para>
     <xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>
-
-    <para><b>Double fallback:</b></para>
-    <xi:include href="test1.xml">
-      <xi:fallback>
-        An error occured! You should not be seeing this.
-        <xi:include href="test1.xml">
-          <xi:fallback>
-            Double error occured! This is the content of the fallback element you're seeing.
-          </xi:fallback>
-        </xi:include>
-      </xi:fallback>
-    </xi:include>
     <hr/>
   
   </content>
