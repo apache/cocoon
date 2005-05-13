@@ -18,9 +18,9 @@
   <title>XInclude demo</title>
   <content>
     <para>This sample will include the content of the /html/body tag of the
-      file somehtml.xhtml. This is done using the custom 'elementpath' XPointer
+      file sample.xhtml. This is done using the custom 'elementpath' XPointer
       scheme, which avoids building a DOM (which the xpointer() scheme does).</para>
-    <para><b><![CDATA[somehtml.xhtml#xmlns(c=http://apache.org/cocoon/xpointer)c:elementpath(/html/body)]]></b></para>
-    <xi:include href="somehtml.xhtml#xmlns(c=http://apache.org/cocoon/xpointer)c:elementpath(/html/body)"/>
+    <para><b><![CDATA[sample.xhtml#xmlns(c=http://apache.org/cocoon/xpointer)c:elementpath(/html/body)]]></b></para>
+    <xi:include href="sample.xhtml#xmlns(c=http://apache.org/cocoon/xpointer)c:elementpath(/html/body)"/>
   </content>
 </page>

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
+
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,16 +16,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
-<page xmlns:i="http://apache.org/cocoon/include/1.0">
-  <slashdot>
-    <i:include src="cocoon:/slashdot"/>
-  </slashdot>
-  <moreover>
-    <i:include src="cocoon:/moreover"/>
-  </moreover>
-  <xmlhack>
-    <i:include src="cocoon:/xmlhack"/>
-  </xmlhack>
-</page>
+<para xmlns:i="http://apache.org/cocoon/include/1.0">
+  This is content in <b>itest4.xml</b>, will do a include of itest5.xml here:
+  <i:include src="itest5.xml"/>
+</para>

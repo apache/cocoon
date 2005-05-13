@@ -440,6 +440,18 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="add">
+      IncludeTransformer moved from the scratchpad into the core. It has following
+      features:
+      <ul>
+        <li>Supports caching, with configurable caching key.</li>
+        <li>Supports parallel include processing in multiple threads.</li>
+        <li>Included source URIs resolved relative to the document URI.</li>
+        <li>Supports recursive include processing (includes in included files).</li>
+        <li>Supports fallback element processing.</li>
+        <li>Supports inclusion of files as text.</li>
+      </ul>
+    </action>
     <action dev="VG" type="fix" fixes-bug="25098">
       Databases: SQLTransformer: Support queries nested into insert/delete/update
       queries. Return number of rows updated by insert/delete/update queries as
