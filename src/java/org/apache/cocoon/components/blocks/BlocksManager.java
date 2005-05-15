@@ -16,9 +16,11 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -37,10 +39,11 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.Environment;
 import org.xml.sax.SAXException;
 
 /**
@@ -59,6 +62,7 @@ public class BlocksManager
 
     private HashMap blockConfs = new HashMap();
     private HashMap blocks = new HashMap();
+    private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
@@ -120,7 +124,7 @@ public class BlocksManager
             this.resolver.resolveURI(CORE_COMPONENTS_XCONF);
         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
         Configuration coreComponentsConf =
-            builder.build( coreComponentsSource.getInputStream() );
+            builder.build(coreComponentsSource.getInputStream());
 
         ContainerUtil.configure(blockServiceManager, coreComponentsConf);
         ContainerUtil.initialize(blockServiceManager);
@@ -136,9 +140,16 @@ public class BlocksManager
             BlockManager blockManager = new BlockManager();
             ContainerUtil.enableLogging(blockManager, this.getLogger());
             ContainerUtil.contextualize(blockManager, this.context);
+            ContainerUtil.service(blockManager, blockServiceManager);
             ContainerUtil.configure(blockManager, blockConf);
             ContainerUtil.initialize(blockManager);
             this.blocks.put(entry.getKey(), blockManager);
+            String mountPath = blockConf.getChild("mount").getAttribute("path", null);
+            if (mountPath != null) {
+                this.mountedBlocks.put(mountPath, blockManager);
+                getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
+                                  " at " + mountPath);
+            }
         }
     }
 
@@ -147,6 +158,69 @@ public class BlocksManager
             this.serviceManager.release(this.resolver);
             this.resolver = null;
             this.serviceManager = null;
+        }
+    }
+
+    /* 
+       The BlocksManager could be merged with the Cocoon object and be
+       responsible for all processing. In that case it should
+       implement Processor, at the moment it is called from a protocol
+       and delagates to a BlockManager, so there is no point in
+       implementing the whole Processor interface.
+
+       The largest mount point that is a prefix of the URI is
+       chosen. The implementation could be made much more efficient.
+    */
+    public boolean process(Environment environment) throws Exception {
+        String uri = environment.getURI();
+        String oldPrefix = environment.getURIPrefix();
+        String oldURI = uri;
+        // The mount points start with '/' make sure that the URI also
+        // does, so that they are compareable.
+        if (uri.length() == 0 || uri.charAt(0) != '/') {
+            uri = "/" + uri;
+        }
+        // All mount points that are before or equal to the URI in
+        // lexicographical order. This includes all prefixes.
+        Map possiblePrefixes = mountedBlocks.tailMap(uri);
+        Iterator possiblePrefixesIt = possiblePrefixes.entrySet().iterator();
+        BlockManager block = null;
+        String mountPoint = null;
+        // Find the largest prefix to the uri
+        while (possiblePrefixesIt.hasNext()) {
+            Map.Entry entry = (Map.Entry) possiblePrefixesIt.next();
+            mountPoint = (String)entry.getKey();
+            if (uri.startsWith(mountPoint)) {
+                block = (BlockManager)entry.getValue();
+                break;
+            }
+        }
+        if (block == null) {
+            return false;
+        } else {
+            // Resolve the URI relative to the mount point
+            uri = uri.substring(mountPoint.length());
+            try {
+                environment.setURI("", uri);
+                return block.process(environment);
+            } finally {
+                environment.setURI(oldPrefix, oldURI);
+            }
+        }
+    }
+
+    public boolean process(String blockId, Environment environment) throws Exception {
+        BlockManager block = (BlockManager)this.blocks.get(blockId);
+        if (block == null) {
+            return false;
+        } else {
+            return block.process(environment);
+        }
+    }
+
+    private static class InverseLexicographicalOrder implements Comparator {
+        public int compare(Object o1, Object o2) {
+            return ((String)o2).compareTo((String)o1);
         }
     }
 }
