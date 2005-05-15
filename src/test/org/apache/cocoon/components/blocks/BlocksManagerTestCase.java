@@ -16,21 +16,29 @@
 package org.apache.cocoon.components.blocks;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.SitemapComponentTestCase;
+import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.environment.mock.MockEnvironment;
 
-public class BlocksManagerTestCase extends SitemapComponentTestCase {
+public class BlocksManagerTestCase extends SitemapTestCase {
 
-    /**
-     * This method should return true if the source factories should
-     * be added automatically. Can be overwritten by subclasses. The
-     * default is true.
-     */
-    protected boolean addSourceFactories() {
-        return false;
-    }
-    
-    public void testConfigure() throws ServiceException {
+    public void testCreate() throws ServiceException {
         BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
+        this.release(blocks);
+    }
+
+    public void testMount() throws Exception {
+        BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
+        MockEnvironment env = getEnvironment("/test1/test");
+        blocks.process(env);
+        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
+        this.release(blocks);
+    }
+
+    public void testBlockId() throws Exception {
+        BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
+        MockEnvironment env = getEnvironment("test");
+        blocks.process("test1id", env);
+        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
         this.release(blocks);
     }
 }
