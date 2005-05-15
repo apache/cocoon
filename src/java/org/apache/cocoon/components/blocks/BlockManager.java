@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.blocks;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
@@ -44,9 +44,9 @@ import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.xml.sax.SAXException;
 
 /**
  * @version SVN $Id$
@@ -113,7 +113,7 @@ public class BlockManager
         }
 
         // Read the block.xml file
-        String blockPath = this.location + "/COB-INF/block.xml";
+        String blockPath = this.location + "COB-INF/block.xml";
         SourceResolver resolver = null;
         Source source = null;
         Configuration block = null;
@@ -124,7 +124,13 @@ public class BlockManager
             source = resolver.resolveURI(blockPath);
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             block = builder.build( source.getInputStream() );
-        } catch (Exception e) {
+        } catch (ServiceException e) {
+            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
+            throw new ConfigurationException(msg, e);
+        } catch (IOException e) {
+            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
+            throw new ConfigurationException(msg, e);
+        } catch (SAXException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
         } finally {
