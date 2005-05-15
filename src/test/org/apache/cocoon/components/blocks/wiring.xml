@@ -18,7 +18,7 @@
         xsi:schemaLocation="http://apache.org/cocoon/blocks/wiring/1.0 wiring-schema-1.0.xsd"
 >
 
-  <block id="test1id" location="./test1/">
+  <block id="test1id" location="test1/">
     <mount path="/test1/"/>
     <connections>
       <connection name="test2" block="test2id"/>
@@ -28,6 +28,8 @@
     </properties>
   </block>
 
-  <block id="test2id" location="./test2/"/>
+  <block id="test2id" location="test2/">
+    <mount path="/test2/"/>
+  </block>
 
 </wiring>
