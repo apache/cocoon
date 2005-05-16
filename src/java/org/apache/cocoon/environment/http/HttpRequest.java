@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+import java.util.WeakHashMap;
+import java.lang.ref.WeakReference;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -57,8 +59,10 @@ public final class HttpRequest implements Request {
     /** The default form encoding of the servlet container */
     private String container_encoding;
 
-    /** The current session */
-    private HttpSession session;
+    /**
+     * The map to assure 1:1-mapping of server sessions and Cocoon session wrappers
+     */
+    private static final Map sessions = new WeakHashMap();
 
     private final Map attributes = new HashMap();
 
@@ -232,21 +236,27 @@ public final class HttpRequest implements Request {
      */
     public Session getSession(boolean create) {
         javax.servlet.http.HttpSession serverSession = this.req.getSession(create);
-        if ( null != serverSession) {
-            if ( null != this.session ) {
-                if ( this.session.wrappedSession != serverSession ) {
-                    // update wrapper
-                    this.session.wrappedSession = serverSession;
+        HttpSession session;
+        if (serverSession != null)
+        {
+            synchronized (sessions)
+            {
+                // retrieve existing wrapper
+                WeakReference ref = (WeakReference) sessions.get(serverSession);
+                if (ref == null || (session = (HttpSession) ref.get()) == null)
+                {
+                    // create new wrapper
+                    session = new HttpSession(serverSession);
+                    sessions.put(serverSession, new WeakReference(session));
                 }
-            } else {
-                // new wrapper
-                this.session = new HttpSession( serverSession );
             }
-        } else {
-            // invalidate
-            this.session = null;
         }
-        return this.session;
+        else
+        {
+            // invalidate
+            session = null;
+        }
+        return session;
     }
 
     public Session getSession() {
