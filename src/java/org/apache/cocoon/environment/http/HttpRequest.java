@@ -60,7 +60,7 @@ public final class HttpRequest implements Request {
     private String container_encoding;
 
     /** The map to assure 1:1-mapping of server sessions and Cocoon session wrappers */
-    private static final Map sessions = Collections.synchronizedMap(new WeakHashMap());
+    private static final Map sessions = new WeakHashMap();
 
     /**
      * Creates a HttpRequest based on a real HttpServletRequest object
@@ -227,12 +227,10 @@ public final class HttpRequest implements Request {
         javax.servlet.http.HttpSession serverSession = this.req.getSession(create);
         HttpSession session;
         if (serverSession != null) {
-            // no need to lock the map - it is synchronized
-            // synch on server session assures only one wrapper per session 
-            synchronized (serverSession) {
+            synchronized (sessions) {
                 // retrieve existing wrapper
-                session = (HttpSession)((WeakReference)sessions.get(serverSession)).get();
-                if (session == null) {
+                WeakReference ref = (WeakReference)sessions.get(serverSession);
+                if (ref == null || (session = (HttpSession)ref.get()) == null) {
                     // create new wrapper
                     session = new HttpSession(serverSession);
                     sessions.put(serverSession, new WeakReference(session));
