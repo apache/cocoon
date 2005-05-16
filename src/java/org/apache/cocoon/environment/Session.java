@@ -16,6 +16,7 @@
 package org.apache.cocoon.environment;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 /**
  *
@@ -195,6 +196,15 @@ public interface Session {
      *                                        invalidated session
      */
     void removeAttribute(String name);
+
+    /**
+     * Utility method for getting a <code>Map</code> view of the request attributes.
+     * Returns a <code>Map</code> with attributes.
+     *
+     * @return                a <code>Map</code> containing the request attributes.
+     *
+     */
+    Map getAttributes();
 
     /**
      *

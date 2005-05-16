@@ -20,9 +20,9 @@ import java.util.Hashtable;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractSession;
 
-public class MockSession implements Session {
+public class MockSession extends AbstractSession {
 
     private long creationtime = System.currentTimeMillis();
     private String id = "MockSession";

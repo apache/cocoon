@@ -18,6 +18,7 @@ package org.apache.cocoon.environment;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Map;
 import java.io.InputStream;
 
 /**
@@ -33,6 +34,8 @@ public interface Context {
     Object getAttribute(String name);
 
     void setAttribute(String name, Object value);
+
+    Map getAttributes();
 
     void removeAttribute(String name);
 

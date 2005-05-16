@@ -16,6 +16,7 @@
 package org.apache.cocoon.environment.commandline;
 
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractSession;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -25,10 +26,10 @@ import java.util.Hashtable;
  * Command-line version of Http Session.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CommandLineSession.java,v 1.2 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class CommandLineSession
-implements Session {
+extends AbstractSession {
 
     private long creationTime = System.currentTimeMillis();
 

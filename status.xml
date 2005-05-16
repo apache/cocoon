@@ -75,6 +75,7 @@
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
   <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
+  <person name="Daniel Fagerstrom" email="danielf@apache.org" id="DF"/>
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Antonio Gallardo" email="antonio@apache.org" id="AG"/>
@@ -195,6 +196,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="DF" type="update">
+     Added reflection friendly utility methods for the Cocoon environment according to vote
+     http://marc.theaimsgroup.com/?t=111590936900001&amp;r=1&amp;w=2:
+     Map getAttributes(), Map getParameters(), Map getHeaders() for Request
+     and Map getAttributes() for Session and Context.
+   </action>
    <action dev="LG" type="update">
      JXTemplateGenerator's ScriptManager uses transient store to cache parsed templates.
    </action>

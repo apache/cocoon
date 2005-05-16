@@ -35,8 +35,9 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractRequest;
 
-public class MockRequest implements Request {
+public class MockRequest extends AbstractRequest {
     
     private Hashtable attributes = new Hashtable();
     private Hashtable globalAttributes = new Hashtable();

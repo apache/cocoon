@@ -34,6 +34,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractRequest;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.commons.collections.IteratorUtils;
 
@@ -45,7 +46,7 @@ import org.apache.commons.collections.IteratorUtils;
  * @version CVS $Id$
  */
 
-public final class HttpRequest implements Request {
+public final class HttpRequest extends AbstractRequest {
 
     /** The real HttpServletRequest object */
     private final HttpServletRequest req;

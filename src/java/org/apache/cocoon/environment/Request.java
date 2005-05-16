@@ -240,6 +240,15 @@ public interface Request {
     void removeAttribute(String name, int scope);
 
     /**
+     * Utility method for getting a <code>Map</code> view of the request attributes.
+     * Returns a <code>Map</code> with attributes from the <code>GLOBAL_SCOPE</code>.
+     *
+     * @return                a <code>Map</code> containing the request attributes.
+     *
+     */
+    Map getAttributes();
+
+    /**
      *
      * Returns the name of the authentication scheme used to protect
      * the servlet, for example, "BASIC" or "SSL," or null if the servlet was
@@ -347,6 +356,15 @@ public interface Request {
 
     String[] getParameterValues(String name);
 
+
+    /**
+     * Utility method for getting a <code>Map</code> view of the request parameters.
+     * Returns a <code>Map</code> with request parameters.
+     *
+     * @return                a <code>Map</code> containing the request parameters.
+     *
+     */
+    Map getParameters();
 
     /**
      * Returns the name and version of the protocol the request uses
@@ -600,6 +618,15 @@ public interface Request {
 
     Enumeration getHeaderNames();
     
+    /**
+     * Utility method for getting a <code>Map</code> view of the request headers.
+     * Returns a <code>Map</code> with request headers.
+     *
+     * @return                a <code>Map</code> containing the request headers.
+     *
+     */
+    Map getHeaders();
+
     /**
      * Retrieves the body of the request as binary data using 
      * an <code>InputStream</code>.

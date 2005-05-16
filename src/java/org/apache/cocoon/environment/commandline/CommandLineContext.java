@@ -18,6 +18,7 @@ package org.apache.cocoon.environment.commandline;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.impl.ContextMap;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -31,7 +32,7 @@ import java.io.InputStream;
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @author ?
- * @version CVS $Id: CommandLineContext.java,v 1.3 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class CommandLineContext extends AbstractLogEnabled implements Context {
@@ -78,6 +79,10 @@ public class CommandLineContext extends AbstractLogEnabled implements Context {
             getLogger().debug("CommandlineContext: getAttributeNames");
         }
         return new IteratorEnumeration(this.attributes.keySet().iterator());
+    }
+
+    public Map getAttributes() {
+	return new ContextMap(this);
     }
 
     public URL getResource(String path) throws MalformedURLException {
