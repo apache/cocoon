@@ -24,16 +24,16 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.impl.AbstractContext;
 
 /**
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @author ?
- * @version CVS $Id: HttpContext.java,v 1.3 2004/05/07 17:23:42 joerg Exp $
+ * @version CVS $Id$
  */
 
-public final class HttpContext implements Context {
+public final class HttpContext extends AbstractContext {
 
     /** The ServletContext */
     private final ServletContext servletContext;

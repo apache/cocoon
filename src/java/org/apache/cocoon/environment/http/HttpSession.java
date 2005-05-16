@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.environment.http;
 
-import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractSession;
 
 import java.util.Enumeration;
 
@@ -44,12 +44,12 @@ import java.util.Enumeration;
  * will not be directly visible in another.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HttpSession.java,v 1.3 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  *
  */
 
 public final class HttpSession
-implements Session {
+extends AbstractSession {
 
     javax.servlet.http.HttpSession wrappedSession;
 

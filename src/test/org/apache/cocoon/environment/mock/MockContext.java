@@ -21,9 +21,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.io.InputStream;
 
-import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.impl.AbstractContext;
 
-public class MockContext implements Context {
+public class MockContext extends AbstractContext {
 
     private Hashtable attributes = new Hashtable();
     private Hashtable resources = new Hashtable();

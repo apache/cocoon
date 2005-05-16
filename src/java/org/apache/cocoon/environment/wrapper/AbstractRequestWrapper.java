@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractRequest;
 
 
 /**
@@ -36,7 +37,7 @@ import org.apache.cocoon.environment.Session;
  * @version CVS $Id$
  * @since 2.2
  */
-public abstract class AbstractRequestWrapper implements Request {
+public abstract class AbstractRequestWrapper extends AbstractRequest {
 
     /** The real {@link Request} object */
     protected final Request req;

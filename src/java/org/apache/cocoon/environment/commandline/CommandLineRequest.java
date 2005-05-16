@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.impl.AbstractRequest;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.SystemUtils;
 
@@ -43,7 +44,7 @@ import org.apache.commons.lang.SystemUtils;
  * NOTE: method with a non-compliant implementation are marked with FIXME
  * and should be fixed in the future if required
  */
-public class CommandLineRequest implements Request {
+public class CommandLineRequest extends AbstractRequest {
 
     private class EmptyEnumeration implements Enumeration {
         public boolean hasMoreElements() {
