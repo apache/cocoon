@@ -22,7 +22,7 @@
   </description>
 
   <!-- Build the Eclipse customized project's files -->
-  <target name="eclipse-customized-project" depends="prepare" description="Generate the Eclipse customized project files (using local.block.properties)">
+  <target name="eclipse-customized-project" description="Generate the Eclipse customized project files (using local.block.properties)">
     <echo message="Building Eclipse Customized Project Files"/>
     <xslt in="${gump.descriptor}"
             out="${build.temp}/blocks-eclipse.xml"
@@ -35,7 +35,7 @@
   </target>
 
   <!-- Generate the Emacs JDE project file -->
-  <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
+  <target name="emacs-project" description="Generate the Emacs project files">
     <path id="jar.files">
       <fileset dir="${build.webapp}/WEB-INF/lib">
         <include name="*.jar"/>
@@ -53,7 +53,7 @@
   </target>
 
   <!-- Build the Eclipse projects files -->
-  <target name="eclipse-project" depends="prepare" description="Generate the Eclipse project files">
+  <target name="eclipse-project" description="Generate the Eclipse project files">
 
     <echo message="Building Eclipse Project Files"/>
 
@@ -155,13 +155,13 @@
   <target name="eclipse-webapp-prepare" depends="eclipse-webapp-delete-jars, eclipse-webapp-restore-roles"
           description="Prepares the webapp directory to make it usable within Eclipse"/>
 
-  <target name="eclipse-webapp-restore-roles" depends="prepare" description="Restore cocoon.roles (for use with eclipse)">
+  <target name="eclipse-webapp-restore-roles" description="Restore cocoon.roles (for use with eclipse)">
       <copy file="${build.dest}/org/apache/cocoon/cocoon.roles"
             tofile="${build.webapp}/WEB-INF/classes/org/apache/cocoon/cocoon.roles"
             overwrite="yes"/>
   </target>
 
-  <target name="eclipse-webapp-delete-jars" depends="prepare">
+  <target name="eclipse-webapp-delete-jars">
       <!-- delete all jars and class files, they are already included in the project -->
       <delete>
           <fileset dir="${build.webapp}/WEB-INF">

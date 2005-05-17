@@ -188,7 +188,7 @@
     </jar>
   </target>
 
-  <target name="custom-conf" depends="init-tasks" description="Uses Cocoon's xpatch task to customize runtime configuration">
+  <target name="custom-conf" description="Uses Cocoon's xpatch task to customize runtime configuration">
     <xpatch file="${build.webapp}/sitemap.xmap" srcdir="">
        <include name="${customconf}/*.xmap" />
        <include name="${customconf}/*.xpipe" />

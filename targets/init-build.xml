@@ -21,8 +21,6 @@
     Initialization Targets
   </description>
 
-  <target name="init">
-
     <!-- Set the timestamps -->
     <tstamp/>
 
@@ -131,9 +129,6 @@
       <path location="${build.dest}"/>
     </path>
 
-  </target>
-
-  <target name="init-tasks" depends="init">
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
       <path refid="classpath"/>
@@ -191,12 +186,10 @@
         <pathelement location="tools/lib/ant-contrib-0.6.jar"/>
       </classpath>      
     </taskdef>
-  </target>
 
 <!-- === Preparation Targets ============================================= -->
 
   <!-- Prepare the build directory -->
-  <target name="prepare" depends="init-tasks">
     <echo>====================================================================
                  ${fullname} ${version} [${year}]
 ====================================================================
@@ -210,7 +203,6 @@
    - deprecation ... [${compiler.deprecation}]
 ====================================================================</echo>
     <mkdir dir="${build}"/>
-  </target>
 
 <!-- === Clean Targets =================================================== -->
 
@@ -220,17 +212,17 @@
          description="Cleans the cocoon build, webapp and standalone-demo"/>
 
   <!-- Clean the cocoon build directory -->
-  <target name="clean-cocoon" depends="init" description="Cleans the cocoon build">
+  <target name="clean-cocoon" description="Cleans the cocoon build">
     <delete dir="${build}"/>
   </target>
 
   <!-- Clean the webapp -->
-  <target name="clean-webapp" depends="init" description="Cleans the webapp">
+  <target name="clean-webapp" description="Cleans the webapp">
     <delete dir="${build.webapp}"/>
   </target>
 
   <!-- Clean the standalone demo -->
-  <target name="clean-standalone-demo" depends="init" description="Cleans the standalone-demo">
+  <target name="clean-standalone-demo" description="Cleans the standalone-demo">
     <delete dir="${build.standalone.demo}"/>
   </target>
 </project>

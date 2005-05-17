@@ -36,7 +36,7 @@
   <import file="${env.FORREST_HOME}/forrest.build.xml" optional="true"/>
 -->
 
-  <target name="do-forrest" depends="prepare-extra-docs, prepare, prepare-docs, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
+  <target name="do-forrest" depends="prepare-extra-docs, prepare-docs, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
     <antcall target="site"/>
   </target>
 

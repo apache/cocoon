@@ -42,7 +42,7 @@
     <!-- tbd -->
   </target>
   
-  <target name="prepare-docs" unless="exclude.documentation" depends="init-tasks"
+  <target name="prepare-docs" unless="exclude.documentation"
     description="Test documentation target">
     <!-- create sitemap components: Task has to be rewritten -->
     <!--sitemap-components docDir="build/xdocs/userdocs" source="./src/java"/-->
@@ -162,7 +162,7 @@
 -->
   <!-- Set a variable if the generated printer docs are already up-to-date. -->
   <!--
-  <target name="printer-docs_check" depends="prepare">
+  <target name="printer-docs_check">
     <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
       <srcfiles dir="." includes="status.xml"/>
       <srcfiles dir="${docs}" includes="**/*.xml"/>
@@ -215,7 +215,7 @@
   -->
   <!-- Creates Javadocs -->
   <!-- Obsolete:
-  <target name="javadocs" depends="prepare, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
+  <target name="javadocs" depends="javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
 
     <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
       <equals arg1="1.4" arg2="${ant.java.version}"/>

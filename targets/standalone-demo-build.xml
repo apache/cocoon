@@ -21,7 +21,7 @@
     @author bdelacretaz@codeconsult.ch
  -->
 
-<target name="standalone-demo" depends="init, webapp" description="build webapp and copy files for standalone demo">
+<target name="standalone-demo" depends="webapp" description="build webapp and copy files for standalone demo">
 
     <!-- setup -->
     <mkdir dir="${build.standalone.demo}"/>

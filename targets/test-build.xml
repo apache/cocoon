@@ -105,7 +105,7 @@
          target="tests"/>
   </target>
 
-  <target name="junit-tests-report" depends="init">
+  <target name="junit-tests-report">
     <mkdir dir="${build.test.report}"/>
     <junitreport todir="${build.test.output}">
       <fileset dir="${build.test.output}">
@@ -223,7 +223,7 @@
     <clover-historypoint historyDir="${build}/clover/history"/>
   </target>
 
-  <target name="clover.report" depends="init, clover.on" if="clover.present">
+  <target name="clover.report" depends="clover.on" if="clover.present">
     <clover-report>
       <current outfile="${build}/clover-report">
         <format type="html"/>

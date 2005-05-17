@@ -26,7 +26,7 @@
           depends="compile-core, compile-deprecated, compile-tests"/>
 
   <!-- compiles mocks -->
-  <target name="compile-mocks" depends="prepare">
+  <target name="compile-mocks">
     <mkdir dir="${build.mocks}"/>
     <javac srcdir="${mocks}"
            destdir="${build.mocks}"
@@ -63,7 +63,7 @@
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare, clover.off"
+  <target name="compile-deprecated" depends="clover.off"
           unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
     <!--
@@ -212,7 +212,7 @@
 <!-- === Block Targets =================================================== -->
 
   <!-- prepares the blocks build -->
-  <target name="prepare-blocks" depends="prepare">
+  <target name="prepare-blocks">
     <mkdir dir="${build.blocks}"/>
 
     <copy file="${gump.descriptor}" tofile="${build.temp}/gump.xml" overwrite="true"/>
@@ -240,7 +240,7 @@
          target="compile"/>
   </target>
 
-  <target name="call-block-target" depends="prepare">
+  <target name="call-block-target">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
