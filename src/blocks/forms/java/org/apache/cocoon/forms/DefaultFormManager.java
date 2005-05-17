@@ -82,6 +82,7 @@ public class DefaultFormManager
 
     public void initialize() throws Exception {
         widgetDefinitionBuilderSelector = new SimpleServiceSelector("widget", WidgetDefinitionBuilder.class);
+        widgetDefinitionBuilderSelector.contextualize(avalonContext);
         widgetDefinitionBuilderSelector.service(new ServiceManager() {
             final String WIDGET_DEFINITION_BUILDER_SELECTOR_ROLE = WidgetDefinitionBuilder.class.getName() + "Selector";
 
