@@ -48,6 +48,10 @@
       | Generic fi:field : produce an <input>
       +-->
   <xsl:template match="fi:field">
+    <xsl:if test="fi:captcha-image">
+      <img src="captcha-{@id}.jpg" style="vertical-align:middle"/>
+      <xsl:text> </xsl:text>
+    </xsl:if>
     <input name="{@id}" id="{@id}" value="{fi:value}" title="{fi:hint}" type="text">
       <xsl:apply-templates select="." mode="styling"/>
     </input>
