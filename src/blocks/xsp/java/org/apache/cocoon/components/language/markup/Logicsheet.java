@@ -95,6 +95,32 @@ public class Logicsheet extends AbstractLogEnabled
         }
     }
 
+    /**
+     * Return true if other logicsheet has the same system id.
+     */
+    public boolean equals(Object other)
+    {
+        if (other == this)
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Logicsheet))
+            return false;
+        Logicsheet that = (Logicsheet)other;
+        return this.systemId.equals(that.systemId);
+    }
+
+    /**
+     * Return hash code value for logicsheet.
+     */
+    public int hashCode()
+    {
+        return this.systemId.hashCode();
+    }
+
+    /**
+     * Return system id which uniquely identifies logicsheet.
+     */
     public String getSystemId()
     {
         return this.systemId;
