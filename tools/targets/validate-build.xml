@@ -22,7 +22,7 @@
   </description>
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
-  <target name="validate-jars" depends="prepare" unless="internal.exclude.validate.jars">
+  <target name="validate-jars" unless="internal.exclude.validate.jars">
     <path id="all.jars">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
@@ -79,7 +79,7 @@
     This needs to be done at the end of the build, because the cocoon.xconf
     and cocoon.roles are automatically constructed.
   -->
-  <target name="validate-config" depends="prepare" unless="internal.exclude.validate.config">
+  <target name="validate-config" unless="internal.exclude.validate.config">
     <echo message="Validating some important configuration files"/>
 
     <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
@@ -123,7 +123,7 @@
 
   </target>
 
-  <target name="validate-sitemaps" depends="init-tasks"
+  <target name="validate-sitemaps"
           description="Standalone target to validate all sitemaps">
     <echo message="Validating all sitemap.xmap using RELAX NG ..."/>
     <echo>Note: This is experimental.
@@ -143,7 +143,7 @@ Blocks sitemaps are deliberately excluded.
     </jing>
   </target>
 
-  <target name="validate-stylesheets" depends="init-tasks"
+  <target name="validate-stylesheets"
           description="Standalone target to validate all stylesheets">
     <echo message="Validating all XSLT stylesheets using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
