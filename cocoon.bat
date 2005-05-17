@@ -108,6 +108,7 @@ if ""%1"" == ""servlet"" goto doServlet
 if ""%1"" == ""servlet-admin"" goto doAdmin
 if ""%1"" == ""servlet-debug"" goto doDebug
 IF ""%1"" == ""servlet-profile"" goto doProfile
+IF ""%1"" == ""yourkit-profile"" goto doYourkitProfile
 
 echo Usage: cocoon (action)
 echo actions:
@@ -116,6 +117,7 @@ echo   servlet         Run Cocoon in a servlet container
 echo   servlet-admin   Run Cocoon in a servlet container and turn container web administration on
 echo   servlet-debug   Run Cocoon in a servlet container and turn on remote JVM debug
 echo   servlet-profile Run Cocoon in a servlet container and turn on JVM profiling
+echo   yourkit-profile Run Cocoon in a servlet container and turn on Yourkit JVM profiling
 goto end
 
 :: ----- Cli -------------------------------------------------------------------
@@ -156,6 +158,13 @@ goto end
 
 :doProfile
 %EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xrunhprof:heap=all,cpu=samples,thread=y,depth=3 -classpath "%CP%" "-Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed" "-Dwebapp=%JETTY_WEBAPP%" "-Dhome=%COCOON_HOME%" -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% "-Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib;%COCOON_HOME%\lib\endorsed" -Dloader.main.class=org.mortbay.jetty.Server Loader "%COCOON_HOME%\tools\jetty\conf\main.xml"
+
+:: ----- Yourkit Profile --------------------------------------------------------
+
+:doYourkitProfile
+echo x
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xrunyjpagent:port=10000 -classpath "%CP%" "-Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed" "-Dwebapp=%JETTY_WEBAPP%" "-Dhome=%COCOON_HOME%" -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% "-Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib;%COCOON_HOME%\lib\endorsed" -Dloader.main.class=org.mortbay.jetty.Server Loader "%COCOON_HOME%\tools\jetty\conf\main.xml"
+goto end
 
 :: ----- End -------------------------------------------------------------------
 
