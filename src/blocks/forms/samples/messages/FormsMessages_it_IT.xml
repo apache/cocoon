@@ -49,6 +49,7 @@
 
   <message key="validation.mod10">Verifica Mod 10 fallita.</message>
 
+  <message key="validation.captcha.mismatch">Verifica CAPTCHA fallita.</message>
 
   <message key="aggregatedfield.split-failed">Il valore non corrisponde alla seguente espressione regolare: {0}</message>
   <message key="upload.invalid-type">Tipo del contenuto non valido.</message>

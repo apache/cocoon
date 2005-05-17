@@ -44,6 +44,7 @@
   <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
   <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
   <sample name="Multipage wizard" href="do-multipage.flow">A multipage wizard, using widget states and actions to move between pages.</sample>
+  <sample name="CAPTCHA validation" href="captcha/">CAPTCHA validation (requires <a href="/samples/blocks/batik/">Batik block</a>)</sample>
  </group>
 
  <group name="Binding Samples">
