@@ -21,7 +21,7 @@
     Samples Targets
   </description>
 
-  <target name="samples" depends="prepare, clover.off"
+  <target name="samples" depends="clover.off"
           unless="internal.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
@@ -72,7 +72,7 @@
             includes="**/*.xwelcome"/>
   </target>
 
-  <target name="block-samples" depends="prepare" unless="internal.exclude.webapp.samples">
+  <target name="block-samples" unless="internal.exclude.webapp.samples">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
