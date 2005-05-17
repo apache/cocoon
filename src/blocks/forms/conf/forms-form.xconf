@@ -41,6 +41,7 @@
       <widget name="struct" src="org.apache.cocoon.forms.formmodel.StructDefinitionBuilder"/>
       <widget name="union" src="org.apache.cocoon.forms.formmodel.UnionDefinitionBuilder"/>
       <widget name="group" src="org.apache.cocoon.forms.formmodel.GroupDefinitionBuilder"/>
+      <widget name="captcha" src="org.apache.cocoon.forms.formmodel.CaptchaDefinitionBuilder"/>
     </widgets>
   </forms-formmanager>
 </xconf>
