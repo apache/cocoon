@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="UC" type="add">
+      Added CAPTCHA validator to Forms.
+    </action>
     <action dev="VG" type="add">
       IncludeTransformer moved from the scratchpad into the core. It has following
       features:
