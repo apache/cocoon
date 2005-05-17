@@ -94,6 +94,7 @@
   <person name="Michael Melhem" email="michaelm@apache.org" id="MM"/>
   <person name="Stephan Michels" email="stephan@apache.org" id="SMS"/>
   <person name="John Morrison" email="morrijr@apache.org" id="JM"/>
+  <person name="Alfred Nathaniel" email="anathaniel@apache.org" id="AN"/>
   <person name="Steven Noels" email="stevenn@apache.org" id="SN"/>
   <person name="Christopher Oliver" email="coliver@apache.org" id="CO"/>
   <person name="Giacomo Pati" email="giacomo@apache.org" id="GP"/>
@@ -447,6 +448,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AN" type="fix" fixes-bug="32934">
+      XSP Block: Race condition could lead to duplicate application of same logicsheet
+      with spurious compilation errors or undefined runtime behaviour.
+    </action>
     <action dev="VG" type="add">
       IncludeTransformer moved from the scratchpad into the core. It has following
       features:
