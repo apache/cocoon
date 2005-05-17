@@ -35,6 +35,14 @@ public interface Context {
 
     void setAttribute(String name, Object value);
 
+    /**
+     * Utility method for getting a <code>Map</code> view of the context attributes.
+     * Returns a <code>Map</code> with context attributes.
+     *
+     * @return                a <code>Map</code> containing the context attributes.
+     *
+     * @since 2.2
+     */
     Map getAttributes();
 
     void removeAttribute(String name);

@@ -203,6 +203,7 @@ public interface Session {
      *
      * @return                a <code>Map</code> containing the request attributes.
      *
+     * @since 2.2
      */
     Map getAttributes();
 

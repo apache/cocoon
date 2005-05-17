@@ -245,6 +245,7 @@ public interface Request {
      *
      * @return                a <code>Map</code> containing the request attributes.
      *
+     * @since 2.2
      */
     Map getAttributes();
 
@@ -363,6 +364,7 @@ public interface Request {
      *
      * @return                a <code>Map</code> containing the request parameters.
      *
+     * @since 2.2
      */
     Map getParameters();
 
@@ -624,6 +626,7 @@ public interface Request {
      *
      * @return                a <code>Map</code> containing the request headers.
      *
+     * @since 2.2
      */
     Map getHeaders();
 
