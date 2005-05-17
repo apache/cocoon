@@ -72,34 +72,38 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         if (initialized) {
             return;
         }
-        if (getLogger().isDebugEnabled())
-            getLogger().debug("initialize java flow interpreter");
 
-        classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
+        try {
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("initialize java flow interpreter");
 
-        for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
+            classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
 
-            String classname = (String) scripts.next();
-            if (getLogger().isDebugEnabled()) 
-                getLogger().debug("registered java class \"" + classname + "\" for flow");
+            for (Iterator scripts = needResolve.iterator(); scripts.hasNext();) {
 
-            if (!Continuable.class.isAssignableFrom(Class.forName(classname))) {
-                getLogger().error("java class \"" + classname + "\" doesn't implement Continuable");
-                continue;
-            }            
+                String classname = (String) scripts.next();
+                if (getLogger().isDebugEnabled())
+                    getLogger().debug("registered java class \"" + classname + "\" for flow");
 
-            Class clazz = classloader.loadClass(classname);
+                if (!Continuable.class.isAssignableFrom(Class.forName(classname))) {
+                    getLogger().error("java class \"" + classname + "\" doesn't implement Continuable");
+                    continue;
+                }
 
-            try {
+                Class clazz = classloader.loadClass(classname);
+
                 final Map m = ReflectionUtils.discoverMethods(clazz);
                 methods.putAll(m);
-            } catch (Exception e) {
-                throw new ConfigurationException("cannot get methods by reflection", e);
-            }
+                
+                //Only initialize if everything so far hasn't thrown any exceptions.
+                initialized = true;
 
+            }
+        } catch (final Exception e) {
+            throw new ConfigurationException("Cannot initialize JavaInterpreter", e);
         }
 
-        initialized = true;
+       
     }
 
     /**
