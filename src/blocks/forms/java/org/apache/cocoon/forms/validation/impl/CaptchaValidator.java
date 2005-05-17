@@ -38,7 +38,8 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
 public class CaptchaValidator implements WidgetValidator {
 
     private final Context avalonContext;
-
+    private static final String VALIDATION_MESSAGE_KEY = "validation.captcha.mismatch"; 
+                                                          
     public CaptchaValidator(Context avalonContext) {
         this.avalonContext = avalonContext;
     }
@@ -58,7 +59,7 @@ public class CaptchaValidator implements WidgetValidator {
         }
         boolean result = widget.getValue() != null && widget.getValue().equals(session.getAttribute(CaptchaField.SESSION_ATTR_PREFIX + widget.getId()));
         if (! result) {
-            ((ValidationErrorAware) widget).setValidationError(new ValidationError("general.captcha-mismatch"));
+            ((ValidationErrorAware) widget).setValidationError(new ValidationError(VALIDATION_MESSAGE_KEY));
         }
         return result;
     }
