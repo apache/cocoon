@@ -28,7 +28,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -40,6 +39,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
@@ -57,6 +57,7 @@ public class BlocksManager
     public static String CORE_COMPONENTS_XCONF =
         "resource://org/apache/cocoon/components/blocks/core-components.xconf";
     private ServiceManager serviceManager;
+    private CocoonServiceManager blockServiceManager;
     private SourceResolver resolver;
     private Context context;
 
@@ -115,10 +116,8 @@ public class BlocksManager
         Core core = (Core)this.serviceManager.lookup(Core.ROLE);
         ServiceManager blockParentServiceManager =
             new CoreUtil.RootServiceManager(null, core);
-        CocoonServiceManager blockServiceManager =
+        this.blockServiceManager =
             new CocoonServiceManager(blockParentServiceManager);
-        ContainerUtil.enableLogging(blockServiceManager, this.getLogger());
-        ContainerUtil.contextualize(blockServiceManager, this.context);
 
         Source coreComponentsSource =
             this.resolver.resolveURI(CORE_COMPONENTS_XCONF);
@@ -126,8 +125,11 @@ public class BlocksManager
         Configuration coreComponentsConf =
             builder.build(coreComponentsSource.getInputStream());
 
-        ContainerUtil.configure(blockServiceManager, coreComponentsConf);
-        ContainerUtil.initialize(blockServiceManager);
+        LifecycleHelper.setupComponent(blockServiceManager,
+                                       this.getLogger(),
+                                       this.context,
+                                       null,
+                                       coreComponentsConf);
 
         // Create and store all blocks
 
@@ -138,11 +140,11 @@ public class BlocksManager
             getLogger().debug("Creating " + blockConf.getName() +
                               " id=" + blockConf.getAttribute("id"));
             BlockManager blockManager = new BlockManager();
-            ContainerUtil.enableLogging(blockManager, this.getLogger());
-            ContainerUtil.contextualize(blockManager, this.context);
-            ContainerUtil.service(blockManager, blockServiceManager);
-            ContainerUtil.configure(blockManager, blockConf);
-            ContainerUtil.initialize(blockManager);
+            LifecycleHelper.setupComponent(blockManager,
+                                           this.getLogger(),
+                                           this.context,
+                                           blockServiceManager,
+                                           blockConf);
             this.blocks.put(entry.getKey(), blockManager);
             String mountPath = blockConf.getChild("mount").getAttribute("path", null);
             if (mountPath != null) {
@@ -154,6 +156,16 @@ public class BlocksManager
     }
 
     public void dispose() {
+        Iterator blocksIter = this.blocks.entrySet().iterator();
+        while (blocksIter.hasNext()) {
+            LifecycleHelper.dispose(blocksIter.next());
+        }
+        if (this.blockServiceManager != null) {
+            LifecycleHelper.dispose(this.blockServiceManager);
+            this.blockServiceManager = null;
+        }
+        this.blocks = null;
+        this.mountedBlocks = null;
         if (this.serviceManager != null) {
             this.serviceManager.release(this.resolver);
             this.resolver = null;
