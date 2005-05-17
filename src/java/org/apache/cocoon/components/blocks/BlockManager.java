@@ -27,7 +27,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -39,6 +38,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
@@ -160,8 +160,6 @@ public class BlockManager
 
         // Create an own service manager
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
-        ContainerUtil.enableLogging(this.serviceManager, this.getLogger());
-        ContainerUtil.contextualize(this.serviceManager, this.context);
 
         // Hack to put a sitemap configuration for the main sitemap of
         // the block into the service manager
@@ -181,8 +179,11 @@ public class BlockManager
         conf.addChild(sitemapConf);
         conf.addChild(resolverConf);
 
-        ContainerUtil.configure(this.serviceManager, conf);
-        ContainerUtil.initialize(this.serviceManager);
+        LifecycleHelper.setupComponent(this.serviceManager,
+                                       this.getLogger(),
+                                       this.context,
+                                       null,
+                                       conf);
 
         this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
         final Processor processor = EnvironmentHelper.getCurrentProcessor();
@@ -198,14 +199,22 @@ public class BlockManager
 
         this.environmentHelper = new EnvironmentHelper(
                 (URL)this.context.get(ContextHelper.CONTEXT_ROOT_URL));
-        ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
-        ContainerUtil.service(this.environmentHelper, this.serviceManager);
+        LifecycleHelper.setupComponent(this.environmentHelper,
+                                       this.getLogger(),
+                                       null,
+                                       this.serviceManager,
+                                       null);
     }
 
     public void dispose() {
+        if (this.environmentHelper != null) {
+            LifecycleHelper.dispose(this.environmentHelper);
+            this.environmentHelper = null;
+        }
         if (this.serviceManager != null) {
             this.serviceManager.release(this.sourceResolver);
             this.sourceResolver = null;
+            LifecycleHelper.dispose(this.serviceManager);
             this.serviceManager = null;
         }
         this.parentServiceManager = null;
