@@ -27,6 +27,7 @@
     <validator name="assert" class="org.apache.cocoon.forms.validation.impl.AssertValidatorBuilder"/>
     <validator name="mod10" class="org.apache.cocoon.forms.validation.impl.Mod10ValidatorBuilder"/>
     <validator name="regexp" class="org.apache.cocoon.forms.validation.impl.RegExpValidatorBuilder"/>
+    <validator name="captcha" class="org.apache.cocoon.forms.validation.impl.CaptchaValidatorBuilder"/>
   </forms-validators>
 
 </xconf>
