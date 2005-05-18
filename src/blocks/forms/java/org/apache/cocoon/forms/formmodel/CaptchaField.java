@@ -56,10 +56,10 @@ public class CaptchaField extends Field {
 
     private static final String IMAGE_EL = "captcha-image";
     private static final String SECRET_CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-    private static final int SECRET_LENGTH = 7;
     private static final int SESSION_ATTR_NAME_LENGTH = 6;
     
     private Context avalonContext;
+    private int length;
 
     /**
      * Random number generator used to create session attribute name.
@@ -80,14 +80,15 @@ public class CaptchaField extends Field {
         random.setSeed(System.currentTimeMillis());
     }
 
-    public CaptchaField(FieldDefinition fieldDefinition, Context avalonContext) {
+    public CaptchaField(CaptchaFieldDefinition fieldDefinition, Context avalonContext) {
         super(fieldDefinition);
         this.avalonContext = avalonContext;
+        this.length = fieldDefinition.getLength();
     }
     
     private String generateSecret() {
-        StringBuffer secret = new StringBuffer(SECRET_LENGTH);
-        for (int n = 0 ; n < SECRET_LENGTH ; n++) {
+        StringBuffer secret = new StringBuffer(length);
+        for (int n = 0 ; n < length ; n++) {
             int randomnumber = random.nextInt(SECRET_CHARS.length());
             secret.append(SECRET_CHARS.charAt(randomnumber)); 
         }

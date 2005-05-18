@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<svg width="200" height="75">
+<svg width="210" height="75">
     <defs>
         <filter id="blur2">
             <feGaussianBlur stdDeviation="2"/>

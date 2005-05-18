@@ -24,7 +24,7 @@
 
   <fd:widgets>
   
-    <fd:captcha id="f1" required="true">
+    <fd:captcha id="f1" required="true" length="8">
       <fd:label>Copy the string shown on the right into the input field</fd:label>
       <fd:datatype base="string"/>
       <fd:validation>
