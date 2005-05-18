@@ -15,9 +15,6 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.validation.WidgetValidator;
@@ -31,18 +28,11 @@ import org.w3c.dom.Element;
  * @see org.apache.cocoon.forms.validation.impl.CaptchaValidator
  * @version $Id$
  */
-public class CaptchaValidatorBuilder implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
-    
-    private Context avalonContext;
-
-    public void contextualize(Context context) throws ContextException {
-        System.err.println("CaptchaValidatorBuilder.contextualize(" + context + ")");
-        this.avalonContext = context;
-    }
+public class CaptchaValidatorBuilder implements WidgetValidatorBuilder, ThreadSafe {
 
     public WidgetValidator build(Element validationRuleElement,
             WidgetDefinition definition) throws Exception {
-        return new CaptchaValidator(avalonContext);
+        return new CaptchaValidator();
     }
 
 }

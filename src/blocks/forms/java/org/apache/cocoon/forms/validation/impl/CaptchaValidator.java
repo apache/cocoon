@@ -15,13 +15,6 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import java.util.Map;
-
-import org.apache.avalon.framework.context.Context;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.forms.formmodel.CaptchaField;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
@@ -37,27 +30,14 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  */
 public class CaptchaValidator implements WidgetValidator {
 
-    private final Context avalonContext;
     private static final String VALIDATION_MESSAGE_KEY = "validation.captcha.mismatch"; 
-                                                          
-    public CaptchaValidator(Context avalonContext) {
-        this.avalonContext = avalonContext;
-    }
 
     public boolean validate(Widget widget) {
         if (! (widget instanceof ValidationErrorAware)) {
             // Invalid widget type
             throw new IllegalArgumentException("Widget '" + widget.getRequestParameterName() + "' is not ValidationErrorAware");
         }
-        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
-        Session session = ObjectModelHelper.getRequest(objectModel).getSession(false);
-        if (session == null) {
-            throw new RuntimeException("No session associated with request.");
-        }
-        if (session.getAttribute(CaptchaField.SESSION_ATTR_PREFIX + widget.getId()) == null) {
-            throw new RuntimeException("No CAPTCHA attribute associated with widget " + widget.getId());
-        }
-        boolean result = widget.getValue() != null && widget.getValue().equals(session.getAttribute(CaptchaField.SESSION_ATTR_PREFIX + widget.getId()));
+        boolean result = widget.getValue() != null && widget.getValue().equals(widget.getAttribute("secret"));
         if (! result) {
             ((ValidationErrorAware) widget).setValidationError(new ValidationError(VALIDATION_MESSAGE_KEY));
         }
