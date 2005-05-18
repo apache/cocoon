@@ -16,7 +16,10 @@
 -->
 <!-- The only difference between this file and the form1_template_flow.xml
      is the value of the action attribute on the ft:form-template element -->
-<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      
   <title>Sample form</title>
   <content>
     <ft:form-template action="form1" method="POST">

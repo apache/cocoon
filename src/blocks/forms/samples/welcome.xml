@@ -107,6 +107,15 @@
     </sample>
  </group>
  
+  <group name="Profiling information">
+    <note>
+      These samples concentrate on Cocoon Forms and JXTemplate in order to collect profiling information.
+      In order to keep the samples as lean as possible, an action is used as controller.
+    </note>
+    <sample name="form1 - JXTemplate" href="form1-jx-macro">Render form using JXTemplate macros</sample>
+    <sample name="form1 - FormsTransformer" href="form1-cforms-transformer">Render form using the FormsTransformer</sample>    
+  </group>  
+ 
  <group name="Experimental Flowscript API for Cocoon Forms">
   <note>
     The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
