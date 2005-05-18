@@ -49,5 +49,9 @@ public class CaptchaDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBu
         // parse "@required"
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         definition.setRequired(required);
+        
+        // parse "@length"
+        int length = DomHelper.getAttributeAsInteger(widgetElement, "length", 7);
+        ((CaptchaFieldDefinition) definition).setLength(length);
     }
 }

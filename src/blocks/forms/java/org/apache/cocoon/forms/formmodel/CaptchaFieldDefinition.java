@@ -26,6 +26,7 @@ import org.apache.avalon.framework.context.Context;
 public class CaptchaFieldDefinition extends FieldDefinition {
     
     private Context avalonContext;
+    private int length;
 
     public CaptchaFieldDefinition(Context avalonContext) {
         this.avalonContext = avalonContext;
@@ -34,6 +35,15 @@ public class CaptchaFieldDefinition extends FieldDefinition {
     public Widget createInstance() {
         CaptchaField field = new CaptchaField(this, avalonContext);
         return field;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        checkMutable();
+        this.length = length;
     }
 
 }
