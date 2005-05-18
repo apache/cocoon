@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
@@ -42,6 +43,7 @@ import org.xml.sax.SAXException;
 public class JXMacrosHelper {
 
     private XMLConsumer cocoonConsumer;
+    private Request request;    
     private ArrayStack stack = new ArrayStack();
     private Map classes; // lazily created
 
@@ -51,14 +53,28 @@ public class JXMacrosHelper {
      * @param consumer the generator's consumer
      * @return a helper object
      */
-    public static JXMacrosHelper createHelper(XMLConsumer consumer) {
-        return new JXMacrosHelper(consumer);
+    public static JXMacrosHelper createHelper(XMLConsumer consumer, Request request) {
+        System.out.println("bla");
+        return new JXMacrosHelper(consumer, request);
     }
 
-    public JXMacrosHelper(XMLConsumer consumer) {
+    public JXMacrosHelper(XMLConsumer consumer, Request request) {
         this.cocoonConsumer = consumer;
+        this.request = request;
     }
+    
 
+    public Form getForm(Form form, String attributeName) {
+        Form returnForm = form;
+        // if there hasn't been passed a form object, try to find it in the request
+        if(returnForm == null) {
+            returnForm = (Form) this.request.getAttribute(attributeName);
+        }
+        if(returnForm != null) {
+            return returnForm;
+        }
+        throw new NullPointerException("There hasn't been passed a form object to the template!");
+    }
     public void startForm(Form form, Map attributes) throws SAXException {
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
