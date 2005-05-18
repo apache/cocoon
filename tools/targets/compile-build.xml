@@ -21,103 +21,113 @@
     Compilation Targets
   </description>
 
+  <!-- compilation parts used by all targets -->
+  <presetdef name="cocoon.javac">
+     <javac 
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+   </presetdef>
+
+   <macrodef name="cocoon.compile">
+   <attribute name="destdir"/>
+   <attribute name="srcdir"/>
+   <attribute name="classpathref" default="classpath"/> 
+   <sequential>
+    <mkdir dir="@{destdir}"/>
+    <!-- copy those files that need to be in the classpath -->
+      <copy todir="@{destdir}">
+        <fileset dir="@{srcdir}">
+          <exclude name="**/*.java"/>
+        </fileset>
+      </copy>
+      <cocoon.javac srcdir="@{srcdir}"
+                    destdir="@{destdir}"/>
+      </sequential>
+    </macrodef>
+
   <!-- compiles everything -->
   <target name="compile"
           depends="compile-core, compile-deprecated, compile-tests"/>
 
   <!-- compiles mocks -->
   <target name="compile-mocks">
-    <mkdir dir="${build.mocks}"/>
-    <javac srcdir="${mocks}"
-           destdir="${build.mocks}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           nowarn="${compiler.nowarn}"
-           compiler="${compiler}"
-           classpathref="classpath"/>
+    <cocoon.compile srcdir="${mocks}"
+                           destdir="${build.mocks}"/>
   </target>
 
   <!-- compiles the core -->
   <target name="compile-core" depends="compile-mocks, clover.on">
-    <!-- copy those files that need to be in the classpath -->
-    <copy todir="${build.dest}">
-      <fileset dir="${java}">
-        <exclude name="**/*.java"/>
-      </fileset>
-    </copy>
-
-    <echo message="Compiling Cocoon Core"/>
-
-    <javac srcdir="${java}"
-           destdir="${build.dest}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           nowarn="${compiler.nowarn}"
-           classpathref="classpath"/>
+    <cocoon.compile srcdir="${java}"
+                           destdir="${build.dest}"/>
   </target>
 
   <!-- compiles deprecated code -->
   <target name="compile-deprecated" depends="clover.off"
           unless="internal.exclude.deprecated">
-    <mkdir dir="${build.deprecated}"/>
     <!--
     <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
             srcdir="${deprecated.conf}"
             includes="**/*.xroles"/>
     -->
-    <javac srcdir="${deprecated.src}"
-           destdir="${build.deprecated}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           compiler="${compiler}"
-           classpathref="classpath"/>
+    <cocoon.compile srcdir="${deprecated.src}"
+                          destdir="${build.deprecated}"/>
   </target>
 
   <!-- compiles tests classes -->
   <target name="compile-tests"
           depends="compile-core, compile-deprecated, clover.off">
-    <mkdir dir="${build.test}"/>
-
-    <!-- Copy test files to build test dir -->
-    <copy todir="${build.test}" filtering="on">
-      <fileset dir="${test}" excludes="**/*.java"/>
-    </copy>
-
-    <path id="test.classpath">
-      <path refid="classpath"/>
-      <pathelement location="${build.dest}" />
-       <!-- FIXME Resolver tests depend on deprecated stuff -->
-      <pathelement location="${build.deprecated}" />
-      <pathelement location="${build.test}" />
-      <fileset dir="${tools.lib}">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
 
     <!-- Compile tests -->
-    <javac destdir="${build.test}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           compiler="${compiler}"
-           classpathref="test.classpath">
-       <src path="${test}"/>
-    </javac>
+    <cocoon.compile srcdir="${test}"
+                           destdir="${build.test}"
+                           classpathref="test.classpath"/>
   </target>
 
 <!-- === Package Targets ================================================= -->
 
+   <macrodef name="cocoon.jar">
+   <attribute name="name"/>
+   <attribute name="dir"/>
+   <attribute name="index" default="false"/>
+   <attribute name="update" default="yes"/>   
+   <sequential>
+        <jar jarfile="${build}/@{name}.jar" update="@{update}" index="@{index}">
+          <fileset dir="@{dir}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </sequential>
+    </macrodef>
+   
+   <!-- optionally add source files to the core jar -->
+   <macrodef name="cocoon.package-sources">
+   <attribute name="name"/>
+   <attribute name="dir"/>
+   <sequential>
+       <!-- optionally add source files to the core jar -->
+        <if>
+          <istrue value="${include.sources-in-jars}"/>
+          <then>
+            <cocoon.jar name="@{name}"
+                        dir="@{dir}"/>
+          </then>
+        </if>
+        <if>
+          <istrue value="${include.sources-jars}"/>
+          <then>
+            <cocoon.jar name="@{name}.src"
+                        dir="@{dir}"/>
+          </then>
+        </if>
+      </sequential>
+    </macrodef>
+    
   <!-- packages everything -->
   <target name="package"
           depends="package-core, package-deprecated, package-testcase"/>
@@ -129,56 +139,24 @@
          <exclude name="**/Manifest.mf"/>
       </fileset>
     </jar>
-    <!-- optionally add source files to the core jar -->
-    <if>
-      <istrue value="${include.sources-in-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}.jar" update="yes">
-          <fileset dir="${java}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
-    <if>
-      <istrue value="${include.sources-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}.src.jar">
-          <fileset dir="${java}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
+
+    <cocoon.package-sources name="${name}"
+                            dir="${java}"/>
+ 
   </target>
 
   <!-- package deprecated code -->
   <target name="package-deprecated" depends="compile-deprecated"
       unless="internal.exclude.deprecated">
+      
+      
     <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
-    <!-- optionally add source files to the jar -->
-    <if>
-      <istrue value="${include.sources-in-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}-deprecated.jar" update="yes">
-          <fileset dir="${deprecated.src}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
-    <if>
-      <istrue value="${include.sources-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}-deprecated.src.jar" update="yes">
-          <fileset dir="${deprecated.src}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
+    
+     <cocoon.package-sources name="${name}-deprecated"
+                             dir="${deprecated.src}"/>
+ 
   </target>
 
   <!-- package testcase code -->
@@ -186,27 +164,11 @@
     <jar jarfile="${build}/${name}-testcase.jar" index="true">
       <fileset dir="${build.test}" includes="**/*.class"/>
     </jar>
-    <!-- optionally add source files to the jar -->
-    <if>
-      <istrue value="${include.sources-in-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}-testcase.jar" update="yes">
-          <fileset dir="${test}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
-    <if>
-      <istrue value="${include.sources-jars}"/>
-      <then>
-        <jar jarfile="${build}/${name}-testcase.src.jar">
-          <fileset dir="${test}">
-            <include name="**/*.java"/>
-          </fileset>
-        </jar>
-      </then>
-    </if>
+ 
+      <cocoon.package-sources name="${name}-testcase"
+                              dir="${test}"/>
+                             
+
   </target>
 
 <!-- === Block Targets =================================================== -->

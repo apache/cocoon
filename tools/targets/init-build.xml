@@ -129,6 +129,18 @@
       <path location="${build.dest}"/>
     </path>
 
+    <!-- Set classpath for tests -->
+    <path id="test.classpath">
+      <path refid="classpath"/>
+      <pathelement location="${build.dest}" />
+       <!-- FIXME Resolver tests depend on deprecated stuff -->
+      <pathelement location="${build.deprecated}" />
+      <pathelement location="${build.test}" />
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+    
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
       <path refid="classpath"/>
