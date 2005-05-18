@@ -25,15 +25,8 @@
           unless="internal.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
-    <javac srcdir="${samples}"
-           destdir="${build.samples}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           compiler="${compiler}"
-           classpathref="classpath"/>
+    <cocoon.javac srcdir="${samples}"
+                  destdir="${build.samples}"/>
 
     <!-- copy sample files -->
     <copy todir="${build.webapp.samples}" filtering="on">
