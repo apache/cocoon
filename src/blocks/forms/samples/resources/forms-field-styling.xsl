@@ -49,7 +49,7 @@
       +-->
   <xsl:template match="fi:field">
     <xsl:if test="fi:captcha-image">
-      <img src="captcha-{@id}.jpg" style="vertical-align:middle"/>
+      <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle"/>
       <xsl:text> </xsl:text>
     </xsl:if>
     <input name="{@id}" id="{@id}" value="{fi:value}" title="{fi:hint}" type="text">

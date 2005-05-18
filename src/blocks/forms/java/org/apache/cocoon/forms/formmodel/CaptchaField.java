@@ -15,22 +15,25 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 
 /**
  * A {@link Field} for CAPTCHA validation. Upon generation, a secret random string is stored
- * in a session attribute having the same name as the field's ID, for use by a 
+ * in a session attribute having a randomly generated name, for use by a 
  * {@link org.apache.cocoon.forms.validation.impl.CaptchaValidator}.
  * <br>
  * Usage sample:
@@ -49,33 +52,68 @@ import org.xml.sax.SAXException;
  */
 public class CaptchaField extends Field {
 
-    private static final String IMAGE_EL = "captcha-image";
     public static final String SESSION_ATTR_PREFIX = "captcha-";
+
+    private static final String IMAGE_EL = "captcha-image";
     private static final String SECRET_CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
     private static final int SECRET_LENGTH = 7;
-    private Context avalonContext;
+    private static final int SESSION_ATTR_NAME_LENGTH = 6;
     
-    private String generateSecret() {
-        StringBuffer secret = new StringBuffer(SECRET_LENGTH);
-        for (int n = 0 ; n < SECRET_LENGTH ; n++) {
-            int randomnumber = (int) Math.floor(SECRET_CHARS.length() * Math.random());
-            secret.append(SECRET_CHARS.charAt(randomnumber)); 
+    private Context avalonContext;
+
+    /**
+     * Random number generator used to create session attribute name.
+     */
+    protected static SecureRandom random;
+
+    static {
+        try {
+            random = SecureRandom.getInstance("SHA1PRNG");
+        } catch(java.security.NoSuchAlgorithmException nsae) {
+            // Maybe we are on IBM's SDK
+            try {
+                random = SecureRandom.getInstance("IBMSecureRandom");
+            } catch (NoSuchAlgorithmException e) {
+                throw new CascadingRuntimeException("No random number generator available", e);
+            }
         }
-        return secret.toString();
+        random.setSeed(System.currentTimeMillis());
     }
 
     public CaptchaField(FieldDefinition fieldDefinition, Context avalonContext) {
         super(fieldDefinition);
         this.avalonContext = avalonContext;
     }
+    
+    private String generateSecret() {
+        StringBuffer secret = new StringBuffer(SECRET_LENGTH);
+        for (int n = 0 ; n < SECRET_LENGTH ; n++) {
+            int randomnumber = random.nextInt(SECRET_CHARS.length());
+            secret.append(SECRET_CHARS.charAt(randomnumber)); 
+        }
+        return secret.toString();
+    }
 
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         super.generateItemSaxFragment(contentHandler, locale);
-        contentHandler.startElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        contentHandler.endElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL);
+        byte[] bytes = new byte[SESSION_ATTR_NAME_LENGTH];
+        char[] result = new char[bytes.length * 2];
+        random.nextBytes(bytes);
+        for (int i = 0; i < SESSION_ATTR_NAME_LENGTH; i++) {
+            byte ch = bytes[i];
+            result[2 * i] = Character.forDigit(Math.abs(ch >> 4), 16);
+            result[2 * i + 1] = Character.forDigit(Math.abs(ch & 0x0f), 16);
+        }
+        String id = new String(result);
         Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
         Session session = ObjectModelHelper.getRequest(objectModel).getSession(true);
-        session.setAttribute(SESSION_ATTR_PREFIX + getId(), generateSecret());
+        String secret = generateSecret();
+        session.setAttribute(SESSION_ATTR_PREFIX + id, secret);
+        this.setAttribute("secret", secret);
+        AttributesImpl attrs = new AttributesImpl();
+        attrs.addAttribute("", "id", "id", "PCDATA", id);
+        contentHandler.startElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL, attrs);
+        contentHandler.endElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL);
     }
     
 }
