@@ -272,9 +272,7 @@ public class Cocoon
         }
 
         ContainerUtil.initialize(startupManager);
-
-        this.configure(startupManager);
-
+        configure(startupManager);
         ContainerUtil.dispose(startupManager);
         startupManager = null;
 
@@ -334,29 +332,29 @@ public class Cocoon
      */
     public void configure(ExcaliburComponentManager startupManager) throws ConfigurationException, ContextException {
         SAXParser p = null;
-        Configuration roleConfig = null;
 
+        Configuration roles = null;
         try {
-            this.configurationFile.refresh();
-            p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
+            p = (SAXParser) startupManager.lookup(SAXParser.ROLE);
             SAXConfigurationHandler b = new SAXConfigurationHandler();
-            InputStream inputStream = ClassUtils.getResource("org/apache/cocoon/cocoon.roles").openStream();
-            InputSource is = new InputSource(inputStream);
-            is.setSystemId(this.configurationFile.getURI());
+            URL url = ClassUtils.getResource("org/apache/cocoon/cocoon.roles");
+            InputSource is = new InputSource(url.openStream());
+            is.setSystemId(url.toString());
             p.parse(is, b);
-            roleConfig = b.getConfiguration();
+            roles = b.getConfiguration();
         } catch (Exception e) {
             throw new ConfigurationException("Error trying to load configurations", e);
         } finally {
-            if (p != null) startupManager.release((Component)p);
+            if (p != null) startupManager.release((Component) p);
         }
 
         DefaultRoleManager drm = new DefaultRoleManager();
         ContainerUtil.enableLogging(drm, this.rootLogger.getChildLogger("roles"));
-        ContainerUtil.configure(drm, roleConfig);
-        roleConfig = null;
+        ContainerUtil.configure(drm, roles);
+        roles = null;
 
         try {
+            this.configurationFile.refresh();
             p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
             SAXConfigurationHandler b = new SAXConfigurationHandler();
             InputSource is = SourceUtil.getInputSource(this.configurationFile);
@@ -394,9 +392,9 @@ public class Cocoon
                     throw new ConfigurationException("User-roles configuration '"+userRoles+"' cannot be found.");
                 }
                 InputSource is = new InputSource(new BufferedInputStream(url.openStream()));
-                is.setSystemId(this.configurationFile.getURI());
+                is.setSystemId(url.toString());
                 p.parse(is, b);
-                roleConfig = b.getConfiguration();
+                roles = b.getConfiguration();
             } catch (Exception e) {
                 throw new ConfigurationException("Error trying to load user-roles configuration", e);
             } finally {
@@ -405,8 +403,8 @@ public class Cocoon
 
             DefaultRoleManager urm = new DefaultRoleManager(drm);
             ContainerUtil.enableLogging(urm, this.rootLogger.getChildLogger("roles").getChildLogger("user"));
-            ContainerUtil.configure(urm, roleConfig);
-            roleConfig = null;
+            ContainerUtil.configure(urm, roles);
+            roles = null;
             drm = urm;
         }
 
