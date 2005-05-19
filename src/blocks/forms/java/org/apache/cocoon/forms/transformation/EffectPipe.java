@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,14 @@ package org.apache.cocoon.forms.transformation;
 
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.cocoon.xml.XMLConsumer;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.LocatorImpl;
 
 import java.util.LinkedList;
 
-// TODO: Reduce the Element creation and deletion churn by providing startElement
-// and endElement methods which do not create or use Elements on the stack.
-/*
+/**
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
@@ -39,349 +32,424 @@ import java.util.LinkedList;
  */
 public class EffectPipe extends AbstractXMLPipe {
 
-    protected static final int EVENT_SET_DOCUMENT_LOCATOR   = 0;
-    protected static final int EVENT_START_DOCUMENT         = 1;
-    protected static final int EVENT_END_DOCUMENT           = 2;
-    protected static final int EVENT_START_PREFIX_MAPPING   = 3;
-    protected static final int EVENT_END_PREFIX_MAPPING     = 4;
-    protected static final int EVENT_START_ELEMENT          = 5;
-    protected static final int EVENT_END_ELEMENT            = 6;
-    protected static final int EVENT_ELEMENT                = 7;
-    protected static final int EVENT_CHARACTERS             = 8;
-    protected static final int EVENT_IGNORABLE_WHITESPACE   = 9;
-    protected static final int EVENT_PROCESSING_INSTRUCTION =10;
-    protected static final int EVENT_SKIPPED_ENTITY         =11;
-    protected static final int EVENT_START_DTD              =12;
-    protected static final int EVENT_END_DTD                =13;
-    protected static final int EVENT_START_ENTITY           =14;
-    protected static final int EVENT_END_ENTITY             =15;
-    protected static final int EVENT_START_CDATA            =16;
-    protected static final int EVENT_END_CDATA              =17;
-    protected static final int EVENT_COMMENT                =18;
+    /**
+     * Handler interface. Accepts SAX events, can return other handler
+     * to replace self for further events.
+     */
+    protected interface Handler {
+        public Handler startDocument()
+        throws SAXException;
 
-    protected static class Element {
-        public final String prefix;
-        public final String uri;
-        public final String loc;
-        public final String raw;
-        public final AttributesImpl attrs;
+        public void endDocument()
+        throws SAXException;
 
-        public Element() {
-            this(null, null, null, null, null);
-        }
+        public void startPrefixMapping(String prefix, String uri)
+        throws SAXException;
 
-        public Element(String prefix, String uri) {
-            this(prefix, uri, null, null, null);
-        }
+        public void endPrefixMapping(String prefix)
+        throws SAXException;
 
-        public Element(String uri, String loc, String raw, Attributes attrs) {
-            this(null, uri, loc, raw, attrs);
-        }
-
-        public Element(String prefix, String uri, String loc, String raw, Attributes attrs) {
-            this.prefix=prefix;
-            this.uri = uri;
-            this.loc = loc;
-            this.raw = raw;
-            if (attrs == null) {
-                if (loc == null && raw == null) {
-                    this.attrs = null; // prefix-mapping use of this class doesn't need attrs
-                } else {
-                    this.attrs = new AttributesImpl(); // be ready to possibly add
-                }
-            } else {
-                this.attrs = new AttributesImpl(attrs);
-            }
-        }
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException;
 
         /**
-         * Adds/overwrites the attributes from the collection in the argument
-         * to the ones inside this class.
-         *
-         * @param newAttrs collection of attributes to add/overwrite
+         * Called before startElement, handler can decide what other handler should process
+         * next startElement.
          */
-        public void addAttributes(Attributes newAttrs) {
-            if (newAttrs == null || newAttrs.getLength() == 0) return; //nothing to add
-            int newAttrsCount = newAttrs.getLength();
-            for (int i = 0; i < newAttrsCount; i++) {
-                String uri = newAttrs.getURI(i);
-                String loc = newAttrs.getLocalName(i);
-                String raw = newAttrs.getQName(i);
-                String type = newAttrs.getType(i);
-                String value = newAttrs.getValue(i);
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException;
 
-                addAttribute(uri, loc, raw, type, value);
-            }
-        }
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException;
 
-        /**
-         * Adds/overwrites one single attribute to the ones already contained
-         * inside this object.
-         *
-         * @param uri the uri of the attribute to add.
-         * @param loc the localname of the attribute to add
-         * @param raw the rawname of the attribute to add
-         * @param type the type of the attribute to add
-         * @param value the value of the attribute to add.
-         */
-        public void addAttribute(String uri, String loc, String raw, String type, String value) {
-            int foundAttr = this.attrs.getIndex(uri, loc);
-            if (foundAttr == -1) {
-                this.attrs.addAttribute(uri, loc, raw, type, value);
-            } else {
-                this.attrs.setAttribute(foundAttr, uri, loc, raw, type, value);
-            }
-        }
+        public Handler characters(char ch[], int start, int length)
+        throws SAXException;
 
-        public void addAttribute(String prefix, String uri, String loc, String value) {
-            this.addAttribute(uri, loc, prefix + ":" +loc, "CDATA", value);
-        }
+        public Handler ignorableWhitespace(char ch[], int start, int length)
+        throws SAXException;
 
-        public void addAttribute(String loc, String value) {
-            this.addAttribute("", loc, loc, "CDATA", value);
-        }
+        public Handler processingInstruction(String target, String data)
+        throws SAXException;
 
-        public void removeAttribute(String raw) {
-            int foundAttr = this.attrs.getIndex(raw);
-            if (foundAttr == -1) {
-                this.attrs.removeAttribute(foundAttr);
-            }
-        }
+        public Handler skippedEntity(String name)
+        throws SAXException;
+
+        public Handler startDTD(String name, String publicId, String systemId)
+        throws SAXException;
+
+        public Handler endDTD()
+        throws SAXException;
+
+        public Handler startEntity(String name)
+        throws SAXException;
+
+        public Handler endEntity(String name)
+        throws SAXException;
+
+        public Handler startCDATA()
+        throws SAXException;
+
+        public Handler endCDATA()
+        throws SAXException;
+
+        public Handler comment(char c[], int start, int len)
+        throws SAXException;
     }
 
-    protected abstract class Handler {
-        public abstract Handler process() throws SAXException;
-    }
+    /**
+     * Ignores all events
+     */
+    protected class NullHandler implements Handler {
+        public Handler startDocument() throws SAXException {
+            return this;
+        }
 
-    protected class NullHandler extends Handler {
-        public Handler process() throws SAXException {
+        public void endDocument() throws SAXException {
+        }
+
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        }
+
+        public void endPrefixMapping(String prefix) throws SAXException {
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            return this;
+        }
+
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+        }
+
+        public Handler characters(char ch[], int start, int length) throws SAXException {
+            return this;
+        }
+
+        public Handler ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+            return this;
+        }
+
+        public Handler processingInstruction(String target, String data) throws SAXException {
+            return this;
+        }
+
+        public Handler skippedEntity(String name) throws SAXException {
+            return this;
+        }
+
+        public Handler startDTD(String name, String publicId, String systemId) throws SAXException {
+            return this;
+        }
+
+        public Handler endDTD() throws SAXException {
+            return this;
+        }
+
+        public Handler startEntity(String name) throws SAXException {
+            return this;
+        }
+
+        public Handler endEntity(String name) throws SAXException {
+            return this;
+        }
+
+        public Handler startCDATA() throws SAXException {
+            return this;
+        }
+
+        public Handler endCDATA() throws SAXException {
+            return this;
+        }
+
+        public Handler comment(char c[], int start, int len) throws SAXException {
             return this;
         }
     }
 
-    protected class BufferHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_ELEMENT:
-                return this;
-            default:
-                out.buffer();
-                return this;
-            }
-        }
-    }
-
-    protected class Output extends AbstractXMLPipe {
-
-        protected class Buffer extends SaxBuffer {
-            LocatorImpl locator;
-
-            public void setDocumentLocator(Locator locator) {
-                super.setDocumentLocator(locator);
-                if (locator != null) {
-                    this.locator = new LocatorImpl(locator);
-                }
-            }
-
-            public void toSAX(ContentHandler contentHandler) throws SAXException {
-                final Locator saved = EffectPipe.this.locator;
-                EffectPipe.this.locator = this.locator;
-                try {
-                    super.toSAX(contentHandler);
-                } finally {
-                    EffectPipe.this.locator = saved;
-                }
-            }
+    /**
+     * Buffers content into the pipe's SAX buffer.
+     */
+    protected class BufferHandler extends NullHandler {
+        public Handler startDocument() throws SAXException {
+            if (buffer != null) buffer.startDocument();
+            return this;
         }
 
-        private LinkedList buffers = null;
-        private SaxBuffer saxBuffer = null;
-        private LinkedList elements  = null;
-        protected Element element  = null;
-
-        public Output() { elements = new LinkedList(); }
-
-        public void startPrefixMapping() throws SAXException {
-            super.startPrefixMapping(input.prefix, input.uri);
+        public void endDocument() throws SAXException {
+            if (buffer != null) buffer.endDocument();
         }
 
-        public void endPrefixMapping() throws SAXException {
-            super.endPrefixMapping(input.prefix);
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            if (buffer != null) buffer.startPrefixMapping(prefix, uri);
         }
 
-        public void element(String prefix, String uri, String loc, Attributes attrs) {
-            element = new Element(uri, loc, prefix + ":" + loc, attrs);
+        public void endPrefixMapping(String prefix) throws SAXException {
+            if (buffer != null) buffer.endPrefixMapping(prefix);
         }
 
-        public void element(String prefix, String uri, String loc) {
-            element(prefix, uri, loc, null);
-        }
-
-        public void element(String loc, Attributes attrs) {
-            element = new Element("", loc, loc, attrs);
-        }
-
-        public void element(String loc) {
-            element(loc, null);
-        }
-
-        public void element() {
-            element = new Element(input.uri, input.loc, input.raw, input.attrs);
-        }
-
-        public void attribute(String prefix, String uri, String name, String value) {
-            element.addAttribute(prefix, uri, name, value);
-        }
-
-        public void attribute(String name, String value) {
-            element.addAttribute(name, value);
-        }
-
-        public void copyAttribute(String prefix, String uri, String name) throws SAXException {
-            String value = null;
-            if (input.attrs != null && (value = input.attrs.getValue(uri, name)) != null) {
-                attribute(prefix, uri, name, value);
-            } else {
-                throw new SAXException("Attribute \"" + name + "\" cannot be copied because it does not exist.");
-            }
-        }
-
-        public void attributes(Attributes attrs) {
-            element.addAttributes(attrs);
-        }
-
-        public void attributes() {
-            attributes(input.attrs);
-        }
-
-        public void startElement() throws SAXException {
-            super.startElement(element.uri, element.loc, element.raw, element.attrs);
-            elements.addFirst(element);
-            element = null;
-        }
-
-        public void endElement() throws SAXException {
-            element = (Element)elements.removeFirst();
-            super.endElement(element.uri, element.loc, element.raw);
-            element = null;
-        }
-
-        public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
-            super.startElement(uri, loc, raw, attrs);
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            if (buffer != null) buffer.startElement(uri, loc, raw, attrs);
+            return this;
         }
 
         public void endElement(String uri, String loc, String raw) throws SAXException {
-            super.endElement(uri, loc, raw);
+            if (buffer != null) buffer.endElement(uri, loc, raw);
         }
 
-        public void copy() throws SAXException {
-            switch(event) {
-            case EVENT_SET_DOCUMENT_LOCATOR:   this.setDocumentLocator(locator); break;
-            case EVENT_START_DOCUMENT:         this.startDocument(); break;
-            case EVENT_END_DOCUMENT:           this.endDocument(); break;
-            case EVENT_START_PREFIX_MAPPING:   this.startPrefixMapping(); break;
-            case EVENT_END_PREFIX_MAPPING:     this.endPrefixMapping(); break;
-            case EVENT_START_ELEMENT:          this.element(); attributes(); startElement(); break;
-            case EVENT_END_ELEMENT:            this.endElement(); break;
-            case EVENT_CHARACTERS:             this.characters(c, start, len); break;
-            case EVENT_IGNORABLE_WHITESPACE:   this.ignorableWhitespace(c, start, len); break;
-            case EVENT_PROCESSING_INSTRUCTION: this.processingInstruction(target, data); break;
-            case EVENT_SKIPPED_ENTITY:         this.skippedEntity(name); break;
-            case EVENT_START_DTD:              this.startDTD(name, publicId, systemId); break;
-            case EVENT_END_DTD:                this.endDTD(); break;
-            case EVENT_START_ENTITY:           this.startEntity(name); break;
-            case EVENT_END_ENTITY:             this.endEntity(name); break;
-            case EVENT_START_CDATA:            this.startCDATA(); break;
-            case EVENT_END_CDATA:              this.endCDATA(); break;
-            case EVENT_COMMENT:                this.comment(c, start, len); break;
-            }
+        public Handler characters(char ch[], int start, int length) throws SAXException {
+            if (buffer != null) buffer.characters(ch, start, length);
+            return this;
         }
 
-        protected void bufferInit() {
-            if (saxBuffer != null) {
-                if (buffers == null) {
-                    buffers = new LinkedList();
-                }
-                buffers.addFirst(saxBuffer);
-            }
-            saxBuffer = new Buffer();
-            saxBuffer.setDocumentLocator(locator);
+        public Handler ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+            if (buffer != null) buffer.ignorableWhitespace(ch, start, length);
+            return this;
         }
 
-        protected void bufferFini() {
-            if (buffers != null && buffers.size() > 0) {
-                saxBuffer = (SaxBuffer)buffers.removeFirst();
-            } else {
-                saxBuffer = null;
-            }
+        public Handler processingInstruction(String target, String data) throws SAXException {
+            if (buffer != null) buffer.processingInstruction(target, data);
+            return this;
         }
 
-        protected SaxBuffer getBuffer() {
-            return saxBuffer;
+        public Handler skippedEntity(String name) throws SAXException {
+            if (buffer != null) buffer.skippedEntity(name);
+            return this;
         }
 
-        public void buffer() throws SAXException {
-            switch(event) {
-            case EVENT_SET_DOCUMENT_LOCATOR:   saxBuffer.setDocumentLocator(locator); break;
-            case EVENT_START_DOCUMENT:         saxBuffer.startDocument(); break;
-            case EVENT_END_DOCUMENT:           saxBuffer.endDocument(); break;
-            case EVENT_START_PREFIX_MAPPING:   saxBuffer.startPrefixMapping(prefix, uri); break;
-            case EVENT_END_PREFIX_MAPPING:     saxBuffer.endPrefixMapping(prefix); break;
-            case EVENT_START_ELEMENT:          saxBuffer.startElement(input.uri, input.loc, input.raw, input.attrs); break;
-            case EVENT_END_ELEMENT:            saxBuffer.endElement(input.uri, input.loc, input.raw); break;
-            case EVENT_CHARACTERS:             saxBuffer.characters(c, start, len); break;
-            case EVENT_IGNORABLE_WHITESPACE:   saxBuffer.ignorableWhitespace(c, start, len); break;
-            case EVENT_PROCESSING_INSTRUCTION: saxBuffer.processingInstruction(target, data); break;
-            case EVENT_SKIPPED_ENTITY:         saxBuffer.skippedEntity(name); break;
-            case EVENT_START_DTD:              saxBuffer.startDTD(name, publicId, systemId); break;
-            case EVENT_END_DTD:                saxBuffer.endDTD(); break;
-            case EVENT_START_ENTITY:           saxBuffer.startEntity(name); break;
-            case EVENT_END_ENTITY:             saxBuffer.endEntity(name); break;
-            case EVENT_START_CDATA:            saxBuffer.startCDATA(); break;
-            case EVENT_END_CDATA:              saxBuffer.endCDATA(); break;
-            case EVENT_COMMENT:                saxBuffer.comment(c, start, len); break;
-            }
+        public Handler startDTD(String name, String publicId, String systemId) throws SAXException {
+            if (buffer != null) buffer.startDTD(name, publicId, systemId);
+            return this;
+        }
+
+        public Handler endDTD() throws SAXException {
+            if (buffer != null) buffer.endDTD();
+            return this;
+        }
+
+        public Handler startEntity(String name) throws SAXException {
+            if (buffer != null) buffer.startEntity(name);
+            return this;
+        }
+
+        public Handler endEntity(String name) throws SAXException {
+            if (buffer != null) buffer.endEntity(name);
+            return this;
+        }
+
+        public Handler startCDATA() throws SAXException {
+            if (buffer != null) buffer.startCDATA();
+            return this;
+        }
+
+        public Handler endCDATA() throws SAXException {
+            if (buffer != null) buffer.endCDATA();
+            return this;
+        }
+
+        public Handler comment(char c[], int start, int len) throws SAXException {
+            if (buffer != null) buffer.comment(c, start, len);
+            return this;
         }
     }
 
+    /**
+     * Copies events over into the contentHandler
+     */
+    protected class CopyHandler extends NullHandler {
+        public Handler startDocument() throws SAXException {
+            contentHandler.startDocument();
+            return this;
+        }
 
-    protected int event;
+        public void endDocument() throws SAXException {
+            contentHandler.endDocument();
+        }
 
-    protected Handler nullHandler = new NullHandler();
-    protected Handler bufferHandler = new BufferHandler();
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            contentHandler.startPrefixMapping(prefix, uri);
+        }
 
-    protected LinkedList handlers;
-    protected Handler handler;
+        public void endPrefixMapping(String prefix) throws SAXException {
+            contentHandler.endPrefixMapping(prefix);
+        }
 
-    protected LinkedList elements;
-    protected Element input;
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            contentHandler.startElement(uri, loc, raw, attrs);
+            return this;
+        }
 
-    protected Locator locator;
-    protected String name;
-    protected String publicId;
-    protected String systemId;
-    protected String target;
-    protected String data;
-    protected String prefix;
-    protected String uri;
-    protected char   c[];
-    protected int start;
-    protected int len;
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+            contentHandler.endElement(uri, loc, raw);
+        }
 
-    public Output out;
+        public Handler characters(char ch[], int start, int length) throws SAXException {
+            contentHandler.characters(ch, start, length);
+            return this;
+        }
+
+        public Handler ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+            contentHandler.ignorableWhitespace(ch, start, length);
+            return this;
+        }
+
+        public Handler processingInstruction(String target, String data) throws SAXException {
+            contentHandler.processingInstruction(target, data);
+            return this;
+        }
+
+        public Handler skippedEntity(String name) throws SAXException {
+            contentHandler.skippedEntity(name);
+            return this;
+        }
+
+        public Handler startDTD(String name, String publicId, String systemId) throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.startDTD(name, publicId, systemId);
+            return this;
+        }
+
+        public Handler endDTD() throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.endDTD();
+            return this;
+        }
+
+        public Handler startEntity(String name) throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.startEntity(name);
+            return this;
+        }
+
+        public Handler endEntity(String name) throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.endEntity(name);
+            return this;
+        }
+
+        public Handler startCDATA() throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.startCDATA();
+            return this;
+        }
+
+        public Handler endCDATA() throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.endCDATA();
+            return this;
+        }
+
+        public Handler comment(char c[], int start, int len) throws SAXException {
+            if (lexicalHandler != null) lexicalHandler.comment(c, start, len);
+            return this;
+        }
+    }
+
+    /**
+     * Throws exception on most events, with the exception of ignorableWhitespace.
+     */
+    protected class ErrorHandler extends NullHandler {
+        protected String getName() {
+            return "<unknown>";
+        }
+
+        public Handler startDocument() throws SAXException {
+            throw new SAXException("Unexpected startDocument in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public void endDocument() throws SAXException {
+            throw new SAXException("Unexpected endDocument in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            throw new SAXException("Unexpected startPrefixMapping in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public void endPrefixMapping(String prefix) throws SAXException {
+            throw new SAXException("Unexpected endPrefixMapping in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            throw new SAXException("Unexpected startElement in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+            throw new SAXException("Unexpected endElement in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler characters(char ch[], int start, int length) throws SAXException {
+            throw new SAXException("Unexpected characters in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler processingInstruction(String target, String data) throws SAXException {
+            throw new SAXException("Unexpected processingInstruction in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler skippedEntity(String name) throws SAXException {
+            throw new SAXException("Unexpected skippedEntity in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler startDTD(String name, String publicId, String systemId) throws SAXException {
+            throw new SAXException("Unexpected startDTD in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler endDTD() throws SAXException {
+            throw new SAXException("Unexpected endDTD in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler startEntity(String name) throws SAXException {
+            throw new SAXException("Unexpected startEntity in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler endEntity(String name) throws SAXException {
+            throw new SAXException("Unexpected endEntity in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler startCDATA() throws SAXException {
+            throw new SAXException("Unexpected startCDATA in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler endCDATA() throws SAXException {
+            throw new SAXException("Unexpected endCDATA in '" + getName() + "' (" + getLocation() + ")");
+        }
+
+        public Handler comment(char c[], int start, int len) throws SAXException {
+            throw new SAXException("Unexpected comment in '" + getName() + "' (" + getLocation() + ")");
+        }
+    }
+
+    protected final Handler hNull = new NullHandler();
+    protected final Handler hBuffer = new BufferHandler();
+
+    private Locator locator;
+    private LinkedList handlers;
+    private Handler handler;
+
+    private LinkedList buffers;
+    private SaxBuffer buffer;
 
 
-    public void init() {
+    /**
+     * Initialize the pipe before starting processing
+     */
+    protected void init(Handler top) {
         handlers = new LinkedList();
-        elements = new LinkedList();
-        out = new Output();
+        handler = top;
+    }
+
+    /**
+     * Recycle the pipe after processing
+     */
+    public void recycle() {
+        super.recycle();
+        handlers = null;
+        handler = null;
+        buffers = null;
+        buffer = null;
+        locator = null;
     }
 
     /**
      * @return current location (if known)
      */
     protected String getLocation() {
-        if (locator != null) {
+        if (locator == null) {
             return "unknown";
         }
 
@@ -391,126 +459,115 @@ public class EffectPipe extends AbstractXMLPipe {
         return location;
     }
 
-    //====================================
-    // Methods overriding AbstractXMLPipe
-    //====================================
-
-    public void setConsumer(XMLConsumer consumer) {
-        super.setConsumer(consumer);
-        out.setConsumer(consumer);
+    protected void pushHandler(Handler handler) {
+        this.handlers.addFirst(this.handler);
+        this.handler = handler;
     }
 
-    public void setContentHandler(ContentHandler handler) {
-        super.setContentHandler(handler);
-        out.setContentHandler(handler);
+    protected void popHandler() {
+        this.handler = (Handler) this.handlers.removeFirst();
     }
 
-    public void setLexicalHandler(LexicalHandler handler) {
-        super.setLexicalHandler(handler);
-        out.setLexicalHandler(handler);
+    protected void beginBuffer() {
+        if (this.buffer != null) {
+            if (this.buffers == null) {
+                this.buffers = new LinkedList();
+            }
+            this.buffers.addFirst(this.buffer);
+        }
+        this.buffer = new SaxBuffer();
     }
 
-    public void recycle() {
-        super.recycle();
-        handlers = null;
-        elements = null;
-        locator = null;
-        out = null;
+    protected SaxBuffer endBuffer() {
+        SaxBuffer buffer = this.buffer;
+        if (this.buffers != null && this.buffers.size() > 0) {
+            this.buffer = (SaxBuffer) this.buffers.removeFirst();
+        } else {
+            this.buffer = null;
+        }
+        return buffer;
     }
+
+    //
+    // ContentHandler methods
+    //
 
     public void setDocumentLocator(Locator locator) {
         this.locator = locator;
-        try {
-            event = EVENT_SET_DOCUMENT_LOCATOR; handler = handler.process();
-        } catch(Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     public void startDocument() throws SAXException {
-        event = EVENT_START_DOCUMENT; handler = handler.process();
+        pushHandler(handler.startDocument());
     }
 
     public void endDocument() throws SAXException {
-        event = EVENT_END_DOCUMENT; handler = handler.process();
+        handler.endDocument();
+        popHandler();
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        input = new Element(prefix, uri);
-        elements.addFirst(input);
-        //this.prefix = prefix; this.uri = uri;
-        event = EVENT_START_PREFIX_MAPPING; handler = handler.process();
+        handler.startPrefixMapping(prefix, uri);
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        input = (Element)elements.removeFirst();
-        //this.prefix = prefix;
-        event = EVENT_END_PREFIX_MAPPING; handler = handler.process();
-        input = null;
+        handler.endPrefixMapping(prefix);
     }
 
     public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
-        input = new Element(uri, loc, raw, attrs);
-        elements.addFirst(input);
-        handlers.addFirst(handler);
-        event = EVENT_ELEMENT;       handler = handler.process();
-        event = EVENT_START_ELEMENT; handler = handler.process();
+        pushHandler(handler.nestedElement(uri, loc, raw, attrs));
+        handler = handler.startElement(uri, loc, raw, attrs);
     }
 
     public void endElement(String uri, String loc, String raw) throws SAXException {
-        input = (Element)elements.removeFirst();
-        event = EVENT_END_ELEMENT; handler.process();
-        handler = (Handler)handlers.removeFirst();
-        input = null;
+        handler.endElement(uri, loc, raw);
+        popHandler();
     }
 
-    public void characters(char c[], int start, int len) throws SAXException {
-        this.c = c; this.start = start; this.len = len;
-        event = EVENT_CHARACTERS; handler = handler.process();
+    public void characters(char ch[], int start, int len) throws SAXException {
+        handler = handler.characters(ch, start, len);
     }
 
-    public void ignorableWhitespace(char c[], int start, int len) throws SAXException {
-        this.c = c; this.start = start; this.len = len;
-        event = EVENT_IGNORABLE_WHITESPACE; handler = handler.process();
+    public void ignorableWhitespace(char ch[], int start, int len) throws SAXException {
+        handler = handler.ignorableWhitespace(ch, start, len);
     }
 
     public void processingInstruction(String target, String data) throws SAXException {
-        this.target = target; this.data = data;
-        event = EVENT_PROCESSING_INSTRUCTION; handler = handler.process();
+        handler = handler.processingInstruction(target, data);
     }
 
     public void skippedEntity(String name) throws SAXException {
-        this.name = name;
-        event = EVENT_SKIPPED_ENTITY; handler = handler.process();
+        handler = handler.skippedEntity(name);
     }
+
+    //
+    // LexicalHandler methods
+    //
 
     public void startDTD(String name, String publicId, String systemId) throws SAXException {
-        this.name = name; this.publicId = publicId; this.systemId = systemId;
-        event = EVENT_START_DTD; handler = handler.process();
+        handler = handler.startDTD(name, publicId, systemId);
     }
 
-    public void endDTD() throws SAXException { event = EVENT_END_DTD; handler = handler.process(); }
+    public void endDTD() throws SAXException {
+        handler = handler.endDTD();
+    }
 
     public void startEntity(String name) throws SAXException {
-        this.name = name;
-        event = EVENT_START_ENTITY; handler = handler.process();
+        handler = handler.startEntity(name);
     }
 
     public void endEntity(String name) throws SAXException {
-        this.name = name;
-        event = EVENT_END_ENTITY; handler = handler.process();
+        handler = handler.endEntity(name);
     }
 
     public void startCDATA() throws SAXException {
-        event = EVENT_START_CDATA; handler = handler.process();
+        handler = handler.startCDATA();
     }
 
     public void endCDATA() throws SAXException {
-        event = EVENT_END_CDATA; handler = handler.process();
+        handler = handler.endCDATA();
     }
 
-    public void comment(char c[], int start, int len) throws SAXException {
-        this.c = c; this.start = start; this.len = len;
-        event = EVENT_COMMENT; handler = handler.process();
+    public void comment(char ch[], int start, int len) throws SAXException {
+        handler = handler.comment(ch, start, len);
     }
 }

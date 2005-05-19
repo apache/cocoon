@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,21 +43,18 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
-// TODO: Reduce the Element creation and deletion churn by using startElement
-// and endElement methods which do not create or use Elements on the stack.
-// The corresponding TODO in the EffectPipe needs to be completed first.
-
 /**
- * The basic operation of this Pipe is that it replaces ft:widget (in the
- * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
+ * The basic operation of this Pipe is that it replaces <code>ft:widget</code>
+ * (in the {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "CForms Instance"} namespace), can
- * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
- * individual widget, and will not need to do the whole page layout.
+ * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "CForms Instance"}
+ * namespace), can then be translated to a HTML presentation by an XSLT.
+ * This XSLT will then only have to style individual widget, and will not
+ * need to do the whole page layout.
  *
- * <p>For more information about the supported tags and their function, see the user documentation
- * for the forms template transformer.</p>
+ * <p>For more information about the supported tags and their function,
+ * see the user documentation for the forms template transformer.</p>
  *
  * @version $Id$
  */
@@ -72,7 +69,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String LOCATION = "location";
 
     private static final String AGGREGATE_WIDGET = "aggregate-widget";
-    private static final String CHOOSE = "choose";
     private static final String CLASS = "class";
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
@@ -90,41 +86,35 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     protected Widget contextWidget;
     protected LinkedList contextWidgets;
-    protected String widgetPath;
     protected Widget widget;
     protected Map classes;
 
-    private final AggregateWidgetHandler     aggregateWidgetHandler = new AggregateWidgetHandler();
-    private final ClassHandler               classHandler           = new ClassHandler();
-    private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
-    private final DocHandler                 docHandler             = new DocHandler();
-    private final FormHandler                formHandler            = new FormHandler();
-    private final GroupHandler               groupHandler           = new GroupHandler();
-    private final NestedHandler              nestedHandler          = new NestedHandler();
-    private final NewHandler                 newHandler             = new NewHandler();
-    private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
-    private final RepeaterWidgetHandler      repeaterWidgetHandler  = new RepeaterWidgetHandler();
-    private final RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
-    private final SkipHandler                skipHandler            = new SkipHandler();
-    private final StructHandler              structHandler          = new StructHandler();
-    private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
-    private final UnionHandler               unionHandler           = new UnionHandler();
-    private final UnionPassThruHandler       unionPassThruHandler   = new UnionPassThruHandler();
-    private final ValidationErrorHandler     validationErrorHandler = new ValidationErrorHandler();
-    private final WidgetHandler              widgetHandler          = new WidgetHandler();
-    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
+    private final AggregateWidgetHandler     hAggregate       = new AggregateWidgetHandler();
+    private final ClassHandler               hClass           = new ClassHandler();
+    private final ContinuationIdHandler      hContinuationId  = new ContinuationIdHandler();
+    private final DocHandler                 hDocument        = new DocHandler();
+    private final FormHandler                hForm            = new FormHandler();
+    private final GroupHandler               hGroup           = new GroupHandler();
+    private final NestedHandler              hNested          = new NestedHandler();
+    private final NewHandler                 hNew             = new NewHandler();
+    private final RepeaterSizeHandler        hRepeaterSize    = new RepeaterSizeHandler();
+    private final RepeaterWidgetHandler      hRepeaterWidget  = new RepeaterWidgetHandler();
+    private final RepeaterWidgetLabelHandler hRepeaterWidgetLabel = new RepeaterWidgetLabelHandler();
+    private final SkipHandler                hSkip            = new SkipHandler();
+    private final StructHandler              hStruct          = new StructHandler();
+    private final StylingContentHandler      hStyling         = new StylingContentHandler();
+    private final UnionHandler               hUnion           = new UnionHandler();
+    private final UnionPassThruHandler       hUnionPassThru   = new UnionPassThruHandler();
+    private final ValidationErrorHandler     hValidationError = new ValidationErrorHandler();
+    private final WidgetHandler              hWidget          = new WidgetHandler();
+    private final WidgetLabelHandler         hWidgetLabel     = new WidgetLabelHandler();
 
     /**
      * Map containing all handlers
      */
-    private final Map templates = new HashMap();
+    private final Map templates;
 
     protected FormsPipelineConfig pipeContext;
-
-    /**
-     * Have we encountered a <wi:style> element in a widget ?
-     */
-    protected boolean gotStylingElement;
 
     /**
      * Namespace prefix used for the namespace <code>Constants.FT_NS</code>.
@@ -134,72 +124,69 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public EffectWidgetReplacingPipe() {
         // Setup map of templates.
-        templates.put(AGGREGATE_WIDGET, aggregateWidgetHandler);
-        templates.put(CLASS, classHandler);
-        templates.put(CONTINUATION_ID, continuationIdHandler);
-        templates.put(GROUP, groupHandler);
-        templates.put(NEW, newHandler);
-        templates.put(REPEATER_SIZE, repeaterSizeHandler);
-        templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
-        templates.put(REPEATER_WIDGET_LABEL, repeaterWidgetLabelHandler);
-        templates.put(STRUCT, structHandler);
-        templates.put(UNION, unionHandler);
-        templates.put(VALIDATION_ERROR, validationErrorHandler);
-        templates.put(WIDGET, widgetHandler);
-        templates.put(WIDGET_LABEL, widgetLabelHandler);
-    }
-
-    private void throwSAXException(String message) throws SAXException{
-        throw new SAXException("EffectFormTemplateTransformer: " + message);
+        templates = new HashMap();
+        templates.put(AGGREGATE_WIDGET, hAggregate);
+        templates.put(CLASS, hClass);
+        templates.put(CONTINUATION_ID, hContinuationId);
+        templates.put(GROUP, hGroup);
+        templates.put(NEW, hNew);
+        templates.put(REPEATER_SIZE, hRepeaterSize);
+        templates.put(REPEATER_WIDGET, hRepeaterWidget);
+        templates.put(REPEATER_WIDGET_LABEL, hRepeaterWidgetLabel);
+        templates.put(STRUCT, hStruct);
+        templates.put(UNION, hUnion);
+        templates.put(VALIDATION_ERROR, hValidationError);
+        templates.put(WIDGET, hWidget);
+        templates.put(WIDGET_LABEL, hWidgetLabel);
     }
 
     public void init(Widget contextWidget, FormsPipelineConfig pipeContext) {
-        super.init();
+        // Document handler is top level handler
+        super.init(hDocument);
         this.pipeContext = pipeContext;
-
-        // Attach document handler
-        handler = docHandler;
 
         // Initialize widget related variables
         contextWidgets = new LinkedList();
         classes = new HashMap();
     }
 
-    protected String getWidgetId(Attributes attributes) throws SAXException {
+    protected String getWidgetId(String loc, Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
         if (widgetId == null || widgetId.equals("")) {
-            throwSAXException("Missing required widget \"id\" attribute.");
+            throw new SAXException("Element '" + loc + "' missing required 'id' attribute, " +
+                                   "at " + getLocation());
         }
         return widgetId;
     }
 
-    protected Widget getWidget(String widgetPath) throws SAXException {
-        Widget widget = contextWidget.lookupWidget(widgetPath);
+    /**
+     * Get widget ID in the attributes, and find the widget
+     */
+    protected void setWidget(String loc, Attributes attrs) throws SAXException {
+        String id = getWidgetId(loc, attrs);
+        widget = contextWidget.lookupWidget(id);
         if (widget == null) {
             if (contextWidget.getRequestParameterName().equals("")) {
-                throwSAXException("No widget exists at the path \"" + widgetPath + "\", relative to the form container.");
+                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + id + "', " +
+                                       "relative to the form container, at " + getLocation());
             } else {
-                throwSAXException("No widget exists at the path \"" + widgetPath + "\", relative to the container \"" +
-                                  contextWidget.getRequestParameterName() + "\".");
+                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + id + "', " +
+                                       "relative to the '" + contextWidget.getRequestParameterName() + "', " +
+                                       "at " + getLocation());
             }
         }
-        return widget;
     }
 
-    protected void getRepeaterWidget(String handler) throws SAXException {
-        widgetPath = getWidgetId(input.attrs);
-        widget = getWidget(widgetPath);
-        if (!(widget instanceof Repeater)) {
-            throwWrongWidgetType("RepeaterWidgetLabelHandler", input.loc, "repeater");
+    protected void setTypedWidget(String loc, Attributes attrs, Class wclass, String wname) throws SAXException {
+        setWidget(loc, attrs);
+        if (!wclass.isInstance(widget)) {
+            throw new SAXException("Element '" + loc + "' can only be used with " + wname + " widgets, " +
+                                   "at " + getLocation());
         }
     }
 
     protected boolean isVisible(Widget widget) {
         return widget.getCombinedState().isDisplayingValues();
-    }
-
-    public void throwWrongWidgetType(String pipeName, String element, String widget) throws SAXException {
-        throwSAXException(pipeName + ": Element \"" + element + "\" can only be used for " + widget + " widgets.");
     }
 
     /**
@@ -218,541 +205,453 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         return this.lexicalHandler;
     }
 
-    public Handler nestedTemplate() throws SAXException {
-        if (Constants.TEMPLATE_NS.equals(input.uri)) {
-            // Element in forms template namespace.
-            Handler handler = (Handler)templates.get(input.loc);
-            if (handler != null) {
-                return handler;
-            } else if (FORM_TEMPLATE_EL.equals(input.loc)) {
-                throwSAXException("Element \"form-template\" must not be nested.");
-                return null; // Keep the compiler happy.
+    //
+    // Handler classes to transform CForms template elements
+    //
+
+    protected class NestedHandler extends CopyHandler {
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            // Is it forms namespace?
+            if (!Constants.TEMPLATE_NS.equals(uri)) {
+                return hNested;
+            }
+
+            Handler handler = (Handler) templates.get(loc);
+            if (handler == null) {
+                throw new SAXException("Element '" + loc + "' was not recognized, " +
+                                       "at " + getLocation());
+            }
+
+            return handler;
+        }
+    }
+
+    /**
+     * Top level handler for the forms template
+     */
+    protected class DocHandler extends CopyHandler {
+        public void startPrefixMapping(String prefix, String uri)
+        throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                // We consume this namespace completely.
+                EffectWidgetReplacingPipe.this.namespacePrefix = prefix;
+                return;
+            }
+
+            // Pass through all others.
+            super.startPrefixMapping(prefix, uri);
+        }
+
+        public void endPrefixMapping(String prefix)
+        throws SAXException {
+            if (prefix.equals(EffectWidgetReplacingPipe.this.namespacePrefix)) {
+                // We consume this namespace completely.
+                EffectWidgetReplacingPipe.this.namespacePrefix = null;
+                return;
+            }
+
+            // Pass through all others.
+            super.endPrefixMapping(prefix);
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                if (!FORM_TEMPLATE_EL.equals(loc)) {
+                    throw new SAXException("Element '" + loc + "' is not permitted outside of " +
+                                           "'form-template', at " + getLocation());
+                }
+
+                return hForm;
+            }
+
+            return super.nestedElement(uri, loc, raw, attrs);
+        }
+    }
+
+    /**
+     * <code>ft:form-template</code> element handler.
+     * <pre>
+     * &lt;ft:form-template locale="..." location="..."&gt;
+     *   ...
+     * &lt;/ft:form-template&gt;
+     * </pre>
+     */
+    protected class FormHandler extends NestedHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            if (contextWidget != null) {
+                throw new SAXException("Element 'form-template' can not be nested, " +
+                                       "at " + getLocation());
+            }
+
+            AttributesImpl newAttrs = attrs == null || attrs.getLength() == 0?
+                    new AttributesImpl():
+                    new AttributesImpl(attrs);
+
+            // ====> Retrieve the form
+            String formLocation = attrs.getValue(LOCATION);
+            if (formLocation != null) {
+                // Remove the location attribute
+                newAttrs.removeAttribute(newAttrs.getIndex(LOCATION));
+            }
+            contextWidget = pipeContext.findForm(formLocation);
+
+            // ====> Check if form visible (and skip it if it's not)
+            if (!isVisible(contextWidget)) {
+                return hNull;
+            }
+
+            // ====> Determine the Locale
+            // TODO pull this locale stuff also up in the Config object?
+            String localeAttr = attrs.getValue("locale");
+            if (localeAttr != null) { // first use value of locale attribute if any
+                localeAttr = pipeContext.translateText(localeAttr);
+                pipeContext.setLocale(I18nUtils.parseLocale(localeAttr));
+            } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
+                pipeContext.setLocale(pipeContext.getLocaleParameter());
             } else {
-                throwSAXException("Unrecognized template: " + input.loc);
-                return null; // Keep the compiler happy.
+                // use locale specified in bizdata supplied for form
+                Object locale = null;
+                try {
+                    locale = pipeContext.evaluateExpression("/locale");
+                } catch (JXPathException e) {}
+                if (locale != null) {
+                    pipeContext.setLocale((Locale)locale);
+                } else {
+                    // final solution: use locale defined in the server machine
+                    pipeContext.setLocale(Locale.getDefault());
+                }
             }
-        } else {
-            // Element not in forms namespace.
-            return nestedHandler;
+
+            // We need to merge input.attrs with possible overruling attributes
+            // from the pipeContext
+            pipeContext.addFormAttributes(newAttrs);
+            String[] namesToTranslate = {"action"};
+            Attributes transAttrs = translateAttributes(newAttrs, namesToTranslate);
+
+            getContentHandler().startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
+            getContentHandler().startElement(Constants.INSTANCE_NS, "form-template", Constants.INSTANCE_PREFIX_COLON + "form-template", transAttrs);
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+            getContentHandler().endElement(Constants.INSTANCE_NS, "form-template", Constants.INSTANCE_PREFIX_COLON + "form-template");
+            getContentHandler().endPrefixMapping(Constants.INSTANCE_PREFIX);
+            contextWidget = null;
         }
     }
 
-    //==============================================
-    // Handler classes to transform CForms templates
-    //==============================================
+    protected class SkipHandler extends NestedHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            return this;
+        }
 
-    protected class DocHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_SET_DOCUMENT_LOCATOR:
-                out.copy();
-                return this;
-            case EVENT_START_PREFIX_MAPPING:
-                if(Constants.TEMPLATE_NS.equals(input.uri)) {
-                    // We consume this namespace completely.
-                    EffectWidgetReplacingPipe.this.namespacePrefix = input.prefix;
-                    return this;
-                } else {
-                    // Pass through all others.
-                    out.copy();
-                    return this;
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+        }
+    }
+
+    protected class WidgetLabelHandler extends ErrorHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setWidget(loc, attrs);
+            widget.generateLabel(getContentHandler());
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+        }
+    }
+
+    protected class WidgetHandler extends NullHandler {
+        private boolean hasStyling;
+
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setWidget(loc, attrs);
+            if (!isVisible(widget)) {
+                return hNull;
+            }
+
+            hasStyling = false;
+            return this;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            if (Constants.INSTANCE_NS.equals(uri)) {
+                if (!STYLING_EL.equals(loc)) {
+                    throw new SAXException("Element '" + loc + "' is not permitted within 'widget', " +
+                                           "at " + getLocation());
                 }
-            case EVENT_ELEMENT:
-                if (Constants.TEMPLATE_NS.equals(input.uri)) {
-                    if (FORM_TEMPLATE_EL.equals(input.loc)) {
-                        return formHandler;
-                    } else {
-                        throwSAXException("CForms template \"" + input.loc +
-                                "\" not permitted outside \"form-template\" (" + getLocation() + ")");
+                hasStyling = true;
+                beginBuffer();
+                // Buffer styling elements
+                return hBuffer;
+            }
+            return hNull;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+            if (hasStyling) {
+                hasStyling = false;
+                hStyling.recycle();
+                hStyling.setSaxFragment(endBuffer());
+                hStyling.setContentHandler(getContentHandler());
+                hStyling.setLexicalHandler(getLexicalHandler());
+                widget.generateSaxFragment(hStyling, pipeContext.getLocale());
+            } else {
+                widget.generateSaxFragment(getContentHandler(), pipeContext.getLocale());
+            }
+            widget = null;
+        }
+    }
+
+    protected class RepeaterSizeHandler extends ErrorHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Repeater.class, "repeater");
+            ((Repeater) widget).generateSize(getContentHandler());
+            widget = null;
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+        }
+    }
+
+    protected class RepeaterWidgetLabelHandler extends ErrorHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Repeater.class, "repeater");
+            String widgetPath = attrs.getValue("widget-id");
+            if (widgetPath == null || widgetPath.equals("")) {
+                throw new SAXException("Element '" + loc + "' missing required 'widget-id' attribute, " +
+                                       "at " + getLocation());
+            }
+            ((Repeater)widget).generateWidgetLabel(widgetPath, getContentHandler());
+            widget = null;
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+        }
+    }
+
+    protected class RepeaterWidgetHandler extends BufferHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Repeater.class, "repeater");
+            if (isVisible(widget)) {
+                beginBuffer();
+                return this;
+            }
+            return hNull;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            return hBuffer;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+            SaxBuffer buffer = endBuffer();
+            final Repeater repeater = (Repeater) widget;
+            final int rowCount = repeater.getSize();
+            pushHandler(hNested);
+            contextWidgets.addFirst(contextWidget);
+            for (int i = 0; i < rowCount; i++) {
+                contextWidget = repeater.getRow(i);
+                if (isVisible(contextWidget)) {
+                    buffer.toSAX(EffectWidgetReplacingPipe.this);
+                }
+            }
+            contextWidget = (Widget) contextWidgets.removeFirst();
+            popHandler();
+            widget = null;
+        }
+    }
+
+    protected class AggregateWidgetHandler extends NestedHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, AggregateField.class, "aggregate");
+            if (!isVisible(widget)) {
+                return hNull;
+            }
+
+            contextWidgets.addFirst(contextWidget);
+            contextWidget = widget;
+            return this;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+            contextWidget = (Widget) contextWidgets.removeFirst();
+        }
+    }
+
+    protected class GroupHandler extends AggregateWidgetHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Group.class, "group");
+            if (!isVisible(widget)) {
+                return hNull;
+            }
+
+            contextWidgets.addFirst(contextWidget);
+            contextWidget = widget;
+            return this;
+        }
+    }
+
+    protected class StructHandler extends AggregateWidgetHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Struct.class, "struct");
+            if (!isVisible(widget)) {
+                return hNull;
+            }
+
+            contextWidgets.addFirst(contextWidget);
+            contextWidget = widget;
+            return this;
+        }
+    }
+
+    protected class UnionHandler extends CopyHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setTypedWidget(loc, attrs, Union.class, "union");
+            if (!isVisible(widget)) {
+                return hNull;
+            }
+
+            contextWidgets.addFirst(contextWidget);
+            contextWidget = widget;
+            return this;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                if ("case".equals(loc)) {
+                    String id = attrs.getValue("id");
+                    if (id == null) {
+                        throw new SAXException("Element 'case' missing required 'id' attribute, " +
+                                               "at " + getLocation());
                     }
-                } else {
-                    // Pass through all others.
-                    out.copy();
-                    return this;
-                }
-            case EVENT_END_PREFIX_MAPPING:
-                // We consume this namespace completely
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class FormHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                if (contextWidget != null) {
-                    throwSAXException("Detected nested ft:form-template elements, this is not allowed.");
-                }
-
-                // ====> Retrieve the form
-                // First look for the form using the location attribute, if any
-                String formJXPath = input.attrs.getValue(LOCATION);
-                if (formJXPath != null) {
-                    // remove the location attribute
-                    input.removeAttribute(LOCATION);
-                }
-                contextWidget = pipeContext.findForm(formJXPath);
-
-                if (!isVisible(contextWidget)) {
-                    // Skip widget and its content
-                    return nullHandler;
-                }
-
-                // ====> Determine the Locale
-                //TODO pull this locale stuff also up in the Config object?
-                String localeAttr = input.attrs.getValue("locale");
-                if (localeAttr != null) { // first use value of locale attribute if any
-                    localeAttr = pipeContext.translateText(localeAttr);
-                    pipeContext.setLocale(I18nUtils.parseLocale(localeAttr));
-                } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
-                    pipeContext.setLocale(pipeContext.getLocaleParameter());
-                } else {
-                    //TODO pull this locale stuff also up in the Config object?
-                    // use locale specified in bizdata supplied for form
-                    Object locale = null;
-                    try {
-                        locale = pipeContext.evaluateExpression("/locale");
-                    } catch (JXPathException e) {}
-                    if (locale != null) {
-                        pipeContext.setLocale((Locale)locale);
+                    String value = (String) contextWidget.getValue();
+                    if (id.equals(value != null ? value : "")) {
+                        return hSkip;
                     }
-                    else {
-                        // final solution: use locale defined in the server machine
-                        pipeContext.setLocale(Locale.getDefault());
+                    return hNull;
+                }
+                throw new SAXException("Element '" + loc + "' is not permitted within 'union', " +
+                                       "at " + getLocation());
+            }
+            return hUnionPassThru;
+        }
+
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+            contextWidget = (Widget)contextWidgets.removeFirst();
+        }
+    }
+
+    protected class UnionPassThruHandler extends CopyHandler {
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                if ("case".equals(loc)) {
+                    if (contextWidget.getValue().equals(attrs.getValue("id"))) {
+                        return hSkip;
                     }
+                    return hNull;
                 }
-
-                out.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
-
-                // we need to merge input.attrs with possible overruling attributes
-                // from the pipeContext
-                input.addAttributes(pipeContext.getFormAttributes());
-
-                String[] namesToTranslate = {"action"};
-                Attributes transAttrs = translateAttributes(input.attrs, namesToTranslate);
-                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "form-template", transAttrs);
-                out.startElement();
-                return this;
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            case EVENT_END_ELEMENT:
-                out.copy();
-                out.endPrefixMapping(Constants.INSTANCE_PREFIX);
-                contextWidget = null;
-                return this;
-            default:
-                out.copy();
-                return this;
+                throw new SAXException("Element '" + loc + "' is not permitted within 'union', " +
+                                       "at " + getLocation());
             }
+            return this;
         }
     }
 
-    protected class NestedHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            default:
-                out.copy();
-                return this;
+    protected class NewHandler extends CopyHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            String id = getWidgetId(loc, attrs);
+            SaxBuffer buffer = (SaxBuffer) classes.get(id);
+            if (buffer == null) {
+                throw new SAXException("New: Class '" + id + "' does not exist, " +
+                                       "at " + getLocation());
             }
+            pushHandler(hNested);
+            buffer.toSAX(EffectWidgetReplacingPipe.this);
+            popHandler();
+            return this;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            return hNull;
+        }
+
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
         }
     }
 
-    protected class SkipHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                return this;
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            case EVENT_END_ELEMENT:
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
+    protected class ClassHandler extends BufferHandler {
+        // FIXME What if <class> is nested within <class>?
+        private String widgetPath;
+
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            widgetPath = getWidgetId(loc, attrs);
+            beginBuffer();
+            return this;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            return hBuffer;
+        }
+
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+            classes.put(widgetPath, endBuffer());
         }
     }
 
-    protected class WidgetLabelHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                Widget widget = getWidget(widgetPath);
-                widget.generateLabel(getContentHandler());
-                widget = null;
-                return this;
-            case EVENT_ELEMENT:
-                return nullHandler;
-            case EVENT_END_ELEMENT:
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
+    protected class ContinuationIdHandler extends ErrorHandler {
+        protected String getName() {
+            return "continuation-id";
         }
-    }
 
-    protected class WidgetHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-
-                if (isVisible(widget)) {
-                    gotStylingElement = false;
-                    out.bufferInit();
-                    return this;
-                } else {
-                    // Skip widget and its content
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                if (Constants.INSTANCE_NS.equals(input.uri) && STYLING_EL.equals(input.loc)) {
-                    gotStylingElement = true;
-                }
-                return bufferHandler;
-
-            case EVENT_END_ELEMENT:
-                stylingHandler.recycle();
-                stylingHandler.setSaxFragment(out.getBuffer());
-                stylingHandler.setContentHandler(getContentHandler());
-                stylingHandler.setLexicalHandler(getLexicalHandler());
-                widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
-                widget = null;
-                out.bufferFini();
-                return this;
-
-            default:
-                out.copy();
-                return this;
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            // Insert the continuation id
+            // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
+            Object idObj = pipeContext.evaluateExpression("$cocoon/continuation/id");
+            if (idObj == null) {
+                throw new SAXException("No continuation found");
             }
+
+            String id = idObj.toString();
+            getContentHandler().startElement(Constants.INSTANCE_NS, "continuation-id", Constants.INSTANCE_PREFIX_COLON + "continuation-id", attrs);
+            getContentHandler().characters(id.toCharArray(), 0, id.length());
+            getContentHandler().endElement(Constants.INSTANCE_NS, "continuation-id", Constants.INSTANCE_PREFIX_COLON + "continuation-id");
+            return this;
         }
-    }
 
-    protected class RepeaterSizeHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                getRepeaterWidget("RepeaterSizeHandler");
-                ((Repeater)widget).generateSize(getContentHandler());
-                widget = null;
-                return this;
-            case EVENT_ELEMENT:
-                return nullHandler;
-            case EVENT_END_ELEMENT:
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class RepeaterWidgetLabelHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                getRepeaterWidget("RepeaterWidgetLabelHandler");
-                String widgetPath = input.attrs.getValue("widget-id");
-                if (widgetPath == null || widgetPath.equals(""))
-                    throwSAXException("Element repeater-widget-label missing required widget-id attribute.");
-                ((Repeater)widget).generateWidgetLabel(widgetPath, getContentHandler());
-                widget = null;
-                return this;
-            case EVENT_ELEMENT:
-                return nullHandler;
-            case EVENT_END_ELEMENT:
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class RepeaterWidgetHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                getRepeaterWidget("RepeaterWidgetHandler");
-                if (isVisible(widget)) {
-                  out.bufferInit();
-                  return this;
-                } else {
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                return bufferHandler;
-            case EVENT_END_ELEMENT:
-                Repeater repeater = (Repeater)widget;
-                int rowCount = repeater.getSize();
-                handlers.addFirst(handler);
-                handler = nestedHandler;
-                contextWidgets.addFirst(contextWidget);
-                for (int i = 0; i < rowCount; i++) {
-                    Repeater.RepeaterRow row = repeater.getRow(i);
-                    contextWidget = row;
-                    if (isVisible(contextWidget)) {
-                      out.getBuffer().toSAX(EffectWidgetReplacingPipe.this);
-                    }
-                }
-                contextWidget = (Widget)contextWidgets.removeFirst();
-                handler = (Handler)handlers.removeFirst();
-                widget = null;
-                out.bufferFini();
-                return this;
-            default:
-                out.buffer();
-                return this;
-            }
-        }
-    }
-
-    protected class AggregateWidgetHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-                if (!(widget instanceof AggregateField)) {
-                    throwWrongWidgetType("AggregateWidgetHandler", input.loc, "aggregate");
-                }
-
-                if (isVisible(widget)) {
-                    contextWidgets.addFirst(contextWidget);
-                    contextWidget = widget;
-                    return this;
-                } else {
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            case EVENT_END_ELEMENT:
-                contextWidget = (Widget)contextWidgets.removeFirst();
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class GroupHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-                if (!(widget instanceof Group)) {
-                    throwWrongWidgetType("GroupHandler", input.loc, "group");
-                }
-                if (isVisible(widget)) {
-                    contextWidgets.addFirst(contextWidget);
-                    contextWidget = widget;
-                    return this;
-                } else {
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            case EVENT_END_ELEMENT:
-                contextWidget = (Widget)contextWidgets.removeFirst();
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class StructHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-                if (!(widget instanceof Struct)) {
-                    throwWrongWidgetType("StructHandler", input.loc, "struct");
-                }
-                if (isVisible(widget)) {
-                    contextWidgets.addFirst(contextWidget);
-                    contextWidget = widget;
-                    //Don't output fi:struct
-                    // out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
-                    // out.attributes();
-                    // out.startElement();
-                   return this;
-                } else {
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                return nestedTemplate();
-            case EVENT_END_ELEMENT:
-                // don't output fi:struct
-                // out.endElement();
-                contextWidget = (Widget)contextWidgets.removeFirst();
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class UnionHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-                if (!(widget instanceof Union)) {
-                    throwWrongWidgetType("UnionHandler", input.loc, "union");
-                }
-                if (isVisible(widget)) {
-                    contextWidgets.addFirst(contextWidget);
-                    contextWidget = widget;
-                    // Don't output fi:union
-                    //out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "union");
-                    //out.startElement();
-                    return this;
-                } else {
-                    return nullHandler;
-                }
-            case EVENT_ELEMENT:
-                if (Constants.TEMPLATE_NS.equals(input.uri)) {
-                    if ("case".equals(input.loc)) {
-                        String id = input.attrs.getValue("id");
-                        if (id == null) throwSAXException("Element \"case\" missing required \"id\" attribute.");
-                        String value = (String)contextWidget.getValue();
-                        if (id.equals(value != null ? value : "")) {
-                            return skipHandler;
-                        } else {
-                            return nullHandler;
-                        }
-                    } else if (FORM_TEMPLATE_EL.equals(input.loc)) {
-                        throwSAXException("Element \"form-template\" must not be nested.");
-                    } else {
-                        throwSAXException("Unrecognized template: " + input.loc);
-                    }
-                } else {
-                    return unionPassThruHandler;
-                }
-            case EVENT_END_ELEMENT:
-                // don't output fi:union
-                //out.endElement();
-                contextWidget = (Widget)contextWidgets.removeFirst();
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class UnionPassThruHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_ELEMENT:
-                if (Constants.TEMPLATE_NS.equals(input.uri)) {
-                    if ("case".equals(input.loc)) {
-                        if (contextWidget.getValue().equals(input.attrs.getValue("id"))) {
-                            return skipHandler;
-                        } else {
-                            return nullHandler;
-                        }
-                    } else if (FORM_TEMPLATE_EL.equals(input.loc)) {
-                        throwSAXException("Element \"form-template\" must not be nested.");
-                    } else {
-                        throwSAXException("Unrecognized template: " + input.loc);
-                    }
-                } else {
-                    return this;
-                }
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class NewHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                SaxBuffer classBuffer = (SaxBuffer)classes.get(widgetPath);
-                if (classBuffer == null) {
-                    throwSAXException("New: Class \"" + widgetPath + "\" does not exist.");
-                }
-                handlers.addFirst(handler);
-                handler = nestedHandler;
-                classBuffer.toSAX(EffectWidgetReplacingPipe.this);
-                handler = (Handler)handlers.removeFirst();
-                return this;
-            case EVENT_ELEMENT:
-                return nullHandler;
-            case EVENT_END_ELEMENT:
-                return this;
-            default:
-                out.copy();
-                return this;
-            }
-        }
-    }
-
-    protected class ClassHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                out.bufferInit();
-                return this;
-            case EVENT_ELEMENT:
-                return bufferHandler;
-            case EVENT_END_ELEMENT:
-                classes.put(widgetPath, out.getBuffer());
-                out.bufferFini();
-                return this;
-            default:
-                out.buffer();
-                return this;
-            }
-        }
-    }
-
-    protected class ContinuationIdHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch(event) {
-            case EVENT_START_ELEMENT:
-                // Insert the continuation id
-                // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
-                Object idObj = pipeContext.evaluateExpression("$cocoon/continuation/id");
-                if (idObj == null) {
-                    throwSAXException("No continuation found");
-                }
-
-                String id = idObj.toString();
-                out.element(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS, "continuation-id", input.attrs);
-                out.startElement();
-                out.characters(id.toCharArray(), 0, id.length());
-                out.endElement();
-                return this;
-            case EVENT_END_ELEMENT:
-                return this;
-            case EVENT_IGNORABLE_WHITESPACE:
-                return this;
-            default:
-                throwSAXException("ContinuationIdHandler: No content allowed in \"continuation-id\" element");
-                return null; // Keep the compiler happy.
-            }
+        public void endElement(String uri, String loc, String raw) throws SAXException {
         }
     }
 
@@ -760,18 +659,20 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * This ContentHandler helps in inserting SAX events before the closing tag of the root
      * element.
      */
-    protected class StylingContentHandler extends AbstractXMLPipe implements Recyclable {
+    protected class StylingContentHandler extends AbstractXMLPipe
+                                          implements Recyclable {
+
         private int elementNesting;
-        private SaxBuffer saxBuffer;
+        private SaxBuffer styling;
 
         public void setSaxFragment(SaxBuffer saxFragment) {
-            saxBuffer = saxFragment;
+            styling = saxFragment;
         }
 
         public void recycle() {
             super.recycle();
             elementNesting = 0;
-            saxBuffer = null;
+            styling = null;
         }
 
         public void startElement(String uri, String loc, String raw, Attributes a)
@@ -783,16 +684,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public void endElement(String uri, String loc, String raw)
         throws SAXException {
             elementNesting--;
-            if (elementNesting == 0 && saxBuffer != null) {
-                if (gotStylingElement) {
-                    // Just deserialize
-                    saxBuffer.toSAX(getContentHandler());
-                } else {
-                    // Insert an enclosing <wi:styling>
-                    out.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, XMLUtils.EMPTY_ATTRIBUTES);
-                    saxBuffer.toSAX(getContentHandler());
-                    out.endElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL);
-                }
+            if (elementNesting == 0) {
+                styling.toSAX(getContentHandler());
             }
             super.endElement(uri, loc, raw);
         }
@@ -801,37 +694,41 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     /**
      * Inserts validation errors (if any) for the Field widgets
      */
-    protected class ValidationErrorHandler extends Handler {
-        public Handler process() throws SAXException {
-            switch (event) {
-            case EVENT_START_ELEMENT:
-                widgetPath = getWidgetId(input.attrs);
-                widget = getWidget(widgetPath);
-                out.bufferInit();
-                return this;
+    protected class ValidationErrorHandler extends NullHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            setWidget(loc, attrs);
+            return this;
+        }
 
-            case EVENT_ELEMENT:
-                return bufferHandler;
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
+        throws SAXException {
+            return hNull;
+        }
 
-            case EVENT_END_ELEMENT:
-                if (widget instanceof ValidationErrorAware) {
-                    ValidationError error = ((ValidationErrorAware)widget).getValidationError();
-                    if (error != null) {
-                        out.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
-                        error.generateSaxFragment(stylingHandler);
-                        out.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
-                    }
+        public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+            if (widget instanceof ValidationErrorAware) {
+                ValidationError error = ((ValidationErrorAware)widget).getValidationError();
+                if (error != null) {
+                    getContentHandler().startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
+                    error.generateSaxFragment(hStyling);
+                    getContentHandler().endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
                 }
-                widget = null;
-                out.bufferFini();
-                return this;
-
-            default:
-                out.copy();
-                return this;
             }
+            widget = null;
         }
     }
+
+
+    public void recycle() {
+        super.recycle();
+        this.contextWidget = null;
+        this.widget = null;
+        this.pipeContext = null;
+        this.namespacePrefix = null;
+    }
+
 
     private Attributes translateAttributes(Attributes attributes, String[] names) {
         AttributesImpl newAtts = new AttributesImpl(attributes);
@@ -844,14 +741,5 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             }
         }
         return newAtts;
-    }
-
-    public void recycle() {
-        super.recycle();
-        this.contextWidget = null;
-        this.widget = null;
-        this.widgetPath = null;
-        this.pipeContext = null;
-        this.namespacePrefix = null;
     }
 }
