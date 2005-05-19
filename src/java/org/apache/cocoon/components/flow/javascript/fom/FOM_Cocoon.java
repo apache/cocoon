@@ -324,7 +324,8 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public Object jsFunction_getComponent(String id)
         throws Exception {
-        return getServiceManager().lookup(id);
+        return org.mozilla.javascript.Context.javaToJS(getServiceManager().lookup(id), 
+                                                       getParentScope());
     }
 
     /**
