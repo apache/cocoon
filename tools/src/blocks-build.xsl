@@ -57,10 +57,16 @@
         </fileset>
       </path>
 
-      <!-- Files, which should no compiled or otherwise processed -->
-      <patternset id="unprocessed.sources">
+      <!-- Text files, which should no compiled or otherwise processed -->
+      <patternset id="unprocessed.text-sources">
         <exclude name="**/*.java"/>
         <exclude name="**/package.html"/>
+        <exclude name="**/*.gif"/>
+      </patternset>
+
+      <!-- Binary files, which should no compiled or otherwise processed -->
+      <patternset id="unprocessed.binary-sources">
+        <include name="**/*.gif"/>
       </patternset>
 
       <macrodef name="test-include-block">
@@ -163,7 +169,13 @@
 
       <copy filtering="on" todir="${{build.blocks}}/@{{name}}/dest">
         <fileset dir="@{{dir}}/java">
-          <patternset refid="unprocessed.sources"/>
+          <patternset refid="unprocessed.text-sources"/>
+        </fileset>
+      </copy>
+
+      <copy filtering="off" todir="${{build.blocks}}/@{{name}}/dest">
+        <fileset dir="@{{dir}}/java">
+          <patternset refid="unprocessed.binary-sources"/>
         </fileset>
       </copy>
 
