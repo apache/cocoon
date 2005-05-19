@@ -39,8 +39,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -86,12 +88,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String WIDGET = "widget";
     private static final String WIDGET_LABEL = "widget-label";
 
-    protected Widget contextWidget;
-    protected LinkedList contextWidgets;
-    protected LinkedList chooseWidgets;
-    protected Widget widget;
-    protected Map classes;
-
     private final AggregateWidgetHandler     hAggregate       = new AggregateWidgetHandler();
     private final ChooseHandler              hChoose          = new ChooseHandler();
     private final ChoosePassThruHandler      hChoosePassThru  = new ChoosePassThruHandler();
@@ -122,12 +118,25 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected FormsPipelineConfig pipeContext;
 
     /**
-     * Namespace prefix used for the namespace <code>Constants.FT_NS</code>.
+     * The namespaces and their prefixes
      */
-    protected String namespacePrefix;
+    private final List namespaces;
+
+    /**
+     * True if instance namespace has been mapped to the
+     * 'fi' prefix.
+     */
+    private boolean hasInstanceNamespace;
+
+    protected Widget contextWidget;
+    protected LinkedList contextWidgets;
+    protected LinkedList chooseWidgets;
+    protected Widget widget;
+    protected Map classes;
 
 
     public EffectWidgetReplacingPipe() {
+        namespaces = new ArrayList(5);
         // Setup map of templates.
         templates = new HashMap();
         templates.put(AGGREGATE_WIDGET, hAggregate);
@@ -152,9 +161,18 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         this.pipeContext = pipeContext;
 
         // Initialize widget related variables
-        contextWidgets = new LinkedList();
-        chooseWidgets = new LinkedList();
-        classes = new HashMap();
+        this.contextWidgets = new LinkedList();
+        this.chooseWidgets = new LinkedList();
+        this.classes = new HashMap();
+    }
+
+    public void recycle() {
+        super.recycle();
+        this.contextWidget = null;
+        this.widget = null;
+        this.pipeContext = null;
+        this.namespaces.clear();
+        this.hasInstanceNamespace = false;
     }
 
     /**
@@ -236,6 +254,69 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         return this.lexicalHandler;
     }
 
+
+    /**
+     * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#startPrefixMapping
+     */
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        if (prefix != null) {
+            this.namespaces.add(new String[] {prefix, uri});
+        }
+
+        // Consume template namespace mapping
+        if (!Constants.TEMPLATE_NS.equals(uri)) {
+            super.startPrefixMapping(prefix, uri);
+        }
+    }
+
+    /**
+     * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#endPrefixMapping
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        String uri = null;
+
+        if (prefix != null) {
+            // Find and remove the namespace prefix
+            boolean found = false;
+            for (int i = this.namespaces.size() - 1; i >= 0; i--) {
+                final String[] prefixAndUri = (String[]) this.namespaces.get(i);
+                if (prefixAndUri[0].equals(prefix)) {
+                    uri = prefixAndUri[1];
+                    this.namespaces.remove(i);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new SAXException("Namespace for prefix '" + prefix + "' not found.");
+            }
+        }
+
+        // Consume template namespace mapping
+        if (!Constants.TEMPLATE_NS.equals(uri)) {
+            super.endPrefixMapping(prefix);
+        }
+    }
+
+    /**
+     * @return True if prefix is already mapped into the namespace
+     */
+    protected boolean hasPrefixMapping(String uri, String prefix) {
+        final int l = this.namespaces.size();
+        for (int i = 0; i < l; i++) {
+            String[] prefixAndUri = (String[]) this.namespaces.get(i);
+            if (prefixAndUri[0].equals(prefix) && prefixAndUri[1].equals(uri)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //
     // Handler classes to transform CForms template elements
     //
@@ -262,30 +343,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * Top level handler for the forms template
      */
     protected class DocHandler extends CopyHandler {
-        public void startPrefixMapping(String prefix, String uri)
-        throws SAXException {
-            if (Constants.TEMPLATE_NS.equals(uri)) {
-                // We consume this namespace completely.
-                EffectWidgetReplacingPipe.this.namespacePrefix = prefix;
-                return;
-            }
-
-            // Pass through all others.
-            super.startPrefixMapping(prefix, uri);
-        }
-
-        public void endPrefixMapping(String prefix)
-        throws SAXException {
-            if (prefix.equals(EffectWidgetReplacingPipe.this.namespacePrefix)) {
-                // We consume this namespace completely.
-                EffectWidgetReplacingPipe.this.namespacePrefix = null;
-                return;
-            }
-
-            // Pass through all others.
-            super.endPrefixMapping(prefix);
-        }
-
         public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
             if (Constants.TEMPLATE_NS.equals(uri)) {
@@ -362,7 +419,10 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             String[] namesToTranslate = {"action"};
             Attributes transAttrs = translateAttributes(newAttrs, namesToTranslate);
 
-            getContentHandler().startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
+            hasInstanceNamespace = hasPrefixMapping(Constants.INSTANCE_NS, Constants.INSTANCE_PREFIX);
+            if (!hasInstanceNamespace) {
+                getContentHandler().startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
+            }
             getContentHandler().startElement(Constants.INSTANCE_NS, "form-template", Constants.INSTANCE_PREFIX_COLON + "form-template", transAttrs);
             return this;
         }
@@ -370,11 +430,16 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public void endElement(String uri, String loc, String raw)
         throws SAXException {
             getContentHandler().endElement(Constants.INSTANCE_NS, "form-template", Constants.INSTANCE_PREFIX_COLON + "form-template");
-            getContentHandler().endPrefixMapping(Constants.INSTANCE_PREFIX);
+            if (!hasInstanceNamespace) {
+                getContentHandler().endPrefixMapping(Constants.INSTANCE_PREFIX);
+            }
             contextWidget = null;
         }
     }
 
+    /**
+     * <code>ft:choose</code>, <code>ft:union</code> use this.
+     */
     protected class SkipHandler extends NestedHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -850,14 +915,6 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-
-    public void recycle() {
-        super.recycle();
-        this.contextWidget = null;
-        this.widget = null;
-        this.pipeContext = null;
-        this.namespacePrefix = null;
-    }
 
 
     private Attributes translateAttributes(Attributes attributes, String[] names) {
