@@ -386,6 +386,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    //
+    // Widget Handlers
+    //
+
+    /**
+     * Handles <code>ft:widget-label</code> element.
+     */
     protected class WidgetLabelHandler extends ErrorHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -399,7 +406,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:widget</code> element.
+     */
     protected class WidgetHandler extends NullHandler {
+        // Widgets can't be nested, so this variable is Ok
         private boolean hasStyling;
 
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
@@ -431,6 +442,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public void endElement(String uri, String loc, String raw)
         throws SAXException {
             if (hasStyling) {
+                // Pipe widget XML through the special handler to insert styling element
+                // before fi:widget end element.
                 hasStyling = false;
                 hStyling.recycle();
                 hStyling.setSaxFragment(endBuffer());
@@ -438,12 +451,20 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 hStyling.setLexicalHandler(getLexicalHandler());
                 widget.generateSaxFragment(hStyling, pipeContext.getLocale());
             } else {
+                // Pipe widget XML directly into the output handler
                 widget.generateSaxFragment(getContentHandler(), pipeContext.getLocale());
             }
             widget = null;
         }
     }
 
+    //
+    // Repeater Handlers
+    //
+
+    /**
+     * Handles <code>ft:repeater-size</code> element.
+     */
     protected class RepeaterSizeHandler extends ErrorHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -458,6 +479,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:repeater-widget-label</code> element.
+     */
     protected class RepeaterWidgetLabelHandler extends ErrorHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -473,6 +497,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:repeater</code> element.
+     */
     protected class RepeaterWidgetHandler extends BufferHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -508,10 +535,25 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    protected class AggregateWidgetHandler extends NestedHandler {
+    //
+    // Grouping widgets Handlers
+    //
+
+    /**
+     * Handles <code>ft:group</code> element.
+     */
+    protected class GroupHandler extends NestedHandler {
+        protected Class getWidgetClass() {
+            return Group.class;
+        }
+
+        protected String getWidgetName() {
+            return "group";
+        }
+
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
-            setTypedWidget(loc, attrs, AggregateField.class, "aggregate");
+            setTypedWidget(loc, attrs, getWidgetClass(), getWidgetName());
             if (!isVisible(widget)) {
                 return hNull;
             }
@@ -527,20 +569,22 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    protected class GroupHandler extends AggregateWidgetHandler {
-        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
-        throws SAXException {
-            setTypedWidget(loc, attrs, Group.class, "group");
-            if (!isVisible(widget)) {
-                return hNull;
-            }
+    /**
+     * Handles <code>ft:aggregate</code> element.
+     */
+    protected class AggregateWidgetHandler extends GroupHandler {
+        protected Class getWidgetClass() {
+            return AggregateField.class;
+        }
 
-            contextWidgets.addFirst(contextWidget);
-            contextWidget = widget;
-            return this;
+        protected String getWidgetName() {
+            return "aggregate";
         }
     }
 
+    /**
+     * Handles <code>ft:choose</code> element.
+     */
     protected class ChooseHandler extends CopyHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
             setWidget(loc, getRequiredAttributeValue(loc, attrs, "path"));
@@ -572,6 +616,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:choose/ft:when</code> element.
+     */
     protected class ChoosePassThruHandler extends CopyHandler {
         public Handler nestedElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
             if (Constants.TEMPLATE_NS.equals(uri)) {
@@ -587,31 +634,29 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
-    protected class StructHandler extends AggregateWidgetHandler {
-        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
-        throws SAXException {
-            setTypedWidget(loc, attrs, Struct.class, "struct");
-            if (!isVisible(widget)) {
-                return hNull;
-            }
+    /**
+     * Handles <code>ft:struct</code> element.
+     */
+    protected class StructHandler extends GroupHandler {
+        protected Class getWidgetClass() {
+            return Struct.class;
+        }
 
-            contextWidgets.addFirst(contextWidget);
-            contextWidget = widget;
-            return this;
+        protected String getWidgetName() {
+            return "struct";
         }
     }
 
-    protected class UnionHandler extends CopyHandler {
-        public Handler startElement(String uri, String loc, String raw, Attributes attrs)
-        throws SAXException {
-            setTypedWidget(loc, attrs, Union.class, "union");
-            if (!isVisible(widget)) {
-                return hNull;
-            }
+    /**
+     * Handles <code>ft:union</code> element.
+     */
+    protected class UnionHandler extends GroupHandler {
+        protected Class getWidgetClass() {
+            return Union.class;
+        }
 
-            contextWidgets.addFirst(contextWidget);
-            contextWidget = widget;
-            return this;
+        protected String getWidgetName() {
+            return "union";
         }
 
         public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
@@ -630,12 +675,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             }
             return hUnionPassThru;
         }
-
-        public void endElement(String uri, String loc, String raw) throws SAXException {
-            contextWidget = (Widget)contextWidgets.removeFirst();
-        }
     }
 
+    /**
+     * Handles <code>ft:union/ft:case</code> element.
+     */
     protected class UnionPassThruHandler extends CopyHandler {
         public Handler nestedElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -653,6 +697,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:new</code> element.
+     */
     protected class NewHandler extends CopyHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -678,6 +725,14 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:class</code> element.
+     * <pre>
+     * &lt;ft:class id="..."&gt;
+     *   ...
+     * &lt;/ft:class&gt;
+     * </pre>
+     */
     protected class ClassHandler extends BufferHandler {
         // FIXME What if <class> is nested within <class>?
         private String widgetPath;
@@ -699,6 +754,12 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    /**
+     * Handles <code>ft:continuation-id</code> element.
+     * <pre>
+     * &lt;ft:continuation-id/&gt;
+     * </pre>
+     */
     protected class ContinuationIdHandler extends ErrorHandler {
         protected String getName() {
             return "continuation-id";
