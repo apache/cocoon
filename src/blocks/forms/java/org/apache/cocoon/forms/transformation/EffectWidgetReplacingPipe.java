@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.AggregateField;
+import org.apache.cocoon.forms.formmodel.DataWidget;
 import org.apache.cocoon.forms.formmodel.Group;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Struct;
@@ -69,6 +70,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String LOCATION = "location";
 
     private static final String AGGREGATE_WIDGET = "aggregate-widget";
+    private static final String CHOOSE = "choose";
     private static final String CLASS = "class";
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
@@ -86,10 +88,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     protected Widget contextWidget;
     protected LinkedList contextWidgets;
+    protected LinkedList chooseWidgets;
     protected Widget widget;
     protected Map classes;
 
     private final AggregateWidgetHandler     hAggregate       = new AggregateWidgetHandler();
+    private final ChooseHandler              hChoose          = new ChooseHandler();
+    private final ChoosePassThruHandler      hChoosePassThru  = new ChoosePassThruHandler();
     private final ClassHandler               hClass           = new ClassHandler();
     private final ContinuationIdHandler      hContinuationId  = new ContinuationIdHandler();
     private final DocHandler                 hDocument        = new DocHandler();
@@ -126,6 +131,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         // Setup map of templates.
         templates = new HashMap();
         templates.put(AGGREGATE_WIDGET, hAggregate);
+        templates.put(CHOOSE, hChoose);
         templates.put(CLASS, hClass);
         templates.put(CONTINUATION_ID, hContinuationId);
         templates.put(GROUP, hGroup);
@@ -147,36 +153,61 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
         // Initialize widget related variables
         contextWidgets = new LinkedList();
+        chooseWidgets = new LinkedList();
         classes = new HashMap();
     }
 
-    protected String getWidgetId(String loc, Attributes attributes) throws SAXException {
-        String widgetId = attributes.getValue("id");
-        if (widgetId == null || widgetId.equals("")) {
-            throw new SAXException("Element '" + loc + "' missing required 'id' attribute, " +
+    /**
+     * Get value of the required attribute
+     */
+    protected String getAttributeValue(String loc, Attributes attrs, String name) throws SAXException {
+        String value = attrs.getValue(name);
+        if (value == null) {
+            throw new SAXException("Element '" + loc + "' missing required '" + name + "' attribute, " +
                                    "at " + getLocation());
         }
-        return widgetId;
+        return value;
     }
 
     /**
-     * Get widget ID in the attributes, and find the widget
+     * Get non-empty value of the required attribute
+     */
+    protected String getRequiredAttributeValue(String loc, Attributes attrs, String name) throws SAXException {
+        String value = attrs.getValue(name);
+        if (value == null || value.equals("")) {
+            throw new SAXException("Element '" + loc + "' missing required '" + name + "' attribute, " +
+                                   "at " + getLocation());
+        }
+        return value;
+    }
+
+    /**
+     * Set the widget by the id attribute
      */
     protected void setWidget(String loc, Attributes attrs) throws SAXException {
-        String id = getWidgetId(loc, attrs);
-        widget = contextWidget.lookupWidget(id);
+        setWidget(loc, getRequiredAttributeValue(loc, attrs, "id"));
+    }
+
+    /**
+     * Set the widget by its path
+     */
+    protected void setWidget(String loc, String path) throws SAXException {
+        widget = contextWidget.lookupWidget(path);
         if (widget == null) {
             if (contextWidget.getRequestParameterName().equals("")) {
-                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + id + "', " +
+                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + path + "', " +
                                        "relative to the form container, at " + getLocation());
             } else {
-                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + id + "', " +
+                throw new SAXException("Element '" + loc + "' refers to unexistent widget path '" + path + "', " +
                                        "relative to the '" + contextWidget.getRequestParameterName() + "', " +
                                        "at " + getLocation());
             }
         }
     }
 
+    /**
+     * Set typed widget by the id attribute
+     */
     protected void setTypedWidget(String loc, Attributes attrs, Class wclass, String wname) throws SAXException {
         setWidget(loc, attrs);
         if (!wclass.isInstance(widget)) {
@@ -431,12 +462,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
             setTypedWidget(loc, attrs, Repeater.class, "repeater");
-            String widgetPath = attrs.getValue("widget-id");
-            if (widgetPath == null || widgetPath.equals("")) {
-                throw new SAXException("Element '" + loc + "' missing required 'widget-id' attribute, " +
-                                       "at " + getLocation());
-            }
-            ((Repeater)widget).generateWidgetLabel(widgetPath, getContentHandler());
+            String path = getRequiredAttributeValue(loc, attrs, "widget-id");
+            ((Repeater) widget).generateWidgetLabel(path, getContentHandler());
             widget = null;
             return this;
         }
@@ -514,6 +541,52 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    protected class ChooseHandler extends CopyHandler {
+        public Handler startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            setWidget(loc, getRequiredAttributeValue(loc, attrs, "path"));
+            // TODO: Should instead check for datatype convertable to String.
+            if (!(widget instanceof DataWidget)) {
+                throw new SAXException("Element '" + loc + "' can only be used with DataWidget widgets, " +
+                                       "at " + getLocation());
+            }
+            // Choose does not change the context widget like Union does.
+            chooseWidgets.addFirst(widget);
+            return this;
+        }
+
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                if ("when".equals(loc)) {
+                    String testValue = getAttributeValue(loc, attrs, "value");
+                    String value = (String) ((Widget) chooseWidgets.get(0)).getValue();
+                    return testValue.equals(value) ? hSkip : hNull;
+                }
+                throw new SAXException("Element '" + loc + "' is not permitted within 'choose', " +
+                                       "at " + getLocation());
+            }
+            return hChoosePassThru;
+        }
+
+        public void endElement(String uri, String loc, String raw) throws SAXException {
+            chooseWidgets.removeFirst();
+        }
+    }
+
+    protected class ChoosePassThruHandler extends CopyHandler {
+        public Handler nestedElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            if (Constants.TEMPLATE_NS.equals(uri)) {
+                if ("when".equals(loc)) {
+                    String testValue = getAttributeValue(loc, attrs, "value");
+                    String value = (String) ((Widget) chooseWidgets.get(0)).getValue();
+                    return testValue.equals(value)?  hSkip: hNull;
+                }
+                throw new SAXException("Element '" + loc + "' is not permitted within 'choose', " +
+                                       "at " + getLocation());
+            }
+            return this;
+        }
+    }
+
     protected class StructHandler extends AggregateWidgetHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
@@ -545,11 +618,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         throws SAXException {
             if (Constants.TEMPLATE_NS.equals(uri)) {
                 if ("case".equals(loc)) {
-                    String id = attrs.getValue("id");
-                    if (id == null) {
-                        throw new SAXException("Element 'case' missing required 'id' attribute, " +
-                                               "at " + getLocation());
-                    }
+                    String id = getAttributeValue(loc, attrs, "id");
                     String value = (String) contextWidget.getValue();
                     if (id.equals(value != null ? value : "")) {
                         return hSkip;
@@ -587,7 +656,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected class NewHandler extends CopyHandler {
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
-            String id = getWidgetId(loc, attrs);
+            String id = getRequiredAttributeValue(loc, attrs, "id");
             SaxBuffer buffer = (SaxBuffer) classes.get(id);
             if (buffer == null) {
                 throw new SAXException("New: Class '" + id + "' does not exist, " +
@@ -615,7 +684,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
         public Handler startElement(String uri, String loc, String raw, Attributes attrs)
         throws SAXException {
-            widgetPath = getWidgetId(loc, attrs);
+            widgetPath = getRequiredAttributeValue(loc, attrs, "id");
             beginBuffer();
             return this;
         }
