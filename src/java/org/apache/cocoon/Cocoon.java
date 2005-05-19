@@ -261,7 +261,7 @@ public class Cocoon
         RoleManager drm = null;
         String userRoles = conf.getAttribute("user-roles", "");
         if (!"".equals(userRoles)) {
-            Configuration roleConfig;
+            Configuration roles;
             try {
                 org.apache.cocoon.environment.Context context =
                     (org.apache.cocoon.environment.Context) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
@@ -270,16 +270,16 @@ public class Cocoon
                     throw new ConfigurationException("User-roles configuration '"+userRoles+"' cannot be found.");
                 }
                 is = new InputSource(new BufferedInputStream(url.openStream()));
-                is.setSystemId(this.configurationFile.getURI());
-                roleConfig = builder.build(is);
+                is.setSystemId(url.toString());
+                roles = builder.build(is);
             } catch (Exception e) {
                 throw new ConfigurationException("Error trying to load user-roles configuration", e);
             }
 
             RoleManager urm = new RoleManager(drm);
             ContainerUtil.enableLogging(urm, this.rootLogger.getChildLogger("roles").getChildLogger("user"));
-            ContainerUtil.configure(urm, roleConfig);
-            roleConfig = null;
+            ContainerUtil.configure(urm, roles);
+            roles = null;
             drm = urm;
         }
 
