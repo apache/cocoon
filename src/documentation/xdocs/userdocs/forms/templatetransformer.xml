@@ -102,7 +102,7 @@
 
         <source><![CDATA[<ft:form-template action="#{$cocoon/continuation/id}.continue" ...]]></source>
 
-        <p>The following objects are available in the JXPath context via the cocoon object: 
+        <p>The following objects are available in the JXPath context via the cocoon object:
         continuation, requests, session and parameters. The context of the JXPath expression is
         the map passed on from the flowscript (if any).</p>
 
@@ -146,10 +146,6 @@
   [... label, validation errors, ...]
   <fi:styling type="password"/>
 </fi:field>]]></source>
-
-        <p>Note: it is not recommended to use the older approach, i.e. without
-        the fi:styling element, anymore, since support for it will be dropped
-        at some point in the future. </p>
       </s2>
 
       <s2 title="ft:widget-label">
