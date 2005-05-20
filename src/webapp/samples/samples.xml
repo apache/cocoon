@@ -103,8 +103,8 @@
   </group>  
 
   <group name="Test Pages">
-    <sample name="Anteater tests" href="test/">
-      Pages used by the anteater-tests build target, for automated testing
+    <sample name="Automated tests" href="test/">
+      Pages used by HTTP-based automated tests.
     </sample>
   </group>
 
