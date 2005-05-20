@@ -351,7 +351,8 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         try {
             // Build a namespace-aware configuration object
             NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
-            SourceUtil.toSAX( source, handler );
+            AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
+            SourceUtil.toSAX( source, annotationsFilter );
             Configuration treeConfig = handler.getConfiguration();
 
             return build(treeConfig);
