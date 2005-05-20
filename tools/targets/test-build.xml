@@ -98,6 +98,7 @@
       verbose="false"
       usetimestamp="false"/>
 
+    <echo>To run a selected subset of the tests, use 'htmlunit.test.include' in build.properties (currently set to ${htmlunit.test.include})</echo>
     <junit printsummary="yes" fork="yes" failureproperty="htmlunit.test.failed">
       <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
       <jvmarg value="-Djunit.test.loglevel=${junit.test.loglevel}"/>
@@ -112,7 +113,7 @@
       <formatter type="xml"/>
       <batchtest todir="${build.test.htmlunit.output}">
         <fileset dir="${build.test.htmlunit}">
-          <include name="**/*TestCase.class"/>
+          <include name="${htmlunit.test.include}"/>
           <exclude name="**/HtmlUnitTestCase.class"/>
         </fileset>
       </batchtest>
