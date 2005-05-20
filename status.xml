@@ -206,11 +206,6 @@
    <action dev="LG" type="update">
      JXTemplateGenerator's ScriptManager uses transient store to cache parsed templates.
    </action>
-   <action dev="BD" type="add" fixes-bug="25352" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
-     The new "annotations" namespace (http://apache.org/cocoon/sitemap/annotations/1.0)
-     can be used to add information to sitemaps. The sitemap processor ignores this information,
-     which can be used for documentation purposes.
-   </action>
    <action dev="LG" type="update">
      Removed o.a.c.generation.JXTemplateGenerator from core. 
      Introduced o.a.c.template.jxtg.JXTemplateGenerator as the official templating language.
@@ -448,6 +443,11 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="BD" type="add" fixes-bug="25352" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
+      The new "annotations" namespace (http://apache.org/cocoon/sitemap/annotations/1.0)
+      can be used to add information to sitemaps. The sitemap processor ignores this information,
+      which can be used for documentation purposes.
+    </action>
     <action dev="AN" type="fix" fixes-bug="32934">
       XSP Block: Race condition could lead to duplicate application of same logicsheet
       with spurious compilation errors or undefined runtime behaviour.
