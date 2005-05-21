@@ -482,10 +482,13 @@ public class ContinuationsManagerImpl
      */
     private void invalidateContinuations(
             WebContinuationsHolder continuationsHolder) {
-        Set continuationIds = continuationsHolder.getContinuationIds();
-        Iterator idsIter = continuationIds.iterator();
-        while (idsIter.hasNext()) {
-            WebContinuation wk = continuationsHolder.get(idsIter.next());
+        // TODO: this avoids ConcurrentModificationException, still this is not
+        // the best solution and should be changed
+        Object[] continuationIds = continuationsHolder.getContinuationIds()
+                .toArray();
+        
+        for (int i = 0; i < continuationIds.length; i++) {
+            WebContinuation wk = continuationsHolder.get(continuationIds[i]);
             if (wk != null) {
                 _detach(wk);
                 _invalidate(continuationsHolder, wk);
