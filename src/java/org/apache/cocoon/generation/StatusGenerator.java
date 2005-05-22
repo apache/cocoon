@@ -150,13 +150,16 @@ public class StatusGenerator
         }        
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
         this.showContinuationsInformation = parameters.getParameterAsBoolean(SHOW_CONTINUATIONS_INFO, false);
     }   
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -387,24 +390,29 @@ public class StatusGenerator
             throw new RuntimeException("Unable to lookup Cocoon core.");
         }
         final Settings s = core.getSettings();
-        this.startGroup("Settings");
+        this.startGroup("Base Settings");
         
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
-        this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, s.getConfigurationReloadDelay());
-        this.addValue(Settings.KEY_ALLOW_RELOAD, s.isAllowReload());
-        this.addValue(Settings.KEY_INIT_CLASSLOADER, s.isInitClassloader());
         this.addValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
         this.addValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
         this.addValue(Settings.KEY_FORCE_PROPERTIES, s.getForceProperties());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
-        this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
         this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
-        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
         this.addValue(Settings.KEY_LOGGING_LOG4J_CONFIGURATION, s.getLog4jConfiguration());
         this.addValue(Settings.KEY_LOGGING_MANAGER_CLASS, s.getLoggerManagerClassName());
+        this.addValue(Settings.KEY_PARENT_SERVICE_MANAGER, s.getParentServiceManagerClassName());
+        
+        this.endGroup();
+
+        this.startGroup("Dynamic Settings");
+
+        this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, s.getConfigurationReloadDelay());
+        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
+        this.addValue(Settings.KEY_ALLOW_RELOAD, s.isAllowReload());
+        this.addValue(Settings.KEY_INIT_CLASSLOADER, s.isInitClassloader());
+        this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
         this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
         this.addValue(Settings.KEY_MANAGE_EXCEPTIONS, s.isManageExceptions());
-        this.addValue(Settings.KEY_PARENT_SERVICE_MANAGER, s.getParentServiceManagerClassName());
         this.addValue(Settings.KEY_UPLOADS_DIRECTORY, s.getUploadDirectory());
         this.addValue(Settings.KEY_UPLOADS_AUTOSAVE, s.isAutosaveUploads());
         this.addValue(Settings.KEY_UPLOADS_ENABLE, s.isEnableUploads());
@@ -416,6 +424,8 @@ public class StatusGenerator
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
         this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
+
+        this.endGroup();
     }
 
     private void genProperties() throws SAXException {

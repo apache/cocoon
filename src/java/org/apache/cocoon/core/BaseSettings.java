@@ -33,7 +33,6 @@ public interface BaseSettings {
     /**
      * This parameter allows to set system properties
      */
-    /** FIXME - implement the support for this key: */
     String KEY_FORCE_PROPERTIES = "system.properties";
 
     /**
@@ -79,7 +78,6 @@ public interface BaseSettings {
      * be named here. Additional entries may be inserted here during build
      * depending on your build properties.
      */
-    /** FIXME: Implement support for this: */
     String KEY_LOAD_CLASSES = "classloader.load.classes";
 
     /**
@@ -88,7 +86,6 @@ public interface BaseSettings {
      * Note that absolute pathes are taken as such but relative pathes
      * are rooted at the context root of the Cocoon servlet.
      */
-    /** FIXME: Implement support for this: */
     String KEY_EXTRA_CLASSPATHS = "extra.classpaths";
 
     /**

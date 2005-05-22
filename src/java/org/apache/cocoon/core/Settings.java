@@ -450,9 +450,9 @@ public class Settings implements BaseSettings, DynamicSettings {
           KEY_CONFIGURATION_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_ALLOW_RELOAD + " : " + this.allowReload + '\n' +
           KEY_INIT_CLASSLOADER + " : " + this.initClassloader + '\n' +
-          KEY_EXTRA_CLASSPATHS + " : " + this.extraClasspaths + '\n' +
-          KEY_LOAD_CLASSES + " : " + this.loadClasses + '\n' +
-          KEY_FORCE_PROPERTIES + " : " + this.forceProperties + '\n' +
+          KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
+          KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
+          KEY_FORCE_PROPERTIES + " : " + this.toString(this.forceProperties) + '\n' +
           KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
           KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
           KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
@@ -473,6 +473,46 @@ public class Settings implements BaseSettings, DynamicSettings {
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
           KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
           KEY_LAZY_MODE + " : " + this.lazyMode + '\n';
+    }
+
+    /**
+     * Helper method to make a string out of a list of objects.
+     */
+    protected String toString(List a) {
+        final StringBuffer buffer = new StringBuffer();
+        final Iterator i = a.iterator();
+        boolean first = true;
+        while ( i.hasNext() ) {
+            if ( first ) {
+                first = false;
+            } else {
+                buffer.append(", ");
+            }
+            buffer.append(i.next());
+        }
+        return buffer.toString();        
+    }
+
+    /**
+     * Helper method to make a string out of a map of objects.
+     */
+    protected String toString(Map a) {
+        final StringBuffer buffer = new StringBuffer("{");
+        final Iterator i = a.entrySet().iterator();
+        boolean first = true;
+        while ( i.hasNext() ) {
+            if ( first ) {
+                first = false;
+            } else {
+                buffer.append(", ");
+            }
+            final Map.Entry current = (Map.Entry)i.next();
+            buffer.append(current.getKey());
+            buffer.append("=");
+            buffer.append(current.getValue());
+        }
+        buffer.append("}");
+        return buffer.toString();        
     }
 
     public String getProperty(String name) {
@@ -534,6 +574,12 @@ public class Settings implements BaseSettings, DynamicSettings {
                 value = this.overrideLogLevel;
             } else if ( sKey.equals(KEY_LAZY_MODE) ) {
                 value = String.valueOf(this.lazyMode);
+            } else if ( key.equals(KEY_LOAD_CLASSES) ) {
+                value = this.toString(this.loadClasses);
+            } else if ( key.equals(KEY_EXTRA_CLASSPATHS) ) {
+                this.toString(this.extraClasspaths);
+            } else if ( key.equals(KEY_FORCE_PROPERTIES) ) {
+                this.toString(this.forceProperties);
             }
         }
 
