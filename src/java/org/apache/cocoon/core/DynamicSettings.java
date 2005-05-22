@@ -56,7 +56,7 @@ public interface DynamicSettings {
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
-    String KEY_LOGGING_ACCESS_LOGGER = "logging.logger.access.category";
+    String KEY_LOGGING_ENVIRONMENT_LOGGER = "logging.category.environment";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -65,7 +65,7 @@ public interface DynamicSettings {
      * and sitemap.xmap file not having specified a logger with the
      * logger="..." attribute in the component configuration file.
      */
-    String KEY_LOGGING_COCOON_LOGGER = "logging.logger.cocoon.category";
+    String KEY_LOGGING_COCOON_LOGGER = "logging.category.cocoon";
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -165,96 +165,109 @@ public interface DynamicSettings {
 
     /**
      * @return Returns the hideShowTime.
+     * @see #KEY_HIDE_SHOWTIME
      */
     boolean isHideShowTime();
 
     /**
      * @return Returns the allowReload.
+     * @see #KEY_ALLOW_RELOAD
      */
     boolean isAllowReload();
 
     /**
      * @return Returns the autosaveUploads.
+     * @see #KEY_UPLOADS_AUTOSAVE
      */
     boolean isAutosaveUploads();
 
     /**
      * @return Returns the cacheDirectory.
+     * @see #KEY_CACHE_DIRECTORY
      */
     String getCacheDirectory();
 
     /**
      * @return Returns the cocoonLogger.
+     * @see #KEY_LOGGING_COCOON_LOGGER
      */
     String getCocoonLogger();
 
     /**
      * @return Returns the enableUploads.
+     * @see #KEY_UPLOADS_ENABLE
      */
     boolean isEnableUploads();
 
     /**
      * @return Returns the formEncoding.
+     * @see #KEY_FORM_ENCODING
      */
     String getFormEncoding();
 
     /**
      * @return Returns the initClassloader.
+     * @see #KEY_INIT_CLASSLOADER
      */
     boolean isInitClassloader();
 
     /**
-     * @return Returns the logLevel.
-     */
-    String getBootstrapLogLevel();
-
-    /**
      * @return Returns the manageExceptions.
+     * @see #KEY_MANAGE_EXCEPTIONS
      */
     boolean isManageExceptions();
 
     /**
      * @return Returns the maxUploadSize.
+     * @see #KEY_UPLOADS_MAXSIZE
      */
     int getMaxUploadSize();
 
     /**
      * @return Returns the overwriteUploads.
+     * @see #KEY_UPLOADS_OVERWRITE
      */
     String getOverwriteUploads();
 
     /**
      * @return Returns the showTime.
+     * @see #KEY_SHOWTIME
      */
     boolean isShowTime();
 
     /**
      * @return Returns the uploadDirectory.
+     * @see #KEY_UPLOADS_DIRECTORY
      */
     String getUploadDirectory();
 
     /**
      * @return Returns the workDirectory.
+     * @see #KEY_WORK_DIRECTORY
      */
     String getWorkDirectory();
 
     /**
-     * @return Returns the accessLogger.
+     * @return Returns the logger for the environment.
+     * @see #KEY_LOGGING_ENVIRONMENT_LOGGER
      */
-    String getAccessLogger();
+    String getEnvironmentLogger();
 
     /**
      * @return Returns the overrideLogLevel.
+     * @see #KEY_LOGGING_OVERRIDE_LOGLEVEL
      */
     String getOverrideLogLevel();
 
     /**
      * @return Returns the configurationReloadDelay.
+     * @see #KEY_CONFIGURATION_RELOAD_DELAY
      */
     long getConfigurationReloadDelay();
 
     /**
      * @return Returns the lazyMode.
+     * @see #KEY_LAZY_MODE
      */
     boolean isLazyMode();
 

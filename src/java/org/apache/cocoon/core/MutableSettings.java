@@ -29,6 +29,7 @@ import org.apache.commons.lang.math.NumberUtils;
  */
 public class MutableSettings extends Settings {
 
+    /** Are we still mutable? */
     protected boolean readOnly = false;
 
     /**
@@ -60,14 +61,14 @@ public class MutableSettings extends Settings {
                         this.configurationReloadDelay = NumberUtils.toLong(value);
                     } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
                         this.loggingConfiguration = value;
-                    } else if ( key.equals(KEY_LOGGING_ACCESS_LOGGER) ) {
-                        this.accessLogger = value;
+                    } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
+                        this.environmentLogger = value;
                     } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
                         this.cocoonLogger = value;
                     } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                         this.bootstrapLogLevel = value;
                     } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
-                        this.loggerClassName = value;
+                        this.loggerManagerClassName = value;
                     } else if ( key.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
                         this.log4jConfiguration = value;
                     } else if ( key.equals(KEY_ALLOW_RELOAD) ) {
@@ -207,9 +208,9 @@ public class MutableSettings extends Settings {
     /**
      * @param loggerClassName The loggerClassName to set.
      */
-    public void setLoggerClassName(String loggerClassName) {
+    public void setLoggerManagerClassName(String loggerClassName) {
         this.checkWriteable();
-        this.loggerClassName = loggerClassName;
+        this.loggerManagerClassName = loggerClassName;
     }
 
     /**
@@ -294,11 +295,11 @@ public class MutableSettings extends Settings {
     }
 
     /**
-     * @param servletLogger The servletLogger to set.
+     * @param logger The logger for the environment.
      */
-    public void setAccessLogger(String servletLogger) {
+    public void setEnvironmentLogger(String logger) {
         this.checkWriteable();
-        this.accessLogger = servletLogger;
+        this.environmentLogger = logger;
     }
 
     /**
@@ -341,7 +342,7 @@ public class MutableSettings extends Settings {
     throws IllegalStateException {
         if( this.readOnly ) {
             throw new IllegalStateException
-                ( "Settings is read only and can not be modified" );
+                ( "Settings is read only and can not be modified anymore." );
         }
     }
 

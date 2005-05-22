@@ -59,9 +59,26 @@ public interface BootstrapEnvironment {
 
     InputStream getInputStream(String path);
     
+    /**
+     * This callback can be used by the environment to add environment specific
+     * settings. For example the servlet environment parsed the web.xml and adjusts
+     * the settings based on the parameters.
+     * @param settings The settings for Cocoon.
+     */
     void configure(MutableSettings settings);
+
+    /**
+     * This callback can be used by the environment to add environment specific
+     * information for the logging system.
+     * @param context The context passed to the logging system.
+     */
     void configureLoggingContext(DefaultContext context);
 
+    /**
+     * This callback can be used by the environment to add environment specific
+     * information.
+     * @param context The context passed to all Avalon based components that are context aware.
+     */
     void configure(DefaultContext context);
 
     ClassLoader getInitClassLoader();

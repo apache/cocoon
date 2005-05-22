@@ -376,7 +376,7 @@ public class CoreUtil {
             logLevel = "INFO";
         }
 
-        String accesslogger = settings.getAccessLogger();
+        String accesslogger = settings.getEnvironmentLogger();
         if (accesslogger == null) {
             accesslogger = "cocoon";
         }
@@ -412,7 +412,7 @@ public class CoreUtil {
         }
         this.env.configureLoggingContext(subcontext);
 
-        String loggerManagerClass = settings.getLoggerClassName();
+        String loggerManagerClass = settings.getLoggerManagerClassName();
         if (loggerManagerClass == null) {
             loggerManagerClass = LogKitLoggerManager.class.getName();
         }

@@ -65,7 +65,7 @@ public class Settings implements BaseSettings, DynamicSettings {
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
-    protected String accessLogger;
+    protected String environmentLogger;
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -88,7 +88,7 @@ public class Settings implements BaseSettings, DynamicSettings {
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
      * Log4J has to be configured already.
      */
-    protected String loggerClassName;
+    protected String loggerManagerClassName;
 
     /**
      * If you want to configure log4j using Cocoon, then you can define
@@ -317,8 +317,8 @@ public class Settings implements BaseSettings, DynamicSettings {
     /**
      * @return Returns the loggerClassName.
      */
-    public String getLoggerClassName() {
-        return this.loggerClassName;
+    public String getLoggerManagerClassName() {
+        return this.loggerManagerClassName;
     }
 
     /**
@@ -394,8 +394,8 @@ public class Settings implements BaseSettings, DynamicSettings {
     /**
      * @return Returns the accessLogger.
      */
-    public String getAccessLogger() {
-        return this.accessLogger;
+    public String getEnvironmentLogger() {
+        return this.environmentLogger;
     }
 
     /**
@@ -454,11 +454,11 @@ public class Settings implements BaseSettings, DynamicSettings {
           KEY_LOAD_CLASSES + " : " + this.loadClasses + '\n' +
           KEY_FORCE_PROPERTIES + " : " + this.forceProperties + '\n' +
           KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
-          KEY_LOGGING_ACCESS_LOGGER + " : " + this.accessLogger + '\n' +
+          KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
           KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
           KEY_LOGGING_COCOON_LOGGER + " : " + this.cocoonLogger + '\n' +
           KEY_LOGGING_LOG4J_CONFIGURATION + " : " + this.log4jConfiguration + '\n' +
-          KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerClassName + '\n' +
+          KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerManagerClassName + '\n' +
           KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
           KEY_PARENT_SERVICE_MANAGER + " : " + this.parentServiceManagerClassName + '\n' +
@@ -494,14 +494,14 @@ public class Settings implements BaseSettings, DynamicSettings {
                 value = String.valueOf(this.configurationReloadDelay);
             } else if ( sKey.equals(KEY_LOGGING_CONFIGURATION) ) {
                 value = this.loggingConfiguration;
-            } else if ( sKey.equals(KEY_LOGGING_ACCESS_LOGGER) ) {
-                value = this.accessLogger;
+            } else if ( sKey.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
+                value = this.environmentLogger;
             } else if ( sKey.equals(KEY_LOGGING_COCOON_LOGGER) ) {
                 value = this.cocoonLogger;
             } else if ( sKey.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                 value = this.bootstrapLogLevel;
             } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
-                value = this.loggerClassName;
+                value = this.loggerManagerClassName;
             } else if ( sKey.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
                 value = this.log4jConfiguration;
             } else if ( sKey.equals(KEY_ALLOW_RELOAD) ) {
