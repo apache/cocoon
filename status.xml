@@ -443,6 +443,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+      Updated ant to 1.6.4.
+    </action>
     <action dev="SW" type="add">
       CForms block: add automatic AJAX features. When <code>&lt;ft:form-template&gt;</code>
       has an <code>ajax="true"</code> attribute, partial page updates are performed rather
