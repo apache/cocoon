@@ -89,10 +89,16 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
 
     abstract protected String getTypeName();
 
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = (DefaultContext)context;
     }
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
@@ -116,6 +122,9 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
         this.manager = null;
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         String name = configuration.getAttribute("name");
         this.sourceMapName =
@@ -130,6 +139,9 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
         }
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         this.resolver = resolver;
@@ -206,19 +218,21 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
         HashMap map = new HashMap();
 
         // resolve and map params
-        Iterator names = par.getParameterNames();
-        while (names.hasNext()) {
-            String name = (String)names.next();
+        String[] names = par.getNames();
+        for(int i=0; i<names.length; i++) {
+            String name = names[i];
             String value = par.getParameter(name, null);
-            if (this.sources.contains(name))
+            if (this.sources.contains(name)) {
                 value = resolveAndMapSourceURI(name, value);
+            }
             map.put(name, value);
         }
 
         // resolve and map src
-        if (src != null)
+        if (src != null) {
             map.put("src", resolveAndMapSourceURI("src", src));
-        
+        }
+
         return map;
     }
 
@@ -238,11 +252,12 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
 
         // Create a new URI that refers to the source in the context
         String mappedURI;
-        if (src instanceof XMLizable)
+        if (src instanceof XMLizable) {
             mappedURI = "xmodule:environment-attr:" + this.sourceMapName + "#" + name;
-        else
+        } else {
             mappedURI = "module:environment-attr:" + this.sourceMapName + "#" + name;
-        
+        }
+
         return mappedURI;
     }
 }
