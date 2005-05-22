@@ -59,7 +59,7 @@ public interface BootstrapEnvironment {
 
     InputStream getInputStream(String path);
     
-    void configure(Settings settings);
+    void configure(MutableSettings settings);
     void configureLoggingContext(DefaultContext context);
 
     void configure(DefaultContext context);

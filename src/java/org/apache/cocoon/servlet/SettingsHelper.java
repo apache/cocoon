@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -36,7 +36,7 @@ public class SettingsHelper {
         //  no instantiation
     }
     
-    public static void fill(Settings s, ServletConfig config) {
+    public static void fill(MutableSettings s, ServletConfig config) {
         String value;
 
         s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", s.isInitClassloader()));
@@ -152,7 +152,7 @@ public class SettingsHelper {
         return Integer.parseInt(value);
     }
     
-    private static void handleLoadClass(String param, Settings s) {
+    private static void handleLoadClass(String param, MutableSettings s) {
         if ( param == null ) {
             return;
         }
@@ -170,7 +170,7 @@ public class SettingsHelper {
      * separate each entry with whitespace, a comma, or a semi-colon.
      * Cocoon will strip any whitespace from the entry.
      */
-    private static void handleForceProperty(String forceSystemProperty, Settings s) {
+    private static void handleForceProperty(String forceSystemProperty, MutableSettings s) {
         if (forceSystemProperty != null) {
             StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
 
@@ -197,7 +197,7 @@ public class SettingsHelper {
      * Retreives the "extra-classpath" attribute, that needs to be
      * added to the class path.
      */
-    private static void handleExtraClassPath(String extraClassPath, Settings settings) {
+    private static void handleExtraClassPath(String extraClassPath, MutableSettings settings) {
         if (extraClassPath != null) {
             StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
             while (st.hasMoreTokens()) {

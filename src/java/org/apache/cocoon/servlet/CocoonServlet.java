@@ -51,6 +51,7 @@ import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
@@ -689,7 +690,7 @@ public class CocoonServlet extends HttpServlet {
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.configuration.Settings)
          */
-        public void configure(Settings settings) {
+        public void configure(MutableSettings settings) {
             // fill from the servlet parameters
             SettingsHelper.fill(settings, this.config);
             if ( settings.getWorkDirectory() == null ) {
