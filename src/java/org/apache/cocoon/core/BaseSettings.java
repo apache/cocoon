@@ -103,46 +103,55 @@ public interface BaseSettings {
 
     /**
      * @return Returns the configuration.
+     * @see #KEY_CONFIGURATION
      */
     String getConfiguration();
 
     /**
      * @return Returns the extraClasspaths.
+     * @see #KEY_EXTRA_CLASSPATHS
      */
     List getExtraClasspaths();
 
     /**
      * @return Returns the forceProperties.
+     * @see #KEY_FORCE_PROPERTIES
      */
     Map getForceProperties();
 
     /**
      * @return Returns the loadClasses.
+     * @see #KEY_LOAD_CLASSES
      */
     Iterator getLoadClasses();
 
     /**
-     * @return Returns the loggerClassName.
+     * @return Returns the loggerManagerClassName.
+     * @see #KEY_LOGGING_MANAGER_CLASS
      */
-    String getLoggerClassName();
+    String getLoggerManagerClassName();
 
     /**
      * @return Returns the loggingConfiguration.
+     * @see #KEY_LOGGING_CONFIGURATION
      */
     String getLoggingConfiguration();
 
     /**
      * @return Returns the logLevel.
+     * @see #KEY_LOGGING_BOOTSTRAP_LOGLEVEL
      */
     String getBootstrapLogLevel();
 
     /**
      * @return Returns the parentServiceManagerClassName.
+     * @see #KEY_PARENT_SERVICE_MANAGER
      */
     String getParentServiceManagerClassName();
 
     /**
      * @return Returns the log4jConfiguration.
+     * @see #KEY_LOGGING_LOG4J_CONFIGURATION
      */
     String getLog4jConfiguration();
 

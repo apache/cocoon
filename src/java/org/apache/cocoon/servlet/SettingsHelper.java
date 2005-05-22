@@ -57,7 +57,7 @@ public class SettingsHelper {
 
         value = getInitParameter(config, "servlet-logger");
         if ( value != null ) {
-            s.setAccessLogger(value);
+            s.setEnvironmentLogger(value);
         }
 
         value = getInitParameter(config, "cocoon-logger");
@@ -72,7 +72,7 @@ public class SettingsHelper {
 
         value = getInitParameter(config, "logger-class");
         if ( value != null ) {
-            s.setLoggerClassName(value);
+            s.setLoggerManagerClassName(value);
         }
 
         value = getInitParameter(config, "log4j-config");
