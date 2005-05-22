@@ -386,7 +386,9 @@ public class CoreUtil {
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
         defaultHierarchy.setErrorHandler(errorHandler);
-        defaultHierarchy.setDefaultLogTarget(this.env.getDefaultLogTarget());
+        if ( this.env.getDefaultLogTarget() != null ) {
+            defaultHierarchy.setDefaultLogTarget(this.env.getDefaultLogTarget());
+        }
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
 

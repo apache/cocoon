@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ public class TestBootstrapEnvironment
     }
 
     public void configureLoggingContext(DefaultContext context) {
-        throw new UnsupportedOperationException();
+        // simply do nothing
     }
 
     public void configure(DefaultContext context) {
@@ -129,7 +129,7 @@ public class TestBootstrapEnvironment
     }
 
     public LogTarget getDefaultLogTarget() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     /**
@@ -144,6 +144,6 @@ public class TestBootstrapEnvironment
     }
 
     public String getClassPath(Settings settings) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 }
