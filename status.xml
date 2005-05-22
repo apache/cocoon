@@ -443,6 +443,11 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="SW" type="add">
+      CForms block: add automatic AJAX features. When <code>&lt;ft:form-template&gt;</code>
+      has an <code>ajax="true"</code> attribute, partial page updates are performed rather
+      than full page reloads.
+    </action>
     <action dev="AG" type="fix" fixes-bug="32728" due-to="Thomas Scheithauer" due-to-email="cocoon-t3@gmx.de">
       SearchGenerator return has-previous false when meet the no. 2 page.
     </action>
