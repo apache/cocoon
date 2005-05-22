@@ -30,14 +30,18 @@
   <sample name="Cocoon Forms Documentation" href="http://cocoon.apache.org/2.1/userdocs/forms/">
     Documentation is available on the Cocoon site.
   </sample>
+  <note>
+     Samples with the (Ajax) mark use the new transparent Ajax (Asynchronous Javascript And XML) framework
+     to reduce client/server roundtrips and perform partial page updates.
+  </note>
  </group>
 
  <group name="Basic Samples">
   <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features.</sample>
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
-  <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
-  <sample name="XHR Car selector" href="xhr_carselector">Same sample, using XmlHttpRequest to reduce client/server roundtrips.</sample>
+  <sample name="Car selector" href="carselector">(Ajax) Illustrates programmatically changing selectionlists.</sample>
+  <sample name="XHR Car selector" href="xhr_carselector">Same sample, with the historical first use of XmlHttpRequest to reduce client/server roundtrips.</sample>
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
@@ -89,14 +93,14 @@
      widgets.
    </note>
    <sample name="Dynamic repeater template" href="do-dynaRepeater.flow">
-     Shows a simple repeater, which isn't displayed at all if empty, and whose row action depend on
+     (Ajax) Shows a simple repeater, which isn't displayed at all if empty, and whose row action depend on
      the row number.
    </sample>
    <sample name="Datasource chooser" href="do-datasourceChooser.flow">
-     A datasource chooser, illustrating the fd:union widget.
+     (Ajax) A datasource chooser, illustrating the fd:union widget.
    </sample>
    <sample name="Task tree" href="do-taskTree.flow">
-     A project work breakdown into a hierarchy of tasks, showing the use of the fd:class and fd:new
+     (Ajax) A project work breakdown into a hierarchy of tasks, showing the use of the fd:class and fd:new
      widgets.
    </sample>
  </group>
@@ -106,7 +110,7 @@
       Create your Euro 2004 soccer dream team
     </sample>
  </group>
- 
+
   <group name="Profiling information">
     <note>
       These samples concentrate on Cocoon Forms and JXTemplate in order to collect profiling information.
@@ -114,7 +118,7 @@
     </note>
     <sample name="form1 - JXTemplate" href="form1-jx-macro">Render form using JXTemplate macros</sample>
     <sample name="form1 - FormsTransformer" href="form1-cforms-transformer">Render form using the FormsTransformer</sample>    
-  </group>  
+  </group> 
  
  <group name="Experimental Flowscript API for Cocoon Forms">
   <note>

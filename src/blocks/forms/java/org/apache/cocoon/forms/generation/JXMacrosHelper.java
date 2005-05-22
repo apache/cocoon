@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.Constants;
@@ -27,6 +28,7 @@ import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.transformation.BrowserUpdateTransformer;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -43,9 +45,11 @@ import org.xml.sax.SAXException;
 public class JXMacrosHelper {
 
     private XMLConsumer cocoonConsumer;
-    private Request request;    
+    private Request request;
     private ArrayStack stack = new ArrayStack();
     private Map classes; // lazily created
+    private boolean ajaxMode;
+    private Set updatedWidgets;
 
     /**
      * Builds and helper object, given the generator's consumer.
@@ -54,13 +58,13 @@ public class JXMacrosHelper {
      * @return a helper object
      */
     public static JXMacrosHelper createHelper(XMLConsumer consumer, Request request) {
-        System.out.println("bla");
         return new JXMacrosHelper(consumer, request);
     }
 
     public JXMacrosHelper(XMLConsumer consumer, Request request) {
         this.cocoonConsumer = consumer;
         this.request = request;
+        this.ajaxMode = request.getParameter("cocoon-ajax") != null;
     }
     
 
@@ -75,7 +79,11 @@ public class JXMacrosHelper {
         }
         throw new NullPointerException("There hasn't been passed a form object to the template!");
     }
+
     public void startForm(Form form, Map attributes) throws SAXException {
+        
+        this.updatedWidgets = form.getUpdatedWidgets();
+        
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
         Iterator iter = attributes.entrySet().iterator();
@@ -83,6 +91,8 @@ public class JXMacrosHelper {
             Map.Entry entry = (Map.Entry)iter.next();
             attrs.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
         }
+        
+        this.ajaxMode = this.ajaxMode && "true".equals(attributes.get("ajax"));
 
         this.cocoonConsumer.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
         this.cocoonConsumer.startElement(Constants.INSTANCE_NS,
@@ -96,22 +106,9 @@ public class JXMacrosHelper {
                                        "form-template",
                                        Constants.INSTANCE_PREFIX_COLON + "form-template");
         this.cocoonConsumer.endPrefixMapping(Constants.INSTANCE_PREFIX);
-    }
-
-    /**
-     * Flush the root element name that has been stored in
-     * {@link #generateWidget(Widget, Locale)}.
-     *
-     * @param obj the object that is terminated (widget or validation error)
-     * @throws SAXException
-     */
-    public void flushRoot(Object obj) throws SAXException {
-        Object stackObj = stack.pop();
-        if (stackObj != obj) {
-            throw new IllegalStateException("Flushing on wrong widget (expected " + stackObj +
-                                            ", got " + obj + ")");
-        }
-        ((RootBufferingPipe) stack.pop()).flushRoot();
+        
+        this.ajaxMode = false;
+        this.updatedWidgets = null;
     }
 
     /**
@@ -149,11 +146,37 @@ public class JXMacrosHelper {
      * @throws SAXException
      */
     public void generateWidget(Widget widget, Locale locale) throws SAXException {
+        String id = widget.getRequestParameterName();
+        if (ajaxMode && this.updatedWidgets.contains(id)) {
+            AttributesImpl attr = new AttributesImpl();
+            attr.addCDATAAttribute("id", id);
+            this.cocoonConsumer.startElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace", attr);
+        }
         // Needs to be buffered
         RootBufferingPipe pipe = new RootBufferingPipe(this.cocoonConsumer);
         this.stack.push(pipe);
         this.stack.push(widget);
         widget.generateSaxFragment(pipe, locale);
+    }
+
+    /**
+     * Flush the root element name that has been stored in
+     * {@link #generateWidget(Widget, Locale)}.
+     *
+     * @param obj the object that is terminated (widget or validation error)
+     * @throws SAXException
+     */
+    public void flushRoot(Widget widget) throws SAXException {
+        Object stackObj = stack.pop();
+        if (stackObj != widget) {
+            throw new IllegalStateException("Flushing on wrong widget (expected " + stackObj +
+                                            ", got " + widget + ")");
+        }
+        ((RootBufferingPipe) stack.pop()).flushRoot();
+        String id = widget.getRequestParameterName();
+        if (ajaxMode && this.updatedWidgets.contains(id)) {
+            this.cocoonConsumer.endElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace");
+        }
     }
 
     public void generateWidgetLabel(Widget widget, String id) throws SAXException {
@@ -209,8 +232,25 @@ public class JXMacrosHelper {
         return caseValue.equals(value != null ? value : "");
     }
 
-    public boolean isVisible(Widget widget) {
-        return widget.getCombinedState().isDisplayingValues();
+    public boolean isVisible(Widget widget) throws SAXException {
+        boolean visible = widget.getCombinedState().isDisplayingValues();
+        
+        if (!visible) {
+            // Generate a placeholder it not visible
+            String id = widget.getRequestParameterName();
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addCDATAAttribute("id", id);
+            this.cocoonConsumer.startElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace", attrs);
+            this.cocoonConsumer.startElement(Constants.INSTANCE_NS, "placeholder", Constants.INSTANCE_PREFIX_COLON + "placeholder", attrs);
+            this.cocoonConsumer.endElement(Constants.INSTANCE_NS, "placeholder", Constants.INSTANCE_PREFIX_COLON + "placeholder");
+            this.cocoonConsumer.endElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace");
+        }
+        
+        return visible;
+    }
+    
+    public boolean isModified(Widget widget) {
+        return this.updatedWidgets.contains(widget.getRequestParameterName());
     }
 
     /**

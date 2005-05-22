@@ -37,7 +37,7 @@ import java.util.WeakHashMap;
  * </p>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: BeanConvertor.java,v 1.3 2004/12/30 13:37:45 giacomo Exp $
+ * @version $Id$
  */
 public class BeanConvertor
     implements Convertor

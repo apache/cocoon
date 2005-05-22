@@ -100,6 +100,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
      */
     public void setValidationError(ValidationError error) {
         this.validationError = error;
+        getForm().addWidgetUpdate(this);
     }
 
     /**
@@ -143,7 +144,9 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         Object oldValue = value;
         value = (Boolean)object;
         if (!value.equals(oldValue)) {
-            getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+            Form form = getForm();
+            form.addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
+            form.addWidgetUpdate(this);
         }
     }
 

@@ -49,7 +49,6 @@ public class StaticSelectionList implements SelectionList {
      */
     private List items;
 
-
     public StaticSelectionList(Datatype datatype) {
         this.datatype = datatype;
         this.items = new ArrayList();

@@ -39,6 +39,7 @@ var forms_onsubmitHandlers = new Array();
 function forms_onsubmit() {
     if (forms_onsubmitHandlers == null) {
         alert("onsubmit called twice!");
+        return;
     }
 
     for (var i = 0; i < forms_onsubmitHandlers.length; i++) {
@@ -52,7 +53,7 @@ function forms_onsubmit() {
  * Submit the form containing an element, also storing in the hidden
  * 'forms_submit_id' field the name of the element which triggered the submit.
  */
-function forms_submitForm(element, name) {
+function oldforms_submitForm(element, name) {
     if (name == undefined) {
         name = element.name;
     }

@@ -76,6 +76,7 @@ public class Repeater extends AbstractWidget
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         rows.add(repeaterRow);
         repeaterRow.initialize();
+        getForm().addWidgetUpdate(this);
         return repeaterRow;
     }
     
@@ -87,6 +88,7 @@ public class Repeater extends AbstractWidget
             rows.add(index, repeaterRow);
         }
         repeaterRow.initialize();
+        getForm().addWidgetUpdate(this);
         return repeaterRow;
     }
 
@@ -104,8 +106,10 @@ public class Repeater extends AbstractWidget
     public Widget getChild(String id) {
         int rowIndex = -1;
         try {
-        	rowIndex = Integer.parseInt(id);
+            rowIndex = Integer.parseInt(id);
         } catch (NumberFormatException nfe) {
+            // Not a number
+            return null;
         }
         if (rowIndex < 0 || rowIndex >= getSize()) 
             return null;
@@ -146,6 +150,7 @@ public class Repeater extends AbstractWidget
      */
     public void removeRow(int index) {
         rows.remove(index);
+        getForm().addWidgetUpdate(this);
     }
     
     public void moveRowLeft(int index) {
@@ -156,6 +161,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index-1, this.rows.get(index));
             this.rows.set(index, temp);
         }
+        getForm().addWidgetUpdate(this);
     }
 
     public void moveRowRight(int index) {
@@ -166,6 +172,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index+1, this.rows.get(index));
             this.rows.set(index, temp);
         }
+        getForm().addWidgetUpdate(this);
     }
     
     /**
@@ -174,6 +181,7 @@ public class Repeater extends AbstractWidget
      */
     public void removeRows() {
         clear();
+        getForm().addWidgetUpdate(this);
     }
     
     /**
@@ -186,6 +194,7 @@ public class Repeater extends AbstractWidget
         for (int i = 0; i < this.definition.getInitialSize(); i++) {
             addRow();
         }
+        getForm().addWidgetUpdate(this);
     }
 
     /**

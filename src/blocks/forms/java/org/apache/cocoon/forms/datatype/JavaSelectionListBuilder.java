@@ -50,7 +50,6 @@ public class JavaSelectionListBuilder extends AbstractLogEnabled
      */
 	private ServiceManager manager;
 
-
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }

@@ -14,13 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+   <!-- Import the macros that define CForms template elements -->
+   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
   <title>Car selector</title>
-  <para>This example illustrates how you can programmatically update the
-    content of a selection list.</para>
-  <para>
-    This sample illustrates event-handling in Cocoon Forms and how selection lists can be changed
-    programmatically.
+  <para>This example illustrates:
+     <ul>
+        <li>how you can programmatically update the content of a selection list,</li>
+        <li>the AJAX features that allow partial page reloads and the associated visual effects.</li>
+     </ul>
   </para>
   <para>
     Event-handlers are defined in the form definition to update the selection lists and set
@@ -32,7 +34,31 @@
     See "carselector_form.xml" and "carselector_template.xml" to see how this is done.
   </para>
   <content>
-    <ft:form-template action="carselector" method="POST">
+    <script language="JavaScript">
+       var currentEffect = "fade";
+       function setEffect(effect) {
+           if (effect == "none") {
+               BrowserUpdate.highlight = null;
+           } else if (effect == "fade") {
+               BrowserUpdate.highlight = Fader.fade;
+           } else if (effect == "blink") {
+               BrowserUpdate.highlight = Blinker.blink;
+           }
+           
+           document.getElementById(currentEffect).style.fontWeight = "";
+           document.getElementById(effect).style.fontWeight = "bold";
+           currentEffect = effect;
+           return false;
+       }
+    </script>
+    <para>
+      Page update effect:
+      <a id="none" href="#" onclick="setEffect('none')">None</a> - 
+      <a style="font-weight: bold" id="fade" href="#" onclick="setEffect('fade')">Fade</a> - 
+      <a id="blink" href="#" onclick="setEffect('blink')">Blink</a>
+    </para>
+      
+    <ft:form-template action="carselector" method="POST" ajax="true">
       <ft:continuation-id/>
       <fi:group>
         <fi:styling layout="columns"/>

@@ -47,7 +47,6 @@ public abstract class AbstractJavaSelectionList implements JavaSelectionList,
     private boolean nullable;
     private boolean rebuild;
 
-
     public AbstractJavaSelectionList() {
         this.items = new ArrayList();
         this.rebuild = true;

@@ -131,8 +131,8 @@ public abstract class AbstractWidget implements Widget {
      * @return the form where this widget belongs to.  
      */
     public Form getForm() {
-        Widget myParent = getParent();
         if (this.form == null) {
+            Widget myParent = getParent();
             if (myParent == null) {
                 this.form = (Form)this;
             } else {
@@ -151,6 +151,9 @@ public abstract class AbstractWidget implements Widget {
             throw new IllegalArgumentException("A widget state cannot be set to null");
         }
         this.state = state;
+
+        // Update the browser
+        getForm().addWidgetUpdate(this);
     }
 
     public WidgetState getCombinedState() {
@@ -419,8 +422,9 @@ public abstract class AbstractWidget implements Widget {
      */
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale)    
     throws SAXException {
-        if (getCombinedState().isDisplayingValues()) {
 
+        if (getCombinedState().isDisplayingValues()) {
+            // FIXME: we may want to strip out completely widgets that aren't updated when in AJAX mode
             String element = this.getXMLElementName();
             AttributesImpl attrs = getXMLElementAttributes();
             contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
@@ -430,6 +434,13 @@ public abstract class AbstractWidget implements Widget {
             generateItemSaxFragment(contentHandler, locale);
 
             contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
+
+        } else {
+            // Generate a placeholder that can be used later by AJAX updates
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addCDATAAttribute("id", getRequestParameterName());
+            contentHandler.startElement(Constants.INSTANCE_NS, "placeholder", Constants.INSTANCE_PREFIX_COLON + "placeholder", attrs);
+            contentHandler.endElement(Constants.INSTANCE_NS, "placeholder", Constants.INSTANCE_PREFIX_COLON + "placeholder");
         }
     }
 

@@ -19,6 +19,7 @@ import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * A discriminated union that references a discriminant value in another
@@ -66,7 +67,11 @@ public class Union extends AbstractContainerWidget {
         ((ValueChangedListenerEnabled)caseWidget).addValueChangedListener(
             new ValueChangedListener() {
                 public void valueChanged(ValueChangedEvent event) {
-                    Union.this.caseValue = (String)event.getNewValue();
+                    String newValue = (String)event.getNewValue();
+                    if (!ObjectUtils.equals(Union.this.caseValue, newValue)) {
+                        Union.this.caseValue = newValue;
+                        getForm().addWidgetUpdate(Union.this);
+                    }
                 }
             }
         );
@@ -106,7 +111,11 @@ public class Union extends AbstractContainerWidget {
                 widget.readFromRequest(formContext);
             }
         }
-        this.caseValue = newValue;
+        
+        if (!ObjectUtils.equals(this.caseValue, newValue)) {
+            this.caseValue = newValue;
+            getForm().addWidgetUpdate(this);
+        }
     }
 
     // TODO: Simplify this logic.

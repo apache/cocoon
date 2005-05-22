@@ -65,28 +65,30 @@
       </xsl:choose>
     </xsl:variable>
     
-    <!-- regular input -->
-    <input id="{@id}" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text">
-      <xsl:apply-templates select="." mode="styling"/>
-    </input>
+    <span id="{@id}">
+      <!-- regular input -->
+      <input id="{@id}" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text">
+        <xsl:apply-templates select="." mode="styling"/>
+      </input>
     
-    <!-- calendar popup -->
-    <xsl:choose>
-      <xsl:when test="@state = 'disabled'">
-        <!-- TODO: i18n key for @alt -->
-        <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <a href="#" name="{$id}" id="{$id}"
-           onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
+      <!-- calendar popup -->
+      <xsl:choose>
+        <xsl:when test="@state = 'disabled'">
           <!-- TODO: i18n key for @alt -->
           <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
-        </a>
-      </xsl:otherwise>
-    </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <a href="#" name="{$id}" id="{$id}"
+             onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
+            <!-- TODO: i18n key for @alt -->
+            <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
+          </a>
+        </xsl:otherwise>
+      </xsl:choose>
 
-    <!-- common stuff -->
-    <xsl:apply-templates select="." mode="common"/>
+      <!-- common stuff -->
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
 </xsl:stylesheet>

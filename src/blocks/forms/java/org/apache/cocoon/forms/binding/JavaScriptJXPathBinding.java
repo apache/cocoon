@@ -36,7 +36,7 @@ import org.mozilla.javascript.Scriptable;
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
 
-	private final Context avalonContext;
+    private final Context avalonContext;
     private final String id;
     private final String path;
     private final Function loadScript;
@@ -47,7 +47,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     final static String[] SAVE_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
 
     public JavaScriptJXPathBinding(
-    		    Context context, JXPathBindingBuilderBase.CommonAttributes commonAtts, String id,
+    	    Context context, JXPathBindingBuilderBase.CommonAttributes commonAtts, String id,
             String path, Function loadScript, Function saveScript, Map childBindings) {
         super(commonAtts);
         this.id = id;
@@ -58,9 +58,9 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
         
         // Set parent on child bindings
         for(Iterator iter = childBindings.values().iterator(); iter.hasNext(); ) {
-        		((Binding)iter.next()).setParent(this);
+        	    ((Binding)iter.next()).setParent(this);
         }
-        
+
         this.childBindings = new ScriptableMap(childBindings);
     }
 
@@ -102,6 +102,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             JXPathContext widgetCtx = jctx.getRelativeContext(pointer);
             try {
                 Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+
                 JavaScriptHelper.callFunction(this.saveScript, frmModel,
                 		new Object[] {widget, pointer, widgetCtx, this.childBindings}, objectModel);
 

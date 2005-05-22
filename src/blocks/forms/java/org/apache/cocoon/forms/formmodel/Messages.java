@@ -70,6 +70,7 @@ public class Messages extends AbstractWidget {
      */
     public void addMessage(String message) {
         messages.add(new StringMessage(message));
+        getForm().addWidgetUpdate(this);
     }
 
     /**
@@ -81,6 +82,7 @@ public class Messages extends AbstractWidget {
      */
     public void addMessage(XMLizable message) {
         messages.add(message);
+        getForm().addWidgetUpdate(this);
     }
     
     /**

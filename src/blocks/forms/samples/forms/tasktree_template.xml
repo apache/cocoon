@@ -65,7 +65,7 @@
     
   </style>
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
     
       <ft:class id="task-class">
         <div class="section">
@@ -90,20 +90,22 @@
       <ft:class id="tasklist-class">
         <!-- Show the "Add subtask" button only if there are currently no subtasks.
              If there are some, more subtasks can be added using the "+" button -->
-        <jx:choose>
-          <jx:when test="${widget.getChild('tasks').getSize() > 0}">
-            <ft:repeater-widget id="tasks">
-              <!-- recurse -->
-              <ft:new id="task-class"/>
+        <ft:repeater id="tasks">
+          <jx:choose>
+            <jx:when test="${repeater.getSize() > 0}">
+              <ft:repeater-rows>
+                <!-- recurse -->
+                <ft:new id="task-class"/>
               
-            </ft:repeater-widget>
-          </jx:when>
-          <jx:otherwise>
+              </ft:repeater-rows>
+            </jx:when>
+            <jx:otherwise>
             <ft:widget id="addsub">
-	      <fi:styling type="link"/>
-	    </ft:widget>
+              <fi:styling type="link"/>
+            </ft:widget>
           </jx:otherwise>
         </jx:choose>
+        </ft:repeater>
       </ft:class>
       
       Project name: <ft:widget id="name"/>
