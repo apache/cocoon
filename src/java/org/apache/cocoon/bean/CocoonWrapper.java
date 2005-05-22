@@ -44,8 +44,6 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;

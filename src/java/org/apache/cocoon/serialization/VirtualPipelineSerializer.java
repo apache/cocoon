@@ -18,11 +18,9 @@ package org.apache.cocoon.serialization;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.impl.AbstractVirtualSitemapComponent;
-import org.apache.cocoon.xml.XMLConsumer;
 
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class VirtualPipelineSerializer extends AbstractVirtualSitemapComponent

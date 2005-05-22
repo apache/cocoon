@@ -20,6 +20,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
@@ -156,8 +157,8 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //  }
     }
 
-    public void configure(Settings settings) {
-        String defaultEncoding  = settings.getFormEncoding();
+    public void configure(Core core) {
+        String defaultEncoding  = core.getSettings().getFormEncoding();
         if (defaultEncoding != null) {
             this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);
         }        
