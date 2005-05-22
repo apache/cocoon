@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.sitemap.impl;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -63,7 +62,7 @@ import java.util.Set;
  * </ul>
  */
 public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
-    implements SitemapModelComponent, Serviceable, Disposable, Contextualizable, Configurable {
+    implements SitemapModelComponent, Serviceable, Contextualizable, Configurable {
 
     private ProcessingNode node;
     private String sourceMapName;
@@ -106,20 +105,16 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
     /**
      * Release all resources.
      */
-    public void dispose() {
-        try {
-            Iterator sources =
-                this.sourceMap.values().iterator();
-            while (sources.hasNext()) {
-                Source source = (Source)sources.next();
-                // FIXME
-                // These are allready disposed, why?
-                //this.resolver.release(source);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Could not dispose sources", e);
+    public void recycle() {
+        Iterator sources = this.sourceMap.values().iterator();
+        while (sources.hasNext()) {
+            Source source = (Source)sources.next();
+            // FIXME
+            // These are allready disposed, why?
+            //this.resolver.release(source);
         }
-        this.manager = null;
+        this.sourceMap.clear();
+        super.recycle();
     }
 
     /**
