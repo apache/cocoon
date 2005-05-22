@@ -186,7 +186,7 @@ public class LuceneCocoonPager implements ListIterator
      * @return    Description of the Returned Value
      */
     public boolean hasPrevious() {
-        return hitsIndex > countOfHitsPerPage;
+        return hitsIndex >= countOfHitsPerPage;
     }
 
     /**

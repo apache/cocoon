@@ -194,9 +194,11 @@
    </actions>
   </todo>
 
-
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="fix" fixes-bug="32728" due-to="Thomas Scheithauer" due-to-email="cocoon-t3@gmx.de">
+      SearchGenerator return has-previous false when meet the no. 2 page.
+    </action>
     <action dev="BD" type="add" fixes-bug="25352" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
       The new "annotations" namespace (http://apache.org/cocoon/sitemap/annotations/1.0)
       can be used to add information to sitemaps. The sitemap processor ignores this information,
