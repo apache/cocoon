@@ -21,7 +21,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;

@@ -80,7 +80,7 @@ public class CoreUtil {
     protected final DefaultContext appContext = new ComponentContext();
 
     /** The settings. */
-    protected Settings settings;
+    protected MutableSettings settings;
 
     /** The parent service manager. */
     protected ServiceManager parentManager;
@@ -327,9 +327,9 @@ public class CoreUtil {
      * Get the settings for Cocoon.
      * @return A new Settings object
      */
-    protected Settings createSettings() {
+    protected MutableSettings createSettings() {
         // create an empty settings objects
-        final Settings s = new Settings();
+        final MutableSettings s = new MutableSettings();
 
         String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
 
