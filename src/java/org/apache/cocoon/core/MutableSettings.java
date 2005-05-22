@@ -101,6 +101,13 @@ public class MutableSettings extends Settings {
                         this.overrideLogLevel = value;
                     } else if ( key.equals(KEY_LAZY_MODE) ) {
                         this.lazyMode = BooleanUtils.toBoolean(value);
+                    } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
+                        this.addToLoadClasses(value);
+                    } else if ( key.startsWith(KEY_EXTRA_CLASSPATHS) ) {
+                        this.addToExtraClasspaths(value);
+                    } else if ( key.startsWith(KEY_FORCE_PROPERTIES) ) {
+                        key = key.substring(KEY_FORCE_PROPERTIES.length() + 1);
+                        this.addToForceProperties(key, value);
                     }
                 }
             }

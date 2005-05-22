@@ -30,6 +30,9 @@ public class VirtualPipelineGenerator extends AbstractVirtualSitemapComponent
         return "generator";
     }
 
+    /**
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate()
     throws IOException, SAXException, ProcessingException {
 
