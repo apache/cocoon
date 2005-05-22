@@ -26,7 +26,6 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
 
 /**
  * Factory for Avalon based components.
@@ -122,7 +121,7 @@ public class ComponentFactory {
             this.poolOutMethod = null;
         }
         try {
-            this.configureSettingsMethod = this.serviceClass.getMethod("configure", new Class[] {Settings.class});
+            this.configureSettingsMethod = this.serviceClass.getMethod("configure", new Class[] {Core.class});
         } catch (Throwable ignore) {
             // we have to catch throwable here, as the above test can
             // result in NoClassDefFound exceptions etc.
@@ -156,7 +155,7 @@ public class ComponentFactory {
         ContainerUtil.contextualize( component, this.environment.context );
         ContainerUtil.service( component, this.environment.serviceManager );
         if ( this.configureSettingsMethod != null && this.core != null) {
-            this.configureSettingsMethod.invoke( component, new Object[] {this.core.getSettings()});
+            this.configureSettingsMethod.invoke( component, new Object[] {this.core});
         }
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 

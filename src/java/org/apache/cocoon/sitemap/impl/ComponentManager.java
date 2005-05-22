@@ -15,12 +15,9 @@
  */
 package org.apache.cocoon.sitemap.impl;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.sitemap.ComponentLocator;
 
 

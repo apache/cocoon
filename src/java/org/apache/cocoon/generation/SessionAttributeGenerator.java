@@ -26,7 +26,6 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.IOException;
 import java.util.Map;

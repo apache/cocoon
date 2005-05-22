@@ -18,7 +18,6 @@ package org.apache.cocoon;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.StandaloneServiceSelector;

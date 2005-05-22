@@ -22,9 +22,6 @@ import org.apache.cocoon.xml.XMLConsumer;
 
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 public class VirtualPipelineTransformer extends AbstractVirtualSitemapComponent
     implements Transformer {
 

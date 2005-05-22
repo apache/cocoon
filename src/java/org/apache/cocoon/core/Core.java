@@ -58,11 +58,23 @@ public class Core {
 
     private final Settings settings;
     
+    /**
+     * Constructor
+     * The core object is created by the {@link CoreUtil} class. Never construct
+     * a core object yourself (apart from testing of course)!
+     * @param s The settings
+     * @param c The context
+     */
     public Core(Settings s, Context c) {
         this.settings = s;
         this.context = c;
     }
 
+    /**
+     * Add a cleanup task.
+     * A cleanup task is run after a request is processed.
+     * @param task The task to run.
+     */
     public static void addCleanupTask(CleanupTask task) {
         List l = (List)cleanup.get();
         if ( l == null ) {
@@ -72,6 +84,10 @@ public class Core {
         l.add(task);
     }
 
+    /**
+     * Invoke all registered cleanup tasks for the current process.
+     * This method should not be called directly!
+     */
     public static void cleanup() {
         List l = (List)cleanup.get();
         if ( l != null ) {
@@ -84,8 +100,16 @@ public class Core {
         }
     }
 
+    /**
+     * The interface for the cleanup task.
+     * A cleanup task can be run after a request has been processed.
+     */
     public static interface CleanupTask {
 
+        /**
+         * Start the cleanup.
+         * This method should never raise any exception!
+         */
         void invoke();
     }
 
