@@ -85,10 +85,6 @@ Form.prototype.lookupWidget = function(path) {
 }
 
 /**
- * Set a function that will be called when 
- */
-
-/**
  * Manages the display of a form and its validation.
  *
  * This uses some additionnal properties on the form object :
@@ -118,17 +114,21 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
         this.locale = java.util.Locale.getDefault();
     viewdata["locale"] = this.locale;
 
-    // Keep the first continuation that will be created as the result of this function
-    var result = null;
-
     var finished = false;
-    this.isValid = false;
 
     var comingBack = false;
     var bookmark = cocoon.createWebContinuation(ttl);
 
     if (comingBack) {
         // We come back to the bookmark: process the form
+        
+        if (finished && cocoon.request.getParameter("cocoon-ajax-continue") != null) {
+            // A request with this parameter is sent by the client upon receiving the indication
+            // that Ajax interaction on the form is finished (see below).
+            // We also check "finished" to ensure we won't exit showForm() because of some
+            // faulty or hacked request. It's set to false, this will simply redisplay the form.
+            return bookmark;
+        }
         
 	    if (this.restoreHook) {
 	        this.restoreHook(this);
@@ -147,6 +147,15 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
             var widget = this.form.getSubmitWidget();
             // Can be null on "normal" submit
             this.submitId = widget == null ? null : widget.getId();
+            
+            if (cocoon.request.getParameter("cocoon-ajax") != null) {
+                // Ask the client to load the page
+                cocoon.response.setHeader("X-Cocoon-Ajax", "continue");
+                cocoon.response.setHeader("Content-Length", "0");
+                cocoon.sendStatus(200);
+                FOM_Cocoon.suicide();
+            }
+            
             return bookmark;
         }
     }

@@ -45,7 +45,6 @@ public class EnumConvertorBuilderTestCase extends TestCase {
         parser = factory.newDocumentBuilder();
     }
 
-
     public EnumConvertorBuilderTestCase(String name) {
         super(name);
     }

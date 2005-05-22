@@ -117,8 +117,6 @@ public class AggregateFieldDefinition extends FieldDefinition {
 
     public Widget createInstance() {
         AggregateField aggregateField = new AggregateField(this);
-        // Set the initial selection list, if any
-        aggregateField.setSelectionList(getSelectionList());
 
         Iterator fieldDefinitionIt = container.getWidgetDefinitions().iterator();
         while (fieldDefinitionIt.hasNext()) {

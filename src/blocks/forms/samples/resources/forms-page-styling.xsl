@@ -141,7 +141,7 @@
     <fieldset id="{$id}">
       <legend title="{fi:hint}">
         <xsl:apply-templates select="fi:label/node()"/>
-        <select name="{$state-widget}" onchange="forms_showTab('{$id}', this.selectedIndex, {count(fi:items/*)}, '{$state-widget}')">
+        <select name="{$state-widget}" id="{$state-widget}" onchange="forms_showTab('{$id}', this.selectedIndex, {count(fi:items/*)}, '{$state-widget}')">
           <xsl:for-each select="fi:items/fi:*">
             <xsl:variable name="pos" select="position() - 1"/>
             <option>

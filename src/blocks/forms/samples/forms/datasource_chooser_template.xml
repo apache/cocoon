@@ -23,7 +23,7 @@
   
   <title>Datasource chooser</title>
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
       
       <p>Datasource name: <ft:widget id="name"/></p>
       <fieldset>

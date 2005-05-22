@@ -67,6 +67,11 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         super(definition);
         this.definition = definition;
     }
+    
+    public void initialize() {
+        this.selectionList = this.definition.getSelectionList();
+        super.initialize();
+    }
 
     public WidgetDefinition getDefinition() {
         return definition;
@@ -170,6 +175,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         } else {
             throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + value.getClass().getName());
         }
+        getForm().addWidgetUpdate(this);
     }
 
     public void setValues(Object[] values) {
@@ -179,6 +185,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
                 throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + values[i].getClass().getName());
         }
         this.values = values;
+        getForm().addWidgetUpdate(this);
     }
 
     /**
@@ -196,6 +203,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         }
         this.selectionList = selectionList;
+        getForm().addWidgetUpdate(this);
     }
 
     /**
@@ -246,6 +254,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
     public void setValidationError(ValidationError error) {
         this.validationError = error;
+        getForm().addWidgetUpdate(this);
     }
 
     public Datatype getDatatype() {

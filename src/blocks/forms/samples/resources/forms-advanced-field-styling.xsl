@@ -90,7 +90,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <div class="forms-doubleList" title="{fi:hint}">
+    <div id="{@id}" class="forms-doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
           <tr>

@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.forms.formmodel;
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
-/**
- * The {@link WidgetDefinition} part of a MultiValueField widget, see {@link MultiValueField} for more information.
- * 
- * @version $Id$
- */
-public class MultiValueFieldDefinition extends FieldDefinition {
-    public Widget createInstance() {
-        MultiValueField field =  new MultiValueField(this);
-        return field;
-    }
-    
-	public void setRequired(boolean required) {
-		throw new UnsupportedOperationException("The property 'required' is not available on widgets of type multivalue.");
-	}
+function captcha() {
+    var form = new Form("forms/captcha.def.xml");
+    form.showForm("captcha-display-pipeline");
+    cocoon.sendPage("success", {
+        value: form.lookupWidget("/f1").value,
+    });
 }

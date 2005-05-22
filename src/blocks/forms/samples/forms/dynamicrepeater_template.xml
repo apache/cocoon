@@ -38,7 +38,7 @@
   </style>
   
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
     
     <p>This is an example of how dynamic templates (using the JX macros) allow to change the
        page structure depending on the form contents. By adding or removing rows in the repeater
@@ -47,8 +47,9 @@
       <li>when there are no contacts, only the "Add contact" button is displayed and the table isn't shown,</li>
       <li>when there are some contacts, the "move up" and "move down" buttons are not shown on the first and last lines, respectively.</li>
     </ul>
+      <ft:repeater id="contacts">
         <jx:choose>
-          <jx:when test="${form.getChild('contacts').getSize() == 0}">
+          <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>
           </jx:when>
           <jx:otherwise>
@@ -62,7 +63,7 @@
               </tr>
                   <!-- The contents of the repeater-widget element is a template that will
                        be applied to each row in the repeater. -->
-                  <ft:repeater-widget id="contacts">
+                  <ft:repeater-rows>
                     <tr class="forms-row-${repeaterLoop.index % 2}">
                       <td><ft:widget id="firstname"/></td>
                       <td><ft:widget id="lastname"/></td>
@@ -93,16 +94,17 @@
                       <ft:widget id="select"/>
                       </td>
                     </tr>
-                  </ft:repeater-widget>
+                  </ft:repeater-rows>
             </table>
                 </jx:otherwise>
               </jx:choose>
-              <p>
+             <p>
                   <ft:widget id="addcontact"/>
                   <jx:if test="${widget.getChild('contacts').getSize() > 0}">
                     <ft:widget id="removecontacts"/>
                   </jx:if>
               </p>
+            </ft:repeater>
             <ft:widget id="submit"/><br/>
             <a href="./do-dynaRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
 

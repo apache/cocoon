@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: BeanConvertorBuilder.java,v 1.2 2004/12/27 13:30:48 giacomo Exp $
+ * @version $Id$
  */
 public class BeanConvertorBuilder
     implements ConvertorBuilder

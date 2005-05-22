@@ -26,6 +26,7 @@ import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -70,6 +71,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         } else {
             throw new RuntimeException("The value of an upload widget must be of type " + Part.class + ".");
         }
+        getForm().addWidgetUpdate(this);
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -90,6 +92,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
             requestPart.setDisposeWithRequest(false);
             this.part = requestPart;
             this.validationError = null;
+            getForm().addWidgetUpdate(this);
 
         // If it's not a part and not null, clear any existing value
         // We also check if we're the submit widget, as a result of clicking the "..." button
@@ -100,6 +103,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
                 this.part = null;
             }
             this.validationError = null;
+            getForm().addWidgetUpdate(this);
         }
 
         // And keep the current state if the parameter doesn't exist or is null
@@ -108,25 +112,36 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     public boolean validate() {
         if (!getCombinedState().isValidatingValues())
             return true;
+        
+        ValidationError newError = null;
 
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
-                this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+                newError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+                getForm().addWidgetUpdate(this);
             }
         } else {
             String mimeTypes = this.uploadDefinition.getMimeTypes();
             if (mimeTypes != null) {
                 StringTokenizer tok = new StringTokenizer(this.uploadDefinition.getMimeTypes(), ", ");
-                this.validationError = new ValidationError(new I18nMessage("upload.invalid-type", Constants.I18N_CATALOGUE));
                 String contentType = this.part.getMimeType();
-                while (tok.hasMoreTokens()) {
+                boolean found = false;
+                while(tok.hasMoreTokens()) {
                     if (tok.nextToken().equals(contentType)) {
-                        this.validationError = null;
+                        found = true;
+                        break;
                     }
                 }
+                if (!found) {
+                    newError = new ValidationError(new I18nMessage("upload.invalid-type", Constants.I18N_CATALOGUE));
+                }
             } else {
-                this.validationError = null;
+                newError = null;
             }
+        }
+        
+        if (!ObjectUtils.equals(this.validationError, newError)) {
+            setValidationError(newError);
         }
 
         return validationError == null ? super.validate() : false;
@@ -148,6 +163,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
      */
     public void setValidationError(ValidationError error) {
         this.validationError = error;
+        getForm().addWidgetUpdate(this);
     }
 
     /**

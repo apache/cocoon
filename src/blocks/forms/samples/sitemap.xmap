@@ -20,6 +20,7 @@
  <map:components>
 
   <map:transformers default="xslt">    
+    <map:transformer name="browser-update" src="org.apache.cocoon.transformation.BrowserUpdateTransformer"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
         <catalogue id="other" name="OtherMessages" location="messages"/>
@@ -127,20 +128,23 @@
        </map:select>
 
        <!-- pipeline to show the form -->
-       <map:generate src="forms/form1_template_action.xml"/>
+       <map:generate src="forms/form1_template_action.xml">
+	     <map:parameter name="attribute-name" value="form1"/>       	
+       </map:generate>
+
        <map:transform type="forms" label="content1">
          <map:parameter name="attribute-name" value="form1"/>
        </map:transform>
+       
        <map:transform type="i18n">
-         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/form1_success.xsp"/>
        </map:call>
        <map:transform type="i18n">
-         <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
        <map:transform src="resources/forms-samples-styling.xsl"/>
+
        <map:serialize/>
      </map:match>
         
@@ -191,6 +195,7 @@
         -->
      <map:match pattern="*-display-pipeline.jx">
        <map:generate type="jx" src="forms/{1}_template.xml" label="content1"/>
+       <map:transform type="browser-update"/>
        <map:transform type="i18n">
          <!--map:parameter name="locale" value="en-US"/-->
        </map:transform>
@@ -198,7 +203,15 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl"/>
-       <map:serialize/>
+       <map:select type="request-parameter">
+         <map:parameter name="parameter-name" value="cocoon-ajax"/>
+         <map:when test="true">
+	   <map:serialize type="xml"/>
+	 </map:when>
+	 <map:otherwise>
+           <map:serialize type="html"/>
+	 </map:otherwise>
+       </map:select>
      </map:match>
 
      <!--

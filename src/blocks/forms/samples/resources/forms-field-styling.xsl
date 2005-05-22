@@ -30,6 +30,7 @@
 
   <xsl:template match="head" mode="forms-field">
     <script src="{$resources-uri}/js/forms-lib.js" type="text/javascript"/>
+    <script src="{$resources-uri}/js/cforms.js" type="text/javascript"/>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/css/forms.css"/>
   </xsl:template>
 
@@ -48,21 +49,24 @@
       | Generic fi:field : produce an <input>
       +-->
   <xsl:template match="fi:field">
-    <xsl:if test="fi:captcha-image">
-      <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle"/>
-      <xsl:text> </xsl:text>
-    </xsl:if>
-    <input name="{@id}" id="{@id}" value="{fi:value}" title="{fi:hint}" type="text">
-      <xsl:apply-templates select="." mode="styling"/>
-    </input>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}">
+      <xsl:if test="fi:captcha-image">
+        <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <!--  @id-input is what labels point to -->
+      <input name="{@id}" id="{@id}-input" value="{fi:value}" title="{fi:hint}" type="text">
+        <xsl:apply-templates select="." mode="styling"/>
+      </input>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
   <!--+
       | Field in "output" state: display its value
       +-->
   <xsl:template match="fi:field[@state='output']" priority="3">
-    <xsl:value-of select="fi:value/node()"/>
+    <span id="{@id}"><xsl:value-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -164,7 +168,7 @@
     <xsl:variable name="vertical" select="string(fi:styling/@list-orientation) != 'horizontal'"/>
     <xsl:choose>
       <xsl:when test="$vertical">
-        <table cellpadding="0" cellspacing="0" border="0" title="{fi:hint}">
+        <table id="{$id}" cellpadding="0" cellspacing="0" border="0" title="{fi:hint}">
           <xsl:for-each select="fi:selection-list/fi:item">
             <tr>
               <td>
@@ -190,7 +194,7 @@
         </table>
       </xsl:when>
       <xsl:otherwise>
-        <span title="{fi:hint}">
+        <span id="{$id}" title="{fi:hint}">
           <xsl:for-each select="fi:selection-list/fi:item">
             <input type="radio" id="{generate-id()}" name="{$id}" value="{@value}">
               <xsl:if test="@value = $value">
@@ -202,8 +206,8 @@
               <xsl:with-param name="id" select="generate-id()"/>
             </xsl:apply-templates>
           </xsl:for-each>
+          <xsl:apply-templates select="." mode="common"/>
         </span>
-        <xsl:apply-templates select="." mode="common"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -219,18 +223,20 @@
     <xsl:variable name="value" select="fi:value"/>
 
     <!-- dropdown or listbox -->
-    <select title="{fi:hint}" id="{@id}" name="{@id}">
-      <xsl:apply-templates select="." mode="styling"/>
-      <xsl:for-each select="fi:selection-list/fi:item">
-        <option value="{@value}">
-          <xsl:if test="@value = $value">
-            <xsl:attribute name="selected">selected</xsl:attribute>
-          </xsl:if>
-          <xsl:copy-of select="fi:label/node()"/>
-        </option>
-      </xsl:for-each>
-    </select>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}">
+      <select title="{fi:hint}" id="{@id}-input" name="{@id}">
+        <xsl:apply-templates select="." mode="styling"/>
+        <xsl:for-each select="fi:selection-list/fi:item">
+          <option value="{@value}">
+            <xsl:if test="@value = $value">
+              <xsl:attribute name="selected">selected</xsl:attribute>
+            </xsl:if>
+            <xsl:copy-of select="fi:label/node()"/>
+          </option>
+        </xsl:for-each>
+      </select>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
   <!--+
@@ -239,33 +245,37 @@
   <xsl:template match="fi:field[fi:selection-list][fi:styling/@type='output']" priority="3">
     <xsl:variable name="value" select="fi:value"/>
     <xsl:variable name="selected" select="fi:selection-list/fi:item[@value = $value]"/>
-    <xsl:choose>
-      <xsl:when test="$selected/fi:label">
-        <xsl:copy-of select="$selected/fi:label/node()"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$value"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <span id="{@id}">
+      <xsl:choose>
+        <xsl:when test="$selected/fi:label">
+          <xsl:copy-of select="$selected/fi:label/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$value"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </span>
   </xsl:template>
 
   <!--+
       | fi:field with @type 'textarea'
       +-->
   <xsl:template match="fi:field[fi:styling/@type='textarea']">
-    <textarea id="{@id}" name="{@id}" title="{fi:hint}">
-      <xsl:apply-templates select="." mode="styling"/>
-      <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
-      <xsl:copy-of select="translate(fi:value/node(), '&#13;', '')"/>
-    </textarea>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}">
+      <textarea id="{@id}-input" name="{@id}" title="{fi:hint}">
+        <xsl:apply-templates select="." mode="styling"/>
+        <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
+        <xsl:copy-of select="translate(fi:value/node(), '&#13;', '')"/>
+      </textarea>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
   <!--+
       | fi:field with @type 'output' and fi:output are both rendered as text
       +-->
   <xsl:template match="fi:output | fi:field[fi:styling/@type='output']" priority="2">
-    <xsl:copy-of select="fi:value/node()"/>
+    <span id="{@id}"><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -273,7 +283,7 @@
       +-->
   <xsl:template match="fi:*" mode="label">
     <xsl:param name="id" select="@id"/>
-    <label for="{$id}" title="{fi:hint}">
+    <label for="{$id}-input" title="{fi:hint}">
       <xsl:copy-of select="fi:label/node()"/>
     </label>
   </xsl:template>
@@ -291,22 +301,24 @@
       | the value and not the checked attribute
       +-->
   <xsl:template match="fi:booleanfield">
-    <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{fi:hint}">
-      <xsl:apply-templates select="." mode="styling"/>
-      <xsl:choose>
-        <xsl:when test="./fi:styling[@type='hidden']">
-          <xsl:if test="fi:value = 'false'">
-            <xsl:attribute name="value">false</xsl:attribute>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="fi:value = 'true'">
-            <xsl:attribute name="checked">checked</xsl:attribute>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
-    </input>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}">
+      <input id="{@id}-input" type="checkbox" value="true" name="{@id}" title="{fi:hint}">
+        <xsl:apply-templates select="." mode="styling"/>
+        <xsl:choose>
+          <xsl:when test="./fi:styling[@type='hidden']">
+            <xsl:if test="fi:value = 'false'">
+              <xsl:attribute name="value">false</xsl:attribute>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="fi:value = 'true'">
+              <xsl:attribute name="checked">checked</xsl:attribute>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+      </input>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
   <!--+
@@ -314,7 +326,7 @@
       | use text but avoids i18n problems related to hardcoding 'yes'/'no' or 'true'/'false'
       +-->
   <xsl:template match="fi:booleanfield[@state='output' or fi:styling/@type='output']" priority="3">
-    <input type="checkbox" title="{fi:hint}" disabled="disabled">
+    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled">
     	  <xsl:if test="fi:value = 'true'">
     	    <xsl:attribute name="checked">checked</xsl:attribute>
     	  </xsl:if>
@@ -325,7 +337,7 @@
       | fi:action
       +-->
   <xsl:template match="fi:action">
-    <input id="{@id}" type="submit" name="{@id}" title="{fi:hint}">
+    <input id="{@id}" type="submit" name="{@id}" title="{fi:hint}" onclick="forms_submitForm(this, '{@id}'); return false">
       <xsl:attribute name="value"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
       <xsl:apply-templates select="." mode="styling"/>
     </input>
@@ -335,7 +347,7 @@
       | fi:action, link-style 	 
       +--> 	 
   <xsl:template match="fi:action[fi:styling/@type = 'link']" priority="1"> 	 
-    <a title="{fi:hint}" href="#" onclick="forms_submitForm(this, '{@id}'); return false"> 	 
+    <a id="{@id}" title="{fi:hint}" href="#" onclick="forms_submitForm(this, '{@id}'); return false"> 	 
       <xsl:apply-templates select="." mode="styling"/> 	 
       <xsl:copy-of select="fi:label/node()"/> 	 
     </a>
@@ -361,7 +373,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span title="{fi:hint}">
+    <span id="{@id}" title="{fi:hint}">
       <xsl:for-each select="fi:selection-list/fi:item">
         <xsl:variable name="value" select="@value"/>
         <input id="{generate-id()}" type="checkbox" value="{@value}" name="{$id}">
@@ -374,8 +386,8 @@
         </xsl:apply-templates>
         <br/>
       </xsl:for-each>
+      <xsl:apply-templates select="." mode="common"/>
     </span>
-    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--+
@@ -385,8 +397,8 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span title="{fi:hint}">
-      <select id="{@id}" name="{$id}" multiple="multiple">
+    <span id="{@id}" title="{fi:hint}">
+      <select id="{@id}-input" name="{$id}" multiple="multiple">
         <xsl:apply-templates select="." mode="styling"/>
         <xsl:for-each select="fi:selection-list/fi:item">
           <xsl:variable name="value" select="@value"/>
@@ -398,8 +410,8 @@
           </option>
         </xsl:for-each>
       </select>
+      <xsl:apply-templates select="." mode="common"/>
     </span>
-    <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
   <!--+
@@ -407,50 +419,52 @@
       +-->
   <xsl:template match="fi:multivaluefield[@state='output']" priority="3">
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
-    <xsl:for-each select="fi:selection-list/fi:item">
-      <xsl:variable name="value" select="@value"/>
-      <xsl:if test="$values[. = $value]">
-    	    <xsl:value-of select="fi:label/node()"/>
-    	  </xsl:if>
-    </xsl:for-each>
+    <span id="{@id}">
+      <xsl:for-each select="fi:selection-list/fi:item">
+        <xsl:variable name="value" select="@value"/>
+        <xsl:if test="$values[. = $value]">
+          <xsl:value-of select="fi:label/node()"/>
+    	    </xsl:if>
+      </xsl:for-each>
+    </span>
   </xsl:template>
 
   <!--+
       | fi:upload
       +-->
   <xsl:template match="fi:upload">
-    <xsl:choose>
-      <xsl:when test="fi:value">
-        <!-- Has a value (filename): display it with a change button -->
-        <span title="{fi:hint}">
-          <xsl:text>[</xsl:text>
-          <xsl:value-of select="fi:value"/>
-          <xsl:text>] </xsl:text>
-          <input type="button" id="{@id}" name="{@id}" value="..." onclick="forms_submitForm(this)"/>
-        </span>
-      </xsl:when>
-      <xsl:otherwise>
-        <input type="file" id="{@id}" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
-          <xsl:apply-templates select="." mode="styling"/>
-        </input>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}" title="{fi:hint}">
+      <xsl:choose>
+        <xsl:when test="fi:value">
+          <!-- Has a value (filename): display it with a change button -->
+            <xsl:text>[</xsl:text>
+            <xsl:value-of select="fi:value"/>
+            <xsl:text>] </xsl:text>
+            <input type="button" id="{@id}-input" name="{@id}-input" value="..." onclick="forms_submitForm(this)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <input type="file" id="{@id}-input" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
+            <xsl:apply-templates select="." mode="styling"/>
+          </input>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="." mode="common"/>`
+    </span>
   </xsl:template>
 
   <!--+
       | fi:upload, output state
       +-->
   <xsl:template match="fi:upload[@state='output']" priority="3">
-      <xsl:copy-of select="fi:value/node()"/>
+      <span id="{@id}"><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
       | fi:repeater
       +-->
   <xsl:template match="fi:repeater">
-    <input type="hidden" name="{@id}.size" value="{@size}"/>
-    <table border="1">
+    <table id="{@id}" border="1">
+      <input type="hidden" name="{@id}.size" value="{@size}"/>
       <tr>
         <xsl:for-each select="fi:headings/fi:heading">
           <th><xsl:value-of select="."/></th>
@@ -489,6 +503,9 @@
       <xsl:attribute name="onsubmit">forms_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       <!-- hidden field to store the submit id -->
       <div><input type="hidden" name="forms_submit_id"/></div>
+      <xsl:if test="@ajax = 'true'">
+        <script script="text/javascript">CForms.ajax = true;</script>
+      </xsl:if>
       <xsl:apply-templates/>
       
       <!-- TODO: consider putting this in the xml stream from the generator? -->
@@ -534,62 +551,88 @@
   </xsl:template>
 
   <xsl:template match="fi:aggregatefield">
-    <input id="{@id}" name="{@id}" value="{fi:value}" title="{fi:hint}">
-      <xsl:apply-templates select="." mode="styling"/>
-    </input>
-    <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}">
+      <input id="{@id}-input" name="{@id}" value="{fi:value}" title="{fi:hint}">
+        <xsl:apply-templates select="." mode="styling"/>
+      </input>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
   </xsl:template>
 
   <xsl:template match="fi:messages">
-    <xsl:if test="fi:message">
-      <xsl:apply-templates select="." mode="label"/>:
-      <ul>
-        <xsl:for-each select="fi:message">
-          <li><xsl:apply-templates/></li>
-        </xsl:for-each>
-      </ul>
-    </xsl:if>
+    <div id="{@id}">
+      <xsl:if test="fi:message">
+        <xsl:apply-templates select="." mode="label"/>:
+        <ul>
+          <xsl:for-each select="fi:message">
+            <li><xsl:apply-templates/></li>
+          </xsl:for-each>
+        </ul>
+      </xsl:if>
+    </div>
   </xsl:template>
 
   <xsl:template match="fi:validation-errors">
-    <xsl:variable name="header">
-      <xsl:choose>
-        <xsl:when test="header">
-          <xsl:copy-of select="header"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="footer">
-      <xsl:choose>
-        <xsl:when test="footer">
-          <xsl:copy-of select="footer"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
-    <xsl:if test="$messages">
-      <xsl:copy-of select="$header"/>
-      <ul>
-        <xsl:for-each select="$messages">
-          <li class="forms-validation-error">
-            <xsl:variable name="label">
-              <xsl:apply-templates select=".." mode="label"/>
-            </xsl:variable>
-            <xsl:if test="$label">
-              <xsl:copy-of select="$label"/><xsl:text>: </xsl:text>
-            </xsl:if>
-            <xsl:value-of select="."/>
-          </li>
-        </xsl:for-each>
-      </ul>
-      <xsl:copy-of select="$footer"/>
-    </xsl:if>
+    <div id="{@id}">
+      <xsl:variable name="header">
+        <xsl:choose>
+          <xsl:when test="header">
+            <xsl:copy-of select="header"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="footer">
+        <xsl:choose>
+          <xsl:when test="footer">
+            <xsl:copy-of select="footer"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
+      <xsl:if test="$messages">
+        <xsl:copy-of select="$header"/>
+        <ul>
+          <xsl:for-each select="$messages">
+            <li class="forms-validation-error">
+              <xsl:variable name="label">
+                <xsl:apply-templates select=".." mode="label"/>
+              </xsl:variable>
+              <xsl:if test="$label">
+                <xsl:copy-of select="$label"/><xsl:text>: </xsl:text>
+              </xsl:if>
+              <xsl:value-of select="."/>
+            </li>
+          </xsl:for-each>
+        </ul>
+        <xsl:copy-of select="$footer"/>
+      </xsl:if>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="fi:union">
+    <div id="{@id}">
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="fi:repeater-template">
+    <div id="{@id}">
+      <xsl:apply-templates/>
+    </div>
+  </xsl:template>
+  
+  <!--+
+      | fi:placeholder - used to represent invisible widgets so that AJAX updates
+      | know where to insert the widget if it becomes visible
+      +-->
+  <xsl:template match="fi:placeholder">
+    <span id="{@id}"/>
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">

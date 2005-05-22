@@ -15,10 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- An implementation of the CForms template engine as a JXTemplate tag library -->
     
 <jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
-             xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+             xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+             xmlns:bu="http://apache.org/cocoon/browser-update/1.0">
     <!--
         ft:form-template
     -->
@@ -155,9 +157,20 @@
       
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:if test="${cformsHelper.isVisible(widget)}">
-        <fi:union id="${widget.getRequestParameterName()}">
-          <jx:evalBody/>
-        </fi:union>
+        <jx:choose>
+          <jx:when test="${cformsHelper.isModified(widget)}">
+            <bu:replace id="${widget.getRequestParameterName()}">
+              <fi:union id="${widget.getRequestParameterName()}">
+                <jx:evalBody/>
+              </fi:union>
+            </bu:replace>
+          </jx:when>
+          <jx:otherwise>
+            <fi:union id="${widget.getRequestParameterName()}">
+              <jx:evalBody/>
+            </fi:union>
+          </jx:otherwise>
+        </jx:choose>
       </jx:if>
     </jx:macro>
 
@@ -201,6 +214,37 @@
       <jx:if test="${cformsHelper.isVisible(widget)}">
         <jx:evalBody/>
       </jx:if>
+    </jx:macro>
+    
+    <jx:macro name="repeater" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+      <jx:parameter name="id"/>
+      <jx:set var="repeater" value="${cformsHelper.getWidget(widget, id)}"/>
+      <jx:if test="${cformsHelper.isVisible(widget)}">
+        <jx:choose>
+          <jx:when test="${cformsHelper.isModified(repeater)}">
+            <bu:replace id="${repeater.getRequestParameterName()}">
+		     <fi:repeater-template id="${repeater.getRequestParameterName()}">
+		       <jx:evalBody/>
+		     </fi:repeater-template>
+            </bu:replace>
+          </jx:when>
+          <jx:otherwise>
+	        <fi:repeater-template id="${repeater.getRequestParameterName()}">
+	          <jx:evalBody/>
+	        </fi:repeater-template>
+          </jx:otherwise>
+        </jx:choose>
+        
+      </jx:if>
+    </jx:macro>
+    
+    <jx:macro name="repeater-rows" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+        <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
+          <jx:set var="widget" value="${repeater.getRow(repeaterLoop.index)}"/>
+          <jx:if test="${cformsHelper.isVisible(widget)}">
+            <jx:evalBody/>
+          </jx:if>
+        </jx:forEach>
     </jx:macro>
         
 </jx:template>

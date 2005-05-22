@@ -15,7 +15,10 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.cocoon.forms.FormContext;
@@ -52,6 +55,9 @@ public class Form extends AbstractContainerWidget {
     //to read their value before events get fired.
     private boolean bufferEvents = false;
     private CursorableLinkedList events;
+    
+    // Widgets that need to be updated in the client when in AJAX mode
+    private Set updatedWidgets;
 
     public Form(FormDefinition definition) {
         super(definition);
@@ -101,6 +107,16 @@ public class Form extends AbstractContainerWidget {
             // Send it right now
             event.getSourceWidget().broadcastEvent(event);
         }
+    }
+    
+    public void addWidgetUpdate(Widget widget) {
+        if (this.updatedWidgets != null) {
+            this.updatedWidgets.add(widget.getRequestParameterName());
+        }
+    }
+    
+    public Set getUpdatedWidgets() {
+        return this.updatedWidgets == null ? Collections.EMPTY_SET : this.updatedWidgets;
     }
 
     /**
@@ -204,9 +220,16 @@ public class Form extends AbstractContainerWidget {
      * </ul>
      * This processing can be interrupted by the widgets (or their event listeners) by calling
      * {@link #endProcessing(boolean)}.
+     * <p>
+     * Note that this method is synchronized as a Form is not thread-safe. This should not be a
+     * bottleneck as such concurrent requests can only happen for a single user.
      */
-    public boolean process(FormContext formContext) {
-
+    public synchronized boolean process(FormContext formContext) {
+        // Is this an AJAX request?
+        if (formContext.getRequest().getParameter("cocoon-ajax") != null) {
+            this.updatedWidgets = new HashSet();
+        }
+        
         // Fire the binding phase events
         fireEvents();
 

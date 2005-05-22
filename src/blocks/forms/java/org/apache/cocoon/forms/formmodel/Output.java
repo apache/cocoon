@@ -98,5 +98,6 @@ public class Output extends AbstractWidget implements DataWidget {
                                        + ", received " + object.getClass() + ".");
         }
         value = object;
+        getForm().addWidgetUpdate(this);
     }
 }

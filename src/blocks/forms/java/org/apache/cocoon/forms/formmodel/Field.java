@@ -134,6 +134,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (value != null) {
             setValue(value);
         }
+        this.selectionList = this.fieldDefinition.getSelectionList();
         super.initialize();
     }
 
@@ -197,6 +198,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             if (callListeners) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
+            getForm().addWidgetUpdate(this);
         }
     }
 
@@ -251,6 +253,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 // will lazily compute the new value only if needed.
                 getForm().addWidgetEvent(new DeferredValueChangedEvent(this, oldValue));
             }
+            
+            getForm().addWidgetUpdate(this);
         }
     }
 
@@ -270,8 +274,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState == VALUE_PARSED) {
             doValidate();
             this.valueState = VALUE_DISPLAY_VALIDATION;
+            getForm().addWidgetUpdate(this);
         } else if (this.valueState == VALUE_PARSE_ERROR) {
             this.valueState = VALUE_DISPLAY_PARSE_ERROR;
+            getForm().addWidgetUpdate(this);
         }
 
         return this.validationError == null;
@@ -360,6 +366,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public void setValidationError(ValidationError error) {
         this.validationError = error;
         this.valueState = VALUE_DISPLAY_VALIDATION;
+        getForm().addWidgetUpdate(this);
     }
 
     public boolean isRequired() {
@@ -427,6 +434,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         }
         this.selectionList = selectionList;
+        getForm().addWidgetUpdate(this);
     }
 
     /**
