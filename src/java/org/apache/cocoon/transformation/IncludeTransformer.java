@@ -664,9 +664,9 @@ public class IncludeTransformer extends AbstractTransformer
         public IncludeXMLPipe(Logger logger, ContentHandler contentHandler, LexicalHandler lexicalHandler,
                               boolean recursive, boolean parallel, boolean recursiveParallel) {
             root = false;
-            enableLogging(logger);
-            setContentHandler(contentHandler);
-            setLexicalHandler(lexicalHandler);
+            this.enableLogging(logger);
+            this.setContentHandler(contentHandler);
+            this.setLexicalHandler(lexicalHandler);
             this.recursive = recursive;
             this.parallel = parallel;
             this.recursiveParallel = recursiveParallel;
@@ -694,17 +694,17 @@ public class IncludeTransformer extends AbstractTransformer
         /** Push current consumer into the stack, replace with new one */
         private void push(XMLConsumer consumer) {
             this.consumers.push(new Object[]{ super.xmlConsumer, super.contentHandler, super.lexicalHandler });
-            setConsumer(consumer);
+            this.setConsumer(consumer);
         }
 
         /** Pop consumer from the stack, replace current one */
         private void pop() {
             Object[] consumer = (Object[]) this.consumers.pop();
             if (consumer[0] != null) {
-                setConsumer((XMLConsumer) consumer[0]);
+                this.setConsumer((XMLConsumer) consumer[0]);
             } else {
-                setContentHandler((ContentHandler) consumer[1]);
-                setLexicalHandler((LexicalHandler) consumer[2]);
+                this.setContentHandler((ContentHandler) consumer[1]);
+                this.setLexicalHandler((LexicalHandler) consumer[2]);
             }
         }
 
