@@ -126,18 +126,8 @@ public class CocoonWrapper {
         // Install a temporary logger so that getDir() can log if needed
         final Logger envLogger = new LogKitLogger(hierarchy.getLoggerFor(""));
 
-        // setup Cocoon core
-        // FIXME - this is not finished yet!
-        try {
-            WrapperBootstrapper env = this.getBootstrapEnvironment();
-            env.setEnvironmentLogger(envLogger);
-            this.coreUtil = new CoreUtil(env);
-            this.cocoon = this.coreUtil.createCocoon();
-            this.log = env.logger;
-        } catch (Exception ignore) {
-            this.log = envLogger;
-            ignore.printStackTrace();
-        }
+        // FIXME - remove this once CoreUtil is used
+        this.log = envLogger;
 
         try {
             // First of all, initialize the logging system
@@ -197,6 +187,19 @@ public class CocoonWrapper {
             log.fatalError("Exception caught", e);
             throw e;
         }
+        // setup Cocoon core
+        // FIXME - this is not finished yet!
+        try {
+            WrapperBootstrapper env = this.getBootstrapEnvironment();
+            env.setEnvironmentLogger(envLogger);
+            env.setEnvironmentContext(cliContext);
+            this.coreUtil = new CoreUtil(env);
+            this.cocoon = this.coreUtil.createCocoon();
+            // FIXME - activate this: this.log = env.logger;
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+
         initialized = true;
     }
 
@@ -666,9 +669,14 @@ public class CocoonWrapper {
         public Logger logger;
 
         protected Logger environmentLogger;
+        protected Context environmentContext;
 
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
+        }
+
+        public void setEnvironmentContext(Context context) {
+            this.environmentContext = context;
         }
 
         /**
@@ -684,7 +692,6 @@ public class CocoonWrapper {
          */
         public void configure(MutableSettings settings) {
             // TODO Auto-generated method stub
-            
         }
 
         /**
@@ -699,7 +706,6 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getClassPath(org.apache.cocoon.core.Settings)
          */
         public String getClassPath(Settings settings) {
-            // TODO Auto-generated method stub
             return null;
         }
 
@@ -739,16 +745,14 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getEnvironmentContext()
          */
         public Context getEnvironmentContext() {
-            // TODO Auto-generated method stub
-            return null;
+            return this.environmentContext;
         }
 
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#getInitClassLoader()
          */
         public ClassLoader getInitClassLoader() {
-            // TODO Auto-generated method stub
-            return null;
+            return CocoonWrapper.class.getClassLoader();
         }
 
         /**
