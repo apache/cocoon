@@ -84,7 +84,7 @@ function login(action, args) {
  * to the user.
  */
 function invoke(action, args) {
-    func = this[action];
+    var func = this[action];
     if (func != undefined) {
         func.apply(this,args);
     } else {
