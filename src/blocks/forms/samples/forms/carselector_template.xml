@@ -73,7 +73,7 @@
             <fi:styling submit-on-change="true"/>
           </ft:widget>
           <ft:widget id="message"/>
-          <input type="submit" value="Buy it!"/>
+	  <ft:widget id="buy"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

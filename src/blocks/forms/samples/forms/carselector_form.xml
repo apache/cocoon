@@ -86,14 +86,16 @@
           modelwidget.setValue(null);
           
           // Fun with messages...
+          var msg = event.source.lookupWidget("../message");
           if (value != null) {
-            var msg = event.source.lookupWidget("../message");
             if (event.oldValue == null) {
               msg.value = "A " + makewidget.value + " " + value + " is a very good choice.";
             } else {
               msg.value = "So you prefer a " + value + " ?";
             }
-          }
+          } else {
+	      msg.value = "I see that you're undecided...";
+	  }
         </javascript>
       </fd:on-value-changed>
     </fd:field>
@@ -122,6 +124,10 @@
     <fd:output id="message">
       <fd:datatype base="string"/>
     </fd:output>
+
+    <fd:submit id="buy">
+      <fd:label>Buy it!</fd:label>
+    </fd:submit>
   
   </fd:widgets>
 

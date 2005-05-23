@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.util;
 
+import java.util.Arrays;
+
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -35,5 +37,14 @@ public class StringMessage implements XMLizable {
 
     public void toSAX(ContentHandler contentHandler) throws SAXException {
         contentHandler.characters(ch, 0, ch.length);
+    }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof StringMessage) {
+            // Compare char arrays
+            return Arrays.equals(this.ch, ((StringMessage)obj).ch);
+        } else {
+            return false;
+        }
     }
 }
