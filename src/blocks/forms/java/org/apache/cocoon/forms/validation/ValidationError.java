@@ -19,6 +19,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.util.StringMessage;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 
 /**
@@ -82,6 +83,14 @@ public class ValidationError {
     public void generateSaxFragment(ContentHandler contentHandler) throws SAXException {
         if (saxFragment != null) {
             saxFragment.toSAX(contentHandler);
+        }
+    }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof ValidationError) {
+            return ObjectUtils.equals(this.saxFragment, ((ValidationError)obj).saxFragment);
+        } else {
+            return false;
         }
     }
 }

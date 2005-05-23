@@ -55,7 +55,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
         Request request = formContext.getRequest();
 
         String value = request.getParameter(fullId);
-        if (value != null && value.length() > 0) {
+        if (value != null) {
             form.setSubmitWidget(this);
 
         } else {

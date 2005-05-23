@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.forms.util;
 
+import java.util.Arrays;
+
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -130,5 +133,17 @@ public class I18nMessage implements XMLizable {
             contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT);
         }
         contentHandler.endPrefixMapping("i18n");
+    }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof I18nMessage) {
+            I18nMessage other = (I18nMessage)obj;
+            return ObjectUtils.equals(this.catalogue, other.catalogue) &&
+                   ObjectUtils.equals(this.key, other.key) &&
+                   Arrays.equals(this.keys, other.keys) &&
+                   Arrays.equals(this.parameters, other.parameters);
+        } else {
+            return false;
+        }
     }
 }

@@ -26,6 +26,7 @@ import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -145,6 +146,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             return this.value;
         }
 
+        ValidationError oldError = this.validationError;
+
         // Parse the value
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
@@ -153,6 +156,12 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // Validate the value if it was successfully parsed
         if (this.valueState == VALUE_PARSED) {
             doValidate();
+        }
+
+        if (oldError != null && this.validationError == null) {
+            // The parsing process removed an existing validation error. This happens
+            // mainly when a required field is given a value.
+            getForm().addWidgetUpdate(this);
         }
 
         return this.validationError == null ? this.value : null;
@@ -237,6 +246,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             changed = !enteredValue.equals(newEnteredValue);
         }
         if (changed) {
+            ValidationError oldError = this.validationError;
             
             // If we have some value-changed listeners, we must make sure the current value has been
             // parsed, to fill the event. Otherwise, we don't need to spend that extra CPU time.
@@ -253,8 +263,12 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 // will lazily compute the new value only if needed.
                 getForm().addWidgetEvent(new DeferredValueChangedEvent(this, oldValue));
             }
-            
-            getForm().addWidgetUpdate(this);
+
+            if (oldError != null) {
+                // There was a validation error, and the user entered a new value: refresh
+                // the widget, because the previous error was cleared
+                getForm().addWidgetUpdate(this);
+            }
         }
     }
 
@@ -274,7 +288,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState == VALUE_PARSED) {
             doValidate();
             this.valueState = VALUE_DISPLAY_VALIDATION;
-            getForm().addWidgetUpdate(this);
+            if (this.validationError != null) {
+                getForm().addWidgetUpdate(this);
+            }
         } else if (this.valueState == VALUE_PARSE_ERROR) {
             this.valueState = VALUE_DISPLAY_PARSE_ERROR;
             getForm().addWidgetUpdate(this);
@@ -324,6 +340,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * validation failed.
      */
     private void doValidate() {
+
         if (this.valueState != VALUE_PARSED) {
             throw new IllegalStateException("Field is not in PARSED state (" + this.valueState + ")");
         }
@@ -364,9 +381,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * @param error the validation error
      */
     public void setValidationError(ValidationError error) {
-        this.validationError = error;
         this.valueState = VALUE_DISPLAY_VALIDATION;
-        getForm().addWidgetUpdate(this);
+        if (!ObjectUtils.equals(this.validationError, error)) {
+            this.validationError = error;
+            getForm().addWidgetUpdate(this);
+        }
     }
 
     public boolean isRequired() {
