@@ -270,7 +270,7 @@
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>optional/batik-all-1.5.1.jar</lib>
+    <lib>optional/batik-all-1.6.jar</lib>
     <homepage>http://xml.apache.org/batik/</homepage>
   </file>
 
