@@ -112,27 +112,7 @@ public final class SitemapSourceInfo {
 
         
         // determine if the queryString specifies a cocoon-view
-        info.view = null;
-        if (info.queryString != null) {
-            int index = info.queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
-                    && (index == 0 || info.queryString.charAt(index-1) == '&')
-                    && info.queryString.length() > index + Constants.VIEW_PARAM.length() 
-                    && info.queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
-                String tmp = info.queryString.substring(index+Constants.VIEW_PARAM.length()+1);
-                index = tmp.indexOf('&');
-                if (index != -1) {
-                    info.view = tmp.substring(0,index);
-                } else {
-                    info.view = tmp;
-                }
-            } else {
-                info.view = env.getView();
-            }
-        } else {
-            info.view = env.getView();
-        }
+        info.view = getView(info.queryString, env);
 
         // build the request uri which is relative to the context
         info.requestURI = info.prefix + info.uri;
@@ -147,5 +127,27 @@ public final class SitemapSourceInfo {
 
         return info;
     }
-    
+
+    public static String getView(String query, Environment env) {
+        if (query != null) {
+            int index = query.indexOf(Constants.VIEW_PARAM);
+            if (index != -1 
+                    && (index == 0 || query.charAt(index-1) == '&')
+                    && query.length() > index + Constants.VIEW_PARAM.length() 
+                    && query.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
+                
+                String tmp = query.substring(index+Constants.VIEW_PARAM.length()+1);
+                index = tmp.indexOf('&');
+                if (index != -1) {
+                    return tmp.substring(0,index);
+                } else {
+                    return tmp;
+                }
+            } else {
+                return env.getView();
+            }
+        } else {
+            return env.getView();
+        }
+    }
 }
