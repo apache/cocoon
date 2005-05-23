@@ -31,6 +31,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * This is the core Cocoon component.
@@ -118,6 +119,14 @@ public class Core {
      */
     public Settings getSettings() {
         return this.settings;
+    }
+
+    /**
+     * Update the dynamic settings at runtime.
+     * @param dynSettings
+     */
+    public void update(DynamicSettings dynSettings) {
+        throw new NotImplementedException("The update method is not implemented yet.");
     }
 
     /**

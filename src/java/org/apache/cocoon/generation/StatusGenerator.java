@@ -401,26 +401,26 @@ public class StatusGenerator
         this.addValue(Settings.KEY_LOGGING_LOG4J_CONFIGURATION, s.getLog4jConfiguration());
         this.addValue(Settings.KEY_LOGGING_MANAGER_CLASS, s.getLoggerManagerClassName());
         this.addValue(Settings.KEY_PARENT_SERVICE_MANAGER, s.getParentServiceManagerClassName());
+        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
+        this.addValue(Settings.KEY_INIT_CLASSLOADER, s.isInitClassloader());
+        this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
+        this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
+        this.addValue(Settings.KEY_MANAGE_EXCEPTIONS, s.isManageExceptions());
+        this.addValue(Settings.KEY_UPLOADS_DIRECTORY, s.getUploadDirectory());
+        this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
+        this.addValue(Settings.KEY_WORK_DIRECTORY, s.getWorkDirectory());
+        this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
         
         this.endGroup();
 
         this.startGroup("Dynamic Settings");
 
         this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, s.getConfigurationReloadDelay());
-        this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
         this.addValue(Settings.KEY_ALLOW_RELOAD, s.isAllowReload());
-        this.addValue(Settings.KEY_INIT_CLASSLOADER, s.isInitClassloader());
-        this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
-        this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
-        this.addValue(Settings.KEY_MANAGE_EXCEPTIONS, s.isManageExceptions());
-        this.addValue(Settings.KEY_UPLOADS_DIRECTORY, s.getUploadDirectory());
         this.addValue(Settings.KEY_UPLOADS_AUTOSAVE, s.isAutosaveUploads());
         this.addValue(Settings.KEY_UPLOADS_ENABLE, s.isEnableUploads());
         this.addValue(Settings.KEY_UPLOADS_MAXSIZE, s.getMaxUploadSize());
         this.addValue(Settings.KEY_UPLOADS_OVERWRITE, s.isAllowOverwrite());
-        this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
-        this.addValue(Settings.KEY_WORK_DIRECTORY, s.getWorkDirectory());
-        this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
         this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());

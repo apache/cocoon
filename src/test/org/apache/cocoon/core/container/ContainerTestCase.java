@@ -38,7 +38,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.util.log.DeprecationLogger;
 
 /**
@@ -300,7 +300,7 @@ public class ContainerTestCase extends TestCase {
         roleManager.configure( confRM );
 
         // Set up root manager for Core
-        Core core = new Core(new Settings(), this.context);
+        Core core = new Core(new MutableSettings(), this.context);
         ((DefaultContext)this.context).put(Core.ROLE, core);
         CoreUtil.RootServiceManager rsm = new CoreUtil.RootServiceManager(null, core);
  
