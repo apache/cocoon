@@ -129,7 +129,7 @@ CForms._handleBrowserUpdate = function(form, request) {
             // Get the continuation-id, if any.
             var contParam = '?cocoon-ajax-continue=true';
             if (form.elements["continuation-id"]) {
-                contParam = "&continuation-id=" + form.elements["continuation-id"].value;
+                contParam += "&continuation-id=" + form.elements["continuation-id"].value;
             }
             window.location.href = form.action + contParam;
         } else {
