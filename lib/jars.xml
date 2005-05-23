@@ -1023,7 +1023,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>optional/db-ojb-1.0.1.jar</lib>
+    <lib>optional/db-ojb-1.0.3.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->

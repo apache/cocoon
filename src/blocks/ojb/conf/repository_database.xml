@@ -45,6 +45,21 @@
         useAutoCommit="1"
         ignoreAutoCommitExceptions="false"
      >
+     <!-- alternative cache implementations, see docs section "Caching" -->
+        <object-cache class="org.apache.ojb.broker.cache.ObjectCacheTwoLevelImpl">
+            <!-- meaning of attributes, please see docs section "Caching" -->
+            <!-- common attributes -->
+            <attribute attribute-name="cacheExcludes" attribute-value=""/>
+            <!-- ObjectCacheTwoLevelImpl attributes -->
+            <attribute attribute-name="applicationCache" attribute-value="org.apache.ojb.broker.cache.ObjectCacheDefaultImpl"/>
+            <attribute attribute-name="copyStrategy" attribute-value="org.apache.ojb.broker.cache.ObjectCacheTwoLevelImpl$CopyStrategyImpl"/>
+            <!-- ObjectCacheDefaultImpl attributes -->
+            <attribute attribute-name="timeout" attribute-value="900"/>
+            <attribute attribute-name="autoSync" attribute-value="true"/>
+            <attribute attribute-name="cachingKeyType" attribute-value="0"/>
+            <attribute attribute-name="useSoftReferences" attribute-value="true"/>
+        </object-cache>
+        
         <connection-pool
             maxActive="2"
             maxIdle="2"
@@ -57,6 +72,12 @@
     </jdbc-connection-descriptor>
 
     <jdbc-connection-descriptor jcd-alias="personnel" default-connection="true">
+        <object-cache class="org.apache.ojb.broker.cache.ObjectCacheDefaultImpl">
+            <attribute attribute-name="cacheExcludes" attribute-value=""/>
+            <attribute attribute-name="timeout" attribute-value="900"/>
+            <attribute attribute-name="autoSync" attribute-value="true"/>
+            <attribute attribute-name="cachingKeyType" attribute-value="0"/>
+        </object-cache>
         <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
             <attribute attribute-name="grabSize" attribute-value="5"/>
         </sequence-manager>
