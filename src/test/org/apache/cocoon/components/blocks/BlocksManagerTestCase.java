@@ -41,4 +41,8 @@ public class BlocksManagerTestCase extends SitemapTestCase {
         getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
         this.release(blocks);
     }
+
+    public void testBlocksSource() throws Exception {
+        process("test");
+    }
 }

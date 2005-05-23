@@ -38,10 +38,13 @@
     <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
     <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.BlocksSourceFactory" name="blocks"/>
   </source-factories>
 
   <component role="org.apache.cocoon.components.blocks.BlocksManager"
              class="org.apache.cocoon.components.blocks.BlocksManager"
              file="wiring.xml"/>
+
+  <sitemap file="blocks-sitemap.xmap"/>
 
 </cocoon>
