@@ -688,7 +688,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.configuration.Settings)
+         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
          */
         public void configure(MutableSettings settings) {
             // fill from the servlet parameters
@@ -822,7 +822,6 @@ public class CocoonServlet extends HttpServlet {
          *
          * We need to get this to work properly when Cocoon is in a war.
          *
-         * @throws ServletException
          */
         public String getClassPath(Settings settings) {
             StringBuffer buildClassPath = new StringBuffer();
