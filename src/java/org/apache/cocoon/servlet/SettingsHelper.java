@@ -25,7 +25,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
 
 /**
- * This helper class initializes the {@link Settings} object from the servlet
+ * This helper class initializes the {@link MutableSettings} object from the servlet
  * configuration.
  * 
  * @version SVN $Id: Settings.java 125448 2005-01-17 22:28:43Z cziegeler $

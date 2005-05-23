@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,6 +46,11 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.core.CoreUtil;
+import org.apache.cocoon.core.MutableSettings;
+import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
@@ -57,6 +64,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.SystemUtils;
 
 import org.apache.log.Hierarchy;
+import org.apache.log.LogTarget;
 import org.apache.log.Priority;
 import org.xml.sax.ContentHandler;
 
@@ -102,12 +110,12 @@ public class CocoonWrapper {
 
     private boolean initialized = false;
 
-    //
-    // INITIALISATION METHOD
-    //
-    public void initialize() throws Exception {
-        // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
+    private CoreUtil coreUtil;
 
+    /**
+     * INITIALISATION METHOD.
+     */
+    public void initialize() throws Exception {
         // Create a new hierarchy. This is needed when CocoonBean is called from
         // within a CocoonServlet call, in order not to mix logs
         final Hierarchy hierarchy = new Hierarchy();
@@ -116,7 +124,20 @@ public class CocoonWrapper {
         hierarchy.setDefaultPriority(priority);
 
         // Install a temporary logger so that getDir() can log if needed
-        this.log = new LogKitLogger(hierarchy.getLoggerFor(""));
+        final Logger envLogger = new LogKitLogger(hierarchy.getLoggerFor(""));
+
+        // setup Cocoon core
+        // FIXME - this is not finished yet!
+        try {
+            WrapperBootstrapper env = this.getBootstrapEnvironment();
+            env.setEnvironmentLogger(envLogger);
+            this.coreUtil = new CoreUtil(env);
+            this.cocoon = this.coreUtil.createCocoon();
+            this.log = env.logger;
+        } catch (Exception ignore) {
+            this.log = envLogger;
+            ignore.printStackTrace();
+        }
 
         try {
             // First of all, initialize the logging system
@@ -630,5 +651,134 @@ public class CocoonWrapper {
             log.debug("Context classpath: " + buildClassPath);
         }
         return buildClassPath.toString();
+    }
+
+    protected WrapperBootstrapper getBootstrapEnvironment() {
+        return new WrapperBootstrapper();
+    }
+
+    /**
+     * This class provides wrapper specific environment information
+     *
+     */
+    public static class WrapperBootstrapper implements BootstrapEnvironment {
+
+        public Logger logger;
+
+        protected Logger environmentLogger;
+
+        public void setEnvironmentLogger(Logger log) {
+            this.environmentLogger = log;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
+         */
+        public void configure(DefaultContext context) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
+         */
+        public void configure(MutableSettings settings) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
+         */
+        public void configureLoggingContext(DefaultContext context) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getClassPath(org.apache.cocoon.core.Settings)
+         */
+        public String getClassPath(Settings settings) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
+         */
+        public URL getConfigFile(String configFileName) throws Exception {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
+         */
+        public File getContextForWriting() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextURL()
+         */
+        public String getContextURL() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getDefaultLogTarget()
+         */
+        public LogTarget getDefaultLogTarget() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getEnvironmentContext()
+         */
+        public Context getEnvironmentContext() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getInitClassLoader()
+         */
+        public ClassLoader getInitClassLoader() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getInputStream(java.lang.String)
+         */
+        public InputStream getInputStream(String path) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
+         */
+        public void log(String message, Throwable error) {
+            this.environmentLogger.error(message, error);
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String)
+         */
+        public void log(String message) {
+            this.environmentLogger.debug(message);
+        }
+
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
+         */
+        public void setLogger(Logger rootLogger) {
+            this.logger = rootLogger;
+        }
+        
     }
 }
