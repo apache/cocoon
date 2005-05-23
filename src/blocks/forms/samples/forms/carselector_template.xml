@@ -58,7 +58,7 @@
       <a id="blink" href="#" onclick="setEffect('blink')">Blink</a>
     </para>
       
-    <ft:form-template action="carselector" method="POST" ajax="true">
+    <ft:form-template action="continue" method="POST" ajax="true">
       <ft:continuation-id/>
       <fi:group>
         <fi:styling layout="columns"/>
@@ -73,7 +73,7 @@
             <fi:styling submit-on-change="true"/>
           </ft:widget>
           <ft:widget id="message"/>
-	  <ft:widget id="buy"/>
+          <ft:widget id="buy"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

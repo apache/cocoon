@@ -335,16 +335,9 @@
      </map:match>
 
      <map:match pattern="carselector">
-       <map:select type="request-method">
-         <map:when test="POST">
-           <map:call continuation="{request-param:continuation-id}"/>
-         </map:when>
-         <map:otherwise>
-           <map:call function="selectCar">
-             <map:parameter name="defaultMake" value="Maserati"/>
-           </map:call>
-         </map:otherwise>
-       </map:select>
+       <map:call function="selectCar">
+         <map:parameter name="defaultMake" value="Maserati"/>
+       </map:call>
      </map:match>
 
      <!--
