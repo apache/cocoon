@@ -25,7 +25,7 @@
   
   <xsl:template match="/">
    <list>
-    <xsl:for-each select="dir:directory/dir:directory[not(starts-with(@name,'template')) and not(starts-with(@name,'CVS'))]">
+    <xsl:for-each select="dir:directory/dir:directory[not(starts-with(@name,'template')) and not(starts-with(@name,'.svn'))]">
      <xsl:if test="position() &lt;= number($count)">
       <xsl:apply-templates select="."/>
      </xsl:if>

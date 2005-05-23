@@ -29,7 +29,7 @@
    </list>
   </xsl:template>
 
-  <xsl:template match="dir:directory/dir:directory[not(starts-with(@name,'template')) and not(starts-with(@name,'CVS'))]">
+  <xsl:template match="dir:directory/dir:directory[not(starts-with(@name,'template')) and not(starts-with(@name,'.svn'))]">
     <element id="{@name}">
      <include:include src="cocoon:/{$prefix}/{@name}.xml"/>
     </element>
