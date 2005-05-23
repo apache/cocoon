@@ -25,25 +25,23 @@ var username = "";
  * Main entry point for the flow. This is where user authorization takes place.
  */
 function main(action,root,baseURL) {
- 	home = root + "/";
-  	base = baseURL;
+ 	var action = cocoon.parameters.page;
+ 	var root = cocoon.parameters.root;
+ 	var base = cocoon.parameters.baseURL;
 
-    var args = new Array(arguments.length - 3);
-    for (var i = 3; i < arguments.length; i++) {
-        args[i-3] = arguments[i];
-    }            
+ 	home = root + "/";
 
     if ((userid == undefined) || (userid == "")) {
-        login(action, args);
+        login(action);
     }
-                
-    invoke(action, args);
+
+    invoke(action);
 }
 
 /*
  * If the user is not yet authorized, than authentication takes place
  */
-function login(action, args) {
+function login(action) {
     var name = "";
     var password = "";
     var userError = "";
@@ -83,10 +81,10 @@ function login(action, args) {
  * the given arguments. If not, the appropriate admin screen is sent
  * to the user.
  */
-function invoke(action, args) {
+function invoke(action) {
     var func = this[action];
     if (func != undefined) {
-        func.apply(this,args);
+        func.apply(this,new Array());
     } else {
         cocoon.sendPage("screen/" + action, { base : base, user : username});
     }
@@ -106,7 +104,11 @@ function logout() {
 /*
  * The edit action performs the editing subflow.
  */
-function edit(id,type,subpage) {
+function edit() {
+    var id = cocoon.parameters.id;
+    var type = cocoon.parameters.type;
+    var subpage = cocoon.parameters.subpage;
+
     var repository = home + "repository/" + type + "/";
 
     if (id == "template") {
@@ -146,7 +148,7 @@ function edit(id,type,subpage) {
                 		var realID = id.substring(id.indexOf("-") + 1);
 			        	repo.copy(document, repository + realID);
 			        	repo.remove(document);
-			        }
+			    }
                 	break;
                 }
             }                   
@@ -161,7 +163,7 @@ function getID(repository) {
 	var dirs = new java.io.File(repository).listFiles();
 	var id = 0;
 
-	for (i = 0; i < dirs.length; i++) {
+	for (var i = 0; i < dirs.length; i++) {
 		if (dirs[i].isDirectory()) {
 			var name = dirs[i].getName();
             if (name.indexOf("template-") > -1) {
