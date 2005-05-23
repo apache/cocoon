@@ -20,12 +20,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This object holds the global configuration of Cocoon that can't be changed
- * during runtime.
+ * The settings (configuration) for the Cocoon core are described through the {@link BaseSettings}
+ * interface and the {@link DynamicSettings} interface.
+ * Whereas the settings of the {@link BaseSettings} object can't be changed at runtime,
+ * the settings of the {@link DynamicSettings} object are mutable. Use the {@link Core} instance
+ * to update the settings.
  *
  * @version SVN $Id$
  */
 public interface BaseSettings {
+
+    /** Default value for {@link #isManageExceptions()}. */
+    boolean MANAGE_EXCEPTIONS = true;
+
+    /**
+     * Default value for {@link #isInitClassloader()} setting (false)
+     */
+    boolean INIT_CLASSLOADER = false;
 
     /** Name of the property specifying a user properties file */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
@@ -99,6 +110,71 @@ public interface BaseSettings {
     String KEY_PARENT_SERVICE_MANAGER = "parentservicemanager";
 
     /**
+     * This parameter tells Cocoon to set the thread's context classloader to
+     * its own classloader. If you experience strange classloader issues,
+     * try setting this parameter to "true".
+     */
+    String KEY_INIT_CLASSLOADER = "classloader.init";
+
+    /**
+     * This parameter indicates the category id of the logger from the LogKit
+     * configuration used by the environment.
+     */
+    String KEY_LOGGING_ENVIRONMENT_LOGGER = "logging.category.environment";
+
+    /**
+     * This parameter indicates the category id of the logger from the LogKit
+     * management configuration for the Cocoon engine.
+     * This logger is used for all components described in the cocoon.xconf
+     * and sitemap.xmap file not having specified a logger with the
+     * logger="..." attribute in the component configuration file.
+     */
+    String KEY_LOGGING_COCOON_LOGGER = "logging.category.cocoon";
+
+    /**
+     * This parameter allows to specify where Cocoon should put uploaded files.
+     * The path specified can be either absolute or relative to the context
+     * path of the servlet. On windows platform, absolute directory must start
+     * with volume: C:\Path\To\Upload\Directory.
+     */
+    String KEY_UPLOADS_DIRECTORY = "uploads.directory";
+
+    /**
+     * This parameter allows to specify where Cocoon should create its page
+     * and other objects cache. The path specified can be either absolute or
+     * relative to the context path of the servlet. On windows platform,
+     * absolute directory must start with volume: C:\Path\To\Cache\Directory.
+     */
+    String KEY_CACHE_DIRECTORY = "cache.directory";
+
+    /**
+     * This parameter allows to specify where Cocoon should put it's
+     * working files. The path specified is either absolute or relative
+     * to the context path of the Cocoon servlet. On windows platform,
+     * absolute directory must start with volume: C:\Path\To\Work\Directory.
+     */
+    String KEY_WORK_DIRECTORY = "work.directory";
+
+    /**
+     * If true or not set, this class will try to catch and handle all Cocoon exceptions.
+     * If false, it will rethrow them to the servlet container.
+     */
+    String KEY_MANAGE_EXCEPTIONS = "manageexceptions";
+
+    /**
+     * Set form encoding. This will be the character set used to decode request
+     * parameters. If not set the ISO-8859-1 encoding will be assumed.
+    */
+    String KEY_FORM_ENCODING = "formencoding";
+
+    /**
+     * If this value is specified, it will be interpreted as a log level and
+     * all logging categories will be set to this level regardless of their
+     * definition in the logging configuration.
+     */
+    String KEY_LOGGING_OVERRIDE_LOGLEVEL = "override.loglevel";
+
+    /**
      * @return Returns the configuration.
      * @see #KEY_CONFIGURATION
      */
@@ -151,5 +227,59 @@ public interface BaseSettings {
      * @see #KEY_LOGGING_LOG4J_CONFIGURATION
      */
     String getLog4jConfiguration();
+
+    /**
+     * @return Returns the uploadDirectory.
+     * @see #KEY_UPLOADS_DIRECTORY
+     */
+    String getUploadDirectory();
+
+    /**
+     * @return Returns the workDirectory.
+     * @see #KEY_WORK_DIRECTORY
+     */
+    String getWorkDirectory();
+
+    /**
+     * @return Returns the logger for the environment.
+     * @see #KEY_LOGGING_ENVIRONMENT_LOGGER
+     */
+    String getEnvironmentLogger();
+
+    /**
+     * @return Returns the overrideLogLevel.
+     * @see #KEY_LOGGING_OVERRIDE_LOGLEVEL
+     */
+    String getOverrideLogLevel();
+
+    /**
+     * @return Returns the formEncoding.
+     * @see #KEY_FORM_ENCODING
+     */
+    String getFormEncoding();
+
+    /**
+     * @return Returns the initClassloader.
+     * @see #KEY_INIT_CLASSLOADER
+     */
+    boolean isInitClassloader();
+
+    /**
+     * @return Returns the manageExceptions.
+     * @see #KEY_MANAGE_EXCEPTIONS
+     */
+    boolean isManageExceptions();
+
+    /**
+     * @return Returns the cacheDirectory.
+     * @see #KEY_CACHE_DIRECTORY
+     */
+    String getCacheDirectory();
+
+    /**
+     * @return Returns the cocoonLogger.
+     * @see #KEY_LOGGING_COCOON_LOGGER
+     */
+    String getCocoonLogger();
 
 }

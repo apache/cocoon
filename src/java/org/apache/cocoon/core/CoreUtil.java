@@ -666,7 +666,7 @@ public class CoreUtil {
 
             this.cocoon = c;
         } catch (Exception e) {
-            this.log.error("Exception reloading", e);
+            this.log.error("Exception reloading Cocoon.", e);
             this.disposeCocoon();
             throw e;
         }
