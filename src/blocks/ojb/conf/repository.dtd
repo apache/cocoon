@@ -43,15 +43,15 @@
     file to a given version of this dtd. This will help to
     avoid versions conflicts.
 
-    The isolation attribute defines the default isolation level for
-    class-descriptor on ODMG api level that do not define a
-    specific isolation level (this does NOT touch the jdbc-level
-    of the connection).
+    The isolation-level attribute defines the default locking isolation level used
+    by OJB's pessimistic locking api. All jdbc-connection-descriptor or class-descriptor
+    that do not define a specific isolation level will use this.
+    Note: This does NOT touch the jdbc-level of the connection.
   -->
 <!ATTLIST descriptor-repository
 	version (1.0) #REQUIRED
 	isolation-level (read-uncommitted | read-committed | repeatable-read |
-	                 serializable | optimistic) "read-uncommitted"
+	                 serializable | optimistic | none) "read-uncommitted"
 	proxy-prefetching-limit CDATA "50"
 >
 
@@ -342,7 +342,7 @@
 
   -->
 <!ELEMENT class-descriptor
-	((documentation?, extent-class+, attribute*) |
+	((documentation?, object-cache?, extent-class+, attribute*) |
 	(documentation?, object-cache?, extent-class*, field-descriptor+,
 	 reference-descriptor*, collection-descriptor*,
      index-descriptor*, attribute*,
@@ -354,9 +354,10 @@
 	As this attribute is of type ID there can only be one class-descriptor per
 	class.
 
-	The isolation-level attribute specifies the transactional isolation to be
-	used for this class on ODMG api level (this does NOT touch the jdbc-level
-    of the connection).
+	The isolation-level attribute defines the locking isolation level of the
+    specified class (used by OJB's pessimistic locking api). Default is "empty String"
+    to use isolation-level defined on "descriptor-repository" level.
+    Note: This does NOT touch the jdbc-level of the connection.
 
 	If the proxy attribute is set, proxies are used for all loading operations
 	of instances of this class. If set to "dynamic", dynamic proxies are used.
@@ -399,7 +400,7 @@
 <!ATTLIST class-descriptor
 	class ID #REQUIRED
 	isolation-level (read-uncommitted | read-committed | repeatable-read |
-	                 serializable | optimistic) "read-uncommitted"
+	                 serializable | optimistic | none) ""
 	proxy CDATA #IMPLIED
 	proxy-prefetching-limit CDATA #IMPLIED
 	schema CDATA #IMPLIED
@@ -597,13 +598,13 @@
 	The auto-update attribute specifies whether OJB automatically stores
 	this reference attribute on storing the persistent object or not or only
     link the reference.
-	This attribute must be set to 'false' if using the OTM, ODMG or JDO layer.
-    More info see OJB documentation.
+	This attribute must be set to 'false' if using the OTM or JDO layer.
+    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
 
 	The auto-delete attribute specifies whether OJB automatically deletes
 	this reference attribute on deleting the persistent object or not.
-	This attribute must be set to 'false' if using the OTM, ODMG or JDO layer.
-    More info see OJB documentation.
+	This attribute must be set to 'false' if using the OTM or JDO layer.
+    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
 
 	The otm-dependent attribute specifies whether the OTM layer automatically
     creates the referred object or deletes it if the reference field is set to null.
@@ -713,13 +714,13 @@
 
 	The auto-update attribute specifies whether OJB automatically stores
 	the referenced objects on storing the persistent object or not or only link.
-	This attribute must be set to 'false' if using the OTM, ODMG or JDO layer.
-    More info see OJB documentation.
+	This attribute must be set to 'false' if using the OTM or JDO layer.
+    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
 
 	The auto-delete attribute specifies whether OJB automatically deletes
 	the referenced objects on deleting the persistent object or not.
-	This attribute must be set to false if using the OTM, ODMG or JDO layer.
-    More info see OJB documentation.
+	This attribute must be set to 'false' if using the OTM or JDO layer.
+    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
 
 	The otm-dependent attribute specifies whether the OTM layer automatically
     creates collection elements that were included into the collectionelements

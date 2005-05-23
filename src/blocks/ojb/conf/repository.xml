@@ -18,7 +18,7 @@
 -->
 
 <!DOCTYPE descriptor-repository PUBLIC 
-          "-//Apache Software Foundation//DTD OJB Repository//EN" 
+          "-//Apache Software Foundation//DTD OJB Repository//EN"
           "repository.dtd"
 [
   <!ENTITY database SYSTEM "repository_database.xml">
