@@ -79,6 +79,8 @@ public class DynamicSelectionList implements SelectionList {
             sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
             source = sourceResolver.resolveURI(src);
             generateSaxFragment(contentHandler, locale, source);
+        } catch (SAXException e) {
+            throw e;
         } catch (Exception e) {
             throw new SAXException("Error while generating selection list: " + e.getMessage(), e);
         } finally {
