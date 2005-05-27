@@ -100,11 +100,11 @@ public class StaticSelectionList implements SelectionList {
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale, Convertor.FormatCache formatCache)
         throws SAXException {
             String stringValue;
-            if (this.value == null) {
+            if (this.value != null) {
+                stringValue = datatype.getConvertor().convertToString(this.value, locale, formatCache);
+            } else {
                 // Null value translates into the empty string
                 stringValue = "";
-            } else {
-                stringValue = datatype.getConvertor().convertToString(this.value, locale, formatCache);
             }
 
             AttributesImpl attrs = new AttributesImpl();
