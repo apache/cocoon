@@ -213,6 +213,7 @@ public class StatusGenerator extends ServiceableGenerator {
         endGroup(ch);
         // END operating system
 
+        // BEGIN ClassPath
         String classpath = SystemUtils.JAVA_CLASS_PATH;
         if (classpath != null) {
             List paths = new ArrayList();
