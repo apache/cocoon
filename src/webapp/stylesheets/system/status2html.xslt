@@ -23,7 +23,9 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:status="http://apache.org/cocoon/status/2.0">
+                xmlns:status="http://apache.org/cocoon/status/2.0"
+                xmlns:xalan="http://xml.apache.org/xalan"
+                exclude-result-prefixes="xalan">
  
   <xsl:param name="contextPath"/>
 
@@ -39,6 +41,11 @@
         <h1><xsl:value-of select="@status:host"/> - <xsl:value-of select="@status:date"/></h1>
         <h2>Apache Cocoon <xsl:value-of select="@status:cocoon-version"/></h2>
         <xsl:apply-templates/>
+
+        <!--
+          - Add Xalan / Xerces information using custom Xalan extension
+          -->
+        <xsl:apply-templates select="xalan:checkEnvironment()"/>
       </body>
     </html>
   </xsl:template>
@@ -92,5 +99,21 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <!--
+    - Process Xalan extension output
+    -->
+  <xsl:template match="checkEnvironmentExtension">
+    <h2>Xerces, Xalan</h2>
+    <ul><xsl:apply-templates select="EnvironmentCheck/environment/item[starts-with(@key, 'version.')]"/></ul>
+  </xsl:template> 
+
+  <xsl:template match="item">
+    <li style="width: 40%">
+      <span class="description"><xsl:value-of select="@key"/>:</span>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="."/>
+    </li>
+  </xsl:template> 
+   
 </xsl:stylesheet>
