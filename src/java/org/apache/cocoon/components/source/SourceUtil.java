@@ -15,21 +15,11 @@
  */
 package org.apache.cocoon.components.source;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.transform.OutputKeys;
-
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -39,6 +29,7 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -58,6 +49,17 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.transform.OutputKeys;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * This class contains some utility methods for the source resolving.
@@ -80,7 +82,7 @@ public final class SourceUtil {
     }
 
     /** Avoid instantiation */
-    protected SourceUtil() {
+    private SourceUtil() {
     }
 
     /**
@@ -510,27 +512,18 @@ public final class SourceUtil {
                 resourceParameters.hasParameters()) {
             int pos = uri.indexOf(";jsessionid=");
 
-            if (!uri.startsWith("cocoon:")) {
-                // It looks like this block is never called (JT)
-                if (pos!=-1) {
-                    uri = uri.substring(0, pos);
-                }
-                uri = org.apache.excalibur.source.SourceUtil.appendParameters(uri, resourceParameters);
+            StringBuffer buf;
+            if (pos == -1) {
+                buf = new StringBuffer(uri);
             } else {
-                StringBuffer buf;
-
-                if (pos == -1) {
-                    buf = new StringBuffer(uri);
-                } else {
-                    buf = new StringBuffer(uri.substring(0, pos));
-                }
-                buf.append(((uri.indexOf('?') == -1) ? '?' : '&'));
-                buf.append(resourceParameters.getEncodedQueryString());
-                uri = buf.toString();
+                buf = new StringBuffer(uri.substring(0, pos));
             }
+            buf.append(((uri.indexOf('?') == -1) ? '?' : '&'));
+            buf.append(resourceParameters.getEncodedQueryString());
+            uri = buf.toString();
         }
-        Map resolverParameters = new java.util.HashMap();
 
+        Map resolverParameters = new HashMap();
         resolverParameters.put(SourceResolver.METHOD, method);
         if (typeParameters != null) {
             String encoding = typeParameters.getParameter("encoding",
@@ -705,8 +698,7 @@ public final class SourceUtil {
 
         Source source = null;
         try {
-            source = SourceUtil.getSource(location, typeParameters,
-                                          parameters, resolver);
+            source = SourceUtil.getSource(location, typeParameters, parameters, resolver);
             Document doc = SourceUtil.toDOM(source);
 
             DocumentFragment fragment = doc.createDocumentFragment();
