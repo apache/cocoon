@@ -26,9 +26,9 @@ import java.util.Locale;
 
 /**
  * A Datatype encapsulates the functionality for working with specific
- * kinds of data like integers, deciamals or dates.
+ * kinds of data like integers, decimals or dates.
  *
- * <p>I provides:
+ * <p>It provides:
  * <ul>
  *  <li>Methods for converting between String and Object representation of the data
  *  <li>For validating the data (usually against a set of validation rules)
