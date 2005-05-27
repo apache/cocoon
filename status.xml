@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <<action dev="AG" type="update">
+      Cforms block: Improved dynamic selection list performance inside repeaters.
+    </action>
     <action dev="AG" type="update">
       Updated ant to 1.6.4, batik to 1.6, db-ojb to 1.0.3.
     </action>
