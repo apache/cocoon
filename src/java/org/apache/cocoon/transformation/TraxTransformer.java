@@ -148,7 +148,7 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
  */
 public class TraxTransformer extends AbstractTransformer
-implements Transformer, Serviceable, Configurable, CacheableProcessingComponent, Disposable {
+implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
     /** The service manager instance (protected because used by subclasses) */
     protected ServiceManager manager;
