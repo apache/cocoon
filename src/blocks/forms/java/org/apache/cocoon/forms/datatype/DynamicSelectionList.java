@@ -16,22 +16,28 @@
 package org.apache.cocoon.forms.datatype;
 
 import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
+import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -55,6 +61,7 @@ public class DynamicSelectionList implements SelectionList {
         this.datatype = datatype;
         this.src = src;
         this.serviceManager = serviceManager;
+        this.cachedItemList = null;
     }
 
     public Datatype getDatatype() {
@@ -73,21 +80,112 @@ public class DynamicSelectionList implements SelectionList {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        SourceResolver sourceResolver = null;
-        Source source = null;
+        if (cachedItemList != null) {
+            cachedItemList.generateSaxFragment(contentHandler, locale);
+        } else {
+            SourceResolver sourceResolver = null;
+            Source source = null;
+            try {
+                sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
+                source = sourceResolver.resolveURI(src);
+                generateSaxFragment(contentHandler, locale, source);
+            } catch (SAXException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new SAXException("Error while generating selection list: " + e.getMessage(), e);
+            } finally {
+                if (sourceResolver != null) {
+                    if (source != null)
+                        try { sourceResolver.release(source); } catch (Exception e) {}
+                    serviceManager.release(sourceResolver);
+                }
+            }
+        }
+    }
+    
+    private SelectionList cachedItemList;
+    
+    /**
+     * Prepare cache for the DynamicSelectionList
+     * THIS IS FOR INTERNAL USE ONLY. Subject to change without notice.  
+     */
+    public void prepareCache() throws SAXException {
         try {
-            sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(src);
-            generateSaxFragment(contentHandler, locale, source);
-        } catch (SAXException e) {
-            throw e;
+            Element selectionListElement = readSelectionList();
+            cachedItemList = buildStaticList(selectionListElement);
         } catch (Exception e) {
             throw new SAXException("Error while generating selection list: " + e.getMessage(), e);
+        }
+    }
+
+    private SelectionList buildStaticList(Element selectionListElement) throws Exception {
+        StaticSelectionList selectionList = new StaticSelectionList(datatype);
+        Convertor convertor = null;
+        Convertor.FormatCache formatCache = new DefaultFormatCache();
+
+        NodeList children = selectionListElement.getChildNodes();
+        for (int i = 0; children.item(i) != null; i++) {
+            Node node = children.item(i);
+            if (convertor == null && node instanceof Element && Constants.DEFINITION_NS.equals(node.getNamespaceURI()) && "convertor".equals(node.getLocalName())) {
+                Element convertorConfigElement = (Element)node;
+                try {
+                    convertor = datatype.getBuilder().buildConvertor(convertorConfigElement);
+                } catch (Exception e) {
+                    throw new SAXException("Error building convertor from convertor configuration embedded in selection list XML.", e);
+                }
+            } else if (node instanceof Element && Constants.DEFINITION_NS.equals(node.getNamespaceURI()) && "item".equals(node.getLocalName())) {
+                if (convertor == null) {
+                    convertor = datatype.getConvertor();
+                }
+                Element element = (Element)node;
+                String stringValue = element.getAttribute("value");
+                Object value;
+                if ("".equals(stringValue)) {
+                    // Empty value translates into the null object
+                    value = null;
+                } else {
+                    ConversionResult conversionResult = convertor.convertFromString(stringValue, Locale.US, formatCache);
+                    if (!conversionResult.isSuccessful()) {
+                        throw new Exception("Could not convert the value \"" + stringValue +
+                                            "\" to the type " + datatype.getDescriptiveName() +
+                                            ", defined at " + DomHelper.getLocation(element));
+                    }
+                    value = conversionResult.getResult();
+                }
+
+                XMLizable label = null;
+                Element labelEl = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "label");
+                if (labelEl != null) {
+                    label = DomHelper.compileElementContent(labelEl);
+                }
+                selectionList.addItem(value, label);
+            }
+        }
+        return selectionList;
+    }
+
+    private Element readSelectionList() throws Exception {
+        SourceResolver resolver = null;
+        Source source = null;
+        try {
+            resolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
+            source = resolver.resolveURI(src);
+            InputSource inputSource = new InputSource(source.getInputStream());
+            inputSource.setSystemId(source.getURI());
+            Document document = DomHelper.parse(inputSource, this.serviceManager);
+            Element selectionListElement = document.getDocumentElement();
+            if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) ||
+                    !"selection-list".equals(selectionListElement.getLocalName())) {
+                throw new Exception("Expected a fd:selection-list element at " +
+                                    DomHelper.getLocation(selectionListElement));
+            }
+            return selectionListElement;
         } finally {
-            if (sourceResolver != null) {
-                if (source != null)
-                    try { sourceResolver.release(source); } catch (Exception e) {}
-                serviceManager.release(sourceResolver);
+            if (resolver != null) {
+                if (source != null) {
+                    resolver.release(source);
+                }
+                serviceManager.release(resolver);
             }
         }
     }

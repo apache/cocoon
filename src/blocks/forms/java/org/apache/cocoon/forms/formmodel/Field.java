@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.Datatype;
+import org.apache.cocoon.forms.datatype.DynamicSelectionList;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.event.*;
@@ -434,6 +435,13 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
         // generate selection list, if any
         if (selectionList != null) {
+            // If we are inside a repeater, Notify DynamicSelectionList to cache the item list
+            if (selectionList instanceof DynamicSelectionList && this.getParent() instanceof Repeater.RepeaterRow) {
+                Repeater r = (Repeater)this.getParent().getParent();
+                if (r.indexOf((Repeater.RepeaterRow)this.getParent()) == 0) {
+                    ((DynamicSelectionList)selectionList).prepareCache();
+                }
+            }
             selectionList.generateSaxFragment(contentHandler, locale);
         }
 
