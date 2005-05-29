@@ -144,6 +144,7 @@ public class BlocksManager
                                            this.context,
                                            blockServiceManager,
                                            blockConf);
+            blockManager.setBlocksManager(this);
             this.blocks.put(entry.getKey(), blockManager);
             String mountPath = blockConf.getChild("mount").getAttribute("path", null);
             if (mountPath != null) {
