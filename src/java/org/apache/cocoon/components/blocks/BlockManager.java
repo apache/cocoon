@@ -36,6 +36,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
@@ -54,12 +55,14 @@ public class BlockManager
     implements Configurable, Contextualizable, Disposable, Initializable, Processor, Serviceable { 
 
     public static String ROLE = BlockManager.class.getName();
+    public static String NAME = BlockManager.class.getName() + "-name";
 
     private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
     private SourceResolver sourceResolver;
     private DefaultContext context;
     private Processor processor;
+    private BlocksManager blocksManager;
     private EnvironmentHelper environmentHelper;
 
     private String id;
@@ -168,7 +171,7 @@ public class BlockManager
         sitemapConf.setAttribute("file", this.sitemapPath);
         sitemapConf.setAttribute("check-reload", "yes");
         // The source resolver must be defined in this service
-        // manager, otherwise the root path will be the one t´from the
+        // manager, otherwise the root path will be the one from the
         // parent manager
         DefaultConfiguration resolverConf =
             new DefaultConfiguration("source-resolver", "BlockManager source resolver: " + this.id);
@@ -218,17 +221,40 @@ public class BlockManager
         this.parentServiceManager = null;
     }
 
+    public void setBlocksManager(BlocksManager blocksManager) {
+        this.blocksManager = blocksManager;
+    }
+
     // The Processor methods
 
     public boolean process(Environment environment) throws Exception {
-        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
-        try {
-            return this.processor.process(environment);
-        } finally {
-            EnvironmentHelper.leaveProcessor();
+        String blockName = (String)environment.getAttribute(BlockManager.NAME);
+
+        if (blockName != null) {
+            // Request to other block.
+            // The block name should not be used in the recieving block.
+            environment.removeAttribute(BlockManager.NAME);
+            String blockId = (String)this.connections.get(blockName);
+            if (blockId == null) {
+                throw new ProcessingException("Unknown block name " + blockName);
+            }
+            getLogger().debug("Resolving block: " + blockName + " to " + blockId);
+            return this.blocksManager.process(blockId, environment);
+        } else {
+            getLogger().debug("Enter processing in block " + this.id);
+            // Request to the own block
+            EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
+            try {
+                return this.processor.process(environment);
+            } finally {
+                EnvironmentHelper.leaveProcessor();
+                getLogger().debug("Leaving processing in block " + this.id);
+            }
         }
     }
 
+    // FIXME: Not consistently supported for blocks yet. Most of the
+    // code just use process.
     public InternalPipelineDescription buildPipeline(Environment environment)
         throws Exception {
         return this.processor.buildPipeline(environment);
