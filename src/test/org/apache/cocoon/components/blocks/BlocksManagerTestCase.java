@@ -45,4 +45,12 @@ public class BlocksManagerTestCase extends SitemapTestCase {
     public void testBlocksSource() throws Exception {
         process("test");
     }
+
+    public void testBlockSource1() throws Exception {
+        process("test2");
+    }
+
+    public void testBlockSource2() throws Exception {
+        process("test3");
+    }
 }
