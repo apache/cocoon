@@ -32,7 +32,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 /**
- * Loacte a resource in a resource tree. Any attribute name is interpreted as a
+ * Locate a resource in a resource tree. Any attribute name is interpreted as a
  * URI with the last part being the resource name unless it ends with a slash. 
  * The URI is checked if the resource exists and the URI is returned. If the
  * resource does not exist, the URI is shortened until the resource name is found
