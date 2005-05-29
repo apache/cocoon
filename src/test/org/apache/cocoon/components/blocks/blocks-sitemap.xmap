@@ -37,8 +37,8 @@
   <map:pipelines>
     <map:pipeline>
 
-      <map:match pattern="test">
-        <map:read src="blocks:/test1/test"/>
+      <map:match pattern="*">
+        <map:read src="blocks:/test1/{1}"/>
       </map:match>
 
     </map:pipeline>
