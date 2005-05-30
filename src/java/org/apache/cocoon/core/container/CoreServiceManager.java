@@ -111,7 +111,7 @@ public class CoreServiceManager
     /** The classloader to get classes from */
     protected ClassLoader classloader;
 
-    /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
+    /** The resolver used to resolve includes. It is lazily loaded in {@link #setupSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
     /** Create the ServiceManager with a parent ServiceManager */
@@ -595,10 +595,10 @@ public class CoreServiceManager
      * Obtain a new ComponentHandler for the specified component. 
      * 
      * @param role the component's role.
-     * @param componentClass Class of the component for which the handle is
+     * @param className Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
-     * @param serviceManager The service manager which will be managing the Component.
+     * @param baseInfo The information for managing the component, like service manager etc.
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
@@ -818,7 +818,7 @@ public class CoreServiceManager
     }
 
     /** 
-     * Check if a component can be overriden. Only {@link DefaultSelector} or its subclasses can be
+     * Check if a component can be overriden. Only {@link DefaultServiceSelector} or its subclasses can be
      * overriden, as they directly feed this manager with their component definitions and are empty
      * shells delegating to this manager afterwards.
      */

@@ -121,10 +121,8 @@ public class Cocoon
 
     /**
      * Creates a new <code>Cocoon</code> instance.
-     *
-     * @exception ConfigurationException if an error occurs
      */
-    public Cocoon() throws ConfigurationException {
+    public Cocoon() {
         // Set the system properties needed by Xalan2.
         setSystemProperties();
 
@@ -133,6 +131,9 @@ public class Cocoon
         instance = this;
     }
 
+    /**
+     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
     public void enableLogging(Logger logger) {
         this.rootLogger = logger;
         super.enableLogging(logger.getChildLogger("cocoon"));
@@ -342,7 +343,7 @@ public class Cocoon
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -359,7 +360,11 @@ public class Cocoon
             ContainerUtil.dispose(this.serviceManager);
             this.serviceManager = null;
         }
-
+        if ( this.parentServiceManager != null ) {
+            this.parentServiceManager.release(this.core);
+            this.core = null;
+            this.parentServiceManager = null;
+        }
         this.context = null;
         this.disposed = true;
     }
