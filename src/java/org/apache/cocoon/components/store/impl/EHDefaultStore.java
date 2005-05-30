@@ -265,6 +265,15 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Store object " + value + " with key "+ key);
         }
+
+        // without these checks we get cryptic "ClassCastException" messages
+        if(!(key instanceof Serializable)) {
+            throw new IOException("Key of class " + key.getClass().getName() + " is not Serializable");
+        }
+        if(!(value instanceof Serializable)) {
+            throw new IOException("Value of class " + value.getClass().getName() + " is not Serializable");            
+        }
+
         final Element element = new Element((Serializable) key, (Serializable) value);
         this.cache.put(element);
     }
