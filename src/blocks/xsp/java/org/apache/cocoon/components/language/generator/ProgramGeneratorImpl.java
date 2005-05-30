@@ -50,7 +50,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -267,20 +267,30 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             }
 
             if (programInstance == null) {
-                // no instance found
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Creating new serverpage for [" + id + "]");
-                }
                 synchronized (this) {
-                    generateSourcecode(source,
-                                       normalizedName,
-                                       markupLanguage,
-                                       programmingLanguage);
+                    // Attempt again to load program object from cache.
+                    // This avoids that simultaneous requests recompile
+                    // the same XSP over and over again.
+                    try {
+                        programInstance = (CompiledComponent) this.cache.select(normalizedName);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("The serverpage [" + id + "] was now in the cache");
+                        }
+                    } catch (Exception e) {
+                        // no instance found
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Creating new serverpage for [" + id + "]");
+                        }
+                        generateSourcecode(source,
+                                           normalizedName,
+                                           markupLanguage,
+                                           programmingLanguage);
 
-                    programInstance = loadProgram(newManager,
-                                                  normalizedName,
-                                                  markupLanguage,
-                                                  programmingLanguage);
+                        programInstance = loadProgram(newManager,
+                                                      normalizedName,
+                                                      markupLanguage,
+                                                      programmingLanguage);
+                    }
                 }
             } else {
                 // found an instance
