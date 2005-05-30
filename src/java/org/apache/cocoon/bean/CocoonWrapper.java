@@ -31,21 +31,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
@@ -56,13 +49,11 @@ import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
 import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.SystemUtils;
-
 import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
 import org.apache.log.Priority;
@@ -102,7 +93,6 @@ public class CocoonWrapper {
 
     // Internal Objects
     private CommandLineContext cliContext;
-    private LogKitLoggerManager logManager;
     private Cocoon cocoon;
     protected Logger log;
     private Map attributes = new HashMap();
@@ -126,79 +116,31 @@ public class CocoonWrapper {
         // Install a temporary logger so that getDir() can log if needed
         final Logger envLogger = new LogKitLogger(hierarchy.getLoggerFor(""));
 
-        // FIXME - remove this once CoreUtil is used
-        this.log = envLogger;
+        this.context = getDir(this.contextDir, "context");
+        this.work = getDir(workDir, "working");
 
-        try {
-            // First of all, initialize the logging system
+        this.conf = getConfigurationFile(this.context, this.configFile);
+        cliContext = new CommandLineContext(contextDir);
+        cliContext.enableLogging(envLogger);
 
-            // Setup the application context with context-dir and work-dir that
-            // can be used in logkit.xconf
-            this.context = getDir(this.contextDir, "context");
-            this.work = getDir(workDir, "working");
-            DefaultContext appContext = new DefaultContext();
-            appContext.put(Constants.CONTEXT_WORK_DIR, work);
-
-            this.logManager = new LogKitLoggerManager(hierarchy);
-            this.logManager.enableLogging(log);
-
-            if (this.logKit != null) {
-                final FileInputStream fis = new FileInputStream(logKit);
-                final DefaultConfigurationBuilder builder =
-                    new DefaultConfigurationBuilder();
-                final Configuration logKitConf = builder.build(fis);
-                final DefaultContext subcontext = new DefaultContext(appContext);
-                subcontext.put("context-root", this.contextDir);
-                subcontext.put("context-work", this.workDir);
-                this.logManager.contextualize(subcontext);
-                this.logManager.configure(logKitConf);
-                if (logger != null) {
-                    log = this.logManager.getLoggerForCategory(logger);
-                } else {
-                    log = this.logManager.getLoggerForCategory("cocoon");
-                }
-            }
-
-            this.conf = getConfigurationFile(this.context, this.configFile);
-
-            cliContext = new CommandLineContext(contextDir);
-            cliContext.enableLogging(log);
-
-            appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
-            appContext.put(Constants.CONTEXT_CLASS_LOADER,
-                    CocoonWrapper.class.getClassLoader());
-            appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));
-            appContext.put(Constants.CONTEXT_UPLOAD_DIR, contextDir + "upload-dir");
-            File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
-            appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
-            appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
-            appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL, this.context.toURL());
-
-            loadClasses(classList);
-
-            cocoon = new Cocoon();
-            ContainerUtil.enableLogging(cocoon, log);
-            ContainerUtil.contextualize(cocoon, appContext);
-            cocoon.setLoggerManager(logManager);
-            ContainerUtil.initialize(cocoon);
-
-        } catch (Exception e) {
-            log.fatalError("Exception caught", e);
-            throw e;
-        }
         // setup Cocoon core
         // FIXME - this is not finished yet!
         try {
+            File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
+
             WrapperBootstrapper env = this.getBootstrapEnvironment();
+            env.setContextDirectory(contextDir);
             env.setEnvironmentLogger(envLogger);
             env.setEnvironmentContext(cliContext);
             env.setWorkingDirectory(this.work);
+            env.setCachingDirectory(cacheDir);
             env.setBootstrapLogLevel(this.logLevel);
             env.setLoggingConfiguration(this.logKit);
+            env.setConfigFile(this.conf);
+            env.setLoadClassList(this.classList);
             this.coreUtil = new CoreUtil(env);
             this.cocoon = this.coreUtil.createCocoon();
-            // FIXME - activate this: this.log = env.logger;
+            this.log = env.logger;
         } catch (Exception ignore) {
             ignore.printStackTrace();
         }
@@ -307,25 +249,6 @@ public class CocoonWrapper {
     protected void finalize() throws Throwable {
         dispose();
         super.finalize();
-    }
-
-    protected void loadClasses(List classList) {
-        if (classList != null) {
-            for (Iterator i = classList.iterator(); i.hasNext();) {
-                String className = (String) i.next();
-                try {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Trying to load class: " + className);
-                    }
-                    ClassUtils.loadClass(className).newInstance();
-                } catch (Exception e) {
-                    if (log.isWarnEnabled()) {
-                        log.warn("Could not force-load class: " + className, e);
-                    }
-                    // Do not throw an exception, because it is not a fatal error.
-                }
-            }
-        }
     }
 
     //
@@ -457,9 +380,9 @@ public class CocoonWrapper {
     public void dispose() {
         if (this.initialized) {
             this.initialized = false;
-            ContainerUtil.dispose(this.cocoon);
+            this.coreUtil.destroy();
             this.cocoon = null;
-            this.logManager.dispose();
+            this.coreUtil = null;
             if (log.isDebugEnabled()) {
                 log.debug("Disposed");
             }
@@ -676,6 +599,10 @@ public class CocoonWrapper {
         protected String workingDirectory;
         protected String bootstrapLogLevel;
         protected String loggingConfiguration;
+        protected String cachingDirectory;
+        protected String contextDirectory;
+        protected String configFile;
+        protected List loadClassList;
 
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
@@ -685,8 +612,8 @@ public class CocoonWrapper {
             this.environmentContext = context;
         }
 
-        public void setWorkingDirectory(File file) {
-            this.workingDirectory = file.getAbsolutePath();
+        public void setWorkingDirectory(File dir) {
+            this.workingDirectory = dir.getAbsolutePath();
         }
 
         public void setBootstrapLogLevel(String bootstrapLogLevel) {
@@ -695,6 +622,22 @@ public class CocoonWrapper {
 
         public void setLoggingConfiguration(String config) {
             this.loggingConfiguration = config;
+        }
+
+        public void setCachingDirectory(File dir) {
+            this.cachingDirectory = dir.getAbsolutePath();
+        }
+
+        public void setContextDirectory(String dir) {
+            this.contextDirectory = dir;
+        }
+
+        public void setConfigFile(File file) {
+            this.configFile = file.getAbsolutePath();
+        }
+
+        public void setLoadClassList(List l) {
+            this.loadClassList = l;
         }
 
         /**
@@ -708,11 +651,20 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
          */
         public void configure(MutableSettings settings) {
-            // TODO Auto-generated method stub
             settings.setWorkDirectory(this.workingDirectory);
+            settings.setCacheDirectory(this.cachingDirectory);
+            settings.setUploadDirectory(this.contextDirectory + "upload-dir");
             settings.setBootstrapLogLevel(this.bootstrapLogLevel);
             settings.setCreateLogKitHierarchy(true);
             settings.setLoggingConfiguration(this.loggingConfiguration);
+            settings.setFormEncoding("ISO-8859-1");
+            settings.setConfiguration(this.configFile);
+            if ( this.loadClassList != null ) {
+                final Iterator i = this.loadClassList.iterator();
+                while ( i.hasNext() ) {
+                    settings.addToLoadClasses(i.next().toString());
+                }
+            }
         }
 
         /**
@@ -733,24 +685,21 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
          */
         public URL getConfigFile(String configFileName) throws Exception {
-            // TODO Auto-generated method stub
-            return null;
+            return new File(this.contextDirectory, configFileName).toURL();
         }
 
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
          */
         public File getContextForWriting() {
-            // TODO Auto-generated method stub
-            return null;
+            return new File(this.contextDirectory);
         }
 
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#getContextURL()
          */
         public String getContextURL() {
-            // TODO Auto-generated method stub
-            return null;
+            return this.contextDirectory;
         }
 
         /**
@@ -778,7 +727,14 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getInputStream(java.lang.String)
          */
         public InputStream getInputStream(String path) {
-            // TODO Auto-generated method stub
+            final File f = new File(this.contextDirectory, path);
+            if ( f.exists() ) {
+                try {
+                    return new FileInputStream(f);
+                } catch (FileNotFoundException fnfe) {
+                    // this can't occure as we checked it already
+                }
+            }
             return null;
         }
 
