@@ -24,7 +24,6 @@ import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
@@ -43,7 +42,7 @@ public class MatchNode extends SimpleSelectorProcessingNode
 
     private Map parameters;
 
-    public MatchNode(String type, VariableResolver pattern, String name) throws PatternException {
+    public MatchNode(String type, VariableResolver pattern, String name) {
         super(Matcher.ROLE + "Selector", type);
         this.pattern = pattern;
         this.name = name;

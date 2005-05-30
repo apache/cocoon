@@ -745,8 +745,6 @@ public class CoreServiceManager
                 try {
                     ConfigurationBuilder builder = new ConfigurationBuilder(this.settings);
                     includeConfig = builder.build(src.getInputStream(), uri);
-                } catch (ConfigurationException ce) {
-                    throw ce;
                 } catch (Exception e) {
                     throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);
                 }

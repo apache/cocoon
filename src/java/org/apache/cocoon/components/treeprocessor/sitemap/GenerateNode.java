@@ -24,13 +24,12 @@ import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessi
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: GenerateNode.java,v 1.5 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
@@ -41,7 +40,7 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
     private Map parameters;
 
 
-    public GenerateNode(String name, VariableResolver source) throws PatternException {
+    public GenerateNode(String name, VariableResolver source) {
         this.generatorName = name;
         this.source = source;
     }

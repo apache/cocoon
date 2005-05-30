@@ -30,7 +30,7 @@ import java.util.Map;
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: VariableResolver.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class VariableResolver {
 
@@ -54,9 +54,8 @@ public abstract class VariableResolver {
             VariableResolver other = (VariableResolver)object;
             return (this.originalExpr == null && other.originalExpr == null) ||
                    (this.originalExpr.equals(other.originalExpr));
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

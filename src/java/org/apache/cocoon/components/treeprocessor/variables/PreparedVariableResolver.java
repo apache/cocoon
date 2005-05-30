@@ -42,8 +42,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
     private ServiceManager manager;
     private ServiceSelector selector;
-    private List tokens;
-    private boolean needsMapStack;
+    protected List tokens;
+    protected boolean needsMapStack;
 
     private static final int OPEN = -2;
     private static final int CLOSE = -3;
@@ -56,10 +56,10 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static final int ROOT_SITEMAP_VARIABLE = 0;
     private static final int ANCHOR_VAR = -1;
 
-    private static Token COLON_TOKEN = new Token(COLON);
-    private static Token OPEN_TOKEN = new Token(OPEN);
-    private static Token CLOSE_TOKEN = new Token(CLOSE);
-    private static Token EMPTY_TOKEN = new Token(EXPR);
+    protected static Token COLON_TOKEN = new Token(COLON);
+    protected static Token OPEN_TOKEN = new Token(OPEN);
+    protected static Token CLOSE_TOKEN = new Token(CLOSE);
+    protected static Token EMPTY_TOKEN = new Token(EXPR);
 
     public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
         super(expr);
@@ -108,23 +108,22 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         });
     }
 
-    private Token getNewVariableToken(String variable) {
+    protected Token getNewVariableToken(String variable) {
         if (variable.startsWith("/")) {
             return new Token(ROOT_SITEMAP_VARIABLE, variable.substring(1));
-        } else {
-            // Find level
-            int level = 1; // Start at 1 since it will be substracted from list.size()
-            int pos = 0;
-            while (variable.startsWith("../", pos)) {
-                level++;
-                pos += "../".length();
-            }
-            return new Token(level, variable.substring(pos));
         }
+        // Find level
+        int level = 1; // Start at 1 since it will be substracted from list.size()
+        int pos = 0;
+        while (variable.startsWith("../", pos)) {
+            level++;
+            pos += "../".length();
+        }
+        return new Token(level, variable.substring(pos));
     }
 
 
-    private Token getNewModuleToken(String moduleName) throws PatternException {
+    protected Token getNewModuleToken(String moduleName) throws PatternException {
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
@@ -300,16 +299,15 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         if (type == ROOT_SITEMAP_VARIABLE) {
             Object result = ((Map)mapStack.get(0)).get(value);
             return new Token(EXPR, result==null ? "" : result.toString());
-        } else {
-            // relative sitemap variable
-            if (type > stackSize) {
-                throw new PatternException("Error while evaluating '" + this.originalExpr +
-                    "' : not so many levels");
-            }
-
-            Object result = ((Map)mapStack.get(stackSize - type)).get(value);
-            return new Token(EXPR, result==null ? "" : result.toString());
         }
+        // relative sitemap variable
+        if (type > stackSize) {
+            throw new PatternException("Error while evaluating '" + this.originalExpr +
+                "' : not so many levels");
+        }
+
+        Object result = ((Map)mapStack.get(stackSize - type)).get(value);
+        return new Token(EXPR, result==null ? "" : result.toString());
     }
 
     public final void dispose() {
@@ -363,9 +361,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         public String getStringValue() {
             if (value instanceof String) {
                 return (String)this.value;
-            } else {
-                return null;
             }
+            return null;
         }
 
         public boolean hasType(int type){
@@ -375,9 +372,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         public boolean equals(Object o) {
             if (o instanceof Token) {
                 return ((Token)o).hasType(this.type);
-            } else {
-                return false;
             }
+            return false;
         }
 
         public void merge(Token newToken) {
@@ -387,9 +383,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         public InputModule getModule() {
             if (value instanceof InputModule) {
                 return (InputModule)value;
-            } else {
-                return null;
             }
+            return null;
         }
     }
 }

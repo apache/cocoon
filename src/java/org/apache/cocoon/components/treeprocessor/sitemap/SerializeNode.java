@@ -26,7 +26,6 @@ import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessi
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 /**
  *
@@ -54,7 +53,10 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
      * @param mimeType the mime-type, or <code>null</code> not specified.
      * @param statusCode the HTTP response status code, or <code>-1</code> if not specified.
      */
-    public SerializeNode(String name, VariableResolver source, VariableResolver mimeType, int statusCode) throws PatternException {
+    public SerializeNode(String name,
+                         VariableResolver source, 
+                         VariableResolver mimeType, 
+                         int statusCode) {
         this.serializerName = name;
         this.source = source;
         this.mimeType = mimeType;
