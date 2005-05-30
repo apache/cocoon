@@ -81,6 +81,8 @@
       <dirset dir="${src}">
         <include name="mocks"/>
         <include name="blocks/*/trunk/mocks"/>
+	<!-- exclude xsp mocks that redefine classes in session-fw -->
+	<exclude name="blocks/xsp/trunk/mocks"/>
       </dirset>
     </path>
 
