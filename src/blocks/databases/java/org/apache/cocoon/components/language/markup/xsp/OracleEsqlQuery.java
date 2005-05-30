@@ -22,7 +22,7 @@ import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: OracleEsqlQuery.java,v 1.5 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 final public class OracleEsqlQuery extends AbstractEsqlQuery {
 
@@ -52,26 +52,26 @@ final public class OracleEsqlQuery extends AbstractEsqlQuery {
                 return (new StringBuffer("select * from (select a.*, rownum rnum from (")
                         .append(super.getQueryString())
                         .append(") a where rownum <= ")
-                        .append(getSkipRows() + getMaxRows())
+                        .append(getSkipRows() + getMaxRows() + 1)
                         .append(") where rnum > ")
                         .append(getSkipRows())
                         .toString());
             }
             else {
-		return (new StringBuffer("select * from (select a.*, rownum rnum from (")
+                return (new StringBuffer("select * from (select a.*, rownum rnum from (")
                         .append(super.getQueryString())
-			.append(") a ")
+                        .append(") a ")
                         .append(") where rnum > ")
                         .append(getSkipRows())
                         .toString());
-	    }
+            }
         }
         else {
             if (getMaxRows() > -1) {
                 return (new StringBuffer("select * from (select a.*, rownum from (")
                         .append(super.getQueryString())
-			.append(") a where rownum <= ")
-                        .append(getMaxRows())
+                        .append(") a where rownum <= ")
+                        .append(getMaxRows() + 1)
                         .append(")").toString());
             }
             else {
