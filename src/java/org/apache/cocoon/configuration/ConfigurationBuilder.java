@@ -25,7 +25,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.PropertyHelper;
@@ -124,10 +123,9 @@ public class ConfigurationBuilder
      * @return a <code>Configuration</code> object
      * @throws SAXException if a parsing error occurs
      * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
      */
     public Configuration build( final InputStream inputStream )
-    throws SAXException, IOException, ConfigurationException {
+    throws SAXException, IOException {
         return this.build( new InputSource( inputStream ) );
     }
 
@@ -141,11 +139,10 @@ public class ConfigurationBuilder
      * @return a <code>Configuration</code> object
      * @throws SAXException if a parsing error occurs
      * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
      */
     public Configuration build( final InputStream inputStream, 
                                 final String systemId )
-    throws SAXException, IOException, ConfigurationException {
+    throws SAXException, IOException {
         final InputSource inputSource = new InputSource( inputStream );
         inputSource.setSystemId( systemId );
         return this.build( inputSource );
@@ -157,10 +154,9 @@ public class ConfigurationBuilder
      * @return a <code>Configuration</code> object
      * @throws SAXException if a parsing error occurs
      * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
      */
     public Configuration build( final String uri )
-    throws SAXException, IOException, ConfigurationException {
+    throws SAXException, IOException {
         return this.build( new InputSource( uri ) );
     }
 
@@ -170,10 +166,9 @@ public class ConfigurationBuilder
      * @return a <code>Configuration</code> object
      * @throws SAXException if a parsing error occurs
      * @throws IOException if an I/O error occurs
-     * @throws ConfigurationException if an error occurs
      */
     public Configuration build( final InputSource input )
-    throws SAXException, IOException, ConfigurationException {
+    throws SAXException, IOException {
         synchronized( this ) {
             this.clear();
             this.parser.parse( input );

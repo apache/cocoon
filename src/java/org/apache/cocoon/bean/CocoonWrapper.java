@@ -193,6 +193,7 @@ public class CocoonWrapper {
             WrapperBootstrapper env = this.getBootstrapEnvironment();
             env.setEnvironmentLogger(envLogger);
             env.setEnvironmentContext(cliContext);
+            env.setWorkingDirectory(this.work);
             this.coreUtil = new CoreUtil(env);
             this.cocoon = this.coreUtil.createCocoon();
             // FIXME - activate this: this.log = env.logger;
@@ -670,6 +671,7 @@ public class CocoonWrapper {
 
         protected Logger environmentLogger;
         protected Context environmentContext;
+        protected String workingDirectory;
 
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
@@ -679,12 +681,15 @@ public class CocoonWrapper {
             this.environmentContext = context;
         }
 
+        public void setWorkingDirectory(File file) {
+            this.workingDirectory = file.getAbsolutePath();
+        }
+
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configure(DefaultContext context) {
-            // TODO Auto-generated method stub
-            
+            // nothing to add
         }
 
         /**
@@ -692,14 +697,14 @@ public class CocoonWrapper {
          */
         public void configure(MutableSettings settings) {
             // TODO Auto-generated method stub
+            settings.setWorkDirectory(this.workingDirectory);
         }
 
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configureLoggingContext(DefaultContext context) {
-            // TODO Auto-generated method stub
-            
+            // nothing to add
         }
 
         /**

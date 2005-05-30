@@ -21,12 +21,11 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.PermanentRedirector;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.6 2004/05/25 13:48:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class RedirectToURINode extends AbstractProcessingNode {
@@ -43,8 +42,10 @@ public class RedirectToURINode extends AbstractProcessingNode {
 
     private boolean permanent;
 
-    public RedirectToURINode(VariableResolver uri, boolean createSession, boolean global, boolean permanent )
-    throws PatternException {
+    public RedirectToURINode(VariableResolver uri, 
+                             boolean createSession, 
+                             boolean global, 
+                             boolean permanent ) {
         this.global = global;
         this.uri = uri;
         this.createSession = createSession;

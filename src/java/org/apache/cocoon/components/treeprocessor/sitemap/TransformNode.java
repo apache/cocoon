@@ -23,7 +23,6 @@ import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessi
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 import java.util.Map;
@@ -31,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TransformNode.java,v 1.3 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class TransformNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
@@ -43,7 +42,7 @@ public class TransformNode extends PipelineEventComponentProcessingNode implemen
     private Map parameters;
 
 
-    public TransformNode(String name, VariableResolver source) throws PatternException {
+    public TransformNode(String name, VariableResolver source) {
         this.transformerName = name;
         this.source = source;
     }

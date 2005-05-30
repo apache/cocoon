@@ -26,12 +26,11 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.selection.SwitchSelector;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.9 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {
@@ -45,7 +44,7 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
 
     private ProcessingNode[] otherwhiseNodes;
 
-    public SwitchSelectNode(String name) throws PatternException {
+    public SwitchSelectNode(String name) {
         super(Selector.ROLE + "Selector", name);
     }
 

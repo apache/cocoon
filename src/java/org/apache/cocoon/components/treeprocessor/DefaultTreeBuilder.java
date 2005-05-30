@@ -167,7 +167,7 @@ public class DefaultTreeBuilder
 
     /**
      * Get the location of the treebuilder config file. Can be overridden for other versions.
-     * @return
+     * @return The location of the treebuilder config file
      */
     protected String getBuilderConfigURL() {
         return "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";

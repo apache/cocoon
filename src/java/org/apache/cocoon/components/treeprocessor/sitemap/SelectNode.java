@@ -25,12 +25,11 @@ import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNode.java,v 1.7 2004/07/17 10:51:15 joerg Exp $
+ * @version CVS $Id$
  */
 public class SelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {
@@ -44,7 +43,7 @@ public class SelectNode extends SimpleSelectorProcessingNode
 
     private ProcessingNode[] otherwhiseNodes;
 
-    public SelectNode(String name) throws PatternException {
+    public SelectNode(String name) {
         super(Selector.ROLE + "Selector", name);
     }
 

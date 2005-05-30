@@ -108,8 +108,7 @@ public class VariableResolverFactory {
 
             return resolver;
 
-        } else {
-            return new NOPVariableResolver(expression);
         }
+        return new NOPVariableResolver(expression);
     }
 }
