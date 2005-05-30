@@ -697,6 +697,9 @@ public class CocoonServlet extends HttpServlet {
                 final File workDir = (File)this.config.getServletContext().getAttribute("javax.servlet.context.tempdir");
                 settings.setWorkDirectory(workDir.getAbsolutePath());
             }
+            if ( settings.getLoggingConfiguration() == null ) {
+                settings.setLoggingConfiguration("/WEB-INF/logkit.xconf");
+            }
         }
 
         /**

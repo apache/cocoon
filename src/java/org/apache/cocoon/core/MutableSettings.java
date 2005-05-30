@@ -229,6 +229,8 @@ public class MutableSettings implements Settings {
      */
     protected boolean lazyMode = false;
 
+    protected boolean createLogKitHierarchy = CREATE_LOGKIT_HIERARCHY;
+
     /**
      * Create a new settings object
      */
@@ -915,4 +917,14 @@ public class MutableSettings implements Settings {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.core.BaseSettings#isCreateLogKitHierarchy()
+     */
+    public boolean isCreateLogKitHierarchy() {
+        return this.createLogKitHierarchy;
+    }
+
+    public void setCreateLogKitHierarchy(boolean flag) {
+        this.createLogKitHierarchy = flag;
+    }
 }
