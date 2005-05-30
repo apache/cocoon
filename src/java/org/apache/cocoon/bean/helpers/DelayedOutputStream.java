@@ -16,7 +16,6 @@
 package org.apache.cocoon.bean.helpers;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -25,7 +24,7 @@ import java.io.OutputStream;
  *
  * @author    huber@apache.org
  * @author    uv@upaya.co.uk
- * @version CVS $Id: DelayedOutputStream.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DelayedOutputStream extends OutputStream {
     /**
@@ -53,9 +52,8 @@ public class DelayedOutputStream extends OutputStream {
      * Creates a file output stream to write to the file represented by the specified File object.
      *
      * @param  outputStream               The new fileOutputStream value
-     * @exception  FileNotFoundException  thrown if creating of FileOutputStream fails
      */
-    public void setFileOutputStream(OutputStream outputStream) throws FileNotFoundException {
+    public void setFileOutputStream(OutputStream outputStream) {
         if (fos == null) {
             fos = outputStream;
         }
@@ -232,8 +230,7 @@ public class DelayedOutputStream extends OutputStream {
     public byte[] getContent() {
         if (baos != null) {
             return baos.toByteArray();
-        } else {
-            return null;
         }
+        return null;
     }
 }

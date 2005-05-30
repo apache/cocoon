@@ -42,13 +42,12 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.26 2004/04/30 12:55:55 upayavira Exp $
+ * @version CVS $Id$
  */
 public class Main {
 
     protected static final String HELP_OPT =               "h";
     protected static final String VERSION_OPT =            "v";
-    protected static final String VERBOSE_OPT =            "V";
     protected static final String LOG_KIT_OPT =            "k";
     protected static final String LOGGER_OPT =             "l";
     protected static final String LOG_LEVEL_OPT =          "u";
@@ -70,7 +69,6 @@ public class Main {
 
     protected static final String HELP_LONG =               "help";
     protected static final String VERSION_LONG =            "version";
-    protected static final String VERBOSE_LONG =            "verbose";
     protected static final String LOG_KIT_LONG =            "logKitconfig";
     protected static final String LOGGER_LONG =             "Logger";
     protected static final String LOG_LEVEL_LONG =          "logLevel";
@@ -106,11 +104,6 @@ public class Main {
                                      VERSION_LONG,
                                      false,
                                      "print the version information and exit"));
-
-        options.addOption(new Option(VERBOSE_OPT,
-                                     VERBOSE_LONG,
-                                     false,
-                                     "enable verbose messages to System.out"));
 
         options.addOption(new Option(LOG_KIT_OPT,
                                      LOG_KIT_LONG,
@@ -244,9 +237,6 @@ public class Main {
             destDir = line.getOptionValue(DEST_DIR_OPT);
         }
 
-        if (line.hasOption(VERBOSE_OPT)) {
-            cocoon.setVerbose(true);
-        }
         if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
             cocoon.setPrecompileOnly(true);
         }

@@ -38,7 +38,6 @@ import org.w3c.dom.NodeList;
 public class BeanConfigurator {
 
     private static final String NODE_ROOT = "cocoon";
-    private static final String ATTR_VERBOSE = "verbose";
 
     private static final String NODE_LOGGING = "logging";
     private static final String ATTR_LOG_KIT = "log-kit";
@@ -102,9 +101,6 @@ public class BeanConfigurator {
             throw new IllegalArgumentException("Expected root node of "+ NODE_ROOT);
         }
 
-        if (hasAttribute(root, ATTR_VERBOSE)) {
-            cocoon.setVerbose(getBooleanAttributeValue(root, ATTR_VERBOSE));
-        }
         if (hasAttribute(root, ATTR_FOLLOW_LINKS)) {
             cocoon.setFollowLinks(getBooleanAttributeValue(root, ATTR_FOLLOW_LINKS));
         }
@@ -163,31 +159,27 @@ public class BeanConfigurator {
                 } else if (nodeName.equals(NODE_CONTEXT_DIR)) {
                     if (hasAttribute(root, ATTR_CONTEXT_DIR)) {
                         throw new IllegalArgumentException("Cannot have "+NODE_CONTEXT_DIR+" as both element and attribute");
-                    } else {
-                        cocoon.setContextDir(getNodeValue(node));
                     }
+                    cocoon.setContextDir(getNodeValue(node));
 
                 } else if (nodeName.equals(NODE_CONFIG_FILE)) {
                     if (hasAttribute(root, ATTR_CONFIG_FILE)) {
                         throw new IllegalArgumentException("Cannot have "+NODE_CONFIG_FILE+" as both element and attribute");
-                    } else {
-                        cocoon.setConfigFile(getNodeValue(node));
                     }
+                    cocoon.setConfigFile(getNodeValue(node));
                 } else if (nodeName.equals(NODE_DEST_DIR)) {
                     // Ignore
 
                 } else if (nodeName.equals(NODE_WORK_DIR)) {
                     if (hasAttribute(root, ATTR_WORK_DIR)) {
                         throw new IllegalArgumentException("Cannot have "+NODE_WORK_DIR+" as both element and attribute");
-                    } else {
-                        cocoon.setWorkDir(getNodeValue(node));
                     }
+                    cocoon.setWorkDir(getNodeValue(node));
                 } else if (nodeName.equals(NODE_CHECKSUMS_URI)) {
                     if (hasAttribute(root, ATTR_CHECKSUMS_URI)) {
                         throw new IllegalArgumentException("Cannot have "+NODE_CHECKSUMS_URI+" as both element and attribute");
-                    } else {
-                        cocoon.setChecksumURI(getNodeValue(node));
-                    }                
+                    }
+                    cocoon.setChecksumURI(getNodeValue(node));
                 } else if (nodeName.equals(NODE_AGENT)) {
                     cocoon.setAgentOptions(getNodeValue(node));
 
@@ -217,9 +209,8 @@ public class BeanConfigurator {
                 } else if (nodeName.equals(NODE_URI_FILE)) {
                     if (hasAttribute(root, ATTR_URI_FILE)) {
                         throw new IllegalArgumentException("Cannot have "+NODE_URI_FILE+" as both element and attribute");
-                    } else {
-                        cocoon.addTargets(processURIFile(getNodeValue(node)), destDir);
                     }
+                    cocoon.addTargets(processURIFile(getNodeValue(node)), destDir);
                 } else {
                     throw new IllegalArgumentException("Unknown element: <" + nodeName + ">");
                 }
@@ -280,9 +271,8 @@ public class BeanConfigurator {
 
         if (hasAttribute(node, ATTR_INCLUDE_EXCLUDE_PATTERN)) {
             return getAttributeValue(node, ATTR_INCLUDE_EXCLUDE_PATTERN);
-        } else {
-            throw new IllegalArgumentException("Expected a "+ATTR_INCLUDE_EXCLUDE_PATTERN+" attribute for <"+NODE_TYPE+"> node");
         }
+        throw new IllegalArgumentException("Expected a "+ATTR_INCLUDE_EXCLUDE_PATTERN+" attribute for <"+NODE_TYPE+"> node");
     }
 
     private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir, String uriGroup) throws IllegalArgumentException {

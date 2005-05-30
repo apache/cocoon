@@ -78,7 +78,6 @@ public class CocoonBean extends CocoonWrapper {
     // Internal Objects
     private boolean initialized;
     private List listeners = new ArrayList();
-    private boolean verbose;
     SourceResolver sourceResolver;
 
     private Crawler crawler;    
@@ -130,10 +129,6 @@ public class CocoonBean extends CocoonWrapper {
         return precompileOnly;
     }
     
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-    }
-
     public void setDefaultFilename(String filename) {
         defaultFilename = filename;
     }
@@ -670,9 +665,8 @@ public class CocoonBean extends CocoonWrapper {
     private boolean isCrawlablePage(Target target) {
         if (includeLinkExtensions == null) {
             return true;
-        } else {
-            return includeLinkExtensions.contains(target.getExtension());
         }
+        return includeLinkExtensions.contains(target.getExtension());
     }
 
     /* NB. This is a temporary solution - it may well be replaced by storing the checksum info
@@ -729,10 +723,9 @@ public class CocoonBean extends CocoonWrapper {
             
             if (streamDigest.equals(targetDigest)) {
                 return true;
-            } else {
-                checksums.put(target.getSourceURI(), streamDigest);
-                return false;
             }
+            checksums.put(target.getSourceURI(), streamDigest);
+            return false;
         } catch (NoSuchAlgorithmException e) {
             // or do something:
             return false;
