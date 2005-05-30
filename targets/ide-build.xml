@@ -69,9 +69,9 @@
       <pathelement path="${src}/test"/>
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
-        <include name="*/java"/>
-        <include name="*/test"/>
-        <include name="*/java${target.vm}"/>
+        <include name="**/java"/>
+        <include name="**/test"/>
+        <include name="**/java${target.vm}"/>
       </dirset>
     </path>
 
@@ -106,7 +106,7 @@
     <property name="srcs" refid="srcs"/>
     <property name="mockss" refid="mockss"/>
     <property name="libs" refid="libs"/>
-
+    
     <!-- expand properties in the template file -->
     <copy file="${tools}/ide/eclipse/classpath-tmpl.xml"
           tofile="${build.temp}/classpath-temp.xml"
