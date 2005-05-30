@@ -447,6 +447,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="SW" type="fix">
+      When receiving a multipart request, also add parameters given on the URL to the
+      request parameters.
+    </action>
     <action dev="BD" type="fix">
       EHDefaultStore.store throws more descriptive exception if key or value
       are not Serializable.
