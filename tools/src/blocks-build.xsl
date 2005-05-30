@@ -697,7 +697,7 @@
         <link packagelistloc="${{resources.javadoc}}/avalon-excalibur"
               offline="true" href="http://excalibur.apache.org/apidocs"/>
         <link packagelistloc="${{resources.javadoc}}/avalon-framework"
-              offline="true" href="http://avalon.apache.org/framework/api"/>
+              offline="true" href="http://excalibur.apache.org/apidocs"/>
         <link packagelistloc="${{resources.javadoc}}/j2ee"
               offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api"/>
         <link packagelistloc="${{resources.javadoc}}/j2se"
