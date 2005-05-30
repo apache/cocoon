@@ -35,10 +35,16 @@ implements ComponentLocator {
         this.manager = m;
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#hasComponent(java.lang.String)
+     */
     public boolean hasComponent(String key) {
         return this.manager.hasService(key);
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#getComponent(java.lang.String)
+     */
     public Object getComponent(String key) 
     throws ProcessingException {
         try {
@@ -48,6 +54,9 @@ implements ComponentLocator {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#release(java.lang.Object)
+     */
     public void release(Object component) {
         this.manager.release(component);
     }
