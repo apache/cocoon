@@ -200,6 +200,10 @@
       XSP Block: Double check and attempt again to load program object from cache.
       This avoids that simultaneous requests recompile the same XSP over and over again.
     </action>
+    <action dev="SW" type="fix">
+      When receiving a multipart request, also add parameters given on the URL to the
+      request parameters.
+    </action>
     <action dev="BD" type="fix">
       EHDefaultStore.store throws more descriptive exception if key or value
       are not Serializable.
