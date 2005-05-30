@@ -161,32 +161,29 @@ public final class BlockSource
                                                  "The protocol must have the form block:foo:/bar");
                 }
                 this.blockName = uri.getScheme();
-                info.prefix = "";
                 info.uri = uri.getPath();
-                info.processFromRoot = true;
             } else {
                 // self reference relative to the current sitemap, e.g. block:./foo
                 this.blockName = null;
-                info.prefix = env.getURIPrefix();
-                info.uri = uri.getPath();
-                info.processFromRoot = false;
+                URI base = new URI(null, null, env.getURIPrefix(), null);
+                info.uri = base.resolve(uri).toString();
             }
         } else {
             // reference to the base sitemap of the own block, block:/foo
             this.blockName = null;
-            info.prefix = "";
             info.uri = uri.getPath();
-            info.processFromRoot = true;
         }
 
-        info.requestURI = info.prefix + info.uri;
+        // All URIs, also relative are resolved and processed from the block manager
+        info.processFromRoot = true;
+        info.prefix = "";
+        info.requestURI = info.uri;
         info.queryString = uri.getQuery();
         info.view = SitemapSourceInfo.getView(info.queryString, env);
         
         // FIXME: This will not be a system global id, as the blockName is block local.
-        info.systemId =
-            info.protocol + ":" + (this.blockName != null ? this.blockName + ":" : "") +
-            info.requestURI + (info.queryString != null ? "?" + info.queryString : "");
+        String ssp = (new URI(this.blockName, null, info.requestURI, info.queryString, null)).toString();
+        info.systemId = (new URI(info.protocol, ssp, null)).toString();
         
         return info;
     }
