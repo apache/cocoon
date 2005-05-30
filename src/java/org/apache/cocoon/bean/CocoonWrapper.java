@@ -194,6 +194,8 @@ public class CocoonWrapper {
             env.setEnvironmentLogger(envLogger);
             env.setEnvironmentContext(cliContext);
             env.setWorkingDirectory(this.work);
+            env.setBootstrapLogLevel(this.logLevel);
+            env.setLoggingConfiguration(this.logKit);
             this.coreUtil = new CoreUtil(env);
             this.cocoon = this.coreUtil.createCocoon();
             // FIXME - activate this: this.log = env.logger;
@@ -672,6 +674,8 @@ public class CocoonWrapper {
         protected Logger environmentLogger;
         protected Context environmentContext;
         protected String workingDirectory;
+        protected String bootstrapLogLevel;
+        protected String loggingConfiguration;
 
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
@@ -683,6 +687,14 @@ public class CocoonWrapper {
 
         public void setWorkingDirectory(File file) {
             this.workingDirectory = file.getAbsolutePath();
+        }
+
+        public void setBootstrapLogLevel(String bootstrapLogLevel) {
+            this.bootstrapLogLevel = bootstrapLogLevel;
+        }
+
+        public void setLoggingConfiguration(String config) {
+            this.loggingConfiguration = config;
         }
 
         /**
@@ -698,6 +710,9 @@ public class CocoonWrapper {
         public void configure(MutableSettings settings) {
             // TODO Auto-generated method stub
             settings.setWorkDirectory(this.workingDirectory);
+            settings.setBootstrapLogLevel(this.bootstrapLogLevel);
+            settings.setCreateLogKitHierarchy(true);
+            settings.setLoggingConfiguration(this.loggingConfiguration);
         }
 
         /**
@@ -742,7 +757,6 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getDefaultLogTarget()
          */
         public LogTarget getDefaultLogTarget() {
-            // TODO Auto-generated method stub
             return null;
         }
 

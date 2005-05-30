@@ -383,7 +383,12 @@ public class CoreUtil {
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
-        final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
+        final Hierarchy defaultHierarchy;
+        if ( settings.isCreateLogKitHierarchy() ) {
+            defaultHierarchy = new Hierarchy();            
+        } else {
+            defaultHierarchy = Hierarchy.getDefaultHierarchy();
+        }
         final ErrorHandler errorHandler = new DefaultErrorHandler();
         defaultHierarchy.setErrorHandler(errorHandler);
         if ( this.env.getDefaultLogTarget() != null ) {
@@ -433,84 +438,83 @@ public class CoreUtil {
             if (loggerManager instanceof Configurable) {
                 //Configure the logkit management
                 String logkitConfig = settings.getLoggingConfiguration();
-                if (logkitConfig == null) {
-                    logkitConfig = "/WEB-INF/logkit.xconf";
-                }
 
-                Source source = null;
-                try {
-                    source = resolver.resolveURI(logkitConfig);
-                    final ConfigurationBuilder builder = new ConfigurationBuilder(
-                            settings);
-                    final Configuration conf = builder.build(source
-                            .getInputStream());
-                    final DefaultConfiguration categories = (DefaultConfiguration) conf
-                            .getChild("categories");
-                    final DefaultConfiguration targets = (DefaultConfiguration) conf
-                            .getChild("targets");
-                    final DefaultConfiguration factories = (DefaultConfiguration) conf
-                            .getChild("factories");
-
-                    // now process includes
-                    final Configuration[] children = conf
-                            .getChildren("include");
-                    for (int i = 0; i < children.length; i++) {
-                        String directoryURI = children[i].getAttribute("dir");
-                        final String pattern = children[i].getAttribute(
-                                "pattern", null);
-                        int[] parsedPattern = null;
-                        if (pattern != null) {
-                            parsedPattern = WildcardHelper
-                                    .compilePattern(pattern);
-                        }
-                        Source directory = null;
-                        try {
-                            directory = resolver.resolveURI(directoryURI,
-                                    source.getURI(), CONTEXT_PARAMETERS);
-                            if (directory instanceof TraversableSource) {
-                                final Iterator c = ((TraversableSource) directory)
-                                        .getChildren().iterator();
-                                while (c.hasNext()) {
-                                    final Source s = (Source) c.next();
-                                    if (parsedPattern == null
-                                            || this.match(s.getURI(),
-                                                    parsedPattern)) {
-                                        final Configuration includeConf = builder
-                                                .build(s.getInputStream());
-                                        // add targets and categories
-                                        categories.addAllChildren(includeConf
-                                                .getChild("categories"));
-                                        targets.addAllChildren(includeConf
-                                                .getChild("targets"));
-                                        factories.addAllChildren(includeConf
-                                                .getChild("factories"));
-                                    }
-                                }
-                            } else {
-                                throw new ConfigurationException(
-                                        "Include.dir must point to a directory, '"
-                                                + directory.getURI()
-                                                + "' is not a directory.'");
+                if ( logkitConfig != null ) {
+                    Source source = null;
+                    try {
+                        source = resolver.resolveURI(logkitConfig);
+                        final ConfigurationBuilder builder = new ConfigurationBuilder(
+                                settings);
+                        final Configuration conf = builder.build(source
+                                .getInputStream());
+                        final DefaultConfiguration categories = (DefaultConfiguration) conf
+                                .getChild("categories");
+                        final DefaultConfiguration targets = (DefaultConfiguration) conf
+                                .getChild("targets");
+                        final DefaultConfiguration factories = (DefaultConfiguration) conf
+                                .getChild("factories");
+    
+                        // now process includes
+                        final Configuration[] children = conf
+                                .getChildren("include");
+                        for (int i = 0; i < children.length; i++) {
+                            String directoryURI = children[i].getAttribute("dir");
+                            final String pattern = children[i].getAttribute(
+                                    "pattern", null);
+                            int[] parsedPattern = null;
+                            if (pattern != null) {
+                                parsedPattern = WildcardHelper
+                                        .compilePattern(pattern);
                             }
-                        } catch (IOException ioe) {
-                            throw new ConfigurationException(
-                                    "Unable to read configurations from "
-                                            + directoryURI);
-                        } finally {
-                            resolver.release(directory);
+                            Source directory = null;
+                            try {
+                                directory = resolver.resolveURI(directoryURI,
+                                        source.getURI(), CONTEXT_PARAMETERS);
+                                if (directory instanceof TraversableSource) {
+                                    final Iterator c = ((TraversableSource) directory)
+                                            .getChildren().iterator();
+                                    while (c.hasNext()) {
+                                        final Source s = (Source) c.next();
+                                        if (parsedPattern == null
+                                                || this.match(s.getURI(),
+                                                        parsedPattern)) {
+                                            final Configuration includeConf = builder
+                                                    .build(s.getInputStream());
+                                            // add targets and categories
+                                            categories.addAllChildren(includeConf
+                                                    .getChild("categories"));
+                                            targets.addAllChildren(includeConf
+                                                    .getChild("targets"));
+                                            factories.addAllChildren(includeConf
+                                                    .getChild("factories"));
+                                        }
+                                    }
+                                } else {
+                                    throw new ConfigurationException(
+                                            "Include.dir must point to a directory, '"
+                                                    + directory.getURI()
+                                                    + "' is not a directory.'");
+                                }
+                            } catch (IOException ioe) {
+                                throw new ConfigurationException(
+                                        "Unable to read configurations from "
+                                                + directoryURI);
+                            } finally {
+                                resolver.release(directory);
+                            }
+    
+                            // finally remove include
+                            ((DefaultConfiguration) conf).removeChild(children[i]);
                         }
-
-                        // finally remove include
-                        ((DefaultConfiguration) conf).removeChild(children[i]);
+                        // override log level?
+                        if (settings.getOverrideLogLevel() != null) {
+                            this.overrideLogLevel(conf.getChild("categories"),
+                                    settings.getOverrideLogLevel());
+                        }
+                        ContainerUtil.configure(loggerManager, conf);
+                    } finally {
+                        resolver.release(source);
                     }
-                    // override log level?
-                    if (settings.getOverrideLogLevel() != null) {
-                        this.overrideLogLevel(conf.getChild("categories"),
-                                settings.getOverrideLogLevel());
-                    }
-                    ContainerUtil.configure(loggerManager, conf);
-                } finally {
-                    resolver.release(source);
                 }
             }
 

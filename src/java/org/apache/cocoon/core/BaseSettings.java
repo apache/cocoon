@@ -37,6 +37,11 @@ public interface BaseSettings {
      * Default value for {@link #isInitClassloader()} setting (false)
      */
     boolean INIT_CLASSLOADER = false;
+    
+    /**
+     * Default value for {@link #isCreateLogKitHierarchy()} (false)
+     */
+    boolean CREATE_LOGKIT_HIERARCHY = false;
 
     /** Name of the property specifying a user properties file */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
@@ -65,6 +70,13 @@ public interface BaseSettings {
      * not readable/available this log level is of importance.
      */
     String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.loglevel";
+
+    /**
+     * Create a new hierarchy for LogKit.
+     * If this is set to true, a new log hierarchy for LogKit is used. Otherwise
+     * the default hierarchy is used.
+     */
+    String KEY_LOGGING_LOGKIT_NEW_HIERARCHY = "logging.logkit.createhierarchy";
 
     /**
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
@@ -281,5 +293,11 @@ public interface BaseSettings {
      * @see #KEY_LOGGING_COCOON_LOGGER
      */
     String getCocoonLogger();
+
+    /**
+     * @return Returns true if a new hierarchy should be created
+     * @see #KEY_LOGGING_LOGKIT_NEW_HIERARCHY
+     */
+    boolean isCreateLogKitHierarchy();
 
 }
