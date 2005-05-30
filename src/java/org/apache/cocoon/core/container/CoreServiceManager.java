@@ -613,6 +613,7 @@ public class CoreServiceManager
             info = baseInfo.duplicate();
         } else {
             info = new ComponentInfo();
+            info.fill(configuration);
         }
         info.setConfiguration(configuration);
         info.setServiceClassName(className);

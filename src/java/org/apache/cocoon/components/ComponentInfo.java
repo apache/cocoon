@@ -54,6 +54,7 @@ public final class ComponentInfo {
 
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
+        this.loggingSystem = LOGGING_SYSTEM_LOGKIT;
     }
 
     /**
@@ -188,9 +189,9 @@ public final class ComponentInfo {
         if ( LOGGING_LOG4J.equals(logSystem) ) {
             this.setLoggingSystem(LOGGING_SYSTEM_LOG4J);
         } else if (LOGGING_COMMONSLOGGING.equals(logSystem)) {
-            this.setLoggingSystem(LOGGING_SYSTEM_LOGKIT);
-        } else if ( LOGGING_LOGKIT.equals(logSystem) ) {
             this.setLoggingSystem(LOGGING_SYSTEM_COMMONSLOGGING);
+        } else if ( LOGGING_LOGKIT.equals(logSystem) ) {
+            this.setLoggingSystem(LOGGING_SYSTEM_LOGKIT);
         }
     }
 
