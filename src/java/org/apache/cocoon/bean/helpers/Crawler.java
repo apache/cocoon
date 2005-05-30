@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.bean.Target;
-import org.apache.cocoon.ProcessingException;
 
 /**
  *   A simple Cocoon crawler
@@ -50,10 +49,9 @@ public class Crawler {
             if (!stillNotVisited.containsKey(targetString)) {
                 stillNotVisited.put(targetString, target);
                 return true;
-            } else {
-                Target existingTarget = (Target)stillNotVisited.get(targetString);
-                existingTarget.addReferringURI(target.getReferringURI());
             }
+            Target existingTarget = (Target)stillNotVisited.get(targetString);
+            existingTarget.addReferringURI(target.getReferringURI());
         } else {
             Target visitedTarget = (Target)visitedAlready.get(targetString);
             visitedTarget.addReferringURI(target.getReferringURI());
@@ -77,7 +75,7 @@ public class Crawler {
         return allTranslatedLinks.size();
     }
     
-    public void addTranslatedLink(Target target) throws ProcessingException {
+    public void addTranslatedLink(Target target) {
         allTranslatedLinks.put(target.getSourceURI(), target);
     }
     

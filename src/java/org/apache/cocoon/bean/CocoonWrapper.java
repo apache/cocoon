@@ -124,28 +124,22 @@ public class CocoonWrapper {
         cliContext.enableLogging(envLogger);
 
         // setup Cocoon core
-        // FIXME - this is not finished yet!
-        try {
-            File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
+        File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
 
-            WrapperBootstrapper env = this.getBootstrapEnvironment();
-            env.setContextDirectory(contextDir);
-            env.setEnvironmentLogger(envLogger);
-            env.setEnvironmentContext(cliContext);
-            env.setWorkingDirectory(this.work);
-            env.setCachingDirectory(cacheDir);
-            env.setBootstrapLogLevel(this.logLevel);
-            env.setLoggingConfiguration(this.logKit);
-            env.setConfigFile(this.conf);
-            env.setLoadClassList(this.classList);
-            this.coreUtil = new CoreUtil(env);
-            this.cocoon = this.coreUtil.createCocoon();
-            this.log = env.logger;
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
-
-        initialized = true;
+        WrapperBootstrapper env = this.getBootstrapEnvironment();
+        env.setContextDirectory(contextDir);
+        env.setEnvironmentLogger(envLogger);
+        env.setEnvironmentContext(cliContext);
+        env.setWorkingDirectory(this.work);
+        env.setCachingDirectory(cacheDir);
+        env.setBootstrapLogLevel(this.logLevel);
+        env.setLoggingConfiguration(this.logKit);
+        env.setConfigFile(this.conf);
+        env.setLoadClassList(this.classList);
+        this.coreUtil = new CoreUtil(env);
+        this.cocoon = this.coreUtil.createCocoon();
+        this.log = env.logger;
+        this.initialized = true;
     }
 
     protected ServiceManager getServiceManager() {
@@ -475,7 +469,7 @@ public class CocoonWrapper {
 
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
         Processor.InternalPipelineDescription pipeline = cocoon.buildPipeline(env);
-        EnvironmentHelper.enterProcessor(pipeline.lastProcessor, getServiceManager(), env);
+        EnvironmentHelper.enterProcessor(pipeline.lastProcessor, pipeline.pipelineManager, env);
         try {
             pipeline.processingPipeline.prepareInternal(env);
             pipeline.processingPipeline.process(env, consumer);
@@ -494,10 +488,13 @@ public class CocoonWrapper {
     /** Class <code>NullOutputStream</code> here. */
     static class NullOutputStream extends OutputStream {
         public void write(int b) throws IOException {
+            // ignore
         }
         public void write(byte b[]) throws IOException {
+            // ignore
         }
         public void write(byte b[], int off, int len) throws IOException {
+            // ignore
         }
     }
 

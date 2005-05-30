@@ -315,8 +315,7 @@ public class Target {
      * into another page as a link. This link needs to be
      * relative to the original page.
      */
-    public String getTranslatedURI(String path)
-        throws ProcessingException {
+    public String getTranslatedURI(String path) {
                     
         String actualSourceURI = this.sourceURI;
         if (!actualSourceURI.startsWith(root)) {
