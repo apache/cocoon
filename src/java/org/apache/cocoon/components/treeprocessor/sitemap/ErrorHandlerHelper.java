@@ -104,7 +104,12 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                       Environment env,
                                       InvokeContext context)
     throws Exception {
-        return prepareErrorHandler(ex, env, context) != null;
+        final Processor.InternalPipelineDescription desc = prepareErrorHandler(ex, env, context);
+        if ( desc != null ) {
+            desc.release();
+            return true;
+        }
+        return  false;
     }
 
     /**
@@ -146,7 +151,12 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                       Environment env,
                                       InvokeContext context)
     throws Exception {
-        return prepareErrorHandler(node, ex, env, context) != null;
+        final Processor.InternalPipelineDescription desc = prepareErrorHandler(node, ex, env, context);
+        if ( desc != null ) {
+            desc.release();
+            return true;
+        }
+        return  false;
     }
 
     /**
