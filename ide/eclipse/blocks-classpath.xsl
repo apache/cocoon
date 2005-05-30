@@ -160,10 +160,10 @@
         <target name="{@name}-eclipseclasspath" unless="internal.exclude.block.{$block-name}">
             <!-- block src and test directory -->
             <if>
-                <available file="${{blocks}}/{$block-name}/java" type="dir"/>
+                <available file="${{blocks}}/{$block-name}/trunk/java" type="dir"/>
                 <then>
                     <path id="src-{$block-name}">
-                        <dirset dir="${{blocks}}/{$block-name}">
+                        <dirset dir="${{blocks}}/{$block-name}/trunk">
                             <include name="java"/>
                             <include name="test"/>
                         </dirset>
@@ -175,7 +175,7 @@
             </if>
             <!-- block mocks directory -->
             <if>
-                <available file="${{blocks}}/{$block-name}/mocks" type="dir"/>
+                <available file="${{blocks}}/{$block-name}/trunk/mocks" type="dir"/>
                 <then>
                     <path id="mocks-{$block-name}">
                         <dirset dir="${{blocks}}/{$block-name}">
@@ -190,7 +190,7 @@
 
             <!-- block lib directory (deprecated) -->
             <if>
-                <available file="${{blocks}}/{$block-name}/lib" type="dir"/>
+                <available file="${{blocks}}/{$block-name}/trunk/lib" type="dir"/>
                 <then>
                     <path id="lib-{$block-name}">
                         <fileset dir="${{blocks}}/{$block-name}">
