@@ -197,6 +197,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="fix" fixes-bug="32935">
+      XSP Block: Double check and attempt again to load program object from cache.
+      This avoids that simultaneous requests recompile the same XSP over and over again.
+    </action>
    <action dev="DF" type="update">
      Added reflection friendly utility methods for the Cocoon environment according to vote
      http://marc.theaimsgroup.com/?t=111590936900001&amp;r=1&amp;w=2:
