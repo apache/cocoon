@@ -18,7 +18,7 @@
 <project name="docs">
   <description> Documentation Targets </description>
   
-  <target name="docs" depends="prepare-docs" unless="exclude.documentation" description="Test documentation target">
+  <target name="docs" depends="prepare-docs" description="Test documentation target">
     <!-- check whether Forrest bin directory ist set -->
     <condition property="cond.forrest.bin.exists">
       <available file="${forrest.bin}/forrest.bat" property="blaaaa"/>
