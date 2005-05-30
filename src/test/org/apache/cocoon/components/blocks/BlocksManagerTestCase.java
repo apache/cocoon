@@ -42,15 +42,27 @@ public class BlocksManagerTestCase extends SitemapTestCase {
         this.release(blocks);
     }
 
-    public void testBlocksSource() throws Exception {
-        process("test");
-    }
-
     public void testBlockSource1() throws Exception {
-        process("test2");
+        pipeTest("test", "test1/test.xml");
     }
 
     public void testBlockSource2() throws Exception {
-        process("test3");
+        pipeTest("test2", "test2/test.xml");
+    }
+
+    public void testBlockSource3() throws Exception {
+        pipeTest("test3", "test1/test.xml");
+    }
+
+    public void testBlockSourceSub1() throws Exception {
+        pipeTest("sub/test", "test1/sub/test.xml");
+    }
+
+    public void testBlockSourceSub2() throws Exception {
+        pipeTest("sub/test2", "test1/sub/test.xml");
+    }
+
+    public void testBlockSourceSub3() throws Exception {
+        pipeTest("sub/test3", "test1/test.xml");
     }
 }
