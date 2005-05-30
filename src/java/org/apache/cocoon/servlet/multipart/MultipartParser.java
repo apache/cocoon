@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -87,24 +88,44 @@ public class MultipartParser {
         this.characterEncoding = characterEncoding;
     }
 
-    public Hashtable getParts(int contentLength, String contentType, InputStream requestStream)
+    private void parseParts(int contentLength, String contentType, InputStream requestStream)
     throws IOException, MultipartException {
         if (contentLength > this.maxUploadSize) {
             throw new IOException("Content length exceeds maximum upload size");
         }
 
-        this.parts = new Hashtable();
         BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
         PushbackInputStream pushbackStream = new PushbackInputStream(bufferedStream, MAX_BOUNDARY_SIZE);
         TokenStream stream = new TokenStream(pushbackStream);
 
         parseMultiPart(stream, getBoundary(contentType));
 
-        return this.parts;    
+    }
+    
+    public Hashtable getParts(int contentLength, String contentType, InputStream requestStream)
+    throws IOException, MultipartException {
+        this.parts = new Hashtable();
+        parseParts(contentLength, contentType, requestStream);
+        return this.parts;
     }
     
     public Hashtable getParts(HttpServletRequest request) throws IOException, MultipartException {
-        return getParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
+        this.parts = new Hashtable();
+        
+        // Copy all parameters coming from the request URI to the parts table.
+        // This happens when a form's action attribute has some parameters
+        Enumeration names = request.getParameterNames();
+        while(names.hasMoreElements()) {
+            String name = (String)names.nextElement();
+            String[] values = request.getParameterValues(name);
+            Vector v = new Vector(values.length);
+            for (int i = 0; i < values.length; i++) {
+                v.add(values[i]);
+            }
+            this.parts.put(name, v);
+        }
+        parseParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
+        return this.parts;    
     }
     
     /**

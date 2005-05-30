@@ -116,18 +116,21 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper {
      *
      */
     public String getParameter(String name) {
-        Object value = get(name);
-        String result = null;
-
-        if (value != null) {
-            if (value instanceof Vector) {
-                value = ((Vector) value).elementAt(0);
+        if (values != null) {
+            Object value = get(name);
+            String result = null;
+    
+            if (value != null) {
+                if (value instanceof Vector) {
+                    value = ((Vector) value).elementAt(0);
+                }
+    
+                result = value.toString();
             }
-
-            result = value.toString();
+            return result;
+        } else {
+            return super.getParameter(name);
         }
-
-        return result;
     }
 
     /**
