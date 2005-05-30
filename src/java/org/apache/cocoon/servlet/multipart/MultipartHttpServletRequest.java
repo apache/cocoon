@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.7 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 
@@ -129,18 +129,21 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      *
      */
     public String getParameter(String name) {
-        Object value = get(name);
-        String result = null;
-
-        if (value != null) {
-            if (value instanceof Vector) {
-                value = ((Vector) value).elementAt(0);
+        if (values != null) {
+            Object value = get(name);
+            String result = null;
+    
+            if (value != null) {
+                if (value instanceof Vector) {
+                    value = ((Vector) value).elementAt(0);
+                }
+    
+                result = value.toString();
             }
-
-            result = value.toString();
+            return result;
+        } else {
+            return this.request.getParameter(name);
         }
-
-        return result;
     }
 
     /**
