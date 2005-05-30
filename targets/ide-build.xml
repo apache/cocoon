@@ -69,15 +69,18 @@
       <pathelement path="${src}/test"/>
       <!-- blocks source dirs -->
       <dirset dir="${blocks}">
-        <include name="**/java"/>
-        <include name="**/test"/>
-        <include name="**/java${target.vm}"/>
+        <include name="*/trunk/java"/>
+        <include name="*/trunk/test"/>
+        <include name="*/trunk/java${target.vm}"/>
       </dirset>
+      <!-- garbage has its own layout -->
+      <pathelement path="${src}/blocks/scratchpad/trunk/garbage/source/java"/>
     </path>
 
     <path id="mockss">
       <dirset dir="${src}">
-        <include name="**/mocks"/>
+        <include name="mocks"/>
+        <include name="blocks/*/trunk/mocks"/>
       </dirset>
     </path>
 
@@ -94,7 +97,7 @@
       </fileset>
       <!-- blocks lib -->
       <fileset dir="${blocks}">
-        <include name="**/*.jar"/>
+        <include name="*/trunk/*/*.jar"/>
       </fileset>
       <!-- tools libs -->
       <fileset dir="${tools}/lib">
