@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2005 The Apache Software Foundation
 
@@ -196,7 +196,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
-    <<action dev="AG" type="update">
+    <action dev="BD" type="fix">
+      EHDefaultStore.store throws more descriptive exception if key or value
+      are not Serializable.
+    </action>
+    <action dev="AG" type="update">
       Cforms block: Improved dynamic selection list performance inside repeaters.
     </action>
     <action dev="AG" type="update">
