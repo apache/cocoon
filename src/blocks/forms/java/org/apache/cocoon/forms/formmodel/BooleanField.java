@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.*;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -78,7 +79,9 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());
-        value = Boolean.valueOf(param);
+
+        value = BooleanUtils.toBooleanObject(definition.getTrueParamValue().equals(param));
+
         if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
@@ -110,10 +113,19 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         return BOOLEAN_FIELD_EL;
     }
 
+    protected AttributesImpl getXMLElementAttributes() {
+        AttributesImpl attrs = super.getXMLElementAttributes();
+        // Add the parameter value for true
+        attrs.addCDATAAttribute("true-value", definition.getTrueParamValue());
+        return attrs;
+    }
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // value element
         contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        String stringValue = String.valueOf(BooleanUtils.toBoolean(value));
+
+        String stringValue = BooleanUtils.toBoolean(value) ? definition.getTrueParamValue() : "false";
+
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         // validation message element: only present if the value is not valid

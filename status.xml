@@ -196,6 +196,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+     <action dev="SW" type="add">
+       CForms block: add a new <code>&lt;fd:true-param-value&gt;<code> configuration to
+       booleanfield definitions, to allow specifying a value different from "<code>true</code>"
+       for the checkbox.
+     </action>
     <action dev="CZ" type="update">
       Set the content-length of a response when the pipeline buffers the content
       (which is the default).
