@@ -225,6 +225,12 @@ public class BlockManager
         this.blocksManager = blocksManager;
     }
 
+    // This is for being able to call EnvironmentHelper.enterProcessor
+    // in BlocksManager, don't know if it really is needed
+    public ServiceManager getServiceManager() {
+        return this.serviceManager;
+    }
+
     // The Processor methods
 
     public boolean process(Environment environment) throws Exception {
@@ -241,15 +247,8 @@ public class BlockManager
             getLogger().debug("Resolving block: " + blockName + " to " + blockId);
             return this.blocksManager.process(blockId, environment);
         } else {
-            getLogger().debug("Enter processing in block " + this.id);
             // Request to the own block
-            EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
-            try {
-                return this.processor.process(environment);
-            } finally {
-                EnvironmentHelper.leaveProcessor();
-                getLogger().debug("Leaving processing in block " + this.id);
-            }
+            return this.processor.process(environment);
         }
     }
 
