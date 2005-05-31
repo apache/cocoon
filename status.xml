@@ -447,6 +447,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="update">
+      Set the content-length of a response when the pipeline buffers the content
+      (which is the default).
+    </action>
     <action dev="SW" type="fix">
       When receiving a multipart request, also add parameters given on the URL to the
       request parameters.

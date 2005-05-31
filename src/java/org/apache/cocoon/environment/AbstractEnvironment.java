@@ -168,6 +168,7 @@ public abstract class AbstractEnvironment
      * @see org.apache.cocoon.environment.Environment#setStatus(int)
      */
     public void setStatus(int statusCode) {
+        // for subclasses
     }
 
     /* (non-Javadoc)
@@ -255,6 +256,7 @@ public abstract class AbstractEnvironment
     public void commitResponse()
     throws IOException {
         if (this.secureOutputStream != null) {
+            this.setContentLength(this.secureOutputStream.getCount());
             this.secureOutputStream.realFlush();
         } else if ( this.outputStream != null ){
             this.outputStream.flush();
