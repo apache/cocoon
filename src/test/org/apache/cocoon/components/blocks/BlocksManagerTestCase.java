@@ -69,4 +69,20 @@ public class BlocksManagerTestCase extends SitemapTestCase {
     public void testBlockSourceSub3() throws Exception {
         pipeTest("sub/test3", "test1/test.xml");
     }
+
+    public void testBlockExtend1() throws Exception {
+        pipeTest("ext/test", "test3/test.xml");
+    }
+
+    public void testBlockExtend2() throws Exception {
+        pipeTest("ext/test2", "test2/test.xml");
+    }
+
+    public void testBlockExtend3() throws Exception {
+        pipeTest("ext/test3", "test3/test.xml");
+    }
+
+    public void testBlockExtend4() throws Exception {
+        pipeTest("ext/test3", "test1/test.xml");
+    }
 }

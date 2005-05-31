@@ -32,4 +32,11 @@
     <mount path="/test2/"/>
   </block>
 
+  <block id="test3id" location="test3/">
+    <mount path="/test3/"/>
+    <connections>
+      <connection name="super" block="test1id"/>
+    </connections>
+  </block>
+
 </wiring>
