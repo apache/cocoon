@@ -25,7 +25,7 @@ import java.io.OutputStream;
  * the output stream.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: BufferedOutputStream.java,v 1.4 2004/06/24 07:14:44 cziegeler Exp $
+ * @version CVS $Id$
  * @since   2.1
  */
 public final class BufferedOutputStream extends FilterOutputStream {
@@ -101,11 +101,12 @@ public final class BufferedOutputStream extends FilterOutputStream {
 
     /**
      * Flushes this buffered output stream. 
-     * We don't flush here. 
+     * We don't flush here, flushing is done during closing.
      *
      * @exception  IOException  if an I/O error occurs.
      */
     public void flush() throws IOException {
+        // nothing
     }
 
     /**
@@ -121,7 +122,6 @@ public final class BufferedOutputStream extends FilterOutputStream {
 
     /**
      * Flushes this buffered output stream. 
-     * We don't flush here. 
      */
     public void realFlush() throws IOException {
         this.writeBuffer();
@@ -135,6 +135,7 @@ public final class BufferedOutputStream extends FilterOutputStream {
     throws IOException {
         if (this.count > 0) {
             this.out.write(this.buf, 0, this.count);
+            this.clearBuffer();
         }
     }
 
@@ -155,6 +156,12 @@ public final class BufferedOutputStream extends FilterOutputStream {
     public void clearBuffer() {
         this.count = 0;
     }
-    
+
+    /**
+     * Return the size of the current buffer
+     */
+    public int getCount() {
+        return this.count;
+    }
 }
 
