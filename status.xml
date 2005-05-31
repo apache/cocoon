@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update">
+      Set the content-length of a response when the pipeline buffers the content
+      (which is the default).
+    </action>
     <action dev="AN" type="fix" fixes-bug="32935">
       XSP Block: Double check and attempt again to load program object from cache.
       This avoids that simultaneous requests recompile the same XSP over and over again.
