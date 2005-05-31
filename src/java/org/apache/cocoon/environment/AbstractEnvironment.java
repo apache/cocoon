@@ -56,22 +56,22 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     protected StringBuffer prefix = new StringBuffer();
 
     /** The View requested */
-    protected String view = null;
+    protected String view;
 
     /** The Action requested */
-    protected String action = null;
+    protected String action;
 
      /** The Context path */
-    protected String context = null;
+    protected String context;
 
     /** The context path stored temporarily between constructor and initComponents */
-    private String tempInitContext = null;
+    private String tempInitContext;
 
     /** The root context path */
-    protected String rootContext = null;
+    protected String rootContext;
 
     /** The servlet object model */
-    protected HashMap objectModel = null;
+    protected HashMap objectModel;
 
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver sourceResolver;
@@ -518,6 +518,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     public void commitResponse()
     throws IOException {
         if (this.secureOutputStream != null) {
+            this.setContentLength(this.secureOutputStream.getCount());
             this.secureOutputStream.realFlush();
         } else if (this.outputStream != null) {
             this.outputStream.flush();
