@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
  */
 public final class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
         
         super.setupDefinition(widgetElement, definition);
@@ -42,7 +43,14 @@ public final class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitio
         Element initialValueElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "initial-value", false);
         if (initialValueElement != null) {
             Boolean initialValue = Boolean.valueOf(DomHelper.getElementText(initialValueElement));
-        }        
+            definition.setInitialValue(initialValue);
+        }
+        
+        // Parameter value for true
+        Element trueParamElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "true-param-value", false);
+        if (trueParamElement != null) {
+            definition.setTrueParamValue(DomHelper.getElementText(trueParamElement));
+        }
 
         definition.makeImmutable();
         return definition;

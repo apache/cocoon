@@ -68,6 +68,10 @@
   
     <fd:booleanfield id="spam">
       <fd:label>Send me spam</fd:label>
+      <!-- initially checked -->
+      <fd:initial-value>true</fd:initial-value>
+      <!-- request param value will be "send" when checked -->
+      <fd:true-param-value>send</fd:true-param-value>
     </fd:booleanfield>
   </fd:widgets>
 

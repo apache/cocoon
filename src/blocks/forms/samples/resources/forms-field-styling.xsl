@@ -302,7 +302,7 @@
       +-->
   <xsl:template match="fi:booleanfield">
     <span id="{@id}">
-      <input id="{@id}-input" type="checkbox" value="true" name="{@id}" title="{fi:hint}">
+      <input id="{@id}-input" type="checkbox" value="{@true-value}" name="{@id}" title="{fi:hint}">
         <xsl:apply-templates select="." mode="styling"/>
         <xsl:choose>
           <xsl:when test="./fi:styling[@type='hidden']">
@@ -311,7 +311,7 @@
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:if test="fi:value = 'true'">
+            <xsl:if test="fi:value != 'false'">
               <xsl:attribute name="checked">checked</xsl:attribute>
             </xsl:if>
           </xsl:otherwise>
@@ -326,8 +326,8 @@
       | use text but avoids i18n problems related to hardcoding 'yes'/'no' or 'true'/'false'
       +-->
   <xsl:template match="fi:booleanfield[@state='output' or fi:styling/@type='output']" priority="3">
-    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled">
-    	  <xsl:if test="fi:value = 'true'">
+    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}">
+    	  <xsl:if test="fi:value != 'true'">
     	    <xsl:attribute name="checked">checked</xsl:attribute>
     	  </xsl:if>
     </input>

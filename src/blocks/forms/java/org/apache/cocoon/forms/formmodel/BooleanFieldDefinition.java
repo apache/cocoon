@@ -28,6 +28,8 @@ public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     private ValueChangedListener listener;
     
     private Boolean initialValue;
+    
+    private String trueParamValue = "true";
 
     public Widget createInstance() {
         return new BooleanField(this);
@@ -40,6 +42,19 @@ public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     
     public Boolean getInitialValue() {
         return this.initialValue;
+    }
+    
+    public void setTrueParamValue(String value) {
+        checkMutable();
+        this.trueParamValue = value;
+    }
+    
+    /**
+     * Get the parameter value that indicates a true value. Default
+     * is "<code>true</code>".
+     */
+    public String getTrueParamValue() {
+        return this.trueParamValue;
     }
     
     public void addValueChangedListener(ValueChangedListener listener) {
