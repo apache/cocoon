@@ -54,6 +54,10 @@ public class BlocksManagerTestCase extends SitemapTestCase {
         pipeTest("test3", "test1/test.xml");
     }
 
+    public void testBlockSource4() throws Exception {
+        pipeTest("test4", "test1/COB-INF/classes/test.xml");
+    }
+
     public void testBlockSourceSub1() throws Exception {
         pipeTest("sub/test", "test1/sub/test.xml");
     }
