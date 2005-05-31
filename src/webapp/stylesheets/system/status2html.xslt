@@ -43,9 +43,32 @@
         <xsl:apply-templates/>
 
         <!--
-          - Add Xalan / Xerces information using custom Xalan extension
+          - Add XSLT processor information
           -->
-        <xsl:apply-templates select="xalan:checkEnvironment()"/>
+        <h2>XSLT Processor</h2>
+        <li>
+          <span class="description">XSLT Version:</span>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="system-property('xsl:version')"/>
+        </li>
+        <li>
+          <span class="description">Vendor:</span>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="system-property('xsl:vendor')"/>
+        </li>
+        <li>
+          <span class="description">Vendor URL:</span>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="system-property('xsl:vendor-url')"/>
+        </li>
+
+        <!--
+          - Add Xalan / Xerces information using custom Xalan extension
+          - (if it's present)
+          -->
+        <xsl:if test="function-available('xalan:checkEnvironment')">
+          <xsl:apply-templates select="xalan:checkEnvironment()"/>
+        </xsl:if>
       </body>
     </html>
   </xsl:template>
