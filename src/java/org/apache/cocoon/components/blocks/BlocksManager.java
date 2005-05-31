@@ -43,6 +43,7 @@ import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.xml.sax.SAXException;
 
 /**
@@ -212,11 +213,18 @@ public class BlocksManager
         } else {
             // Resolve the URI relative to the mount point
             uri = uri.substring(mountPoint.length());
+            getLogger().debug("Enter processing in block at " + mountPoint);
             try {
                 environment.setURI("", uri);
+                // It is important to set the current block each time
+                // a new block is entered, this is used for the block
+                // protocol
+                EnvironmentHelper.enterProcessor(block, block.getServiceManager(), environment);
                 return block.process(environment);
             } finally {
+                EnvironmentHelper.leaveProcessor();
                 environment.setURI(oldPrefix, oldURI);
+                getLogger().debug("Leaving processing in block at " + mountPoint);
             }
         }
     }
@@ -226,7 +234,17 @@ public class BlocksManager
         if (block == null) {
             return false;
         } else {
-            return block.process(environment);
+            getLogger().debug("Enter processing in block " + blockId);
+            try {
+                // It is important to set the current block each time
+                // a new block is entered, this is used for the block
+                // protocol
+                EnvironmentHelper.enterProcessor(block, block.getServiceManager(), environment);
+                return block.process(environment);
+            } finally {
+                EnvironmentHelper.leaveProcessor();
+                getLogger().debug("Leaving processing in block " + blockId);
+            }
         }
     }
 
