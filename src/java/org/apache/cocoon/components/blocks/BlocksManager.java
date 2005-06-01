@@ -219,7 +219,7 @@ public class BlocksManager
                 // It is important to set the current block each time
                 // a new block is entered, this is used for the block
                 // protocol
-                EnvironmentHelper.enterProcessor(block, block.getServiceManager(), environment);
+                EnvironmentHelper.enterProcessor(block, null, environment);
                 return block.process(environment);
             } finally {
                 EnvironmentHelper.leaveProcessor();
@@ -230,16 +230,32 @@ public class BlocksManager
     }
 
     public boolean process(String blockId, Environment environment) throws Exception {
+        return process(blockId, environment, false);
+    }
+
+    public boolean process(String blockId, Environment environment, boolean superCall)
+        throws Exception {
         BlockManager block = (BlockManager)this.blocks.get(blockId);
         if (block == null) {
             return false;
+        } else if (superCall) {
+            getLogger().debug("Enter processing in super block " + blockId);
+            try {
+                // A super block should be called in the context of
+                // the called block to get polymorphic calls resolved
+                // in the right way. Therefore no new current block is
+                // set.
+                return block.process(environment);
+            } finally {
+                getLogger().debug("Leaving processing in super block " + blockId);
+            }
         } else {
             getLogger().debug("Enter processing in block " + blockId);
             try {
                 // It is important to set the current block each time
                 // a new block is entered, this is used for the block
                 // protocol
-                EnvironmentHelper.enterProcessor(block, block.getServiceManager(), environment);
+                EnvironmentHelper.enterProcessor(block, null, environment);
                 return block.process(environment);
             } finally {
                 EnvironmentHelper.leaveProcessor();
