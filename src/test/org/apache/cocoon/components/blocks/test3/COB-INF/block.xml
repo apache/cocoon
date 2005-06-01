@@ -34,6 +34,9 @@
       <default>gazonk</default>
       <description>Another test property</description>
     </property>
+    <property name="baz">
+      <description>Still another test property</description>
+    </property>
   </properties>
-  <extends block="http://cocoon.apache.org/blocks/anyblock/1.0"/>
+  <extends block="http://cocoon.apache.org/blocks/anyblock/1.0"/>
 </block>
