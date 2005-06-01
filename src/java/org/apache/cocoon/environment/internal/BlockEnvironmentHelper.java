@@ -19,7 +19,7 @@ import java.net.URL;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.blocks.BlockManager;
+import org.apache.cocoon.components.blocks.Block;
 
 /**
  * Hack used for geting hold on the current block manager without
@@ -34,13 +34,13 @@ public class BlockEnvironmentHelper
         super(context);
     }
 
-    public static BlockManager getCurrentBlock() {
+    public static Block getCurrentBlock() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
             for (int i = stack.getOffset(); i >= 0; i--) {
                 final EnvironmentInfo info = (EnvironmentInfo)stack.get(i);
-                if (info.processor instanceof BlockManager) {
-                    return (BlockManager)info.processor;
+                if (info.processor instanceof Block) {
+                    return (Block)info.processor;
                 }
             }
         }

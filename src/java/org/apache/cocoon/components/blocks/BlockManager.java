@@ -52,11 +52,9 @@ import org.xml.sax.SAXException;
  */
 public class BlockManager
     extends AbstractLogEnabled
-    implements Configurable, Contextualizable, Disposable, Initializable, Processor, Serviceable { 
+    implements Block, Configurable, Contextualizable, Disposable, Initializable, Serviceable { 
 
     public static String ROLE = BlockManager.class.getName();
-    public static String NAME = BlockManager.class.getName() + "-name";
-    public static String SUPER = "super";
 
     private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
@@ -73,6 +71,8 @@ public class BlockManager
     private String superId;
     private Map connections = new HashMap();
     private Map properties = new HashMap();
+
+    // Life cycle
 
     public void service(ServiceManager manager) throws ServiceException {
         this.parentServiceManager = manager;
@@ -100,7 +100,7 @@ public class BlockManager
             String name = connection.getAttribute("name");
             String block = connection.getAttribute("block");
             if (BlockManager.SUPER.equals(name)) {
-                superId = block;
+                this.superId = block;
                 getLogger().debug("super: " + " block=" + block);
             } else {
                 this.connections.put(name, block);
@@ -147,6 +147,23 @@ public class BlockManager
         }
         this.sitemapPath = block.getChild("sitemap").getAttribute("src");
         getLogger().debug("sitemapPath=" + this.sitemapPath);
+
+        properties =
+            block.getChild("properties").getChildren("property");
+        for (int i = 0; i < properties.length; i++) {
+            Configuration property = properties[i];
+            String name = property.getAttribute("name");
+            String defaultVal = property.getChild("default").getValue(null);
+            getLogger().debug("listing property: " + " name=" + name + " default=" + defaultVal);
+            if (this.properties.get(name) == null && defaultVal != null) {
+                // add default properties for those not set. This will
+                // override values from the extended class, question
+                // is if that is what we intend.
+                this.properties.put(name, defaultVal);
+                getLogger().debug("property: " + " name=" + name + " default=" + defaultVal);
+            }
+        }
+
     }
 
     public void initialize() throws Exception {
@@ -226,38 +243,58 @@ public class BlockManager
         this.parentServiceManager = null;
     }
 
+    // Block methods
+
+    // The blocks manager should not be available within a block so I
+    // didn't want to make it part of the parent manager. But this is
+    // a little bit clumsy. Question is what components, if any, the
+    // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
         this.blocksManager = blocksManager;
     }
 
+    public String getProperty(String name) {
+        String value = (String)this.properties.get(name);
+        getLogger().debug("Accessing property=" + name + " value=" + value + " block=" + this.id);
+        if (value == null) {
+            // Ask the super block for the property
+            getLogger().debug("Try super property=" + name + " block=" + this.superId);
+            value = this.blocksManager.getProperty(this.superId, name);
+        }
+        return value;
+    }
+
+    // TODO: We should have a reflection friendly Map getProperties() also
+
+
     // The Processor methods
 
     public boolean process(Environment environment) throws Exception {
-        String blockName = (String)environment.getAttribute(BlockManager.NAME);
+        String blockName = (String)environment.getAttribute(Block.NAME);
 
         if (blockName != null) {
             // Request to other block.
             if (BlockManager.SUPER.equals(blockName)) {
                 // Explicit call to super block
-                if (superId == null) {
+                if (this.superId == null) {
                     throw new ProcessingException("block:super: with no super block");
                 }
                 // The block name should not be used in the recieving block.
-                environment.removeAttribute(BlockManager.NAME);
-                getLogger().debug("Resolving super block to " + superId);
-                return this.blocksManager.process(superId, environment, true);
+                environment.removeAttribute(Block.NAME);
+                getLogger().debug("Resolving super block to " + this.superId);
+                return this.blocksManager.process(this.superId, environment, true);
             } else {
                 // Call to named block
                 String blockId = (String)this.connections.get(blockName);
                 if (blockId != null) {
                     getLogger().debug("Resolving block: " + blockName + " to " + blockId);
                     // The block name should not be used in the recieving block.
-                    environment.removeAttribute(BlockManager.NAME);
+                    environment.removeAttribute(Block.NAME);
                     return this.blocksManager.process(blockId, environment);
-                } else if (superId != null) {
+                } else if (this.superId != null) {
                     // If there is a super block, the connection might
                     // be defined there instead.
-                    return this.blocksManager.process(superId, environment, true);
+                    return this.blocksManager.process(this.superId, environment, true);
                 } else {
                     throw new ProcessingException("Unknown block name " + blockName);
                 }
@@ -276,9 +313,9 @@ public class BlockManager
 
 //             if (result) {
 //                 return true;
-//             } else if (superId != null) {
+//             } else if (this.superId != null) {
 //                 // Wasn't defined in the current block try super block
-//                 return this.blocksManager.process(superId, environment, true);
+//                 return this.blocksManager.process(this.superId, environment, true);
 //             } else {
 //                 return false;
 //             }
