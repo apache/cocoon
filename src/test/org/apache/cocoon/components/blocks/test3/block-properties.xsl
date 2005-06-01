@@ -15,27 +15,16 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id$ -->
+<!-- $Id:$ -->
 
-<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <map:pipelines>
-    <map:pipeline>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-      <map:match pattern="test">
-        <map:generate src="test.xml"/>
-        <map:serialize/>
-      </map:match>
+  <xsl:param name="foo"/>
+  <xsl:param name="bar"/>
+  <xsl:param name="baz"/>
 
-      <map:match pattern="test2">
-        <map:generate src="block:./test"/>
-        <map:serialize/>
-      </map:match>
+  <xsl:template match="/">
+    <properties foo="{$foo}" bar="{$bar}" baz="{$baz}"/>
+  </xsl:template>
 
-      <map:match pattern="test3">
-        <map:generate src="block:/test"/>
-        <map:serialize/>
-      </map:match>
-
-    </map:pipeline>
-  </map:pipelines>
-</map:sitemap>
+</xsl:stylesheet>

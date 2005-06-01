@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id$ -->
+<!-- SVN $Id:$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -25,9 +25,7 @@
     </map:generators>
 
     <map:transformers default="xslt">
-      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer">
-        <xslt-processor-role>xalan</xslt-processor-role>
-      </map:transformer>
+      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
     </map:transformers>
 
     <map:serializers default="xml">
@@ -48,8 +46,8 @@
     <map:pipeline>
 
       <map:match pattern="test">
-        <map:generate type="file" src="test.xml"/>
-        <map:serialize type="xml"/>
+        <map:generate src="test.xml"/>
+        <map:serialize/>
       </map:match>
 
     </map:pipeline>

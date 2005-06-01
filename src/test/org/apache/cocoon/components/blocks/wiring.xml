@@ -37,6 +37,9 @@
     <connections>
       <connection name="super" block="test1id"/>
     </connections>
+    <properties>
+      <property name="baz" value="blah"/>
+    </properties>
   </block>
 
 </wiring>

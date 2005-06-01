@@ -85,4 +85,8 @@ public class BlocksManagerTestCase extends SitemapTestCase {
     public void testBlockExtend4() throws Exception {
         pipeTest("ext/test4", "test1/test.xml");
     }
+
+    public void testBlockProperty() throws Exception {
+        pipeTest("ext/prop", "test3/prop-expected.xml");
+    }
 }
