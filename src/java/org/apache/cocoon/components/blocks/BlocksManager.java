@@ -47,7 +47,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.xml.sax.SAXException;
 
 /**
- * @version SVN $Id$
+ * @version $Id:$
  */
 public class BlocksManager
     extends AbstractLogEnabled
@@ -226,6 +226,15 @@ public class BlocksManager
                 environment.setURI(oldPrefix, oldURI);
                 getLogger().debug("Leaving processing in block at " + mountPoint);
             }
+        }
+    }
+
+    public String getProperty(String blockId, String name) {
+        BlockManager block = (BlockManager)this.blocks.get(blockId);
+        if (block != null) {
+            return block.getProperty(name);
+        } else {
+            return null;
         }
     }
 

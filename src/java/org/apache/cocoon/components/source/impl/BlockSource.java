@@ -27,8 +27,7 @@ import java.util.Map;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.blocks.BlockManager;
-import org.apache.cocoon.components.blocks.BlocksManager;
+import org.apache.cocoon.components.blocks.Block;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
@@ -40,7 +39,7 @@ import org.apache.excalibur.source.impl.AbstractSource;
 
 /**
  * Implementation of a {@link Source} that gets its content by
- * invoking the BlockManager. 
+ * invoking the Block. 
  *
  * @version $Id$ */
 public final class BlockSource
@@ -91,7 +90,7 @@ public final class BlockSource
         }
 
         this.environment.setURI(info.prefix, info.uri);
-        this.environment.setAttribute(BlockManager.NAME, this.blockName);
+        this.environment.setAttribute(Block.NAME, this.blockName);
     }
 
     /**
@@ -103,7 +102,7 @@ public final class BlockSource
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.environment.setOutputStream(os);
 
-        BlockManager block = BlockEnvironmentHelper.getCurrentBlock();
+        Block block = BlockEnvironmentHelper.getCurrentBlock();
         if (block == null)
             throw new SourceNotFoundException("Must be used in a block context " + this.getURI());
 
@@ -134,7 +133,7 @@ public final class BlockSource
     public void recycle() {
     }
 
-    // Parse the blocks protocol.
+    // Parse the block protocol.
     private SitemapSourceInfo parseBlockURI(Environment env, String blockURI) 
         throws URISyntaxException {
 
