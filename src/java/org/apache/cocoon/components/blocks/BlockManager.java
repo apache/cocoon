@@ -56,6 +56,7 @@ public class BlockManager
 
     public static String ROLE = BlockManager.class.getName();
     public static String NAME = BlockManager.class.getName() + "-name";
+    public static String SUPER = "super";
 
     private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
@@ -69,6 +70,7 @@ public class BlockManager
     private String location;
     private String mountPath;
     private String sitemapPath;
+    private String superId;
     private Map connections = new HashMap();
     private Map properties = new HashMap();
 
@@ -95,22 +97,25 @@ public class BlockManager
             config.getChild("connections").getChildren("connection");
         for (int i = 0; i < connections.length; i++) {
             Configuration connection = connections[i];
-            this.connections.put(connection.getAttribute("name"),
-                                 connection.getAttribute("block"));
-            getLogger().debug("connection: " +
-                              " name=" + connection.getAttribute("name") +
-                              " block=" + connection.getAttribute("block"));
+            String name = connection.getAttribute("name");
+            String block = connection.getAttribute("block");
+            if (BlockManager.SUPER.equals(name)) {
+                superId = block;
+                getLogger().debug("super: " + " block=" + block);
+            } else {
+                this.connections.put(name, block);
+                getLogger().debug("connection: " + " name=" + name + " block=" + block);
+            }
         }
 
         Configuration[] properties =
             config.getChild("properties").getChildren("property");
         for (int i = 0; i < properties.length; i++) {
             Configuration property = properties[i];
-            this.properties.put(property.getAttribute("name"),
-                                 property.getAttribute("value"));
-            getLogger().debug("property: " +
-                              " name=" + property.getAttribute("name") +
-                              " value=" + property.getAttribute("value"));
+            String name = property.getAttribute("name");
+            String value = property.getAttribute("value");
+            this.properties.put(name, value);
+            getLogger().debug("property: " + " name=" + name + " value=" + value);
         }
 
         // Read the block.xml file
@@ -225,12 +230,6 @@ public class BlockManager
         this.blocksManager = blocksManager;
     }
 
-    // This is for being able to call EnvironmentHelper.enterProcessor
-    // in BlocksManager, don't know if it really is needed
-    public ServiceManager getServiceManager() {
-        return this.serviceManager;
-    }
-
     // The Processor methods
 
     public boolean process(Environment environment) throws Exception {
@@ -238,17 +237,51 @@ public class BlockManager
 
         if (blockName != null) {
             // Request to other block.
-            // The block name should not be used in the recieving block.
-            environment.removeAttribute(BlockManager.NAME);
-            String blockId = (String)this.connections.get(blockName);
-            if (blockId == null) {
-                throw new ProcessingException("Unknown block name " + blockName);
+            if (BlockManager.SUPER.equals(blockName)) {
+                // Explicit call to super block
+                if (superId == null) {
+                    throw new ProcessingException("block:super: with no super block");
+                }
+                // The block name should not be used in the recieving block.
+                environment.removeAttribute(BlockManager.NAME);
+                getLogger().debug("Resolving super block to " + superId);
+                return this.blocksManager.process(superId, environment, true);
+            } else {
+                // Call to named block
+                String blockId = (String)this.connections.get(blockName);
+                if (blockId != null) {
+                    getLogger().debug("Resolving block: " + blockName + " to " + blockId);
+                    // The block name should not be used in the recieving block.
+                    environment.removeAttribute(BlockManager.NAME);
+                    return this.blocksManager.process(blockId, environment);
+                } else if (superId != null) {
+                    // If there is a super block, the connection might
+                    // be defined there instead.
+                    return this.blocksManager.process(superId, environment, true);
+                } else {
+                    throw new ProcessingException("Unknown block name " + blockName);
+                }
             }
-            getLogger().debug("Resolving block: " + blockName + " to " + blockId);
-            return this.blocksManager.process(blockId, environment);
         } else {
             // Request to the own block
-            return this.processor.process(environment);
+            boolean result = this.processor.process(environment);
+
+            return result;
+
+            // Pipelines seem to throw an exception instead of
+            // returning false when the pattern is not found. For the
+            // moment an explicit call of the super block is called in
+            // the end of the sitemap. It might be better to be
+            // explicit about it anyway.
+
+//             if (result) {
+//                 return true;
+//             } else if (superId != null) {
+//                 // Wasn't defined in the current block try super block
+//                 return this.blocksManager.process(superId, environment, true);
+//             } else {
+//                 return false;
+//             }
         }
     }
 
