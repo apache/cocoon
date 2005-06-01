@@ -39,6 +39,10 @@
       <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
     </map:serializers>
 
+    <map:readers default="resource">
+      <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
+    </map:readers>
+
     <map:matchers default="wildcard">
       <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
     </map:matchers>
@@ -60,6 +64,10 @@
       <map:match pattern="test4">
         <map:generate type="file" src="block:super:/test"/>
         <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="**">
+        <map:read src="block:super:/{1}"/>
       </map:match>
 
     </map:pipeline>

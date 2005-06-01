@@ -83,6 +83,6 @@ public class BlocksManagerTestCase extends SitemapTestCase {
     }
 
     public void testBlockExtend4() throws Exception {
-        pipeTest("ext/test3", "test1/test.xml");
+        pipeTest("ext/test4", "test1/test.xml");
     }
 }
