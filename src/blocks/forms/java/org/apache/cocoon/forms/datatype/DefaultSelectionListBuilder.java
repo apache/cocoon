@@ -19,6 +19,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -27,6 +30,7 @@ import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -45,9 +49,14 @@ import java.util.Locale;
  *
  * @version $Id$
  */
-public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
+public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable, Contextualizable {
 
     private ServiceManager serviceManager;
+    private Context context;
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
@@ -57,18 +66,35 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
         SelectionList selectionList;
         String src = selectionListElement.getAttribute("src");
         if (src.length() > 0) {
-            boolean dynamic = DomHelper.getAttributeAsBoolean(selectionListElement, "dynamic", false);
-            if (!dynamic) {
-                selectionListElement = readSelectionList(src);
-                selectionList = buildStaticList(selectionListElement, datatype);
+            boolean dynamic = false;
+            boolean usePerRequestCache = false;
+            String cacheType = DomHelper.getAttribute(selectionListElement, "cache", null);
+
+            // Read @cache 
+            if ("request".equals(cacheType)) { // Dynamic SelectionList cached per request
+                dynamic = true;
+                usePerRequestCache = true;
+            } else if ("none".equals(cacheType)){ // Dynamic SelectionList non cached
+                dynamic = true;
+            } else if ("static".equals(cacheType)) {
+                // Static SelectionList (default values)
+            } else { // Checking for deprecated @dynamic
+                if (DomHelper.getAttribute(selectionListElement, "dynamic", null) != null) {
+                    Deprecation.logger.warn("'@dynamic' is deprecated in <fd:selection-list> and replaced by '@cache' at " + DomHelper.getLocation(selectionListElement));                    
+                }
+                dynamic = DomHelper.getAttributeAsBoolean(selectionListElement, "dynamic", false);
+            }
+            // Create SelectionList
+            if (dynamic) {
+                selectionList = new DynamicSelectionList(datatype, src, usePerRequestCache, serviceManager, context);
             } else {
-                selectionList = new DynamicSelectionList(datatype, src, serviceManager);
+                selectionListElement = readSelectionList(src);
+                selectionList = buildStaticList(selectionListElement, datatype);                
             }
         } else {
             // selection list is defined inline
             selectionList = buildStaticList(selectionListElement, datatype);
         }
-
         return selectionList;
     }
 

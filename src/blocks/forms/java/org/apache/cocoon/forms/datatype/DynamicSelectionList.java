@@ -18,22 +18,28 @@ package org.apache.cocoon.forms.datatype;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
+import java.rmi.server.UID;
+import java.util.Enumeration;
 import java.util.Locale;
 
 /**
@@ -48,10 +54,35 @@ import java.util.Locale;
  */
 public class DynamicSelectionList implements SelectionList {
     private String src;
+    private boolean usePerRequestCache;
     private Datatype datatype;
     private ServiceManager serviceManager;
+    private Context context;
 
+    /**
+     * @param datatype
+     * @param src
+     * @param usePerRequestCache 
+     * @param serviceManager
+     * @param context
+     */
+    public DynamicSelectionList(Datatype datatype, String src, boolean usePerRequestCache, ServiceManager serviceManager, Context context) {
+        this.datatype = datatype;
+        this.src = src;
+        this.serviceManager = serviceManager;
+        this.usePerRequestCache = usePerRequestCache;
+        this.context = context;
+    }
+
+    /**
+     * Creates a DynamicSelectionList without caching
+     * @param datatype - 
+     * @param src - 
+     * @param serviceManager -
+     */
     public DynamicSelectionList(Datatype datatype, String src, ServiceManager serviceManager) {
+        this.usePerRequestCache = false;
+        this.context = null;
         this.datatype = datatype;
         this.src = src;
         this.serviceManager = serviceManager;
@@ -71,8 +102,11 @@ public class DynamicSelectionList implements SelectionList {
         handler.setContentHandler(contentHandler);
         SourceUtil.toSAX(serviceManager, source, null, handler);
     }
-
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+    
+    /*
+     * This method generate SaxFragment directly from source.
+     */
+    private void generateSaxFragmentFromSrc(ContentHandler contentHandler, Locale locale) throws SAXException {
         SourceResolver sourceResolver = null;
         Source source = null;
         try {
@@ -85,10 +119,43 @@ public class DynamicSelectionList implements SelectionList {
             throw new SAXException("Error while generating selection list: " + e.getMessage(), e);
         } finally {
             if (sourceResolver != null) {
-                if (source != null)
+                if (source != null) {
                     try { sourceResolver.release(source); } catch (Exception e) {}
+                }
                 serviceManager.release(sourceResolver);
             }
+        }
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+
+        if (usePerRequestCache) {
+            // Search the cacheID in request attributes
+            Request request = ContextHelper.getRequest(this.context);
+            Enumeration enumeration = request.getAttributeNames();
+            boolean cacheFound = false;
+            String name = null;
+            while (enumeration.hasMoreElements()) {
+                name = (String)enumeration.nextElement();
+                if (name.startsWith(src)) {
+                    cacheFound = true;
+                    break;
+                }
+            }
+            SaxBuffer saxBuffer;
+            if (cacheFound) {
+                saxBuffer = (SaxBuffer)request.getAttribute(name);
+            } else {
+                // Generate the usePerRequestCache and store in a request attribute.
+                saxBuffer = new SaxBuffer();
+                generateSaxFragmentFromSrc(saxBuffer, locale);
+                String cacheID = (new UID()).toString();
+                request.setAttribute(src + cacheID, saxBuffer);
+            }
+            // Output the stored saxBuffer to the contentHandler
+            saxBuffer.toSAX(contentHandler);
+        } else { // We don't use usePerRequestCache => re-read from the source.
+            generateSaxFragmentFromSrc(contentHandler, locale);
         }
     }
 
