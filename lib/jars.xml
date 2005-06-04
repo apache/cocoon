@@ -512,7 +512,7 @@
     of platforms. </description>
     <used-by>DELI (deli block)</used-by>
     <lib>optional/icu4j-2.8.jar</lib>
-    <homepage>http://oss.software.ibm.com/icu4j/</homepage>
+    <homepage>http://www-306.ibm.com/software/globalization/icu/</homepage>
   </file>
 
   <file>
@@ -520,7 +520,7 @@
     <description>Java Caching System</description>
     <used-by>JCS Store</used-by>
     <lib>core/jcs-1.2.5-dev-20050313.jar</lib>
-    <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
+    <homepage>http://jakarta.apache.org/jcs/</homepage>
   </file>
 
   <file>
@@ -544,7 +544,7 @@
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
     <lib>optional/nekohtml-0.9.4.jar</lib>
-    <homepage>http://www.apache.org/~andyc/neko/</homepage>
+    <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
   </file>
 
   <file>
@@ -552,7 +552,7 @@
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>Forms block</used-by>
     <lib>optional/nekodtd-0.1.11.jar</lib>
-    <homepage>http://www.apache.org/~andyc/neko/</homepage>
+    <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
   </file>
   
   <file>
@@ -563,7 +563,7 @@
     </description>
     <used-by>Forms block</used-by>
     <lib>optional/daisy-htmlcleaner-1.1.jar</lib>
-    <homepage>http://daisy.cocoondev.org/</homepage>
+    <homepage>http://cocoondev.org/daisy/</homepage>
   </file>  
 
   <file>
@@ -573,7 +573,7 @@
     </description>
     <used-by>Forms block - HTMLCleaner</used-by>
     <lib>optional/daisy-util-1.1.jar</lib>
-    <homepage>http://daisy.cocoondev.org/</homepage>
+    <homepage>http://cocoondev.org/daisy/</homepage>
   </file>   
   
   <file>
@@ -584,7 +584,7 @@
     </description>
     <used-by>Lucene block</used-by>
     <lib>optional/lucene-1.4.3.jar</lib>
-    <homepage>http://jakarta.apache.org/lucene/</homepage>
+    <homepage>http://lucene.apache.org/</homepage>
   </file>
 
   <file>
@@ -695,7 +695,7 @@
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
     <lib>core/jdtcore-3.0.2.jar</lib>
-    <homepage>http://www.eclipse.org/jdt</homepage>
+    <homepage>http://www.eclipse.org/jdt/</homepage>
   </file>
 
   <file>
@@ -703,7 +703,7 @@
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
     <lib>core/rhino1.5r4-continuations-20040629T1232.jar</lib>
-    <homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
+    <homepage>http://svn.cocoondev.org/repos/rhino+cont/</homepage>
   </file>
 
   <file>
@@ -741,7 +741,7 @@
     </description>
     <used-by>Chaperon block</used-by>
     <lib>optional/chaperon-20040205.jar</lib>
-    <homepage>http://chaperon.sourceforge.net</homepage>
+    <homepage>http://chaperon.sourceforge.net/</homepage>
   </file>
 
   <file>
@@ -851,7 +851,7 @@
     </description>
     <used-by>Axis block</used-by>
     <lib>optional/wsdl4j-1.4.jar</lib>
-    <homepage>http://www-124.ibm.com/developerworks/projects/wsdl4j/</homepage>
+    <homepage>http://sourceforge.net/projects/wsdl4j</homepage>
   </file>
 
   <file>
@@ -919,7 +919,7 @@
     </description>
     <used-by>Cocoon Forms block</used-by>
     <lib>optional/xreporter-expression-20040701.jar</lib>
-    <homepage>http://xreporter.cocoondev.org</homepage>
+    <homepage>http://cocoondev.org/xreporter/</homepage>
   </file>
 
   <file>
@@ -927,7 +927,7 @@
     <description>Perl5 compatible regular expression engine</description>
     <used-by>Cocoon Forms block</used-by>
     <lib>optional/jakarta-oro-2.0.8.jar</lib>
-    <homepage>http://jakarta.apache.org/oro</homepage>
+    <homepage>http://jakarta.apache.org/oro/</homepage>
   </file>
 
   <file>
@@ -1039,7 +1039,7 @@
     </description>
     <used-by>JMS</used-by>
     <lib>optional/geronimo-spec-jms-DEV-20031120.jar</lib>
-    <homepage>http://incubator.apache.org/projects/geronimo/index.html</homepage>
+    <homepage>http://geronimo.apache.org/</homepage>
   </file>
   <!--
   <file>
@@ -1050,6 +1050,7 @@
     <lib>jms/lib/exolabcore-0.3.6.jar</lib>
     <homepage>http://openjms.sf.net</homepage>
   </file>
+
   <file>
     <title>OpenJMS</title>
     <description>OpenJMS client libraries. OpenJMS is a OpenSource JMS, Java Messaging
@@ -1058,6 +1059,7 @@
     <lib>jms/lib/openjms-client-0.7.6-rc2.jar</lib>
     <homepage>http://openjms.sf.net</homepage>
   </file>
+
   <file>
     <title>Sun JMS API</title>
     <description>Sun's Java Messaging Service APIs. From the website:
@@ -1074,6 +1076,7 @@
     <lib>jms/lib/jms-1.0.2a.jar</lib>
     <homepage>http://java.sun.com/jms</homepage>
   </file>
+
   <file>
     <title>Sun JNDI</title>
     <description>Sun's Java Naming and Directory Interface. From the website:
@@ -1102,6 +1105,7 @@
     <lib>optional/portlet-api-1.0.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
+
   <file>
     <title>JSR-168 Container Implementation</title>
     <description>
@@ -1133,7 +1137,7 @@
     </description>
     <used-by>Faces block</used-by>
     <lib>optional/myfaces-20041005m.jar</lib>
-    <homepage>http://www.myfaces.org/</homepage>
+    <homepage>http://myfaces.apache.org/</homepage>
   </file>
 
   <file>
@@ -1144,7 +1148,7 @@
     </description>
     <used-by>Faces block</used-by>
     <lib>optional/myfaces-jsf-api-20041005.jar</lib>
-    <homepage>http://www.myfaces.org/</homepage>
+    <homepage>http://myfaces.apache.org/</homepage>
   </file>
 
   <file>
