@@ -36,7 +36,7 @@
       <xsl:for-each select="src-dirs/item | mock-dirs/item">
         <!-- alphabetical sorting, complete path -->
         <xsl:sort select="."/>
-        <classpathentry excluding="htmlunit/" kind="src" path="{.}"/>
+        <classpathentry excluding="**/.svn/**|htmlunit/" kind="src" path="{.}"/>
       </xsl:for-each>
 
       <!-- 2. libraries -->
