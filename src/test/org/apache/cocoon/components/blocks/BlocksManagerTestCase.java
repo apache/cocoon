@@ -89,4 +89,8 @@ public class BlocksManagerTestCase extends SitemapTestCase {
     public void testBlockProperty() throws Exception {
         pipeTest("ext/prop", "test3/prop-expected.xml");
     }
+
+    public void testAbsolutize() throws Exception {
+        pipeTest("sub/abs", "test1/sub/path-expected.xml");
+    }
 }

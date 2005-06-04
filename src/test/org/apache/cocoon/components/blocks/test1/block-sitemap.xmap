@@ -28,6 +28,10 @@
       <component-instance class="org.apache.cocoon.components.source.impl.BlockSourceFactory" name="block"/>
     </source-factories>
 
+    <input-modules>
+      <component-instance name="block-path"  class="org.apache.cocoon.components.modules.input.BlockPathModule"/>
+    </input-modules>
+
     <map:generators default="file">
       <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
     </map:generators>
