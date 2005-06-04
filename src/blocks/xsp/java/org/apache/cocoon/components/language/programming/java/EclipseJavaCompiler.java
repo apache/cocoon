@@ -375,7 +375,6 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                                 ClassFile classFile = classFiles[i];
                                 char[][] compoundName = classFile.getCompoundName();
                                 StringBuffer className = new StringBuffer();
-                                String sep = "";
                                 for (int j = 0;  j < compoundName.length; j++) {
                                     if (j > 0) {
                                         className.append(".");
