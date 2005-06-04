@@ -74,7 +74,7 @@ public final class BlocksSource
             info = parseBlocksURI(env, uri);
         } catch (URISyntaxException e) {
             throw new MalformedURLException("Malformed URI in blocks source " +
-					    e.getMessage());
+                                            e.getMessage());
         }
         setScheme(info.protocol);
         setSystemId(info.systemId);
@@ -140,7 +140,7 @@ public final class BlocksSource
 
         if (!uri.isAbsolute() && uri.isOpaque() && uri.getAuthority() == null) {
             throw new URISyntaxException(sitemapURI,
-					 "The blocks protocol must be an absolute, hierachial URI whithout authority part");
+                                         "The blocks protocol must be an absolute, hierachial URI whithout authority part");
         }
 
         SitemapSourceInfo info = new SitemapSourceInfo();
