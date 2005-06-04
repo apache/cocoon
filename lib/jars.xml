@@ -219,7 +219,7 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/avalon-framework-api-4.1.5.jar</lib>
-    <homepage>http://avalon.apache.org/framework/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
   <file>
@@ -230,7 +230,7 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/avalon-framework-impl-4.1.5.jar</lib>
-    <homepage>http://avalon.apache.org/framework/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
   <!--+
@@ -305,7 +305,7 @@
     </description>
     <used-by>Cocoon logging</used-by>
     <lib>core/logkit-1.2.2.jar</lib>
-    <homepage>http://avalon.apache.org/logkit/</homepage>
+    <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
   <file>
@@ -817,7 +817,7 @@
 
   <file>
     <title>Jakarta Commons Codec</title>
-    <description>implementations of common encoders and decoders</description>
+    <description>Implementations of common encoders and decoders</description>
     <used-by>WebDAV block</used-by>
     <lib>optional/commons-codec-1.3.jar</lib>
     <homepage>http://jakarta.apache.org/commons/codec/</homepage>
