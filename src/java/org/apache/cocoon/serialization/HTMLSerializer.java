@@ -33,6 +33,7 @@ import java.io.OutputStream;
  * @cocoon.sitemap.component.logger sitemap.serializer.html
  * 
  * @cocoon.sitemap.component.pooling.max  32
+ * 
  * @cocoon.sitemap.component.configuration
  * <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
  * <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
@@ -49,7 +50,7 @@ public class HTMLSerializer extends AbstractTextSerializer {
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
-        super.configure( conf );
+        super.configure(conf);
         this.format.put(OutputKeys.METHOD,"html");
     }
 
@@ -67,8 +68,8 @@ public class HTMLSerializer extends AbstractTextSerializer {
             this.setContentHandler(handler);
             this.setLexicalHandler(handler);
         } catch (Exception e) {
-            throw new CascadingIOException(e.toString(), e);
+            final String message = "Cannot set HTMLSerializer outputstream"; 
+            throw new CascadingIOException(message, e);
         }
     }
-
 }
