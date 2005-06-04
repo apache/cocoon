@@ -447,6 +447,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+      Updated ant to 1.6.5.
+     </action>
     <action dev="SW" type="add">
       CForms block: add a new <code>&lt;fd:true-param-value&gt;<code> configuration to
       booleanfield definitions, to allow specifying a value different from "<code>true</code>"
