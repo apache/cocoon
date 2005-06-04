@@ -50,7 +50,7 @@ public class HTMLSerializer extends AbstractTextSerializer {
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
-        super.configure( conf );
+        super.configure(conf);
         this.format.put(OutputKeys.METHOD,"html");
     }
 
@@ -68,8 +68,8 @@ public class HTMLSerializer extends AbstractTextSerializer {
             this.setContentHandler(handler);
             this.setLexicalHandler(handler);
         } catch (Exception e) {
-            throw new CascadingIOException(e.toString(), e);
+            final String message = "Cannot set HTMLSerializer outputstream"; 
+            throw new CascadingIOException(message, e);
         }
     }
-
 }
