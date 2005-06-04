@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.blocks.Block;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -34,7 +33,6 @@ import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.impl.AbstractSource;
 
 /**
@@ -54,6 +52,9 @@ public final class BlockSource
     /** The name of the called block */
     private String blockName;
 
+    /** The current block */
+    private final Block block;
+
     /**
      * Construct a new object
      */
@@ -68,6 +69,10 @@ public final class BlockSource
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
         }
         this.manager = manager;
+
+        this.block = BlockEnvironmentHelper.getCurrentBlock();
+        if (this.block == null)
+            throw new MalformedURLException("Must be used in a block context " + this.getURI());
 
         SitemapSourceInfo info = null;
         try {
@@ -102,12 +107,8 @@ public final class BlockSource
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.environment.setOutputStream(os);
 
-        Block block = BlockEnvironmentHelper.getCurrentBlock();
-        if (block == null)
-            throw new SourceNotFoundException("Must be used in a block context " + this.getURI());
-
         try {
-            block.process(this.environment);
+            this.block.process(this.environment);
             
             return new ByteArrayInputStream(os.toByteArray());
 
@@ -149,30 +150,19 @@ public final class BlockSource
                                          "Only absolute URIs are allowed for the block protocol.");
         }
         info.protocol = uri.getScheme();
-        
-        if (uri.isOpaque()) {
-            // Sub protocol or relative self reference
-            uri = new URI(uri.getSchemeSpecificPart());
-            if (uri.isAbsolute()) {
-                // Sub protocol refering to other block, e.g. block:foo:/bar
-                if (uri.isOpaque()) {
-                    throw new URISyntaxException(blockURI,
-                                                 "The protocol must have the form block:foo:/bar");
-                }
-                this.blockName = uri.getScheme();
-                info.uri = uri.getPath();
-            } else {
-                // self reference relative to the current sitemap, e.g. block:./foo
-                this.blockName = null;
-                URI base = new URI(null, null, env.getURIPrefix(), null);
-                info.uri = base.resolve(uri).toString();
-            }
-        } else {
-            // reference to the base sitemap of the own block, block:/foo
-            this.blockName = null;
-            info.uri = uri.getPath();
-        }
 
+        String baseURI = env.getURIPrefix();
+        if (baseURI.length() == 0 || !baseURI.startsWith("/"))
+            baseURI = "/" + baseURI;
+
+        uri = this.block.resolveURI(new URI(uri.getSchemeSpecificPart()),
+                                    new URI(null, null, baseURI, null));
+        
+        this.blockName = uri.getScheme();
+        info.uri = uri.getPath();
+        // Sub sitemap URI parsing doesn't like URIs starting with "/"
+        if (info.uri.length() != 0 && info.uri.startsWith("/"))
+            info.uri = info.uri.substring(1);
         // All URIs, also relative are resolved and processed from the block manager
         info.processFromRoot = true;
         info.prefix = "";
@@ -181,9 +171,10 @@ public final class BlockSource
         info.view = SitemapSourceInfo.getView(info.queryString, env);
         
         // FIXME: This will not be a system global id, as the blockName is block local.
-        String ssp = (new URI(this.blockName, null, info.requestURI, info.queryString, null)).toString();
+        String ssp = (new URI(this.blockName, null, uri.getPath(), info.queryString, null)).toString();
         info.systemId = (new URI(info.protocol, ssp, null)).toString();
         
         return info;
     }
 }
+

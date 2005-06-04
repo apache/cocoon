@@ -16,6 +16,8 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -236,6 +238,18 @@ public class BlocksManager
         } else {
             return null;
         }
+    }
+
+    public URI absolutizeURI(URI uri) throws URISyntaxException {
+        String mountPath =
+            ((Configuration)this.blockConfs.get(uri.getScheme())).getChild("mount").getAttribute("path", null);
+        if (mountPath == null)
+            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
+        if (mountPath.endsWith("/"))
+            mountPath = mountPath.substring(0, mountPath.length() - 1);
+        String absoluteURI = mountPath + uri.getSchemeSpecificPart();
+        getLogger().debug("Resolving " + uri.toString() + " to " + absoluteURI);
+        return new URI(absoluteURI);
     }
 
     public boolean process(String blockId, Environment environment) throws Exception {

@@ -16,6 +16,8 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -253,6 +255,9 @@ public class BlockManager
         this.blocksManager = blocksManager;
     }
 
+    /**
+     * Get a block property
+     */
     public String getProperty(String name) {
         String value = (String)this.properties.get(name);
         getLogger().debug("Accessing property=" + name + " value=" + value + " block=" + this.id);
@@ -266,6 +271,52 @@ public class BlockManager
 
     // TODO: We should have a reflection friendly Map getProperties() also
 
+    /**
+     * Takes the scheme specific part of a block URI (the scheme is
+     * the responsibilty of the BlockSource) and resolve it with
+     * respect to the blocks mount point.
+     */
+    public URI absolutizeURI(URI uriToResolve, URI base) throws URISyntaxException {
+        URI uri = resolveURI(uriToResolve, base);
+        String blockName = uri.getScheme();
+        String blockId = null;
+        if (blockName == null)
+            // this block
+            blockId = this.id;
+        else
+            // another block
+            blockId = (String)this.connections.get(blockName);
+        if (blockId == null)
+            throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
+        // The block id for identificaition
+        uri = new URI(blockId, uri.getSchemeSpecificPart(), null);
+        return this.blocksManager.absolutizeURI(uri);
+    }
+
+    /**
+     * Parses and resolves the scheme specific part of a block URI
+     * with respect to the base URI of the current sitemap. The scheme
+     * specific part of the block URI has the form
+     * <code>foo:/bar</code> when refering to another block, in this
+     * case only an absolute path is allowed. For reference to the own
+     * block, both absolute <code>/bar</code> and relative
+     * <code>./foo</code> paths are allowed.
+     */
+    public URI resolveURI(URI uri, URI base) throws URISyntaxException {
+        getLogger().debug("BlockManager: resolving " + uri.toString() + " with scheme " +
+                          uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
+        if (uri.getPath() != null && uri.getPath().length() >= 2 &&
+            uri.getPath().startsWith("./")) {
+            // self reference relative to the current sitemap, e.g. ./foo
+            if (uri.isAbsolute())
+                throw new URISyntaxException(uri.toString(), "When the protocol refers to other blocks the path must be absolute");
+            URI resolvedURI = base.resolve(uri);
+            getLogger().debug("BlockManager: resolving " + uri.toString() +
+                              " to " + resolvedURI.toString() + " with base URI " + base.toString());
+            uri = resolvedURI;
+        }
+        return uri;
+    }
 
     // The Processor methods
 
