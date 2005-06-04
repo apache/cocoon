@@ -197,7 +197,7 @@
   <changes>
   <release version="@version@" date="@date@">
      <action dev="SW" type="add">
-       CForms block: add a new <code>&lt;fd:true-param-value&gt;<code> configuration to
+       CForms block: add a new <code>&lt;fd:true-param-value&gt;</code> configuration to
        booleanfield definitions, to allow specifying a value different from "<code>true</code>"
        for the checkbox.
      </action>
@@ -218,7 +218,14 @@
       are not Serializable.
     </action>
     <action dev="AG" type="update">
-      Cforms block: Improved dynamic selection list performance inside repeaters.
+      Cforms block: Caching selection list for best performance inside repeaters.
+      Deprecate <code>@dynamic</code> in <code>&lt;fd:selection-list&gt;</code>
+      in favor of <code>@cache</code>. Posible <code>@cache</code> values are:
+      <ul>
+        <li><code>static</code> => equivalent to old <code>@dynamic="false"</code></li>
+        <li><code>none</code> => equivalent to old <code>@dynamic="true"</code></li>
+        <li><code>request</code> => is new, similar to <code>cache="none"</code>, but caching the selection list per request. Useful to improve performance inside repeaters.</li>
+      </ul>
     </action>
     <action dev="AG" type="update">
       Updated ant to 1.6.4, batik to 1.6, db-ojb to 1.0.3.
