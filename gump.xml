@@ -1343,6 +1343,28 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-spring-app" status="unstable" dir="src/blocks/spring-app/trunk">
+    <package>org.apache.cocoon</package>
+
+    <description>A demo for Spring and Cocoon</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="spring-app"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <library name="spring"/>
+
+    <jar name="blocks/spring-app.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -1467,4 +1489,8 @@
     <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
   </project>
 
+  <project name="spring">
+    <package>org.springframework</package>
+    <jar name="lib/optional/spring-1.1.5.jar"/>
+  </project>
 </module>
