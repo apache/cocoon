@@ -328,7 +328,6 @@
                   <include name="**/*.gif"/>
                   <include name="**/*.jpg"/>
                 </fileset>
-                <fileset dir="@{{dir}}/conf" includes="*.xsamples"/>
               </copy>
               <!-- copy sample classes -->
               <copy todir="${{build.webapp.classes}}" filtering="off">
