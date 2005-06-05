@@ -315,8 +315,17 @@
             <available file="@{{dir}}/samples/sitemap.xmap"/>
             <then>
               <copy filtering="on" todir="${{build.webapp}}/samples/blocks/@{{name}}">
-                <fileset dir="@{{dir}}/samples"/>
+                <fileset dir="@{{dir}}/samples">
+                  <exclude name="**/*.gif"/>
+                  <exclude name="**/*.jpg"/>
+                </fileset>
                 <fileset dir="@{{dir}}/conf" includes="*.xsamples"/>
+              </copy>
+              <copy filtering="off" todir="${{build.webapp}}/samples/blocks/@{{name}}">
+                <fileset dir="@{{dir}}/samples">
+                  <include name="**/*.gif"/>
+                  <include name="**/*.jpg"/>
+                </fileset>
               </copy>
               <!-- copy sample classes -->
               <copy todir="${{build.webapp.classes}}" filtering="off">
