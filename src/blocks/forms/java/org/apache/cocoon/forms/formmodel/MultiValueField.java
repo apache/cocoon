@@ -117,11 +117,12 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         if (!getCombinedState().isValidatingValues())
             return true;
 
-        if (values != null)
+        if (values != null) {
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
-        else
+        }
+        else {
             validationError = new ValidationError(new I18nMessage("multivaluefield.conversionfailed", Constants.I18N_CATALOGUE));
-
+        }
         return validationError == null ? super.validate() : false;
     }
 

@@ -195,11 +195,9 @@
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:set var="validationError" value="${widget.getValidationError()}"/>
       <jx:if test="${cformsHelper.isValidationError(validationError)}">
-        <fi:validation-error>
           <jx:set var="cformsDummy" value="${cformsHelper.generateValidationError(validationError)}"/>
             <jx:evalBody/>
           <jx:set var="cformsDummy" value="${cformsHelper.flushRoot(validationError)}"/>
-        </fi:validation-error>
       </jx:if>
     </jx:macro>
 

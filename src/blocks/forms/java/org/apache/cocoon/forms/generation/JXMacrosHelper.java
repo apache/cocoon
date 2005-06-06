@@ -122,19 +122,17 @@ public class JXMacrosHelper {
 
         if (result != null) {
             return result;
-        } else {
-            throw new IllegalArgumentException("Widget '" + currentWidget +
-                                               "' has no child named '" + path + "'");
         }
+        throw new IllegalArgumentException("Widget '" + currentWidget +
+                                           "' has no child named '" + path + "'");
     }
 
     public Repeater getRepeater(Widget currentWidget, String id) {
         Widget child = getWidget(currentWidget, id);
         if (child instanceof Repeater) {
             return (Repeater)child;
-        } else {
-            throw new IllegalArgumentException("Widget '" + child + "' is not a repeater");
         }
+        throw new IllegalArgumentException("Widget '" + child + "' is not a repeater");
     }
 
     /**
@@ -202,6 +200,21 @@ public class JXMacrosHelper {
         error.generateSaxFragment(pipe);
         pipe.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
     }
+    
+    /**
+     * Flush the validation error that has been stored.
+     *
+     * @param validation error that is terminated
+     * @throws SAXException
+     */
+    public void flushRoot(ValidationError error) throws SAXException {
+        Object stackObj = stack.pop();
+        if (stackObj != error) {
+            throw new IllegalStateException("Flushing on wrong validation error (expected " + stackObj +
+                                            ", got " + error + ")");
+        }
+        ((RootBufferingPipe) stack.pop()).flushRoot();
+    }    
 
     public boolean isValidationError(Object object) {
         return object instanceof ValidationError;
@@ -222,9 +235,8 @@ public class JXMacrosHelper {
 
         if (result == null) {
             throw new IllegalArgumentException("No class '" + id + "' has been defined.");
-        } else {
-            return result;
-        }
+        } 
+        return result;
     }
 
     public boolean isSelectedCase(Widget unionWidget, String caseValue) {
@@ -255,7 +267,7 @@ public class JXMacrosHelper {
 
     /**
      * A SAX pipe that buffers the <code>endElement()</code> event of the root element.
-     * This is needed by the generator version of the Woody transformer (see woody-jxmacros.xml).
+     * This is needed by the generator version of the FormsTransformer (see jx-macros.xml).
      *
      * @version $Id$
      */

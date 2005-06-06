@@ -159,9 +159,8 @@ public abstract class AbstractWidget implements Widget {
     public WidgetState getCombinedState() {
         if (this.parent == null) {
             return this.state;
-        } else {
-            return WidgetState.strictest(this.state, this.parent.getCombinedState());
-        }
+        } 
+        return WidgetState.strictest(this.state, this.parent.getCombinedState());
     }
 
     public String getRequestParameterName() {
@@ -276,13 +275,11 @@ public abstract class AbstractWidget implements Widget {
     public boolean removeValidator(WidgetValidator validator) {
         if (this.validators != null) {
             return this.validators.remove(validator);
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean validate() {
-
         // Consider widget valid if it is not validating values.
         if (!getCombinedState().isValidatingValues()) {
             return true;
@@ -292,24 +289,25 @@ public abstract class AbstractWidget implements Widget {
         if (!getDefinition().validate(this)) {
             // Failed
             return false;
-        } else {
-            // Definition successful, test local validators
-            if (this.validators == null) {
-                // No local validators
-                return true;
-            } else {
-                // Iterate on local validators
-                Iterator iter = this.validators.iterator();
-                while(iter.hasNext()) {
-                    WidgetValidator validator = (WidgetValidator)iter.next();
-                    if (!validator.validate(this)) {
-                        return false;
-                    }
-                }
-                // All local iterators successful
-                return true;
+        } 
+        // Definition successful, test local validators
+        if (this.validators == null) {
+            // No local validators
+            return true;
+        }
+        
+        // Iterate on local validators
+        Iterator iter = this.validators.iterator();
+        while(iter.hasNext()) {
+            WidgetValidator validator = (WidgetValidator)iter.next();
+            if (!validator.validate(this)) {
+                return false;
             }
         }
+        
+        // All local iterators successful
+        return true;
+
     }
 
     /**

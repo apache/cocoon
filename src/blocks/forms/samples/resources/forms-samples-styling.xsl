@@ -22,9 +22,9 @@
       | want advanced styling of widgets, change it here!
       | See xsl:include as composition and xsl:import as extension/inheritance.
       +-->
-  <xsl:include href="forms-page-styling.xsl"/>
-  <xsl:include href="forms-advanced-field-styling.xsl"/>
-
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-page-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/>
+  
   <xsl:template match="head">
     <head>
       <xsl:apply-templates/>

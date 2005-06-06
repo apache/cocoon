@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.apache.cocoon.forms.formmodel;
+
 import java.util.Iterator;
 
 /**

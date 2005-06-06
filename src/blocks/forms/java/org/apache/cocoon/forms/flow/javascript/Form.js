@@ -170,6 +170,14 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
     FOM_Cocoon.suicide();
 }
 
+Form.prototype.setValidationError = function(error) {
+    this.form.setValidationError(error);
+}
+
+Form.prototype.getValidationError = function() {
+    return this.form.getValidationError();
+}
+
 Form.prototype.createBinding = function(bindingURI) {
     var bindingManager = null;
     var source = null;
