@@ -112,10 +112,9 @@ public class WidgetDefinitionList {
                         String location = containerDefinition.getLocation();
                         if (parent instanceof FormDefinition) {
                             throw new Exception("Container: Non-terminating recursion detected in form definition (" + location + ")");
-                        } else {
-                            throw new Exception("Container: Non-terminating recursion detected in widget definition: "
-                                + parent.getId() + " (" + location + ")");
-                        }
+                        } 
+                        throw new Exception("Container: Non-terminating recursion detected in widget definition: "
+                            + parent.getId() + " (" + location + ")");
                     }
                 }
             }

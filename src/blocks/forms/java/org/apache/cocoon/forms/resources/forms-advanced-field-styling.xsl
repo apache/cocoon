@@ -25,9 +25,9 @@
       | also need additional JS files) are separated out of this file.
       +-->
        
-  <xsl:import href="forms-field-styling.xsl"/>
-  <xsl:include href="forms-calendar-styling.xsl"/>
-  <xsl:include href="forms-htmlarea-styling.xsl"/>
+  <xsl:import href="resource://org/apache/cocoon/forms/resources/forms-field-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-calendar-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-htmlarea-styling.xsl"/>
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 

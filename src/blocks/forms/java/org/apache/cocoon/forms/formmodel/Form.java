@@ -28,6 +28,8 @@ import org.apache.cocoon.forms.event.ProcessingPhaseEvent;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.commons.collections.list.CursorableLinkedList;
 import org.apache.commons.lang.BooleanUtils;
 
@@ -39,7 +41,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class Form extends AbstractContainerWidget {
+public class Form extends AbstractContainerWidget implements ValidationErrorAware {
 
     private final FormDefinition definition;
 
@@ -317,7 +319,24 @@ public class Form extends AbstractContainerWidget {
         // let all individual widgets read their value from the request object
         super.readFromRequest(formContext);
     }
+    
+    /**
+     * Set a validation error on this field. This allows the form to be externally marked as invalid by
+     * application logic.
+     *
+     * @param error the validation error
+     */
+    public ValidationError getValidationError() {
+        return this.validationError;
+    }
 
+    /**
+     * set a validation error
+     */
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
+    }
+    
     /**
      * Performs validation phase of form processing.
      */
@@ -342,7 +361,7 @@ public class Form extends AbstractContainerWidget {
             return this.endProcessing.booleanValue();
         }
 
-        return this.isValid;
+        return this.isValid && this.validationError == null;
     }
 
     private static final String FORM_EL = "form";

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -33,6 +34,11 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * List of contained widgets.
      */
     protected WidgetList widgets;
+    
+    /**
+     * validation errors on container widgets
+     */
+    protected ValidationError validationError;    
 
     /**
      * Constructs AbstractContainerWidget
@@ -123,5 +129,6 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
         if (getCombinedState().isDisplayingValues()) {
             widgets.generateSaxFragment(contentHandler, locale);
         }
-    }
+    }    
+    
 }

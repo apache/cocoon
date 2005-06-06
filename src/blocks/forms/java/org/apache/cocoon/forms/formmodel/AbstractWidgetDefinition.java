@@ -131,9 +131,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public Object getAttribute(String name) {
         if (this.attributes != null) {
             return this.attributes.get(name);
-        } else {
-            return null;
         }
+        return null;
     }
 
     protected void addCreateListener(CreateListener listener) {
@@ -214,17 +213,16 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             // No validators
             return true;
 
-        } else {
-            Iterator iter = this.validators.iterator();
-            while(iter.hasNext()) {
-                WidgetValidator validator = (WidgetValidator)iter.next();
-                if (! validator.validate(widget)) {
-                    // Stop at the first validator that fails
-                    return false;
-                }
+        } 
+        Iterator iter = this.validators.iterator();
+        while(iter.hasNext()) {
+            WidgetValidator validator = (WidgetValidator)iter.next();
+            if (! validator.validate(widget)) {
+                // Stop at the first validator that fails
+                return false;
             }
-            // All validators were sucessful
-            return true;
         }
+        // All validators were sucessful
+        return true;
     }
 }

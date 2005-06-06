@@ -23,6 +23,8 @@ import java.util.Locale;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
@@ -41,11 +43,11 @@ import org.xml.sax.SAXException;
  * 
  * @version $Id$
  */
-public class Repeater extends AbstractWidget 
-//implements ContainerWidget 
+public class Repeater extends AbstractWidget implements ValidationErrorAware //, ContainerWidget 
 {
     private final RepeaterDefinition definition;
     private final List rows = new ArrayList();
+    protected ValidationError validationError;
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         super(repeaterDefinition);
@@ -131,9 +133,8 @@ public class Repeater extends AbstractWidget
         if (result == null) {
             throw new RuntimeException("Could not find a parent row for widget " + widget);
 
-        } else {
-            return (Repeater.RepeaterRow)result;
         }
+        return (Repeater.RepeaterRow)result;
     }
     
     /**
@@ -257,7 +258,7 @@ public class Repeater extends AbstractWidget
             RepeaterRow row = (RepeaterRow)rowIt.next();
             valid = valid & row.validate();
         }
-        return valid ? super.validate() : false;
+        return (valid ? super.validate() : false) && this.validationError == null;
     }
 
 
@@ -335,6 +336,23 @@ public class Repeater extends AbstractWidget
         contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
         contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL);
     }
+    
+    /**
+     * Set a validation error on this field. This allows repeaters be externally marked as invalid by
+     * application logic.
+     *
+     * @param error the validation error
+     */
+    public ValidationError getValidationError() {
+        return this.validationError;
+    }
+
+    /**
+     * set a validation error
+     */
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
+    }
 
     public class RepeaterRow extends AbstractContainerWidget {
 
@@ -399,4 +417,5 @@ public class Repeater extends AbstractWidget
             throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
         }
     }
+
 }
