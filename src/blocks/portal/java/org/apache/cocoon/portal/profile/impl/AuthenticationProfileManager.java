@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -547,14 +548,14 @@ public class AuthenticationProfileManager
         return new User(state);
     }
     
-    protected static final class User implements PortalUser {
-        
+    protected static final class User implements PortalUser, Serializable {
+
         protected final RequestState state;
-        
+
         public User(RequestState state) {
             this.state = state;    
         }
-        
+
         /* (non-Javadoc)
          * @see org.apache.cocoon.portal.profile.PortalUser#getGroup()
          */
@@ -562,14 +563,14 @@ public class AuthenticationProfileManager
             // TODO Auto-generated method stub
             return null;
         }
-        
+
         /* (non-Javadoc)
          * @see org.apache.cocoon.portal.profile.PortalUser#getUserName()
          */
         public String getUserName() {
             return this.state.getHandler().getUserId();
         }
-        
+
         /* (non-Javadoc)
          * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
          */
@@ -577,5 +578,5 @@ public class AuthenticationProfileManager
             return this.state.getHandler().isUserInRole(role);
         }
     }
-    
+
 }

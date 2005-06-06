@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.cocoon.portal.profile.PortalUser;
@@ -23,27 +24,27 @@ import org.apache.cocoon.portal.profile.PortalUser;
  * Information about the current user.
  * This data object is used for loading the profile. It decouples the
  * portal from the used authentication method.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version CVS $Id: MapProfileLS.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public abstract class UserInfo implements PortalUser {
-    
+public abstract class UserInfo implements PortalUser, Serializable {
+
     protected String userName;
-    
+
     protected String group;
-    
+
     protected String portalName;
 
     protected String layoutKey;
 
     protected Map    configurations;
-    
+
     public UserInfo(String portalName, String layoutKey) {
         this.portalName = portalName;
         this.layoutKey = layoutKey;
     }
-    
+
     /**
      * @return Returns the group.
      */
@@ -57,49 +58,49 @@ public abstract class UserInfo implements PortalUser {
     public void setGroup(String group) {
         this.group = group;
     }
-    
+
     /**
      * @return Returns the userName.
      */
     public String getUserName() {
         return userName;
     }
-    
+
     /**
      * @param userName The userName to set.
      */
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
+
     /**
      * @return Returns the configurations.
      */
     public Map getConfigurations() {
         return configurations;
     }
-    
+
     /**
      * @param configurations The configurations to set.
      */
     public void setConfigurations(Map configurations) {
         this.configurations = configurations;
     }
-    
+
     /**
      * @return Returns the layoutKey.
      */
     public String getLayoutKey() {
         return layoutKey;
     }
-    
+
     /**
      * @return Returns the portalName.
      */
     public String getPortalName() {
         return portalName;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
      */
