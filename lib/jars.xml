@@ -1117,7 +1117,7 @@
   </file>
 
 
-  <file>
+  <file id="jcr-170-api">
     <title>JCR API</title>
     <description>
       JCR (aka JSR-170 API)
@@ -1127,7 +1127,7 @@
     <homepage> </homepage>
   </file>
 
-  <file>
+  <file id="jackrabbit">
     <title>Jackrabbit</title>
     <description>
       Jackrabbit JCR implementation
@@ -1135,6 +1135,16 @@
     <used-by>JCR block</used-by>
     <lib>optional/jackrabbit-20050422T153417.jar</lib>
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
+  </file>
+
+  <file id="spring-core">
+    <title>Spring</title>
+    <description>
+      Jackrabbit JCR implementation
+    </description>
+    <used-by>Spring block</used-by>
+    <lib>optional/spring-1.1.5.jar</lib>
+    <homepage>http://www.springframework.org/</homepage>
   </file>
 
 </jars>
