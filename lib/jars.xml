@@ -1140,7 +1140,7 @@
   <file id="spring-core">
     <title>Spring</title>
     <description>
-      Jackrabbit JCR implementation
+      The Spring Framework.
     </description>
     <used-by>Spring block</used-by>
     <lib>optional/spring-1.1.5.jar</lib>
