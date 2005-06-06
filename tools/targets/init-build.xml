@@ -106,50 +106,80 @@
     <!-- Alias for the loglevel -->
     <property name="loglevel" value="${build.webapp.loglevel}"/>
 
-    <!-- Set classpath -->
-    <path id="classpath">
-      <fileset dir="${lib.local}">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${lib}">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${lib.endorsed}">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${lib.core}">
-        <include name="*.jar"/>
-      </fileset>
-      <!-- Currently, we have no JVM dependent libraries
-        <fileset dir="${lib.core}/jvm${target.vm}">
-          <include name="*.jar"/>
-        </fileset>
-      -->
-      <path location="${build.mocks}"/>
-      <path location="${build.dest}"/>
-    </path>
+    <!-- Ant-Contrib tasks -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+      <classpath>
+        <pathelement location="tools/lib/ant-contrib-0.6.jar"/>
+      </classpath>      
+    </taskdef>
 
-    <!-- Set classpath for tests -->
-    <path id="test.classpath">
-      <path refid="classpath"/>
-      <pathelement location="${build.dest}" />
-       <!-- FIXME Resolver tests depend on deprecated stuff -->
-      <pathelement location="${build.deprecated}" />
-      <pathelement location="${build.test}" />
-      <fileset dir="${tools.lib}">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
+    <!-- By default use the libs in SVN -->
+    <property name="m2jars" value="false"/>
     
-    <!-- Set classpath for building ant tasks -->
-    <path id="tasks.classpath">
-      <path refid="classpath"/>
-      <fileset dir="${tools.lib}">
-        <include name="*.jar"/>
-      </fileset>
-      <path location="${tools.tasks.dest}"/>
-    </path>
+    <if>
+      <istrue value="${m2jars}"/>
+      <then>
+        <echo>   !!! Using Maven Artifact Task !!!</echo>
+        <echo>  !!!   Still needs to be coded   !!!</echo>
+        <path id="classpath">
+        </path>
+        <path id="test.classpath">
+        </path>        
+        <path id="task.classpath">
+        </path>        
+       </then>
+     </if>
+     
+    <if>
+      <isfalse value="${m2jars}"/>
+      <then>
+        <!-- Set classpath -->
+        <path id="classpath">
+          <fileset dir="${lib.local}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.endorsed}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.core}">
+            <include name="*.jar"/>
+          </fileset>
+          <!-- Currently, we have no JVM dependent libraries
+            <fileset dir="${lib.core}/jvm${target.vm}">
+              <include name="*.jar"/>
+            </fileset>
+          -->
+          <path location="${build.mocks}"/>
+          <path location="${build.dest}"/>
+        </path>
+    
+        <!-- Set classpath for tests -->
+        <path id="test.classpath">
+          <path refid="classpath"/>
+          <pathelement location="${build.dest}" />
+           <!-- FIXME Resolver tests depend on deprecated stuff -->
+          <pathelement location="${build.deprecated}" />
+          <pathelement location="${build.test}" />
+          <fileset dir="${tools.lib}">
+            <include name="*.jar"/>
+          </fileset>
+        </path>
+        
+        <!-- Set classpath for building ant tasks -->
+        <path id="tasks.classpath">
+          <path refid="classpath"/>
+          <fileset dir="${tools.lib}">
+            <include name="*.jar"/>
+          </fileset>
+          <path location="${tools.tasks.dest}"/>
+        </path>
 
+       </then>
+     </if>
+     
     <!-- compile the ant tasks -->
     <mkdir dir="${tools.tasks.dest}"/>
     <javac srcdir="${tools.tasks.src}"
@@ -191,13 +221,6 @@
            source="1.4"
            target="1.4"
            nowarn="on"/>
-
-    <!-- Ant-Contrib tasks -->
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-      <classpath>
-        <pathelement location="tools/lib/ant-contrib-0.6.jar"/>
-      </classpath>      
-    </taskdef>
 
 <!-- === Preparation Targets ============================================= -->
 
