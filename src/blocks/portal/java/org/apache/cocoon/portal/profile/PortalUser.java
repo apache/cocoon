@@ -18,12 +18,12 @@ package org.apache.cocoon.portal.profile;
 /**
  * Information about the current portal user.
  * This object decouples the portal from the used authentication method.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version SVN $Id$
  */
 public interface PortalUser {
-    
+
     /**
      * @return Returns the group.
      */
@@ -33,6 +33,6 @@ public interface PortalUser {
      * @return Returns the userName.
      */
     String getUserName();
-    
+
     boolean isUserInRole(String role);
 }

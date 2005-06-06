@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -383,15 +384,15 @@ implements Configurable {
         return this.portalUser;
     }
     
-    protected static final class StaticPortalUser implements PortalUser {
-        
+    protected static final class StaticPortalUser implements PortalUser, Serializable {
+
         /* (non-Javadoc)
          * @see org.apache.cocoon.portal.profile.PortalUser#getGroup()
          */
         public String getGroup() {
             return null;
         }
-        
+
         /* (non-Javadoc)
          * @see org.apache.cocoon.portal.profile.PortalUser#getUserName()
          */
@@ -405,5 +406,5 @@ implements Configurable {
         public boolean isUserInRole(String role) {
             return false;
         }
-}
+    }
 }
