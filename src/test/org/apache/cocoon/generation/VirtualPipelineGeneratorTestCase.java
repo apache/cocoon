@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.test.SitemapTestCase;
 
 public class VirtualPipelineGeneratorTestCase extends SitemapTestCase {
     public void testSimplePipe() throws Exception {

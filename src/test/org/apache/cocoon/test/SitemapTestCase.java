@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon;
+package org.apache.cocoon.test;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -27,8 +27,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.TestBootstrapEnvironment;
-import org.apache.cocoon.core.TestCoreUtil;
+import org.apache.cocoon.test.core.TestBootstrapEnvironment;
+import org.apache.cocoon.test.core.TestCoreUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;

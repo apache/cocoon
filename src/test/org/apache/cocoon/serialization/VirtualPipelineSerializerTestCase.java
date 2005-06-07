@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.serialization;
 
-import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.test.SitemapTestCase;
 
 public class VirtualPipelineSerializerTestCase extends SitemapTestCase {
     public void testSerializer() throws Exception {

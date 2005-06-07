@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.blocks;
+package org.apache.cocoon.test.components.blocks;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.test.SitemapTestCase;
+import org.apache.cocoon.components.blocks.BlockManager;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 
 public class BlockManagerTestCase extends SitemapTestCase {
