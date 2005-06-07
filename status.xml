@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Add setter action to set values in the object model, request or session.
+    </action>
      <action dev="AG" type="update">
       Updated ant to 1.6.5.
     </action>
