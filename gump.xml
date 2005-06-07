@@ -68,7 +68,7 @@
             groupId="ant-contrib" artifactId="ant-contrib" version="20020829"/>
             
     <depend project="xml-apis"
-            groupId="xml-apis" artifactId="xml-apis" version="20020829"/>    
+            groupId="xml-apis" artifactId="xml-apis" version="2.0.2"/>    
     <depend project="xml-xerces"
             groupId="xerces" artifactId="xercesImpl" version="2.6.2"/>  
     <depend project="xml-xalan2"
