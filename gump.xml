@@ -54,60 +54,68 @@
    
       http://www.ibiblio.org/maven2/ant-contrib/ant-contrib/20020829/ant-contrib-20020829.jar
 
-    Versions are semi-random, needs checking.
-    3 jars are missing.
+    Versions are the same as in SVN jars. 
+    Some jars are not present in the repository yet, use @locallib instead.
+    Some jars are missing.
     
     -->
 
     <depend project="ant" inherit="runtime"
             groupId="ant" artifactId="ant" version="1.6.5"/>
     
+    <!-- different version -->
     <depend project="ant-contrib"
             groupId="ant-contrib" artifactId="ant-contrib" version="20020829"/>
             
     <depend project="xml-apis"
             groupId="xml-apis" artifactId="xml-apis" version="20020829"/>    
     <depend project="xml-xerces"
-            groupId="xerces" artifactId="xerces" version="2.4.0"/>  
+            groupId="xerces" artifactId="xercesImpl" version="2.6.2"/>  
     <depend project="xml-xalan2"
-            groupId="xalan" artifactId="xalan" version="2.6.0"/>  
+            groupId="xalan" artifactId="xalan" version="2.6.1" 
+            locallib="endorsed/xalan-2.6.1-dev-20041008T0304.jar"/>  
     <depend project="xml-commons-resolver"
             groupId="xml-resolver" artifactId="xml-resolver" version="1.1"/>  
             
     <depend project="avalon-framework-api"
-            groupId="avalon-framework" artifactId="avalon-framework-api" version="4.2.0"/>  
-    <!-- missing -->
+            groupId="avalon-framework" artifactId="avalon-framework-api" version="4.1.5"/>  
+    <!-- what's this!?! -->
     <depend project="avalon-framework-legacy"/>  
     <depend project="avalon-framework-impl"
-            groupId="avalon-framework" artifactId="avalon-framework-impl" version="4.2.0"/> 
-    <!-- missing -->      
+            groupId="avalon-framework" artifactId="avalon-framework-impl" version="4.1.5"/> 
+    <!-- what's this!?! -->
     <depend project="excalibur-legacy" id="compatibility"/>  
     <depend project="excalibur-legacy" id="i18n"
             groupId="excalibur-i18n" artifactId="excalibur-i18n" version="1.1"/>  
     <depend project="excalibur-instrument-legacy"
             groupId="excalibur-instrument" artifactId="excalibur-instrument" version="1.0"/>  
     <depend project="excalibur-sourceresolve"
-            groupId="excalibur-sourceresolve" artifactId="excalibur-sourceresolve" version="2.0"/>  
+            groupId="excalibur-sourceresolve" artifactId="excalibur-sourceresolve" version="1.1"/>  
     <depend project="excalibur-xmlutil"
             groupId="excalibur-xmlutil" artifactId="excalibur-xmlutil" version="1.0"/>  
     <depend project="excalibur-store"
             groupId="excalibur-store" artifactId="excalibur-store" version="1.0"/>  
     <depend project="excalibur-pool"
-            groupId="excalibur-pool" artifactId="excalibur-pool" version="1.2"/>  
+            groupId="excalibur-pool" artifactId="excalibur-pool-api" version="2.0"/>  
+      <dependx project="excalibur-pool"
+               groupId="excalibur-pool" artifactId="excalibur-pool-impl" version="2.0"/> 
+      <dependx project="excalibur-pool"
+               groupId="excalibur-pool" artifactId="excalibur-pool-instrumented" version="2.0"/> 
     <depend project="excalibur-logger"
             groupId="excalibur-logger" artifactId="excalibur-logger" version="1.1"/>  
 
     <depend project="jakarta-regexp"
             groupId="regexp" artifactId="regexp" version="1.3"/>  
     <depend project="jakarta-servletapi-4"
-            groupId="servletapi" artifactId="servletapi" version="2.4-20040521"/>  
+            groupId="servletapi" artifactId="servletapi" version="2.3"/>  
     <depend project="jakarta-turbine-jcs"
-            groupId="jcs" artifactId="jcs" version="1.0-dev"/>  
+            groupId="jcs" artifactId="jcs" version="1.5"
+            locallib="core/jcs-1.2.5-dev-20050313.jar"/>   
 
     <depend project="commons-cli"
             groupId="commons-cli" artifactId="commons-cli" version="1.0"/>  
     <depend project="commons-httpclient"
-            groupId="commons-httpclient" artifactId="commons-httpclient" version="3.0-rc2"/>  
+            groupId="commons-httpclient" artifactId="commons-httpclient" version="2.0.2"/>  
     <depend project="commons-collections"
             groupId="commons-collections" artifactId="commons-collections" version="3.1"/>  
     <depend project="commons-jexl"
@@ -115,28 +123,32 @@
     <depend project="commons-jxpath"
             groupId="commons-jxpath" artifactId="commons-jxpath" version="1.2"/>  
     <depend project="commons-lang"
-            groupId="commons-lang" artifactId="commons-lang" version="2.0"/>  
+            groupId="commons-lang" artifactId="commons-lang" version="2.1"
+            locallib="core/commons-lang-2.0-20041007T2305.jar"/>  
     <depend project="logging-log4j"
-            groupId="log4j" artifactId="log4j" version="1.2.8"/>  
+            groupId="log4j" artifactId="log4j" version="1.2.9"
+            locallib="core/log4j-1.2.9.jar"/>  
 
     <depend project="rhino"
-            groupId="rhino" artifactId="rhino" version="1.5R4.1"/>  
+            groupId="rhino" artifactId="rhino" version="1.6"
+            locallib="core/rhino-1.6R1.jar"/>  
     <depend project="ehcache"
             groupId="ehcache" artifactId="ehcache" version="1.1"/> 
-    <!-- missing -->        
+    <!-- what's this!?! -->     
     <depend project="jing"/>  
     <depend project="junit"
-            groupId="junit" artifactId="junit" version="3.8"/>  
+            groupId="junit" artifactId="junit" version="3.8.1"/>  
     <depend project="jmock"
             groupId="jmock" artifactId="jmock" version="1.0.1"/>  
     <depend project="easymock"
             groupId="easymock" artifactId="easymock" version="1.1"/>  
+    <!-- what's this!?! -->         
     <depend project="concurrent"
             groupId="concurrent" artifactId="concurrent" version="1.3.4"/>  
 
    <!-- used by the testcases -->
     <depend project="xmlunit"
-            groupId="xmlunit" artifactId="xmlunit" version="1.0"/> 
+            groupId="xmlunit" artifactId="xmlunit" version="0.8"/> 
    <!-- used by ant tasks -->
     <depend project="qdox"
             groupId="qdox" artifactId="qdox" version="1.5"/>  
