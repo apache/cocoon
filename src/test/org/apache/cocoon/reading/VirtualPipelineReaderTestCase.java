@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.reading;
 
-import org.apache.cocoon.SitemapTestCase;
+import org.apache.cocoon.test.SitemapTestCase;
 
 public class VirtualPipelineReaderTestCase extends SitemapTestCase {
     public void testVirtualPipe() throws Exception {

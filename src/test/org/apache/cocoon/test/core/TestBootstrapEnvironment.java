@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core;
+package org.apache.cocoon.test.core;
 
 import java.io.File;
 import java.io.InputStream;
@@ -23,6 +23,7 @@ import java.net.URL;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.log.DeprecationLogger;
