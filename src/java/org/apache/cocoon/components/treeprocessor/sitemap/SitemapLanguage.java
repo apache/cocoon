@@ -89,12 +89,17 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         if (classpathConfig == null) {
             newClassLoader = Thread.currentThread().getContextClassLoader();
         } else {
+            String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
             // Create a new classloader
-            ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentProcessorManager.lookup(ClassLoaderFactory.ROLE);
-            newClassLoader = clFactory.createClassLoader(
-                    Thread.currentThread().getContextClassLoader(),
-                    classpathConfig
-            );
+            ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentProcessorManager.lookup(factoryRole);
+            try {
+                newClassLoader = clFactory.createClassLoader(
+                        Thread.currentThread().getContextClassLoader(),
+                        classpathConfig
+                );
+            } finally {
+                this.parentProcessorManager.release(clFactory);
+            }
         }
         
         this.itsClassLoader = newClassLoader;

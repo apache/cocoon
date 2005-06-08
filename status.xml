@@ -197,6 +197,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update">
+      Remove deprecated emptyAttributes from the AbstractSAXTransformer.
+    </action>
+    <action dev="CZ" type="add">
+      Per sitemap classloader factory is configurable using the role name.
+    </action>
     <action dev="BD" type="add">
       The junit.test.include.* options in build.properties can be used to run only
       a subset of JUnit tests, to shorten debugging cycles.
