@@ -134,7 +134,7 @@
   <map:pipeline>
     <!-- This action sets the portal name for the current request and
          initializes the portal service. So this should be the first
-         taks in every request!
+         task for every request!
     -->
     <map:act type="portal-prepare">
       <map:parameter name="portal-name" value="portal"/>
@@ -223,7 +223,7 @@
         </map:act>
       </map:act>
 
-      <!-- Test pipeline for layout engine -->
+      <!-- Test pipeline for portal engine -->
       <map:match pattern="portal">
         <map:act type="auth-protect">
           <map:parameter name="handler" value="portal-handler"/>
