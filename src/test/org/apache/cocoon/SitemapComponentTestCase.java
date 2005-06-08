@@ -624,7 +624,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             assertionsource = resolver.resolveURI(source);
             assertNotNull("Test lookup of assertion source",
                           assertionsource);
-            assertTrue("Test if source exist", assertionsource.exists());
+            assertTrue("Source '" + assertionsource.getURI() + "' must exist", assertionsource.exists());
 
             DOMBuilder builder = new DOMBuilder();
             assertNotNull("Test if inputstream of the assertion source is not null",
