@@ -49,8 +49,8 @@
       <formatter type="xml"/>
       <batchtest todir="${build.test.output}">
         <fileset dir="${build.test}">
-          <include name="**/*TestCase.class"/>
-          <include name="**/*Test.class" />
+          <include name="${junit.test.include.1}"/>
+          <include name="${junit.test.include.2}"/>
           <exclude name="**/AllTest.class" />
           <exclude name="**/CocoonBeanTestCase.class" />
           <exclude name="**/*$$*Test.class" />
