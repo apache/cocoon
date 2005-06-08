@@ -16,6 +16,7 @@
 package org.apache.cocoon.test;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class SitemapTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_WARN);
+        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
 
         objectmodel.clear();
@@ -103,12 +104,20 @@ public class SitemapTestCase extends TestCase {
      */
     protected URL getClassDirURL() throws RuntimeException {
         String className = getClass().getName().replace( '.', '/' ) + ".class";
+        String classURL = null;
+        String classDir = null;
         try {
-            String classURL =
+            classURL =
                 getClass().getClassLoader().getResource( className ).toExternalForm();
-            String classDir = classURL.substring(0, classURL.lastIndexOf('/') + 1);
-
+            getLogger().debug("classURL=" + classURL);
+            classDir = classURL.substring(0, classURL.lastIndexOf('/') + 1);
+            getLogger().debug("classDir=" + classDir);
             return new URL(classDir);
+        } catch (SecurityException e) {
+            throw new RuntimeException("Not allowed to access classloader for " + className, e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed URL for className=" + className +
+                                       " classURL=" + classURL + " classDir=" + classDir, e);
         } catch (Exception e) {
             throw new RuntimeException("Couldn't create URL for " + className, e);
         }
@@ -183,7 +192,7 @@ public class SitemapTestCase extends TestCase {
         this.request.setEnvironment(env);
         env.setObjectModel(this.objectmodel);
 
-	return env;
+        return env;
     }
 
     protected byte[] process(String uri) throws Exception {
