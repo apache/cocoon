@@ -457,6 +457,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="update">
+      Move expires pipeline implementation out of the scratchpad.
+    </action>
     <action dev="CZ" type="add">
       Add setter action to set values in the object model, request or session.
     </action>

@@ -429,6 +429,13 @@
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
+     <!--+
+         | This pipeline implementation caches the complete content for a defined
+         | period of time (expires). The cache key is the current uri.
+         +-->
+     <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
+       <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
+     </map:pipe>
    </map:pipes>
    
    <!-- include some additional components -->
