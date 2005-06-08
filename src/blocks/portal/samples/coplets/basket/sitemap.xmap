@@ -56,9 +56,9 @@
       </map:match>
 
       <map:match pattern="*.*.flow">
-        <map:act type="portal-object-model">
-          <map:parameter name="copletId" value="{request-param:copletid}"/>
-          <map:parameter name="portalName" value="portal"/>
+        <map:act type="portal-set-object-model">
+          <map:parameter name="cocoon-portal-copletId" value="{request-param:copletid}"/>
+          <map:parameter name="cocoon-portal-portalName" value="portal"/>
         </map:act>
         <map:call function="{2}">
           <map:parameter name="id" value="{request-param:copletid}"/>
