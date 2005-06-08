@@ -182,10 +182,6 @@
         shorthand="fam"
         default-class="org.apache.cocoon.components.fam.SitemapMonitorImpl"/>
         
-  <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
-        shorthand="classloader"
-        default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
-
   <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
         shorthand="image-encoder"/>
 

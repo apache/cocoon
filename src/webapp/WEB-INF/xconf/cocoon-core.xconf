@@ -565,11 +565,6 @@
 <!-- ====================== System Components =========================== -->
 
   <!--+
-      | The core classloader implementation
-      +-->
-  <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl" logger="core.classloader"/>
-
-  <!--+
       | XML compiler/decompiler
       |
       | These components are used to process SAX events and produce a binary
