@@ -63,8 +63,8 @@
                   src="org.apache.cocoon.portal.acting.LoginAction"/>
       <map:action name="portal-logout"
                   src="org.apache.cocoon.portal.acting.LogoutAction"/>
-      <map:action name="portal-object-model"
-                  src="org.apache.cocoon.portal.acting.ObjectModelAction"/>
+      <map:action name="portal-set-object-model"
+                  src="org.apache.cocoon.acting.SetterAction"/>
       <map:action name="portal-set-data"
                   src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
       <map:action name="portal-save-profile"
