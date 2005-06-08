@@ -219,6 +219,14 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
     private boolean isInitialized;
 
     /**
+     * Empty attributes (for performance). This can be used
+     * do create own attributes, but make sure to clean them
+     * afterwords.
+     * @deprecated Use {@link AbstractSAXTransformer#EMPTY_ATTRIBUTES}.
+     */
+    protected Attributes emptyAttributes = EMPTY_ATTRIBUTES;
+
+    /**
      * The namespaces and their prefixes
      */
     private final List namespaces = new ArrayList(5);
