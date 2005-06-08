@@ -251,6 +251,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected String defaultSmtpHost;
     protected String defaultFromAddress;
 
+    protected boolean useExternalRequests = true;
+    protected List    usedSources = new ArrayList();
+
     /**
      * create a new Transformer
      */
@@ -266,6 +269,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         super.configure(configuration);
         this.defaultSmtpHost = configuration.getChild("smtphost").getValue("");
         this.defaultFromAddress = configuration.getChild("from").getValue("");
+        this.useExternalRequests = configuration.getChild("use-external-requests").getValueAsBoolean(this.useExternalRequests);
     }
 
     /**
@@ -541,6 +545,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         // from variable to build mailbody
         if (this.bodyURI != null) {
             Source      inSrc   = resolver.resolveURI(this.bodyURI);
+            this.usedSources.add(inSrc);
             InputStream inStr   = inSrc.getInputStream();
             byte[]      byteArr = new byte[inStr.available()];
             inStr.read(byteArr);
@@ -567,9 +572,10 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
                 if (aD.isURLSource()) {
                     inputSource = resolver.resolveURI(aD.strAttrSrc);
+                    this.usedSources.add(inputSource);
 
                     String iSS = inputSource.getURI();
-                    if (iSS.startsWith("cocoon:")) {
+                    if (iSS.startsWith("cocoon:") && this.useExternalRequests) {
                         iSS = iSS.substring(7, iSS.length());
 
                         if (this.contextPath != null) {
@@ -591,6 +597,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                     messageBodyPart.setDataHandler(new DataHandler(dataSource));
                 } else if (aD.isFileSource()) {
                     inputSource = resolver.resolveURI(aD.strAttrFile);
+                    this.usedSources.add(inputSource);
                     dataSource  = new URLDataSource(new URL(inputSource.getURI()));
                     messageBodyPart.setDataHandler(new DataHandler(dataSource));
                 }
@@ -669,6 +676,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         return iaArr;
     }
 
+	/**
+	 * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+	 */
 	public void recycle() {
         this.toAddresses = null;
         this.defaultToAddresses = null;
@@ -683,7 +693,13 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 	    this.contextPath = null;
 	    this.sendPartial = true;
 	    this.smtpMessage = null;
-	    super.recycle();
+        final Iterator i = this.usedSources.iterator();
+        while ( i.hasNext() ) {
+            final Source source = (Source)i.next();
+            this.resolver.release(source);
+        }
+        this.usedSources.clear();
+ 	    super.recycle();
 	}
 
     static class AttachmentDescriptor {

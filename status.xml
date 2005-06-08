@@ -197,6 +197,10 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="update">
+      Mail block: Make internal protocol handling for attachments in SendMailTransformer
+      configurable and properly release all sources.
+    </action>
+    <action dev="CZ" type="update">
       Move expires pipeline implementation out of the scratchpad.
     </action>
     <action dev="CZ" type="add">
