@@ -14,8 +14,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-chmod u+x ./tools/bin/antRun
-chmod u+x ./tools/bin/ant
+# ----- Set path to our tools, overridable  -----------------------------------
+if [ "$COCOON_TOOLS" = "" ] 
+then
+  COCOON_TOOLS="./tools"
+fi
+
+chmod u+x $COCOON_TOOLS/bin/antRun
+chmod u+x $COCOON_TOOLS/bin/ant
 
 # ----- Verify and Set Required Environment Variables -------------------------
 
@@ -33,7 +39,7 @@ export CLASSPATH
 
 # ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 OLD_ANT_HOME="$ANT_HOME"
-ANT_HOME=tools
+ANT_HOME=$COCOON_TOOLS
 OLD_ANT_OPTS="$ANT_OPTS"
 ANT_OPTS="-Xms32M -Xmx512M -Djava.endorsed.dirs=lib/endorsed"
 export ANT_HOME ANT_OPTS
