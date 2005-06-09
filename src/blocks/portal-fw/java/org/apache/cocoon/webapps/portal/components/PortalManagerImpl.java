@@ -37,6 +37,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.CocoonThread;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -2783,7 +2784,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 loadedCoplet[7] = statusProfile;
 
                 CopletThread copletThread = new CopletThread();
-                Thread theThread = new Thread(copletThread);
+                Thread theThread = new CocoonThread(copletThread);
                 loadedCoplet[6] = copletThread;
                 copletThread.init(copletID,
                                   ContextHelper.getObjectModel(this.componentContext),
