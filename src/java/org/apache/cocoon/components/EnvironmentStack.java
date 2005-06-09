@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.components;
 
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.xml.XMLConsumer;
 
 import org.apache.commons.collections.ArrayStack;
@@ -43,8 +46,8 @@ final class EnvironmentStack extends ArrayStack
         this.offset = value;
     }
 
-    Object getCurrent() {
-        return this.get(offset);
+    Item getCurrent() {
+        return (Item)this.get(offset);
     }
 
     public Object clone() {
@@ -57,7 +60,22 @@ final class EnvironmentStack extends ArrayStack
                                                    int oldOffset) {
         return new EnvironmentChanger(consumer, this, oldOffset, this.offset);
     }
+
+    static final class Item {
+        public final Environment env;
+        public final Processor processor;
+        public final ComponentManager manager;
+        public final int offset;
+        
+        public Item(Environment env, Processor processor, ComponentManager manager, int offset) {
+            this.env = env;
+            this.processor = processor;
+            this.manager = manager;
+            this.offset = offset;
+        }
+    }
 }
+
 
 /**
  * This class is an {@link XMLConsumer} that changes the current environment.

@@ -30,6 +30,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
+import org.apache.cocoon.components.CocoonThread;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
@@ -183,7 +184,8 @@ public final class DefaultIncludeCacheManager
                 Source source = session.resolveURI(uri, this.resolver);
 
                 LoaderThread loader = new LoaderThread(source, serializer, this.manager);
-                Thread thread = new Thread(loader);
+                // Load the included content in a thread that inherits the current thread's environment
+                Thread thread = new CocoonThread(loader);
                 session.add(uri, loader);
                 thread.start();
                 if (this.getLogger().isDebugEnabled()) {

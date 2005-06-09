@@ -62,8 +62,11 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /** The environment attribute used to keep track of the actual environment in which the pipeline was built. */
     private static final String PROCESSOR_ATTR = "CocoonComponentManager.processor";
 
-    /** The environment information */
-    private static InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+    /**
+     * The environment information. Package-private as it is used by CocoonThread to initialize
+     * child thread's environment.
+     */
+    static final ThreadLocal environmentStack = new ThreadLocal();
 
     /** The configured {@link SourceResolver} */
     private SourceResolver sourceResolver;
@@ -120,12 +123,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             stack = new EnvironmentStack();
 			environmentStack.set(stack);
 		}
-		stack.push(new Object[] {env, processor, manager, new Integer(stack.getOffset())});
+		stack.push(new EnvironmentStack.Item(env, processor, manager, stack.getOffset()));
         stack.setOffset(stack.size()-1);
 
         env.setAttribute(PROCESSOR_ATTR, processor);
     }
-
+    
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
      * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
@@ -143,11 +146,11 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     public static void leaveEnvironment(boolean success) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.pop();
-        stack.setOffset(((Integer)objs[3]).intValue());
+        final EnvironmentStack.Item objs = (EnvironmentStack.Item)stack.pop();
+        stack.setOffset(objs.offset);
 
         if ( stack.isEmpty() ) {
-            final Environment env = (Environment)objs[0];
+            final Environment env = objs.env;
             final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
             if ( globalComponents != null) {
 
@@ -202,8 +205,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.getCurrent();
-        return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[3]).intValue());
+        final EnvironmentStack.Item objs = stack.getCurrent();
+        return stack.getEnvironmentAwareConsumerWrapper(consumer, objs.offset);
     }
 
     /**
@@ -245,7 +248,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     public static Environment getCurrentEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if (null != stack && !stack.isEmpty()) {
-            return (Environment) ((Object[])stack.getCurrent())[0];
+            return stack.getCurrent().env;
         }
         return null;
     }
@@ -256,7 +259,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     public static Processor getCurrentProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if (null != stack && !stack.isEmpty()) {
-            return (Processor) ((Object[])stack.getCurrent())[1];
+            return stack.getCurrent().processor;
         }
         return null;
     }
@@ -277,8 +280,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     static public ComponentManager getSitemapComponentManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if (null != stack && !stack.isEmpty()) {
-            Object[] o = (Object[]) stack.peek();
-            return (ComponentManager) o[2];
+            EnvironmentStack.Item o = (EnvironmentStack.Item) stack.peek();
+            return o.manager;
         }
 
         // If we don't have an environment yet, just return null
@@ -312,8 +315,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
 
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( null != stack && !stack.isEmpty()) {
-            final Object[] objects = (Object[])stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = stack.getCurrent();
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
             if ( null != desc ) {
                 Component component = desc.getRequestLifecycleComponent(role);
@@ -334,8 +337,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
 
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ((Environment) objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = stack.getCurrent();
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription) objectModel.get(PROCESS_KEY);
             if (null != desc) {
                 // first test if the parent CM has already initialized this component
@@ -344,7 +347,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                         if (component instanceof Recomposable) {
                             ((Recomposable) component).recompose(this);
                         }
-                        ((RequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
+                        ((RequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects.env,
                                                                       objectModel);
                     } catch (Exception local) {
                         throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
@@ -359,8 +362,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                 throw new ComponentException(role, "ComponentManager has no Environment Stack.");
             }
 
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = stack.getCurrent();
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription) objectModel.get(PROCESS_KEY);
             if (null != desc) {
                 // first test if the parent CM has already initialized this component
@@ -369,7 +372,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                         if (component instanceof Recomposable) {
                             ((Recomposable) component).recompose(this);
                         }
-                        ((GlobalRequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
+                        ((GlobalRequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects.env,
                                                                       objectModel);
                     } catch (Exception local) {
                         throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
@@ -437,8 +440,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( null != stack && !stack.isEmpty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = (EnvironmentStack.Item)stack.get(0);
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
             if ( null != desc ) {
                 desc.addToAutoRelease(selector, component, manager);
@@ -456,8 +459,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( null != stack && !stack.isEmpty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = (EnvironmentStack.Item)stack.get(0);
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
             if ( null != desc ) {
                 desc.addToAutoRelease(manager, component);
@@ -474,8 +477,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( null != stack && !stack.isEmpty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            final EnvironmentStack.Item objects = (EnvironmentStack.Item)stack.get(0);
+            final Map objectModel = objects.env.getObjectModel();
             EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
             if ( null != desc ) {
                 desc.removeFromAutoRelease(component);
@@ -529,8 +532,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         if (baseURI == null) {
             final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
             if ( null != stack && !stack.isEmpty()) {
-                final Object[] objects = (Object[])stack.getCurrent();
-                baseURI = ((Environment)objects[0]).getContext();
+                final EnvironmentStack.Item objects = stack.getCurrent();
+                baseURI = objects.env.getContext();
             }
         }
         return this.sourceResolver.resolveURI(location, baseURI, parameters);
@@ -750,28 +753,3 @@ final class EnvironmentDescription {
         }
     }
 }
-
-final class CloningInheritableThreadLocal
-    extends InheritableThreadLocal {
-
-    /**
-     * Computes the child's initial value for this InheritableThreadLocal
-     * as a function of the parent's value at the time the child Thread is
-     * created.  This method is called from within the parent thread before
-     * the child is started.
-     * <p>
-     * This method merely returns its input argument, and should be overridden
-     * if a different behavior is desired.
-     *
-     * @param parentValue the parent thread's value
-     * @return the child thread's initial value
-     */
-    protected Object childValue(Object parentValue) {
-        if ( null != parentValue) {
-            return ((EnvironmentStack)parentValue).clone();
-        } else {
-            return null;
-        }
-    }  
-}
-
