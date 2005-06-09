@@ -64,6 +64,8 @@ import org.apache.log4j.LogManager;
 
 /**
  * This is an utility class to create a new Cocoon instance.
+ * 
+ * TODO - Remove dependencies to LogKit
  *
  * @version $Id$
  * @since 2.2

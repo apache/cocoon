@@ -25,16 +25,18 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.log.LogTarget;
 
 /**
-* The BootstrapEnvironment is the connection between the real environment
-* (servlet, cli etc.) and the Cocoon core. The core uses this object to
-* access information from the real environment and to pass several objects
-* back.
-* A BootstrapEnvironment can be used to create a new Cocoon system using
-* the {@link CoreUtil}.
-*
-* @version SVN $Id$
-* @since 2.2
-*/
+ * The BootstrapEnvironment is the connection between the real environment
+ * (servlet, cli etc.) and the Cocoon core. The core uses this object to
+ * access information from the real environment and to pass several objects
+ * back.
+ * A BootstrapEnvironment can be used to create a new Cocoon system using
+ * the {@link CoreUtil}.
+ * 
+ * TODO - Remove dependencies to LogKit
+ *
+ * @version SVN $Id$
+ * @since 2.2
+ */
 public interface BootstrapEnvironment {
 
     /** Log a message during bootstrapping. This is used to log
