@@ -404,6 +404,7 @@
               <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
                 <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
                 <jvmarg value="-Djunit.test.loglevel=${{junit.test.loglevel}}"/>
+                <jvmarg line="${{junit.test.jvmargs}}"/>
                 <classpath>
                   <path refid="@{{name}}.classpath"/>
                   <path refid="test.classpath"/>
