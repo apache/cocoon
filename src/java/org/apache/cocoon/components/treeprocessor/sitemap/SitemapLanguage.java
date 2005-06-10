@@ -209,6 +209,9 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         newContext.put(Constants.CONTEXT_ENV_PREFIX, env.getURIPrefix());
         // FIXME How to get rid of EnvironmentHelper?
         newContext.put(Constants.CONTEXT_ENV_HELPER, getProcessor().getWrappingProcessor().getEnvironmentHelper());
+        // FIXME - find a better way to make the interpreter available
+        newContext.put("sitemap-language", this);
+
         return newContext;
     }
 
