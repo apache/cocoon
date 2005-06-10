@@ -96,6 +96,7 @@ public class TestBootstrapEnvironment
     public void configure(MutableSettings settings) {
         settings.setConfiguration(this.configuration);
         settings.setWorkDirectory("work");
+	settings.setInitClassloader(true);
     }
 
     public void configureLoggingContext(DefaultContext context) {
