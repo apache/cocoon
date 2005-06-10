@@ -507,7 +507,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     private boolean hasValueChangedListeners() {
-        return this.listener != null || this.fieldDefinition.hasValueChangedListeners();
+        return this.listener != null ||
+               this.fieldDefinition.hasValueChangedListeners() ||
+               this.getForm().hasFormHandler();
     }
 
     private void fireValueChangedEvent(ValueChangedEvent event) {
