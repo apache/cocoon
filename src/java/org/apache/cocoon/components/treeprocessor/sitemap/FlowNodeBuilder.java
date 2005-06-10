@@ -31,7 +31,7 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        String language = config.getAttribute("language", "JavaScript");
+        String language = config.getAttribute("language", "javascript");
         FlowNode node = new FlowNode(language);
 
         this.treeBuilder.registerNode("flow", node);
