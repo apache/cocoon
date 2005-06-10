@@ -62,11 +62,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /** The environment attribute used to keep track of the actual environment in which the pipeline was built. */
     private static final String PROCESSOR_ATTR = "CocoonComponentManager.processor";
 
-    /**
-     * The environment information. Package-private as it is used by CocoonThread to initialize
-     * child thread's environment.
-     */
-    static final ThreadLocal environmentStack = new ThreadLocal();
+    /** The environment information */
+    protected static final ThreadLocal environmentStack = new ThreadLocal();
 
     /** The configured {@link SourceResolver} */
     private SourceResolver sourceResolver;
@@ -584,6 +581,46 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             }
         }
         parentAwareComponents = null;  // null to save memory, and catch logic bugs.
+    }
+    
+    /**
+     * A runnable wrapper that inherits the environment stack of the thread it is
+     * created in.
+     * <p>
+     * It's defined as an abstract class here to use some internals of EnvironmentHelper, and
+     * should only be used through its public counterpart, {@link org.apache.cocoon.environment.CocoonRunnable}
+     */
+    public static abstract class AbstractCocoonRunnable implements Runnable {
+        private Object parentStack = null;
+
+        public AbstractCocoonRunnable() {
+            // Clone the environment stack of the calling thread.
+            // We'll use it in run() below
+            Object stack = CocoonComponentManager.environmentStack.get();
+            if (stack != null) {
+                this.parentStack = ((EnvironmentStack)stack).clone();
+            }
+        }
+
+        /**
+         * Calls {@link #doRun()} within the environment context of the creating thread.
+         */
+        public final void run() {
+            // Install the stack from the parent thread and run the Runnable
+            Object oldStack = environmentStack.get();
+            CocoonComponentManager.environmentStack.set(this.parentStack);
+            try {
+                doRun();
+            } finally {
+                // Restore the previous stack
+                CocoonComponentManager.environmentStack.set(oldStack);
+            }
+            // FIXME: Check the lifetime of this run compared to the parent thread.
+            // A CocoonThread is meant to start and die within the execution period of the parent request,
+            // and it is an error if it lives longer as the parent environment is no more valid.
+        }
+        
+        abstract protected void doRun();
     }
 }
 
