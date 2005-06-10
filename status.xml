@@ -197,6 +197,13 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix">
+      Fix a huge memory leak in error pipelines that was caused by unreleased components.
+    </action>     
+    <action dev="DF" type="fix">
+      JxTemplate block: fix a bug in <code>&lt;jx:set&gt;</code> that caused considerable
+      performance problems.
+    </action>    
     <action dev="CZ" type="update">
       Remove deprecated emptyAttributes from the AbstractSAXTransformer.
     </action>
@@ -457,6 +464,16 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="RP" type="update">
+      CForms block: The default HTML stylesheets have been moved into the jar packages. If they should
+      be extended in custom stylesheets, import or include them using the resource protocol:
+      <code>&lt;xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/&gt;</code>.
+    </action>   
+    <action dev="RP" type="add">
+      CForms block: The form and container widgets can take up <code>ValidationError</code>s. As those widgets
+      don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
+      has to be used. Currently this tag is only supported by the jxtemplate macro library.
+    </action>     
     <action dev="SW" type="fix">
   		Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
   		caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
