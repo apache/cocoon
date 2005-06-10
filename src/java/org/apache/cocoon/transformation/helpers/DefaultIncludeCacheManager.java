@@ -30,12 +30,12 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.components.CocoonThread;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -185,7 +185,7 @@ public final class DefaultIncludeCacheManager
 
                 LoaderThread loader = new LoaderThread(source, serializer, this.manager);
                 // Load the included content in a thread that inherits the current thread's environment
-                Thread thread = new CocoonThread(loader);
+                Thread thread = new Thread(new CocoonRunnable(loader));
                 session.add(uri, loader);
                 thread.start();
                 if (this.getLogger().isDebugEnabled()) {
