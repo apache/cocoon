@@ -174,6 +174,10 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
         this.submitWidget = widget;
     }
 
+    public boolean hasFormHandler() {
+       return (this.formHandler != null);
+    }
+
     public void setFormHandler(FormHandler formHandler) {
         this.formHandler = formHandler;
     }

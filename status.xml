@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix" fixes-bug="35311" due-to="Jeffrey Kirby" due-to-email="jeff.kirby@wicourts.gov">
+      CForms block: Ensure FormHandler is always called when a field's value change.
+    </action>
     <action dev="RP" type="update">
       CForms block: The default HTML stylesheets have been moved into the jar packages. If they should
       be extended in custom stylesheets, import or include them using the resource protocol:
