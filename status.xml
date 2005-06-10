@@ -196,7 +196,7 @@
 
   <changes>
   <release version="@version@" date="@date@">
-	 <action dev="CZ" type="fix">
+	 <action dev="SW" type="fix">
 		Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
 		caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
 		To use multiple threads to process a request (e.g. parallel include), background processing must use
