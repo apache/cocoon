@@ -196,13 +196,23 @@
 
   <changes>
   <release version="@version@" date="@date@">
-	 <action dev="SW" type="fix">
-		Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
-		caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
-		To use multiple threads to process a request (e.g. parallel include), background processing must use
-		the <code>org.apache.cocoon.environment.CocoonRunnable</code> wrapper that ensures that the environment
-		context of the main request is properly inherited by tasks running in the background.
-	 </action>
+    <action dev="RP" type="update">
+      CForms block: The default HTML stylesheets have been moved into the jar packages. If they should
+      be extended in custom stylesheets, import or include them using the resource protocol:
+      <code>&lt;xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/&gt;</code>.
+    </action>   
+    <action dev="RP" type="add">
+      CForms block: The form and container widgets can take up <code>ValidationError</code>s. As those widgets
+      don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
+      has to be used. Currently this tag is only supported by the jxtemplate macro library.
+    </action>       
+	  <action dev="SW" type="fix">
+		 Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
+		 caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
+		 To use multiple threads to process a request (e.g. parallel include), background processing must use
+		 the <code>org.apache.cocoon.environment.CocoonRunnable</code> wrapper that ensures that the environment
+		 context of the main request is properly inherited by tasks running in the background.
+	  </action>
     <action dev="CZ" type="update">
       Mail block: Make internal protocol handling for attachments in SendMailTransformer
       configurable and properly release all sources.
