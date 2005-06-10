@@ -49,7 +49,7 @@ extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
 
     /** The environment information */
-    static protected final InheritableThreadLocal environmentStack = new CloningInheritableThreadLocal();
+    static protected final ThreadLocal environmentStack = new ThreadLocal();
 
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver resolver;
@@ -418,27 +418,44 @@ implements SourceResolver, Serviceable, Disposable {
     public static XMLConsumer createPopEnvironmentConsumer(XMLConsumer consumer) {
         return new PopEnvironmentChanger(consumer);
     }
-}
-
-final class CloningInheritableThreadLocal
-    extends InheritableThreadLocal {
-
+    
     /**
-     * Computes the child's initial value for this InheritableThreadLocal
-     * as a function of the parent's value at the time the child Thread is
-     * created.  This method is called from within the parent thread before
-     * the child is started.
+     * A runnable wrapper that inherits the environment stack of the thread it is
+     * created in.
      * <p>
-     * This method merely returns its input argument, and should be overridden
-     * if a different behavior is desired.
-     *
-     * @param parentValue the parent thread's value
-     * @return the child thread's initial value
+     * It's defined as an abstract class here to use some internals of EnvironmentHelper, and
+     * should only be used through its public counterpart, {@link org.apache.cocoon.environment.CocoonRunnable}
      */
-    protected Object childValue(Object parentValue) {
-        if ( null != parentValue) {
-            return ((EnvironmentStack)parentValue).clone();
+    public static abstract class AbstractCocoonRunnable implements Runnable {
+        private Object parentStack = null;
+
+        public AbstractCocoonRunnable() {
+            // Clone the environment stack of the calling thread.
+            // We'll use it in run() below
+            Object stack = EnvironmentHelper.environmentStack.get();
+            if (stack != null) {
+                this.parentStack = ((EnvironmentStack)stack).clone();
+            }
         }
-        return null;
+
+        /**
+         * Calls {@link #doRun()} within the environment context of the creating thread.
+         */
+        public final void run() {
+            // Install the stack from the parent thread and run the Runnable
+            Object oldStack = environmentStack.get();
+            EnvironmentHelper.environmentStack.set(this.parentStack);
+            try {
+                doRun();
+            } finally {
+                // Restore the previous stack
+                EnvironmentHelper.environmentStack.set(oldStack);
+            }
+            // FIXME: Check the lifetime of this run compared to the parent thread.
+            // A CocoonThread is meant to start and die within the execution period of the parent request,
+            // and it is an error if it lives longer as the parent environment is no more valid.
+        }
+        
+        abstract protected void doRun();
     }
 }

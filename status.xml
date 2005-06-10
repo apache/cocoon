@@ -457,6 +457,13 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="SW" type="fix">
+  		Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
+  		caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
+  		To use multiple threads to process a request (e.g. parallel include), background processing must use
+  		the <code>org.apache.cocoon.environment.CocoonRunnable</code> wrapper that ensures that the environment
+  		context of the main request is properly inherited by tasks running in the background.
+    </action>
     <action dev="CZ" type="update">
       Mail block: Make internal protocol handling for attachments in SendMailTransformer
       configurable and properly release all sources.

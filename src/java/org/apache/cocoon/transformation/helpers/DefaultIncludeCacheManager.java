@@ -34,6 +34,7 @@ import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -183,7 +184,7 @@ public final class DefaultIncludeCacheManager
                 LoaderThread loader = new LoaderThread(source, serializer, this.manager);
                 final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
                 session.add(uri, loader);
-                runnableManager.execute( loader );
+                runnableManager.execute( new CocoonRunnable(loader) );
                 this.manager.release( runnableManager );
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug("Thread started for " + uri);
