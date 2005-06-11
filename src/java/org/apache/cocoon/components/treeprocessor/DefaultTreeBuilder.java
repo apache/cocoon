@@ -280,12 +280,14 @@ public class DefaultTreeBuilder
     }
 
     /**
-     * Register a <code>ProcessingNode</code> under a given name.
-     * For example, <code>ResourceNodeBuilder</code> stores here the <code>ProcessingNode</code>s
-     * it produces for use by sitemap pipelines. This allows to turn the tree into a graph.
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#registerNode(java.lang.String, org.apache.cocoon.components.treeprocessor.ProcessingNode)
      */
-    public void registerNode(String name, ProcessingNode node) {
+    public boolean registerNode(String name, ProcessingNode node) {
+        if ( this.registeredNodes.containsKey(name) ) {
+            return false;
+        }
         this.registeredNodes.put(name, node);
+        return true;
     }
 
     public ProcessingNode getRegisteredNode(String name) {

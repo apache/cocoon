@@ -56,8 +56,10 @@ public interface TreeBuilder {
      * Register a <code>ProcessingNode</code> under a given name.
      * For example, <code>ResourceNodeBuilder</code> stores here the <code>ProcessingNode</code>s
      * it produces for use by sitemap pipelines. This allows to turn the tree into a graph.
+     * If a node with the name is already registed, the process fails!
+     * @return If the node could be registered, <code>true</code> is returned; otherwise false.
      */
-    void registerNode(String name, ProcessingNode node);
+    boolean registerNode(String name, ProcessingNode node);
 
     /**
      * @throws IllegalStateException

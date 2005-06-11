@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Builds a generic container node.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CategoryNodeBuilder.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
@@ -72,7 +72,9 @@ public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
         node.setCategory(this.name, category);
 
         // Register node to allow lookup by other nodes
-        this.treeBuilder.registerNode(PREFIX + this.name, node);
+        if ( !this.treeBuilder.registerNode(PREFIX + this.name, node) ) {
+            throw new ConfigurationException("There can only be one category with the name: " + this.name);
+        }
 
         return node;
     }
