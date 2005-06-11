@@ -27,10 +27,12 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
@@ -183,19 +185,42 @@ public class Core {
     }
     
     /**
-     * Return the locator of the current sitemap.
-     * @return The current locator or null if no request is currently processed
+     * Return the current sitemap.
+     * @return The current sitemap or null if no request is currently processed
      */
-    public ComponentLocator getSitemapComponentLocator() {
-        final ServiceManager m = EnvironmentHelper.getSitemapServiceManager();
-        ComponentLocator l = null;
-        if ( m != null ) {
-            if ( !(m instanceof ComponentLocator) ) {
-                l = new ComponentLocatorWrapper(m);
-            } else {
-                l = (ComponentLocator)m;
-            }
+    public Sitemap getCurrentSitemap() {
+        Processor p = EnvironmentHelper.getCurrentProcessor();
+        if ( p != null ) {
+            return SITEMAP;            
         }
-        return l;
+        return null;
+    }
+
+    private final static Sitemap SITEMAP = new SitemapImpl();
+
+    public final static class SitemapImpl implements Sitemap {
+
+        /**
+         * @see org.apache.cocoon.sitemap.Sitemap#getComponentLocator()
+         */
+        public ComponentLocator getComponentLocator() {
+            final ServiceManager m = EnvironmentHelper.getSitemapServiceManager();
+            ComponentLocator l = null;
+            if ( m != null ) {
+                if ( !(m instanceof ComponentLocator) ) {
+                    l = new ComponentLocatorWrapper(m);
+                } else {
+                    l = (ComponentLocator)m;
+                }
+            }
+            return l;
+        }
+
+        /**
+         * @see org.apache.cocoon.sitemap.Sitemap#getCurrentProcessor()
+         */
+        public Processor getCurrentProcessor() {
+            return EnvironmentHelper.getCurrentProcessor();
+        }
     }
 }

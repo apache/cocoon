@@ -39,6 +39,7 @@ import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -220,7 +221,11 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
      * Get the component locator.
      */
     protected ComponentLocator getComponentLocator() {
-        ComponentLocator l = this.core.getSitemapComponentLocator();
+        ComponentLocator l = null;
+        final Sitemap sitemap = this.core.getCurrentSitemap();
+        if ( sitemap != null ) {
+            l = sitemap.getComponentLocator();
+        }
         if ( l == null ) {
             l = new ComponentLocatorWrapper(this.manager);
         }
