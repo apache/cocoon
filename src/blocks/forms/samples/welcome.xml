@@ -73,6 +73,13 @@
   -->
  </group>
 
+ <group name="Database access">
+   <sample name="Zero-code SQL database access" href="sqldatabase/">
+     SQL database editing without any custom Java code, using the SQLTransformer to load
+     and update data.
+   </sample>
+ </group>
+
  <group name="Locales">
   <note>
     The samples below are the same as the basic flowscript sample but now use different locales.
