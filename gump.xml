@@ -384,6 +384,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="excalibur-datasource"/>
+    <depend project="cocoon-block-hsqldb" type="samples"/>
 
     <library name="excalibur-datasource"/>
 
@@ -405,7 +406,6 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="cocoon-block-databases"/>
     <depend project="hsqldb"/>
 
     <library name="hsqldb"/>
