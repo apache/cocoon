@@ -464,6 +464,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="BD" type="add" fixes-bug="35364" due-to="Askild Aaberg Olsen" due-to-email="askild@xangeli.com">
+       Forms block: sqldatabase sample added, demonstrates "zero java code" editing of SQL data
+       using the SQLTransformer.
+     </action>
     <action dev="SW" type="fix" fixes-bug="35311" due-to="Jeffrey Kirby" due-to-email="jeff.kirby@wicourts.gov">
   	   CForms block: Ensure FormHandler is always called when a field's value change.
     </action>
