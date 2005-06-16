@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="fix" fixes-bug="33097">
+      Fixed reloading of the i18n catalogues (regression introduced in 2.1.7).
+    </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
       JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
       detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
@@ -205,10 +208,10 @@
       updated to use this mechanism.
     </action>
     <action dev="BD" type="add" fixes-bug="35364" due-to="Askild Aaberg Olsen" due-to-email="askild@xangeli.com">
-       Forms block: sqldatabase sample added, demonstrates "zero java code" editing of SQL data
-       using the SQLTransformer.
-     </action>
-     <action dev="SW" type="fix" fixes-bug="35311" due-to="Jeffrey Kirby" due-to-email="jeff.kirby@wicourts.gov">
+      Forms block: sqldatabase sample added, demonstrates "zero java code" editing of SQL data
+      using the SQLTransformer.
+    </action>
+    <action dev="SW" type="fix" fixes-bug="35311" due-to="Jeffrey Kirby" due-to-email="jeff.kirby@wicourts.gov">
       CForms block: Ensure FormHandler is always called when a field's value change.
     </action>
     <action dev="RP" type="update">
@@ -221,13 +224,13 @@
       don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
       has to be used. Currently this tag is only supported by the jxtemplate macro library.
     </action>       
-	  <action dev="SW" type="fix">
-		 Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
-		 caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
-		 To use multiple threads to process a request (e.g. parallel include), background processing must use
-		 the <code>org.apache.cocoon.environment.CocoonRunnable</code> wrapper that ensures that the environment
-		 context of the main request is properly inherited by tasks running in the background.
-	  </action>
+    <action dev="SW" type="fix">
+      Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
+      caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
+      To use multiple threads to process a request (e.g. parallel include), background processing must use
+      the <code>org.apache.cocoon.environment.CocoonRunnable</code> wrapper that ensures that the environment
+      context of the main request is properly inherited by tasks running in the background.
+    </action>
     <action dev="CZ" type="update">
       Mail block: Make internal protocol handling for attachments in SendMailTransformer
       configurable and properly release all sources.
@@ -2095,7 +2098,7 @@
    The authentication framework now uses a configurable component to try to authenticate a user.
    This allows to drop in own authentication services or e.g. the servlet authentication mechanism.
   </action>
-  <action dev="JH" type="fix" fixes-bug="4934" due-to="Ryder Rishel" due-to-email="	ryderblue@yahoo.com">
+  <action dev="JH" type="fix" fixes-bug="4934" due-to="Ryder Rishel" due-to-email="ryderblue@yahoo.com">
    Made JSPs working in Resin that don't end on *.jsp.
   </action>
   <action dev="JH" type="update">
