@@ -1336,6 +1336,7 @@
     <!--depend project="cocoon-block-eventcache" type="samples"/-->
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-hsqldb"/>
+    <depend project="cocoon-block-cron"/>
     <depend project="gump.resource.geronimo-spec-jms"/>
 
     <library name="geronimo-spec-jms"/>

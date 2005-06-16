@@ -37,6 +37,8 @@ import org.apache.avalon.framework.service.Serviceable;
 /**
  * Abstract JMS message publisher. Use this as a basis for components 
  * that want to publish JMS messages.
+ * When used in conjunction with the default {@link org.apache.cocoon.components.jms.JMSConnectionManager} 
+ * implementation this class supports automatic reconnection when the connection gets severed.
  * 
  * <p>Parameters:</p>
  * <table border="1">
@@ -87,7 +89,7 @@ import org.apache.avalon.framework.service.Serviceable;
  * @version CVS $Id: AbstractMessagePublisher.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public abstract class AbstractMessagePublisher extends AbstractLogEnabled
-implements Serviceable, Parameterizable, Initializable, Disposable {
+implements Serviceable, Parameterizable, Initializable, Disposable, JMSConnectionEventListener {
 
     // ---------------------------------------------------- Constants
 
@@ -136,7 +138,58 @@ implements Serviceable, Parameterizable, Initializable, Disposable {
     }
 
     public void initialize() throws Exception {
+        if (m_connectionManager instanceof JMSConnectionEventNotifier) {
+            ((JMSConnectionEventNotifier) m_connectionManager).addConnectionListener(m_connectionName, this);
+        }
+        createSessionAndPublisher();
+    }
 
+    public void dispose() {
+        closePublisherAndSession();
+        if (m_manager != null) {
+            if (m_connectionManager != null) {
+                m_manager.release(m_connectionManager);
+            }
+        }
+    }
+
+    // ---------------------------------------------------- JMSConnectionEventListener
+
+    public void onConnection(String name) {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Creating publisher because of reconnection");
+        }
+        try {
+            createSessionAndPublisher();
+        }
+        catch (JMSException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Reinitialization after reconnection failed", e);
+            }
+        }
+    }
+
+    public void onDisconnection(String name) {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Closing subscriber because of disconnection");
+        }
+        closePublisherAndSession();
+    }
+
+    // ---------------------------------------------------- Implementation
+
+    /**
+     * Concrete classes call this method to publish messages.
+     */
+    protected synchronized void publishMessage(Message message) throws JMSException {
+        // TODO: discover disconnected state and queue messages until connected.
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Publishing message '" + message + "'");
+        }
+        m_publisher.publish(message, m_mode, m_priority, m_timeToLive);
+    }
+
+    private void createSessionAndPublisher() throws JMSException {
         // set the default acknowledge mode
         // concrete implementations may override this
         m_acknowledgeMode = Session.DUPS_OK_ACKNOWLEDGE;
@@ -153,10 +206,9 @@ implements Serviceable, Parameterizable, Initializable, Disposable {
                 getLogger().warn("Could not obtain JMS connection '" + m_connectionName + "'");
             }
         }
-
     }
 
-    public void dispose() {
+    private void closePublisherAndSession() {
         if (m_publisher != null) {
             try {
                 m_publisher.close();
@@ -172,23 +224,6 @@ implements Serviceable, Parameterizable, Initializable, Disposable {
                 getLogger().warn("Error closing session.", e);
             }
         }
-        if (m_manager != null) {
-            if (m_connectionManager != null) {
-                m_manager.release(m_connectionManager);
-            }
-        }
-    }
-
-    // ---------------------------------------------------- Implementation
-
-    /**
-     * Concrete classes call this method to publish messages.
-     */
-    protected synchronized void publishMessage(Message message) throws JMSException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Publishing message '" + message + "'");
-        }
-        m_publisher.publish(message, m_mode, m_priority, m_timeToLive);
     }
 
 }

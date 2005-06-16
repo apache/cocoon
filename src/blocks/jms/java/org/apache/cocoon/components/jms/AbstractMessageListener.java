@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.jms;
 
-import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.Session;
@@ -23,7 +22,6 @@ import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -35,8 +33,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
 /**
- * Abstract JMS MessageListener. Use this as a basis for concrete
- * MessageListener implementations.
+ * Abstract {@link javax.jms.MessageListener} implementation. 
+ * Use this as a basis for concrete MessageListener implementations. 
+ * When used in conjunction with the default {@link org.apache.cocoon.components.jms.JMSConnectionManager} 
+ * implementation this class supports automatic reconnection when the connection gets severed.
  * 
  * <p>Parameters:</p>
  * <table border="1">
@@ -76,7 +76,8 @@ import org.apache.avalon.framework.service.Serviceable;
  * @version CVS $Id: AbstractMessageListener.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public abstract class AbstractMessageListener extends AbstractLogEnabled
-implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Initializable, Disposable {
+implements MessageListener, Serviceable, Parameterizable, Initializable, Disposable,
+           JMSConnectionEventListener {
 
     // ---------------------------------------------------- Constants
 
@@ -98,7 +99,7 @@ implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Ini
     protected int m_acknowledgeMode;
 
     /* connection manager component */
-    private JMSConnectionManager m_jmsConnectionManager;
+    private JMSConnectionManager m_connectionManager;
 
     /* our session */
     private TopicSession m_session;
@@ -113,7 +114,7 @@ implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Ini
 
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
-        m_jmsConnectionManager = (JMSConnectionManager) m_manager.lookup(JMSConnectionManager.ROLE);
+        m_connectionManager = (JMSConnectionManager) m_manager.lookup(JMSConnectionManager.ROLE);
     }
 
     public void parameterize(Parameters parameters) throws ParameterException {
@@ -128,15 +129,48 @@ implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Ini
 
     /**
      * Registers this MessageListener as a TopicSubscriber to the configured Topic.
+     * @throws Exception
      */
     public void initialize() throws Exception {
+        if (m_connectionManager instanceof JMSConnectionEventNotifier) {
+            ((JMSConnectionEventNotifier) m_connectionManager).addConnectionListener(m_connectionName, this);
+        }
+        createSessionAndSubscriber();
+    }
 
+    public void dispose() {
+        closeSubscriberAndSession();
+        m_manager.release(m_connectionManager);
+    }
+
+    public void onConnection(String name) {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Creating subscriber because of reconnection");
+        }
+        try {
+            createSessionAndSubscriber();
+        }
+        catch (JMSException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Reinitialization after reconnection failed", e);
+            }
+        }
+    }
+
+    public void onDisconnection(String name) {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Closing subscriber because of disconnection");
+        }
+        closeSubscriberAndSession();
+    }
+
+    private void createSessionAndSubscriber() throws JMSException {
         // set the default acknowledge mode to dups
         // concrete implementations may want to override this
         m_acknowledgeMode = Session.DUPS_OK_ACKNOWLEDGE;
 
         // register this MessageListener with a TopicSubscriber
-        final TopicConnection connection = (TopicConnection) m_jmsConnectionManager.getConnection(m_connectionName);
+        final TopicConnection connection = (TopicConnection) m_connectionManager.getConnection(m_connectionName);
         if (connection != null) {
             m_session = connection.createTopicSession(false, m_acknowledgeMode);
             final Topic topic = m_session.createTopic(m_topicName);
@@ -153,15 +187,17 @@ implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Ini
                 getLogger().warn("Could not obtain JMS connection '" + m_connectionName + "'");
             }
         }
-
     }
 
-    public void dispose() {
+    private void closeSubscriberAndSession() {
         if (m_subscriber != null) {
             try {
                 m_subscriber.close();
             } catch (JMSException e) {
                 getLogger().error("Error closing subscriber", e);
+            }
+            finally {
+                m_subscriber = null;
             }
         }
         if (m_session != null) {
@@ -171,13 +207,9 @@ implements MessageListener, ExceptionListener, Serviceable, Parameterizable, Ini
             catch (JMSException e) {
                 getLogger().error("Error closing session", e);
             }
-        }
-        this.m_manager.release(m_jmsConnectionManager);
-    }
-
-    public void onException(JMSException exception) {
-        if (getLogger().isWarnEnabled()) {
-            getLogger().warn("JMS problem detected", exception);
+            finally {
+                m_session = null;
+            }
         }
     }
 }

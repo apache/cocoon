@@ -15,13 +15,16 @@
  */
 package org.apache.cocoon.components.jms;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
+import java.util.Set;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
@@ -29,9 +32,7 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import org.apache.cocoon.components.jms.JMSConnectionManager;
-
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
@@ -39,15 +40,22 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.cron.CronJob;
+import org.apache.cocoon.components.cron.JobScheduler;
 
 /**
  * {@link org.apache.cocoon.components.jms.JMSConnectionManager} implementation.
  */
 public class JMSConnectionManagerImpl extends AbstractLogEnabled 
-implements JMSConnectionManager, Configurable, Initializable, Startable, Disposable, ThreadSafe {
+implements JMSConnectionManager, Serviceable, Configurable, Initializable,
+           Startable, Disposable, ThreadSafe, JMSConnectionEventNotifier {
 
     // ---------------------------------------------------- Constants
     
@@ -63,17 +71,28 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
     private static final String CONNECTION_FACTORY_PARAM = "connection-factory";
     private static final String USERNAME_PARAM = "username";
     private static final String PASSWORD_PARAM = "password";
+    private static final String AUTO_RECONNECT_PARAM = "auto-reconnect";
+    private static final String AUTO_RECONNECT_DELAY_PARAM = "auto-reconnect-delay";
+    
+    private static final int DEFAULT_AUTO_RECONNECT_DELAY = 1000;
     
     private static final String JNDI_PROPERTY_PREFIX = "java.naming.";
 
     // ---------------------------------------------------- Instance variables
 
+    private ServiceManager m_serviceManager;
+    
     private Map m_configurations;
     private Map m_connections;
+    private Map m_listeners;
 
     // ---------------------------------------------------- Lifecycle
 
     public JMSConnectionManagerImpl() {
+    }
+    
+    public void service(ServiceManager manager) {
+        m_serviceManager = manager;
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -103,39 +122,19 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
     }
 
     public void initialize() throws Exception {
+        m_listeners = new HashMap();
         m_connections = new HashMap(m_configurations.size());
         final Iterator iter = m_configurations.values().iterator();
-        try {
-            while (iter.hasNext()) {
-                final ConnectionConfiguration cc = (ConnectionConfiguration) iter.next();
-                final InitialContext context = createInitialContext(cc.getJNDIProperties());
-                final ConnectionFactory factory = (ConnectionFactory) context.lookup(cc.getConnectionFactory());
-                final Connection connection = createConnection(factory, cc);
+
+        while (iter.hasNext()) {
+            final ConnectionConfiguration cc = (ConnectionConfiguration) iter.next();
+            try {
+                final Connection connection = createConnection(cc);
+                
                 m_connections.put(cc.getName(), connection);
             }
-        }
-        catch (NamingException e) {
-            if (getLogger().isWarnEnabled()) {
-                Throwable rootCause = e.getRootCause();
-                if (rootCause != null) {
-                    String message = e.getRootCause().getMessage();
-                    if (rootCause instanceof ClassNotFoundException) {
-                        String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" + 
-                            "- For the jms block to work you must install and start a JMS server and " +
-                            "place the client jar in WEB-INF/lib.";
-                            if (message.indexOf("exolab") > 0 ) {
-                                info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
-                            }
-                        System.err.println(info);
-                        getLogger().warn(info,e);
-                    } else {
-                        System.out.println(message);
-                        getLogger().warn("Cannot get Initial Context. Is the JNDI server reachable?",e);
-                    }
-                }
-                else {
-                    getLogger().warn("Failed to initialize JMS.",e);
-                }
+            catch (NamingException e) {
+                // ignore, warnings for NamingExceptions are logged by createConnection method
             }
         }
         m_configurations = null;
@@ -157,17 +156,20 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
         final Iterator iter = m_connections.entrySet().iterator();
         while (iter.hasNext()) {
             final Map.Entry entry = (Map.Entry) iter.next();
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Stopping JMS connection " + entry.getKey());
-            }
-            try {
-                final Connection connection = (Connection) entry.getValue();
-                connection.stop();
-            }
-            catch (JMSException e) {
-                getLogger().error("Error stopping JMS connection " + entry.getKey(), e);
-            }
+            stopConnection((String) entry.getKey(), (Connection) entry.getValue());
         }
+    }
+
+    void stopConnection(String name, Connection connection) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Stopping JMS connection " + name);
+        }
+        try {
+            connection.stop();
+        }
+        catch (JMSException e) {
+            // ignore
+        }        
     }
 
     public void dispose() {
@@ -189,25 +191,73 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
 
     // ---------------------------------------------------- ConnectionManager
 
-    public Connection getConnection(String name) {
+    public synchronized Connection getConnection(String name) {
         return (Connection) m_connections.get(name);
     }
 
-    public TopicConnection getTopicConnection(String name) {
+    public synchronized TopicConnection getTopicConnection(String name) {
         return (TopicConnection) m_connections.get(name);
     }
 
-    public QueueConnection getQueueConnection(String name) {
+    public synchronized QueueConnection getQueueConnection(String name) {
         return (QueueConnection) m_connections.get(name);
     }
 
+    // ---------------------------------------------------- JMSConnectionEventNotifier
+    
+    public synchronized void addConnectionListener(String name, JMSConnectionEventListener listener) {
+       Set connectionListeners = (Set) m_listeners.get(name);
+       if (connectionListeners == null) {
+           connectionListeners = new HashSet();
+           m_listeners.put(name, connectionListeners);
+       }
+       connectionListeners.add(listener);
+    }
+
+    public synchronized void removeConnectionListener(String name, JMSConnectionEventListener listener) {
+        Set connectionListeners = (Set) m_listeners.get(name);
+        if (connectionListeners != null) {
+            connectionListeners.remove(listener);
+        }
+     }
+
     // ---------------------------------------------------- Implementation
 
-    private InitialContext createInitialContext(Properties properties) throws NamingException {
-        if (properties != null) {
-            return new InitialContext(properties);
+    Connection createConnection(ConnectionConfiguration cc) throws NamingException, JMSException {
+        try {
+            final InitialContext context = createInitialContext(cc.getJNDIProperties());
+            final ConnectionFactory factory = (ConnectionFactory) context.lookup(cc.getConnectionFactory());
+            final Connection connection = createConnection(factory, cc);
+            if (cc.isAutoReconnect()) {
+                connection.setExceptionListener(new ReconnectionListener(this, cc));
+            }
+            return connection;
         }
-        return new InitialContext();
+        catch (NamingException e) {
+            if (getLogger().isWarnEnabled()) {
+                final Throwable rootCause = e.getRootCause();
+                if (rootCause != null) {
+                    String message = e.getRootCause().getMessage();
+                    if (rootCause instanceof ClassNotFoundException) {
+                        String info = "WARN! *** JMS block is installed but jms client library not found. ***\n" + 
+                            "- For the jms block to work you must install and start a JMS server and " +
+                            "place the client jar in WEB-INF/lib.";
+                            if (message.indexOf("exolab") > 0 ) {
+                                info += "\n- The default server, OpenJMS is configured in cocoon.xconf but is not bundled with Cocoon.";
+                            }
+                        System.err.println(info);
+                        getLogger().warn(info,e);
+                    } else {
+                        System.out.println(message);
+                        getLogger().warn("Cannot get Initial Context. Is the JNDI server reachable?",e);
+                    }
+                }
+                else {
+                    getLogger().warn("Failed to initialize JMS.",e);
+                }
+            }
+            throw e;
+        }
     }
 
     private Connection createConnection(ConnectionFactory factory, ConnectionConfiguration cc) throws JMSException {
@@ -242,7 +292,73 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
         return null;
     }
 
-    private static final class ConnectionConfiguration {
+    private InitialContext createInitialContext(Properties properties) throws NamingException {
+        if (properties != null) {
+            return new InitialContext(properties);
+        }
+        return new InitialContext();
+    }
+    
+    synchronized void removeConnection(String name) {
+        notifyListenersOfDisconnection(name);
+        final Connection connection = (Connection) m_connections.remove(name);
+        stopConnection(name, connection);
+    }
+    
+    synchronized void addConnection(String name, Connection connection) {
+        m_connections.put(name, connection);
+        notifyListenersOfConnection(name);
+    }
+    
+    void scheduleReconnectionJob(ConnectionConfiguration configuration) {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Scheduling JMS reconnection job for: " + configuration.getName());
+        }
+        JobScheduler scheduler = null;
+        try {
+            scheduler = (JobScheduler) m_serviceManager.lookup(JobScheduler.ROLE);
+            Date executionTime = new Date(System.currentTimeMillis() + configuration.getAutoReconnectDelay());
+            ReconnectionJob job = new ReconnectionJob(this, configuration);
+            scheduler.fireJobAt(executionTime, "reconnect_" + configuration.getName(), job);
+        }
+        catch (ServiceException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Cannot obtain scheduler.",e);
+            }
+        }
+        catch (CascadingException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Unable to schedule reconnection job.",e);
+            }
+        }
+        finally {
+            if (scheduler != null) {
+                m_serviceManager.release(scheduler);
+            }
+        }
+    }
+    
+    private void notifyListenersOfConnection(String name) {
+        Set connectionListeners = (Set) m_listeners.get(name);
+        if (connectionListeners != null) {
+            for (Iterator listenersIterator = connectionListeners.iterator(); listenersIterator.hasNext();) {
+                JMSConnectionEventListener listener = (JMSConnectionEventListener) listenersIterator.next();
+                listener.onConnection(name);
+            }
+        }
+    }
+    
+    private void notifyListenersOfDisconnection(String name) {
+        Set connectionListeners = (Set) m_listeners.get(name);
+        if (connectionListeners != null) {
+            for (Iterator listenersIterator = connectionListeners.iterator(); listenersIterator.hasNext();) {
+                JMSConnectionEventListener listener = (JMSConnectionEventListener) listenersIterator.next();
+                listener.onDisconnection(name);
+            }
+        }
+    }
+
+    static final class ConnectionConfiguration {
         
         // ------------------------------------------------ Instance variables
 
@@ -251,15 +367,20 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
         private final String m_connectionFactory;
         private final String m_username;
         private final String m_password;
+        private final boolean m_autoReconnect;
+        private final int m_autoReconnectDelay;
+        
         private Properties m_jndiProperties = new Properties();
 
-        private ConnectionConfiguration(String name, Parameters parameters, int type) 
+        ConnectionConfiguration(String name, Parameters parameters, int type) 
         throws ConfigurationException {
             m_name = name;
             try {
                 m_connectionFactory = parameters.getParameter(CONNECTION_FACTORY_PARAM);
                 m_username = parameters.getParameter(USERNAME_PARAM, null);
                 m_password = parameters.getParameter(PASSWORD_PARAM, null);
+                m_autoReconnect = parameters.getParameterAsBoolean(AUTO_RECONNECT_PARAM, false);
+                m_autoReconnectDelay = parameters.getParameterAsInteger(AUTO_RECONNECT_DELAY_PARAM, DEFAULT_AUTO_RECONNECT_DELAY);
                 
                 // parse the jndi property parameters
                 String[] names = parameters.getNames();
@@ -275,34 +396,98 @@ implements JMSConnectionManager, Configurable, Initializable, Startable, Disposa
             m_type = type;
         }
 
-        private String getName() {
+        String getName() {
             return m_name;
         }
 
-        private int getType() {
+        int getType() {
             return m_type;
         }
 
-        private Properties getJNDIProperties() {
+        Properties getJNDIProperties() {
             return m_jndiProperties;
         }
 
-        private String getConnectionFactory() {
+        String getConnectionFactory() {
             return m_connectionFactory;
         }
 
-        private String getUserName() {
+        String getUserName() {
             return m_username;
         }
 
-        private String getPassword() {
+        String getPassword() {
             return m_password;
+        }
+        
+        boolean isAutoReconnect() {
+            return m_autoReconnect;
+        }
+        
+        int getAutoReconnectDelay() {
+            return m_autoReconnectDelay;
         }
 
         public int hashCode() {
             return m_name.hashCode();
         }
 
+    }
+
+    static final class ReconnectionListener implements ExceptionListener {
+
+        private final JMSConnectionManagerImpl m_manager;
+        private final ConnectionConfiguration m_configuration;
+        
+        ReconnectionListener(JMSConnectionManagerImpl manager, ConnectionConfiguration configuration) {
+            super();
+            m_manager = manager;
+            m_configuration = configuration;
+        }
+
+        public void onException(JMSException exception) {
+            m_manager.removeConnection(m_configuration.getName());
+            m_manager.scheduleReconnectionJob(m_configuration);
+        }
+
+    }
+
+    static final class ReconnectionJob implements CronJob {
+
+        private final JMSConnectionManagerImpl m_manager;        
+        private final ConnectionConfiguration m_configuration;
+
+        ReconnectionJob(JMSConnectionManagerImpl manager, ConnectionConfiguration configuration) {
+            super();
+            m_manager = manager;
+            m_configuration = configuration;
+        }
+        
+        public void execute(String jobname) {
+            final Logger logger = m_manager.getLogger();
+            if (logger.isInfoEnabled()) {
+                logger.info("Reconnecting JMS connection: " + m_configuration.getName());
+            }
+            try {
+                final Connection connection = m_manager.createConnection(m_configuration);
+                m_manager.addConnection(m_configuration.getName(), connection);
+                if (logger.isInfoEnabled()) {
+                    logger.info("Successfully reconnected JMS connection: " + m_configuration.getName());
+                }
+            }
+            catch (NamingException e) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Failed to reconnect.",e);
+                }
+                m_manager.scheduleReconnectionJob(m_configuration);
+            }
+            catch (JMSException e) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Failed to reconnect.",e);
+                }
+                m_manager.scheduleReconnectionJob(m_configuration);
+            }
+        }
     }
 
 }
