@@ -254,14 +254,18 @@ public class XMLResourceBundleFactory
             getLogger().debug("Selecting from: " + name + ", locale: " + locale +
                               ", directory: " + directories[index]);
         }
-        String cacheKey = getCacheKey(directories, index, name, locale);
-        XMLResourceBundle bundle = selectCached(cacheKey);
+
+        final String cacheKey = getCacheKey(directories, index, name, locale);
+        final String fileName = getFileName(directories[index], name, locale);
+
+        XMLResourceBundle bundle = selectCached(cacheKey, fileName);
         if (bundle == null) {
             synchronized (this) {
-                bundle = selectCached(cacheKey);
+                bundle = selectCached(cacheKey, fileName);
                 if (bundle == null) {
                     boolean localeAvailable = (locale != null && !locale.getLanguage().equals(""));
                     index++;
+
                     XMLResourceBundle parentBundle = null;
                     if (localeAvailable && index == directories.length) {
                         // all directories have been searched with this locale,
@@ -271,11 +275,12 @@ public class XMLResourceBundleFactory
                         // there are directories left to search for with this locale
                         parentBundle = _select(directories, index, name, locale);
                     }
+
                     if (!isNotFoundBundle(cacheKey)) {
-                        String fileName = getFileName(directories[index - 1], name, locale);
                         bundle = _loadBundle(name, fileName, locale, parentBundle);
                         updateCache(cacheKey, bundle);
                     }
+
                     if (bundle == null) {
                         return parentBundle;
                     }
@@ -411,63 +416,56 @@ public class XMLResourceBundleFactory
     /**
      * Selects a bundle from the cache.
      *
+     * @param cacheKey          caching key of the bundle
      * @param fileName          file name of the bundle
      * @return                  the cached bundle; null, if not found
      */
-    protected XMLResourceBundle selectCached(String fileName) {
-        XMLResourceBundle bundle = null;
-        bundle = (XMLResourceBundle) this.cache.get(fileName);
+    protected XMLResourceBundle selectCached(String cacheKey, String fileName) {
+        XMLResourceBundle bundle = (XMLResourceBundle) this.cache.get(cacheKey);
         if (bundle != null) {
             bundle.update(fileName);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Returning from cache: " + fileName);
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Not found in cache: " + fileName);
-            }
         }
 
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug((bundle == null? "NOT ":"") + "In cache: " + cacheKey);
+        }
         return bundle;
     }
 
     /**
      * Checks if the bundle is in the &quot;not-found&quot; cache.
      *
-     * @param fileName          file name of the bundle
+     * @param cacheKey          caching key of the bundle
      * @return                  true, if the bundle wasn't found already before;
      *                          otherwise, false.
      */
-    protected boolean isNotFoundBundle(String fileName) {
-        String result = (String) this.cacheNotFound.get(fileName);
-        if (result != null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Returning from not_found_cache: " + fileName);
-            }
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Not found in not_found_cache: " + fileName);
-            }
+    protected boolean isNotFoundBundle(String cacheKey) {
+        Object result = this.cacheNotFound.get(cacheKey);
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug((result == null? "NOT ":"") + "In not_found_cache: " + cacheKey);
         }
         return result != null;
     }
 
     /**
-     * Checks if the bundle is in the &quot;not-found&quot; cache.
+     * Stores bundle in the cache (or in the &quot;not-found&quot; cache,
+     * if bundle is null)
      *
-     * @param fileName          file name of the bundle
+     * @param cacheKey          caching key of the bundle
+     * @param bundle            bundle to be placed in the cache
      */
-    protected void updateCache(String fileName, XMLResourceBundle bundle) {
+    protected void updateCache(String cacheKey, XMLResourceBundle bundle) {
         if (bundle == null) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Updating not_found_cache: " + fileName);
+                getLogger().debug("Updating not_found_cache: " + cacheKey);
             }
-            this.cacheNotFound.put(fileName, fileName);
+            this.cacheNotFound.put(cacheKey, cacheKey);
         } else {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Updating cache: " + fileName);
+                getLogger().debug("Updating cache: " + cacheKey);
             }
-            this.cache.put(fileName, bundle);
+            this.cache.put(cacheKey, bundle);
         }
     }
 }
