@@ -20,7 +20,7 @@
     |
     | $Id$
     |
-    |  see http://brutus.apache.org/gump/public/buildLog.html
+    |  see http://vmgump.apache.org/gump/public/buildLog.html
     |  for already existing projects
     |
     +-->
@@ -1530,18 +1530,6 @@
     <jar name="lib/optional/daisy-util-1.1.jar"/>
   </project>      
 
-  <project name="commons-javaflow">
-    <package>org.apache.commons.javaflow</package>
-    <home nested="lib/optional"/>
-    <jar name="commons-javaflow-0.1-dev.jar"/>
-  </project>      
-
-  <project name="commons-jci">
-    <package>org.apache.jci</package>
-    <home nested="lib/core"/>
-    <jar name="commons-jci-r159148.jar"/>
-  </project>      
-
   <project name="jcr">
     <package>javax.jcr</package>
     <jar name="lib/optional/jcr-0.16.4.jar"/>
@@ -1553,8 +1541,4 @@
     <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
   </project>
 
-  <project name="spring">
-    <package>org.springframework</package>
-    <jar name="lib/optional/spring-1.1.5.jar"/>
-  </project>
 </module>
