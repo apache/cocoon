@@ -197,6 +197,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="add">
+  	   CForms block: new Tree widget, heavily inspired by Swing's JTree. Features Ajax, selection listeners,
+      and a lightweight data model with two implementations: a generic one, and a source-based one to build
+      file explorers.
+    </action>     
     <action dev="CZ" type="fix">
       Fix a huge memory leak in error pipelines that was caused by unreleased components.
     </action>     
