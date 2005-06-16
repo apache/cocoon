@@ -32,6 +32,10 @@
     |   equivalent to "java.naming.factory.initial".
     | - connection-factory: the JNDI lookup name of the javax.jms.ConnectionFactory service.
     | - username / password: optional connection credentials
+    | - auto-reconnect: when the JMS connection fails when this parameter is set to true
+    |   a cron job will be scheduled to attempt to re-establish the connection. Default is false.
+    | - auto-reconnect-delay: the amount of time in ms between reconnection attempts. 
+    |   Only applies when auto-reconnect is on. Defaults to 1000ms.
     + -->
   <jms-connection-manager logger="core.jms">
     <topic-connection name="local-topics">
@@ -42,6 +46,8 @@
       <!--
       <parameter name="username" value="user"/>
       <parameter name="password" value="secret"/>
+      <parameter name="auto-reconnect" value="false"/>
+      <parameter name="auto-reconnect-delay" value="1000"/>
       -->
     </topic-connection>
   </jms-connection-manager>
