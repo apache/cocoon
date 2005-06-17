@@ -188,6 +188,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public static final String NAMESPACE                  = "http://apache.org/cocoon/transformation/sendmail";
     public static final String ELEMENT_SENDMAIL           = "sendmail";
     public static final String ELEMENT_SMTPHOST           = "smtphost";
+    public static final String ELEMENT_SMTPPORT           = "smtpport";
     public static final String ELEMENT_MAILFROM           = "from";
     public static final String ELEMENT_MAILTO             = "to";
     public static final String ELEMENT_REPLYTO            = "reply-to";
@@ -215,11 +216,13 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected static final int MODE_ATTACHMENT         = 6;
     protected static final int MODE_ATTACHMENT_CONTENT = 7;
     protected static final int MODE_REPLY_TO           = 8;
+    protected static final int MODE_SMTPPORT           = 8;
 
     /*
      * constants, related to parameter from request
      */
     public final static String PARAM_SMTPHOST    = "smtphost";
+    public final static String PARAM_SMTPPORT    = "smtpport";
     public final static String PARAM_FROM        = "from";
     public final static String PARAM_TO          = "to";
     public final static String PARAM_REPLY_TO    = "reply-to";
@@ -241,6 +244,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected String               bodyURI;
     protected String               bodyMimeType;
     protected String               mailHost;
+    protected int                  mailPort;
     protected String               fromAddress;
     protected AttachmentDescriptor attachmentDescriptor;
     protected int                  port;
@@ -249,6 +253,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected Message              smtpMessage;
 
     protected String defaultSmtpHost;
+    protected int defaultSmtpPort;
     protected String defaultFromAddress;
 
     protected boolean useExternalRequests = true;
@@ -268,6 +273,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     throws ConfigurationException {
         super.configure(configuration);
         this.defaultSmtpHost = configuration.getChild("smtphost").getValue("");
+        this.defaultSmtpPort = configuration.getChild("smtpport").getValueAsInteger(25);
         this.defaultFromAddress = configuration.getChild("from").getValue("");
         this.useExternalRequests = configuration.getChild("use-external-requests").getValueAsBoolean(this.useExternalRequests);
     }
@@ -281,13 +287,14 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         super.setup(resolver, objectModel, src, par);
 
         this.mailHost    = par.getParameter(PARAM_SMTPHOST, this.defaultSmtpHost);
+        this.mailPort    = par.getParameterAsInteger(PARAM_SMTPPORT, this.defaultSmtpPort);
         this.fromAddress = par.getParameter(PARAM_FROM, this.defaultFromAddress);
         this.port        = this.request.getServerPort();
         this.contextPath = this.request.getContextPath();
         this.sendPartial = par.getParameterAsBoolean(PARAM_SENDPARTIAL, true);
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Using host " + mailHost + ", from address " + fromAddress);
+            getLogger().debug("Using host " + mailHost + " on port " + mailPort +  ", from address " + fromAddress);
         }
 
         this.attachments = new ArrayList();
@@ -314,6 +321,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         } else if (name.equals(ELEMENT_SMTPHOST)) {
             startTextRecording();
             this.mode = MODE_SMTPHOST;
+        } else if (name.equals(ELEMENT_SMTPPORT)) {
+            this.startTextRecording();
+            this.mode = MODE_SMTPPORT;
         } else if (name.equals(ELEMENT_MAILFROM)) {
             startTextRecording();
             this.mode = MODE_FROM;
@@ -369,6 +379,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             sendMail();
         } else if (name.equals(ELEMENT_SMTPHOST) ) {
             this.mailHost = endTextRecording();
+            this.mode     = MODE_NONE;
+        } else if (name.equals(ELEMENT_SMTPPORT) ) {
+            this.mailPort = Integer.parseInt(this.endTextRecording());
             this.mode     = MODE_NONE;
         } else if (name.equals(ELEMENT_MAILFROM)) {
             this.fromAddress = endTextRecording();
@@ -429,6 +442,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         try {
             Properties props = new Properties();
             props.put("mail.smtp.host", this.mailHost);
+            props.put("mail.smtp.port", String.valueOf(this.mailPort));
 
             if (this.subject == null) {
 		        this.ignoreHooksCount++;
@@ -687,7 +701,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 	    this.body = null;
 	    this.bodyURI = null;
 	    this.mailHost = null;
-	    this.fromAddress = null;
+        this.mailPort = 0;
+        this.fromAddress = null;
 	    this.attachmentDescriptor = null;
 	    this.port = 0;
 	    this.contextPath = null;
