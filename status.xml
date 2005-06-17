@@ -198,6 +198,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="UH" type="add" due-to="Johan Stuyts">
+      Mail block: The SendMailTransformer can now configure the smtp port.
+    </action>
+    <action dev="UH" type="add" due-to="Johan Stuyts">
       JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
       detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
       in order to re-establish the connection. As soon as reconnection was successful it notifies its listeners
