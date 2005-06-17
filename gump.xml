@@ -1173,6 +1173,7 @@
     <depend project="cocoon" inherit="all"/>
     <!-- commented out because of circular dependency -->
     <!--depend project="cocoon-block-eventcache" type="samples"/-->
+    <depend project="cocoon-block-cron"/>
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-hsqldb" inherit="all" type="samples"/>
     <depend project="jms"/>
