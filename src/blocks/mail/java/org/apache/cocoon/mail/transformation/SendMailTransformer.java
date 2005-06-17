@@ -216,7 +216,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected static final int MODE_ATTACHMENT         = 6;
     protected static final int MODE_ATTACHMENT_CONTENT = 7;
     protected static final int MODE_REPLY_TO           = 8;
-    protected static final int MODE_SMTPPORT           = 8;
+    protected static final int MODE_SMTPPORT           = 9;
 
     /*
      * constants, related to parameter from request
