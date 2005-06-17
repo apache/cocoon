@@ -197,6 +197,14 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="UH" type="add" due-to="Johan Stuyts">
+      JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
+      detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
+      in order to re-establish the connection. As soon as reconnection was successful it notifies its listeners
+      so that they may recover as well and refresh their JMS sessions. The provided abstract MessageListener
+      and JMS publisher that users are recommended to use as base classes for their concrete JMS needs have been
+      updated to use this mechanism.
+    </action>
     <action dev="SW" type="add">
       CForms block: new Tree widget, heavily inspired by Swing's JTree. Features Ajax, selection listeners,
       and a lightweight data model with two implementations: a generic one, and a source-based one to build
