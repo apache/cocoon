@@ -91,11 +91,10 @@ implements MessageListener, Serviceable, Parameterizable, Initializable, Disposa
     protected ServiceManager m_manager;
 
     /* configuration */
-    private String m_connectionName;
-    private String m_topicName;
-    private String m_subscriptionId;
-    private String m_selector;
-
+    protected String m_connectionName;
+    protected String m_topicName;
+    protected String m_subscriptionId;
+    protected String m_selector;
     protected int m_acknowledgeMode;
 
     /* connection manager component */
