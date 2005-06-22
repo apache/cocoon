@@ -110,13 +110,12 @@ implements Serviceable, Parameterizable, Initializable, Disposable, JMSConnectio
     protected TopicSession m_session;
     protected TopicPublisher m_publisher;
 
-    private int m_mode;
-    private int m_priority;
-    private int m_timeToLive;
-    private String m_topicName;
-    private int m_acknowledgeMode;
-
-    private String m_connectionName;
+    protected int m_mode;
+    protected int m_priority;
+    protected int m_timeToLive;
+    protected String m_topicName;
+    protected int m_acknowledgeMode;
+    protected String m_connectionName;
 
     // ---------------------------------------------------- Lifecycle
 
