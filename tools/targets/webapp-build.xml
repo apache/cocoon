@@ -29,6 +29,7 @@
     <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
     <copy file="${webapp}/sitemap-additions.xconf" tofile="${build.webapp}/sitemap-additions.xconf"/>
+    <copy file="${webapp}/wiring.xml" tofile="${build.webapp}/wiring.xml" filtering="on"/>
 
     <!-- generate sitemap entries
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
