@@ -149,10 +149,27 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
             this.submitId = widget == null ? null : widget.getId();
             
             if (cocoon.request.getParameter("cocoon-ajax") != null) {
-                // Ask the client to load the page
+                // Ask the client to issue a new request reloading the whole page.
+                // As we have nothing special to send back, so a header is just what we need...
                 cocoon.response.setHeader("X-Cocoon-Ajax", "continue");
-                cocoon.response.setHeader("Content-Length", "0");
                 cocoon.sendStatus(200);
+                
+                // ...but Safari doesn't consider empty responses (with content-length=0) as
+                // valid ones. So send a dummy response by using directly the HttpResponse's
+                // output stream. Avoiding this hack would require to put an additional pipeline
+                // in the sitemap for just sending this dummy response, which isn't nice.
+                var httpResponse = objectModel.get(org.apache.cocoon.environment.http.HttpEnvironment.HTTP_RESPONSE_OBJECT);
+                if (httpResponse) {
+                    httpResponse.setContentType("text/xml");
+                    var text = "<?xml version='1.0'?><bu:document xmlns:bu='" +
+                        org.apache.cocoon.transformation.BrowserUpdateTransformer.BU_NSURI +
+                        "'></bu:document>";
+                    httpResponse.writer.print(text);
+                } else {
+                    // Empty response
+                    cocoon.response.setHeader("Content-Length", "0");
+                }
+
                 FOM_Cocoon.suicide();
             }
             
