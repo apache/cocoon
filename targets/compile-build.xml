@@ -162,7 +162,7 @@
   <!-- package testcase code -->
   <target name="package-testcase" depends="compile-tests">
     <jar jarfile="${build}/${name}-testcase.jar" index="true">
-      <fileset dir="${build.test}" includes="**/*.class"/>
+      <fileset dir="${build.test}"/>
     </jar>
  
       <cocoon.package-sources name="${name}-testcase"
