@@ -481,7 +481,7 @@
   </release>
   <release version="2.1.8" date="TBD">
     <action dev="AG" type="update">
-      Updated commons-digester to 1.7.
+      Updated commons-digester to 1.7, commons-lang to 2.1.
     </action>
     <action dev="VG" type="fix" fixes-bug="33097">
       Fixed reloading of the i18n catalogues (regression introduced in 2.1.7).
