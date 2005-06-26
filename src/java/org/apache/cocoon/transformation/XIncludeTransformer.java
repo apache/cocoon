@@ -71,6 +71,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
 
+    /**
+     * @deprecated Should be removed in cocoon 2.2. Use javax.xml.XMLConstants.XML_NS_URI instead.
+     */
     public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
     public static final String XMLBASE_ATTRIBUTE = "base";
 
