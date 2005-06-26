@@ -71,7 +71,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
 
-    public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
     public static final String XMLBASE_ATTRIBUTE = "base";
 
     public static final String XINCLUDE_NAMESPACE_URI = "http://www.w3.org/2001/XInclude";
