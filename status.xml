@@ -197,7 +197,7 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="AG" type="update">
-      Updated commons-digester to 1.7.
+      Updated commons-digester to 1.7, commons-lang to 2.1.
     </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
       Mail block: The SendMailTransformer can now configure the smtp port.
