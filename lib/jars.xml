@@ -896,7 +896,7 @@
        available for your use, or you can also create your own.
     </description>
     <used-by>Faces block, BetwixtTransformer</used-by>
-    <lib>optional/commons-digester-1.6.jar</lib>
+    <lib>optional/commons-digester-1.7.jar</lib>
     <homepage>http://jakarta.apache.org/commons/digester/</homepage>
   </file>  
 
