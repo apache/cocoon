@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+      Updated commons-digester to 1.7.
+    </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
       Mail block: The SendMailTransformer can now configure the smtp port.
     </action>
@@ -244,14 +247,14 @@
     <action dev="CZ" type="add">
       Add setter action to set values in the object model, request or session.
     </action>
-     <action dev="AG" type="update">
+    <action dev="AG" type="update">
       Updated ant to 1.6.5.
     </action>
-     <action dev="SW" type="add">
+    <action dev="SW" type="add">
        CForms block: add a new <code>&lt;fd:true-param-value&gt;</code> configuration to
        booleanfield definitions, to allow specifying a value different from "<code>true</code>"
        for the checkbox.
-     </action>
+    </action>
     <action dev="CZ" type="update">
       Set the content-length of a response when the pipeline buffers the content
       (which is the default).
