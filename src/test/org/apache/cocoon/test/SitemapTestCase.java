@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 import org.apache.avalon.framework.logger.ConsoleLogger;
@@ -148,15 +149,18 @@ public class SitemapTestCase extends TestCase {
                           assertionsource.getInputStream());
 
             InputStream input = assertionsource.getInputStream();
-            long size = assertionsource.getContentLength();
 
-            assertiondocument = new byte[(int) size];
+            Vector document = new Vector();
             int i = 0;
             int c;
 
             while ((c = input.read())!=-1) {
-                assertiondocument[i] = (byte) c;
+                document.add(new Byte((byte) c)); 
                 i++;
+            }
+            assertiondocument = new byte[document.size()];
+            for (i = 0; i < document.size(); i++) {
+                assertiondocument[i] = ((Byte)document.get(i)).byteValue();
             }
 
         } catch (Exception e) {
