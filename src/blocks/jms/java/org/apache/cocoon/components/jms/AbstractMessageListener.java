@@ -180,6 +180,8 @@ implements MessageListener, Serviceable, Parameterizable, Initializable, Disposa
                 m_subscriber = m_session.createSubscriber(topic, m_selector, false);
             }
             m_subscriber.setMessageListener(this);
+            // recover in case of reconnection
+            m_session.recover();
         }
         else {
             if (getLogger().isWarnEnabled()) {
