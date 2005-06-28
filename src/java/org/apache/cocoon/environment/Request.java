@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,10 +39,8 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id$
- *
+ * @version $Id$
  */
-
 public interface Request {
 
     /**
@@ -79,6 +77,7 @@ public interface Request {
      *                        the parameter does not exist
      *
      */
+
     Object get(String name);
 
     /**
@@ -259,6 +258,7 @@ public interface Request {
      *                        protect the servlet, or null if the servlet was
      *                        not protected
      */
+
     String getAuthType();
 
     /**
@@ -275,10 +275,11 @@ public interface Request {
 
     String getCharacterEncoding();
 
-     /**
+    /**
      * Overrides the charactor encoding of parameters.
      *
      * @throws java.io.UnsupportedEncodingException if this is not a valid encoding.
+     *
      */
 
     void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException;
@@ -850,6 +851,19 @@ public interface Request {
 
     /**
      * <p>
+     * Returns the URI Prefix of the requested resource where the sitemap is mounted.
+     * For example, if your webapp is mounted at "/webapp" and the HTTP request
+     * is for "/webapp/foo", this method returns "webapp/".
+     * </p>
+     *
+     * @return a <code>String</code> containing the URI prefix as mangled by the
+     *         sitemap
+     */
+
+    String getSitemapURIPrefix();
+
+    /**
+     * <p>
      * Returns the path to the sitemap of the requested resource as interpreted 
      * by the sitemap.
      * For example, if your webapp is mounted at "webapp" and the HTTP request
@@ -860,6 +874,7 @@ public interface Request {
      * @return a <code>String</code> containing the path to the sitemap
      * @since 2.2
      */
+
     String getSitemapPath();
     
     /**

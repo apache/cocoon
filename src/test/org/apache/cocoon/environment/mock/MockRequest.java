@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractRequest;
 
+/**
+ * @version $Id$
+ */
 public class MockRequest extends AbstractRequest {
     
     private Hashtable attributes = new Hashtable();
@@ -285,6 +288,10 @@ public class MockRequest extends AbstractRequest {
         return this.environment.getURIPrefix();
     }
 
+    public String getSitemapURIPrefix() {
+        return "";
+    }
+
     public String getServletPath() {
         return servletPath;
     }
@@ -352,15 +359,15 @@ public class MockRequest extends AbstractRequest {
         parameters.clear();
         headers.clear();
     }
-    
+
     public void setHeader( String key, String value ) {
         this.headers.put(key, value );
     }
-    
+
     public void setMethod( String method ) {
         this.method = method;
     }
-    
+
     public void clearSession() {
         this.session = null;
     }
