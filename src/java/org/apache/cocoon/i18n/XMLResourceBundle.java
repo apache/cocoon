@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * Value can be any well formed XML snippet and it will be cached by the key specified
- * in the attrbute <code>key</code>. Objects returned by this {@link Bundle} implementation
+ * in the attribute <code>key</code>. Objects returned by this {@link Bundle} implementation
  * are instances of the {@link ParamSaxBuffer} class.
  *
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
@@ -82,11 +82,10 @@ public class XMLResourceBundle extends AbstractLogEnabled
      */
     public static final String AT_KEY = "key";
 
-
     /**
-     * Bundle name
+     * Source URI of the bundle
      */
-    private String name;
+    private String sourceURI;
 
     /**
      * Bundle validity
@@ -147,7 +146,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
         }
 
         public void startElement(String ns, String localName, String qName, Attributes atts) throws SAXException {
-            switch (state) {
+            switch (this.state) {
                 case 0:
                     // <i18n:catalogue>
                     if (!"".equals(ns) && !NS.equals(ns)) {
@@ -158,7 +157,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
                         throw new SAXException("Root element must be <" + EL_CATALOGUE + ">.");
                     }
                     this.namespace = ns;
-                    state ++;
+                    this.state++;
                     break;
                 case 1:
                     // <i18n:message>
@@ -175,12 +174,12 @@ public class XMLResourceBundle extends AbstractLogEnabled
                         throw new SAXException("<" + EL_MESSAGE + "> must have '" +
                                                AT_KEY + "' attribute.");
                     }
-                    buffer = new ParamSaxBuffer();
-                    values.put(key, buffer);
-                    state ++;
+                    this.buffer = new ParamSaxBuffer();
+                    this.values.put(key, this.buffer);
+                    this.state++;
                     break;
                 case 2:
-                    buffer.startElement(ns, localName, qName, atts);
+                    this.buffer.startElement(ns, localName, qName, atts);
                     break;
                 default:
                     throw new SAXException("Internal error: Invalid state");
@@ -188,20 +187,20 @@ public class XMLResourceBundle extends AbstractLogEnabled
         }
 
         public void endElement(String ns, String localName, String qName) throws SAXException {
-            switch (state) {
+            switch (this.state) {
                 case 0:
                     break;
                 case 1:
                     // </i18n:catalogue>
-                    state --;
+                    this.state--;
                     break;
                 case 2:
                     if (this.namespace.equals(ns) && EL_MESSAGE.equals(localName)) {
                         // </i18n:message>
                         this.buffer = null;
-                        state --;
+                        this.state--;
                     } else {
-                        buffer.endElement(ns, localName, qName);
+                        this.buffer.endElement(ns, localName, qName);
                     }
                     break;
                 default:
@@ -210,26 +209,26 @@ public class XMLResourceBundle extends AbstractLogEnabled
         }
 
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
-            if (buffer != null) {
-                buffer.startPrefixMapping(prefix, uri);
+            if (this.buffer != null) {
+                this.buffer.startPrefixMapping(prefix, uri);
             }
         }
 
         public void endPrefixMapping(String prefix) throws SAXException {
-            if (buffer != null) {
-                buffer.endPrefixMapping(prefix);
+            if (this.buffer != null) {
+                this.buffer.endPrefixMapping(prefix);
             }
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-            if (buffer != null) {
-                buffer.ignorableWhitespace(ch, start, length);
+            if (this.buffer != null) {
+                this.buffer.ignorableWhitespace(ch, start, length);
             }
         }
 
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if (buffer != null) {
-                buffer.characters(ch, start, length);
+            if (this.buffer != null) {
+                this.buffer.characters(ch, start, length);
             }
         }
     }
@@ -254,8 +253,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
     /**
      * Initalize the bundle
      *
-     * @param name name of the bundle
-     * @param sourceURL source URL of the XML bundle
+     * @param sourceURI source URI of the XML bundle
      * @param locale locale
      * @param parent parent bundle of this bundle
      *
@@ -263,38 +261,31 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * @throws ProcessingException if an error occurs while loading the bundle
      * @throws SAXException if an error occurs while loading the bundle
      */
-    public void init(String name, String sourceURL, Locale locale, Bundle parent)
+    public void init(String sourceURI, Locale locale, Bundle parent)
     throws IOException, ProcessingException, SAXException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Loading XML bundle: " + name + ", locale: " + locale);
-        }
-
-        this.name = name;
+        this.sourceURI = sourceURI;
         this.locale = locale;
         this.parent = parent;
         this.values = new HashMap();
-        load(sourceURL);
+        load();
     }
 
     /**
-     * Load the XML bundle, based on the source URL.
-     *
-     * @param sourceURL source URL of the XML bundle
+     * Load the XML bundle, based on the source URI.
      *
      * @exception IOException if an IO error occurs while reading the file
      * @exception ProcessingException if no parser is configured
      * @exception SAXException if an error occurs while parsing the file
      */
-    protected void load(String sourceURL)
-    throws IOException, ProcessingException, SAXException {
+    protected void load() throws IOException, ProcessingException, SAXException {
         Source source = null;
         SourceResolver resolver = null;
         try {
-            int valid = this.validity == null? SourceValidity.INVALID: this.validity.isValid();
+            int valid = this.validity == null ? SourceValidity.INVALID : this.validity.isValid();
             if (valid != SourceValidity.VALID) {
                 // Saved validity is not valid, get new source and validity
                 resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-                source = resolver.resolveURI(sourceURL);
+                source = resolver.resolveURI(this.sourceURI);
                 SourceValidity sourceValidity = source.getValidity();
                 if (valid == SourceValidity.INVALID || this.validity.isValid(sourceValidity) != SourceValidity.VALID) {
                     HashMap values = new HashMap();
@@ -302,29 +293,20 @@ public class XMLResourceBundle extends AbstractLogEnabled
                     this.validity = sourceValidity;
                     this.values = values;
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Loaded XML bundle: " + this.name + ", locale: " + this.locale);
+                        getLogger().debug("Loaded XML bundle: " + this.sourceURI + ", locale: " + this.locale);
                     }
                 }
             }
         } catch (ServiceException e) {
             throw new ProcessingException("Can't lookup source resolver", e);
         } catch (MalformedURLException e) {
-            throw new SourceNotFoundException("Invalid resource URL: " + sourceURL, e);
+            throw new SourceNotFoundException("Invalid resource URL: " + this.sourceURI, e);
         } finally {
             if (source != null) {
                 resolver.release(source);
             }
             this.manager.release(resolver);
         }
-    }
-
-    /**
-     * Gets the name of the bundle.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return this.name;
     }
 
     /**
@@ -356,7 +338,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             return null;
         }
 
-        Object value = values.get(key);
+        Object value = this.values.get(key);
         if (value == null && this.parent != null) {
             value = this.parent.getObject(key);
         }
@@ -397,16 +379,14 @@ public class XMLResourceBundle extends AbstractLogEnabled
     }
 
     /**
-     * Reload this bundle if URI's timestam is newer than ours
-     *
-     * @param sourceURL source URL of the XML bundle
+     * Reload this bundle if URI's timestamp is newer than ours.
      */
-    public void update(String sourceURL) {
+    public void update() {
         try {
-            load(sourceURL);
+            load();
         } catch (Exception e) {
-            getLogger().info("Resource update failed. " + this.name + ", locale: " + this.locale +
-                             " Exception: " + e);
+            getLogger().info("Resource update failed. " + this.sourceURI + ", locale: " + this.locale
+                             + " Exception: " + e);
         }
     }
 }
