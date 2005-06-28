@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ import java.util.Map;
  * JXPath does not automatically create sessions.</p>
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class JXPathCocoonContexts implements Component, Contextualizable, ThreadSafe {
 
@@ -311,6 +311,10 @@ public final class JXPathCocoonContexts implements Component, Contextualizable, 
 
         public String getSitemapURI() {
             return this.delegate.getSitemapURI();
+        }
+
+        public String getSitemapURIPrefix() {
+            return this.delegate.getSitemapURIPrefix();
         }
 
         public String getServletPath() {

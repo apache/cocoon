@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,9 +42,8 @@ import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
  * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class HttpRequest implements Request {
 
     /** The real HttpServletRequest object */
@@ -211,6 +210,10 @@ public final class HttpRequest implements Request {
         return this.env.getURI();
     }
 
+    public String getSitemapURIPrefix() {
+        return this.env.getURIPrefix();
+    }
+
     public String getServletPath() {
         return this.req.getServletPath();
     }
@@ -220,7 +223,7 @@ public final class HttpRequest implements Request {
      * {@link javax.servlet.http.HttpSession}.
      * The method must assure 1:1-mapping of
      * {@link javax.servlet.http.HttpSession}s to Cocoon's session wrappers.
-     * 
+     *
      * @see org.apache.cocoon.environment.Request#getSession(boolean)
      */
     public Session getSession(boolean create) {

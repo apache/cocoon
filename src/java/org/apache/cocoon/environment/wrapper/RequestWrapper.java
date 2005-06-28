@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,14 +28,13 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
-
 /**
  * This is a wrapper class for the <code>Request</code> object.
  * It has the same properties except that the url and the parameters
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class RequestWrapper implements Request {
 
@@ -56,7 +55,7 @@ public final class RequestWrapper implements Request {
 
     /** The request uri */
     private String requestURI;
-    
+
     /**
      * Constructor
      */
@@ -278,6 +277,10 @@ public final class RequestWrapper implements Request {
         return this.environment.getURI();
     }
 
+    public String getSitemapURIPrefix() {
+        return this.environment.getURIPrefix();
+    }
+
     public String getServletPath() {
         return this.req.getServletPath();
     }
@@ -316,8 +319,8 @@ public final class RequestWrapper implements Request {
 
     public String getAuthType() {
         return this.req.getAuthType();
-    }   
-    
+    }
+
     public void setRequestURI(String prefix, String uri) {
         StringBuffer buffer = new StringBuffer(this.getContextPath());
         buffer.append('/');
