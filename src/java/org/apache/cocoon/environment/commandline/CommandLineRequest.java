@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import org.apache.commons.lang.SystemUtils;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 /*
@@ -105,7 +105,7 @@ public class CommandLineRequest implements Request {
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#get(java.lang.String)
      */
-    public Object get(String name) { 
+    public Object get(String name) {
         String[] values = this.getParameterValues(name);
         if (values == null || values.length == 0) {
             return null;
@@ -134,7 +134,9 @@ public class CommandLineRequest implements Request {
     public String getSitemapURI() {
         return this.env.getURI();
     }
-    
+    public String getSitemapURIPrefix() {
+        return this.env.getURIPrefix();
+    }
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
 
@@ -155,7 +157,7 @@ public class CommandLineRequest implements Request {
         if (this.parameters == null) {
             return null;
         }
-        
+
         final Object value = this.parameters.get(name);
         if (value instanceof String) {
             return (String)value;
@@ -194,14 +196,13 @@ public class CommandLineRequest implements Request {
 
     public long getDateHeader(String name) {
         //FIXME
-        //throw new RuntimeException (this.getClass().getName() + ".getDateHeader(String name) method not yet implemented!");
         return 0;
     }
 
     public Enumeration getHeaders(String name) {
-        //throw new RuntimeException (this.getClass().getName() + ".getHeaders(String name) method not yet implemented!");
+        // FIXME
         return new EmptyEnumeration();
-    } // FIXME
+    }
 
     public Enumeration getHeaderNames() {
         if (headers != null) {
@@ -338,8 +339,9 @@ public class CommandLineRequest implements Request {
 
     public Locale getLocale() { return Locale.getDefault(); }
     public Enumeration getLocales() {
+        // FIXME
         throw new RuntimeException (getClass().getName() + ".getLocales() method not yet implemented!");
-    } // FIXME
+    }
 
     public String getAuthType() { return null; }
     public boolean isSecure() { return false; }

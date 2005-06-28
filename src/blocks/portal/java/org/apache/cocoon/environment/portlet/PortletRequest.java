@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class PortletRequest implements Request {
 
@@ -260,6 +260,10 @@ public abstract class PortletRequest implements Request {
      */
     public String getSitemapURI() {
         return this.environment.getURI();
+    }
+
+    public String getSitemapURIPrefix() {
+        return this.environment.getURIPrefix();
     }
 
     public String getServletPath() {

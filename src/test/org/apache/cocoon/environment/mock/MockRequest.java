@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,9 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
+/**
+ * @version $Id$
+ */
 public class MockRequest implements Request {
 
     private Hashtable attributes = new Hashtable();
@@ -265,6 +268,10 @@ public class MockRequest implements Request {
         return requestURI;
     }
 
+    public String getSitemapURIPrefix() {
+        return "";
+    }
+
     public String getServletPath() {
         return servletPath;
     }
@@ -330,15 +337,15 @@ public class MockRequest implements Request {
         parameters.clear();
         headers.clear();
     }
-    
+
     public void setHeader( String key, String value ) {
         this.headers.put(key, value );
     }
-    
+
     public void setMethod( String method ) {
         this.method = method;
     }
-    
+
     public void clearSession() {
         this.session = null;
     }
