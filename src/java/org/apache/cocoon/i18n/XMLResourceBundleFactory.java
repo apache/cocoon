@@ -53,12 +53,12 @@ public class XMLResourceBundleFactory
        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
     /**
-     * Cache of the bundles by file name
+     * Cache of the bundles
      */
     protected final Map cache = Collections.synchronizedMap(new HashMap());
 
     /**
-     * Cache for the file names of the bundles that were not found
+     * Cache for the bundles that were not found
      */
     protected final Map cacheNotFound = new HashMap();
 
@@ -152,7 +152,7 @@ public class XMLResourceBundleFactory
      * @return the directory path
      */
     protected String getDirectory() {
-        return directory;
+        return this.directory;
     }
 
     /**
@@ -161,7 +161,7 @@ public class XMLResourceBundleFactory
      * @return true if pre-loading all resources; false otherwise
      */
     protected boolean cacheAtStartup() {
-        return cacheAtStartup;
+        return this.cacheAtStartup;
     }
 
     /**
@@ -255,12 +255,11 @@ public class XMLResourceBundleFactory
         }
 
         final String cacheKey = getCacheKey(directories, index, name, locale);
-        final String fileName = getFileName(directories[index], name, locale);
 
-        XMLResourceBundle bundle = selectCached(cacheKey, fileName);
+        XMLResourceBundle bundle = selectCached(cacheKey);
         if (bundle == null) {
             synchronized (this) {
-                bundle = selectCached(cacheKey, fileName);
+                bundle = selectCached(cacheKey);
                 if (bundle == null) {
                     boolean localeAvailable = (locale != null && !locale.getLanguage().equals(""));
                     index++;
@@ -276,6 +275,7 @@ public class XMLResourceBundleFactory
                     }
 
                     if (!isNotFoundBundle(cacheKey)) {
+                        final String fileName = getFileName(directories[index - 1], name, locale);
                         bundle = _loadBundle(name, fileName, locale, parentBundle);
                         updateCache(cacheKey, bundle);
                     }
@@ -309,7 +309,7 @@ public class XMLResourceBundleFactory
             bundle = new XMLResourceBundle();
             bundle.enableLogging(this.logger);
             bundle.service(this.manager);
-            bundle.init(name, fileName, locale, parentBundle);
+            bundle.init(fileName, locale, parentBundle);
             return bundle;
         } catch (ResourceNotFoundException e) {
             getLogger().info("Resource not found: " + name + ", locale: " + locale +
@@ -416,13 +416,12 @@ public class XMLResourceBundleFactory
      * Selects a bundle from the cache.
      *
      * @param cacheKey          caching key of the bundle
-     * @param fileName          file name of the bundle
      * @return                  the cached bundle; null, if not found
      */
-    protected XMLResourceBundle selectCached(String cacheKey, String fileName) {
+    protected XMLResourceBundle selectCached(String cacheKey) {
         XMLResourceBundle bundle = (XMLResourceBundle) this.cache.get(cacheKey);
         if (bundle != null) {
-            bundle.update(fileName);
+            bundle.update();
         }
 
         if (getLogger().isDebugEnabled()) {
