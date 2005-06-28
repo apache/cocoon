@@ -480,6 +480,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="add" fixes-bug="35435" due-to="Nico Verwer" due-to-email="nverwer@email.com">
+      Added getSitemapURIPrefix method to the Request interface.
+    </action>
     <action dev="AG" type="update">
       Updated commons-digester to 1.7, commons-lang to 2.1, xercesImpl to 2.7.0.
     </action>
