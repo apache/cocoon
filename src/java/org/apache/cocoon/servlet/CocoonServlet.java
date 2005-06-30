@@ -63,7 +63,6 @@ import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.StopWatch;
-import org.apache.log.ContextMap;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -353,7 +352,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         String contentType = null;
-        ContextMap ctxMap = null;
+        Object ctxMap = null;
 
         Environment env;
         try{
@@ -375,16 +374,7 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             try {
-                // Initialize a fresh log context containing the object model: it
-                // will be used by the CocoonLogFormatter
-                ctxMap = ContextMap.getCurrentContext();
-                // Add thread name (default content for empty context)
-                String threadName = Thread.currentThread().getName();
-                ctxMap.set("threadName", threadName);
-                // Add the object model
-                ctxMap.set("objectModel", env.getObjectModel());
-                // Add a unique request id (threadName + currentTime
-                ctxMap.set("request-id", threadName + System.currentTimeMillis());
+                ctxMap = this.coreUtil.initializePerRequestLoggingContext(env);
 
                 if (this.cocoon.process(env)) {
                     contentType = env.getContentType();
@@ -469,9 +459,7 @@ public class CocoonServlet extends HttpServlet {
                 }
             }
         } finally {
-            if (ctxMap != null) {
-                ctxMap.clear();
-            }
+            this.coreUtil.cleanPerRequestLoggingContext(ctxMap);
 
             try {
                 if (request instanceof MultipartHttpServletRequest) {
