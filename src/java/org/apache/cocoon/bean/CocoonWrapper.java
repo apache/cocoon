@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
@@ -54,9 +54,6 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.log.Hierarchy;
-import org.apache.log.LogTarget;
-import org.apache.log.Priority;
 import org.xml.sax.ContentHandler;
 
 /**
@@ -106,15 +103,9 @@ public class CocoonWrapper {
      * INITIALISATION METHOD.
      */
     public void initialize() throws Exception {
-        // Create a new hierarchy. This is needed when CocoonBean is called from
-        // within a CocoonServlet call, in order not to mix logs
-        final Hierarchy hierarchy = new Hierarchy();
-
-        final Priority priority = Priority.getPriorityForName(logLevel);
-        hierarchy.setDefaultPriority(priority);
-
         // Install a temporary logger so that getDir() can log if needed
-        final Logger envLogger = new LogKitLogger(hierarchy.getLoggerFor(""));
+        final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel.getLogLevelForName(this.logLevel);
+        final Logger envLogger = new ConsoleLogger(level.getLevel());
 
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");
@@ -601,6 +592,13 @@ public class CocoonWrapper {
         protected String configFile;
         protected List loadClassList;
 
+        /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
+         */
+        public Logger getBootstrapLogger(LogLevel logLevel) {
+            return new ConsoleLogger(logLevel.getLevel());
+        }
+
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
         }
@@ -652,7 +650,6 @@ public class CocoonWrapper {
             settings.setCacheDirectory(this.cachingDirectory);
             settings.setUploadDirectory(this.contextDirectory + "upload-dir");
             settings.setBootstrapLogLevel(this.bootstrapLogLevel);
-            settings.setCreateLogKitHierarchy(true);
             settings.setLoggingConfiguration(this.loggingConfiguration);
             settings.setFormEncoding("ISO-8859-1");
             settings.setConfiguration(this.configFile);
@@ -697,13 +694,6 @@ public class CocoonWrapper {
          */
         public String getContextURL() {
             return this.contextDirectory;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getDefaultLogTarget()
-         */
-        public LogTarget getDefaultLogTarget() {
-            return null;
         }
 
         /**
