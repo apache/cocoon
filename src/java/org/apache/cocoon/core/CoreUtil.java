@@ -49,12 +49,14 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.TraversableSource;
+import org.apache.log.ContextMap;
 import org.apache.log4j.LogManager;
 
 /**
@@ -367,6 +369,35 @@ public class CoreUtil {
         return s;
     }
 
+    /**
+     * Initialize the context for logging.
+     * TODO - Move this to the logger manager and make it LogKit independent.
+     */
+    public Object initializePerRequestLoggingContext(Environment env) {
+        ContextMap ctxMap;
+        // Initialize a fresh log context containing the object model: it
+        // will be used by the CocoonLogFormatter
+        ctxMap = ContextMap.getCurrentContext();
+        // Add thread name (default content for empty context)
+        String threadName = Thread.currentThread().getName();
+        ctxMap.set("threadName", threadName);
+        // Add the object model
+        ctxMap.set("objectModel", env.getObjectModel());
+        // Add a unique request id (threadName + currentTime
+        ctxMap.set("request-id", threadName + System.currentTimeMillis());
+        
+        return ctxMap;
+    }
+
+    /**
+     * Initialize the context for logging.
+     */
+    public void cleanPerRequestLoggingContext(Object ctxMap) {
+        if ( ctxMap != null ) {
+            ((ContextMap)ctxMap).clear();
+        }
+    }
+
     protected void initLogger() {
         String logLevel = settings.getBootstrapLogLevel();
         if (logLevel == null) {
@@ -502,7 +533,7 @@ public class CoreUtil {
             // let's configure log4j
             final String log4jConfig = settings.getLog4jConfiguration();
             if (log4jConfig != null) {
-                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext);
+                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext, this.settings);
 
                 Source source = null;
                 try {

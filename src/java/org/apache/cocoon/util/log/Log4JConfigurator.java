@@ -17,6 +17,7 @@ package org.apache.cocoon.util.log;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.cocoon.core.Settings;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -28,10 +29,12 @@ import org.apache.log4j.xml.DOMConfigurator;
  */
 public class Log4JConfigurator extends DOMConfigurator {
 
-    protected Context context;
-    
-    public Log4JConfigurator(Context context) {
+    protected final Context context;
+    protected final Settings settings;
+
+    public Log4JConfigurator(Context context, Settings settings) {
         this.context = context;
+        this.settings = settings;
     }
     
     protected String subst(String value) {
@@ -81,8 +84,8 @@ public class Log4JConfigurator extends DOMConfigurator {
             }
             j += DELIM_START_LEN;
             String key = val.substring(j, k);
-            // first try in System properties
-            String replacement = this.getSystemProperty(key);
+            // first try in settigns and system properties
+            String replacement = this.getProperty(key);
             // then try props parameter
             if (replacement == null && this.context != null) {
                 try {
@@ -112,12 +115,19 @@ public class Log4JConfigurator extends DOMConfigurator {
      * This is directly copied from log4j's OptionConverter class.
      * The only difference is the getting of a property.
      */
-    public String getSystemProperty(String key) {
-        try {
-            return System.getProperty(key, null);
-        } catch(Throwable e) { // MS-Java throws com.ms.security.SecurityExceptionEx
-            LogLog.debug("Was not allowed to read system property \""+key+"\".");
-            return null;
+    protected String getProperty(String key) {
+        String value = null;
+        if ( this.settings != null ) {
+            value = this.settings.getProperty(key);
         }
+        if ( value == null ) {
+            try {
+                value = System.getProperty(key, null);
+            } catch(Throwable e) { // MS-Java throws com.ms.security.SecurityExceptionEx
+                LogLog.debug("Was not allowed to read system property \""+key+"\".");
+                value = null;
+            }
+        }
+        return value;
     }
 }
