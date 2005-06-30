@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Cocoon;
@@ -60,12 +61,9 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log.ContextMap;
-import org.apache.log.LogTarget;
-import org.apache.log.output.ServletOutputLogTarget;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -660,6 +658,13 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
+         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
+         */
+        public Logger getBootstrapLogger(BootstrapEnvironment.LogLevel logLevel) {
+            return new ServletLogger(this.config, logLevel.getLevel());
+        }
+
+        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String)
          */
         public void log(String message) {
@@ -729,17 +734,6 @@ public class CocoonServlet extends HttpServlet {
          */
         public File getContextForWriting() {
             return this.writeableContextPath;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getDefaultLogTarget()
-         */
-        public LogTarget getDefaultLogTarget() {
-            final CocoonLogFormatter formatter = new CocoonLogFormatter();
-            formatter.setFormat("%7.7{priority} %{time}   [%8.8{category}] " +
-                                "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}");
-            return new ServletOutputLogTarget(this.config.getServletContext(), formatter);
-
         }
 
         /**

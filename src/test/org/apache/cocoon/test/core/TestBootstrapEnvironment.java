@@ -27,7 +27,6 @@ import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.log.DeprecationLogger;
-import org.apache.log.LogTarget;
 
 public class TestBootstrapEnvironment
     implements BootstrapEnvironment {
@@ -42,7 +41,7 @@ public class TestBootstrapEnvironment
                                     ClassLoader classLoader,
                                     String contextPath,
                                     Context environmentContext,
-				    Logger logger) {
+				                    Logger logger) {
         this.configuration = configuration;
         this.classLoader = classLoader;
         this.contextPath = contextPath;
@@ -50,6 +49,13 @@ public class TestBootstrapEnvironment
 
         this.logger = logger;
         DeprecationLogger.logger = this.logger;
+    }
+
+    /**
+     * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
+     */
+    public Logger getBootstrapLogger(LogLevel logLevel) {
+        return this.logger;
     }
 
     /** Log a message during bootstrapping. This is used to log
@@ -127,10 +133,6 @@ public class TestBootstrapEnvironment
      *         writeable.
      */
     public File getContextForWriting() {
-        return null;
-    }
-
-    public LogTarget getDefaultLogTarget() {
         return null;
     }
 
