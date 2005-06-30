@@ -96,6 +96,9 @@ public class CoreUtil {
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
+    /** We use LogKit */
+    protected boolean isLogKit = false;
+
     /**
      * Setup a new instance.
      * @param environment The hook back to the environment.
@@ -374,19 +377,22 @@ public class CoreUtil {
      * TODO - Move this to the logger manager and make it LogKit independent.
      */
     public Object initializePerRequestLoggingContext(Environment env) {
-        ContextMap ctxMap;
-        // Initialize a fresh log context containing the object model: it
-        // will be used by the CocoonLogFormatter
-        ctxMap = ContextMap.getCurrentContext();
-        // Add thread name (default content for empty context)
-        String threadName = Thread.currentThread().getName();
-        ctxMap.set("threadName", threadName);
-        // Add the object model
-        ctxMap.set("objectModel", env.getObjectModel());
-        // Add a unique request id (threadName + currentTime
-        ctxMap.set("request-id", threadName + System.currentTimeMillis());
-        
-        return ctxMap;
+        if ( this.isLogKit ) {
+            ContextMap ctxMap;
+            // Initialize a fresh log context containing the object model: it
+            // will be used by the CocoonLogFormatter
+            ctxMap = ContextMap.getCurrentContext();
+            // Add thread name (default content for empty context)
+            String threadName = Thread.currentThread().getName();
+            ctxMap.set("threadName", threadName);
+            // Add the object model
+            ctxMap.set("objectModel", env.getObjectModel());
+            // Add a unique request id (threadName + currentTime
+            ctxMap.set("request-id", threadName + System.currentTimeMillis());
+            
+            return ctxMap;
+        }
+        return null;   
     }
 
     /**
@@ -568,8 +574,12 @@ public class CoreUtil {
         }
         try {
             Class clazz = Class.forName(loggerManagerClass);
+            if ( loggerManagerClass.equals(LogKitLoggerManager.class.getName()) ) {
+                this.isLogKit = true;
+            }
             return (LoggerManager) clazz.newInstance();
         } catch (Exception e) {
+            this.isLogKit = true;
             return new LogKitLoggerManager();
         }
     }
