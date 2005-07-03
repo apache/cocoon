@@ -161,14 +161,14 @@ public class CocoonServlet extends HttpServlet {
         // as the logger isn't initialized yet.
         String debugPathOne = null, debugPathTwo = null;
         if (path == null) {
-            // Try to figure out the path of the root from that of WEB-INF
+            // Try to figure out the path of the root from that of WEB-INF/web.xml
             try {
-                path = this.servletContext.getResource("/WEB-INF").toString();
+                path = this.servletContext.getResource("/WEB-INF/web.xml").toString();
             } catch (MalformedURLException me) {
-                throw new ServletException("Unable to get resource 'WEB-INF'.", me);
+                throw new ServletException("Unable to get resource 'WEB-INF/web.xml'.", me);
             }
             debugPathOne = path;
-            path = path.substring(0, path.length() - "WEB-INF".length());
+            path = path.substring(0, path.length() - "WEB-INF/web.xml".length());
             debugPathTwo = path;
         }
         try {
