@@ -76,11 +76,11 @@ public final class HttpContext extends AbstractContext {
             if (value == null) {
                 // Try to figure out the path of the root from that of WEB-INF
                 try {
-                value = this.servletContext.getResource("/WEB-INF").toString();
+                value = this.servletContext.getResource("/WEB-INF/web.xml").toString();
                 } catch (MalformedURLException mue) {
                     throw new CascadingRuntimeException("Cannot determine the base URL for " + path, mue);
                 }
-                value = value.substring(0,value.length()-"WEB-INF".length());
+                value = value.substring(0,value.length()-"WEB-INF/web.xml".length());
             }
             return value;
         }
