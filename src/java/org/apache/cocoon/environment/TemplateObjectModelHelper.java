@@ -47,18 +47,22 @@ public class TemplateObjectModelHelper {
     /** Avoid instantiation */
     private TemplateObjectModelHelper() {}
 
-    public static Scriptable getRootScope() {
-        if (rootScope == null) {
+    public static Scriptable getScope() {
+        Context ctx = Context.enter();
+        try {
             // Create it if never used up to now
-            Context ctx = Context.enter();
-            try {
+            if (rootScope == null)
                 rootScope = ctx.initStandardObjects(null);
-            } finally {
-                Context.exit();
-            }
+            
+            Scriptable scope = ctx.newObject(rootScope);
+            scope.setPrototype(rootScope);
+            scope.setParentScope(null);
+            return scope;
+        } finally {
+            Context.exit();
         }
-        return rootScope;
     }
+    
     public static void fillContext(Object contextObject, Map map) {
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
@@ -118,18 +122,18 @@ public class TemplateObjectModelHelper {
         try {
             // cocoon.request
             final Request request = ObjectModelHelper.getRequest( objectModel );
-            cocoon.put("request", new FOM_Cocoon.FOM_Request(getRootScope(), request));
+            cocoon.put("request", new FOM_Cocoon.FOM_Request(getScope(), request));
             
             // cocoon.session
             final Session session = request.getSession(false);
             if (session != null) {
-                cocoon.put("session", new FOM_Cocoon.FOM_Session(getRootScope(), session));
+                cocoon.put("session", new FOM_Cocoon.FOM_Session(getScope(), session));
             }
         
             // cocoon.context
             final org.apache.cocoon.environment.Context context =
                 ObjectModelHelper.getContext( objectModel );
-            cocoon.put("context", new FOM_Cocoon.FOM_Context(getRootScope(), context));
+            cocoon.put("context", new FOM_Cocoon.FOM_Context(getScope(), context));
 
         } finally {
             Context.exit();
@@ -178,11 +182,11 @@ public class TemplateObjectModelHelper {
                 final String JAVA_PACKAGE = "JavaPackage";
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 Scriptable newPackages = new NativeJavaPackage( "", cl );
-                newPackages.setParentScope( getRootScope() );
-                newPackages.setPrototype( ScriptableObject.getClassPrototype(   getRootScope(),
+                newPackages.setParentScope( getScope() );
+                newPackages.setPrototype( ScriptableObject.getClassPrototype(   getScope(),
                                                                                 JAVA_PACKAGE ) );
                 objectModel.put( "Packages", newPackages );
-                objectModel.put( "java", ScriptableObject.getProperty( getRootScope(), "java" ) );
+                objectModel.put( "java", ScriptableObject.getProperty( getScope(), "java" ) );
             } finally {
                 Context.exit();
             }
