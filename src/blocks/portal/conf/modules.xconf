@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <xconf xpath="/cocoon/input-modules" unless="component-instance[@class='org.apache.cocoon.portal.components.modules.input.CopletModule']">
 
-      <component-instance logger="core.modules.input" name="coplet" class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
-      <component-instance logger="core.modules.input" name="portal-layout" class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
-      <component-instance logger="core.modules.input" name="portal-skin" class="org.apache.cocoon.portal.components.modules.input.SkinModule"/>
+      <component-instance logger="portal" name="coplet" class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
+      <component-instance logger="portal" name="portal-layout" class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
+      <component-instance logger="portal" name="portal-skin" class="org.apache.cocoon.portal.components.modules.input.SkinModule"/>
 
 </xconf>

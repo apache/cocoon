@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -99,8 +100,17 @@ public abstract class AbstractCopletAdapter
                                          ContentHandler contentHandler)
     throws SAXException; 
     
+    /**
+     * This method streams the content of a coplet instance data.
+     * It handles buffering and timeout setting and calls
+     * {@link #streamContent(CopletInstanceData, ContentHandler)}
+     * for creating the content.
+     *
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     */
     public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
+        final long startTime = System.currentTimeMillis();
         Boolean bool = (Boolean) this.getConfiguration( coplet, "buffer" );
         Integer timeout = (Integer) this.getConfiguration( coplet, "timeout");
         if ( timeout != null ) {
@@ -118,8 +128,11 @@ public abstract class AbstractCopletAdapter
                     final int milli = timeout.intValue() * 1000;
                     LoaderThread loader = new LoaderThread(this, coplet, buffer);
                     final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
-                    runnableManager.execute( loader );
-                    this.manager.release( runnableManager );
+                    try {
+                        runnableManager.execute( new CocoonRunnable(loader) );
+                    } finally {
+                        this.manager.release( runnableManager );
+                    }
                     try {
                         read = loader.join( milli );
                     } catch (InterruptedException ignore) {
@@ -153,7 +166,11 @@ public abstract class AbstractCopletAdapter
         } else {
             this.streamContent( coplet, contentHandler );
         }
-        
+        if ( this.getLogger().isInfoEnabled() ) {
+            final long msecs = System.currentTimeMillis() - startTime;
+            this.getLogger().info("Streamed coplet " + coplet.getCopletData().getId() +
+                                  " (instance " + coplet.getId() + ") in " + msecs + "ms.");
+        }
     }
     
     /* (non-Javadoc)

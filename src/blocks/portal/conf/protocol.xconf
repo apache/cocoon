@@ -14,9 +14,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <xconf xpath="/cocoon/source-factories" unless="component-instance[@name='coplet']">
 
     <!-- portal protocol -->
-    <component-instance class="org.apache.cocoon.portal.source.CopletSourceFactory" name="coplet"/>
+    <component-instance class="org.apache.cocoon.portal.source.CopletSourceFactory" name="coplet" logger="portal"/>
 </xconf>

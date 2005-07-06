@@ -14,21 +14,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.event.aspect.EventAspectSelector']">
 
  <!-- Event Aspect configuration -->
  <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
-    <aspect name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
-    <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
-    <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
-    <aspect name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />
-    <aspect name="page-label" class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"/>
-    <aspect name="convertable" class="org.apache.cocoon.portal.event.aspect.impl.ConvertableEventAspect"/>
-    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
+    <aspect logger="portal" name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
+    <aspect logger="portal" name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
+    <aspect logger="portal" name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
+    <aspect logger="portal" name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />
+    <aspect logger="portal" name="page-label" class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"/>
+    <aspect logger="portal" name="convertable" class="org.apache.cocoon.portal.event.aspect.impl.ConvertableEventAspect"/>
+    <aspect logger="portal" name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
 
     <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
-    <aspect name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
+    <aspect logger="portal" name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
  </component>
 
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
@@ -65,8 +65,8 @@
   <!-- Event Factory configuration -->
   <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.ConvertableEventFactorySelector">
     <!-- The events that can be marshalled. The name must match the Event's request parameter. -->
-    <factory name="cocoon-portal-fs" class="org.apache.cocoon.portal.event.impl.FullScreenCopletEventFactory"/>
-    <factory name="url" class="org.apache.cocoon.portal.pluto.PortletURLProviderFactory"/>
+    <factory logger="portal" name="cocoon-portal-fs" class="org.apache.cocoon.portal.event.impl.FullScreenCopletEventFactory"/>
+    <factory logger="portal" name="url" class="org.apache.cocoon.portal.pluto.PortletURLProviderFactory"/>
   </component>
 
   <!-- This is the portal manager.
@@ -115,71 +115,74 @@
                     class="org.apache.cocoon.portal.coplet.adapter.impl.PortletAdapter" 
                     logger="portal"/>
     <!-- This is an extension of the uri adapter -->
-    <coplet-adapter name="caching-uri"
-                    class="org.apache.cocoon.portal.coplet.adapter.impl.CachingURICopletAdapter" logger="portal"/>
+    <coplet-adapter name="caching-uri" 
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.CachingURICopletAdapter"
+                    logger="portal"/>
     <!-- This is the application adapter -->
     <coplet-adapter name="application"
-                    class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter" logger="portal"/>
+                    class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
+                    logger="portal"/>
  </component>
 
 
  <!-- Renderer Aspect configuration -->
  <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector">
-    <aspect name="composite-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
-    <aspect name="tab-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
-    <aspect name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
-    <aspect name="portlet-window"
+    <aspect logger="portal" name="composite-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
+    <aspect logger="portal" name="tab-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
+    <aspect logger="portal" name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
+    <aspect logger="portal" name="portlet-window"
             class="org.apache.cocoon.portal.layout.renderer.aspect.impl.PortletWindowAspect"/>
 
     <!-- This aspect can be used to render the minimize/maximize buttons -->
-    <aspect name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
+    <aspect logger="portal" name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
 
     <!-- This aspect can be used to render the remove button -->
-    <aspect name="coplet-removing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"/>
+    <aspect logger="portal" name="coplet-removing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"/>
 
     <!-- This aspect can be used to render a full-screen button -->
-    <aspect name="coplet-full-screen" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FullScreenCopletAspect"/>
+    <aspect logger="portal" name="coplet-full-screen" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FullScreenCopletAspect"/>
 
     <!-- This aspect can be used to render cinclude statements that will be used to include the coplet content,
          use the coplet aspect below to directly stream the content -->
-    <aspect name="coplet-cinclude" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
+    <aspect logger="portal" name="coplet-cinclude" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
 
     <!-- This aspect creates a history of all layout aspect datas,
          coplet aspect datas and coplet attributes. It can be used by
          the bookmark action to browse the history -->
-    <aspect name="history" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.HistoryAspect"/>
+    <aspect logger="portal" name="history" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.HistoryAspect"/>
     
     <!-- This aspect can be used to render the content of the coplet -->
-    <aspect name="coplet" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
-    <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
-    <aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
-    <aspect class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect" name="parameter"/>
+    <aspect logger="portal" name="coplet" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
+    <aspect logger="portal" name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
+    <aspect logger="portal" name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
+    <aspect logger="portal" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect" name="parameter"/>
     <!-- This is the special basket renderer -->
-    <aspect class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect" name="basket"/>
+    <aspect logger="portal" class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect" name="basket"/>
  </component>
 
  <!-- Aspect Storage configuration -->
  <component class="org.apache.cocoon.components.ExtendedComponentSelector" 
             role="org.apache.cocoon.portal.aspect.AspectDataStoreSelector">
-    <store name="temporary" class="org.apache.cocoon.portal.aspect.impl.TemporaryAspectDataStore"/>
-    <store name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>
-    <store name="session" class="org.apache.cocoon.portal.aspect.impl.SessionAspectDataStore"/>
-    <store name="persistent" class="org.apache.cocoon.portal.aspect.impl.PersistentAspectDataStore"/>
-    <store name="memory" class="org.apache.cocoon.portal.aspect.impl.MemoryAspectDataStore"/>
+    <store logger="portal" name="temporary" class="org.apache.cocoon.portal.aspect.impl.TemporaryAspectDataStore"/>
+    <store logger="portal" name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>
+    <store logger="portal" name="session" class="org.apache.cocoon.portal.aspect.impl.SessionAspectDataStore"/>
+    <store logger="portal" name="persistent" class="org.apache.cocoon.portal.aspect.impl.PersistentAspectDataStore"/>
+    <store logger="portal" name="memory" class="org.apache.cocoon.portal.aspect.impl.MemoryAspectDataStore"/>
  </component>
 
-<component class="org.apache.cocoon.components.persistence.CastorSourceConverter" role="org.apache.cocoon.components.persistence.CastorSourceConverter">
+<component class="org.apache.cocoon.components.persistence.CastorSourceConverter" role="org.apache.cocoon.components.persistence.CastorSourceConverter" logger="portal">
  	<mapping-source source="layout">resource://org/apache/cocoon/portal/layout/layout.xml</mapping-source>
  	<mapping-source source="copletbasedata">resource://org/apache/cocoon/portal/coplet/copletbasedata.xml</mapping-source>
  	<mapping-source source="copletdata">resource://org/apache/cocoon/portal/coplet/copletdata.xml</mapping-source>
  	<mapping-source source="copletinstancedata">resource://org/apache/cocoon/portal/coplet/copletinstancedata.xml</mapping-source>
  </component>
- <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
+ <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" logger="portal"/>
 
- <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" />
+ <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" logger="portal"/>
  <!-- This is the basket manager -->
  <component class="org.apache.cocoon.portal.coplets.basket.BasketManagerImpl" 
-            role="org.apache.cocoon.portal.coplets.basket.BasketManager">
+            role="org.apache.cocoon.portal.coplets.basket.BasketManager"
+            logger="portal">
      <!-- This is only a sample configuration, it doesn't really work -->
      <parameter name="basket:action:print" value="cocoon://print-basket"/>
      <parameter name="basket:action:email" value="cocoon://email-basket"/>
