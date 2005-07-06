@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.apache.excalibur.store.Store;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.10 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -77,8 +77,8 @@ implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
     public void store(Serializable     key,
                       CachedResponse   response)
     throws ProcessingException {
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Caching new response for " + key);
+        if ( this.getLogger().isInfoEnabled()) {
+            this.getLogger().info("Caching new response for " + key);
         }
         try {
             this.store.store(key, response);
@@ -109,8 +109,8 @@ implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
      *                    request
      */
     public void remove(Serializable key) {
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Removing cached response for " + key); 
+        if ( this.getLogger().isInfoEnabled()) {
+            this.getLogger().info("Removing cached response for " + key); 
         }
         this.store.remove(key);
     }
@@ -119,8 +119,8 @@ implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
      * clear cache of all cached responses 
      */
     public void clear() {
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Clearing cache"); 
+        if ( this.getLogger().isInfoEnabled()) {
+            this.getLogger().info("Clearing cache"); 
         }
         // FIXME this clears the whole store!
         this.store.clear();
