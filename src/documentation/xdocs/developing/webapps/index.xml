@@ -27,20 +27,13 @@
 <s1 title="Overview">
  <p>This section contains several documents about developing real-world web applications
   with Cocoon.</p>
- <p>Some of these concepts are currently in development. The development of the
-  <link href="session.html">Session handling</link>, the 
-  <link href="authentication.html">authentication</link> framework and
-  the <link href="portal.html">portal framework</link> is nearly finished. You will
-  find these components in the latest CVS version of Cocoon. The documentation
-  listed in the menu conforms to the current CVS version.</p>
- <p>However, the current release @released.version@ contains alpha versions in the
-   scratchpad area of these three components. So you can already have a look at them. The
-   documentation in the "scratchpad" folder contains the description conforming to the
-   scratchpad. But be warned that they are in the scratchpad area and will change in 
-   upcomming releases. So if you are really planning to use them, have a look at the
-   latest CVS.
- </p>
-
+ <p>Cocoon has different modules/concepts for making this task much easier. There are
+  components for <link href="session.html">Session handling</link>, the 
+  <link href="authentication.html">authentication</link> framework ,
+  the <link href="portal.html">portal framework</link> and the newer
+  <link href="../portal/index.html">portal engine</link>. You will
+  find these components in the latest SVN version of Cocoon. The documentation
+  listed in the menu conforms to the current SVN version.</p>
  </s1>
     <s1 title="Introduction">
      <p>A session is a data storage which resides on the server and records
