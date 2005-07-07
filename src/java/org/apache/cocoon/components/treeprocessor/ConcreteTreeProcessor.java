@@ -18,8 +18,10 @@ package org.apache.cocoon.components.treeprocessor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -90,6 +92,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     protected volatile boolean needsReload = false;
     protected boolean fresh = true;
     
+    /** Processor attributes */
+    protected Map processorAttributes = new HashMap();
+
     public void onChangeDirectory( final File changeDirectory ) {
         if (!fresh) {
             if (getLogger().isDebugEnabled()) {
@@ -501,5 +506,26 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     public ServiceManager getServiceManager() {
         return this.manager;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.processorAttributes.get(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
+     */
+    public Object removeAttribute(String name) {
+        return this.processorAttributes.remove(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.processorAttributes.put(name, value);
     }
 }

@@ -58,6 +58,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -118,6 +119,9 @@ public class Cocoon
 
     /** The Cocoon Core */
     protected Core core;
+
+    /** Processor attributes */
+    protected Map processorAttributes = new HashMap();
 
     /**
      * Creates a new <code>Cocoon</code> instance.
@@ -598,4 +602,26 @@ public class Cocoon
     public ServiceManager getServiceManager() {
         return this.serviceManager;
     }
+
+    /**
+     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.processorAttributes.get(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
+     */
+    public Object removeAttribute(String name) {
+        return this.processorAttributes.remove(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.processorAttributes.put(name, value);
+    }
+
 }

@@ -16,10 +16,10 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.flow.Interpreter;
 
 /**
  * TODO WORK IN PROGRESS!!
- * TODO Add Interpreter(s)
  *
  * This interface describes the current sitemap. The current sitemap is available using
  * {@link org.apache.cocoon.core.Core#getCurrentSitemap()}.
@@ -38,6 +38,13 @@ public interface Sitemap {
     /**
      * Return the current processor
      */
-    Processor getCurrentProcessor();
+    Processor getProcessor();
 
+    /**
+     * Return the Interpreter for the given language. If no
+     * interpreter is found <code>null</code> is returned.
+     * @param language The language or <code>null</code> for the default interpreter.
+     * @return The interpreter or <code>null</code>.
+     */
+    Interpreter getInterpreter(String language);
 }

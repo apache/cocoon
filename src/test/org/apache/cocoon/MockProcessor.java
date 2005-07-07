@@ -67,4 +67,26 @@ public class MockProcessor implements Processor {
     public boolean process(Environment environment) throws Exception {
         return false;
     }
+
+    /**
+     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
+     */
+    public Object removeAttribute(String name) {
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        // nothing to do
+    }
+
 }

@@ -66,7 +66,6 @@ implements SourceResolver, Serviceable, Disposable {
     /** The last prefix, which is stripped off from the request uri */
     protected String lastPrefix;
 
-
     /**
      * Constructor
      *
