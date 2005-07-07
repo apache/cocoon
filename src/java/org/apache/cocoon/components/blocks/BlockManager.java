@@ -74,6 +74,9 @@ public class BlockManager
     private Map connections = new HashMap();
     private Map properties = new HashMap();
 
+    /** Processor attributes */
+    protected Map processorAttributes = new HashMap();
+
     // Life cycle
 
     public void service(ServiceManager manager) throws ServiceException {
@@ -396,5 +399,26 @@ public class BlockManager
     
     public String getContext() {
         return this.environmentHelper.getContext();
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.processorAttributes.get(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
+     */
+    public Object removeAttribute(String name) {
+        return this.processorAttributes.remove(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.processorAttributes.put(name, value);
     }
 }

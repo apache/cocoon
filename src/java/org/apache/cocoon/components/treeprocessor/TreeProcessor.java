@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.net.URL;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -35,8 +36,10 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.fam.SitemapMonitor;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -429,6 +432,14 @@ public class TreeProcessor extends AbstractLogEnabled
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("ConcreteTreeProcessor ready");
                 }
+
+                // Get the actual interpreter
+                FlowNode flowNode = (FlowNode)treeBuilder.getRegisteredNode("flow");
+                if ( flowNode != null ) {
+                    final Interpreter interpreter = flowNode.getInterpreter();
+                    newProcessor.setAttribute(Interpreter.ROLE, interpreter);
+                }
+                
             } finally {
                 this.manager.release(treeBuilder);
             }
@@ -483,4 +494,24 @@ public class TreeProcessor extends AbstractLogEnabled
             this.manager = null;
         }
     }
-}
+
+    /**
+     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.concreteProcessor.getAttribute(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
+     */
+    public Object removeAttribute(String name) {
+        return this.concreteProcessor.removeAttribute(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.concreteProcessor.setAttribute(name, value);
+    }}

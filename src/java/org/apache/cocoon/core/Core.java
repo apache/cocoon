@@ -29,6 +29,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.ComponentLocator;
@@ -217,10 +218,19 @@ public class Core {
         }
 
         /**
-         * @see org.apache.cocoon.sitemap.Sitemap#getCurrentProcessor()
+         * @see org.apache.cocoon.sitemap.Sitemap#getProcessor()
          */
-        public Processor getCurrentProcessor() {
+        public Processor getProcessor() {
             return EnvironmentHelper.getCurrentProcessor();
         }
+
+        /**
+         * @see org.apache.cocoon.sitemap.Sitemap#getInterpreter(java.lang.String)
+         */
+        public Interpreter getInterpreter(String language) {
+            // TODO We ignore the language for now
+            return (Interpreter)this.getProcessor().getAttribute(Interpreter.ROLE);
+        }
+
     }
 }
