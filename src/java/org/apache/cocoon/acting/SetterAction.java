@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * whereas the parameter name is the key and the value of the parameter
  * will be set as a string value for this key.
  *
- * @version SVN $Id:$
+ * @version SVN $Id$
  */
 public class SetterAction
     extends AbstractAction
@@ -62,7 +62,7 @@ public class SetterAction
             } else if ( MODEDEF_SESSION_ATTR.equals(modeDef) ) {
                 this.mode = MODE_SESSION_ATTR;
             } else {
-                throw new ParameterException("Unknown mode: " + mode);
+                throw new ParameterException("Unknown mode: " + this.mode);
             }
         }
     }
@@ -83,7 +83,7 @@ public class SetterAction
                 objectModel.put(name, parameters.getParameter(name));                
             } else if ( this.mode == MODE_REQUEST_ATTR ) {
                 ObjectModelHelper.getRequest(objectModel).setAttribute(name, parameters.getParameter(name));                
-            } else if ( this.mode == MODE_REQUEST_ATTR ) {
+            } else if ( this.mode == MODE_SESSION_ATTR ) {
                 ObjectModelHelper.getRequest(objectModel).getSession().setAttribute(name, parameters.getParameter(name));                
             }
         }
