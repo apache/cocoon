@@ -30,13 +30,11 @@
  <p>This section contains several documents about developing a portal with Cocoon.</p>
  <p>The <link href="../webapps/portal.html">portal framework</link> is a stable
    portal framework that uses the authentication framework. It can
-   be used to quickly develop portal applications.</p> 
-<p>The new <link href="portal-block.html">portal engine</link> is a new
+   be used to quickly develop portal applications, but it is deprecated.</p> 
+<p>The <link href="portal-block.html">portal engine</link> is a replacement
   implementation of a portal engine which focuses on more flexibility
-  and ease-of-use. In addition it supports the JSR-168. The current state of 
-  this engine is <em>alpha</em> which means that the engine can still change 
-  in some aspects.</p>
-
+  and ease-of-use. In addition it supports the JSR-168. For new projects
+  our advice is to use the portal engine.</p>
  </s1>
   <s1 title="Features">
   <p>The portal framework is a portal server that runs inside Cocoon - or to be more 
