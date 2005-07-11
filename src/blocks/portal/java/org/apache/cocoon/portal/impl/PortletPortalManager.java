@@ -24,12 +24,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -66,7 +64,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
-	implements Initializable, Contextualizable, Disposable, Subscriber {
+	implements Initializable, Subscriber {
 
     public static final ThreadLocal copletInstanceData = new InheritableThreadLocal();
     
@@ -79,14 +77,11 @@ public class PortletPortalManager
     /** The Portlet Container environment */
     protected PortletContainerEnvironmentImpl portletContainerEnvironment;
     
-    /** The component context */
-    protected Context context;
-    
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-        this.context = context;
+        super.contextualize(context);
         try {
             this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
             // we have to somehow pass this component down to other components!
@@ -101,7 +96,7 @@ public class PortletPortalManager
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -115,7 +110,7 @@ public class PortletPortalManager
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -144,7 +139,7 @@ public class PortletPortalManager
             this.servletConfig.getServletContext().removeAttribute(PortalManager.ROLE);
             this.servletConfig = null;
         }
-        this.manager = null;
+        super.dispose();
     }
 
     /* (non-Javadoc)
