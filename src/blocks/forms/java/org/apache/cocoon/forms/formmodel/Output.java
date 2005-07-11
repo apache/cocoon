@@ -59,7 +59,17 @@ public class Output extends AbstractWidget implements DataWidget {
         // do nothing
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#validate()
+     */
     public boolean validate() {
+        return true;
+    }
+
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#isValid()
+     */
+    public boolean isValid() {
         return true;
     }
 

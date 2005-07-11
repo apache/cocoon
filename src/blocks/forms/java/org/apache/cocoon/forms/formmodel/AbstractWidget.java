@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,11 @@ public abstract class AbstractWidget implements Widget {
      * Storage for the widget allocated attributes
      */
     private Map attributes;
+
+    /**
+     * The result of the last call to {@link #validate()}.
+     */
+    protected boolean wasValid = true;
 
     protected AbstractWidget(AbstractWidgetDefinition definition) {
         this.state = definition.getState();
@@ -279,20 +284,26 @@ public abstract class AbstractWidget implements Widget {
         return false;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#validate()
+     */
     public boolean validate() {
         // Consider widget valid if it is not validating values.
         if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
         }
 
         // Test validators from the widget definition
         if (!getDefinition().validate(this)) {
             // Failed
+            this.wasValid = false;
             return false;
         } 
         // Definition successful, test local validators
         if (this.validators == null) {
             // No local validators
+            this.wasValid = true;
             return true;
         }
         
@@ -301,13 +312,21 @@ public abstract class AbstractWidget implements Widget {
         while(iter.hasNext()) {
             WidgetValidator validator = (WidgetValidator)iter.next();
             if (!validator.validate(this)) {
+                this.wasValid = false;
                 return false;
             }
         }
         
         // All local iterators successful
+        this.wasValid = true;
         return true;
+    }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#isValid()
+     */
+    public boolean isValid() {
+        return this.wasValid;
     }
 
     /**

@@ -30,6 +30,6 @@ import org.w3c.dom.Element;
  */
 public interface WidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception;
+    WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception;
 
 }

@@ -96,6 +96,13 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
         return true;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#isValid()
+     */
+    public boolean isValid() {
+        return true;
+    }
+    
     private static final String ACTION_EL = "action";
 
     /**

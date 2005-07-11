@@ -248,17 +248,22 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         }
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#validate()
+     */
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
-
+        }
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
             valid = valid & row.validate();
         }
-        return (valid ? super.validate() : false) && this.validationError == null;
+        this.wasValid = (valid ? super.validate() : false) && this.validationError == null;
+        return this.wasValid;
     }
 
 
@@ -341,7 +346,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
      * Set a validation error on this field. This allows repeaters be externally marked as invalid by
      * application logic.
      *
-     * @param error the validation error
+     * @return the validation error
      */
     public ValidationError getValidationError() {
         return this.validationError;

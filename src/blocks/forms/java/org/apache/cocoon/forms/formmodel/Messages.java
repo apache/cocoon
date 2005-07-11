@@ -60,9 +60,11 @@ public class Messages extends AbstractWidget {
 
     public boolean validate() {
         if (!getCombinedState().isValidatingValues())  {
+            this.wasValid = true;
             return true;
         }
-        return messages.size() == 0;
+        this.wasValid = messages.size() == 0;
+        return this.wasValid;
     }
 
     /**
