@@ -110,9 +110,10 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
-        
+        }
         ValidationError newError = null;
 
         if (this.part == null) {
@@ -143,8 +144,8 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         if (!ObjectUtils.equals(this.validationError, newError)) {
             setValidationError(newError);
         }
-
-        return validationError == null ? super.validate() : false;
+        this.wasValid = validationError == null ? super.validate() : false;
+        return this.wasValid;
     }
 
     /**

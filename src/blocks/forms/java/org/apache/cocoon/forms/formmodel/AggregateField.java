@@ -194,9 +194,10 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
-
+        }
         if (enteredValue != null && !fieldsHaveValues()) {
             XMLizable failMessage = getAggregateFieldDefinition().getSplitFailMessage();
             if (failMessage != null) {
@@ -207,6 +208,7 @@ public class AggregateField extends Field implements ContainerWidget {
                                                                       Constants.I18N_CATALOGUE));
             }
             valueState = VALUE_DISPLAY_VALIDATION;
+            this.wasValid = false;
             return false;
         }
 
@@ -221,6 +223,7 @@ public class AggregateField extends Field implements ContainerWidget {
         }
         if (!valid) {
             valueState = VALUE_DISPLAY_VALIDATION;
+            this.wasValid = false;
             return false;
         }
 

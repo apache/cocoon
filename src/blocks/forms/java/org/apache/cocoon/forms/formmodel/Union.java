@@ -120,16 +120,20 @@ public class Union extends AbstractContainerWidget {
 
     // TODO: Simplify this logic.
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
-
+        }
         Widget widget;
         boolean valid = true;
         // Read current case from request
         String value = (String)getValue();
-        if (value != null && !value.equals(""))
-            if ((widget = getChild(value)) != null)
+        if (value != null && !value.equals("")) {
+            if ((widget = getChild(value)) != null) {
                 valid = valid & widget.validate();
+            }
+        }
+        this.wasValid = valid;
         return valid;
     }
 

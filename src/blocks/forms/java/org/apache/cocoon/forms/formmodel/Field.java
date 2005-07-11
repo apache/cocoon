@@ -273,8 +273,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
+        }
 
         if (this.valueState == VALUE_UNPARSED) {
             doParse();
@@ -296,6 +298,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             getForm().addWidgetUpdate(this);
         }
 
+        this.wasValid = this.validationError == null;
         return this.validationError == null;
     }
 

@@ -31,30 +31,30 @@ public interface WidgetDefinition {
     /**
      * Gets the {@link FormDefinition}.
      */
-    public FormDefinition getFormDefinition();
+    FormDefinition getFormDefinition();
 
     /**
-     * Sets the parent of this definition
+     * Sets the parent of this definition.
      */
-    public void setParent(WidgetDefinition definition);
+    void setParent(WidgetDefinition definition);
 
     /**
      * Gets source location of this widget definition.
      */
-    public String getLocation();
+    String getLocation();
 
     /**
      * Gets id of this widget definition.
      */
-    public String getId();
+    String getId();
     
     /**
-     * Gets an attribute that has been defined on the widget's definition
+     * Gets an attribute that has been defined on the widget's definition.
      * 
      * @param name the attribute name
      * @return the attribute value, or null if it doesn't exist
      */
-    public Object getAttribute(String name);
+    Object getAttribute(String name);
     
     /**
      * Validate a widget using the validators that were defined in its definition. If validation
@@ -63,26 +63,26 @@ public interface WidgetDefinition {
      * @param widget the widget
      * @return <code>true</code> if validation was successful.
      */
-    public boolean validate(Widget widget);
+    boolean validate(Widget widget);
     
 
     /**
      * Creates and returns a widget based on this widget definition.
      */
-    public Widget createInstance();
+    Widget createInstance();
 
     /**
      * Generates SAX events for named display data.
      */
-    public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException;
+    void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException;
 
     /**
      * Generates SAX events for display data.
      */
-    public void generateDisplayData(ContentHandler contentHandler) throws SAXException;
+    void generateDisplayData(ContentHandler contentHandler) throws SAXException;
 
     /**
      * Generates SAX events for the label of this widget.
      */
-    public void generateLabel(ContentHandler contentHandler) throws SAXException;
+    void generateLabel(ContentHandler contentHandler) throws SAXException;
 }

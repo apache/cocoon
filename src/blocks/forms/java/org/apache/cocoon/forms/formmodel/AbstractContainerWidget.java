@@ -109,12 +109,14 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
-        if (!getCombinedState().isValidatingValues())
+        if (!getCombinedState().isValidatingValues()) {
+            this.wasValid = true;
             return true;
-
+        }
         // Validate children first, then always validate self. Return combined result.
         final boolean valid = widgets.validate();
-        return super.validate() && valid;
+        this.wasValid = super.validate() && valid;
+        return this.wasValid;
     }
 
     /**

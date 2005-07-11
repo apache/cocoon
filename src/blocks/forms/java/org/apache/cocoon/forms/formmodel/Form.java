@@ -328,7 +328,7 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
      * Set a validation error on this field. This allows the form to be externally marked as invalid by
      * application logic.
      *
-     * @param error the validation error
+     * @return the validation error
      */
     public ValidationError getValidationError() {
         return this.validationError;
@@ -351,7 +351,8 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
 
         // FIXME: Is this check needed, before invoking the listener?
         if (this.endProcessing != null) {
-            return this.endProcessing.booleanValue();
+            this.wasValid = this.endProcessing.booleanValue();
+            return this.wasValid;
         }
 
         // Notify the end of the current phase
@@ -362,10 +363,11 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
             // De-validate the form if one of the listeners asked to end the processing
             // This allows for additional application-level validation.
             this.isValid = false;
-            return this.endProcessing.booleanValue();
+            this.wasValid = this.endProcessing.booleanValue();
+            return this.wasValid;
         }
-
-        return this.isValid && this.validationError == null;
+        this.wasValid = this.isValid && this.validationError == null;
+        return this.wasValid;
     }
 
     private static final String FORM_EL = "form";
