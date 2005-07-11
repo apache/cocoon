@@ -480,6 +480,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="add">
+      CForms block: Add isValid() method to a Widget.
+    </action>     
     <action dev="VG" type="add" fixes-bug="29817" due-to="Patrick Herber" due-to-email="patrick@arpage.ch">
       POI Block: Added HSSFGenerator.
     </action>
