@@ -197,6 +197,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Portal block: Add portal manager aspects for more flexible portal processing.
+    </action>     
+    <action dev="CZ" type="add">
       CForms block: Add isValid() method to a Widget.
     </action>     
     <action dev="VG" type="add" fixes-bug="29817" due-to="Patrick Herber" due-to-email="patrick@arpage.ch">

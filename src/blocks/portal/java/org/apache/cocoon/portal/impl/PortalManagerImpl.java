@@ -16,14 +16,25 @@
 package org.apache.cocoon.portal.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalManager;
+import org.apache.cocoon.portal.PortalManagerAspect;
+import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
+import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.Layout;
@@ -40,13 +51,20 @@ import org.xml.sax.SAXException;
  */
 public class PortalManagerImpl
 	extends AbstractLogEnabled
-	implements PortalManager, Serviceable, Disposable, ThreadSafe {
+	implements PortalManager, Serviceable, Disposable, ThreadSafe, Contextualizable, PortalManagerAspect, Configurable {
 
     /** The service manager */
     protected ServiceManager manager;
 
     /** The portal service */
     protected PortalService portalService;
+
+    protected PortalManagerAspectChain chain;
+
+    protected ServiceSelector aspectSelector;
+
+    /** The component context. */
+    protected Context context;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
@@ -55,6 +73,9 @@ public class PortalManagerImpl
     throws ServiceException {
         this.manager = serviceManager;
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        if ( this.manager.hasService(PortalManagerAspect.ROLE+"Selector") ) {
+            this.aspectSelector = (ServiceSelector) this.manager.lookup( PortalManagerAspect.ROLE+"Selector");
+        }
     }
 
     /**
@@ -65,6 +86,12 @@ public class PortalManagerImpl
             this.manager.release(this.portalService);
             this.portalService = null;
             this.manager = null;
+            if ( this.chain != null) {
+                this.chain.dispose( this.aspectSelector );
+            }
+            this.manager.release( this.aspectSelector );
+            this.aspectSelector = null;
+            this.manager = null;
         }
     }
 
@@ -73,8 +100,11 @@ public class PortalManagerImpl
      */
     public void process()
     throws ProcessingException {
-        EventManager eventManager = this.portalService.getComponentManager().getEventManager();
-        eventManager.processEvents();
+        DefaultPortalManagerAspectContext aspectContext =
+            new DefaultPortalManagerAspectContext(this.chain,
+                                                  this.portalService,
+                                                  ContextHelper.getObjectModel(this.context));
+        aspectContext.invokeNext();
     }
 
 	/**
@@ -82,6 +112,40 @@ public class PortalManagerImpl
 	 */
 	public void showPortal(ContentHandler contentHandler, Parameters parameters) 
     throws SAXException {
+        DefaultPortalManagerAspectContext aspectContext =
+            new DefaultPortalManagerAspectContext(this.chain,
+                                                  this.portalService,
+                                                  ContextHelper.getObjectModel(this.context));
+        aspectContext.invokeNext(contentHandler, parameters);
+	}
+
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration conf) throws ConfigurationException {
+        this.chain = new PortalManagerAspectChain();
+        this.chain.configure(this.aspectSelector, conf.getChild("aspects"), this, new Parameters());
+    }
+
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
+     */
+    public void prepare(PortalManagerAspectPrepareContext context, PortalService service) throws ProcessingException {
+        EventManager eventManager = this.portalService.getComponentManager().getEventManager();
+        eventManager.processEvents();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void render(PortalManagerAspectRenderContext context, PortalService service, ContentHandler ch, Parameters parameters) throws SAXException {
         // first check for a full screen layout
         Layout portalLayout = this.portalService.getEntryLayout(null);
         if ( portalLayout == null ) {
@@ -90,8 +154,8 @@ public class PortalManagerImpl
 
         Renderer portalLayoutRenderer = this.portalService.getComponentManager().getRenderer( portalLayout.getRendererName());       
 
-        contentHandler.startDocument();
-        portalLayoutRenderer.toSAX(portalLayout, this.portalService, contentHandler);
-        contentHandler.endDocument();
+        ch.startDocument();
+        portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);
+        ch.endDocument();
 	}
 }
