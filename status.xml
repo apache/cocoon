@@ -480,7 +480,7 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
-    <action dev="CZ" type="fix">
+    <action dev="CZ" type="add">
       Portal block: Add portal manager aspects for more flexible portal processing.
     </action>
     <action dev="CZ" type="add">
