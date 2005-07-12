@@ -24,6 +24,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 import org.outerj.expression.Expression;
@@ -34,10 +35,15 @@ import org.outerj.expression.TokenMgrError;
  *
  * @version $Id$
  */
-public abstract class AbstractValidationRuleBuilder implements ValidationRuleBuilder, Serviceable, Disposable {
+public abstract class AbstractValidationRuleBuilder 
+    implements ValidationRuleBuilder, Serviceable, Disposable {
+
     protected ExpressionManager expressionManager;
     protected ServiceManager serviceManager;
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
         this.expressionManager = (ExpressionManager)serviceManager.lookup(ExpressionManager.ROLE);

@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder;
 import org.apache.cocoon.forms.formmodel.WidgetDefinition;
 import org.apache.cocoon.forms.validation.WidgetValidator;
@@ -27,8 +28,13 @@ import org.w3c.dom.Element;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class RegExpValidatorBuilder extends RegExpValidationRuleBuilder implements WidgetValidatorBuilder {
+public class RegExpValidatorBuilder
+    extends RegExpValidationRuleBuilder
+    implements WidgetValidatorBuilder, ThreadSafe {
 
+    /**
+     * @see org.apache.cocoon.forms.validation.WidgetValidatorBuilder#build(org.w3c.dom.Element, org.apache.cocoon.forms.formmodel.WidgetDefinition)
+     */
     public WidgetValidator build(Element validationRuleElement, WidgetDefinition definition) throws Exception {
         return new ValidationRuleValidator(super.build(validationRuleElement));
     }
