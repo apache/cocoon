@@ -24,7 +24,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 import org.outerj.expression.Expression;
