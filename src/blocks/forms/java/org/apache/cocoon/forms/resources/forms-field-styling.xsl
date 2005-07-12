@@ -25,8 +25,6 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
-  <!-- Location of the resources directory, where JS libs and icons are stored -->
-  <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="forms-field">
     <script src="{$resources-uri}/js/forms-lib.js" type="text/javascript"/>
