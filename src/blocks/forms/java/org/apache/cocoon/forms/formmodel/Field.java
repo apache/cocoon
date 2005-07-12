@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -272,6 +272,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.Widget#validate()
+     */
     public boolean validate() {
         if (!getCombinedState().isValidatingValues()) {
             this.wasValid = true;
@@ -350,6 +353,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
         // Go to transient validating state
         this.valueState = VALUE_VALIDATING;
+
+        // reset validation errot
+        this.validationError = null;
 
         try {
             if (this.value == null && getFieldDefinition().isRequired()) {

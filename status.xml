@@ -197,6 +197,10 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      CForms block: Make all WidgetValidatorBuilders ThreadSafe. Reset validation errors
+                    before validating a field.
+    </action>     
+    <action dev="CZ" type="add">
       Portal block: Add portal manager aspects for more flexible portal processing.
     </action>     
     <action dev="CZ" type="add">

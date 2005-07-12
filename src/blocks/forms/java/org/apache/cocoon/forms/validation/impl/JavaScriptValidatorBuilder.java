@@ -33,8 +33,9 @@ import org.w3c.dom.Element;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
-    
+public class JavaScriptValidatorBuilder 
+    implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
+
     private Context avalonContext;
     
     private static final String[] ARG_NAMES = {"widget"};
