@@ -22,9 +22,6 @@
       | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
       +-->
 
-  <!-- Location of the resources directory, where JS libs and icons are stored -->
-  <xsl:param name="resources-uri">resources</xsl:param>
-
   <xsl:template match="head" mode="forms-calendar">
     <script src="{$resources-uri}/mattkruse-lib/CalendarPopup.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/date.js" type="text/javascript"/>

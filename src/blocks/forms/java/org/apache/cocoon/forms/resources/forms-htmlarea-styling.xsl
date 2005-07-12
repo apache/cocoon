@@ -22,8 +22,6 @@
       | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
       +-->
 
-  <!-- Location of the resources directory, where JS libs and icons are stored -->
-  <xsl:param name="resources-uri">resources</xsl:param>
   <xsl:param name="htmlarea-lang">en</xsl:param>
 
   <xsl:template match="head" mode="forms-htmlarea">
