@@ -95,13 +95,6 @@
     </sample>
   </group>  
 
-  <group name="Cocoon Forms Processing">
-    <sample href="simpleform/" name="Simple Forms">
-      These examples show a simple way to work with HTML forms. More powerful
-      form solutions can be found in the blocks section. 
-    </sample>
-  </group>  
-
   <group name="Test Pages">
     <sample name="Automated tests" href="test/">
       Pages used by HTTP-based automated tests.

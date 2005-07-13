@@ -113,7 +113,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     /**
      * Map containing all handlers
      */
-    private final Map templates;
+    protected final Map templates;
 
     protected FormsPipelineConfig pipeContext;
 
