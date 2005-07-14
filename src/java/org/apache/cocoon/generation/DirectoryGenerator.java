@@ -45,6 +45,7 @@ import java.util.Comparator;
 /**
  * @cocoon.sitemap.component.documentation
  * Generates an XML directory listing.
+ * A more general approach is implemented by the TraversableGenerator (src/blocks/repository/java/org/apache/cocoon/generation/TraversableGenerator.java)
  * 
  * @cocoon.sitemap.component.name   directory
  * @cocoon.sitemap.component.label  content
