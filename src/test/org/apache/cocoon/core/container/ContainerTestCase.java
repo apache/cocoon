@@ -39,7 +39,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.util.log.DeprecationLogger;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -150,7 +149,6 @@ public class ContainerTestCase extends TestCase {
 
         String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_WARN);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
-        DeprecationLogger.logger = this.logger;
         this.prepare();
     }
     
