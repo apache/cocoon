@@ -25,21 +25,21 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletStatusEvent.java,v 1.3 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public abstract class CopletStatusEvent 
+public abstract class CopletStatusEvent
     implements Event, ComparableEvent {
 
     protected CopletInstanceData coplet;
-    
+
     public CopletInstanceData getCopletInstanceData() {
         return this.coplet;
     }
-    
+
     public void setCopletInstanceData(CopletInstanceData data) {
         this.coplet = data;
     }
-    
+
     public boolean equalsEvent(ComparableEvent event) {
         if (event instanceof CopletStatusEvent) {
             return ((CopletStatusEvent)event).getCopletInstanceData().getId().equals( this.coplet.getId() );

@@ -27,12 +27,12 @@ import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 
 /**
- * Prepare the portal by setting the portal name
+ * Prepare the portal by setting the portal name.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PreparePortalAction.java,v 1.1 2005/01/07 10:21:45 cziegeler Exp $
+ * @version CVS $Id$
  */
-public class PreparePortalAction 
+public class PreparePortalAction
 extends ServiceableAction {
 
 	/* (non-Javadoc)
@@ -51,7 +51,7 @@ extends ServiceableAction {
                 portalService.setPortalName(portalName);
             }
             return EMPTY_MAP;
-        
+
         } catch (ServiceException e) {
             throw new ProcessingException("Unable to lookup portal service.", e);
         } finally {

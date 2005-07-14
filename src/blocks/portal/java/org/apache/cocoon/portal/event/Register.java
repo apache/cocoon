@@ -19,12 +19,13 @@ package org.apache.cocoon.portal.event;
 /**
  * <tt>Register</tt> allows a <tt>Subscriber</tt> to subscribe to 
  * and unsubscribe from <tt>EventManager</tt>.
- *  
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author Mauro Talevi
- * 
- * @version CVS $Id: Register.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @deprecated Use {@link org.apache.cocoon.portal.event.EventManager#subscribe(Receiver)} instead.
+ *
+ * @version CVS $Id$
  */
 public interface Register {
     

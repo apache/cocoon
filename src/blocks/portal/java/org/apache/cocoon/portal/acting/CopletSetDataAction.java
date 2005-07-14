@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 
 /**
@@ -69,7 +69,7 @@ extends ServiceableAction {
             // if the value is null or empty, the value is not set!
             final String[] names = parameters.getNames();
             if ( names != null ) {
-                final Publisher publisher = portalService.getComponentManager().getEventManager().getPublisher();
+                final EventManager publisher = portalService.getComponentManager().getEventManager();
                 for(int i=0; i<names.length; i++) {
                     final String path = names[i];
                     final String value = parameters.getParameter(path, null );
@@ -77,7 +77,7 @@ extends ServiceableAction {
                         final Event event = new CopletJXPathEvent(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId),
                                 path,
                                 value);
-                        publisher.publish(event);
+                        publisher.send(event);
                     }
                 }
             }

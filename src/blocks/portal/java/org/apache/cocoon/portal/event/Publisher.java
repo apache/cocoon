@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.event;
 
-
 /**
  * <tt>Publisher</tt> produces or publishes events that are brokered by <tt>EventManager</tt>
  * and of which the appropriate subscribers are informed of.
@@ -23,11 +22,11 @@ package org.apache.cocoon.portal.event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author Mauro Talevi
- * 
- * @version CVS $Id: Publisher.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ *
+ * @version CVS $Id$
  */
 public interface Publisher {
-    
+
     /**
      *  Publishes an event for subscribers to be informed of.
      *

@@ -16,28 +16,28 @@
 package org.apache.cocoon.portal.event;
 
 import java.io.Serializable;
+
 /**
  * A Filter allows subscribers to specify which events
- * they should be informed of.  
- * It is Serializable to allow events to be published and received 
+ * they should be informed of.
+ * It is Serializable to allow events to be published and received
  * in a distributed architecture.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author Mauro Talevi
- * 
- * @version CVS $Id: Filter.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @deprecated Use the receiver instead.
+ *
+ * @version CVS $Id$
  */
 public interface Filter extends Serializable {
-     /**
-      * Filters event, discarding those not of interest to the subscriber.
-      * 
-      * @param event the <tt>Event</tt>
-      * @return boolean <code>true</code> if Event passes filter
-      */
-     boolean filter( Event event );
+
+    /**
+     * Filters event, discarding those not of interest to the subscriber.
+     *
+     * @param event the <tt>Event</tt>
+     * @return boolean <code>true</code> if Event passes filter
+     */
+    boolean filter( Event event );
 
 }
-
-
-

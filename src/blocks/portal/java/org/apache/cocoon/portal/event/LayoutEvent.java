@@ -16,15 +16,15 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * This interface marks an {@link ActionEvent} as targetted at a 
- * {@link org.apache.cocoon.portal.layout.Layout} object
- * 
+ * This interface marks an {@link ActionEvent} as targetted at a
+ * {@link org.apache.cocoon.portal.layout.Layout} object.
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
+ *
  * @version CVS $Id$
  */
 public interface LayoutEvent extends ActionEvent {
-    
+
     // just a marker interface
 }

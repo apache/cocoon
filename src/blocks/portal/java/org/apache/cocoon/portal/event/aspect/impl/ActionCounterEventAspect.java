@@ -36,15 +36,15 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  */
 public class ActionCounterEventAspect
 	extends AbstractLogEnabled
-	implements EventAspect, 
-                ThreadSafe,
-                Parameterizable {
+	implements EventAspect,
+               ThreadSafe,
+               Parameterizable {
+
     protected final static String ATTRIBUTE_NAME = ActionCounterEventAspect.class.getName();
-    
 
     /** The name of the parameter to check */
     protected String parameterName;
-    
+
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
@@ -52,7 +52,7 @@ public class ActionCounterEventAspect
         final String requestParameterName = context.getAspectParameters().getParameter("parameter-name", this.parameterName);
 
         int actionCount;
-        
+
         Integer actionValue = (Integer) service.getAttribute(ATTRIBUTE_NAME);
         if (null == actionValue) {
             actionValue = new Integer(0);
@@ -73,7 +73,7 @@ public class ActionCounterEventAspect
             } catch (Exception ignore) {
                 number = -1;
             }
-            
+
             if ( number == actionCount - 1) {
                 // and invoke next one
                 context.invokeNext( service );
@@ -88,7 +88,6 @@ public class ActionCounterEventAspect
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
 	}
 
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
@@ -96,5 +95,4 @@ public class ActionCounterEventAspect
     throws ParameterException {
         this.parameterName = parameters.getParameter("parameter-name", "cocoon-portal-action");
     }
-
 }

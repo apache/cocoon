@@ -27,7 +27,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.PortalService;
 
 /**
- * This action saves the profile
+ * This action saves the profile.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$

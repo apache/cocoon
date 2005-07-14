@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,20 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 
 /**
- * <p>Service to manage event notification. The designed has been inspired by the paper by 
- * Gupta, S., J. M. Hartkopf, and S. Ramaswamy, in Java Report, Vol. 3, No. 7, July 1998, 19-36,
- * "Event Notifier: A Pattern for Event Notification".</p>  
+ * This component manages the event handling mechanism in the portal.
+ * The event mechanism is based on the publisher/subscriber principle.
+ * An interested component (a {@link org.apache.cocoon.portal.event.Receiver}
+ * can subscribe itself for a specific class (or classes) of events.
+ * All Events have a common ancestor type {@link Event} and the event types are 
+ * identified by a (sub)class
  * 
- * <p>EventManager brokers events between a <tt>Publisher</tt>, which produces events,
+ * The old design which is now deprecated has been inspired by the paper by 
+ * Gupta, S., J. M. Hartkopf, and S. Ramaswamy, in Java Report, Vol. 3, No. 7, July 1998, 19-36,
+ * "Event Notifier: A Pattern for Event Notification".  
+ * 
+ * EventManager brokers events between a <tt>Publisher</tt>, which produces events,
  * and a <tt>Subscriber</tt>, which handles the notification of events.
  * A <tt>Filter</tt> discards events not of interest to a subscriber.
- * All Events have a common ancestor type <tt>Event</tt> and the event types are 
- * identified by a <tt>Class</tt>.</p>
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
@@ -38,18 +43,20 @@ import org.apache.cocoon.ProcessingException;
 public interface EventManager extends Component {
  
     /**
-     * Represents Role of the service
+     * Represents the role of the service
      */
     String ROLE = EventManager.class.getName(); 
     
      /**
       *  Returns the Publisher with which events can be published.
+      *  @deprecated Use {@link #send(Event)} instead.
       */
     Publisher getPublisher();
     
      /**
       *  Returns the Register with which subscribers can 
       *  subscribe and unsubscribe interest to given Events.
+      *  @deprecated Use {@link #subscribe(Receiver)} and {@link #unsubscribe(Receiver)}.
       */
     Register getRegister();
 
@@ -58,9 +65,21 @@ public interface EventManager extends Component {
      */
     void processEvents()
     throws ProcessingException;
-     
+
+    /**
+     * Publish an event. All registered receivers get notified.
+     * @param event The event to broadcast.
+     */
+    void send(Event event);
+
+    /**
+     * Subscribes a receiver for a specific type of event.  
+     */
+    void subscribe(Receiver receiver);
+
+    /**
+     * Unsubscribes a receiver for all events.
+     */
+    void unsubscribe(Receiver receiver);
 
 }
-
-
-

@@ -23,12 +23,12 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventAspect.java,v 1.2 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface EventAspect extends Component {
 
     String ROLE = EventAspect.class.getName();
-    
+
     void process(EventAspectContext context,
-                  PortalService  service);
+                 PortalService  service);
 }

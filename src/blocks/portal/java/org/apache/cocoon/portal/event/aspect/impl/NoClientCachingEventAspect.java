@@ -27,17 +27,17 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * This aspect implementation sets some headers on the response that tell
  * clients/proxies to not cache. This "disables" the back button on the
  * client.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: NoClientCachingEventAspect.java,v 1.2 2004/04/07 12:03:46 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class NoClientCachingEventAspect
 	extends AbstractLogEnabled
-	implements EventAspect, 
-                ThreadSafe {
+	implements EventAspect,
+               ThreadSafe {
 
-    /* (non-Javadoc)
+    /**
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
 	public void process(EventAspectContext context, PortalService service) {
@@ -47,9 +47,7 @@ public class NoClientCachingEventAspect
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "Thu, 01 Jan 2000 00:00:00 GMT");
-        
+
         context.invokeNext(service);
 	}
-
-
 }

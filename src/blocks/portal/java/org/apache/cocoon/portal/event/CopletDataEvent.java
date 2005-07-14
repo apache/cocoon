@@ -21,7 +21,7 @@ package org.apache.cocoon.portal.event;
  * for all coplet instance datas).
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
 public interface CopletDataEvent 

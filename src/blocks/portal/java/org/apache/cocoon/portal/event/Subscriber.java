@@ -16,39 +16,38 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * <tt>Subscriber</tt> registers its interest in a class of events and 
+ * <tt>Subscriber</tt> registers its interest in a class of events and
  * filters the events of which it should be notified.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author Mauro Talevi
- * 
- * @version CVS $Id: Subscriber.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @deprecated Use the {@link org.apache.cocoon.portal.event.Receiver} instead.
+ *
+ * @version CVS $Id$
  */
 public interface Subscriber {
-    
+
     /**
      *  Returns the event type of the event on which the Subscriber is interested.
      *  The event type is encoded by a <tt>Class</tt>.
      *
-     *  @return the <tt>Class</tt> encoding the event type  
+     *  @return the <tt>Class</tt> encoding the event type
      */
-     Class getEventType();
+    Class getEventType();
 
     /**
-     *  Returns the filter used to select the events in which the subscriber is 
+     *  Returns the filter used to select the events in which the subscriber is
      *  interested.
      *
-     *  @return the <tt>Filter</tt> 
+     *  @return the <tt>Filter</tt>
      */
-     Filter getFilter();
-     
+    Filter getFilter();
+
     /**
      * Callback method informing the Subscriber of the occurence of an event.
      *
      * @param event the <tt>Event</tt> of which the <tt>Subscriber</tt> is informed
      */
-     void inform( Event event );
+    void inform( Event event );
 }
-
-

@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
@@ -41,24 +41,26 @@ public class RequestParameterEventAspect
 	extends AbstractLogEnabled
 	implements EventAspect, ThreadSafe {
 
-    protected void process(EventAspectContext context, Request request, String parameterName) {
+    protected void process(EventAspectContext context,
+                           PortalService      service,
+                           Request            request, 
+                           String             parameterName) {
         String[] values = request.getParameterValues( parameterName );
+        final EventManager publisher = service.getComponentManager().getEventManager();
         if ( values != null ) {
-            final Publisher publisher = context.getEventPublisher();
             for(int i=0; i<values.length; i++) {
                 final String current = values[i];
                 final Event e = context.getEventConverter().decode(current);
                 if ( null != e) {
-                    publisher.publish(e);
+                    publisher.send(e);
                 }
             }
         } else {
             List list = (List) request.getAttribute("org.apache.cocoon.portal." + parameterName);
             if (list != null) {
                 Event[] events = (Event[]) list.toArray(new Event[0]);
-                final Publisher publisher = context.getEventPublisher();
                 for (int i = 0; i < events.length; i++) {
-                    publisher.publish(events[i]);
+                    publisher.send(events[i]);
                 }
             }
         }
@@ -76,13 +78,13 @@ public class RequestParameterEventAspect
         StringTokenizer tokenizer = new StringTokenizer(requestParameterNames, ", ");
         while ( tokenizer.hasMoreTokens() ) {
             final String currentName = tokenizer.nextToken();
-            this.process(context, request, currentName);
+            this.process(context, service, request, currentName);
             if ( LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME.equals(currentName) ) {
                 processedDefault = true;
             }
         }
         if ( !processedDefault ) {
-            this.process( context, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
+            this.process( context, service, request, LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME );
         }
         context.invokeNext( service );        
 	}

@@ -27,9 +27,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Publisher;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
@@ -51,7 +49,7 @@ public class FullScreenCopletEventAspect
                 ThreadSafe, 
                 Serviceable,
                 Disposable, 
-                Subscriber, 
+                Receiver, 
                 Initializable {
 
     protected ServiceManager manager;
@@ -71,12 +69,12 @@ public class FullScreenCopletEventAspect
         final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
         String[] values = request.getParameterValues( requestParameterName );
         if ( values != null ) {
-            final Publisher publisher = context.getEventPublisher();
+            final EventManager publisher = service.getComponentManager().getEventManager();
             for(int i=0; i<values.length; i++) {
                 final String current = values[i];
                 Event e = context.getEventConverter().decode(current);
                 if ( null != e ) {
-                    publisher.publish(e);
+                    publisher.send(e);
                     FullScreenCopletEvent fsce = (FullScreenCopletEvent)e;
                     if ( fsce.getLayout() != null) {
                         service.getComponentManager().getLinkService().addEventToLink( e );
@@ -85,17 +83,14 @@ public class FullScreenCopletEventAspect
             }
         } else {
             List list = (List) request.getAttribute("org.apache.cocoon.portal." + requestParameterName);
-            if (list != null)
-            {
+            if (list != null) {
                 FullScreenCopletEvent[] events =
                     (FullScreenCopletEvent[]) list.toArray(new FullScreenCopletEvent[0]);
-                final Publisher publisher = context.getEventPublisher();
-                for (int i = 0; i < events.length; i++)
-                {
+                final EventManager publisher = service.getComponentManager().getEventManager();
+                for (int i = 0; i < events.length; i++) {
                     FullScreenCopletEvent e = events[i];
-                    publisher.publish(e);
-                    if (e.getLayout() != null)
-                    {
+                    publisher.send(e);
+                    if (e.getLayout() != null) {
                         service.getComponentManager().getLinkService().addEventToLink(e);
                     }
                 }
@@ -105,26 +100,11 @@ public class FullScreenCopletEventAspect
         context.invokeNext( service );
 	}
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * @see Receiver
      */
-    public Class getEventType() {
-        return FullScreenCopletEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event event) {
-        FullScreenCopletEvent e = (FullScreenCopletEvent) event;
-        final Layout startingLayout = (CopletLayout)e.getLayout();
+    public void inform(FullScreenCopletEvent event, PortalService service) {
+        final Layout startingLayout = (CopletLayout)event.getLayout();
         PortalService portalService = null;
         try {
             portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
@@ -151,18 +131,21 @@ public class FullScreenCopletEventAspect
         EventManager eventManager = null;
         try {
             eventManager = (EventManager) this.manager.lookup( EventManager.ROLE );
-            eventManager.getRegister().subscribe( this );
+            eventManager.subscribe( this );
         } finally {
             this.manager.release( eventManager );
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if ( this.manager != null ) {
             EventManager eventManager = null;
             try {
                 eventManager = (EventManager) this.manager.lookup( EventManager.ROLE );
-                eventManager.getRegister().unsubscribe( this );
+                eventManager.unsubscribe( this );
             } catch (Exception ignore) {
                 // ignore this here
             } finally {

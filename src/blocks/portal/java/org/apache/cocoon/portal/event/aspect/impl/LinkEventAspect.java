@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.event.aspect.impl;
 
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.LinkLayout;
@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.layout.impl.LinkLayout;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: LinkEventAspect.java,v 1.3 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LinkEventAspect extends AbstractContentEventAspect {
 
@@ -41,7 +41,7 @@ public class LinkEventAspect extends AbstractContentEventAspect {
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(org.apache.cocoon.portal.event.Publisher, org.apache.cocoon.portal.layout.Layout, java.lang.String[])
      */
-    protected void publish(Publisher publisher,
+    protected void publish(EventManager publisher,
                              Layout layout,
                               String[] values) {
         if (layout instanceof LinkLayout) {
@@ -49,11 +49,11 @@ public class LinkEventAspect extends AbstractContentEventAspect {
             Event e = new ChangeAspectDataEvent(linkLayout,
                                                 "link-layout-key",
                                                 values[2]);
-            publisher.publish(e);
+            publisher.send(e);
             e = new ChangeAspectDataEvent(linkLayout,
                                           "link-layout-id",
                                           values[3]);
-            publisher.publish(e);
+            publisher.send(e);
         } else {
             this.getLogger().warn(
                 "the configured layout: "

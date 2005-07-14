@@ -45,11 +45,9 @@ import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.LayoutEvent;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
-import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -134,7 +132,7 @@ public class DefaultLayoutFactory
                  Disposable, 
                  Serviceable,
                  Initializable,
-                 Subscriber {
+                 Receiver {
 
     protected Map layouts = new HashMap();
     
@@ -362,7 +360,7 @@ public class DefaultLayoutFactory
             EventManager eventManager = null;
             try { 
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-                eventManager.getRegister().unsubscribe( this );
+                eventManager.unsubscribe( this );
             } catch (Exception ignore) {
                 // ignore
             } finally {
@@ -382,39 +380,21 @@ public class DefaultLayoutFactory
         EventManager eventManager = null;
         try { 
             eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe( this );
+            eventManager.subscribe( this );
         } finally {
             this.manager.release( eventManager );
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
+    /**
+     * @see Receiver
      */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
-     */
-    public Class getEventType() {
-        return LayoutEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        // event dispatching
-        if ( e instanceof LayoutRemoveEvent ) {
-            LayoutRemoveEvent event = (LayoutRemoveEvent)e;
-            Layout layout = (Layout)event.getTarget();
-            try {
-                this.remove( layout );
-            } catch (ProcessingException pe) {
-                throw new CascadingRuntimeException("Exception during removal.", pe);
-            }
+    public void inform(LayoutEvent event, PortalService service) {
+        Layout layout = (Layout)event.getTarget();
+        try {
+            this.remove( layout );
+        } catch (ProcessingException pe) {
+            throw new CascadingRuntimeException("Exception during removal.", pe);
         }
     }
 
@@ -447,7 +427,7 @@ public class DefaultLayoutFactory
                     if ( layout.equals(service.getEntryLayout(null)) ) {
                         Event event = new FullScreenCopletEvent(((CopletLayout)layout).getCopletInstanceData(), null);
                         eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-                        eventManager.getPublisher().publish(event);
+                        eventManager.send(event);
                         service.getComponentManager().getLinkService().addEventToLink(event);
                     }
                     CopletFactory factory = service.getComponentManager().getCopletFactory();

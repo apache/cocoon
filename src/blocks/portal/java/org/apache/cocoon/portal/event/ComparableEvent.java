@@ -16,15 +16,15 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * Marker interface for portal event that is comparable
+ * Marker interface for portal event that is comparable.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
- * @version CVS $Id: ComparableEvent.java,v 1.2 2004/03/05 13:02:11 bdelacretaz Exp $
+ *
+ * @version CVS $Id$
  */
-public interface ComparableEvent 
+public interface ComparableEvent
     extends Event {
-    
+
     boolean equalsEvent(ComparableEvent event);
 }

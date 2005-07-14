@@ -26,34 +26,34 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * throughout the portal.
  * Any component in the portal should never lookup these components
  * itself, but use this component manager instead.
- * 
+ *
  * This manager allows to run differently configured portals in Cocoon
  * at the same time. This component can't be looked up using the
  * usual Avalon mechanisms, it has to be get by the {@link PortalService}.
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
 public interface PortalComponentManager {
 
     /**
-     * Get the link service
+     * Get the link service.
      */
     LinkService getLinkService();
-    
+
     /**
-     * Get the current profile manager
+     * Get the current profile manager.
      */
     ProfileManager getProfileManager();
-    
+
     /**
-     * Get the renderer 
+     * Get the renderer.
      */
     Renderer getRenderer(String hint);
-    
+
     /**
-     * Get the coplet factory
+     * Get the coplet factory.
      */
     CopletFactory getCopletFactory();
     

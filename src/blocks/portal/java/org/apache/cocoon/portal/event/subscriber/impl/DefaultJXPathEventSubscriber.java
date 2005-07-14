@@ -15,44 +15,28 @@
  */
 package org.apache.cocoon.portal.event.subscriber.impl;
 
-import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * This subscriber processes JXPath events
+ * This subscriber processes JXPath events.
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
 public final class DefaultJXPathEventSubscriber 
-    implements Subscriber {
+    implements Receiver {
 
     public DefaultJXPathEventSubscriber() {
         // nothing to do         
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * @see Receiver
      */
-    public Class getEventType() {
-        return JXPathEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        final JXPathEvent event = (JXPathEvent)e;
+    public void inform(JXPathEvent event, PortalService service) {
         final Object target = event.getTarget();
         if ( target != null ) {
             final JXPathContext jxpathContext = JXPathContext.newContext(target);

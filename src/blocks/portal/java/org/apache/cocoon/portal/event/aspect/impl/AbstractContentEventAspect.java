@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.layout.Layout;
@@ -62,7 +62,7 @@ public abstract class AbstractContentEventAspect
      * @param layout  The corresponding layout
      * @param values  The values contained in the request
      */
-    protected abstract void publish(Publisher publisher, Layout layout, String[] values);
+    protected abstract void publish(EventManager publisher, Layout layout, String[] values);
     
     /**
      * Publish the event.
@@ -70,7 +70,7 @@ public abstract class AbstractContentEventAspect
      * values and invokes {@link #publish(Publisher, Layout, String[])}.
      * @param values The values contained in the request
      */
-    protected void publish( PortalService service, Publisher publisher, String[] values) {
+    protected void publish( PortalService service, EventManager publisher, String[] values) {
         Layout layout = service.getComponentManager().getProfileManager().getPortalLayout(values[0], values[1] );
         if ( layout != null ) {
             this.publish( publisher, layout, values);
@@ -84,7 +84,7 @@ public abstract class AbstractContentEventAspect
         final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
         String[] values = request.getParameterValues(this.getRequestParameterName());
         if (values != null) {
-            final Publisher publisher = context.getEventPublisher();
+            final EventManager publisher = service.getComponentManager().getEventManager();
             for (int i = 0; i < values.length; i++) {
                 // first try to make an event out of the value of the parameter
                 final String value = values[i];
@@ -92,7 +92,7 @@ public abstract class AbstractContentEventAspect
                 try {
                     e = context.getEventConverter().decode(value);
                     if (null != e) {
-                        publisher.publish(e);
+                        publisher.send(e);
                     }
                 } catch (Exception ignore) {
                     // ignroe it

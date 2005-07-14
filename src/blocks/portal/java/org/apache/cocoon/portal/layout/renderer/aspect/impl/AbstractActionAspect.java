@@ -18,8 +18,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 
 /**
  * This aspect creates an event and subscribes to it as well
@@ -30,14 +29,7 @@ import org.apache.cocoon.portal.event.Subscriber;
  */
 public abstract class AbstractActionAspect
     extends AbstractAspect
-    implements Subscriber, Disposable, Initializable {
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
+    implements Receiver, Disposable, Initializable {
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
@@ -47,7 +39,7 @@ public abstract class AbstractActionAspect
             EventManager eventManager = null;
             try { 
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-                eventManager.getRegister().unsubscribe( this );
+                eventManager.unsubscribe( this );
             } catch (Exception ignore) {
                 // ignore exceptions
             } finally {
@@ -65,7 +57,7 @@ public abstract class AbstractActionAspect
         EventManager eventManager = null;
         try { 
             eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe( this );
+            eventManager.subscribe( this );
         } finally {
             this.manager.release( eventManager );
         }

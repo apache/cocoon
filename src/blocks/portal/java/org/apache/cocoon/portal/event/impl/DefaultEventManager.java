@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +44,12 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.Register;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.Deprecation;
 
 /**
  * This is the default implementation of the event manager.
@@ -53,7 +57,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.14 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -68,7 +72,11 @@ public class DefaultEventManager
                     
     private final String rootEventType = Event.class.getName();
     private Class eventClass;
+    /** The list of all subscribers. */
     private List subscribers = new ArrayList();
+    /** The list of all receivers */
+    private Map receivers = new HashMap();
+
     private ServiceManager manager;
     private Configuration configuration;
     
@@ -77,12 +85,19 @@ public class DefaultEventManager
     protected ServiceSelector aspectSelector;
 
     protected Context context;
-    
-    /* (non-Javadoc)
+
+    /** The portal service */
+    protected PortalService service;
+
+    /** Introspected receiver classes */
+    protected Map receiverClasses = new HashMap();
+
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.service = (PortalService)manager.lookup(PortalService.ROLE);
     }
 
     /* (non-Javadoc)
@@ -124,6 +139,8 @@ public class DefaultEventManager
             }
             this.manager.release( this.aspectSelector );
             this.aspectSelector = null;
+            this.manager.release(this.service);
+            this.service = null;
             this.manager = null;
         }
     }
@@ -143,18 +160,17 @@ public class DefaultEventManager
         Configuration roles = this.configuration.getChild("subscriber-roles", false);
         if ( roles != null ) {
             Configuration[] rolesConf = roles.getChildren("role");
-            if ( rolesConf != null ) {
-                for(int i=0; i<rolesConf.length;i++) {
-                    final Configuration current = rolesConf[i];
-                    final String name = current.getAttribute("name");
-                    
-                    Subscriber subscriber = null;
-                    try {
-                        subscriber = (Subscriber) this.manager.lookup(name);
-                        this.subscribe(subscriber);
-                    } finally {
-                        this.manager.release(subscriber);
-                    }
+            for(int i=0; i<rolesConf.length;i++) {
+                final Configuration current = rolesConf[i];
+                final String name = current.getAttribute("name");
+                
+                Subscriber subscriber = null;
+                try {
+                    subscriber = (Subscriber) this.manager.lookup(name);
+                    Deprecation.logger.warn("Subscriber is deprecated. Please convert the following component to a Receiver: " + subscriber.getClass().getName());
+                    this.subscribe(subscriber);
+                } finally {
+                    this.manager.release(subscriber);
                 }
             }
         }
@@ -162,39 +178,60 @@ public class DefaultEventManager
         Configuration classes = this.configuration.getChild("subscriber-classes", false);
         if ( classes != null ) {
             Configuration[] classesConf = classes.getChildren("class");
-            if ( classesConf != null ) {
-                for(int i=0; i<classesConf.length;i++) {
-                    final Configuration current = classesConf[i];
-                    final String name = current.getAttribute("name");
-                    
-                    Subscriber subscriber = (Subscriber) ClassUtils.newInstance(name);
-                    ContainerUtil.enableLogging(subscriber, this.getLogger());
-                    ContainerUtil.service(subscriber, this.manager );
-                    ContainerUtil.initialize(subscriber);
-                    this.subscribe(subscriber);
+            for(int i=0; i<classesConf.length;i++) {
+                final Configuration current = classesConf[i];
+                final String name = current.getAttribute("name");
+                
+                Deprecation.logger.warn("Subscriber is deprecated. Please convert the following component to a Receiver: " + name);
+                Subscriber subscriber = (Subscriber) ClassUtils.newInstance(name);
+                ContainerUtil.enableLogging(subscriber, this.getLogger());
+                ContainerUtil.contextualize(subscriber, this.context);
+                ContainerUtil.service(subscriber, this.manager );
+                ContainerUtil.initialize(subscriber);
+                this.subscribe(subscriber);
+            }
+        }
+        // subscribe all configured receiver roles
+        roles = this.configuration.getChild("receiver-roles", false);
+        if ( roles != null ) {
+            Configuration[] rolesConf = roles.getChildren("role");
+            for(int i=0; i<rolesConf.length;i++) {
+                final Configuration current = rolesConf[i];
+                final String name = current.getAttribute("name");
+                
+                Receiver receiver = null;
+                try {
+                    receiver = (Receiver) this.manager.lookup(name);
+                    this.subscribe(receiver);
+                } finally {
+                    this.manager.release(receiver);
                 }
             }
         }
+        // subscribe all configured receiver classes
+        classes = this.configuration.getChild("receiver-classes", false);
+        if ( classes != null ) {
+            Configuration[] classesConf = classes.getChildren("class");
+            for(int i=0; i<classesConf.length;i++) {
+                final Configuration current = classesConf[i];
+                final String name = current.getAttribute("name");
+                
+                Receiver receiver = (Receiver)ClassUtils.newInstance(name);
+                ContainerUtil.enableLogging(receiver, this.getLogger());
+                ContainerUtil.contextualize(receiver, this.context);
+                ContainerUtil.service(receiver, this.manager );
+                ContainerUtil.initialize(receiver);
+                this.subscribe(receiver);
+            }
+        }
+
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.Publisher#publish(org.apache.cocoon.portal.event.Event)
      */
     public void publish( final Event event ) {
-        
-        if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug("Publishing event " + event.getClass());
-        } 
-        for ( Iterator e = subscribers.iterator(); e.hasNext(); ){
-            Subscriber subscriber = (Subscriber)e.next();
-            if (subscriber.getEventType().isAssignableFrom(event.getClass())
-            && (subscriber.getFilter() == null || subscriber.getFilter().filter(event))) {
-                if ( getLogger().isDebugEnabled() ) {
-                    getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
-                }
-                subscriber.inform(event);
-            }
-        }
+        this.send(event);        
     }
     
     /* (non-Javadoc)
@@ -284,12 +321,117 @@ public class DefaultEventManager
 
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) 
     throws ContextException {
         this.context = context;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.EventManager#send(org.apache.cocoon.portal.event.Event)
+     */
+    public void send(Event event) {
+        if ( getLogger().isDebugEnabled() ) {
+            getLogger().debug("Publishing event " + event.getClass());
+        } 
+        for ( Iterator e = subscribers.iterator(); e.hasNext(); ){
+            Subscriber subscriber = (Subscriber)e.next();
+            if (subscriber.getEventType().isAssignableFrom(event.getClass())
+            && (subscriber.getFilter() == null || subscriber.getFilter().filter(event))) {
+                if ( getLogger().isDebugEnabled() ) {
+                    getLogger().info("Informing subscriber "+subscriber+" of event "+event.getClass());
+                }
+                subscriber.inform(event);
+            }
+        }
+        for (Iterator re = receivers.entrySet().iterator(); re.hasNext(); ) {
+            final Map.Entry current = (Map.Entry)re.next();
+            final Receiver receiver = (Receiver)current.getKey();
+            final List methodInfos = (List)current.getValue();
+            boolean found = false;
+            final Iterator ci = methodInfos.iterator();
+            while ( !found && ci.hasNext() ) {
+                final MethodInfo info = (MethodInfo)ci.next();
+                if ( info.eventClass.isAssignableFrom(event.getClass()) ) {
+                    if ( getLogger().isDebugEnabled() ) {
+                        getLogger().info("Informing receiver "+receiver+" of event "+event.getClass());
+                    }
+                    try {
+                        info.method.invoke(receiver, new Object[] {event, this.service});
+                    } catch (Exception ignore) {
+                        this.getLogger().warn("Exception during event dispatching on receiver " + receiver
+                                             +" and event " + event, ignore);
+                    }
+                    found = true;
+                }
+            }
+        }
+    }
+
+    protected static final class MethodInfo {
+        
+        public Class eventClass;
+        public Method method;
+    }
+
+    protected synchronized List introspect(Class receiverClass) {
+        List result = (List)this.receiverClasses.get(receiverClass.getName());
+        if ( result == null ) {
+            result = new ArrayList();
+            Method[] methods = receiverClass.getMethods();
+            for(int i=0; i<methods.length; i++ ) {
+                final Method current = methods[i];
+                if ( current.getName().equals("inform") ) {
+                    final Class[] params = current.getParameterTypes();
+                    if ( params.length == 2 
+                         && params[1].getName().equals(PortalService.class.getName())) {
+                        if ( eventClass.isAssignableFrom( params[0] ) ) {
+                            MethodInfo info = new MethodInfo();
+                            info.eventClass = params[0];
+                            info.method = current;
+                            result.add(info);
+                        }
+                    }
+                }
+            }
+            if ( result.size() == 0 ) {
+                result = null;
+            }
+        }
+        return result;
+    }
+ 
+    /**
+     * @see org.apache.cocoon.portal.event.EventManager#subscribe(org.apache.cocoon.portal.event.Receiver)
+     */
+    public void subscribe(Receiver receiver) {
+        List infos = this.introspect(receiver.getClass());
+        if ( infos == null ) {
+            throw new RuntimeException("Invalid event receiver type: " + receiver);
+        }
+
+        // Add to list but prevent duplicate subscriptions
+        List eventClassesForReceiver = (List)this.receivers.get(receiver);
+        if ( eventClassesForReceiver == null ) {
+            this.receivers.put(receiver, infos);
+        }
+        if ( getLogger().isDebugEnabled() ) {
+            for(int i=0; i<infos.size();i++) {
+                getLogger().debug( "Receiver " + receiver + " subscribed for event: " + ((MethodInfo)infos.get(i)).eventClass.getName() );
+            }
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.EventManager#unsubscribe(org.apache.cocoon.portal.event.Receiver)
+     */
+    public void unsubscribe(Receiver receiver) {
+        if ( getLogger().isDebugEnabled() ) {
+            getLogger().debug( "Receiver " + receiver + " unsubscribed.");
+        }
+        this.receivers.remove(receiver);
     }
 
 }
