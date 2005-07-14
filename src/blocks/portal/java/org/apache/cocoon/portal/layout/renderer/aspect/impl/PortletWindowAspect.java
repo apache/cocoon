@@ -25,10 +25,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.impl.PortletPortalManager;
+import org.apache.cocoon.portal.impl.PortletPortalManagerAspect;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -92,7 +91,7 @@ implements Contextualizable {
         try {
             // now get the portal manager
             ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-            PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+            PortletPortalManagerAspect portalManager = (PortletPortalManagerAspect) servletConfig.getServletContext().getAttribute(PortletPortalManagerAspect.class.getName());
             if ( portalManager != null ) {
                 this.environment = portalManager.getPortletContainerEnvironment();
             }

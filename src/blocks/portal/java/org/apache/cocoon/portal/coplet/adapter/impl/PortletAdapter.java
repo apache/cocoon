@@ -26,9 +26,8 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.impl.PortletPortalManager;
+import org.apache.cocoon.portal.impl.PortletPortalManagerAspect;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
 import org.apache.cocoon.portal.pluto.om.PortletEntityListImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
@@ -78,7 +77,7 @@ public class PortletAdapter
         try {
             // now get the portal manager
             ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-            PortletPortalManager portalManager = (PortletPortalManager) servletConfig.getServletContext().getAttribute(PortalManager.ROLE);
+            PortletPortalManagerAspect portalManager = (PortletPortalManagerAspect) servletConfig.getServletContext().getAttribute(PortletPortalManagerAspect.class.getName());
             
             this.portletContainer = portalManager.getPortletContainer();
             this.environment = portalManager.getPortletContainerEnvironment();
@@ -125,7 +124,7 @@ public class PortletAdapter
                 objectModel.put("portlet-request",  req);                
             }
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-            PortletPortalManager.copletInstanceData.set(coplet);
+            PortletPortalManagerAspect.copletInstanceData.set(coplet);
             try {
                 this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
                                                   res);
@@ -135,7 +134,7 @@ public class PortletAdapter
                 coplet.removeTemporaryAttribute("window");
                 ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
             } finally {
-                PortletPortalManager.copletInstanceData.set(null);
+                PortletPortalManagerAspect.copletInstanceData.set(null);
             }
         }
     }
@@ -162,7 +161,7 @@ public class PortletAdapter
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-            PortletPortalManager.copletInstanceData.set(coplet);
+            PortletPortalManagerAspect.copletInstanceData.set(coplet);
             
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
@@ -183,7 +182,7 @@ public class PortletAdapter
         } catch (Exception e) {
             throw new SAXException(e);
         } finally {
-            PortletPortalManager.copletInstanceData.set(null);            
+            PortletPortalManagerAspect.copletInstanceData.set(null);            
         }
     }
 

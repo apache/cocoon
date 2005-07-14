@@ -197,6 +197,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Portal block: Convert PortletPortalManager into portal manager aspect.
+    </action>
+    <action dev="CZ" type="add">
       CForms block: Make all WidgetValidatorBuilders ThreadSafe. Reset validation errors
                     before validating a field.
     </action>     
