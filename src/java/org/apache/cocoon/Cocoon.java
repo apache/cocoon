@@ -46,7 +46,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.util.log.DeprecationLogger;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.Source;
@@ -171,7 +170,6 @@ public class Cocoon
      */
     public void setLoggerManager(LoggerManager loggerManager) {
         this.loggerManager = loggerManager;
-        DeprecationLogger.logger = this.loggerManager.getLoggerForCategory("deprecation");
     }
 
     /* (non-Javadoc)

@@ -26,7 +26,6 @@ import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.util.log.DeprecationLogger;
 
 public class TestBootstrapEnvironment
     implements BootstrapEnvironment {
@@ -48,7 +47,6 @@ public class TestBootstrapEnvironment
         this.environmentContext = environmentContext;
 
         this.logger = logger;
-        DeprecationLogger.logger = this.logger;
     }
 
     /**
