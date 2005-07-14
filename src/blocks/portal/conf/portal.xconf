@@ -17,8 +17,8 @@
 <!-- SVN $Id$ -->
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.event.aspect.EventAspectSelector']">
 
- <!-- Event Aspect configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
+  <!-- Event Aspect configuration -->
+  <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
     <aspect logger="portal" name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
     <aspect logger="portal" name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
     <aspect logger="portal" name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
@@ -29,9 +29,16 @@
 
     <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
     <aspect logger="portal" name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
- </component>
+  </component>
 
- <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
+  <!-- Portal Manager Aspect Configuration -->
+  <component class="org.apache.cocoon.components.ExtendedComponentSelector"
+             role="org.apache.cocoon.portal.PortalManagerAspectSelector">
+    <!-- This aspect activates the JSR-168 support. -->
+    <aspect logger="portal" name="portlet" class="org.apache.cocoon.portal.impl.PortletPortalManagerAspect"/>
+  </component>
+
+  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
         <!-- Uncomment this aspect when marshalling JSR168 portlet events 
         <aspect type="convertable"/>
@@ -60,7 +67,7 @@
     <subscriber-roles>
         <!-- <role name="AVALON-ROLE"/> -->
     </subscriber-roles>
- </component>
+  </component>
 
   <!-- Event Factory configuration -->
   <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.ConvertableEventFactorySelector">
@@ -70,14 +77,17 @@
   </component>
 
   <!-- This is the portal manager.
-       If you don't need the JSR-168 support uncomment the following line and comment out 
-       the definition below:
-    <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" 
-               logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
-
+       The portal manager can be extended with different aspects.
+       Currently the JSR-168 aspect is configured/activated.
+       If you don't need the JSR-168 support uncomment the aspect.
   -->
-  <component class="org.apache.cocoon.portal.impl.PortletPortalManager" 
-             logger="portal" role="org.apache.cocoon.portal.PortalManager"/>
+  <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" 
+             logger="portal" role="org.apache.cocoon.portal.PortalManager">
+    <aspects>
+      <!-- JSR-168 support: -->
+      <aspect type="portlet"/>
+    </aspects>
+  </component>
 
   <!-- This is the portal service -->
   <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal" role="org.apache.cocoon.portal.PortalService">

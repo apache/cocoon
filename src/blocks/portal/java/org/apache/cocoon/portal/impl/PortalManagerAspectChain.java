@@ -81,4 +81,15 @@ public final class PortalManagerAspectChain {
         this.aspects.clear();
         this.configs.clear();
     }
+
+    /**
+     * Adds an aspect at the front. This method is only used by the deprecated PortletPortalManager.
+     * @deprecated This method will be removed in 2.2.
+     * @param firstAspect
+     * @param firstAspectParameters
+     */
+    public void addAsFirst(PortalManagerAspect firstAspect, Parameters firstAspectParameters) {
+        this.aspects.add(0, firstAspect);
+        this.configs.add(0, firstAspectParameters);
+    }
 }
