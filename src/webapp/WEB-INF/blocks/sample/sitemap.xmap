@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -88,7 +88,7 @@
 
       <!-- images -->
       <map:match pattern="images/*.gif">
-	<map:read src="resources/images/{1}.gif" mime-type="images/gif"/>
+	<map:read src="resources/images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
       <!-- CSS stylesheets -->
