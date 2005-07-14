@@ -198,6 +198,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Portal block: Remove deprecated Publisher, Subscriber, Filter and Register.
+    </action>
+    <action dev="CZ" type="add">
       Portal block: Remove deprecated PortletPortalManager.
     </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
@@ -483,6 +486,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="add">
+      Portal block: Add easier to use event handling mechanism by introducing the new Receiver interface.
+                    Deprecated Publisher, Subscriber, Filter and Register.
+    </action>
     <action dev="CZ" type="add">
       Portal block: Convert PortletPortalManager into portal manager aspect.
     </action>
