@@ -27,7 +27,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -73,7 +73,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      * There is a special CopletLinkEvent with the uri "createNewCopletInstance", which is the
      * trigger to create a new instance of the one that is the target of the event.
      */
-    public void handleCopletInstanceEvent(Event e) {
+    public void handleCopletInstanceEvent(CopletInstanceEvent e) {
         super.handleCopletInstanceEvent(e);
         
         if ( e instanceof CopletLinkEvent ) {
@@ -198,9 +198,8 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(
-        CopletInstanceData coplet,
-        ContentHandler handler)
+    protected boolean renderErrorContent(CopletInstanceData coplet,
+                                         ContentHandler handler)
     throws SAXException {
         handler.startDocument();
         XMLUtils.startElement(handler, "p");

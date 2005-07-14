@@ -43,10 +43,8 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.pluto.PortletContainerEnvironmentImpl;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
@@ -67,7 +65,7 @@ import org.xml.sax.SAXException;
  * This aspect provides the JSR-168 support by initializing Pluto.
  * The aspect can be configured at the portal manager.
  *
- * @version SVN $Id:$
+ * @version SVN $Id$
  */
 public class PortletPortalManagerAspect
 	extends AbstractLogEnabled
@@ -76,7 +74,7 @@ public class PortletPortalManagerAspect
                Serviceable,
                Initializable,
                Disposable,
-               Subscriber {
+               Receiver {
 
     public static final ThreadLocal copletInstanceData = new InheritableThreadLocal();
 
@@ -122,7 +120,7 @@ public class PortletPortalManagerAspect
         EventManager eventManager = null;
         try {
             eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe(this);
+            eventManager.subscribe(this);
         } finally {
             this.manager.release(eventManager);
         }
@@ -136,7 +134,7 @@ public class PortletPortalManagerAspect
             EventManager eventManager = null;
             try {
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-                eventManager.getRegister().unsubscribe(this);
+                eventManager.unsubscribe(this);
             } catch (Exception ignore) {
                 // let's ignore it
             } finally {
@@ -216,30 +214,15 @@ public class PortletPortalManagerAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+     * @see Receiver
      */
-    public Class getEventType() {
-        return PortletURLProviderImpl.class;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        PortletURLProviderImpl event = (PortletURLProviderImpl)e;
+    public void inform(PortletURLProviderImpl event, PortalService service) {
         final Map objectModel = ContextHelper.getObjectModel(this.context);
         final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
         final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
         objectModel.put("portlet-response",  res);
         objectModel.put("portlet-request", req);        
-        
+
         if ( event.isAction() ) {
             // This means we can only have ONE portlet event per request!
             objectModel.put("portlet-event", event);
@@ -247,7 +230,7 @@ public class PortletPortalManagerAspect
             DynamicInformationProvider dynProv;
             InformationProviderService ips;
             PortletActionProvider pap;
-            
+
             ips = (InformationProviderService)this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
             dynProv = ips.getDynamicProvider(req);
             pap = dynProv.getPortletActionProvider(event.getPortletWindow());
@@ -319,6 +302,7 @@ public class PortletPortalManagerAspect
             aspectContext.invokeNext(ch, parameters);
         }
     }
+
 
 }
 

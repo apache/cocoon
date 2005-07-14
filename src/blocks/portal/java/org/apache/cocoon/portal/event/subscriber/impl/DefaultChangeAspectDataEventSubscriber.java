@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.portal.event.subscriber.impl;
 
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.Aspectalizable;
-import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 
 /**
@@ -28,31 +27,16 @@ import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
  * @version CVS $Id$
  */
 public final class DefaultChangeAspectDataEventSubscriber 
-    implements Subscriber {
+    implements Receiver {
 
     public DefaultChangeAspectDataEventSubscriber() {
         // nothing to do 
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * @see Receiver
      */
-    public Class getEventType() {
-        return ChangeAspectDataEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        final ChangeAspectDataEvent event = (ChangeAspectDataEvent)e;
+    public void inform(ChangeAspectDataEvent event, PortalService service) {
         final Aspectalizable target = event.getAspectalizable();
         target.setAspectData(event.getAspectName(), event.getData());
     }

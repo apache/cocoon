@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.event.Publisher;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventAspectContext.java,v 1.2 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface EventAspectContext {
     
@@ -47,10 +47,11 @@ public interface EventAspectContext {
     EventConverter getEventConverter();
     
     /**
-     * Get the publisher
+     * Get the publisher.
+     * @deprecated The aspect can use the portal service to publish events.
      */
     Publisher getEventPublisher();
-    
+
     /**
      * Get the object model
      */

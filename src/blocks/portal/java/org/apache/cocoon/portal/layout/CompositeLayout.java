@@ -79,7 +79,7 @@ public interface CompositeLayout
     String getItemClassName();
     
     /**
-     * @param itemClassName The item class name to set.
+     * @param value The item class name to set.
      */
     void setItemClassName(String value);
     

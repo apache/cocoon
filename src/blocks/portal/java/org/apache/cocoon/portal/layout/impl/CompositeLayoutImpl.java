@@ -120,7 +120,7 @@ public class CompositeLayoutImpl
     }
     
     /**
-     * @param itemClassName The item class name to set.
+     * @param value The item class name to set.
      */
     public void setItemClassName(String value) {
         this.itemClassName = value;

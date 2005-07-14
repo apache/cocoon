@@ -24,13 +24,14 @@ import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.Publisher;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
+import org.apache.cocoon.util.Deprecation;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventAspectContext.java,v 1.3 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class DefaultEventAspectContext 
     implements EventAspectContext {
@@ -77,7 +78,8 @@ public final class DefaultEventAspectContext
     /**
      * Get the publisher
      */
-    public Publisher getEventPublisher(){
+    public Publisher getEventPublisher() {
+        Deprecation.logger.info("The getEventPublisher() method in the EventAspectContext is deprecated.");
         return this.publisher;
     }
     

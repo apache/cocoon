@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.generation;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -46,8 +45,7 @@ import org.xml.sax.SAXException;
  * @version CVS $Id: AbstractCopletTransformer.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public abstract class AbstractCopletGenerator 
-extends ServiceableGenerator
-implements Disposable {
+extends ServiceableGenerator {
 
     /**
      * Parameter name.

@@ -19,9 +19,9 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
-import org.apache.cocoon.portal.event.Event;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -184,25 +184,21 @@ public class CachingURICopletAdapter
         coplet.setAttribute(CACHE_VALIDITY, CACHE_INVALID);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+    /**
+     * @see org.apache.cocoon.portal.event.Receiver
      */
-    public void inform(Event e) {
-        if (e instanceof CopletInstanceEvent) {
-            if ( this.getLogger().isInfoEnabled() ) {
-                this.getLogger().info("CopletInstanceEvent " + e + " caught by CachingURICopletAdapter");
-            }
-            this.handleCopletInstanceEvent(e);
+    public void inform(CopletInstanceEvent e, PortalService service) {
+        if ( this.getLogger().isInfoEnabled() ) {
+            this.getLogger().info("CopletInstanceEvent " + e + " caught by CachingURICopletAdapter");
         }
-        super.inform(e);
+        this.handleCopletInstanceEvent(e);
+        super.inform(e, service);
     }
 
     /**
      * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid.
      */
-    public void handleCopletInstanceEvent(Event e) {
-        final CopletInstanceEvent event = (CopletInstanceEvent) e;
-
+    public void handleCopletInstanceEvent(CopletInstanceEvent event) {
         final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
 
         this.setCacheInvalid(coplet);

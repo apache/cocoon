@@ -38,10 +38,8 @@ import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
-import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -57,7 +55,7 @@ import org.xml.sax.SAXException;
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
-    implements Disposable, Subscriber, Initializable, Contextualizable {
+    implements Disposable, Receiver, Initializable, Contextualizable {
 	
     /** The source resolver */
     protected SourceResolver resolver;
@@ -80,6 +78,9 @@ public class URICopletAdapter
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
     
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     */
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
         final String uri = (String)coplet.getCopletData().getAttribute("uri");
@@ -90,8 +91,8 @@ public class URICopletAdapter
     }
 
     public void streamContent(final CopletInstanceData coplet, 
-                               final String uri,
-                               final ContentHandler contentHandler)
+                              final String uri,
+                              final ContentHandler contentHandler)
     throws SAXException {
 		Source copletSource = null;
 		PortalService portalService = null;
@@ -138,8 +139,8 @@ public class URICopletAdapter
 			this.manager.release(portalService);
 		}
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -147,7 +148,7 @@ public class URICopletAdapter
             EventManager eventManager = null;
             try { 
                 eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-                eventManager.getRegister().unsubscribe( this );
+                eventManager.unsubscribe(this);
             } catch (Exception ignore) {
                 // ignore
             } finally {
@@ -160,49 +161,28 @@ public class URICopletAdapter
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * @see Receiver
      */
-    public Class getEventType() {
-        return CopletInstanceEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event e) {
-        CopletInstanceEvent event = (CopletInstanceEvent)e;
-        PortalService service = null;
-        try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            List list = (List)service.getTemporaryAttribute(URICopletAdapter.class.getName());
-            if ( list == null ) {
-                list = new ArrayList();
-            }
-            list.add(event.getTarget());
-            service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
-        } catch (ServiceException ignore ) {            
-            // ignore
-        } finally {
-            this.manager.release(service);
+    public void inform(CopletInstanceEvent event, PortalService service) {
+        List list = (List)service.getTemporaryAttribute(URICopletAdapter.class.getName());
+        if ( list == null ) {
+            list = new ArrayList();
         }
+        if ( !list.contains(event.getTarget()) ) {
+            list.add(event.getTarget());
+        }
+        service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
         EventManager eventManager = null;
         try { 
             eventManager = (EventManager)this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe( this );
+            eventManager.subscribe( this );
         } finally {
             this.manager.release( eventManager );
         }
@@ -260,5 +240,4 @@ public class URICopletAdapter
         }
         return false;
     }
-
 }

@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.event.aspect.impl;
 
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.FrameLayout;
@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.layout.impl.FrameLayout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.9 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FrameEventAspect extends AbstractContentEventAspect {
 
@@ -43,12 +43,12 @@ public class FrameEventAspect extends AbstractContentEventAspect {
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.aspect.impl.AbstractContentEventAspect#publish(org.apache.cocoon.portal.event.Publisher, org.apache.cocoon.portal.layout.Layout, java.lang.String[])
      */
-    protected void publish(Publisher publisher,
+    protected void publish(EventManager publisher,
                              Layout layout,
                              String[] values) {
         if (layout instanceof FrameLayout) {
             final Event e = new ChangeAspectDataEvent(layout, "frame", values[2]);
-            publisher.publish(e);
+            publisher.send(e);
         } else {
             this.getLogger().warn(
                 "the configured layout: "

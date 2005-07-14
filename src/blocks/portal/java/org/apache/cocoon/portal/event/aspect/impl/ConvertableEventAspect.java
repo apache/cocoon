@@ -49,8 +49,10 @@ public class ConvertableEventAspect extends AbstractLogEnabled
 
     protected ServiceManager manager;
 
-    public void service(ServiceManager manager) throws ServiceException
-    {
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 

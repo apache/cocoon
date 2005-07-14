@@ -26,17 +26,17 @@ import org.apache.cocoon.portal.PortalService;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
+ *
  * @version CVS $Id$
  */
-public class FullScreenCopletEvent 
-    extends CopletStatusEvent 
+public class FullScreenCopletEvent
+    extends CopletStatusEvent
     implements RequestEvent, ConvertableEvent {
 
     public static final String REQUEST_PARAMETER_NAME = "cocoon-portal-fs";
-    
+
     protected Layout layout;
-    
+
     public FullScreenCopletEvent(CopletInstanceData data, Layout layout) {
         this.coplet = data;
         this.layout = layout;
@@ -67,7 +67,7 @@ public class FullScreenCopletEvent
     public String getRequestParameterName() {
         return REQUEST_PARAMETER_NAME;
     }
-    
+
     public Layout getLayout() {
         return this.layout;
     }

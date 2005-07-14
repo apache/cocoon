@@ -64,10 +64,8 @@ import org.apache.cocoon.portal.coplets.basket.events.RemoveItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.ShowBasketEvent;
 import org.apache.cocoon.portal.coplets.basket.events.ShowItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.UploadItemEvent;
-import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
-import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.servlet.multipart.PartOnDisk;
@@ -82,7 +80,7 @@ import org.apache.excalibur.source.SourceResolver;
  */
 public class BasketManagerImpl
 extends AbstractLogEnabled
-implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializable, Disposable, Parameterizable, ThreadSafe, Component  {
+implements BasketManager, Serviceable, Receiver, Contextualizable, Initializable, Disposable, Parameterizable, ThreadSafe, Component  {
     
     /** The service manager */
     protected ServiceManager manager;
@@ -173,30 +171,16 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
         EventManager eventManager = null;
         try {
             eventManager = (EventManager) this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe(this);
+            eventManager.subscribe(this);
         } finally {
             this.manager.release(eventManager);
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+    /**
+     * @see Receiver
      */
-    public Class getEventType() {
-        return ContentStoreEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event event) {
+    public void inform(ContentStoreEvent event, PortalService service) {
         // dispatch
         final Session session = ContextHelper.getRequest(this.context).getSession();
         if ( event instanceof AddItemEvent ) {
@@ -420,7 +404,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                             while ( i.hasNext() ) {
                                 Map.Entry entry = (Map.Entry)i.next();
                                 attributes.put(entry.getKey(), entry.getValue());
-                        }
+                            }
                             i = cid.getCopletData().getAttributes().entrySet().iterator();
                             while ( i.hasNext() ) {
                                 Map.Entry entry = (Map.Entry)i.next();
@@ -472,7 +456,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
             store.addItem(ci);
         } else { 
             store.addItem(item);
-            }
+        }
         this.saveContentStore(store);
     }
 
@@ -526,13 +510,13 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
             store = this.loadContentStore(type, user);
         }
         if ( store == null && user != null ) {
-        try {
+            try {
                 final String clazzName;
                 if ( BRIEFCASE_KEY.equals(type) ) {
                     clazzName = this.briefcaseClassName;
                 } else {
                     clazzName = this.folderClassName;
-        }
+                }
                 
                 final Class clazz = ClassUtils.loadClass(clazzName);
                 final Constructor constructor = clazz.getConstructor(new Class[] {String.class});
@@ -543,7 +527,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                     store = new Briefcase(user);
                 } else {
                     store = new Folder(user);
-            }
+                }
             }
         }
         return store;
@@ -762,7 +746,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
             }
         }
         return null;
-            }
+    }
     
     protected static final class BatchInfo {
         public ContentItem item;
@@ -779,8 +763,8 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
             final ActionInfo current = (ActionInfo)i.next();
             if ( current.name.equals(name) ) {
                 return current;
+            }
         }
-    }
         return null;
     }
     
@@ -838,13 +822,13 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                     buffer.append('=');
                     buffer.append(current.getValue().toString());
                 }
-        }
+            }
             this.url = buffer.toString();
-    }
-   
-    /* (non-Javadoc)
+        }    
+    
+        /* (non-Javadoc)
          * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
-     */
+         */
         public void execute(String jobname) {
             SourceResolver resolver = null;
             Source source = null;
@@ -873,7 +857,7 @@ implements BasketManager, Serviceable, Subscriber, Contextualizable, Initializab
                 }
             }
         }
-    }    
+    }
     
     
     /* (non-Javadoc)

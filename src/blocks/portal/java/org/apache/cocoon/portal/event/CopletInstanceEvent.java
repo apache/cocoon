@@ -20,11 +20,11 @@ package org.apache.cocoon.portal.event;
  * This interface marks an event as an event for a coplet instance.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
-public interface CopletInstanceEvent 
+public interface CopletInstanceEvent
     extends ActionEvent {
-        
+
     // just a marker interface
 }

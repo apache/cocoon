@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.impl.PageLabelManager;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.Publisher;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
@@ -41,21 +41,26 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  *
  * @version CVS $Id:  $
  */
-public class PageLabelEventAspect extends AbstractLogEnabled
+public class PageLabelEventAspect
+    extends AbstractLogEnabled
 	implements EventAspect, ThreadSafe, Serviceable, Disposable {
 
     protected ServiceManager manager;
 
     protected PageLabelManager labelManager;
 
-    public void service(ServiceManager manager) throws ServiceException
-    {
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.labelManager = (PageLabelManager)manager.lookup(PageLabelManager.ROLE);
     }
 
-    public void dispose()
-    {
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
         if (this.manager != null) {
             if (this.labelManager != null) {
                 this.manager.release(this.labelManager);
@@ -65,12 +70,12 @@ public class PageLabelEventAspect extends AbstractLogEnabled
         }
     }
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
 	public void process(EventAspectContext context, PortalService service) {
         if (this.labelManager != null) {
-            final Publisher publisher = context.getEventPublisher();
+            final EventManager publisher = service.getComponentManager().getEventManager();
             final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
             final String parameterName = this.labelManager.getRequestParameterName();
 
@@ -85,7 +90,7 @@ public class PageLabelEventAspect extends AbstractLogEnabled
                     // Publish all the events for this page label.
                     while (iter.hasNext()) {
                         Event event = (Event) iter.next();
-                        publisher.publish(event);
+                        publisher.send(event);
                     }
             //        return;
                 }

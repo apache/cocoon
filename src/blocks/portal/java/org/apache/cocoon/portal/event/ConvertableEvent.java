@@ -16,10 +16,10 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * Marker interface for portal event 
+ * Marker interface for portal event .
  *
  * @author <a href="mailto:rgoers@apache.org">Ralph Goers/a>
- * 
+ *
  * @version SVN $Id: $
  */
 public interface ConvertableEvent extends Event {

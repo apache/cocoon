@@ -16,15 +16,15 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * This event is performed "on" a target
+ * This event is performed "on" a target.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ActionEvent.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface ActionEvent extends Event {
 
     Object getTarget();
-    
+
 }

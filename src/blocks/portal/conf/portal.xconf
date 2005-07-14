@@ -59,14 +59,24 @@
     </event-aspects>
     <!-- add a new instance of each class as a subscriber: -->
     <subscriber-classes>
-        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
-        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
-        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaulCopletDataEventSubscriber"/>
+      <!-- Please note that Subcribers are deprecated. Please use receivers instead. -->
+      <!-- class name="CLASSNAME"/> -->
     </subscriber-classes>
     <!-- add each component as a subscriber (the component should be thread safe): -->
     <subscriber-roles>
-        <!-- <role name="AVALON-ROLE"/> -->
+      <!-- Please note that Subcribers are deprecated. Please use receivers instead. -->
+      <!-- <role name="AVALON-ROLE"/> -->
     </subscriber-roles>
+    <!-- add a new instance of each class as a receiver: -->
+    <receiver-classes>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaulCopletDataEventSubscriber"/>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
+    </receiver-classes>
+    <!-- add each component as a receiver (the component should be thread safe): -->
+    <receiver-roles>
+        <!-- <role name="AVALON-ROLE"/> -->
+    </receiver-roles>
   </component>
 
   <!-- Event Factory configuration -->
