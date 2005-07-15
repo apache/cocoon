@@ -127,6 +127,7 @@
         <copy todir="${cocoon.build.webapp.dir}/WEB-INF/xconf" filtering="on" overwrite="true">
             <fileset dir="${cocoon.local.conf.dir}">
                 <include name="*xconf"/>
+                <include name="*logkit"/>                
             </fileset>
         </copy>
 
