@@ -1177,8 +1177,8 @@
       JCR (aka JSR-170 API)
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jcr-0.16.4.jar</lib>
-    <homepage> </homepage>
+    <lib>optional/jcr-1.0.jar</lib>
+    <homepage>http://www.jcp.org/en/jsr/detail?id=170</homepage>
   </file>
 
   <file>
@@ -1187,7 +1187,27 @@
       Jackrabbit JCR implementation
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-20050422T153417.jar</lib>
+    <lib>optional/jackrabbit-api-1.0-dev-LCR209797.jar</lib>
+    <homepage>http://incubator.apache.org/jackrabbit/</homepage>
+  </file>
+
+  <file>
+    <title>Jackrabbit</title>
+    <description>
+      Jackrabbit JCR implementation
+    </description>
+    <used-by>JCR block</used-by>
+    <lib>optional/jackrabbit-commons-1.0-dev-LCR209797.jar</lib>
+    <homepage>http://incubator.apache.org/jackrabbit/</homepage>
+  </file>
+
+  <file>
+    <title>Jackrabbit</title>
+    <description>
+      Jackrabbit JCR implementation
+    </description>
+    <used-by>JCR block</used-by>
+    <lib>optional/jackrabbit-core-1.0-dev-LCR209797.jar</lib>
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
   </file>
 
