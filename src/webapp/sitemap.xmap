@@ -661,9 +661,13 @@
         | Note that other mount-tables can be added here using the xpatch ant task
         | (see src/confpatch/mount-table.xmap)
         +-->
+    <!--
+      Disabled while working on OSGI stuff, this wouldn't work anyway
+      (due to the ../) and it causes an NPE in the MountTableMatcher
     <map:match type="mount-table" pattern="../../mount-table.xml">
       <map:mount src="{src}" uri-prefix="{uri-prefix}"/>
     </map:match>
+    -->
 
     <!--+
         | Call blocks deployed in wiring.xml. The blocks protocol
