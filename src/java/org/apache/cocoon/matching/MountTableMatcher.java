@@ -100,6 +100,9 @@ public class MountTableMatcher extends AbstractLogEnabled
             final String uri = source.getURI();
 
             // Check if source exists
+            // FIXME: source.exists() returns true in the case of an OSGI bundle uri,
+            // For example if uri=bundle://11/../mount-table.xml, exists() returns true
+            // but the Source is unusable
             if (!source.exists()) {
                 if (this.ignoreMissingTables) {
                     return Collections.EMPTY_MAP;
