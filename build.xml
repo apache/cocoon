@@ -71,5 +71,8 @@
   <!-- Apache Forrest targets -->
   <import file="tools/targets/forrest-build.xml" />
   <!-- =================================================================== -->
+  <!-- OSGi targets -->
+  <import file="tools/targets/osgi-build.xml" />
+  <!-- =================================================================== -->   
 
 </project>
