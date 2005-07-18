@@ -12,9 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-#
+# ------------------------------------------------------------------------
+# Knopflerfish OSGI initialization file
 # Properties used by both init.xargs and restart.xargs
-#
+# ------------------------------------------------------------------------
 
 # The Service Platform ID should be used by bundles needing to
 # a unique ID for the platform itself
