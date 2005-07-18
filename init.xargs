@@ -12,7 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# Minimal start command file
+# ------------------------------------------------------------------------
+# Knopflerfish OSGI initialization file
+# This defines which packages to load at startup, options, etc.
+# ------------------------------------------------------------------------
 
 # load common properties
 -xargs props.xargs
