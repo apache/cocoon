@@ -59,6 +59,7 @@ usage()
     echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
     echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
+    echo "  osgi              Run Cocoon with the experimental OSGI kernel"
     exit 1
 }
 
@@ -168,6 +169,12 @@ case "$ACTION" in
 
   servlet-profile)
         $JAVA $JAVA_OPTIONS $JAVA_PROFILE_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        ;;
+
+  osgi)
+        # -init prevents knopflerfish from using its persistent info about bundles, seems safer for now
+        KNOP_OPTIONS="-init"
+        $JAVA $JAVA_OPTIONS -jar lib/osgi/knopflerfish/knopflerfish-framework-1.3.3.jar $KNOP_OPTIONS $ARGS
         ;;
 
   *)
