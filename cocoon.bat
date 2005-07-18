@@ -109,6 +109,7 @@ if ""%1"" == ""servlet-admin"" goto doAdmin
 if ""%1"" == ""servlet-debug"" goto doDebug
 IF ""%1"" == ""servlet-profile"" goto doProfile
 IF ""%1"" == ""yourkit-profile"" goto doYourkitProfile
+IF ""%1"" == ""osgi"" goto doOsgiKnopflerfish
 
 echo Usage: cocoon (action)
 echo actions:
@@ -118,6 +119,7 @@ echo   servlet-admin   Run Cocoon in a servlet container and turn container web 
 echo   servlet-debug   Run Cocoon in a servlet container and turn on remote JVM debug
 echo   servlet-profile Run Cocoon in a servlet container and turn on JVM profiling
 echo   yourkit-profile Run Cocoon in a servlet container and turn on Yourkit JVM profiling
+echo   osgi            Run Cocoon within OSGi
 goto end
 
 :: ----- Cli -------------------------------------------------------------------
@@ -163,8 +165,14 @@ goto end
 :: ----- Yourkit Profile --------------------------------------------------------
 
 :doYourkitProfile
-echo x
+echo %EXEC%
 %EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xrunyjpagent:port=10000 -classpath "%CP%" "-Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed" "-Dwebapp=%JETTY_WEBAPP%" "-Dhome=%COCOON_HOME%" -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% "-Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib;%COCOON_HOME%\lib\endorsed" -Dloader.main.class=org.mortbay.jetty.Server Loader "%COCOON_HOME%\tools\jetty\conf\main.xml"
+goto end
+
+:: ----- OSGi --------------------------------------------------------
+
+:doOsgiKnopflerfish
+%EXEC% "%JAVA_HOME%\bin\java.exe"  -jar lib/osgi/knopflerfish/knopflerfish-framework-1.3.3.jar %JAVA_OPTIONS% -init %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
 :: ----- End -------------------------------------------------------------------
