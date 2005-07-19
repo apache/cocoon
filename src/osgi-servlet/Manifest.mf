@@ -10,9 +10,14 @@ Bundle-DocURL: http://cocoon.apache.org
 Bundle-ContactAddress: http://cocoon.apache.org
 Bundle-Activator: org.apache.cocoon.service.servlet.impl.Activator
 Bundle-Category: servlet
-Import-Package: javax.servlet,javax.servlet.http,org.apache.cocoon.ser
- vlet,org.osgi.framework,org.osgi.service.http,org.osgi.service.log,or
- g.osgi.util.tracker
+Import-Package: 
+ javax.servlet,
+ javax.servlet.http,
+ org.apache.cocoon.servlet,
+ org.osgi.framework,
+ org.osgi.service.http,
+ org.osgi.service.log,
+ org.osgi.util.tracker
 Bundle-UUID: org.apache.cocoon:cocoon_servlet:1.0.0:impl
 Built-From: C:\cygwin\usr\local\svn\cocoon\osgi\bundles\cocoon_servlet
 Build-Date: Fri July 15 2005, 22:46:00
