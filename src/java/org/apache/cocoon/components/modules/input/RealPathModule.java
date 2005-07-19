@@ -33,7 +33,7 @@ import java.util.Vector;
  * running in a .war file), <code>null</code> will be returned.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: RealPathModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 /*
@@ -59,7 +59,7 @@ import java.util.Vector;
  */
 public class RealPathModule extends AbstractInputModule implements ThreadSafe {
 
-    final static Vector returnNames;
+    private final static Vector returnNames;
     static {
         Vector tmp = new Vector();
         tmp.add("realPath");
@@ -79,7 +79,7 @@ public class RealPathModule extends AbstractInputModule implements ThreadSafe {
 
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) throws ConfigurationException {
 
-        return RequestURIModule.returnNames.iterator();
+        return RealPathModule.returnNames.iterator();
     }
 
 
