@@ -1146,5 +1146,85 @@
     <lib>optional/spring-1.1.5.jar</lib>
     <homepage>http://www.springframework.org/</homepage>
   </file>
+  
+  <file id="knopflerfish-cm_api">
+    <title>Knopflerfish CM</title>
+    <description>
+      Knopflerfish CM
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-cm_api-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>  
+  
+  <file id="knopflerfish-console">
+    <title>Knopflerfish Console</title>
+    <description>
+      Knopflerfish Console
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-console_all-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>    
+  
+  <file id="knopflerfish-consoletty">
+    <title>Knopflerfish Consoletty</title>
+    <description>
+      Knopflerfish
+    </description> Consoletty
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-consoletty-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>  
+ 
+  <file id="knopflerfish-framework">
+    <title>Knopflerfish Framework</title>
+    <description>
+      Knopflerfish Framework
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-framework-1.3.3.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>     
+
+  <file id="knopflerfish-frameworkcommands">
+    <title>Knopflerfish</title>
+    <description>
+      Knopflerfish framework commands
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-frameworkcommands-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>  
+  <file id="knopflerfish-http-all">
+    <title>Knopflerfish HTTP</title>
+    <description>
+      Knopflerfish HTTP
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-http_all-1.1.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>  
+  
+  <file id="knopflerfish-log">
+    <title>Knopflerfish Log</title>
+    <description>
+      Knopflerfish Log
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-log_all-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>  
+  
+  <file id="knopflerfish-logcommands">
+    <title>Knopflerfish log commands</title>
+    <description>
+      Knopflerfish Logcommands
+    </description>
+    <used-by>OSGI</used-by>
+    <lib>osgi/knopflerfish/knopflerfish-logcommands-1.0.0.jar</lib>
+    <homepage>http://www.knopflerfish.org/</homepage>
+  </file>   
 
 </jars>
+
