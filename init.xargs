@@ -36,6 +36,7 @@
 ## Some library bundles
 -initlevel 2
 -install build/osgi/org.apache.cocoon_1.0.0.jar
+-install build/osgi/org.apache.cocoon.template_1.0.0.jar
 
 ## HTTP Service
 -initlevel 4
