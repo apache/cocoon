@@ -172,7 +172,7 @@ goto end
 :: ----- OSGi --------------------------------------------------------
 
 :doOsgiKnopflerfish
-%EXEC% "%JAVA_HOME%\bin\java.exe"  -jar lib/osgi/knopflerfish/knopflerfish-framework-1.3.3.jar %JAVA_OPTIONS% -init %2 %3 %4 %5 %6 %7 %8 %9
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -jar lib/osgi/knopflerfish/knopflerfish-framework-1.3.3.jar -init %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
 :: ----- End -------------------------------------------------------------------
