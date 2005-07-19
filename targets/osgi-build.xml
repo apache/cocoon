@@ -26,7 +26,8 @@
     <property name="build.osgi.bundles.cocoon" value="org.apache.cocoon_1.0.0.jar"/>
     <property name="build.osgi.bundles.cocoon_webapp" value="org.apache.cocoon_webapp_1.0.0.jar"/>
     <property name="build.osgi.bundles.cocoon_servlet" value="org.apache.cocoon_servlet_1.0.0.jar"/>    
-    
+    <property name="build.osgi.knopflerfish.fwdir" value="fwdir"/>
+
     <property name="lib.osgi" value="${lib}/osgi"/>
     
     <property name="src.osgi.servlet" value="${src}/osgi-servlet"/>
@@ -42,6 +43,7 @@
   
   <target name="osgi.clean" depends="osgi.init">
     <delete dir="${build.osgi}"/>
+    <delete dir="${build.osgi.knopflerfish.fwdir}"/>
   </target>
   
   <target name="osgi.compile-osgi-servlet">
