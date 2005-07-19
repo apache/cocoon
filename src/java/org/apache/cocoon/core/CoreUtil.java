@@ -288,6 +288,13 @@ public class CoreUtil {
     }
 
     /**
+     * Return the settings object.
+     */
+    public Settings getSettings() {
+        return this.settings;
+    }
+
+    /**
      * Instatiates the parent service manager, as specified in the
      * parent-service-manager init parameter.
      *
