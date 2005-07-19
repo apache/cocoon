@@ -15,9 +15,20 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.10 2004/03/06 02:25:34 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+	<map:components>
+	  <map:generators default="file">
+	    <map:generator name="jx"
+	                   logger="sitemap.generator.jx"
+	                   src="org.apache.cocoon.template.JXTemplateGenerator"
+	                   label="content"
+	                   pool-max="16">
+    	</map:generator>	  
+	  </map:generators>
+	</map:components>
 
   <map:views>
     <map:view name="content" from-label="content">
@@ -36,6 +47,11 @@
 
   <map:pipelines>
     <map:pipeline>
+      
+      <map:match pattern="j">
+        <map:generate src="samples.xml" type="jx"/>
+        <map:serialize type="xml"/>
+      </map:match>
 
       <map:match pattern="">
         <map:generate src="samples.xml"/>
