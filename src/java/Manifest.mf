@@ -41,7 +41,7 @@ Export-Package: javax.servlet,
  org.apache.cocoon.components.source,
  org.apache.cocoon.components.source.impl,
  org.apache.cocoon.components.treeprocessor,
- org.apache.cocoon.components.treeprocessor.sitemap
+ org.apache.cocoon.components.treeprocessor.sitemap,
  org.apache.cocoon.core,
  org.apache.cocoon.core.container,
  org.apache.cocoon.environment,
