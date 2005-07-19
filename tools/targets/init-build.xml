@@ -243,7 +243,7 @@
 
   <!-- Clean -->
   <target name="clean"
-         depends="clean-cocoon,clean-webapp,clean-standalone-demo"
+         depends="clean-cocoon,clean-webapp,clean-standalone-demo,osgi.clean"
          description="Cleans the cocoon build, webapp and standalone-demo"/>
 
   <!-- Clean the cocoon build directory -->
