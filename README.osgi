@@ -19,3 +19,5 @@ favorite webbrowser.
 build osgi
 cocoon osgi or ./cocoon.sh osgi
 http://localhost:8080 and http://localhost:8080/samples/
+
+This is experimental, see http://wiki.apache.org/cocoon/osgi for more info.
