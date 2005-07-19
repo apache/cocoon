@@ -31,6 +31,15 @@
     <xsp-language logger="core.markup.xsp" name="xsp">
       <parameter name="prefix" value="xsp"/>
       <parameter name="uri" value="http://apache.org/xsp"/>
+      <!--+
+          | These two flags determine whether XSP expression interpolation
+          | shall take place in attribute values and text nodes, respectively.
+          | The syntax {#expr} has been chosen that a clash with existing
+          | XSPs and logicsheets is unlikely.  The possibility to switch these
+          | features off is here only for safety.
+          +-->
+      <parameter name="attr-interpolation" value="true"/>
+      <parameter name="text-interpolation" value="true"/>
 
       <!--+
           | Properties for the java language

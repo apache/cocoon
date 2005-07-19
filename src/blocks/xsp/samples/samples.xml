@@ -40,6 +40,9 @@
    <sample name="Hello Stripped" href="java/stripped">
     Hello page with stripped empty spaces
    </sample>
+   <sample name="Interpolation" href="java/interpolation">
+    Using attribute and text interpolation.
+   </sample>
    <sample name="Simple XSP" href="java/simple">
     Simple XSP example showing usage of several logicsheets.
    </sample>

@@ -65,6 +65,18 @@ public abstract class AbstractMarkupLanguage
         implements MarkupLanguage, Serviceable, Configurable, Parameterizable,
                    Recyclable, Disposable
 {
+    /**
+     * Name "attr-interpolation" of boolean attribute to enable
+     * expression interpolation in attribute values.
+     */
+    public static final String ATTR_INTERPOLATION = "attr-interpolation";
+
+    /**
+     * Name "text-interpolation" of boolean attribute to enable
+     * expression interpolation inside text nodes.
+     */
+    public static final String TEXT_INTERPOLATION = "text-interpolation";
+
     /** The 'file' URL protocol. */
     private static final String FILE = "file:";
 
@@ -81,10 +93,16 @@ public abstract class AbstractMarkupLanguage
     protected Store logicsheetCache;
 
     /** The markup language's namespace uri */
-    protected String uri;
+    private String uri;
 
     /** The markup language's namespace prefix */
-    protected String prefix;
+    private String prefix;
+
+    /** Are attribute expressions to be expanded? */
+    private boolean attrInterpolation;
+
+    /** Are text expressions to be expanded? */
+    private boolean textInterpolation;
 
     /** The service manager */
     protected ServiceManager manager;
@@ -222,6 +240,10 @@ public abstract class AbstractMarkupLanguage
     public void parameterize(Parameters params) throws ParameterException {
         this.uri = params.getParameter("uri");
         this.prefix = params.getParameter("prefix", null);
+        this.attrInterpolation =
+            params.getParameterAsBoolean(ATTR_INTERPOLATION, false);
+        this.textInterpolation =
+            params.getParameterAsBoolean(TEXT_INTERPOLATION, false);
     }
 
     /**
@@ -232,6 +254,36 @@ public abstract class AbstractMarkupLanguage
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Returns the namespace URI for this language.
+     */
+    public String getURI() {
+        return this.uri;
+    }
+
+    /**
+     * Returns the namespace prefix for this language.
+     */
+    public String getPrefix() {
+        return this.prefix;
+    }
+
+    /**
+     * Returns true if expansion of attribute expressions is enabled
+     * for this language.
+     */
+    public boolean hasAttrInterpolation() {
+        return this.attrInterpolation;
+    }
+
+    /**
+     * Returns true if expansion of expressions inside text nodes is enabled
+     * for this language.
+     */
+    public boolean hasTextInterpolation() {
+        return this.textInterpolation;
     }
 
     /**

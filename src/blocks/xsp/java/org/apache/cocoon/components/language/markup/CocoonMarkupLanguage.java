@@ -139,13 +139,6 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
     }
 
     /**
-     * Returns the namespace URI for this language.
-     */
-    public String getURI() {
-        return super.uri;
-    }
-
-    /**
      * Returns the root element for this language.
      */
     public abstract String getRootElement();

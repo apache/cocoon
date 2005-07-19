@@ -61,7 +61,7 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
                                                   AbstractXMLPipe filter,
                                                   ProgrammingLanguage language)
     {
-        PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language);
+        PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language, this);
         prefilter.enableLogging(getLogger());
         return prefilter;
     }
@@ -71,57 +71,14 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
 //
 
     /**
-     * This preprocessor wraps the PCDATA into xsp:text elements.
+     * <code>{@link CocoonMarkupLanguage.PreProcessFilter PreProcessFilter}</code> that replaces
+     * XSP expressions.
+     * 
      * @see org.xml.sax.ContentHandler
      */
     protected class PreProcessFilter extends CocoonMarkupLanguage.PreProcessFilter {
-
-        private Stack stack;
-
-        public PreProcessFilter (AbstractXMLPipe filter, String filename, ProgrammingLanguage language) {
-            super(filter, filename, language);
-        }
-
-        public void startDocument() throws SAXException {
-            super.startDocument();
-            stack = new Stack();
-        }
-
-        public void startElement (String namespaceURI, String localName,
-                                  String qName, Attributes atts) throws SAXException {
-            stack.push(new String[] { namespaceURI, localName, qName} );
-            super.startElement(namespaceURI, localName, qName, atts);
-        }
-
-        public void endElement (String namespaceURI, String localName,
-                                String qName) throws SAXException {
-            stack.pop();
-            super.endElement(namespaceURI, localName, qName);
-        }
-
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            String[] tag = (String[]) stack.peek();
-            String tagURI = tag[0];
-            String tagLName = tag[1];
-
-            boolean flag = XSPMarkupLanguage.this.getURI().equals(tagURI);
-            if (flag && tagLName.equals("page")) {
-                // Characters after xsp:page and before first element.
-                super.characters(ch, start, length);
-            } else if (flag && (tagLName.equals("expr") ||
-                    tagLName.equals("logic") || tagLName.equals("structure") ||
-                    tagLName.equals("include"))) {
-                super.characters(ch, start, length);
-            } else {
-                // Quote the string depending on the programming language
-                String value = String.valueOf(ch, start, length);
-                // Create a new element <xsp:text> that wrap the quoted PCDATA
-                super.startElement(XSPMarkupLanguage.this.getURI(), "text",
-                        localPrefix + ":text", XMLUtils.EMPTY_ATTRIBUTES);
-                super.characters(value.toCharArray(), 0, value.length());
-                super.endElement(XSPMarkupLanguage.this.getURI(), "text",
-                        localPrefix + ":text");
-            }
+        public PreProcessFilter(AbstractXMLPipe filter, String filename, ProgrammingLanguage language, XSPMarkupLanguage markup) {
+            super(new XSPExpressionFilter.XMLPipeAdapter(new XSPExpressionFilter(markup), filter), filename, language);
         }
     }
 }
