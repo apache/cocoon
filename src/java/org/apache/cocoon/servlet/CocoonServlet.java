@@ -217,7 +217,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this.coreUtil.getCore().getSettings().toString());
+            getLogger().debug(this.coreUtil.getSettings().toString());
             getLogger().debug("getRealPath for /: " + this.servletContextPath);
             if (this.servletContextPath == null) {
                 getLogger().debug("getResource for /WEB-INF: " + debugPathOne);
@@ -226,11 +226,11 @@ public class CocoonServlet extends HttpServlet {
         }
 
         this.containerEncoding = this.getInitParameter("container-encoding", "ISO-8859-1");
-        this.requestFactory = new RequestFactory(coreUtil.getCore().getSettings().isAutosaveUploads(),
+        this.requestFactory = new RequestFactory(coreUtil.getSettings().isAutosaveUploads(),
                                                  new File(coreUtil.getCore().getSettings().getUploadDirectory()),
-                                                 coreUtil.getCore().getSettings().isAllowOverwrite(),
-                                                 coreUtil.getCore().getSettings().isSilentlyRename(),
-                                                 coreUtil.getCore().getSettings().getMaxUploadSize(),
+                                                 coreUtil.getSettings().isAllowOverwrite(),
+                                                 coreUtil.getSettings().isSilentlyRename(),
+                                                 coreUtil.getSettings().getMaxUploadSize(),
                                                  this.containerEncoding);
 
         try {
@@ -267,7 +267,7 @@ public class CocoonServlet extends HttpServlet {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.coreUtil.getCore().getSettings().isInitClassloader()) {
+        if (this.coreUtil.getSettings().isInitClassloader()) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
@@ -285,7 +285,7 @@ public class CocoonServlet extends HttpServlet {
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request;
         try{
-            if (this.coreUtil.getCore().getSettings().isEnableUploads()) {
+            if (this.coreUtil.getSettings().isEnableUploads()) {
                 request = requestFactory.getServletRequest(req);
             } else {
                 request = req;
@@ -440,7 +440,7 @@ public class CocoonServlet extends HttpServlet {
 
             if (contentType != null && contentType.equals("text/html")) {
                 String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
-                boolean show = this.coreUtil.getCore().getSettings().isShowTime();
+                boolean show = this.coreUtil.getSettings().isShowTime();
                 if (showTime != null) {
                     show = !showTime.equalsIgnoreCase("no");
                 }
@@ -448,7 +448,7 @@ public class CocoonServlet extends HttpServlet {
                     if ( timeString == null ) {
                         timeString = processTime(stopWatch.getTime());
                     }
-                    boolean hide = this.coreUtil.getCore().getSettings().isHideShowTime();
+                    boolean hide = this.coreUtil.getSettings().isHideShowTime();
                     if (showTime != null) {
                         hide = showTime.equalsIgnoreCase("hide");
                     }
@@ -498,7 +498,7 @@ public class CocoonServlet extends HttpServlet {
                                    String title, String message, String description,
                                    Exception e)
     throws IOException {
-        if (this.coreUtil.getCore().getSettings().isManageExceptions()) {
+        if (this.coreUtil.getSettings().isManageExceptions()) {
             if (env != null) {
                 env.tryResetResponse();
             } else {
@@ -556,7 +556,7 @@ public class CocoonServlet extends HttpServlet {
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
         if (formEncoding == null) {
-            formEncoding = this.coreUtil.getCore().getSettings().getFormEncoding();
+            formEncoding = this.coreUtil.getSettings().getFormEncoding();
         }
         env = new HttpEnvironment(uri,
                                   this.servletContextURL,
