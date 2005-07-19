@@ -39,7 +39,7 @@
   </target>
 
   <target name="generate-blocks.properties">
-    <xslt in="gump.xml"
+    <xslt in="${gump.descriptor}"
           out="blocks.properties"
           style="${tools.src}/gump2blocks.properties.xsl"
           force="true"/>
