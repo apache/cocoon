@@ -123,21 +123,17 @@ public class HSSFGenerator extends AbstractGenerator
     /**
      * Generate XML data.
      */
-    public void generate() throws SAXException {
-        try {
-            HSSFWorkbook workbook =
-                    new HSSFWorkbook(this.inputSource.getInputStream());
-            writeXML(workbook);
-        } catch (Exception e) {
-            getLogger().error("Error generating XML Data", e);
-        }
+    public void generate() throws SAXException, IOException {
+        HSSFWorkbook workbook =
+                new HSSFWorkbook(this.inputSource.getInputStream());
+        writeXML(workbook);
     }
 
 
     /**
      * Writes out the workbook data as XML, without formatting information
      */
-    private void writeXML(HSSFWorkbook workbook) throws Exception {
+    private void writeXML(HSSFWorkbook workbook) throws SAXException {
         this.contentHandler.startDocument();
         start("Workbook");
         start("SheetNameIndex");
@@ -163,25 +159,24 @@ public class HSSFGenerator extends AbstractGenerator
             if (formatting) {
                 writeStyles(workbook, sheet);
             }
+
             start("Cells");
-            HSSFRow row = null;
-            HSSFCell cell = null;
-            Iterator cells = null;
-            Iterator rows = sheet.rowIterator();
+            final Iterator rows = sheet.rowIterator();
             while (rows.hasNext()) {
-                row = (HSSFRow) rows.next();
-                cells = row.cellIterator();
+                final HSSFRow row = (HSSFRow) rows.next();
+                final Iterator cells = row.cellIterator();
                 while (cells.hasNext()) {
-                    cell = (HSSFCell) cells.next();
+                    final HSSFCell cell = (HSSFCell) cells.next();
                     attribute("Row", Integer.toString(row.getRowNum()));
                     attribute("Col", Short.toString(cell.getCellNum()));
                     attribute("ValueType", getValueType(cell.getCellType()));
                     start("Cell");
-                    data(cell.getStringCellValue());
+                    data(getValue(cell));
                     end("Cell");
                 }
             }
             end("Cells");
+
             end("Sheet");
         }
         end("Sheets");
@@ -231,9 +226,32 @@ public class HSSFGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns the cell value.
+     * @param cell	POI cell
+     * @return the cell value
+     */
+    private String getValue(HSSFCell cell) {
+        switch (cell.getCellType()) {
+            case HSSFCell.CELL_TYPE_BLANK:
+                return "";
+            case HSSFCell.CELL_TYPE_BOOLEAN:
+                return Boolean.toString(cell.getBooleanCellValue());
+            case HSSFCell.CELL_TYPE_NUMERIC:
+                return Double.toString(cell.getNumericCellValue());
+            case HSSFCell.CELL_TYPE_ERROR:
+                return "#ERR" + cell.getErrorCellValue();
+            case HSSFCell.CELL_TYPE_FORMULA:
+            case HSSFCell.CELL_TYPE_STRING:
+            default:
+                return cell.getStringCellValue();
+        }
+    }
+
+    /**
      * Writes out the workbook data as XML, with formatting information
      */
-    private void writeStyles(HSSFWorkbook workbook, HSSFSheet sheet) throws Exception {
+    private void writeStyles(HSSFWorkbook workbook, HSSFSheet sheet)
+    throws SAXException {
         start("Styles");
         HSSFRow row = null;
         HSSFCell cell = null;
