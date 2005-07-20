@@ -165,6 +165,8 @@ public class CocoonServlet extends HttpServlet {
      */
     protected boolean hiddenShowTime;
 
+    /** Flag to enable/disable X-Cocoon-Version header */
+    private boolean showCocoonVersion;
 
     /**
      * Default value for {@link #enableUploads} parameter (false)
@@ -467,6 +469,8 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug("show-time was not set - defaulting to false");
             }
         }
+
+        this.showCocoonVersion = getInitParameterAsBoolean("show-cocoon-version", true);
 
         parentComponentManagerClass = getInitParameter("parent-component-manager", null);
         if (parentComponentManagerClass != null) {
@@ -1035,7 +1039,9 @@ public class CocoonServlet extends HttpServlet {
         stopWatch.start();
 
         // add the cocoon header timestamp
-        res.addHeader("X-Cocoon-Version", Constants.VERSION);
+        if (this.showCocoonVersion) {
+            res.addHeader("X-Cocoon-Version", Constants.VERSION);
+        }
 
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request;
