@@ -15,8 +15,11 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.avalon.framework.logger.Logger;
@@ -104,7 +107,23 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
         JXPathContext multiValueContext = jctx.getRelativeContext(jctx.createPath(this.multiValuePath));
 
         // Delete all that is already present
-        multiValueContext.removeAll(this.rowPath);
+        
+        // Unfortunately the following statement doesn't work (it doesn't removes all elements from the 
+        // list because of a bug in JXPath) so I had to work out another immediate solution
+        //multiValueContext.removeAll(this.rowPath);
+        
+        Iterator rowPointers = multiValueContext.iteratePointers(this.rowPath);
+        List l = new ArrayList();
+        while( rowPointers.hasNext() )
+        {
+            Pointer p = (Pointer)rowPointers.next();
+            l.add(p.asPath());
+        }
+        Collections.sort(l);
+        for( int i = l.size()-1; i >= 0; i-- )
+        {
+            multiValueContext.removePath((String)l.get(i));
+        }
 
         boolean update = false;
 

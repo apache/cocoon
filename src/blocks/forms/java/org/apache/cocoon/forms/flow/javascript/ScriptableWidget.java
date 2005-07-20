@@ -30,6 +30,8 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
+import java.util.Collection;
+
 /**
  * @version $Id$
  * 
@@ -256,6 +258,8 @@ public class ScriptableWidget extends ScriptableObject {
                     }
                 } else if (value instanceof Object[]) {
                     values = (Object[])value;
+                } else if (value instanceof Collection ) {
+                    values = ((Collection)value).toArray();
                 }
                 field.setValues(values);
             } else {
