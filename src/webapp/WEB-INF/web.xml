@@ -323,6 +323,18 @@
     -->
 
     <!--
+      Whether or not the X-Cocoon-Version response header will be included.
+      This is true by default, but there may be some circumstances when it
+      is not desired (e.g. "information hiding" for added security, or if
+      using jsp:include with Cocoon-generated pages produces a "response is
+      already committed" error).
+    -->
+    <init-param>
+      <param-name>show-cocoon-version</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <!--
        If true or not set, this class will try to catch and handle all Cocoon
        exceptions. If false, it will rethrow them to the servlet container.
     -->

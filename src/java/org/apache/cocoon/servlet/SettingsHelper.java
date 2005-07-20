@@ -126,6 +126,8 @@ public class SettingsHelper {
             s.setHideShowTime(false);
         }
 
+        s.setShowCocoonVersion(getInitParameterAsBoolean(config, "show-cocoon-version", s.isShowCocoonVersion()));
+
         s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", s.isManageExceptions()));
 
         value = getInitParameter(config, "form-encoding");

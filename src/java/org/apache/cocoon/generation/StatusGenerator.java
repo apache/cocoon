@@ -424,6 +424,7 @@ public class StatusGenerator
         this.addValue(Settings.KEY_UPLOADS_OVERWRITE, s.isAllowOverwrite());
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
+        this.addValue(Settings.KEY_SHOW_COCOON_VERSION, s.isShowCocoonVersion());
         this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
 
         this.endGroup();

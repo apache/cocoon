@@ -197,6 +197,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="add" fixes-bug="33388" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
+      Added parameter "show-cocoon-version" to web.xml for configuring whether X-Cocoon-Version
+      response header should be sent.  Default is true.
+      In a security paranoid environment you may want to set it to false in order to hide from
+      the outside world which Cocoon version you are running.
+    </action>
     <action dev="AN" type="add" fixes-bug="35228" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
       XSP block: Added short-cut notation {#expr} for interpolation of
       XSP expressions in attribute values and text nodes.
