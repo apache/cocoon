@@ -43,6 +43,11 @@ public interface DynamicSettings {
     boolean HIDE_SHOW_TIME = false;
 
     /**
+     * Default value for {@link #isShowCocoonVersion()} parameter (true)
+     */
+    boolean SHOW_COCOON_VERSION = true;
+
+    /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
      * set to "yes" or "true", a new cocoon instance can be created using
      * the request parameter "cocoon-reload". It also enables that Cocoon is
@@ -86,6 +91,11 @@ public interface DynamicSettings {
     String KEY_HIDE_SHOWTIME = "hideshowtime";
 
     /**
+     * If true, the X-Cocoon-Version response header will be included.
+     */
+    String KEY_SHOW_COCOON_VERSION = "showcocoonversion";
+
+    /**
      * Delay between reload checks for the configuration
      */
     String KEY_CONFIGURATION_RELOAD_DELAY = "configuration.reloaddelay";
@@ -100,6 +110,12 @@ public interface DynamicSettings {
      * @see #KEY_HIDE_SHOWTIME
      */
     boolean isHideShowTime();
+
+    /**
+     * @return Returns the showCocoonVersion.
+     * @see #KEY_SHOW_COCOON_VERSION
+     */
+    boolean isShowCocoonVersion();
 
     /**
      * @return Returns the allowReload.

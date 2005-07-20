@@ -201,6 +201,11 @@ public class MutableSettings implements Settings {
     protected boolean hideShowTime = HIDE_SHOW_TIME;
 
     /**
+     * If true, the X-Cocoon-Version response header will be included.
+     */
+    protected boolean showCocoonVersion = SHOW_COCOON_VERSION;
+
+    /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
      */
@@ -290,6 +295,8 @@ public class MutableSettings implements Settings {
                         this.showTime = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
                         this.hideShowTime = BooleanUtils.toBoolean(value);
+                    } else if ( key.equals(KEY_SHOW_COCOON_VERSION) ) {
+                        this.showCocoonVersion = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
                         this.manageExceptions = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_FORM_ENCODING) ) {
@@ -450,6 +457,13 @@ public class MutableSettings implements Settings {
      */
     public boolean isShowTime() {
         return this.showTime;
+    }
+
+    /**
+     * @return Returns the showCocoonVersion flag.
+     */
+    public boolean isShowCocoonVersion() {
+        return this.showCocoonVersion;
     }
 
     /**
@@ -634,6 +648,7 @@ public class MutableSettings implements Settings {
           KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
           KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
+          KEY_SHOW_COCOON_VERSION + " : " + this.showCocoonVersion + '\n' +
           KEY_LAZY_MODE + " : " + this.lazyMode + '\n';
     }
 
@@ -837,6 +852,14 @@ public class MutableSettings implements Settings {
     public void setShowTime(boolean showTime) {
         this.checkWriteable();
         this.showTime = showTime;
+    }
+
+    /**
+     * @param showCocoonVersion The showCocoonVersion flag to set.
+     */
+    public void setShowCocoonVersion(boolean showCocoonVersion) {
+        this.checkWriteable();
+        this.showCocoonVersion = showCocoonVersion;
     }
 
     /**
