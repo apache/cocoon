@@ -242,7 +242,8 @@ public class CocoonServlet extends HttpServlet {
         if (this.exception == null) {
             this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
         } else {
-            this.servletContext.log("Errors during initializing Apache Cocoon " + Constants.VERSION + " : " + this.exception.getMessage());
+            final String message = "Errors during initializing Apache Cocoon " + Constants.VERSION + " : " + this.exception.getMessage();
+            this.servletContext.log(message, this.exception);
         }
     }
 
