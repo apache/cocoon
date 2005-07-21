@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="add" fixes-bug="28045" due-to="Jon Evans" due-to-email="jon.evans@misgl.com">
+      Added CookieModule as a more convinient way to access cookie values as {cookie:query}
+      in alternative to {request:cookies[name='query']/value}.
+    </action>
     <action dev="AN" type="add" fixes-bug="33388" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
       Added parameter "show-cocoon-version" to web.xml for configuring whether X-Cocoon-Version
       response header should be sent.  Default is true.

@@ -100,6 +100,23 @@
         </section>
 
         <section>
+            <title>CookieModule</title>
+
+            <p>This module returns the value of the named HTTP cookie.</p>
+
+            <p><strong>Example Pipeline Fragment:</strong></p>
+
+            <source><![CDATA[
+<map:match pattern="foo.html">
+  <map:generate type="file" src="documents/{cookie:user-language}/foo.xml"/>
+  <map:transform src="stylesheets/foo2html.xsl"/>
+  <map:serialize/>
+</map:match>
+]]></source>
+
+        </section>
+
+        <section>
             <title>DateInputModule</title>
 
             <p>This module returns the current date, optionally formated 
