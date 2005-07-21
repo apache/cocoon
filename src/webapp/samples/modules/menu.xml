@@ -31,6 +31,7 @@
   <menu label="Modules">
     <menu-item label="BaseLinkModule" href="baselink.html" desc="BaseLink properties"/>
     <menu-item label="ChainMetaModule" href="chain.html" desc="Chained values"/>
+    <menu-item label="CookieModule" href="cookie.html" desc="Cookie values"/>
     <menu-item label="DateInputModule" href="date.html" desc="Date"/>
     <menu-item label="DefaultsModule" href="defaults.html" desc="Default (static) values"/>
     <menu-item label="GlobalInputModule" href="global.html" desc="Access to the global variables defined in the sitemap."/>

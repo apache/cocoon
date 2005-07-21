@@ -76,6 +76,20 @@
       Finish the reference for this Module.</div>
 
         
+<h2>CookieModule</h2>
+<p>This module returns the value of the named HTTP cookie.</p>
+<p>
+<strong>Example Pipeline Fragment:</strong>
+</p>
+<pre class="code">
+&lt;map:match pattern="foo.html"&gt;
+  &lt;map:generate type="file" src="documents/{cookie:user-language}/foo.xml"/&gt;
+  &lt;map:transform src="stylesheets/foo2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre>
+
+        
 <h2>DateInputModule</h2>
 <p>This module returns the current date, optionally formated 
             as string. Format given through attribute "format" of 
