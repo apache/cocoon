@@ -187,6 +187,9 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
     /** The source resolver */
     private SourceResolver resolver;
 
+    /** Default source, used to create specialized transformers by configuration */
+    private String defaultSrc;
+
     /** The XSLTProcessor */
     private XSLTProcessor xsltProcessor;
 
@@ -230,7 +233,12 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         
         child = conf.getChild("check-includes");
         this.checkIncludes = child.getValueAsBoolean(this.checkIncludes);
-        
+
+        child = conf.getChild("default-src",false);
+        if(child!=null) {
+            this.defaultSrc = child.getValue();
+        }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Use parameters is " + this.useParameters);
             getLogger().debug("Use cookies is " + this.useCookies);
@@ -242,6 +250,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
             } else {
                 getLogger().debug("Use default TrAX Transformer Factory.");
             }
+            getLogger().debug("Default source = " + this.defaultSrc);
         }
 
         try {
@@ -279,6 +288,13 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws SAXException, ProcessingException, IOException {
+
+        if(src==null && defaultSrc!=null) {
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug("src is null, using default source " + defaultSrc);
+            }
+            src = defaultSrc;
+        }
 
         if (src == null) {
             throw new ProcessingException("Stylesheet URI can't be null");
