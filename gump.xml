@@ -95,12 +95,12 @@
             groupId="excalibur-xmlutil" artifactId="excalibur-xmlutil" version="1.0"/>  
     <depend project="excalibur-store"
             groupId="excalibur-store" artifactId="excalibur-store" version="1.0"/>  
-    <depend project="excalibur-pool"
+    <depend project="excalibur-pool-api"
             groupId="excalibur-pool" artifactId="excalibur-pool-api" version="2.0"/>  
-      <dependx project="excalibur-pool"
-               groupId="excalibur-pool" artifactId="excalibur-pool-impl" version="2.0"/> 
-      <dependx project="excalibur-pool"
-               groupId="excalibur-pool" artifactId="excalibur-pool-instrumented" version="2.0"/> 
+    <depend project="excalibur-pool-impl"
+            groupId="excalibur-pool" artifactId="excalibur-pool-impl" version="2.0"/> 
+    <depend project="excalibur-pool-instrumented"
+            groupId="excalibur-pool" artifactId="excalibur-pool-instrumented" version="2.0"/> 
     <depend project="excalibur-logger"
             groupId="excalibur-logger" artifactId="excalibur-logger" version="1.1"/>  
 
@@ -125,6 +125,7 @@
     <depend project="commons-lang"
             groupId="commons-lang" artifactId="commons-lang" version="2.1"
             locallib="core/commons-lang-2.0-20041007T2305.jar"/>  
+    <depend project="commons-logging"/>
     <depend project="logging-log4j"
             groupId="log4j" artifactId="log4j" version="1.2.9"
             locallib="core/log4j-1.2.9.jar"/>  
@@ -152,6 +153,8 @@
    <!-- used by ant tasks -->
     <depend project="qdox"
             groupId="qdox" artifactId="qdox" version="1.5"/>  
+
+    <depend project="commons-jci"/>
 
     <work nested="build/cocoon-@@DATE@@/classes"/>
     <work nested="build/cocoon-@@DATE@@/deprecated"/>
@@ -509,7 +512,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="jakarta-lucene"/>
+    <depend project="lucene-java"/>
     <depend project="cocoon-block-template" type="samples"/>
 
     <library name="lucene"/>
@@ -809,7 +812,7 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xml-axis"/>
+    <depend project="ws-axis"/>
 
     <library name="axis"/>
     <library name="axis-saaj"/>
@@ -1241,6 +1244,7 @@
     <depend project="cocoon-block-session-fw"/>
     <depend project="cocoon-block-databases"/>
     <depend project="concurrent"/>
+    <depend project="excalibur-datasource"/>
     <depend project="jdtcore"/>
 
     <library name="jdtcore"/>
@@ -1390,7 +1394,7 @@
 
     <description>A "jcr:" protocol for Cocoon</description>
 
-    <ant target="jcr-block">
+    <ant target="gump-block">
       <property name="block-name" value="jcr"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
@@ -1419,13 +1423,14 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="spring"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
     <library name="spring"/>
 
-    <jar name="blocks/spring-app.jar"/>
+    <jar name="blocks/spring-app-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
