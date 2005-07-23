@@ -28,7 +28,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLFilterImpl;
+import java.util.LinkedList;
 
+/**
+ * Filter attributes and text and expand {#expr} to xsp:attribute and xsp:expr
+ * elements.
+ *
+ * @version SVN $Id$
+ */
 public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.Handler {
 
     public static class XMLPipeAdapter extends AbstractXMLPipe {
@@ -81,31 +88,24 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
     /** The markup language prefix */
     private String markupPrefix;
 
-    /** Set default processing of attribute templates */
-    private boolean defaultProcessAttribs;
-
-    /** Set processing of attribute templates */
-    private boolean processAttribs;
-
-    /** Set default processing of text templates */
-    private boolean defaultProcessText;
-
-    /** Set processing of text templates */
-    private boolean processText;
+    /** Interpolation settings as nested properties */
+    private LinkedList interpolationStack;
 
     /** The parser for XSP value templates */
     private XSPExpressionParser expressionParser = new XSPExpressionParser(this);
-
-    /** First element was processed */
-    private boolean firstElementProcessed;
 
     private ContentHandler contentHandler;
 
     public XSPExpressionFilter(XSPMarkupLanguage markup) {
         this.markupURI = markup.getURI();
         this.markupPrefix = markup.getPrefix();
-        this.defaultProcessAttribs = markup.hasAttrInterpolation();
-        this.defaultProcessText = markup.hasTextInterpolation();
+
+        // Initialize default interpolation settings.
+        boolean attrInterpolation = markup.hasAttrInterpolation();
+        boolean textInterpolation = markup.hasTextInterpolation();
+        interpolationStack = new LinkedList();
+        interpolationStack.addLast(new InterpolationSettings(attrInterpolation,
+                                                             textInterpolation));
     }
 
     public void setContentHandler(ContentHandler contentHandler) {
@@ -120,9 +120,6 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
      * @param language
      */
     public void startDocument() throws SAXException {
-        processAttribs = defaultProcessAttribs;
-        processText = defaultProcessText;
-
         contentHandler.startDocument();
     }
 
@@ -137,13 +134,10 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
             throws SAXException {
         expressionParser.flush();
 
-        // Check template for processing flags in page
-        if (!firstElementProcessed) {
-            initFromAttribs(attribs);
-            firstElementProcessed = true;
-        }
+        // Check template for interpolation flags
+        attribs = pushInterpolationStack(attribs);
 
-        if (processAttribs) {
+        if (getInterpolationSettings().attrInterpolation) {
             // Attribute value templates enabled => process attributes
             AttributesImpl staticAttribs = new AttributesImpl();
             AttributesImpl dynamicAttribs = new AttributesImpl();
@@ -194,18 +188,43 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
         }
     }
 
-    protected void initFromAttribs(Attributes attribs) {
-        String value = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
+    /**
+     * Check attributes for presence of interpolation flags.
+     * Push current settings to stack.
+     * Remove interpolation attributes and return cleaned attribute list.
+     */
+    private Attributes pushInterpolationStack(Attributes attribs) {
+        String valueAttr = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
+        String valueText = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
 
-        if (value != null) {
-            processAttribs = Boolean.valueOf(value).booleanValue();
+        // Neither interpolation flag in attribute list: push tail to stack.
+        if (valueAttr == null && valueText == null ) {
+            interpolationStack.addLast(interpolationStack.getLast());
+            return attribs;
         }
 
-        value = attribs.getValue(markupURI, XSPMarkupLanguage.TEXT_INTERPOLATION);
+        // Push new interpolation settings to stack and remove attributes.
 
-        if (value != null) {
-            processText = Boolean.valueOf(value).booleanValue();
+        InterpolationSettings lastSettings = (InterpolationSettings)interpolationStack.getLast();
+        boolean attrInterpolation = lastSettings.attrInterpolation;
+        boolean textInterpolation = lastSettings.textInterpolation;
+
+        AttributesImpl cleanedAttribs = new AttributesImpl(attribs);
+
+        if (valueAttr != null) {
+            attrInterpolation = Boolean.valueOf(valueAttr).booleanValue();
+            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION));
         }
+
+        if (valueText != null) {
+            textInterpolation = Boolean.valueOf(valueText).booleanValue();
+            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, XSPMarkupLanguage.TEXT_INTERPOLATION));
+        }
+
+        interpolationStack.addLast(new InterpolationSettings(attrInterpolation,
+                                                             textInterpolation));
+
+        return cleanedAttribs;
     }
 
     /**
@@ -214,6 +233,9 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
     public void endElement(String uri, String loc, String raw) throws SAXException {
         expressionParser.flush();
         contentHandler.endElement(uri, loc, raw);
+
+        // Pop stack of interpolation settings.
+        interpolationStack.removeLast();
     }
 
     /**
@@ -223,7 +245,7 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
      * @see org.xml.sax.contentHandler.#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (processText) {
+        if (getInterpolationSettings().textInterpolation) {
             // Text templated enabled => Replace text expressions
             expressionParser.consume(ch, start, length);
         }
@@ -294,5 +316,26 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         contentHandler.startPrefixMapping(prefix, uri);
+    }
+
+    /**
+     * Return current interpolation settings.
+     */
+    private InterpolationSettings getInterpolationSettings() {
+        return (InterpolationSettings)interpolationStack.getLast();
+    }
+
+    /**
+     * Structure to hold settings for attribute and text interpolation.
+     */
+    private static class InterpolationSettings
+    {
+        boolean attrInterpolation;
+        boolean textInterpolation;
+
+        InterpolationSettings(boolean attrInterpolation, boolean textInterpolation) {
+            this.attrInterpolation = attrInterpolation;
+            this.textInterpolation = textInterpolation;
+        }
     }
 }
