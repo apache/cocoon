@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: hello.xsp 30932 2004-07-29 17:35:38Z vgritsenko $ -->
+<!-- SVN $Id$ -->
 
 <xsp:page
   language="java"
@@ -26,7 +26,8 @@
     <title>Attribute and Text Interpolation</title>
     <content>
       <p>
-        {#Constants.COMPLETE_NAME} allows to use <tt>{##expr}</tt>
+        {#Constants.COMPLETE_NAME} allows to use
+        <tt>{##expr}</tt><!-- Note ## to escape interpolation. -->
         to replace the value of the Java expression <tt>expr</tt>
         within attribute values and text nodes.
       </p>
@@ -54,8 +55,9 @@
       <p>
         Just compare this:
       </p>
-      <pre><![CDATA[
-        <center style="color:{##color}">Hello {##world}!</center>]]>
+      <!-- Use attributes to disable interpolation in nested content. -->
+      <pre xsp:attr-interpolation="false" xsp:text-interpolation="false"><![CDATA[
+        <center style="color:{#color}">Hello {#world}!</center>]]>
       </pre>
       <center style="color:{#color}">Hello {#world}!</center>
 
