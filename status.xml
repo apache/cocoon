@@ -196,11 +196,16 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="update">
+      Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
+      block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
+      (both from batik block).
+    </action>
     <action dev="BD" type="add" due-to="Christian Stocker" due-to-email="chregu@bitflux.ch">
-      XSLTAL block added, presentation templating transformer based on the Zope TAL syntax. 
+      XSLTAL block added, presentation templating transformer based on the Zope TAL syntax.
     </action>
     <action dev="BD" type="update">
-      TraxTransformer: new default-src configuration parameter, used if src is not specified.   
+      TraxTransformer: new default-src configuration parameter, used if src is not specified.
     </action>
     <action dev="AN" type="add" fixes-bug="28045" due-to="Jon Evans" due-to-email="jon.evans@misgl.com">
       Added CookieModule as a more convinient way to access cookie values as {cookie:query}
