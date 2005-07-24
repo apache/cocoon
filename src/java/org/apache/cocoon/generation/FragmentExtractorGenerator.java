@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * for offline generation.
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorGenerator.java,v 1.6 2004/03/28 05:29:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class FragmentExtractorGenerator extends ServiceableGenerator
                                         implements CacheableProcessingComponent {
