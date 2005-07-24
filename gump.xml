@@ -233,7 +233,8 @@
     <depend project="cocoon-block-faces" type="samples"/>
     <depend project="cocoon-block-axis" type="samples"/>
     <depend project="cocoon-block-template" type="samples"/>
-    
+    <depend project="garbage"/>
+
     <library name="velocity"/>
     <library name="castor"/>
     <library name="commons-jexl"/>
@@ -1549,4 +1550,9 @@
     <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
   </project>
 
+  <project name="garbage">
+    <!-- It would be better to *build* Garbage actually. -->
+    <package>org.apache.garbage</package>
+    <jar name="lib/optional/apache-garbage-0.0.jar"/>
+  </project>
 </module>
