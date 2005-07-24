@@ -1400,6 +1400,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="jackrabbit"/>
+    <depend project="jcr"/>
 
     <library name="jcr"/>
     <library name="jackrabbit"/>
