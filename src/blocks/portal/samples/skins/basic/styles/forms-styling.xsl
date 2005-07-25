@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,9 +22,12 @@
       | want advanced styling of widgets, change it here!
       | See xsl:include as composition and xsl:import as extension/inheritance.
       +-->
-  <xsl:include href="forms-page-styling.xsl"/>
-  <xsl:include href="forms-advanced-field-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-page-styling.xsl"/>
+  <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/>
 
+  <!-- Location of the resources directory, where JS libs and icons are stored -->
+  <xsl:param name="resources-uri">resources</xsl:param>
+  
   <xsl:template match="head">
     <head>
       <xsl:apply-templates/>
