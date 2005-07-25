@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@
       This parameter indicates the configuration file of the LogKit management
     -->
     <init-param>
-      <param-name>logkit-config</param-name>
+      <param-name>logging-config</param-name>
       <param-value>/WEB-INF/logkit.xconf</param-value>
     </init-param>
 
@@ -150,16 +150,12 @@
     -->
 
     <!--
-      If you want to configure log4j using Cocoon, then you can define
-      an XML configuration file here. You can use the usual log4j property
-      substituation mechanism, e.g. ${context-root} is replaced by the
-      context root of this web application etc.
-      You can configure the log4j configuration even if you use LogKit
-      for Cocoon logging. You can use this to configure third party code
-      for example.
+      If you want to configure log4j using Cocoon, you can use the
+      following configuration. In this case the log configured defined
+      by the logging-config init parameter is used to initialize Log4J!
       <init-param>
-        <param-name>log4j-config</param-name>
-        <param-value>/WEB-INF/log4j.xconf</param-value>
+        <param-name>logger-class</param-name>
+        <param-value>org.apache.avalon.excalibur.logger.Log4JConfLoggerManager</param-value>
       </init-param>
     -->
 

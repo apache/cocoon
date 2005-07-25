@@ -37,7 +37,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
 
 /**
@@ -300,7 +299,7 @@ public class ContainerTestCase extends TestCase {
         // Set up root manager for Core
         Core core = new Core(new MutableSettings(), this.context);
         ((DefaultContext)this.context).put(Core.ROLE, core);
-        CoreUtil.RootServiceManager rsm = new CoreUtil.RootServiceManager(null, core);
+        SingleComponentServiceManager rsm = new SingleComponentServiceManager(null, core, Core.ROLE);
  
         // Set up the ComponentLocator
         CoreServiceManager ecManager = new CoreServiceManager(rsm);

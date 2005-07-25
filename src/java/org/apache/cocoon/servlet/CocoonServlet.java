@@ -355,7 +355,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         String contentType = null;
-        Object ctxMap = null;
+        Object handle = null;
 
         Environment env;
         try{
@@ -377,7 +377,7 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             try {
-                ctxMap = this.coreUtil.initializePerRequestLoggingContext(env);
+                handle = this.coreUtil.initializeRequest(env);
 
                 if (this.cocoon.process(env)) {
                     contentType = env.getContentType();
@@ -462,7 +462,7 @@ public class CocoonServlet extends HttpServlet {
                 }
             }
         } finally {
-            this.coreUtil.cleanPerRequestLoggingContext(ctxMap);
+            this.coreUtil.cleanUpRequest(handle);
 
             try {
                 if (request instanceof MultipartHttpServletRequest) {

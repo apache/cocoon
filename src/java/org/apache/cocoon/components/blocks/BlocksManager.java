@@ -43,7 +43,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.CoreUtil;
+import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.xml.sax.SAXException;
@@ -117,7 +117,7 @@ public class BlocksManager
 
         Core core = (Core)this.serviceManager.lookup(Core.ROLE);
         ServiceManager blockParentServiceManager =
-            new CoreUtil.RootServiceManager(null, core);
+            new SingleComponentServiceManager(null, core, Core.ROLE);
         this.blockServiceManager =
             new CocoonServiceManager(blockParentServiceManager);
 

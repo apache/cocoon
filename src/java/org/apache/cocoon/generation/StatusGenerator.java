@@ -399,7 +399,6 @@ public class StatusGenerator
         this.addValue(Settings.KEY_FORCE_PROPERTIES, s.getForceProperties());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
         this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
-        this.addValue(Settings.KEY_LOGGING_LOG4J_CONFIGURATION, s.getLog4jConfiguration());
         this.addValue(Settings.KEY_LOGGING_MANAGER_CLASS, s.getLoggerManagerClassName());
         this.addValue(Settings.KEY_PARENT_SERVICE_MANAGER, s.getParentServiceManagerClassName());
         this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());

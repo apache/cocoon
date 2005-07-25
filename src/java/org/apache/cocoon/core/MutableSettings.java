@@ -92,20 +92,8 @@ public class MutableSettings implements Settings {
 
     /**
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
-     * Log4J has to be configured already.
      */
     protected String loggerManagerClassName;
-
-    /**
-     * If you want to configure log4j using Cocoon, then you can define
-     * an XML configuration file here. You can use the usual log4j property
-     * substituation mechanism, e.g. ${context-root} is replaced by the
-     * context root of this web application etc.
-     * You can configure the log4j configuration even if you use LogKit
-     * for Cocoon logging. You can use this to configure third party code
-     * for example.
-     */
-    protected String log4jConfiguration;
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -271,8 +259,6 @@ public class MutableSettings implements Settings {
                         this.bootstrapLogLevel = value;
                     } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                         this.loggerManagerClassName = value;
-                    } else if ( key.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
-                        this.log4jConfiguration = value;
                     } else if ( key.equals(KEY_ALLOW_RELOAD) ) {
                         this.allowReload = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
@@ -481,13 +467,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @return Returns the log4jConfiguration.
-     */
-    public String getLog4jConfiguration() {
-        return this.log4jConfiguration;
-    }
-
-    /**
      * @return Returns the accessLogger.
      */
     public String getEnvironmentLogger() {
@@ -564,8 +543,6 @@ public class MutableSettings implements Settings {
                 value = this.bootstrapLogLevel;
             } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                 value = this.loggerManagerClassName;
-            } else if ( sKey.equals(KEY_LOGGING_LOG4J_CONFIGURATION) ) {
-                value = this.log4jConfiguration;
             } else if ( sKey.equals(KEY_ALLOW_RELOAD) ) {
                 value = String.valueOf(this.allowReload);
             } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
@@ -633,7 +610,6 @@ public class MutableSettings implements Settings {
           KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
           KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
           KEY_LOGGING_COCOON_LOGGER + " : " + this.cocoonLogger + '\n' +
-          KEY_LOGGING_LOG4J_CONFIGURATION + " : " + this.log4jConfiguration + '\n' +
           KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerManagerClassName + '\n' +
           KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
@@ -876,14 +852,6 @@ public class MutableSettings implements Settings {
     public void setWorkDirectory(String workDirectory) {
         this.checkWriteable();
         this.workDirectory = workDirectory;
-    }
-
-    /**
-     * @param log4jConfiguration The log4jConfiguration to set.
-     */
-    public void setLog4jConfiguration(String log4jConfiguration) {
-        this.checkWriteable();
-        this.log4jConfiguration = log4jConfiguration;
     }
 
     /**
