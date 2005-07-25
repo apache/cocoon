@@ -24,6 +24,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * This is a configurator for log4j that supports variable substitution
  *
  * @since 2.1.6
+ * @deprecated This class is in the latest Excalibur version and therefore will be removed in 2.2.
  * @version CVS $Id: Log4JConfigurator.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public class Log4JConfigurator extends DOMConfigurator {
