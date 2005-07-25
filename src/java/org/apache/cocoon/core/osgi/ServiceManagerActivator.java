@@ -23,7 +23,6 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
-import org.apache.cocoon.core.container.CoreServiceManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.log.LogService;
@@ -33,7 +32,7 @@ public class ServiceManagerActivator implements BundleActivator {
 
 //  Registering services must go through the ServiceFactory class wrapping the componentHandler
     
-    private CoreServiceManager manager;
+    private OSGiCoreServiceManager manager;
 
     public void start(final BundleContext ctx) throws Exception {
         
@@ -45,7 +44,7 @@ public class ServiceManagerActivator implements BundleActivator {
         ServiceManager parentManager = new OSGiServiceManager(ctx);
         
         // Create a regular manager
-        this.manager = new CoreServiceManager(parentManager, this.getClass().getClassLoader()) {
+        this.manager = new OSGiCoreServiceManager(parentManager, this.getClass().getClassLoader(), ctx) {
         };
         
         //---- LogEnabled
