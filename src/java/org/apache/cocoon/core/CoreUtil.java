@@ -28,11 +28,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
+import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -48,16 +46,18 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
+import org.apache.cocoon.core.container.SingleComponentServiceManager;
+import org.apache.cocoon.core.logging.CocoonLogKitLoggerManager;
+import org.apache.cocoon.core.logging.PerRequestLoggerManager;
+import org.apache.cocoon.core.logging.SettingsContext;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
-import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
-import org.apache.log.ContextMap;
-import org.apache.log4j.LogManager;
 
 /**
  * This is an utility class to create a new Cocoon instance.
@@ -96,8 +96,8 @@ public class CoreUtil {
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
-    /** We use LogKit */
-    protected boolean isLogKit = false;
+    /** Is this a per request logger manager */
+    protected boolean isPerRequestLoggerManager = false;
 
     /**
      * Setup a new instance.
@@ -329,7 +329,7 @@ public class CoreUtil {
                 }
             }
         }
-        return new RootServiceManager(parentServiceManager, core);
+        return new SingleComponentServiceManager(parentServiceManager, core, Core.ROLE);
     }
 
     /**
@@ -380,34 +380,27 @@ public class CoreUtil {
     }
 
     /**
-     * Initialize the context for logging.
-     * TODO - Move this to the logger manager and make it LogKit independent.
+     * Initialize the current request.
+     * This method can be used to initialize anything required for processing
+     * the request. For example, if the logger manager is a {@link PerRequestLoggerManager}
+     * than this manager is invoked to initialize the logging context for the request.
+     * This method returns a handle that should be used to clean up everything
+     * when the request is finished by calling {@link #cleanUpRequest(Object)}.
      */
-    public Object initializePerRequestLoggingContext(Environment env) {
-        if ( this.isLogKit ) {
-            ContextMap ctxMap;
-            // Initialize a fresh log context containing the object model: it
-            // will be used by the CocoonLogFormatter
-            ctxMap = ContextMap.getCurrentContext();
-            // Add thread name (default content for empty context)
-            String threadName = Thread.currentThread().getName();
-            ctxMap.set("threadName", threadName);
-            // Add the object model
-            ctxMap.set("objectModel", env.getObjectModel());
-            // Add a unique request id (threadName + currentTime
-            ctxMap.set("request-id", threadName + System.currentTimeMillis());
-            
-            return ctxMap;
+    public Object initializeRequest(Environment env) {
+        if ( this.isPerRequestLoggerManager ) {
+            return ((PerRequestLoggerManager)this.loggerManager).initializePerRequestLoggingContext(env);
         }
         return null;   
     }
 
     /**
-     * Initialize the context for logging.
+     * Cleanup everything initialized during the request processing in
+     * {@link #initializeRequest(Environment)}.
      */
-    public void cleanPerRequestLoggingContext(Object ctxMap) {
-        if ( ctxMap != null ) {
-            ((ContextMap)ctxMap).clear();
+    public void cleanUpRequest(Object handle) {
+        if ( handle != null && this.isPerRequestLoggerManager) {
+            ((PerRequestLoggerManager)this.loggerManager).cleanPerRequestLoggingContext(handle);
         }
     }
 
@@ -427,7 +420,7 @@ public class CoreUtil {
         final Logger bootstrapLogger = this.env.getBootstrapLogger(level);
 
         // Create our own resolver
-        SimpleSourceResolver resolver = new SimpleSourceResolver();
+        final SimpleSourceResolver resolver = new SimpleSourceResolver();
         resolver.enableLogging(bootstrapLogger);
         try {
             resolver.contextualize(this.appContext);
@@ -435,9 +428,12 @@ public class CoreUtil {
             throw new CascadingRuntimeException(
                     "Cannot setup source resolver.", ce);
         }
+        // create an own service manager for the logger manager
+        final ServiceManager loggerManagerServiceManager = new SingleComponentServiceManager(
+                 null, resolver, SourceResolver.ROLE);
 
         // create an own context for the logger manager
-        final DefaultContext subcontext = new DefaultContext(this.appContext);
+        final DefaultContext subcontext = new SettingsContext(this.appContext, this.settings);
         subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
         if (this.env.getContextForWriting() == null) {
             File logSCDir = new File(this.settings.getWorkDirectory(), "log");
@@ -458,6 +454,8 @@ public class CoreUtil {
 
         try {
             ContainerUtil.contextualize(loggerManager, subcontext);
+            ContainerUtil.service(loggerManager, loggerManagerServiceManager);
+
             this.loggerManager = loggerManager;
 
             if (loggerManager instanceof Configurable) {
@@ -470,8 +468,7 @@ public class CoreUtil {
                         source = resolver.resolveURI(logkitConfig);
                         final ConfigurationBuilder builder = new ConfigurationBuilder(
                                 settings);
-                        final Configuration conf = builder.build(source
-                                .getInputStream());
+                        final Configuration conf = builder.build(source.getInputStream());
                         final DefaultConfiguration categories = (DefaultConfiguration) conf
                                 .getChild("categories");
                         final DefaultConfiguration targets = (DefaultConfiguration) conf
@@ -542,22 +539,6 @@ public class CoreUtil {
                     }
                 }
             }
-
-            // let's configure log4j
-            final String log4jConfig = settings.getLog4jConfiguration();
-            if (log4jConfig != null) {
-                final Log4JConfigurator configurator = new Log4JConfigurator(subcontext, this.settings);
-
-                Source source = null;
-                try {
-                    source = resolver.resolveURI(log4jConfig);
-                    configurator.doConfigure(source.getInputStream(),
-                            LogManager.getLoggerRepository());
-                } finally {
-                    resolver.release(source);
-                }
-            }
-
             ContainerUtil.initialize(loggerManager);
         } catch (Exception e) {
             bootstrapLogger.error(
@@ -575,19 +556,19 @@ public class CoreUtil {
      */
     private LoggerManager newLoggerManager(String loggerManagerClass) {
         if ("LogKit".equalsIgnoreCase(loggerManagerClass) || loggerManagerClass == null) {
-            loggerManagerClass = LogKitLoggerManager.class.getName();
+            loggerManagerClass = CocoonLogKitLoggerManager.class.getName();
         } else if ("LOG4J".equalsIgnoreCase(loggerManagerClass)) {
-            loggerManagerClass = Log4JLoggerManager.class.getName();
+            loggerManagerClass = Log4JConfLoggerManager.class.getName();
         }
         try {
             Class clazz = Class.forName(loggerManagerClass);
-            if ( loggerManagerClass.equals(LogKitLoggerManager.class.getName()) ) {
-                this.isLogKit = true;
+            if ( PerRequestLoggerManager.class.isAssignableFrom(clazz) ) {
+                this.isPerRequestLoggerManager = true;
             }
             return (LoggerManager) clazz.newInstance();
         } catch (Exception e) {
-            this.isLogKit = true;
-            return new LogKitLoggerManager();
+            this.isPerRequestLoggerManager = true;
+            return new CocoonLogKitLoggerManager();
         }
     }
 
@@ -605,60 +586,6 @@ public class CoreUtil {
             uri = uri.substring(pos+1);
         }
         return WildcardHelper.match(null, uri, parsedPattern);
-    }
-
-    public static final class RootServiceManager
-    implements ServiceManager, Disposable {
-
-        protected final ServiceManager parent;
-        protected final Core cocoon;
-
-        public RootServiceManager(ServiceManager p, Core c) {
-            this.parent = p;
-            this.cocoon = c;
-        }
-
-        /**
-         * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
-         */
-        public boolean hasService(String key) {
-            if ( Core.ROLE.equals(key) ) {
-                return true;
-            }
-            if ( this.parent != null ) {
-                return this.parent.hasService(key);
-            }
-            return false;
-        }
-
-        /**
-         * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
-         */
-        public Object lookup(String key) throws ServiceException {
-            if ( Core.ROLE.equals(key) ) {
-                return this.cocoon;
-            }
-            if ( this.parent != null ) {
-                return this.parent.lookup(key);
-            }
-            throw new ServiceException("Cocoon", "Component for key '" + key + "' not found.");
-        }
-
-        /**
-         * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
-         */
-        public void release(Object component) {
-            if ( component != this.cocoon && parent != null ) {
-                this.parent.release(component);
-            }
-        }
-
-        /**
-         * @see org.apache.avalon.framework.activity.Disposable#dispose()
-         */
-        public void dispose() {
-            ContainerUtil.dispose(this.parent);
-        }
     }
 
     /**

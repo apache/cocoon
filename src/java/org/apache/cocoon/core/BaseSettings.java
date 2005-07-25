@@ -73,17 +73,6 @@ public interface BaseSettings {
     String KEY_LOGGING_MANAGER_CLASS = "logging.manager.class";
 
     /**
-     * If you want to configure log4j using Cocoon, then you can define
-     * an XML configuration file here. You can use the usual log4j property
-     * substituation mechanism, e.g. ${context-root} is replaced by the
-     * context root of this web application etc.
-     * You can configure the log4j configuration even if you use LogKit
-     * for Cocoon logging. You can use this to configure third party code
-     * for example.
-     */
-    String KEY_LOGGING_LOG4J_CONFIGURATION = "logging.log4j.configuration";
-
-    /**
      * This parameter is used to list classes that should be loaded at
      * initialization time of the servlet. For example, JDBC Drivers used need to
      * be named here. Additional entries may be inserted here during build
@@ -221,12 +210,6 @@ public interface BaseSettings {
      * @see #KEY_PARENT_SERVICE_MANAGER
      */
     String getParentServiceManagerClassName();
-
-    /**
-     * @return Returns the log4jConfiguration.
-     * @see #KEY_LOGGING_LOG4J_CONFIGURATION
-     */
-    String getLog4jConfiguration();
 
     /**
      * @return Returns the uploadDirectory.

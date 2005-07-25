@@ -50,9 +50,16 @@ public class SettingsHelper {
             s.setConfiguration("/WEB-INF/cocoon.xconf");
         }
 
+        // upto 2.1.x the logging configuration was named "logkit-config"
+        // we still support this, but provide a new unbiased name as well
         value = getInitParameter(config, "logkit-config");
         if ( value != null ) {
             s.setLoggingConfiguration("context:/" + value);
+        } else {
+            value = getInitParameter(config, "logging-config");
+            if ( value != null ) {
+                s.setLoggingConfiguration("context:/" + value);                
+            }
         }
 
         value = getInitParameter(config, "servlet-logger");
@@ -73,11 +80,6 @@ public class SettingsHelper {
         value = getInitParameter(config, "logger-class");
         if ( value != null ) {
             s.setLoggerManagerClassName(value);
-        }
-
-        value = getInitParameter(config, "log4j-config");
-        if ( value != null ) {
-            s.setLog4jConfiguration("context:/" + value);
         }
 
         s.setAllowReload(getInitParameterAsBoolean(config, "allow-reload", s.isAllowReload()));
