@@ -34,7 +34,7 @@ import java.io.RandomAccessFile;
  * 
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.6 2004/05/27 08:23:58 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {
@@ -90,8 +90,7 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
     /**
      * Read ID3 Tag
      */
-    private void setID3TagAttributes(RandomAccessFile in) throws IOException
-    {
+    private void setID3TagAttributes(RandomAccessFile in) throws IOException  {
         String s;
 
         // TAG takes 128 bytes
@@ -135,8 +134,7 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         return s.trim();
     }
 
-    private void setID3HeaderAttributes(RandomAccessFile in) throws IOException
-    {
+    private void setID3HeaderAttributes(RandomAccessFile in) throws IOException {
         byte[] buffer = new byte[4];
 
         // http://floach.pimpin.net/grd/mp3info/frmheader/index.html
@@ -183,8 +181,7 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         }
     }
 
-    private static boolean isSyncMark(int header)
-    {
+    private static boolean isSyncMark(int header) {
         boolean sync = ((header & 0xFFF00000) == 0xFFF00000);
         // filter out invalid sample rate
         if (sync) sync = ((header >>> 10) & 3) != 3;
@@ -195,8 +192,7 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         return sync;
     }
 
-    private int getVBRHeaderFrames(RandomAccessFile in, int version, int mode) throws IOException
-    {
+    private int getVBRHeaderFrames(RandomAccessFile in, int version, int mode) throws IOException {
         byte[] buffer = new byte[12];
 
         // Try to detect VBR header
@@ -242,9 +238,8 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
     }
 
     // version - layer - bitrate index
-    private static final String bitrates[][][] =
+    private static final String bitrates[][][] = {
     {
-      {
         // MPEG2 - layer 1
         {"free format", "32", "48", "56", "64", "80", "96", "112", "128", "144", "160", "176", "192", "224", "256", "forbidden"},
         // MPEG2 - layer 2
@@ -262,13 +257,11 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
       }
     };
 
-    private static String bitrate(int version, int layer, int bitrate_index)
-    {
+    private static String bitrate(int version, int layer, int bitrate_index) {
         return bitrates[version & 1][layer - 1][bitrate_index];
     }
 
-    private static String mode(int mode)
-    {
+    private static String mode(int mode) {
         switch(mode)
         {
         case MODE_STEREO:
@@ -283,21 +276,18 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         return null;
     }
 
-    private static final int frequencies[][] =
-    {
+    private static final int frequencies[][] = {
         {32000, 16000,  8000}, //MPEG 2.5
         {    0,     0,     0}, //reserved
         {22050, 24000, 16000}, //MPEG 2
         {44100, 48000, 32000}  //MPEG 1
     };
 
-    private static int frequency(int version, int frequency)
-    {
+    private static int frequency(int version, int frequency) {
         return frequencies[version][frequency];
     }
 
-    private static String frequencyString(int version, int frequency)
-    {
+    private static String frequencyString(int version, int frequency) {
         return String.valueOf((float)frequency(version, frequency)/1000);
     }
 }
