@@ -509,6 +509,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="29506" due-to-email="tobias@lentus.se">
+      Fix wrong caching behaviour in DirectoryGenerator.
+    </action>
     <action dev="CZ" type="add">
       Portal block: Add easier to use event handling mechanism by introducing the new Receiver interface.
                     Deprecated Publisher, Subscriber, Filter and Register.

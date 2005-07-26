@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import java.util.Comparator;
 /**
  * @cocoon.sitemap.component.documentation
  * Generates an XML directory listing.
+ * A more general approach is implemented by the TraversableGenerator (src/blocks/repository/java/org/apache/cocoon/generation/TraversableGenerator.java)
  * 
  * @cocoon.sitemap.component.name   directory
  * @cocoon.sitemap.component.label  content
@@ -127,6 +128,9 @@ public class DirectoryGenerator
      */
     protected boolean isRequestedDirectory;
 
+    /** The source object for the directory. */
+    protected Source directorySource;
+
     /**
      * Set the request parameters. Must be called before the generate method.
      *
@@ -142,8 +146,14 @@ public class DirectoryGenerator
         }
         super.setup(resolver, objectModel, src, par);
 
+        try {
+            this.directorySource = this.resolver.resolveURI(src);
+        } catch (SourceException se) {
+            throw SourceUtil.handle(se);
+        }
+
         this.cacheKeyParList = new ArrayList();
-        this.cacheKeyParList.add(src);
+        this.cacheKeyParList.add(this.directorySource.getURI());
 
         this.depth = par.getParameterAsInteger("depth", 1);
         this.cacheKeyParList.add(String.valueOf(this.depth));
@@ -238,18 +248,15 @@ public class DirectoryGenerator
      * @throws ProcessingException  if the requsted URI isn't a directory on the local filesystem
      */
     public void generate() throws SAXException, ProcessingException {
-        String directory = super.source;
-        Source inputSource = null;
         try {
-            inputSource = this.resolver.resolveURI(directory);
-            String systemId = inputSource.getURI();
+            String systemId = this.directorySource.getURI();
             if (!systemId.startsWith(FILE)) {
                 throw new ResourceNotFoundException(systemId + " does not denote a directory");
             }
             // This relies on systemId being of the form "file://..."
             File directoryFile = new File(new URL(systemId).getFile());
             if (!directoryFile.isDirectory()) {
-                throw new ResourceNotFoundException(directory + " is not a directory.");
+                throw new ResourceNotFoundException(super.source + " is not a directory.");
             }
 
             this.contentHandler.startDocument();
@@ -260,12 +267,8 @@ public class DirectoryGenerator
 
             this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
         } catch (IOException ioe) {
-            throw new ResourceNotFoundException("Could not read directory " + directory, ioe);
-        } finally {
-            this.resolver.release(inputSource);
+            throw new ResourceNotFoundException("Could not read directory " + super.source, ioe);
         }
     }
 
@@ -484,6 +487,10 @@ public class DirectoryGenerator
      * Recycle resources
      */
     public void recycle() {
+        if ( this.resolver != null ) {
+            this.resolver.release(this.directorySource);
+            this.directorySource = null;
+        }
         this.cacheKeyParList = null;
         this.attributes = null;
         this.dateFormatter = null;
