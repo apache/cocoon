@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix" fixes-bug="29506" due-to-email="tobias@lentus.se">
+      Fix wrong caching behaviour in DirectoryGenerator.
+    </action>
     <action dev="JH" type="update">
       Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
       block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
