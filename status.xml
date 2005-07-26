@@ -740,8 +740,9 @@
    </action>
    <action dev="VG" type="add">
      Implemented error handling for the internal requests. Error handling for
-     the internal requests configured using <code>when</code> attribute on
-     the <code>handle-errors</code> element. Supported values are: <ul>
+     internal requests can be configured using the <code>when</code> attribute
+     on the <code>handle-errors</code> element. Supported values for
+     <code>when</code> attribute are: <ul>
      <li><code>external</code>: This error handler should be used only on
      external requests (default);</li>
      <li><code>internal</code>: This error handler should be used only on
@@ -749,9 +750,9 @@
      <li><code>always</code>: This error handler can be used for all
      requests.</li>
      </ul>
-     Currently, if internal error handling is enabled, only inner most error handler
-     will be used for errors which happened during internal pipeline
-     processing.
+     Currently, if internal error handling is enabled, only the inner most
+     error handler will be used for errors which happened during internal
+     pipeline processing. See samples for usage details.
    </action>
    <action dev="VG" type="fix">
      Sitemap now properly throws ResourceNotFound exception for not matched
