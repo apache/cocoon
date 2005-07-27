@@ -540,6 +540,8 @@
     <component-instance name="module" class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
     <component-instance name="xmodule" class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
 
+    <component-instance name="create-document" class="org.apache.cocoon.components.source.impl.CreateDocumentSourceFactory"/>
+
     <!--+
         | The "*" protocol handles all uri schemes that are not explicitely
         | specified. This includes all JDK standard protocols.
