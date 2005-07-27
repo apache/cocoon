@@ -106,6 +106,7 @@ public class CocoonWrapper {
         // Install a temporary logger so that getDir() can log if needed
         final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel.getLogLevelForName(this.logLevel);
         final Logger envLogger = new ConsoleLogger(level.getLevel());
+        this.log = envLogger;
 
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");
