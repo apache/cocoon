@@ -120,12 +120,14 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
 
         start("requestHeaders", attr);
         Enumeration headers = request.getHeaderNames();
-        while (headers.hasMoreElements()) {
-            String header = (String)headers.nextElement();
-            attribute(attr, "name", header);
-            start("header", attr);
-            data(request.getHeader(header));
-            end("header");
+        if ( headers != null ) {
+            while (headers.hasMoreElements()) {
+                String header = (String)headers.nextElement();
+                attribute(attr, "name", header);
+                start("header", attr);
+                data(request.getHeader(header));
+                end("header");
+            }
         }
         end("requestHeaders");
 

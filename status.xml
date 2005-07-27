@@ -196,6 +196,13 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add" fixes-bug="35521" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
+      Added the create-document source than either generates empty documents or documents containing
+      just a root node.
+    </action>
+    <action dev="CZ" type="fix" fixes-bug="35457" due-to="Doug Bennett" due-to-email="dbennett1556@netscape.net">
+      Fix NPE in RequestGenerator when request.getHeaderNames() returns null.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="29506" due-to-email="tobias@lentus.se">
       Fix wrong caching behaviour in DirectoryGenerator.
     </action>
