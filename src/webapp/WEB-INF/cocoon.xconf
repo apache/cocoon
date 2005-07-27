@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -545,6 +545,7 @@
     <component-instance name="module" class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
     <component-instance name="xmodule" class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
 
+    <component-instance name="create-document" class="org.apache.cocoon.components.source.impl.CreateDocumentSourceFactory"/>
     <!--+
         | The "*" protocol handles all uri schemes that are not explicitely
         | specified. This includes all JDK standard protocols.
