@@ -171,6 +171,9 @@ public class CocoonWrapper {
             conf = new File(configFile);
             if (!conf.exists()) {
                 conf = new File(dir, configFile);
+                if (!conf.exists()) {
+                    conf = null;
+                }
             }
         }
         if (conf == null) {
