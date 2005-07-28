@@ -450,7 +450,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
-    
+
     protected boolean hasAttribute(String name) {
         return this.attributes.containsKey(name);
     }
@@ -479,18 +479,29 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * The returned stream is buffered by the environment. If the
      * buffer size is -1 then the complete output is buffered.
      * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
+     *
+     * <br>This method replaces {@link #getOutputStream()}.
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
+
+        // This method could be called several times during request processing
+        // with differing values of bufferSize and should handle this situation
+        // correctly.
+
         if (bufferSize == -1) {
             if (this.secureOutputStream == null) {
                 this.secureOutputStream = new BufferedOutputStream(this.outputStream);
             }
             return this.secureOutputStream;
         } else if (bufferSize == 0) {
+            // Discard secure output stream if it was created before.
+            if (this.secureOutputStream != null) {
+                this.secureOutputStream = null;
+            }
             return this.outputStream;
         } else {
+            // FIXME Triple buffering, anyone?
             this.outputStream = new java.io.BufferedOutputStream(this.outputStream, bufferSize);
             return this.outputStream;
         }
