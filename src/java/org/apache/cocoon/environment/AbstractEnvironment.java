@@ -225,14 +225,24 @@ public abstract class AbstractEnvironment
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
+
+        // This method could be called several times during request processing
+        // with differing values of bufferSize and should handle this situation
+        // correctly.
+
         if (bufferSize == -1) {
             if (this.secureOutputStream == null) {
                 this.secureOutputStream = new BufferedOutputStream(this.outputStream);
             }
             return this.secureOutputStream;
         } else if (bufferSize == 0) {
+            // Discard secure output stream if it was created before.
+            if (this.secureOutputStream != null) {
+                this.secureOutputStream = null;
+            }
             return this.outputStream;
         } else {
+            // FIXME Triple buffering, anyone?
             this.outputStream = new java.io.BufferedOutputStream(this.outputStream, bufferSize);
             return this.outputStream;
         }
