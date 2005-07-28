@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This abstract class provides default implementation of the methods specified
@@ -30,15 +31,17 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public abstract class AbstractXMLProducer extends AbstractLogEnabled
                                           implements XMLProducer, Recyclable {
+    
+    protected static final ContentHandler EMPTY_CONTENT_HANDLER = new DefaultHandler();
 
     /** The <code>XMLConsumer</code> receiving SAX events. */
     protected XMLConsumer xmlConsumer;
 
     /** The <code>ContentHandler</code> receiving SAX events. */
-    protected ContentHandler contentHandler;
+    protected ContentHandler contentHandler = EMPTY_CONTENT_HANDLER;
 
     /** The <code>LexicalHandler</code> receiving SAX events. */
-    protected LexicalHandler lexicalHandler;
+    protected LexicalHandler lexicalHandler = DefaultLexicalHandler.NULL_HANDLER;
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
@@ -73,11 +76,12 @@ public abstract class AbstractXMLProducer extends AbstractLogEnabled
     }
 
     /**
-     * Recycle the producer by removing references
+     * Recycle the producer by removing references, and resetting handlers to
+     * null (empty) implementations.
      */
     public void recycle() {
         this.xmlConsumer = null;
-        this.contentHandler = null;
-        this.lexicalHandler = null;
+        this.contentHandler = EMPTY_CONTENT_HANDLER;
+        this.lexicalHandler = DefaultLexicalHandler.NULL_HANDLER;
     }
 }
