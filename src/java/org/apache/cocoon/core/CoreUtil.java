@@ -758,9 +758,19 @@ public class CoreUtil {
      * of this class (eg. Cocoon Context).
      */
     protected void updateEnvironment() throws Exception {
-        StringBuffer buffer = new StringBuffer(this.env.getClassPath(this.settings));
-        buffer.append(File.pathSeparatorChar).append(this.getExtraClassPath());
-
+        // concatenate the class path and the extra class path
+        String classPath = this.env.getClassPath(this.settings);
+        StringBuffer buffer = new StringBuffer();
+        if ( classPath != null && classPath.length() > 0 ) {
+            buffer.append(classPath);
+        }
+        classPath = this.getExtraClassPath();
+        if ( classPath != null && classPath.length() > 0 ) {
+            if ( buffer.length() > 0 ) {
+                buffer.append(File.pathSeparatorChar);
+            }
+            buffer.append(classPath);
+        }
         this.appContext.put(Constants.CONTEXT_CLASSPATH, buffer.toString());
     }
 
