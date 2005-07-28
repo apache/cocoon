@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix" fixes-bug="35618" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
+      Mail block: Allow any of the Cocoon-provided protocols to be used for attachments in SendMailTransformer.
+      This means that "cocoon:" URLs are no more rewritten as external http requests.
+    </action>
     <action dev="CZ" type="add" fixes-bug="35521" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
       Added the create-document source than either generates empty documents or documents containing
       just a root node.

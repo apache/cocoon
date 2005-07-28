@@ -17,7 +17,6 @@ package org.apache.cocoon.mail.transformation;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.StringTokenizer;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.URLDataSource;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -45,6 +43,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.mail.datasource.SourceDataSource;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.Attributes;
@@ -176,7 +175,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <li>No support for smtp user/password
  * <li>No support for different mail servers, first one will always be used
  * </ul></p>
- *
+ * 
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
  * @version CVS $Id$
  */
@@ -256,7 +255,6 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     protected int defaultSmtpPort;
     protected String defaultFromAddress;
 
-    protected boolean useExternalRequests = true;
     protected List    usedSources = new ArrayList();
 
     /**
@@ -275,7 +273,6 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         this.defaultSmtpHost = configuration.getChild("smtphost").getValue("");
         this.defaultSmtpPort = configuration.getChild("smtpport").getValueAsInteger(25);
         this.defaultFromAddress = configuration.getChild("from").getValue("");
-        this.useExternalRequests = configuration.getChild("use-external-requests").getValueAsBoolean(this.useExternalRequests);
     }
 
     /**
@@ -584,40 +581,14 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 Source inputSource = null;
                 DataSource dataSource = null;
 
-                if (aD.isURLSource()) {
-                    inputSource = resolver.resolveURI(aD.strAttrSrc);
-                    this.usedSources.add(inputSource);
+                inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
+                this.usedSources.add(inputSource);
+                
+                dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
 
-                    String iSS = inputSource.getURI();
-                    if (iSS.startsWith("cocoon:") && this.useExternalRequests) {
-                        iSS = iSS.substring(7, iSS.length());
-
-                        if (this.contextPath != null) {
-                            iSS = "http://localhost:" + this.port +
-                                  this.contextPath + iSS;
-                        } else {
-                            iSS = "http://localhost:" + this.port + iSS;
-                        }
-
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("cocoon-URI changed to " + iSS);
-                        }
-
-                        dataSource = new URLDataSource(new URL(iSS));
-                    } else {
-                        dataSource = new URLDataSource(new URL(inputSource.getURI()));
-                    }
-
-                    messageBodyPart.setDataHandler(new DataHandler(dataSource));
-                } else if (aD.isFileSource()) {
-                    inputSource = resolver.resolveURI(aD.strAttrFile);
-                    this.usedSources.add(inputSource);
-                    dataSource  = new URLDataSource(new URL(inputSource.getURI()));
-                    messageBodyPart.setDataHandler(new DataHandler(dataSource));
-                }
+                messageBodyPart.setDataHandler(new DataHandler(dataSource));
             } else {
-                messageBodyPart.setContent(aD.strContent,
-                                           aD.strAttrMimeType);
+                messageBodyPart.setContent(aD.strContent, aD.strAttrMimeType);
             }
 
             messageBodyPart.setFileName(aD.strAttrName);
