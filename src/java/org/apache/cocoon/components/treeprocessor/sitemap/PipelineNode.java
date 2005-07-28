@@ -131,8 +131,12 @@ public class PipelineNode extends AbstractParentProcessingNode
         context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
         try {
             if (this.errorHandlerHelper.isInternal()) {
+                // Set internal error handler in the pipeline
                 context.getProcessingPipeline().setErrorHandler(
                         new SitemapErrorHandler(this.errorHandlerHelper, env, context));
+            } else {
+                // Reset internal error handler (previous pipeline might had set it) 
+                context.getProcessingPipeline().setErrorHandler(null);
             }
 
             if (invokeNodes(children, env, context)) {
