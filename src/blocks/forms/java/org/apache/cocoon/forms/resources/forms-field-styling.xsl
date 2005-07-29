@@ -438,7 +438,7 @@
             <xsl:text>[</xsl:text>
             <xsl:value-of select="fi:value"/>
             <xsl:text>] </xsl:text>
-            <input type="button" id="{@id}-input" name="{@id}-input" value="..." onclick="forms_submitForm(this)"/>
+            <input type="button" id="{@id}-input" name="{@id}" value="..." onclick="forms_submitForm(this)"/>
         </xsl:when>
         <xsl:otherwise>
           <input type="file" id="{@id}-input" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
