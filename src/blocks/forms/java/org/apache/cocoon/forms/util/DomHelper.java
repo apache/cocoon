@@ -25,19 +25,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.util.location.LocationAttributes;
+import org.apache.cocoon.util.location.LocatorToAttributesPipe;
 import org.apache.cocoon.xml.SaxBuffer;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.excalibur.xml.EntityResolver;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.xerces.dom.NodeImpl;
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xerces.xni.Augmentations;
-import org.apache.xerces.xni.NamespaceContext;
-import org.apache.xerces.xni.QName;
-import org.apache.xerces.xni.XMLAttributes;
-import org.apache.xerces.xni.XMLLocator;
-import org.apache.xerces.xni.XNIException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -46,7 +41,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.w3c.dom.UserDataHandler;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotSupportedException;
@@ -74,54 +69,19 @@ public class DomHelper {
      * with the method {@link #parse(InputSource)} of this class.
      */
     public static String getLocation(Element element) {
-        String location = null;
-        if (element instanceof NodeImpl) {
-            location = (String)((NodeImpl)element).getUserData("location");
-        }
-
-        if (location != null) {
-            return location;
-        }
-        return "(location unknown)";
+        return LocationAttributes.getLocationString(element);
     }
     
     public static String getSystemIdLocation(Element element) {
-        String loc = getLocation(element);
-        if (loc.charAt(0) != '(') {
-            int end = loc.lastIndexOf(':');
-            if (end > 0) {
-                int start = loc.lastIndexOf(':', end - 1);
-                if (start >= 0) {
-                    return loc.substring(0, start);
-                }
-            }
-        }
-        return null;
+        return LocationAttributes.getURI(element);
     }
     
     public static int getLineLocation(Element element) {
-        String loc = getLocation(element);
-        if (loc.charAt(0) != '(') {
-            int end = loc.lastIndexOf(':');
-            if (end > 0) {
-                int start = loc.lastIndexOf(':', end - 1);
-                if (start >= 0) {
-                    return Integer.parseInt(loc.substring(start + 1, end));
-                }
-            }
-        }
-        return -1;
+        return LocationAttributes.getLine(element);
     }
 
     public static int getColumnLocation(Element element) {
-        String loc = getLocation(element);
-        if (loc.charAt(0) != '(') {
-            int end = loc.lastIndexOf(':');
-            if (end > 0) {
-                return Integer.parseInt(loc.substring(end));
-            }
-        }
-        return -1;
+        return LocationAttributes.getColumn(element);
     }
 
     /**
@@ -330,75 +290,20 @@ public class DomHelper {
      */
     public static Document parse(InputSource inputSource, ServiceManager manager)
             throws SAXException, SAXNotSupportedException, IOException, ServiceException {
-        DOMParser domParser = new LocationTrackingDOMParser();
-        domParser.setFeature(
-                "http://apache.org/xml/features/dom/defer-node-expansion",
-                false);
-        domParser.setFeature(
-                "http://apache.org/xml/features/dom/create-entity-ref-nodes",
-                false);
         
-        EntityResolver resolver = null;
-        if (manager.hasService(EntityResolver.ROLE)) {
-            resolver = (EntityResolver)manager.lookup(EntityResolver.ROLE);
-            domParser.setEntityResolver(resolver);
-        }
+        SAXParser parser = (SAXParser)manager.lookup(SAXParser.ROLE);
+        DOMBuilder builder = new DOMBuilder();
+        
+        // Enhance the sax stream with location information
+        ContentHandler locationHandler = new LocatorToAttributesPipe(builder);
         
         try {
-            domParser.parse(inputSource);
-            return domParser.getDocument();
+            parser.parse(inputSource, locationHandler);
         } finally {
-            manager.release(resolver);
+            manager.release(parser);
         }
-    }
-
-    /**
-     * An extension of the Xerces DOM parser that puts the location of each
-     * node in that node's UserData.
-     */
-    public static class LocationTrackingDOMParser extends DOMParser {
-        XMLLocator locator;
-
-        public void startDocument(XMLLocator xmlLocator, String s,
-                NamespaceContext namespaceContext,
-                Augmentations augmentations) throws XNIException {
-            super.startDocument(xmlLocator, s, namespaceContext,
-                    augmentations);
-            this.locator = xmlLocator;
-            setLocation();
-        }
-
-        public void startElement(QName qName, XMLAttributes xmlAttributes,
-                Augmentations augmentations) throws XNIException {
-            super.startElement(qName, xmlAttributes, augmentations);
-            setLocation();
-        }
-
-        private final void setLocation() {
-            // Older versions of Xerces had a different signature for the
-            // startDocument method. If such a version is used, the
-            // startDocument method above will not be called and locator will
-            // hence be null.
-            // Tell the users this so that they don't get a stupid NPE.
-            if (this.locator == null) {
-                throw new RuntimeException(
-                        "Error: locator is null. Check that you have the" +
-                        " correct version of Xerces (such as the one that" +
-                        " comes with Cocoon) in your endorsed library path.");
-            }
-            NodeImpl node = null;
-            try {
-                node = (NodeImpl)this.getProperty(
-                        "http://apache.org/xml/properties/dom/current-element-node");
-            } catch (org.xml.sax.SAXException ex) {
-                System.err.println("except" + ex);
-            }
-            if (node != null) {
-                String location = locator.getLiteralSystemId() + ":" +
-                    locator.getLineNumber() + ":" + locator.getColumnNumber();
-                node.setUserData("location", location, (UserDataHandler)null);
-            }
-        }
+        
+        return builder.getDocument();
     }
 
     public static Map getLocalNSDeclarations(Element elm)
