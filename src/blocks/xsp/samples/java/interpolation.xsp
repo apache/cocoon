@@ -22,6 +22,8 @@
   xmlns:xsp-interpolation="http://apache.org/xsp/interpolation/1.0"
   xmlns:xsp="http://apache.org/xsp">
 
+  <xsp:logicsheet location="logicsheets/interpolation.xsl"/>
+
   <page>
     <title>Attribute and Text Interpolation</title>
     <content>
@@ -57,18 +59,22 @@
       </p>
       <!-- Use attributes to disable interpolation in nested content. -->
       <pre xsp:attr-interpolation="false" xsp:text-interpolation="false"><![CDATA[
-        <center style="color:{#color}">Hello {#world}!</center>]]>
+        <center style="color:{#color}">Hello simple {#world}!</center>]]>
       </pre>
-      <center style="color:{#color}">Hello {#world}!</center>
+      <center style="color:{#color}">Hello simple {#world}!</center>
 
       <p>
         to that:
       </p>
       <pre><![CDATA[
-        <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello <xsp:expr>world</xsp:expr>!</center>]]>
+        <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello complex <xsp:expr>world</xsp:expr>!</center>]]>
       </pre>
-      <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello <xsp:expr>world</xsp:expr>!</center>
+      <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello complex <xsp:expr>world</xsp:expr>!</center>
 
+      <p>
+        Interpolation can also be used in logicsheets:
+      </p>
+      <xsp-interpolation:greeting/>
     </content>
   </page>
 

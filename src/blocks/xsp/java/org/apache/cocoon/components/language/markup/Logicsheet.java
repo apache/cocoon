@@ -73,19 +73,28 @@ public class Logicsheet extends AbstractLogEnabled
      */
     private ServiceManager manager;
 
-    public Logicsheet(Source source, ServiceManager manager, SourceResolver resolver)
+    /**
+     * An optional filter to preprocess the logicsheet source code.
+     */
+    private LogicsheetFilter filter;
+
+    public Logicsheet(Source source, ServiceManager manager,
+                      SourceResolver resolver, LogicsheetFilter filter)
         throws SAXException, IOException, ProcessingException
     {
         this.resolver = resolver;
         this.systemId = source.getURI();
         this.manager = manager;
+        this.filter = filter;
     }
 
-    public Logicsheet(String systemId, ServiceManager manager, SourceResolver resolver)
+    public Logicsheet(String systemId, ServiceManager manager,
+                      SourceResolver resolver, LogicsheetFilter filter)
         throws SAXException, IOException, SourceException, ProcessingException
     {
         this.resolver = resolver;
         this.manager = manager;
+        this.filter = filter;
         Source source = null;
         try {
             source = this.resolver.resolveURI( systemId );
@@ -155,8 +164,8 @@ public class Logicsheet extends AbstractLogEnabled
             // getTransformerHandler() of XSLTProcessor will simply return
             // the old template object. If the Source is unchanged, the
             // namespaces are not modified either.
-            XMLFilter saveNSFilter = new SaveNamespaceFilter(namespaceURIs);
-            return xsltProcessor.getTransformerHandler(source, saveNSFilter);
+            filter.setNamespaceMap(namespaceURIs);
+            return xsltProcessor.getTransformerHandler(source, filter);
 
         } catch (ServiceException e) {
             throw new ProcessingException("Could not obtain XSLT processor", e);
@@ -172,49 +181,6 @@ public class Logicsheet extends AbstractLogEnabled
             this.manager.release(xsltProcessor);
             // Release used resources
             this.resolver.release( source );
-        }
-    }
-
-    /**
-     * This filter listen for source SAX events, and register the declared
-     * namespaces into a <code>Map</code> object.
-     *
-     * @see org.xml.sax.XMLFilter
-     * @see org.xml.sax.ContentHandler
-     */
-    protected static class SaveNamespaceFilter extends XMLFilterImpl {
-        private Map originalNamepaceURIs;
-
-        /**
-         * The contructor needs an initialized <code>Map</code> object where it
-         * can store the found namespace declarations.
-         * @param originalNamepaceURIs a initialized <code>Map</code> instance.
-         */
-        public SaveNamespaceFilter(Map originalNamepaceURIs) {
-            this.originalNamepaceURIs = originalNamepaceURIs;
-        }
-
-        public void setParent(XMLReader reader) {
-            super.setParent(reader);
-            reader.setContentHandler(this);
-        }
-
-        public void startDocument() throws SAXException {
-            super.startDocument();
-        }
-
-        public void startPrefixMapping(String prefix, String uri)
-            throws SAXException
-        {
-            originalNamepaceURIs.put(uri, prefix);
-            super.startPrefixMapping(prefix, uri);
-        }
-
-        public void startElement (String namespaceURI, String localName,
-                                  String qName, Attributes atts)
-            throws SAXException
-        {
-            super.startElement(namespaceURI, localName, qName, atts);
         }
     }
 }
