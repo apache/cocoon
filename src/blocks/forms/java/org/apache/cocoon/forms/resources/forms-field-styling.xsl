@@ -571,29 +571,29 @@
   </xsl:template>
 
   <xsl:template match="fi:validation-errors">
-    <div id="{@id}">
-      <xsl:variable name="header">
-        <xsl:choose>
-          <xsl:when test="header">
-            <xsl:copy-of select="header"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="footer">
-        <xsl:choose>
-          <xsl:when test="footer">
-            <xsl:copy-of select="footer"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
-      <xsl:if test="$messages">
+    <xsl:variable name="header">
+      <xsl:choose>
+        <xsl:when test="header">
+          <xsl:copy-of select="header"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="footer">
+      <xsl:choose>
+        <xsl:when test="footer">
+          <xsl:copy-of select="footer"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
+    <xsl:if test="$messages">
+      <div class="forms-validation-errors">
         <xsl:copy-of select="$header"/>
         <ul>
           <xsl:for-each select="$messages">
@@ -609,8 +609,8 @@
           </xsl:for-each>
         </ul>
         <xsl:copy-of select="$footer"/>
-      </xsl:if>
-    </div>
+      </div>
+    </xsl:if>
   </xsl:template>
   
   <xsl:template match="fi:union">
