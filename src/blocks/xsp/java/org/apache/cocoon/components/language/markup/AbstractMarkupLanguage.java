@@ -21,7 +21,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -41,6 +40,7 @@ import org.apache.cocoon.util.HashMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -62,8 +62,7 @@ import java.util.Map;
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
-        implements MarkupLanguage, Serviceable, Configurable, Parameterizable,
-                   Recyclable, Disposable
+        implements MarkupLanguage, Serviceable, Configurable, Recyclable, Disposable
 {
     /**
      * Name "attr-interpolation" of boolean attribute to enable
@@ -133,7 +132,18 @@ public abstract class AbstractMarkupLanguage
      */
     public void configure(Configuration conf) throws ConfigurationException {
         try {
-            name = conf.getAttribute("name");
+            this.name = conf.getAttribute("name");
+
+            // Cannot use Parameterizable because parameterize() is called
+            // after configure(), and <xsp-language> param's are already
+            // needed for processing logicsheet definitions.
+            Parameters params = Parameters.fromConfiguration(conf);
+            this.uri = params.getParameter("uri");
+            this.prefix = params.getParameter("prefix", null);
+            this.attrInterpolation =
+                params.getParameterAsBoolean(ATTR_INTERPOLATION, false);
+            this.textInterpolation =
+                params.getParameterAsBoolean(TEXT_INTERPOLATION, false);
 
             // Set up each target-language
             Configuration[] l = conf.getChildren("target-language");
@@ -181,17 +191,19 @@ public abstract class AbstractMarkupLanguage
             String uri = params.getParameter("uri", null);
             String prefix = params.getParameter("prefix", null);
 
-            NamedLogicsheet namedLogicsheet =
-                new NamedLogicsheet(location, manager, resolver);
-            namedLogicsheet.enableLogging(getLogger());
+            NamedLogicsheet namedLogicsheet
+                = new NamedLogicsheet(location, manager,
+                                      resolver, getLogicsheetFilter());
             namedLogicsheet.setURI(uri);
             namedLogicsheet.setPrefix(prefix);
             logicsheet = namedLogicsheet;
         } else {
             String location = params.getParameter("core-logicsheet", null);
-            logicsheet = new Logicsheet(location, manager, resolver);
-            logicsheet.enableLogging(getLogger());
+            logicsheet = new Logicsheet(location, manager,
+                                        resolver, getLogicsheetFilter());
         }
+
+        logicsheet.enableLogging(getLogger());
 
         String logicsheetName = logicsheet.getSystemId();
         logicsheetCache.store(CACHE_PREFIX + logicsheetName, logicsheet);
@@ -231,19 +243,6 @@ public abstract class AbstractMarkupLanguage
         this.resolver = null;
         this.manager = null;
         this.languages.clear();
-    }
-
-    /**
-     * Initialize the (required) markup language namespace definition.
-     * @param params The supplied parameters
-     */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.uri = params.getParameter("uri");
-        this.prefix = params.getParameter("prefix", null);
-        this.attrInterpolation =
-            params.getParameterAsBoolean(ATTR_INTERPOLATION, false);
-        this.textInterpolation =
-            params.getParameterAsBoolean(TEXT_INTERPOLATION, false);
     }
 
     /**
@@ -448,7 +447,8 @@ public abstract class AbstractMarkupLanguage
                 // (per-request) object, yet Logicsheet is being cached and reused
                 // across multiple requests. "Global" url-factory-based resolver
                 // passed to the Logicsheet.
-                logicsheet = new Logicsheet(inputSource, manager, this.resolver);
+                logicsheet = new Logicsheet(inputSource, manager,
+                                            resolver, getLogicsheetFilter());
                 logicsheetCache.store(CACHE_PREFIX + logicsheet.getSystemId(), logicsheet);
             } catch (SourceException se) {
                 throw SourceUtil.handle(se);
@@ -491,6 +491,13 @@ public abstract class AbstractMarkupLanguage
                 }
             }
         }
+    }
+
+    /**
+     * Return the optional filter to prepocess logicsheets.
+     */
+    protected LogicsheetFilter getLogicsheetFilter() {
+        return new LogicsheetFilter();
     }
 
     //

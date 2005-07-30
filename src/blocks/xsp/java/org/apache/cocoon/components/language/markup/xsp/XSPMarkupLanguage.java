@@ -16,12 +16,14 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
+import org.apache.cocoon.components.language.markup.LogicsheetFilter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
 
 import java.util.Stack;
 
@@ -44,12 +46,18 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
     }
 
     /**
+     * Return the filter to preprocess logicsheets expanding {#expr} to
+     * xsp:attribute and xsp:expr elements.
+     */
+    protected LogicsheetFilter getLogicsheetFilter() {
+        return new XSPExpressionFilter(this);
+    }
+
+    /**
      * Prepare the input source for logicsheet processing and code generation
      * with a preprocess filter.
      * The return <code>XMLFilter</code> object is the first filter on the
      * transformer chain.
-     *
-     * Wraps PCDATA nodes with xsp:text nodes.
      *
      * @param filename The source filename
      * @param language The target programming language

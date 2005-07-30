@@ -31,7 +31,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: NamedLogicsheet.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
 public class NamedLogicsheet extends Logicsheet {
 
@@ -45,10 +45,11 @@ public class NamedLogicsheet extends Logicsheet {
      */
     private String prefix;
 
-    public NamedLogicsheet(String systemId, ServiceManager manager, SourceResolver resolver)
+    public NamedLogicsheet(String systemId, ServiceManager manager,
+                           SourceResolver resolver, LogicsheetFilter filter)
         throws IOException, ProcessingException, SourceException, SAXException
     {
-        super(systemId, manager, resolver);
+        super(systemId, manager, resolver, filter);
     }
 
     /**

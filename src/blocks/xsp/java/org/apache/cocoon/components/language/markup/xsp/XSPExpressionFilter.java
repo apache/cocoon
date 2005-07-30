@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
+import org.apache.cocoon.components.language.markup.LogicsheetFilter;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -36,7 +37,9 @@ import java.util.LinkedList;
  *
  * @version SVN $Id$
  */
-public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.Handler {
+public class XSPExpressionFilter
+    extends LogicsheetFilter
+    implements XSPExpressionParser.Handler {
 
     public static class XMLPipeAdapter extends AbstractXMLPipe {
         private XSPExpressionFilter expressionFilter;
@@ -64,23 +67,6 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
         }
     }
 
-    public static class XMLFilterAdapter extends XMLFilterImpl {
-        private XSPExpressionFilter expressionFilter;
-
-        public XMLFilterAdapter(XSPExpressionFilter filter) {
-            this.expressionFilter = filter;
-            super.setContentHandler(filter);
-        }
-
-        public void setParent(XMLReader reader) {
-            super.setParent(reader);
-            reader.setContentHandler(this);
-        }
-
-        public void setContentHandler(ContentHandler contentHandler) {
-            expressionFilter.setContentHandler(contentHandler);
-        }
-    }
 
     /** The markup language URI */
     private String markupURI;
@@ -89,7 +75,10 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
     private String markupPrefix;
 
     /** Interpolation settings as nested properties */
-    private LinkedList interpolationStack;
+    private LinkedList interpolationStack = new LinkedList();
+
+    /** Default interpolation settings for given markup language */
+    private InterpolationSettings defaultInterpolationSettings;
 
     /** The parser for XSP value templates */
     private XSPExpressionParser expressionParser = new XSPExpressionParser(this);
@@ -101,11 +90,9 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
         this.markupPrefix = markup.getPrefix();
 
         // Initialize default interpolation settings.
-        boolean attrInterpolation = markup.hasAttrInterpolation();
-        boolean textInterpolation = markup.hasTextInterpolation();
-        interpolationStack = new LinkedList();
-        interpolationStack.addLast(new InterpolationSettings(attrInterpolation,
-                                                             textInterpolation));
+        defaultInterpolationSettings
+            = new InterpolationSettings(markup.hasAttrInterpolation(),
+                                        markup.hasTextInterpolation());
     }
 
     public void setContentHandler(ContentHandler contentHandler) {
@@ -120,6 +107,8 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
      * @param language
      */
     public void startDocument() throws SAXException {
+        interpolationStack.clear();
+        interpolationStack.addLast(defaultInterpolationSettings);
         contentHandler.startDocument();
     }
 
@@ -195,7 +184,7 @@ public class XSPExpressionFilter implements ContentHandler, XSPExpressionParser.
      */
     private Attributes pushInterpolationStack(Attributes attribs) {
         String valueAttr = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
-        String valueText = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
+        String valueText = attribs.getValue(markupURI, XSPMarkupLanguage.TEXT_INTERPOLATION);
 
         // Neither interpolation flag in attribute list: push tail to stack.
         if (valueAttr == null && valueText == null ) {
