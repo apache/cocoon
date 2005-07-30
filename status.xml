@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="add">
+      XSP block: Implement {#expr} interpolation also for logicsheets.
+    </action>
     <action dev="JH" type="update">
       Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
       block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
