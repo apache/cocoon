@@ -123,8 +123,21 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
         } else if (uri.startsWith("context://")) {
             return this.contextFactory.getSource(uri, params);
         } else {
-            URL baseURL = new URL(base);
-            URL url = new URL(baseURL, uri);
+            // special handling for windows and unix file paths
+            if( uri.length() > 1 && uri.charAt( 1 ) == ':' ) {
+                uri = "file:/" + uri;
+                base = null;
+            } else if( uri.length() > 2 && uri.charAt(0) == '/' && uri.charAt(2) == ':' ) {
+                uri = "file:" + uri;
+                base = null;
+            }
+            URL url;
+            if ( base == null ) {
+                url = new URL(uri);
+            } else {
+                URL baseURL = new URL(base);
+                url = new URL(baseURL, uri);
+            }
             return this.urlFactory.getSource(url.toExternalForm(), params);
         }
     }

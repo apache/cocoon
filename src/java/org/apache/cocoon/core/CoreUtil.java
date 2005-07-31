@@ -243,7 +243,7 @@ public class CoreUtil {
         appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
-        // update settings
+        // update configuration
         final URL u = this.env.getConfigFile(this.settings.getConfiguration());
         this.settings.setConfiguration(u.toExternalForm());
         this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
