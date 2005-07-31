@@ -225,7 +225,7 @@ public class XSPExpressionParser {
      * @param chars The character sequence to parse
      * @throws SAXException If there is an error in the sequence.
      */
-    public void consume(CharSequence chars) throws SAXException {
+    public void consume(String chars) throws SAXException {
         int end = chars.length();
 
         for (int i = 0; i < end; ++i) {
