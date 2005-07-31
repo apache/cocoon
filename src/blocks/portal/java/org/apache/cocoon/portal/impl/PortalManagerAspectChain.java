@@ -25,6 +25,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalManagerAspect;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 
 /**
  * This chain holds all configured aspects for a portal manager.
@@ -37,7 +38,8 @@ public final class PortalManagerAspectChain {
     
     protected List configs = new ArrayList(3);
     
-    public void configure(ServiceSelector     selector,
+    public void configure(ServiceSelector     aspectSelector,
+                          ServiceSelector     adapterSelector,
                           Configuration       conf,
                           PortalManagerAspect endAspect,
                           Parameters          endAspectParameters) 
@@ -46,19 +48,31 @@ public final class PortalManagerAspectChain {
             Configuration[] aspects = conf.getChildren("aspect");
             for(int i=0; i < aspects.length; i++) {
                 final Configuration current = aspects[i];
-                final String role = current.getAttribute("type");
-                if ( selector == null ) {
+                final String role = current.getAttribute("type", null);
+                PortalManagerAspect pAspect;
+                if ( role != null ) {
+                    if ( aspectSelector == null ) {
                     throw new ConfigurationException("No selector for aspects defined.");
                 }
                 try {
-                    PortalManagerAspect pAspect = (PortalManagerAspect) selector.select(role);
-                    this.aspects.add(pAspect);               
-                    Parameters aspectConfiguration = Parameters.fromConfiguration(current);
-                    this.configs.add(aspectConfiguration);
-                    
-                } catch (ServiceException se) {
-                    throw new ConfigurationException("Unable to lookup aspect " + role, se);
+                        pAspect = (PortalManagerAspect) aspectSelector.select(role);                        
+                    } catch (ServiceException se) {
+                        throw new ConfigurationException("Unable to lookup aspect " + role, current, se);
+                    }
+                } else {
+                    final String adapterName = current.getAttribute("adapter", null);
+                    if ( adapterName == null ) {
+                        throw new ConfigurationException("Aspect configuration requires either a type or an adapter attribute.", current);
+                    }
+                    try {
+                        pAspect = (PortalManagerAspect)adapterSelector.select(adapterName);
+                    } catch (ServiceException se) {
+                        throw new ConfigurationException("Unable to lookup coplet adapter " + adapterName, current, se);
+                    }
                 }
+                this.aspects.add(pAspect);               
+                Parameters aspectConfiguration = Parameters.fromConfiguration(current);
+                this.configs.add(aspectConfiguration);       
             }
         }
         this.aspects.add(endAspect);
@@ -73,10 +87,15 @@ public final class PortalManagerAspectChain {
         return this.configs.iterator();
     }
     
-    public void dispose(ServiceSelector selector) {
+    public void dispose(ServiceSelector aspectSelector, ServiceSelector adapterSelector) {
         Iterator i = this.aspects.iterator();
         while (i.hasNext()) {
-            selector.release(i.next()); 
+            final Object component = i.next();
+            if ( component instanceof CopletAdapter ) {
+                adapterSelector.release(component);
+            } else {
+                aspectSelector.release(i.next());
+            }
         }
         this.aspects.clear();
         this.configs.clear();

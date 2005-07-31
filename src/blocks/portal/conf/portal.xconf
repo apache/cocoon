@@ -34,8 +34,7 @@
   <!-- Portal Manager Aspect Configuration -->
   <component class="org.apache.cocoon.components.ExtendedComponentSelector"
              role="org.apache.cocoon.portal.PortalManagerAspectSelector">
-    <!-- This aspect activates the JSR-168 support. -->
-    <aspect logger="portal" name="portlet" class="org.apache.cocoon.portal.impl.PortletPortalManagerAspect"/>
+      <!--  You can add own aspects here. -->
   </component>
 
   <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
@@ -95,7 +94,7 @@
              logger="portal" role="org.apache.cocoon.portal.PortalManager">
     <aspects>
       <!-- JSR-168 support: -->
-      <aspect type="portlet"/>
+      <aspect adapter="portlet"/>
     </aspects>
   </component>
 

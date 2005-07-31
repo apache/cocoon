@@ -36,6 +36,7 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
@@ -62,6 +63,7 @@ public class PortalManagerImpl
     protected PortalManagerAspectChain chain;
 
     protected ServiceSelector aspectSelector;
+    protected ServiceSelector adapterSelector;
 
     /** The component context. */
     protected Context context;
@@ -76,6 +78,7 @@ public class PortalManagerImpl
         if ( this.manager.hasService(PortalManagerAspect.ROLE+"Selector") ) {
             this.aspectSelector = (ServiceSelector) this.manager.lookup( PortalManagerAspect.ROLE+"Selector");
         }
+        this.adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
     }
 
     /**
@@ -87,10 +90,12 @@ public class PortalManagerImpl
             this.portalService = null;
             this.manager = null;
             if ( this.chain != null) {
-                this.chain.dispose( this.aspectSelector );
+                this.chain.dispose( this.aspectSelector, this.adapterSelector );
             }
             this.manager.release( this.aspectSelector );
             this.aspectSelector = null;
+            this.manager.release( this.adapterSelector );
+            this.adapterSelector = null;
             this.manager = null;
         }
     }
@@ -124,7 +129,11 @@ public class PortalManagerImpl
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.chain = new PortalManagerAspectChain();
-        this.chain.configure(this.aspectSelector, conf.getChild("aspects"), this, new Parameters());
+        this.chain.configure(this.aspectSelector, 
+                             this.adapterSelector, 
+                             conf.getChild("aspects"), 
+                             this, 
+                             new Parameters());
     }
 
     /**

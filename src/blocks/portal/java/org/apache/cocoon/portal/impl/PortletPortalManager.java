@@ -17,28 +17,30 @@ package org.apache.cocoon.portal.impl;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.coplet.adapter.impl.PortletAdapter;
 import org.apache.cocoon.util.Deprecation;
 
 /**
  * Extends the PortalManager by initializing Pluto
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @deprecated Use the {@link org.apache.cocoon.portal.impl.PortletPortalManagerAspect}.
+ * @deprecated Use the {@link org.apache.cocoon.portal.coplet.adapter.impl.PortletAdapter}.
  * @version CVS $Id$
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
 	implements Initializable {
 
-    public static final ThreadLocal copletInstanceData = PortletPortalManagerAspect.copletInstanceData;
+    public static ThreadLocal copletInstanceData;
 
     /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
         Deprecation.logger.info("The PortletPortalManager is deprecated. Please use the PortletPortalManagerAspect instead.");
-        PortletPortalManagerAspect aspect = (PortletPortalManagerAspect)this.aspectSelector.select("portlet");
+        PortletAdapter aspect = (PortletAdapter)this.adapterSelector.select("portlet");
         this.chain.addAsFirst(aspect, new Parameters());
+        copletInstanceData = aspect.copletInstanceData;
     }
 }
 
