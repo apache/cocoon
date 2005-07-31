@@ -27,6 +27,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.input.AbstractInputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.http.HttpCookie;
+import org.apache.regexp.RE;
 
 /**
  * Input module for cookies. Retrieves the value of the requested cookie.
@@ -78,9 +79,10 @@ public class CookieModule extends AbstractInputModule implements ThreadSafe {
         
         Iterator it = allCookies.values().iterator();
         List matched = new LinkedList();
+        RE regexp = new RE(name);
         while (it.hasNext()) {
             HttpCookie cookie = (HttpCookie) it.next();
-            if (cookie.getName().matches(name)) {
+            if (regexp.match(cookie.getName())) {
                 matched.add(cookie.getValue());
             }
         }
