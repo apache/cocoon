@@ -146,7 +146,7 @@ public class CocoonWrapper {
      * @exception IOException if an error occurs
      */
     private File getConfigurationFile(File dir, String configFile)
-        throws IOException {
+    throws IOException {
         File conf;
         if (configFile == null) {
             conf = tryConfigurationFile(dir + File.separator + Constants.DEFAULT_CONF_FILE);
@@ -169,9 +169,9 @@ public class CocoonWrapper {
             }
         } else {
             conf = new File(configFile);
-            if (!conf.exists()) {
+            if (!conf.canRead()) {
                 conf = new File(dir, configFile);
-                if (!conf.exists()) {
+                if (!conf.canRead()) {
                     conf = null;
                 }
             }
@@ -683,7 +683,7 @@ public class CocoonWrapper {
          * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
          */
         public URL getConfigFile(String configFileName) throws Exception {
-            return new File(this.contextDirectory, configFileName).toURL();
+            return new File(configFileName).toURL();
         }
 
         /**
