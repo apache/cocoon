@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+      Updated hsqldb to 1.8.0.
+    </action>
     <action dev="AN" type="add">
       XSP block: Implement {#expr} interpolation also for logicsheets.
     </action>
