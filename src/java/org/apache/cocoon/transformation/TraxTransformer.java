@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -47,6 +49,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.ExceptionUtils;
+import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.cocoon.util.location.LocatedRuntimeException;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
 
@@ -201,6 +207,32 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
+    
+    private TransformerException transformerException;
+    
+    private ErrorListener errorListener = new ErrorListener() {
+
+        public void warning(TransformerException ex) throws TransformerException {
+            if (getLogger().isWarnEnabled()) {
+                Location loc = ExceptionUtils.getLocation(ex);
+                getLogger().warn("Warning at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
+            }
+        }
+
+        public void error(TransformerException ex) throws TransformerException {
+            if (getLogger().isWarnEnabled()) {
+                Location loc = ExceptionUtils.getLocation(ex);
+                getLogger().error("Error at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
+            }
+        }
+
+        public void fatalError(TransformerException ex) throws TransformerException {
+            // Keep it for later use
+            transformerException = ex;
+            // and rethrow it
+            throw ex;
+        }
+    };
 
     /**
      * Configure this transformer.
@@ -413,6 +445,8 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         final SAXResult result = new SAXResult(consumer);
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
+        
+        this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 
     /**
@@ -567,6 +601,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         this.transformerHandler = null;
         this.transformerValidity = null;
         this.exceptionDuringSetConsumer = null;
+        this.transformerException = null;
         super.recycle();
     }
 
@@ -575,7 +610,30 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
      */
     public void endDocument()
     throws SAXException {
-        super.endDocument();
+        try {
+            super.endDocument();
+        } catch(SAXException se) {
+            // Rethrow
+            throw se;
+        } catch(Exception e) {
+            if (transformerException != null) {
+                // Ignore the fake RuntimeException sent by Xalan
+                Location loc = ExceptionUtils.getLocation(transformerException);
+                if (loc == null) {
+                    // No location: if it's just a wrapper, consider only the wrapped exception.
+                    Throwable realEx = transformerException.getCause();
+                    if (realEx == null) realEx = transformerException;
+                    
+                    // Now throw an exception locating the current stylesheet
+                    throw new LocatedRuntimeException("Error during transformation", realEx, new Location(this.inputSource.getURI()));
+                } else {
+                    throw new SAXException(transformerException);
+                }
+            } else {
+                // It's not a fake exception
+                throw new SAXException(e);
+            }
+        }
         this.finishedDocument = true;
     }
     

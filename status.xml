@@ -196,6 +196,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix">
+      Add a specific ErrorListener in TraxTransformer to track exceptions raised during XSLT transformations.
+      This allows this transformer to throw the exception that actually occured, rather than a useless RuntimeException
+      as reported by Xalan.
+    </action>
     <action dev="AN" type="add">
       XSP block: Extend {#expr} interpolation parser to understand {}, "}", '}'
       as not being the closing brace.
