@@ -56,7 +56,7 @@
     an http request or an internal cocoon pipeline request.
    </p>
    <p>
-    Another exsample is the JSR-168 coplet type. This type allows to use JSR-168
+    Another example is the JSR-168 coplet type. This type allows to use JSR-168
     compliant portlets for fetching the content. So let's start with the coplet
     types:
    </p>
@@ -64,7 +64,7 @@
     <p>
      Before you can define your available coplets, you have to define the
      available coplet types, or the so called coplet base data. The current
-     exsample contains an XML document for this (the file is in the
+     example contains an XML document for this (the file is in the
      profiles/copletbasedata directory and is called portlal.xml). This is
      an excerpt from the file:
    </p>
@@ -197,7 +197,7 @@
 ...]]>
    </source>
    <p>
-    As you can see in the exsample above, there is no real difference in configuring
+    As you can see in the example above, there is no real difference in configuring
     a coplet type (base data) and a coplet class (coplet data) apart that the first
     one uses the element name <em>configuration</em> and the last one uses 
     <em>attribute</em>.
