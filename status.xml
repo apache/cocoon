@@ -512,6 +512,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+      Updated hsqldb to 1.8.0.
+    </action>
     <action dev="SW" type="add">
       New org.apache.cocoon.util.location package, providing utilities to track locations in XML documents and
       the objects built from these documents.
