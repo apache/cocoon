@@ -75,6 +75,52 @@
         Interpolation can also be used in logicsheets:
       </p>
       <xsp-interpolation:greeting/>
+
+      <p>
+        The XSP expression parser understands nested braces,
+        single and double quoted strings, and backslash-escaped
+        quotes and apostrophes.
+      </p>
+      <table border="1">
+        <tr>
+          <th>Expression</th>
+          <th>Result</th>
+          <th>Expected</th>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#new String[]{}.length}
+          </td>
+          <td>
+            {#new String[]{}.length}
+          </td>
+          <td>
+            0
+          </td>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#new String[]{"}"}.length}
+          </td>
+          <td>
+            {#new String[]{"}"}.length}
+          </td>
+          <td>
+            1
+          </td>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#"'\"}".indexOf('}')}
+          </td>
+          <td>
+            {#"'\"}".indexOf('}')}
+          </td>
+          <td>
+            2
+          </td>
+        </tr>
+      </table>
     </content>
   </page>
 

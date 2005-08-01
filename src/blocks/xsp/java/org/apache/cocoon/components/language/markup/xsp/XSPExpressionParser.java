@@ -24,7 +24,12 @@ import org.xml.sax.SAXException;
  * expanded by the
  * {@link org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage.PreProcessFilter PreProcessFilter}
  * and have the form {#expression}. To prevent interpolation, use {##quote}, which results in the
- * text {#quote}. Inside expressions, to quote '}' write "#}" and to quote '#' write "##".
+ * text {#quote}.
+ * An exception is thrown if the closing brace is missing.
+ * <p>
+ * The parser has a rudimentary understanding of expressions concerning
+ * nested braces and braces inside quoted strings and character constants.
+ * All valid Java, Javascript, and Python expressions can be used.
  * <p>
  * Example: &lt;h1&gt;Hello {#user.getName()}&lt;/h1&gt; &lt;img or
  * src=&quot;image_{#image.getId()}&quot;/&gt;
@@ -63,14 +68,47 @@ public class XSPExpressionParser {
          * @throws SAXException It is illegal to finish processing in this state.
          */
         public void done(XSPExpressionParser parser) throws SAXException {
-            throw new SAXException("Illegal XSP expression.");
+            throw new SAXException("Incomplete XSP expression {#"+parser.getExpression());
+        }
+    }
+
+    /**
+     * Parser state in a quoted string.
+     */
+    protected static class QuotedState extends State {
+        private final char quote;
+
+        /**
+         * Create state to process quotes strings.
+         *
+         * @param quote The quote character to delimit strings
+         */
+        public QuotedState(char quote) {
+            this.quote = quote;
+        }
+
+        /**
+         * Consume the next character
+         * 
+         * @param parser The parser
+         * @param ch The character to consume
+         * @throws SAXException If there is an error in the expression
+         */
+        public void consume(XSPExpressionParser parser, char ch) throws SAXException {
+            parser.append(ch);
+            if (ch == quote && !parser.isEscaped())
+                parser.setState(EXPRESSION_STATE);
+            else if (ch == '\\')
+                parser.setEscaped(!parser.isEscaped());
+            else
+                parser.setEscaped(false);
         }
     }
 
     /**
      * The parser is parsing text.
      */
-    protected static State TEXT_STATE = new State() {
+    protected static final State TEXT_STATE = new State() {
         public void consume(XSPExpressionParser parser, char ch) throws SAXException {
             switch (ch) {
                 case '{':
@@ -95,7 +133,7 @@ public class XSPExpressionParser {
     /**
      * The parser has encountered '{' in <code>{@link TEXT_STATE}</code>.
      */
-    protected static State LBRACE_STATE = new State() {
+    protected static final State LBRACE_STATE = new State() {
         public void consume(XSPExpressionParser parser, char ch) throws SAXException {
             switch (ch) {
                 case '#':
@@ -124,7 +162,7 @@ public class XSPExpressionParser {
     /**
      * The parser has encountered '#' in <code>{@link LBRACE_STATE}</code>.
      */
-    protected static State TEXT_HASH_STATE = new State() {
+    protected static final State TEXT_HASH_STATE = new State() {
         public void consume(XSPExpressionParser parser, char ch) throws SAXException {
             switch (ch) {
                 case '#':
@@ -135,8 +173,9 @@ public class XSPExpressionParser {
 
                 default:
                     parser.handleText();
-                    parser.append(ch);
+                    parser.initExpression();
                     parser.setState(EXPRESSION_STATE);
+                    EXPRESSION_STATE.consume(parser, ch);
             }
         }
     };
@@ -144,16 +183,37 @@ public class XSPExpressionParser {
     /**
      * The parser is parsing an expression.
      */
-    protected static State EXPRESSION_STATE = new State() {
+    protected static final State EXPRESSION_STATE = new State() {
         public void consume(XSPExpressionParser parser, char ch) throws SAXException {
             switch (ch) {
-                case '}':
-                    parser.handleExpression();
-                    parser.setState(TEXT_STATE);
+                case '{':
+                    parser.incrNesting();
+                    parser.append(ch);
                     break;
 
-                case '#':
-                    parser.setState(EXPRESSION_HASH_STATE);
+                case '}':
+                    if (parser.decrNesting() > 0) {
+                        parser.append(ch);
+                    }
+                    else {
+                        parser.handleExpression();
+                        parser.setState(TEXT_STATE);
+                    }
+                    break;
+
+                case '"':
+                    parser.append(ch);
+                    parser.setState(EXPRESSION_STRING_STATE);
+                    break;
+
+                case '\'':
+                    parser.append(ch);
+                    parser.setState(EXPRESSION_CHAR_STATE);
+                    break;
+
+                case '´':
+                    parser.append(ch);
+                    parser.setState(EXPRESSION_SHELL_STATE);
                     break;
 
                 default:
@@ -163,31 +223,37 @@ public class XSPExpressionParser {
     };
 
     /**
-     * The parser has encountered '#' in <code>{@link EXPRESSION_STATE}</code>.
+     * The parser has encountered '"' in <code>{@link EXPRESSION_STATE}</code>
+     * to start a string constant.
      */
-    protected static State EXPRESSION_HASH_STATE = new State() {
-        public void consume(XSPExpressionParser parser, char ch) throws SAXException {
-            switch (ch) {
-                case '}':
-                    parser.append('}');
-                    parser.setState(EXPRESSION_STATE);
-                    break;
+    protected static final State EXPRESSION_STRING_STATE = new QuotedState('"');
 
-                case '#':
-                    parser.append('#');
-                    parser.setState(EXPRESSION_STATE);
-                    break;
+    /**
+     * The parser has encountered '\'' in <code>{@link EXPRESSION_STATE}</code>
+     * to start a character constant.
+     */
+    protected static final State EXPRESSION_CHAR_STATE = new QuotedState('\'');
 
-                default:
-                    throw new SAXException("Illegal character '" + ch + "' after '#' in expression.");
-            }
-        }
-    };
+    /**
+     * The parser has encountered '´' in <code>{@link EXPRESSION_STATE}</code>
+     * to start a Python string constant.
+     */
+    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('´');
 
     /**
      * The parser state
      */
     private State state = TEXT_STATE;
+
+    /**
+     * The nesting level of braces.
+     */
+    private int nesting = 0;
+
+    /**
+     * Flag whether previous character was a backslash to escape quotes.
+     */
+    private boolean escaped = false;
 
     /**
      * The handler for parsed text and expression fragments.
@@ -268,6 +334,31 @@ public class XSPExpressionParser {
 
     protected void setState(State state) {
         this.state = state;
+    }
+
+    protected void initExpression() {
+        nesting = 1;
+        escaped = false;
+    }
+
+    protected void incrNesting() {
+        nesting++;
+    }
+
+    protected int decrNesting() {
+        return --nesting;
+    }
+
+    protected void setEscaped(boolean escaped) {
+        this.escaped = escaped;
+    }
+
+    protected boolean isEscaped() {
+        return escaped;
+    }
+
+    protected String getExpression() {
+        return new String(buf, 0, bufSize);
     }
 
     protected void handleText() throws SAXException {
