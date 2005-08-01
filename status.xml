@@ -198,6 +198,12 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="AN" type="add">
+      XSP block: Extend {#expr} interpolation parser to understand {}, "}", '}'
+      as not being the closing brace.
+      The previously implemented mechanism #} to escape braces within the
+      statement is no longer supported.
+    </action>
+    <action dev="AN" type="add">
       XSP block: Implement {#expr} interpolation also for logicsheets.
     </action>
     <action dev="JH" type="update">
