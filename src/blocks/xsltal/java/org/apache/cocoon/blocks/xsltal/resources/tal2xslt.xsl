@@ -25,7 +25,14 @@
   http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=112196402613727&w=2
 -->
 
-<xsl:stylesheet version="1.0"  xmlns:metal="http://xml.zope.org/namespaces/metal" xmlns:bxf="http://bitflux.org/functions" xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xslout="whatever" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:func="http://exslt.org/functions" extension-element-prefixes="func">
+<xsl:stylesheet version="1.0"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:bxf="http://bitflux.org/functions"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xslout="whatever"
+    xmlns:func="http://exslt.org/functions"
+    extension-element-prefixes="func">
 
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
     <func:function name="bxf:tales">
@@ -39,10 +46,16 @@
             </xsl:otherwise>
         </xsl:choose>
     </func:function>
-
     <xsl:template match="/">
-        <xslout:stylesheet version="1.0" exclude-result-prefixes="xhtml bxf tal">
-            <xslout:output encoding="utf-8" method="xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+        <xslout:stylesheet version="1.0" exclude-result-prefixes="bxf tal metal">
+            <xsl:choose>
+              <xsl:when test="local-name(/node()) = 'html'">
+                <xslout:output encoding="utf-8" method="xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xslout:output encoding="utf-8" method="xml"/>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:apply-templates select="//*[@tal:include]" mode="init"/>
             <xsl:apply-templates select="//*[@tal:match]" mode="init"/>
             <xsl:apply-templates select="//*[@metal:use-macro]" mode="init"/>
@@ -112,15 +125,15 @@
 
 
     <xsl:template match="*[@tal:repeat]">
-        <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <xsl:variable name="v" select="substring-before(@tal:repeat,' ')"/>
-            <xsl:variable name="x" select="substring-after(@tal:repeat,' ')"/>
-            <xslout:for-each select="{bxf:tales($x)}">
-                <xslout:variable name="{$v}" select="."/>
+        <xsl:variable name="v" select="substring-before(@tal:repeat,' ')"/>
+        <xsl:variable name="x" select="substring-after(@tal:repeat,' ')"/>
+        <xslout:for-each select="{bxf:tales($x)}">
+            <xslout:variable name="{$v}" select="."/>
+            <xsl:copy>
+                <xsl:apply-templates select="@*"/>
                 <xsl:apply-templates/>
-            </xslout:for-each>
-        </xsl:copy>
+            </xsl:copy>
+        </xslout:for-each>
     </xsl:template>
 
     <xsl:template match="@*">
@@ -183,6 +196,9 @@
             </xsl:when>
             <xsl:when test="$mode = 'text'">
                 <xslout:value-of select="{bxf:tales($spath)}"/>
+            </xsl:when>
+            <xsl:when test="$mode = 'text-escaped'">
+                <xslout:value-of select="{bxf:tales($spath)}" disable-output-escaping="yes"/>
             </xsl:when>
             <xsl:when test="$path = 'structure .'">
                 <xslout:copy>
