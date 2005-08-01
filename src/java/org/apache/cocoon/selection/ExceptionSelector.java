@@ -23,7 +23,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.cocoon.util.ExceptionUtils;
 
 /**
  * In a &lt;map:handle-errors>, selects depending on the exception that caused the error.

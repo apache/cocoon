@@ -48,9 +48,6 @@ public class LocationAttributes {
     /** Attribute qualified name for the column number */
     public static final String Q_COL_ATTR  = "loc:column";
     
-    /** Value returned when location is unknown */
-    public static final String UNKNOWN_LOCATION = "[unknown location]";
-    
     // Private constructor, we only have static methods
     private LocationAttributes() {
         // Nothing
@@ -79,18 +76,34 @@ public class LocationAttributes {
         
         return newAttrs;
     }
-
+    
     /**
-     * Returns the location of an element (SAX flavor).
+     * Returns the {@link Location} of an element (SAX flavor).
      * 
      * @param attrs the element's attributes that hold the location information
-     * @return a location string of type "<code>foo.xml:10:80</code>" or
-     *        "<code>[unknown location]</code>" if <code>attrs</code> has no location information.
+     * @return a {@link Location} object
+     */
+    public static Location getLocation(Attributes attrs) {
+        String src = attrs.getValue(URI, SRC_ATTR);
+        if (src == null) {
+            return Location.UNKNOWN;
+        }
+        
+        return new Location(src, getLine(attrs), getColumn(attrs));
+    }
+
+    /**
+     * Returns the location of an element (SAX flavor). If the location is to be kept
+     * into an object built from this element, consider using {@link #getLocation(Attributes)}
+     * and the {@link Locatable} interface.
+     * 
+     * @param attrs the element's attributes that hold the location information
+     * @return a location string as defined by {@link Location#toString()}.
      */
     public static String getLocationString(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
         if (src == null) {
-            return UNKNOWN_LOCATION;
+            return Location.UNKNOWN_STRING;
         }
         
         return src + ":" + attrs.getValue(URI, LINE_ATTR) + ":" + attrs.getValue(URI, COL_ATTR);
@@ -105,7 +118,7 @@ public class LocationAttributes {
      */
     public static String getURI(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
-        return src != null ? src : UNKNOWN_LOCATION;
+        return src != null ? src : Location.UNKNOWN_STRING;
     }
     
     /**
@@ -133,16 +146,32 @@ public class LocationAttributes {
     }
     
     /**
+     * Returns the {@link Location} of an element (DOM flavor).
+     * 
+     * @param attrs the element that holds the location information
+     * @return a {@link Location} object
+     */
+    public static Location getLocation(Element elem) {
+        Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
+        if (srcAttr == null) {
+            return Location.UNKNOWN;
+        }
+        
+        return new Location(srcAttr.getValue(), getLine(elem), getColumn(elem));
+    }
+
+    /**
      * Returns the location of an element that has been processed by this pipe (DOM flavor).
+     * If the location is to be kept into an object built from this element, consider using
+     * {@link #getLocation(Element)} and the {@link Locatable} interface.
      * 
      * @param elem the element that holds the location information
-     * @return a location string of type "<code>foo.xml:10:80</code>" or
-     *        "<code>[unknown location]</code>" if <code>attrs</code> has no location information.
+     * @return a location string as defined by {@link Location#toString()}.
      */
     public static String getLocationString(Element elem) {
         Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
         if (srcAttr == null) {
-            return UNKNOWN_LOCATION;
+            return Location.UNKNOWN_STRING;
         }
         
         return srcAttr.getValue() + ":" + elem.getAttributeNS(URI, LINE_ATTR) + ":" + elem.getAttributeNS(URI, COL_ATTR);
@@ -157,7 +186,7 @@ public class LocationAttributes {
      */
     public static String getURI(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, SRC_ATTR);
-        return attr != null ? attr.getValue() : UNKNOWN_LOCATION;
+        return attr != null ? attr.getValue() : Location.UNKNOWN_STRING;
     }
 
     /**

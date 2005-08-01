@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -27,11 +28,12 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.location.Location;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.8 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
@@ -117,7 +119,12 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
 
         if (! context.isBuildingPipelineOnly()) {
             // Process pipeline
-            return pipeline.process(env);
+            try {
+                return pipeline.process(env);
+            } catch(Exception e) {
+                // Indicate error location
+                throw new ProcessingException("Sitemap: error during pipeline execution", e, Location.parse(getLocation()));
+            }
 
         } else {
             // Return true : pipeline is finished.

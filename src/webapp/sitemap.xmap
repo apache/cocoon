@@ -74,9 +74,11 @@
     <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-max="16" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="content" logger="sitemap.generator.status" name="status" pool-max="16" src="org.apache.cocoon.generation.StatusGenerator"/>
     <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-max="16" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
-    <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
-         representation of the exception that caused the error handler to be executed -->
+    <!-- The notifying generator can only be used in a <handle-errors> section -->
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
+    <!-- The exception generator can only be used in a <handle-errors> section : it produces an XML
+         representation of the exception that caused the error handler to be executed -->
+    <map:generator name="exception" src="org.apache.cocoon.generation.ExceptionGenerator"/>
   </map:generators>
 
 
@@ -676,27 +678,30 @@
       <map:select type="exception">
 
         <map:when test="not-found">
-          <map:generate type="notifying"/>
-          <map:transform src="stylesheets/system/error2html.xslt">
+          <map:generate type="exception"/>
+          <map:transform src="stylesheets/system/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="realPath" value="{realpath:}"/>
             <map:parameter name="pageTitle" value="Resource not found"/>
           </map:transform>
           <map:serialize status-code="404"/>
         </map:when>
 
         <map:when test="invalid-continuation">
-          <map:generate type="notifying"/>
-          <map:transform src="stylesheets/system/error2html.xslt">
+          <map:generate type="exception"/>
+          <map:transform src="stylesheets/system/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="realPath" value="{realpath:}"/>
             <map:parameter name="pageTitle" value="Invalid Continuation"/>
           </map:transform>
           <map:serialize status-code="404"/>
         </map:when>
 
         <map:otherwise>
-          <map:generate type="notifying"/>
-          <map:transform src="stylesheets/system/error2html.xslt">
+          <map:generate type="exception"/>
+          <map:transform src="stylesheets/system/exception2html.xslt">
             <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="realPath" value="{realpath:}"/>
           </map:transform>
           <map:serialize status-code="500"/>
         </map:otherwise>

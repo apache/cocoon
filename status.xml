@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="add">
+      Added Cocoon stacktraces. This is based on location classes in the new org.apache.cocoon.util.location package
+      and a refactoring of the exception management to attach locations to exceptions.
+    </action>
     <action dev="AG" type="update">
       Updated hsqldb to 1.8.0.
     </action>

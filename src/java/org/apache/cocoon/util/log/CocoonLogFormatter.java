@@ -20,9 +20,9 @@ import org.apache.avalon.framework.logger.LogKitLogger;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.ExceptionUtils;
 
 import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
 import org.apache.log.Logger;
