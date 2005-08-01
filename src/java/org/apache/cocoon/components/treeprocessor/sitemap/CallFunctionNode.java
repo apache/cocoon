@@ -35,6 +35,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.location.Location;
 
 /**
  * Node handler for calling functions and resuming continuations in
@@ -120,10 +121,13 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         // the function call, so we invoke it here.
         String continuation = continuationId.resolve(context, env.getObjectModel());
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, params, redirector);
+            try {
+                interpreter.handleContinuation(continuation, params, redirector);
+            } catch(Exception e) {
+                throw new ProcessingException("Sitemap: error calling continuation", e, Location.parse(getLocation()));
+            }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call continuation> did not send a response, at " +
-                                              getLocation());
+                throw new ProcessingException("Sitemap: <map:call continuation> did not send a response", Location.parse(getLocation()));
             }
             return true;
         }
@@ -132,15 +136,18 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         // the specified function
         String name = functionName.resolve(context, env.getObjectModel());
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, params, redirector);
+            try {
+                interpreter.callFunction(name, params, redirector);
+            } catch(Exception e) {
+                throw new ProcessingException("Sitemap: error calling function '" + name + "'", e, Location.parse(getLocation()));
+            }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call function> did not send a response, at " +
-                                              getLocation());
+                throw new ProcessingException("Sitemap: <map:call function> did not send a response", Location.parse(getLocation()));
             }
             return true;
         }
 
         // Found neither continuation nor function to call
-        throw new ProcessingException("No function nor continuation given in <map:call function> at " + getLocation());
+        throw new ProcessingException("Sitemap: no function nor continuation given in <map:call function>", Location.parse(getLocation()));
     }
 }

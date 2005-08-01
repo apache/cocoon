@@ -20,7 +20,7 @@ package org.apache.cocoon;
  * due to a connection reset by peer.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: ConnectionResetException.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ConnectionResetException extends ProcessingException {
 
@@ -30,7 +30,7 @@ public class ConnectionResetException extends ProcessingException {
      * @param message a <code>String</code> value
      */
     public ConnectionResetException(String message) {
-        super(message, null);
+        super(message);
     }
 
     /**

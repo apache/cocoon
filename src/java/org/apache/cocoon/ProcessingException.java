@@ -15,14 +15,17 @@
  */
 package org.apache.cocoon;
 
-import org.apache.avalon.framework.CascadingException;
-
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-import org.xml.sax.SAXParseException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.SourceLocator;
+import javax.xml.transform.TransformerException;
+
+import org.apache.avalon.framework.CascadingException;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.LocatedException;
+import org.apache.cocoon.util.location.Location;
+import org.xml.sax.SAXParseException;
 
 /**
  * This Exception is thrown every time there is a problem in processing
@@ -30,15 +33,15 @@ import javax.xml.transform.SourceLocator;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: ProcessingException.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class ProcessingException extends CascadingException {
-    
+public class ProcessingException extends LocatedException {
+
     /**
      * Construct a new <code>ProcessingException</code> instance.
      */
     public ProcessingException(String message) {
-        super(message, null);
+        super(message);
     }
     
     /**
@@ -58,71 +61,79 @@ public class ProcessingException extends CascadingException {
         super(message, t);
     }
     
-    public String toString() {
-        StringBuffer s = new StringBuffer();
-        s.append(super.toString());
-        final Throwable t = getCause();
-        if(t!=null) {
-            s.append(": ");
-            // be more verbose try to get location info
-            s.append( extraInfo(t) );
-            s.append(t.toString());
-        }
-        return s.toString();
+    public ProcessingException(String message, Location location) {
+        super(message, location);
     }
     
-    /**
-     * Examine Throwable and try to figure out location information.
-     * <p>
-     *   At the moment only SAXParseException, and TransformerException
-     *   are considered.
-     * </p>
-     *
-     * @return String containing location information of the format
-     *  <code>{file-name}:{line}:{column}:</code>, if no location info is 
-     *  available return empty string
-     */
-    private String extraInfo( Throwable t ) {
-        StringBuffer sb = new StringBuffer();
-        if (t instanceof SAXParseException) {
-            SAXParseException spe = (SAXParseException)t;
-            sb.append( String.valueOf(spe.getSystemId()));
-            sb.append( ":" );
-            sb.append( String.valueOf(spe.getLineNumber()));
-            sb.append( ":" );
-            sb.append( String.valueOf(spe.getColumnNumber()));
-            sb.append( ":" );
-        } else if (t instanceof TransformerException) {
-            TransformerException transformerException = (TransformerException) t;
-            SourceLocator sourceLocator = transformerException.getLocator();
-            
-            if( null != sourceLocator ) {
-                sb.append( String.valueOf(sourceLocator.getSystemId()));
-                sb.append( ":" );
-                sb.append( String.valueOf(sourceLocator.getLineNumber()));
-                sb.append( ":" );
-                sb.append( String.valueOf(sourceLocator.getColumnNumber()));
-                sb.append( ":" );
-            }
-        }
-        return sb.toString();
+    public ProcessingException(String message, Throwable t, Location location) {
+        super(message, t, location);
     }
     
-    public void printStackTrace() {
-        super.printStackTrace();
-        if(getCause()!=null)
-            getCause().printStackTrace();
-    }
-    
-    public void printStackTrace( PrintStream s ) {
-        super.printStackTrace(s);
-        if(getCause()!=null)
-            getCause().printStackTrace(s);
-    }
-    
-    public void printStackTrace( PrintWriter s ) {
-        super.printStackTrace(s);
-        if(getCause()!=null)
-            getCause().printStackTrace(s);
-    }
+//    public String toString() {
+//        StringBuffer s = new StringBuffer();
+//        s.append(super.toString());
+//        final Throwable t = getCause();
+//        if(t!=null) {
+//            s.append(": ");
+//            // be more verbose try to get location info
+//            s.append( extraInfo(t) );
+//            s.append(t.toString());
+//        }
+//        return s.toString();
+//    }
+//    
+//    /**
+//     * Examine Throwable and try to figure out location information.
+//     * <p>
+//     *   At the moment only SAXParseException, and TransformerException
+//     *   are considered.
+//     * </p>
+//     *
+//     * @return String containing location information of the format
+//     *  <code>{file-name}:{line}:{column}:</code>, if no location info is 
+//     *  available return empty string
+//     */
+//    private String extraInfo( Throwable t ) {
+//        StringBuffer sb = new StringBuffer();
+//        if (t instanceof SAXParseException) {
+//            SAXParseException spe = (SAXParseException)t;
+//            sb.append( String.valueOf(spe.getSystemId()));
+//            sb.append( ":" );
+//            sb.append( String.valueOf(spe.getLineNumber()));
+//            sb.append( ":" );
+//            sb.append( String.valueOf(spe.getColumnNumber()));
+//            sb.append( ":" );
+//        } else if (t instanceof TransformerException) {
+//            TransformerException transformerException = (TransformerException) t;
+//            SourceLocator sourceLocator = transformerException.getLocator();
+//            
+//            if( null != sourceLocator ) {
+//                sb.append( String.valueOf(sourceLocator.getSystemId()));
+//                sb.append( ":" );
+//                sb.append( String.valueOf(sourceLocator.getLineNumber()));
+//                sb.append( ":" );
+//                sb.append( String.valueOf(sourceLocator.getColumnNumber()));
+//                sb.append( ":" );
+//            }
+//        }
+//        return sb.toString();
+//    }
+//    
+//    public void printStackTrace() {
+//        super.printStackTrace();
+//        if(getCause()!=null)
+//            getCause().printStackTrace();
+//    }
+//    
+//    public void printStackTrace( PrintStream s ) {
+//        super.printStackTrace(s);
+//        if(getCause()!=null)
+//            getCause().printStackTrace(s);
+//    }
+//    
+//    public void printStackTrace( PrintWriter s ) {
+//        super.printStackTrace(s);
+//        if(getCause()!=null)
+//            getCause().printStackTrace(s);
+//    }
 }

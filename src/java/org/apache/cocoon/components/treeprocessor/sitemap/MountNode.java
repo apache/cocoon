@@ -30,6 +30,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.util.location.Location;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -116,6 +117,10 @@ public class MountNode extends AbstractProcessingNode
                 // Processor will create its own pipelines
                 pipelineWasBuilt = processor.process(env);
             }
+        } catch(Exception e) {
+            // Wrap with our location
+            throw new ProcessingException("Sitemap: error when calling sub-sitemap", e, Location.parse(getLocation()));
+
         } finally {
             // We restore the context only if no pipeline was built. This allows the pipeline
             // environment to be left unchanged when we go back to ancestor processors.
