@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@
 -->
 
 <!--
-  Convert an XSLTAL to an XSLT transform.
+  Convert an XSLTAL template to an XSLT transform.
 
   This was donated by Christian Stocker from bitflux.ch, we're using the same
   stuff than they have but it seems easier to keep our own version of it here.
+
+  More info about this donation at
+  http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=112196402613727&w=2
 -->
 
 <xsl:stylesheet version="1.0"  xmlns:metal="http://xml.zope.org/namespaces/metal" xmlns:bxf="http://bitflux.org/functions" xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xslout="whatever" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:func="http://exslt.org/functions" extension-element-prefixes="func">
