@@ -23,6 +23,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -235,7 +236,7 @@ public class HSSFGenerator extends AbstractGenerator
             case HSSFCell.CELL_TYPE_BLANK:
                 return "";
             case HSSFCell.CELL_TYPE_BOOLEAN:
-                return Boolean.toString(cell.getBooleanCellValue());
+                return BooleanUtils.toStringTrueFalse(cell.getBooleanCellValue());
             case HSSFCell.CELL_TYPE_NUMERIC:
                 return Double.toString(cell.getNumericCellValue());
             case HSSFCell.CELL_TYPE_ERROR:
