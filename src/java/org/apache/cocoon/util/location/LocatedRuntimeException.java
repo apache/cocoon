@@ -15,16 +15,20 @@
  */
 package org.apache.cocoon.util.location;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
- * A cascading and located <code>RuntimeException</code>.
+ * A cascading and located <code>RuntimeException</code>. It is also {@link MultiLocatable} to easily build
+ * stack traces.
  * 
  * @version $Id$
  */
-public class LocatedRuntimeException extends CascadingRuntimeException implements LocatableException {
+public class LocatedRuntimeException extends CascadingRuntimeException implements LocatableException, MultiLocatable {
     
-    private Location location;
+    private List locations;
 
     public LocatedRuntimeException(String message) {
         super(message, null);
@@ -36,16 +40,20 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     
     public LocatedRuntimeException(String message, Location location) {
         super(message, null);
-        this.location = location;
+        addLocation(location);
     }
     
     public LocatedRuntimeException(String message, Throwable thr, Location location) {
         super(message, thr);
-        this.location = location;
+        addLocation(location);
     }
 
     public Location getLocation() {
-        return this.location;
+        return locations == null ? null : (Location)locations.get(0);
+    }
+
+    public List getLocations() {
+        return locations;
     }
 
     public String getRawMessage() {
@@ -53,7 +61,40 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     }
 
     public String getMessage() {
-        return this.location == null ? super.getMessage() :
-            super.getMessage() + " (" + this.location.toString() + ")";
+        if (this.locations == null) {
+            return super.getMessage();
+        }
+
+        // Produce a Java-like stacktrace with locations
+        StringBuffer buf = new StringBuffer(super.getMessage());
+        for (int i = 0; i < locations.size(); i++) {
+            buf.append("\n\tat ").append(locations.get(i));
+        }
+        return buf.toString();
+    }
+    
+    public void addLocation(Location loc) {
+        if (loc == null || loc.equals(Location.UNKNOWN))
+            return;
+
+        if (locations == null) {
+            this.locations = new ArrayList(1); // Start small
+        }
+        locations.add(loc);
+    }
+
+    /**
+     * A convenience method to get a located exception for an existing <code>Throwable</code>.
+     * If the throwable already is {@link MultiLocatable}, the location is added to its location
+     * list. Otherwise, a new <code>LocatedRuntimeException</code> is created.
+     */
+    public static LocatedRuntimeException getLocatedException(String description, Throwable thr, Location location) {
+        if (thr instanceof LocatedRuntimeException) {
+            LocatedRuntimeException re = (LocatedRuntimeException)thr;
+            re.addLocation(location);
+            return re;
+        }
+        
+        return new LocatedRuntimeException(description, thr, location);
     }
 }

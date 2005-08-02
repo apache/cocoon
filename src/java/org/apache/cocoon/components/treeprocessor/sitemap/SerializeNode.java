@@ -123,7 +123,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
                 return pipeline.process(env);
             } catch(Exception e) {
                 // Indicate error location
-                throw new ProcessingException("Sitemap: error during pipeline execution", e, Location.parse(getLocation()));
+                throw ProcessingException.getLocatedException("Sitemap: error during pipeline execution", e, Location.parse(getLocation()));
             }
 
         } else {

@@ -119,7 +119,7 @@ public class MountNode extends AbstractProcessingNode
             }
         } catch(Exception e) {
             // Wrap with our location
-            throw new ProcessingException("Sitemap: error when calling sub-sitemap", e, Location.parse(getLocation()));
+            throw ProcessingException.getLocatedException("Sitemap: error when calling sub-sitemap", e, Location.parse(getLocation()));
 
         } finally {
             // We restore the context only if no pipeline was built. This allows the pipeline

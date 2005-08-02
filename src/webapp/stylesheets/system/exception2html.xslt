@@ -72,16 +72,7 @@
           <div id="locations">
             <xsl:for-each select="ex:locations/*">
               <xsl:sort select="position()" order="descending"/>
-              <p>
-                 <strong>
-                    <xsl:for-each select="str:split(., '&#10;')">
-                       <xsl:if test="normalize-space(.)">
-                         <xsl:value-of select="."/><br/>
-                       </xsl:if>
-                    </xsl:for-each>
-                 </strong>
-                 <xsl:call-template name="dump-location"/>
-              </p>
+              <xsl:apply-templates select="."/>
             </xsl:for-each>
           </div>
         </xsl:if>
@@ -138,6 +129,36 @@
         </p>
       </body>
     </html>
+  </xsl:template>
+
+  <xsl:template match="ex:location">
+       <p>
+          <strong>
+             <xsl:for-each select="str:split(., '&#10;')">
+                <xsl:if test="normalize-space(.)">
+                  <xsl:value-of select="."/>
+                </xsl:if>
+             </xsl:for-each>
+          </strong>
+          <br/>
+          <xsl:call-template name="dump-location"/>
+       </p>
+  </xsl:template>
+  
+  <xsl:template match="ex:location-list">
+     <p>
+        <strong>
+           <xsl:for-each select="str:split(ex:description, '&#10;')">
+              <xsl:if test="normalize-space(.)">
+                <xsl:value-of select="."/>
+              </xsl:if>
+           </xsl:for-each>
+        </strong>
+        <xsl:for-each select="ex:location">
+           <br/>
+           <xsl:call-template name="dump-location"/>
+         </xsl:for-each>
+     </p>
   </xsl:template>
 
   <xsl:template match="ex:stacktrace|ex:full-stacktrace">

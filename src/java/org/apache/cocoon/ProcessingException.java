@@ -15,17 +15,12 @@
  */
 package org.apache.cocoon;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.transform.SourceLocator;
-import javax.xml.transform.TransformerException;
-
-import org.apache.avalon.framework.CascadingException;
-import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.LocatedException;
 import org.apache.cocoon.util.location.Location;
-import org.xml.sax.SAXParseException;
+import org.apache.cocoon.util.location.MultiLocatable;
 
 /**
  * This Exception is thrown every time there is a problem in processing
@@ -35,8 +30,8 @@ import org.xml.sax.SAXParseException;
  *         (Apache Software Foundation)
  * @version CVS $Id$
  */
-public class ProcessingException extends LocatedException {
-
+public class ProcessingException extends LocatedException implements MultiLocatable {
+    
     /**
      * Construct a new <code>ProcessingException</code> instance.
      */
@@ -69,6 +64,17 @@ public class ProcessingException extends LocatedException {
         super(message, t, location);
     }
     
+    public static ProcessingException getLocatedException(String description, Throwable thr, Location location) {
+        if (thr instanceof ProcessingException) {
+            ProcessingException pe = (ProcessingException)thr;
+            pe.addLocation(location);
+            return pe;
+        }
+        
+        return new ProcessingException(description, thr, location);
+    }
+
+
 //    public String toString() {
 //        StringBuffer s = new StringBuffer();
 //        s.append(super.toString());

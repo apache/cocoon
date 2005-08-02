@@ -15,16 +15,20 @@
  */
 package org.apache.cocoon.util.location;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.CascadingException;
 
 /**
- * A cascading and located <code>Exception</code>.
+ * A cascading and located <code>Exception</code>. It is also {@link MultiLocatable} to easily build
+ * stack traces.
  * 
  * @version $Id$
  */
-public class LocatedException extends CascadingException implements LocatableException {
-    
-    private Location location;
+public class LocatedException extends CascadingException implements LocatableException, MultiLocatable {
+
+    private List locations;
 
     public LocatedException(String message) {
         super(message, null);
@@ -36,16 +40,20 @@ public class LocatedException extends CascadingException implements LocatableExc
     
     public LocatedException(String message, Location location) {
         super(message, null);
-        this.location = location;
+        addLocation(location);
     }
     
     public LocatedException(String message, Throwable thr, Location location) {
         super(message, thr);
-        this.location = location;
+        addLocation(location);
     }
 
     public Location getLocation() {
-        return this.location;
+        return locations == null ? null : (Location)locations.get(0);
+    }
+
+    public List getLocations() {
+        return locations;
     }
 
     public String getRawMessage() {
@@ -53,7 +61,25 @@ public class LocatedException extends CascadingException implements LocatableExc
     }
 
     public String getMessage() {
-        return this.location == null ? super.getMessage() :
-            super.getMessage() + " (" + this.location.toString() + ")";
+        if (this.locations == null) {
+            return super.getMessage();
+        }
+
+        // Produce a Java-like stacktrace with locations
+        StringBuffer buf = new StringBuffer(super.getMessage());
+        for (int i = 0; i < locations.size(); i++) {
+            buf.append("\n\tat ").append(locations.get(i));
+        }
+        return buf.toString();
+    }
+    
+    public void addLocation(Location loc) {
+        if (loc == null || loc.equals(Location.UNKNOWN))
+            return;
+
+        if (locations == null) {
+            this.locations = new ArrayList(1); // Start small
+        }
+        locations.add(loc);
     }
 }
