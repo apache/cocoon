@@ -78,6 +78,20 @@ public class LocationAttributes {
     }
     
     /**
+     * Returns the {@link Location} pointed to by a SAX <code>Locator</code>.
+     * 
+     * @param locator the locator (can be null)
+     * @return the location
+     */
+    public static Location getLocation(Locator locator) {
+        if (locator == null || locator.getSystemId() == null) {
+            return Location.UNKNOWN;
+        }
+        
+        return new Location(locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
+    }
+    
+    /**
      * Returns the {@link Location} of an element (SAX flavor).
      * 
      * @param attrs the element's attributes that hold the location information

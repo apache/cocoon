@@ -124,7 +124,7 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
             try {
                 interpreter.handleContinuation(continuation, params, redirector);
             } catch(Exception e) {
-                throw new ProcessingException("Sitemap: error calling continuation", e, Location.parse(getLocation()));
+                throw ProcessingException.getLocatedException("Sitemap: error calling continuation", e, Location.parse(getLocation()));
             }
             if (!redirector.hasRedirected()) {
                 throw new ProcessingException("Sitemap: <map:call continuation> did not send a response", Location.parse(getLocation()));
@@ -139,7 +139,7 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
             try {
                 interpreter.callFunction(name, params, redirector);
             } catch(Exception e) {
-                throw new ProcessingException("Sitemap: error calling function '" + name + "'", e, Location.parse(getLocation()));
+                throw ProcessingException.getLocatedException("Sitemap: error calling function '" + name + "'", e, Location.parse(getLocation()));
             }
             if (!redirector.hasRedirected()) {
                 throw new ProcessingException("Sitemap: <map:call function> did not send a response", Location.parse(getLocation()));
