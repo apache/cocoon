@@ -620,8 +620,13 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
                     Throwable realEx = transformerException.getCause();
                     if (realEx == null) realEx = transformerException;
                     
-                    // Now throw an exception locating the current stylesheet
-                    throw new LocatedRuntimeException("Error during transformation", realEx, new Location(this.inputSource.getURI()));
+                    if (realEx instanceof SAXException) {
+                        // Rethrow
+                        throw (SAXException)realEx;
+                    } else {
+                        // Wrap in a SAXException
+                        throw new SAXException(transformerException);
+                    }
                 } else {
                     throw new SAXException(transformerException);
                 }
