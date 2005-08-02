@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="update">
+      Update Rhino+continuations so that JavaScriptException has the same API as the official 1.6 version. This
+      is allows to access location and nested exceptions for Cocoon stacktraces.
+    </action>
     <action dev="SW" type="fix">
       Add a specific ErrorListener in TraxTransformer to track exceptions raised during XSLT transformations.
       This allows this transformer to throw the exception that actually occured, rather than a useless RuntimeException
