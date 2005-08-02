@@ -19,7 +19,9 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:ex="http://apache.org/cocoon/exception/1.0">
+                xmlns:ex="http://apache.org/cocoon/exception/1.0"
+                xmlns:str="http://exslt.org/strings"
+                extension-element-prefixes="str">
 
   <xsl:param name="contextPath"/>
   <xsl:param name="realPath"/>
@@ -51,7 +53,13 @@
 
         <h1><xsl:value-of select="$pageTitle"/></h1>
         <p class="message">
-          <xsl:value-of select="@class"/>:<br/><xsl:value-of select="ex:message"/>
+          <xsl:value-of select="@class"/>:
+          <xsl:for-each select="str:split(ex:message, '&#10;')">
+             <xsl:if test="normalize-space(.)">
+                <br/>
+                <xsl:value-of select="."/>
+             </xsl:if>
+          </xsl:for-each>
           <xsl:if test="@uri">
              <br/><span style="font-weight: normal"><xsl:call-template name="dump-location"/></span>
           </xsl:if>
@@ -64,8 +72,15 @@
           <div id="locations">
             <xsl:for-each select="ex:locations/*">
               <xsl:sort select="position()" order="descending"/>
-              <p><strong><xsl:value-of select="."/></strong><br/>
-              <xsl:call-template name="dump-location"/>
+              <p>
+                 <strong>
+                    <xsl:for-each select="str:split(., '&#10;')">
+                       <xsl:if test="normalize-space(.)">
+                         <xsl:value-of select="."/><br/>
+                       </xsl:if>
+                    </xsl:for-each>
+                 </strong>
+                 <xsl:call-template name="dump-location"/>
               </p>
             </xsl:for-each>
           </div>

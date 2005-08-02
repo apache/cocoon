@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.util;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Vector;
 
 import javax.xml.transform.SourceLocator;
@@ -35,7 +37,20 @@ import org.xml.sax.SAXParseException;
  * @version $Id$
  */
 public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionUtils {
+    
+    private static Method initCauseMethod;
 
+    static {
+        // Add the method used by Rhino to access wrapped exception, which is not part
+        // of the standard method set of ExceptionUtils.
+        org.apache.commons.lang.exception.ExceptionUtils.addCauseMethodName("getWrappedException");
+        
+        try {
+            initCauseMethod = Throwable.class.getMethod("initCause", new Class[] {Throwable.class});
+        } catch(Exception e) {
+            // Ignore
+        }
+    }
     /**
      * Get the cause of a <code>Throwable</code>
      * 
@@ -43,18 +58,30 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
      * @return <code>thr</code>'s parent, or <code>null</code> if none exists.
      */
     public static final Throwable getCause(Throwable thr) {
-        // Specific case of JavaScriptException, which holds the wrapped exception
-        // in its 'value' property, which ExceptionUtils cannot find
-        if (thr instanceof JavaScriptException) {
-            Object obj = ((JavaScriptException)thr).getValue();
-            if (obj instanceof Throwable) {
-                return (Throwable)obj;
-            } else {
-                return null;
+        Throwable result;
+//        // Specific case of JavaScriptException, which holds the wrapped exception
+//        // in its 'value' property, which ExceptionUtils cannot find
+//        if (thr instanceof JavaScriptException) {
+//            Object obj = ((JavaScriptException)thr).getValue();
+//            if (obj instanceof Throwable) {
+//                result = (Throwable)obj;
+//            } else {
+//                result = null;
+//            }
+//        } else {
+            result = org.apache.commons.lang.exception.ExceptionUtils.getCause(thr);
+//        }
+
+        // Ensure JDK 1.4's exception chaining is properly set up (this should really be done in Commons-Lang).
+        if (result != null && initCauseMethod != null) {
+            try {
+                initCauseMethod.invoke(thr, new Throwable[]{result});
+            } catch (Exception e) {
+                // Ignore
             }
-        } else {
-            return org.apache.commons.lang.exception.ExceptionUtils.getCause(thr);
         }
+        
+        return result;
     }
 
     /**
@@ -112,13 +139,15 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
 
         } else if (thr instanceof JavaScriptException) {
             JavaScriptException ex = (JavaScriptException)thr;
-            Vector stackTrace = ex.getJSStackTrace();
-            if (stackTrace != null) {
-                // see JavaScriptException.getMessage()
-                int i = stackTrace.size() - 1;
-                String sourceName = (String)stackTrace.elementAt(i-2);
-                int lineNum = ((Integer)stackTrace.elementAt(i)).intValue();
-                return new Location(sourceName, lineNum, -1);
+            if (ex.sourceName() != null) {
+                return new Location(ex.sourceName(), ex.lineNumber(), -1);
+//            Vector stackTrace = ex.getJSStackTrace();
+//            if (stackTrace != null) {
+//                // see JavaScriptException.getMessage()
+//                int i = stackTrace.size() - 1;
+//                String sourceName = (String)stackTrace.elementAt(i-2);
+//                int lineNum = ((Integer)stackTrace.elementAt(i)).intValue();
+//                return new Location(sourceName, lineNum, -1);
             } else {
                 return null;
             }
