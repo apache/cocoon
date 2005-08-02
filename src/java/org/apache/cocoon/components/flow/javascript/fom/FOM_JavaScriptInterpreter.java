@@ -711,7 +711,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 Thread.currentThread().getContextClassLoader();
             FOM_Cocoon cocoon = null;
             try {
-                try {
+//                try {
                     setupContext(redirector, context, thrScope);
                     cocoon = (FOM_Cocoon) thrScope.get("cocoon", thrScope);
 
@@ -753,27 +753,27 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
                     thrScope.setLock(true);
                     ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
-                } catch (JavaScriptException ex) {
-                    EvaluatorException ee = Context.reportRuntimeError(
-                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                                                    ex.getMessage()));
-                    Throwable unwrapped = unwrap(ex);
-                    if (unwrapped instanceof ProcessingException) {
-                        throw (ProcessingException) unwrapped;
-                    }
-                    throw new CascadingRuntimeException(ee.getMessage(),
-                                                        unwrapped);
-                } catch (EcmaError ee) {
-                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-                    if (ee.getSourceName() != null) {
-                        Context.reportRuntimeError(msg, ee.getSourceName(),
-                                                   ee.getLineNumber(), ee.getLineSource(),
-                                                   ee.getColumnNumber());
-                    } else {
-                        Context.reportRuntimeError(msg);
-                    }
-                    throw new CascadingRuntimeException(ee.getMessage(), ee);
-                }
+//                } catch (JavaScriptException ex) {
+//                    EvaluatorException ee = Context.reportRuntimeError(
+//                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
+//                                                                                                    ex.getMessage()));
+//                    Throwable unwrapped = unwrap(ex);
+//                    if (unwrapped instanceof ProcessingException) {
+//                        throw (ProcessingException) unwrapped;
+//                    }
+//                    throw new CascadingRuntimeException(ee.getMessage(),
+//                                                        unwrapped);
+//                } catch (EcmaError ee) {
+//                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+//                    if (ee.getSourceName() != null) {
+//                        Context.reportRuntimeError(msg, ee.getSourceName(),
+//                                                   ee.getLineNumber(), ee.getLineSource(),
+//                                                   ee.getColumnNumber());
+//                    } else {
+//                        Context.reportRuntimeError(msg);
+//                    }
+//                    throw new CascadingRuntimeException(ee.getMessage(), ee);
+//                }
             } finally {
                 thrScope.setLock(false);
                 setSessionScope(thrScope);
@@ -839,30 +839,30 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
                                                                        fom_wk.getClassName()));
                 Object[] args = new Object[] {k, fom_wk};
-                try {
+//                try {
                     ScriptableObject.callMethod(cocoon,
                                                 "handleContinuation", args);
-                } catch (JavaScriptException ex) {
-                    EvaluatorException ee = Context.reportRuntimeError(
-                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                                                    ex.getMessage()));
-                    Throwable unwrapped = unwrap(ex);
-                    if (unwrapped instanceof ProcessingException) {
-                        throw (ProcessingException)unwrapped;
-                    }
-                    throw new CascadingRuntimeException(ee.getMessage(),
-                                                        unwrapped);
-                } catch (EcmaError ee) {
-                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-                    if (ee.getSourceName() != null) {
-                        Context.reportRuntimeError(msg, ee.getSourceName(),
-                                                   ee.getLineNumber(), ee.getLineSource(),
-                                                   ee.getColumnNumber());
-                    } else {
-                        Context.reportRuntimeError(msg);
-                    }
-                    throw new CascadingRuntimeException(ee.getMessage(), ee);
-                }
+//                } catch (JavaScriptException ex) {
+//                    EvaluatorException ee = Context.reportRuntimeError(
+//                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
+//                                                                                                    ex.getMessage()));
+//                    Throwable unwrapped = unwrap(ex);
+//                    if (unwrapped instanceof ProcessingException) {
+//                        throw (ProcessingException)unwrapped;
+//                    }
+//                    throw new CascadingRuntimeException(ee.getMessage(),
+//                                                        unwrapped);
+//                } catch (EcmaError ee) {
+//                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+//                    if (ee.getSourceName() != null) {
+//                        Context.reportRuntimeError(msg, ee.getSourceName(),
+//                                                   ee.getLineNumber(), ee.getLineSource(),
+//                                                   ee.getColumnNumber());
+//                    } else {
+//                        Context.reportRuntimeError(msg);
+//                    }
+//                    throw new CascadingRuntimeException(ee.getMessage(), ee);
+//                }
             } finally {
                 kScope.setLock(false);
                 setSessionScope(kScope);
