@@ -196,6 +196,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="BD" type="update">
+      Webapp context is now configurable when starting with the included Jetty webserver. Setting
+      JAVA_OPTIONS=-Dcontext=blah/, for example will make the Cocoon webapp available at
+      /blah/ instead of / which stays the default.
+    </action>
     <action dev="SW" type="update">
       Update Rhino+continuations so that JavaScriptException has the same API as the official 1.6 version. This
       is allows to access location and nested exceptions for Cocoon stacktraces.
