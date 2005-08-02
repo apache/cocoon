@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
@@ -32,13 +36,34 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * the relative contextPath for the sub-bindings of this context
      */
     private final String xpath;
+    
+    /**
+     * The name of a factory class for building intermediate elements. Must implement 
+     * {@link org.apache.commons.jxpath.AbstractFactory}.
+     */
+    private AbstractFactory factory;
 
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
      */
-    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
+    public ContextJXPathBinding(CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.xpath = contextPath;
+    }
+
+    /**
+     * Constructs ContextJXPathBinding for the specified xpath sub-context and optional JXPath factory class.
+     */
+    public ContextJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, String factoryClassName, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
+        this.xpath = contextPath;
+        if (factoryClassName != null) {
+            try {
+                this.factory = (AbstractFactory) ClassUtils.newInstance(factoryClassName);
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Cannot create an instance of " + factoryClassName, e);
+            }
+        }
     }
 
     /**
@@ -64,6 +89,9 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * wrapped in a jxpath context.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        if (this.factory != null) {
+            jxpc.setFactory(this.factory);
+        }
         Pointer ptr = jxpc.getPointer(this.xpath);
         if (ptr.getNode() == null) {
             jxpc.createPath(this.xpath);

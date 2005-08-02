@@ -28,6 +28,12 @@ import org.w3c.dom.Element;
  *   &lt;!-- in here come the nested child bindings on the sub-context --&gt;
  * &lt;/fb:context&gt;
  * </code></pre>
+ * <p>The <code>fb:context</code> element can have an optional <code>factory</code>
+ * attribute, whose value, if present, must be the name of a class extending
+ * {@link org.apache.commons.jxpath.AbstractFactory}. If this attribute is present,
+ * an instance of the named class is registered with the JXPath context and can be used to
+ * create an object corresponding to the path of the <code>fb:context</code> element
+ * upon save, if needed.</p>
  *
  * @version $Id$
  */
@@ -43,10 +49,11 @@ public class ContextJXPathBindingBuilder extends JXPathBindingBuilderBase {
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path");
+            String factory = DomHelper.getAttribute(bindingElm, "factory", null);
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-            ContextJXPathBinding contextBinding = new ContextJXPathBinding(commonAtts, xpath, childBindings);
+            ContextJXPathBinding contextBinding = new ContextJXPathBinding(commonAtts, xpath, factory, childBindings);
             return contextBinding;
         } catch (BindingException e) {
             throw e;
