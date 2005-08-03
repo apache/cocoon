@@ -77,21 +77,22 @@ public class ExceptionGenerator extends AbstractGenerator {
         Throwable current = thr;
         while (current != null) {
             if (current instanceof MultiLocatable) {
-                // Get raw message for LocatableExceptions, message otherwise
-                String message = current instanceof LocatableException ?
-                        ((LocatableException)current).getRawMessage() :
-                        current.getMessage();
-
-                attr.clear();
-                handler.startElement(EXCEPTION_NS, "location-list", "ex:location-list", attr);
-                simpleElement("description", attr, message, handler);
                 List locations = ((MultiLocatable)current).getLocations();
-                for (int i = 0; i < locations.size(); i++) {
+                if (locations != null) {
+                    // Get raw message for LocatableExceptions, message otherwise
+                    String message = current instanceof LocatableException ?
+                            ((LocatableException)current).getRawMessage() :
+                            current.getMessage();
+    
                     attr.clear();
-                    dumpLocation((Location)locations.get(i), attr, null, handler);
+                    handler.startElement(EXCEPTION_NS, "location-list", "ex:location-list", attr);
+                    simpleElement("description", attr, message, handler);
+                    for (int i = 0; i < locations.size(); i++) {
+                        attr.clear();
+                        dumpLocation((Location)locations.get(i), attr, null, handler);
+                    }
+                    handler.endElement(EXCEPTION_NS, "location-list", "ex:location-list");
                 }
-                handler.endElement(EXCEPTION_NS, "location-list", "ex:location-list");
-
             } else {
                 // Not a MultiLocatable
                 loc = ExceptionUtils.getLocation(current);
