@@ -18,6 +18,7 @@ package org.apache.cocoon;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.LocatedException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.MultiLocatable;
