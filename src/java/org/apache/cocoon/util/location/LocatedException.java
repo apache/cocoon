@@ -60,17 +60,30 @@ public class LocatedException extends CascadingException implements LocatableExc
         return super.getMessage();
     }
 
-    public String getMessage() {
-        if (this.locations == null) {
-            return super.getMessage();
+    /**
+     * Standard way of building the message of a {@link LocatableException}, as a Java-like
+     * stack trace of locations.
+     * 
+     * @param message the exception's message, given by <code>super.getMessage()</code> (can be null)
+     * @param locations the location list (can be null)
+     * 
+     * @return the message, or <code>null</code> no message and locations were given.
+     */
+    public static String getMessage(String message, List locations) {
+        if (locations == null || locations.isEmpty()) {
+            return message;
         }
 
         // Produce a Java-like stacktrace with locations
-        StringBuffer buf = new StringBuffer(super.getMessage());
+        StringBuffer buf = message == null ? new StringBuffer() : new StringBuffer(message);
         for (int i = 0; i < locations.size(); i++) {
             buf.append("\n\tat ").append(locations.get(i));
         }
         return buf.toString();
+    }
+
+    public String getMessage() {
+        return getMessage(super.getMessage(), locations);
     }
     
     public void addLocation(Location loc) {
