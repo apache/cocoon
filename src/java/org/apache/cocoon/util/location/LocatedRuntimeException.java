@@ -61,16 +61,7 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     }
 
     public String getMessage() {
-        if (this.locations == null || super.getMessage() == null) {
-            return super.getMessage();
-        }
-
-        // Produce a Java-like stacktrace with locations
-        StringBuffer buf = new StringBuffer(super.getMessage());
-        for (int i = 0; i < locations.size(); i++) {
-            buf.append("\n\tat ").append(locations.get(i));
-        }
-        return buf.toString();
+        return LocatedException.getMessage(super.getMessage(), locations);
     }
     
     public void addLocation(Location loc) {
