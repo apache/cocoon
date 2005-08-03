@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.location.Location;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.Scriptable;
@@ -44,14 +43,35 @@ public class LocationTrackingDebugger implements Debugger {
     private List locations;
     private Throwable throwable;
 
+    /**
+     * Rhino+cont API
+     */
     public void handleCompilationDone(Context cx, DebuggableScript fnOrScript, StringBuffer source) {
-        // nothing special here
+        // ignore
     }
 
+    /**
+     * Rhino+cont API
+     */
     public DebugFrame enterFrame(Context cx, Scriptable scope, Scriptable thisObj, Object[] args, DebuggableScript fnOrScript) {
         return new StackTrackingFrame(fnOrScript);
     }
     
+    /**
+     * Rhino 1.6 API
+     */
+    public void handleCompilationDone(Context cx, DebuggableScript fnOrScript, String source) {
+        // nothing
+    }
+
+    /**
+     * Rhino 1.6 API
+     */
+    public DebugFrame getFrame(Context cx, DebuggableScript fnOrScript) {
+        // Rhion 1.6 API
+        return new StackTrackingFrame(fnOrScript);
+    }
+
     /**
      * Get an exception that reflects the known location stack
      *
@@ -91,7 +111,17 @@ public class LocationTrackingDebugger implements Debugger {
             this.script = script;
         }
         
+        public void onEnter(Context cx, Scriptable activation, Scriptable thisObj, Object[] args) {
+            // Rhino 1.6 specific
+        }
+        
+        // Rhino+cont API
         public void onLineChange(Context cx, int lineNumber, boolean breakpoint) {
+            line = lineNumber;
+        }
+
+        // Rhino 1.6 API
+        public void onLineChange(Context cx, int lineNumber) {
             line = lineNumber;
         }
 
@@ -101,11 +131,12 @@ public class LocationTrackingDebugger implements Debugger {
 
         public void onExit(Context cx, boolean byThrow, Object resultOrException) {
             if (byThrow) {
-                Scriptable obj = script.getScriptable();
-                String name = obj instanceof NativeFunction ? ((NativeFunction)obj).getFunctionName() : "Top-level script";
-                if (name == null || name.length() == 0) {
-                    name = "[unnamed]";
-                }
+// Revisit: Rhino+cont and Rhino 1.6 have different debugger APIs, and we currently don't use this information
+//                Scriptable obj = script.getScriptable();
+//                String name = obj instanceof NativeFunction ? ((NativeFunction)obj).getFunctionName() : "Top-level script";
+//                if (name == null || name.length() == 0) {
+//                    name = "[unnamed]";
+//                }
 
                 if (locations == null) {
                     locations = new ArrayList(1); // start small
