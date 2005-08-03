@@ -61,7 +61,7 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     }
 
     public String getMessage() {
-        if (this.locations == null) {
+        if (this.locations == null || super.getMessage() == null) {
             return super.getMessage();
         }
 
