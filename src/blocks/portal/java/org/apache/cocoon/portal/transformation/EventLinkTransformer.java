@@ -167,7 +167,7 @@ public class EventLinkTransformer extends AbstractCopletTransformer {
                     // if attribute found that contains a link
                     if (link != null) {
                         CopletInstanceData cid = this.getCopletInstanceData(attr.getValue("coplet"));
-                        LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+                        LinkService linkService = this.portalService.getComponentManager().getLinkService();
 
                         // create event link
                         CopletLinkEvent event = new CopletLinkEvent(cid, link);
@@ -186,7 +186,7 @@ public class EventLinkTransformer extends AbstractCopletTransformer {
                     String link = this.endTextRecording();
 
                     CopletInstanceData cid = this.getCopletInstanceData();
-                    LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+                    LinkService linkService = this.portalService.getComponentManager().getLinkService();
 
                     // create event link
                     CopletLinkEvent event = new CopletLinkEvent(cid, link);
