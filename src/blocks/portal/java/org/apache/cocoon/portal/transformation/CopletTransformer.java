@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ extends AbstractCopletTransformer {
 
         } else if (name.equals(LINK_ELEM)) {
 
-            final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+            final LinkService linkService = this.portalService.getComponentManager().getLinkService();
             final String format = attr.getValue("format");
             AttributesImpl newAttrs = new AttributesImpl();
             newAttrs.setAttributes(attr);
@@ -166,7 +166,7 @@ extends AbstractCopletTransformer {
                 if ( attr.getValue("layout") != null ) {
                     newAttrs.removeAttribute("layout");
                     final String layoutId = attr.getValue("layout");
-                    Object layout = this.getPortalService().getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
+                    Object layout = this.portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
                     if ( layout != null ) {
                         event = new JXPathEvent(layout, path, value);
                     }
@@ -232,7 +232,7 @@ extends AbstractCopletTransformer {
         } else if ( name.equals(LINKS_ELEM) ) {
             this.insideLinks = false;
             final String format = (String)this.stack.pop();
-            final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+            final LinkService linkService = this.portalService.getComponentManager().getLinkService();
             String href = linkService.getLinkURI(this.collectedEvents);
 
             AttributesImpl newAttrs = (AttributesImpl)this.stack.pop();

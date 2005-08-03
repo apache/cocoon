@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
@@ -27,18 +28,24 @@ import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
 /**
- * Abstract transformer implementation that provides a method getCopletInstanceData().
- * There are two possibilities how the transformer obtains the information required for 
- * getting the coplet instance data:<br><br>
- * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
- * all required information are passed automatically.<br>
- * 2) Otherwise the portal name and the coplet id must be passed to the transformer 
- * as paremeters in the following way:
+ * Abstract transformer implementation that provides some useful methods and
+ * functionality. The portal service is stored in the instance variable
+ * {@link #portalService} and can be used.
+ * There are some methods to fetch a coplet instance data. {@link #getCopletInstanceData()}
+ * tries to get the instance associated with the current request and
+ * {@link #getCopletInstanceData(String)} fetches an instance with a given id.
  *
- * <pre>&lt;map:transform type="coplet"&gt;
- * 	&lt;map:parameter name="portalName" type="exampleportal"/&gt;
- * 	&lt;map:parameter name="copletId" type="examplecoplet"/&gt;
- * &lt;/map:transform&gt;</pre>
+ * If you want to get the coplet instance data associated with the current request,
+ * there are three possibilities how the transformer obtains the information required
+ * for getting the coplet instance data - or more precisly its id:<br><br>
+ * 1) If it is used within a coplet pipeline and this pipeline is called using
+ *    the "cocoon:" protocol, all required information is passed automatically.<br>
+ * 2) The id can be passed to the transformer as sitemap paremeters in the following way:
+ *    <pre>&lt;map:transform type="coplet"&gt;
+ * 	    &lt;map:parameter name="copletId" type="examplecoplet"/&gt;
+ *    &lt;/map:transform&gt;</pre>
+ * 3) Any component can set the id as a string in the object model of the current request.
+ *    This is the name of the key to be used: {@link org.apache.cocoon.portal.Constants#COPLET_ID_KEY}.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version CVS $Id$
@@ -47,18 +54,13 @@ public abstract class AbstractCopletTransformer
 extends AbstractSAXTransformer {
 
     /**
-     * Parameter name.
+     * Parameter name for the coplet id.
      */
     public static final String COPLET_ID_PARAM = "copletId";
 
-    /**
-     * Parameter name.
-     */
-    public static final String PORTAL_NAME_PARAM = "portalName";
+    /** The portal service. @since 2.1.8 */
+    protected PortalService portalService;
 
-    /** The portal service */
-    private PortalService _portalService;
-    
     /**
      * Try to get the coplet instance data belonging to the current request
      * @return The coplet instance data
@@ -75,19 +77,12 @@ extends AbstractSAXTransformer {
     
     
     /**
-     * Get the portal service
+     * Get the portal service.
+     * @deprecated Use directly the instance variable.
      */
     protected PortalService getPortalService()
     throws SAXException {
-        if ( this._portalService == null ) {
-            try {
-                this._portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-                
-            } catch (ServiceException se) {
-                throw new SAXException("Unable to get portal service.", se);
-            }
-        }
-        return this._portalService;
+        return this.portalService;
     }
     
     
@@ -122,19 +117,27 @@ extends AbstractSAXTransformer {
             throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
         }
 
-        CopletInstanceData object = this.getPortalService().getComponentManager().getProfileManager().getCopletInstanceData( copletId );
+        CopletInstanceData object = this.portalService.getComponentManager().getProfileManager().getCopletInstanceData( copletId );
             
         return object;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void recycle() {
-        if ( this._portalService != null ) {
-            this.manager.release( this._portalService );
-            this._portalService = null;            
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);        
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.portalService != null ) {
+            this.manager.release( this.portalService );
+            this.portalService = null;            
         }
-        super.recycle();
+        super.dispose();
     }
 }
