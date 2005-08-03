@@ -585,7 +585,7 @@ public abstract class AbstractProcessingPipeline
             throw e;
         } catch (Exception e) {
             // TODO: Unwrap SAXException ?
-            throw new ProcessingException("Failed to execute pipeline.", e);
+            throw ProcessingException.getLocatedException("Failed to execute pipeline.", e, null);
         }
 
         return true;

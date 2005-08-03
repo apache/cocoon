@@ -30,6 +30,7 @@ import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JSErrorReporter;
+import org.apache.cocoon.components.flow.javascript.LocationTrackingDebugger;
 import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
 import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -51,6 +52,7 @@ import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.PropertyException;
@@ -61,6 +63,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+import org.mozilla.javascript.debug.DebugFrame;
+import org.mozilla.javascript.debug.DebuggableScript;
+import org.mozilla.javascript.debug.Debugger;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.debugger.Main;
 import org.mozilla.javascript.tools.shell.Global;
@@ -704,6 +709,12 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
+        
+        LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
+        if (!enableDebugger) {
+            //FIXME: add a "tee" debugger that allows both to be used simultaneously
+            context.setDebugger(locationTracker, null);
+        }
 
         ThreadScope thrScope = getSessionScope();
         synchronized (thrScope) {
@@ -711,7 +722,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 Thread.currentThread().getContextClassLoader();
             FOM_Cocoon cocoon = null;
             try {
-//                try {
+                try {
                     setupContext(redirector, context, thrScope);
                     cocoon = (FOM_Cocoon) thrScope.get("cocoon", thrScope);
 
@@ -753,7 +764,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
                     thrScope.setLock(true);
                     ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
-//                } catch (JavaScriptException ex) {
+                } catch (JavaScriptException ex) {
+                    throw locationTracker.getException("Calling function " + funName, ex);
 //                    EvaluatorException ee = Context.reportRuntimeError(
 //                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
 //                                                                                                    ex.getMessage()));
@@ -763,7 +775,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 //                    }
 //                    throw new CascadingRuntimeException(ee.getMessage(),
 //                                                        unwrapped);
-//                } catch (EcmaError ee) {
+                } catch (EcmaError ee) {
+                    throw locationTracker.getException("Calling function " + funName, ee);
 //                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
 //                    if (ee.getSourceName() != null) {
 //                        Context.reportRuntimeError(msg, ee.getSourceName(),
@@ -773,7 +786,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 //                        Context.reportRuntimeError(msg);
 //                    }
 //                    throw new CascadingRuntimeException(ee.getMessage(), ee);
-//                }
+                }
             } finally {
                 thrScope.setLock(false);
                 setSessionScope(thrScope);
@@ -803,6 +816,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
+        LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
+        if (!enableDebugger) {
+            //FIXME: add a "tee" debugger that allows both to be used simultaneously
+            context.setDebugger(locationTracker, null);
+        }
 
         // Obtain the continuation object from it, and setup the
         // FOM_Cocoon object associated in the dynamic scope of the saved
@@ -839,10 +857,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
                                                                        fom_wk.getClassName()));
                 Object[] args = new Object[] {k, fom_wk};
-//                try {
+                try {
                     ScriptableObject.callMethod(cocoon,
                                                 "handleContinuation", args);
-//                } catch (JavaScriptException ex) {
+                } catch (JavaScriptException ex) {
+                    throw locationTracker.getException("Calling continuation", ex);
 //                    EvaluatorException ee = Context.reportRuntimeError(
 //                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
 //                                                                                                    ex.getMessage()));
@@ -852,7 +871,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 //                    }
 //                    throw new CascadingRuntimeException(ee.getMessage(),
 //                                                        unwrapped);
-//                } catch (EcmaError ee) {
+                } catch (EcmaError ee) {
+                    throw locationTracker.getException("Calling continuation", ee);
 //                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
 //                    if (ee.getSourceName() != null) {
 //                        Context.reportRuntimeError(msg, ee.getSourceName(),
@@ -862,7 +882,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 //                        Context.reportRuntimeError(msg);
 //                    }
 //                    throw new CascadingRuntimeException(ee.getMessage(), ee);
-//                }
+                }
             } finally {
                 kScope.setLock(false);
                 setSessionScope(kScope);
