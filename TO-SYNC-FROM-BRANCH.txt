@@ -17,3 +17,5 @@ so there's no hurry to sync, or maybe we won't sync at all.
 
 Xsltal block is in branch only for now, it can wait for more examples before
 "porting" to trunk.
+
+Forms block: port support for "factory" attribute in binding.
