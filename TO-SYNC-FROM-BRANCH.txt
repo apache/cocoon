@@ -1,0 +1,19 @@
+--------------------------------------------------------------------------------
+Use this file to list stuff that must be synced from BRANCH_2_1_X to the trunk,
+or the opposite.
+
+See http://marc.theaimsgroup.com/?t=112322817300004&r=1&w=2
+
+There are sometimes good reasons to keep some code unsynchronized for some time,
+but we don't want to forget about it, so it can be listed here.
+--------------------------------------------------------------------------------
+
+TraxTransformer: the default-src parameter is in the branch only (Bertrand,
+didn't find time to port and test it yet, although it's a very simple change).
+
+Slop block: @doktor comments will be added in trunk only as part of the refdoc
+GSoC project. We're still experimenting with this and it might still change,
+so there's no hurry to sync, or maybe we won't sync at all.
+
+Xsltal block is in branch only for now, it can wait for more examples before
+"porting" to trunk.
