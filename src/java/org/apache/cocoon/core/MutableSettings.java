@@ -222,6 +222,9 @@ public class MutableSettings implements Settings {
      */
     protected boolean lazyMode = false;
 
+    /** The time the cocoon instance was created. */
+    protected long creationTime;
+
     /**
      * Create a new settings object
      */
@@ -906,4 +909,19 @@ public class MutableSettings implements Settings {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.core.BaseSettings#getCreationTime()
+     */
+    public long getCreationTime() {
+        return this.creationTime;
+    }
+
+    /**
+     * Set the creation time of the current cocoon instance.
+     */
+    public void setCreationTime(long value) {
+        // Don't check read only here as this will change if Cocoon
+        // is reloaded while the settings remain the same.
+        this.creationTime = value;
+    }
 }
