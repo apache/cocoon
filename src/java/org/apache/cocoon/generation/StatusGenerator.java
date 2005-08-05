@@ -38,6 +38,7 @@ import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.SystemUtils;
@@ -45,7 +46,6 @@ import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -109,6 +109,9 @@ public class StatusGenerator
     protected StoreJanitor storejanitor;
     protected Store store_persistent;
 
+    /** The Cocoon core. */
+    protected Core core;
+
     /**
      * The XML namespace for the output document.
      */
@@ -147,7 +150,8 @@ public class StatusGenerator
             continuationsManager = (ContinuationsManager) this.manager.lookup(ContinuationsManager.ROLE);
         } else {
             getLogger().info("ContinuationsManager is not available. Sorry no overview of created continuations");
-        }        
+        }
+        this.core = (Core)this.manager.lookup(Core.ROLE);
     }
 
     /**
@@ -168,6 +172,8 @@ public class StatusGenerator
             this.manager.release(this.storejanitor);
             this.store_persistent = null;
             this.storejanitor = null;
+            this.manager.release(this.core);
+            this.core = null;
         }
         super.dispose();
     }
@@ -212,9 +218,11 @@ public class StatusGenerator
         }
 
         AttributesImpl atts = new AttributesImpl();
-        atts.addAttribute(namespace, "date", "date", "CDATA", dateTime);
-        atts.addAttribute(namespace, "host", "host", "CDATA", localHost);
-        atts.addAttribute(namespace, "cocoon-version", "cocoon-version", "CDATA", Constants.VERSION);
+        atts.addCDATAAttribute(namespace, "date", dateTime);
+        atts.addCDATAAttribute(namespace, "host", localHost);
+        atts.addCDATAAttribute(namespace, "cocoon-version", Constants.VERSION);
+        dateTime = DateFormat.getDateTimeInstance().format(new Date(this.core.getSettings().getCreationTime()));
+        atts.addCDATAAttribute(namespace, "creation-time", dateTime);
         this.xmlConsumer.startElement(namespace, "statusinfo", "statusinfo", atts);
 
         if(this.showContinuationsInformation) {
@@ -383,13 +391,6 @@ public class StatusGenerator
     }
 
     private void genSettings() throws SAXException {
-        Core core = null;
-        try {
-            core = (Core)this.manager.lookup(Core.ROLE);
-        } catch (ServiceException se) {
-            // this can never happen
-            throw new RuntimeException("Unable to lookup Cocoon core.");
-        }
         final Settings s = core.getSettings();
         this.startGroup("Base Settings");
         

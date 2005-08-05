@@ -21,7 +21,7 @@ import org.xml.sax.Attributes;
  * A helper Class creating SAX Attributes
  * 
  * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id: AttributesImpl.java,v 1.4 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
 
@@ -53,7 +53,22 @@ public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
 		addAttribute("", localName, localName, AttributeTypes.CDATA, value);
 	}
     
-	/**
+    /**
+     * Add an attribute of type CDATA with the namespace to the end of the list.
+     *
+     * <p>For the sake of speed, this method does no checking
+     * to see if the attribute is already in the list: that is
+     * the responsibility of the application.</p>
+     *
+     * @param namespace The namespace.
+     * @param localName The local name.
+     * @param value The attribute value.
+     */
+    public void addCDATAAttribute(String namespace, String localName, String value) {
+        addAttribute(namespace, localName, localName, AttributeTypes.CDATA, value);
+    }
+
+    /**
 	 * Add an attribute of type CDATA to the end of the list.
 	 *
 	 * <p>For the sake of speed, this method does no checking

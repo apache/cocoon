@@ -265,4 +265,8 @@ public interface BaseSettings {
      */
     String getCocoonLogger();
 
+    /**
+     * The creation time of the current Cocoon instance.
+     */
+    long getCreationTime();
 }

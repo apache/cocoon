@@ -93,9 +93,6 @@ public class CoreUtil {
     /** The Cocoon instance (the root processor). */
     protected Cocoon cocoon;
 
-    /** The time the cocoon instance was created. */
-    protected long creationTime;
-
     /** Is this a per request logger manager */
     protected boolean isPerRequestLoggerManager = false;
 
@@ -623,8 +620,7 @@ public class CoreUtil {
             ContainerUtil.service(c, this.parentManager);
 
             ContainerUtil.initialize(c);
-            this.creationTime = System.currentTimeMillis();
-
+            this.settings.setCreationTime(System.currentTimeMillis());
             this.cocoon = c;
         } catch (Exception e) {
             this.log.error("Exception reloading Cocoon.", e);
@@ -644,7 +640,7 @@ public class CoreUtil {
             boolean reload = false;
 
             if (this.cocoon != null) {
-                if (this.cocoon.modifiedSince(this.creationTime)) {
+                if (this.cocoon.modifiedSince(this.settings.getCreationTime())) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Configuration changed reload attempt");
                     }
