@@ -29,6 +29,12 @@
       Shows how to get remote resource and convert it to valid XHTML using HTMLGenerator.
     </sample>
   </group>
+  
+  <group name="NekoHTMLGenerator">
+    <sample name="Cocoon News Website" href="apache-neko">
+      Shows how to get remote resource and convert it to valid XML using NekoHTMLGenerator.
+    </sample>
+  </group>
 
   <group name="HTMLTransformer">
     <sample name="XML input" href="HTMLTransformer/input.xml">
