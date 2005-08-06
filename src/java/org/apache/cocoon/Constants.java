@@ -65,6 +65,9 @@ public final class Constants {
     /** The year of the build */
     public static final String YEAR = properties.getProperty("year");
 
+    /** The build information */
+    public static final String BUILD_INFO = properties.getProperty("build.info");
+
     /**
      * The request parameter name to reload the configuration.
      *

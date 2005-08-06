@@ -41,9 +41,14 @@
         <h1><xsl:value-of select="@status:host"/> - <xsl:value-of select="@status:date"/></h1>
         <h2>Apache Cocoon <xsl:value-of select="@status:cocoon-version"/></h2>
         <li>
-          <span class="description">Created:</span>
+          <span class="description">Instanted:</span>
           <xsl:text> </xsl:text>
           <xsl:value-of select="@status:creation-time"/>
+        </li>
+        <li>
+          <span class="description">Build:</span>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@status:build-info"/>
         </li>
         <xsl:apply-templates/>
 

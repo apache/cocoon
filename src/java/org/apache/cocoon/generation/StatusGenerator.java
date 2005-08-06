@@ -223,6 +223,7 @@ public class StatusGenerator
         atts.addCDATAAttribute(namespace, "cocoon-version", Constants.VERSION);
         dateTime = DateFormat.getDateTimeInstance().format(new Date(this.core.getSettings().getCreationTime()));
         atts.addCDATAAttribute(namespace, "creation-time", dateTime);
+        atts.addCDATAAttribute(namespace, "build-info", Constants.BUILD_INFO);
         this.xmlConsumer.startElement(namespace, "statusinfo", "statusinfo", atts);
 
         if(this.showContinuationsInformation) {
