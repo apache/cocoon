@@ -543,7 +543,7 @@
     <title>CyberNeko: Transform HTML to XML</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
-    <lib>optional/nekohtml-0.9.4.jar</lib>
+    <lib>optional/nekohtml-0.9.5.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
   </file>
 
