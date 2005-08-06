@@ -197,7 +197,7 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="AG" type="update">
-      Updated xercesImpl to 2.7.1, log4j to 1.2.11.
+      Updated xercesImpl to 2.7.1, log4j to 1.2.11, nekohtml to 0.9.5.
     </action>
     <action dev="BD" type="update">
       Webapp context is now configurable when starting with the included Jetty webserver. Setting
