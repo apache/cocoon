@@ -702,7 +702,7 @@ public class CoreUtil {
      * strip any whitespace from the entry.</p>
      */
     protected void forceLoad() {
-        final Iterator i = this.settings.getLoadClasses();
+        final Iterator i = this.settings.getLoadClasses().iterator();
         while (i.hasNext()) {
             final String fqcn = (String)i.next();
             try {

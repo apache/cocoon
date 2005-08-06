@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.core;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -185,7 +184,7 @@ public interface BaseSettings {
      * @return Returns the loadClasses.
      * @see #KEY_LOAD_CLASSES
      */
-    Iterator getLoadClasses();
+    List getLoadClasses();
 
     /**
      * @return Returns the loggerManagerClassName.

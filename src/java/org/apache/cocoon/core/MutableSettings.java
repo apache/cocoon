@@ -388,8 +388,8 @@ public class MutableSettings implements Settings {
     /**
      * @return Returns the loadClasses.
      */
-    public Iterator getLoadClasses() {
-        return this.loadClasses.iterator();
+    public List getLoadClasses() {
+        return this.loadClasses;
     }
 
     /**

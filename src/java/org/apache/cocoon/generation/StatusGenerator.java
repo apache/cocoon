@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,6 +29,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -88,7 +92,8 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class StatusGenerator 
-    extends ServiceableGenerator {
+    extends ServiceableGenerator
+    implements Contextualizable {
 
     
     private static final String SHOW_CONTINUATIONS_INFO = "show-cont";    
@@ -112,6 +117,9 @@ public class StatusGenerator
     /** The Cocoon core. */
     protected Core core;
 
+    /** The component context. */
+    protected Context context;
+
     /**
      * The XML namespace for the output document.
      */
@@ -128,6 +136,10 @@ public class StatusGenerator
      * The namespace prefix for xlink namespace
      */
     protected static final String xlinkPrefix = "xlink";
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
     /**
      * Set the current <code>ServiceManager</code> instance used by this
@@ -269,8 +281,11 @@ public class StatusGenerator
         startGroup("vm");
         // BEGIN Memory status
         startGroup("memory");
-        addValue("total", String.valueOf(Runtime.getRuntime().totalMemory()));
-        addValue("free", String.valueOf(Runtime.getRuntime().freeMemory()));
+        final long totalMemory = Runtime.getRuntime().totalMemory();
+        final long freeMemory = Runtime.getRuntime().freeMemory();
+        addValue("total", String.valueOf(totalMemory));
+        addValue("used", String.valueOf(totalMemory - freeMemory));
+        addValue("free", String.valueOf(freeMemory));
         endGroup();
         // END Memory status
 
@@ -304,6 +319,23 @@ public class StatusGenerator
             addMultilineValue("classpath", paths);
         }
         // END ClassPath
+
+        // BEGIN CONTEXT CLASSPATH
+        String contextClassPath = null;
+        try {
+            contextClassPath = (String)this.context.get(Constants.CONTEXT_CLASSPATH);
+        } catch (ContextException ce) {
+            // we ignore this
+        }
+        if ( contextClassPath != null ) {
+            List paths = new ArrayList();
+            StringTokenizer tokenizer = new StringTokenizer(contextClassPath, File.pathSeparator);
+            while (tokenizer.hasMoreTokens()) {
+                paths.add(tokenizer.nextToken());
+            }
+            addMultilineValue("context-classpath", paths);            
+        }
+        // END CONTEXT CLASSPATH
 
         // BEGIN Cache
         if (this.storejanitor != null) {
@@ -396,8 +428,8 @@ public class StatusGenerator
         this.startGroup("Base Settings");
         
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
-        this.addValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
-        this.addValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
+        this.addMultilineValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
+        this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
         this.addValue(Settings.KEY_FORCE_PROPERTIES, s.getForceProperties());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
         this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
