@@ -64,7 +64,18 @@
   <!-- compiles the core -->
   <target name="compile-core" depends="compile-mocks, clover.on">
     <cocoon.compile srcdir="${java}"
-                           destdir="${build.dest}"/>
+                    destdir="${build.dest}"/>
+  	<!-- Let's replace some values in the cocoon.properties file -->
+    <copy file="${java}/org/apache/cocoon/cocoon.properties"
+          overwrite="true" filtering="true"
+          tofile="${build.dest}/org/apache/cocoon/cocoon.properties">
+      <filterset>
+      	<filter token="compiler.debug" value="${compiler.debug}"/>
+      	<filter token="compiler.optimize" value="${compiler.optimize}"/>
+      	<filter token="target.vm" value="${target.vm}"/>
+      	<filter token="source.vm" value="${source.vm}"/>
+      </filterset>
+    </copy>
   </target>
 
   <!-- compiles deprecated code -->
