@@ -67,6 +67,13 @@
         <map:serialize type="xhtml"/>
       </map:match>
 
+      <!-- ================  NekoHTML  =========================== -->      
+
+      <map:match pattern="apache-neko">
+        <map:generate type="nekohtml" src="http://cocoon.apache.org/news"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
       <!-- ================  HTMLTransformer ================= -->
 
       <map:match pattern="HTMLTransformer/input.xml">
