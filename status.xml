@@ -519,7 +519,7 @@
   </release>
   <release version="2.1.8" date="TBD">
     <action dev="AG" type="update">
-      Updated xercesImpl to 2.7.1, log4j to 1.2.11.
+      Updated xercesImpl to 2.7.1, log4j to 1.2.11, nekohtml to 0.9.5.
     </action>
     <action dev="AG" type="update">
       Updated hsqldb to 1.8.0.
