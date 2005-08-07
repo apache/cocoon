@@ -473,7 +473,7 @@
     <title>CyberNeko</title>
     <description>NekoDTD is a configuration that parses Document Type Definition (DTD) files and converts the information into an XML document.</description>
     <used-by>NekoHTML generator (html block), Forms block</used-by>
-    <lib>optional/nekohtml-0.9.4.jar</lib>
+    <lib>optional/nekohtml-0.9.5.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
   </file>  
   
