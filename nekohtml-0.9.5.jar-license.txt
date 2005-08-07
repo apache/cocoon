@@ -1,7 +1,7 @@
 The CyberNeko Software License, Version 1.0
 
  
-(C) Copyright 2002,2003, Andy Clark.  All rights reserved.
+(C) Copyright 2002-2005, Andy Clark.  All rights reserved.
  
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@ are met:
 4. The names "CyberNeko" and "NekoHTML" must not be used to endorse
    or promote products derived from this software without prior 
    written permission. For written permission, please contact 
-   andy@cyberneko.net.
+   andyc@cyberneko.net.
 
 5. Products derived from this software may not be called "CyberNeko",
    nor may "CyberNeko" appear in their name, without prior written
