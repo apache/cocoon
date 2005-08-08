@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -40,6 +42,7 @@ import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.SkinDescription;
+import org.apache.cocoon.servlet.CocoonServlet;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -71,7 +74,7 @@ public class PortalServiceImpl
     
     final protected static String KEY = PortalServiceImpl.class.getName();
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
@@ -89,91 +92,101 @@ public class PortalServiceImpl
         return info;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getPortalName()
      */
     public String getPortalName() {
         return this.getInfo().getPortalName();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#setPortalName(java.lang.String)
      */
     public void setPortalName(String value) {
         this.getInfo().setPortalName(value);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getAttribute(java.lang.String)
      */
     public Object getAttribute(String key) {
         return this.getInfo().getAttribute(key);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String key, Object value) {
         this.getInfo().setAttribute(key, value);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String key) {
         this.getInfo().removeAttribute(key);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getAttributeNames()
      */
     public Iterator getAttributeNames() {
         return this.getInfo().getAttributeNames();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getTemporaryAttribute(java.lang.String)
      */
     public Object getTemporaryAttribute(String key) {
         return this.getInfo().getTemporaryAttribute(key);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#setTemporaryAttribute(java.lang.String, java.lang.Object)
      */
     public void setTemporaryAttribute(String key, Object value) {
         this.getInfo().setTemporaryAttribute(key, value);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#removeTemporaryAttribute(java.lang.String)
      */
     public void removeTemporaryAttribute(String key) {
         this.getInfo().removeTemporaryAttribute(key);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getTemporaryAttributeNames()
      */
     public Iterator getTemporaryAttributeNames() {
         return this.getInfo().getTemporaryAttributeNames();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getComponentManager()
      */
     public PortalComponentManager getComponentManager() {
         return this.getInfo().getComponentManager();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
+        // add the portal service to the servlet context - if available
+        try {
+            final ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+            servletConfig.getServletContext().setAttribute(PortalService.ROLE, this);
+        } catch (ContextException ignore) {
+            // we ignore the context exception
+            // this avoids startup errors if the portal is configured for the CLI
+            // environment
+            this.getLogger().warn("The portal service is not stored in the servlet config.", ignore);
+        }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -183,9 +196,16 @@ public class PortalServiceImpl
         }
         this.portalComponentManagers.clear();       
         this.portalConfigurations.clear();
+        // remove the portal service to the servlet context - if available
+        try {
+            final ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+            servletConfig.getServletContext().removeAttribute(PortalService.ROLE);
+        } catch (ContextException ignore) {
+            // we ignore the context exception
+        }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
@@ -226,7 +246,7 @@ public class PortalServiceImpl
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#setEntryLayout(org.apache.cocoon.portal.layout.Layout)
      */
     public void setEntryLayout(String layoutKey, Layout object) {
@@ -240,7 +260,7 @@ public class PortalServiceImpl
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getEntryLayout()
      */
     public Layout getEntryLayout(String layoutKey) {
@@ -250,7 +270,7 @@ public class PortalServiceImpl
         return (Layout)this.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#setDefaultLayoutKey(java.lang.String)
      */
     public void setDefaultLayoutKey(String layoutKey) {
@@ -261,7 +281,7 @@ public class PortalServiceImpl
         }
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getDefaultLayoutKey()
      */
     public String getDefaultLayoutKey() {
@@ -276,7 +296,7 @@ public class PortalServiceImpl
         return key;
     }
    
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.PortalService#getSkinDescriptions()
      */
     public List getSkinDescriptions() {
@@ -289,5 +309,4 @@ public class PortalServiceImpl
     public Map getObjectModel() {
         return ContextHelper.getObjectModel(this.context);
     }
-
 }
