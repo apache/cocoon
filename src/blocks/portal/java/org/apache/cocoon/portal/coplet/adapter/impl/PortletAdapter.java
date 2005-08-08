@@ -272,7 +272,7 @@ public class PortletAdapter
             this.getLogger().error("Destruction failed!", t);
         }
         if ( this.servletConfig != null ) {
-            this.servletConfig.getServletContext().removeAttribute(PortalManager.ROLE);
+            this.servletConfig.getServletContext().removeAttribute(PortletAdapter.class.getName());
             this.servletConfig = null;
         }
     }
