@@ -61,7 +61,13 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Con
         String listPath = DomHelper.getAttribute(selectionListElement, "list-path");
         String valuePath = DomHelper.getAttribute(selectionListElement, "value-path");
         Map nspfx = DomHelper.getInheritedNSDeclarations(selectionListElement);
-        String i18nPfx = (String)nspfx.get( Constants.I18N_NS );
+        String i18nPfx = Constants.I18N_PREFIX;
+        if (nspfx != null) {
+            i18nPfx = (String)nspfx.get( Constants.I18N_NS );
+            if (i18nPfx == null ) {
+                i18nPfx = Constants.I18N_PREFIX;
+            }
+        }
         String labelPath = DomHelper.getAttribute(selectionListElement, "label-path", null);
         boolean labelIsI18nKey = false;
         if( labelPath == null )
