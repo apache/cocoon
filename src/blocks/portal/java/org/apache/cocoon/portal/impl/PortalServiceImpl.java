@@ -194,7 +194,7 @@ public class PortalServiceImpl
             final Configuration current = portals[i];
             final String name = current.getAttribute("name");
             try {
-                PortalComponentManager c = new DefaultPortalComponentManager(this);
+                PortalComponentManager c = new DefaultPortalComponentManager(this, this.context);
                 this.portalComponentManagers.put( name, c );
                 ContainerUtil.enableLogging( c, this.getLogger() );
                 ContainerUtil.contextualize( c, this.context );
@@ -282,4 +282,12 @@ public class PortalServiceImpl
     public List getSkinDescriptions() {
         return (List)this.skins.get(this.getPortalName());
     }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalService#getObjectModel()
+     */
+    public Map getObjectModel() {
+        return ContextHelper.getObjectModel(this.context);
+    }
+
 }

@@ -24,6 +24,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -59,7 +60,7 @@ public class DefaultPortalComponentManager
     protected ServiceManager manager;
 
     /** The portal service */
-    protected PortalService portalService;
+    protected final PortalService portalService;
 
     protected String profileManagerRole;
     protected ProfileManager profileManager;
@@ -84,6 +85,8 @@ public class DefaultPortalComponentManager
     protected String portalManagerRole;
     protected PortalManager portalManager;
 
+    protected final Context context;
+
     /**
      * Create a new portal component manager. Each portal has a own
      * component manager that manages all central components for this
@@ -92,8 +95,9 @@ public class DefaultPortalComponentManager
      * to pass it to the other components (TODO).
      * @param service The portal service.
      */
-    public DefaultPortalComponentManager(final PortalService service) {
+    public DefaultPortalComponentManager(final PortalService service, Context context) {
         this.portalService = service;
+        this.context = context;
     }
 
     /* (non-Javadoc)
@@ -253,5 +257,12 @@ public class DefaultPortalComponentManager
             }
         }
         return this.portalManager;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#getComponentContext()
+     */
+    public Context getComponentContext() {
+        return this.context;
     }
 }
