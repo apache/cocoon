@@ -838,7 +838,7 @@
       Implementation taken from the Apache Geronimo project for license compatibility.
     </description>
     <used-by>Slide block</used-by>
-    <lib>optional/geronimo-spec-jta-DEV-20040202.jar</lib>
+    <lib>optional/geronimo-spec-jta-1.0.1B-rc3.jar</lib>
     <homepage>http://java.sun.com/products/jta/</homepage>
   </file>
 
@@ -1038,7 +1038,7 @@
       under the Apache license and therefore freely distributable.
     </description>
     <used-by>JMS</used-by>
-    <lib>optional/geronimo-spec-jms-DEV-20031120.jar</lib>
+    <lib>optional/geronimo-spec-jms-1.1-rc3.jar</lib>
     <homepage>http://geronimo.apache.org/</homepage>
   </file>
   <!--
