@@ -17,7 +17,10 @@ package org.apache.cocoon.portal;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -115,4 +118,10 @@ public interface PortalService extends Component {
      * Return all skins
      */
     List getSkinDescriptions();
+
+    /**
+     * Return the current object model.
+     * @since 2.1.8
+     */
+    Map getObjectModel();
 }
