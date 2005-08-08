@@ -20,6 +20,7 @@ import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -458,7 +459,7 @@ public class IncludeTransformer extends AbstractTransformer
     /**
      * Description of the include element
      */
-    private class IncludeElement {
+    private class IncludeElement extends AbstractLogEnabled {
         /** Parameter controlling recursive includes processing */
         private boolean recursive;
 
@@ -491,13 +492,14 @@ public class IncludeTransformer extends AbstractTransformer
 
         /** The current parameter value (as a {@link StringBuffer}). */
         private StringBuffer value;
-
+        
         /** Create include element */
-        private IncludeElement(String base, boolean parallel, boolean recursive, boolean recursiveParallel) {
+        private IncludeElement(String base, boolean parallel, boolean recursive, boolean recursiveParallel, Logger logger) {
             this.base = base;
             this.parallel = parallel;
             this.recursive = recursive;
             this.recursiveParallel = recursiveParallel;
+            this.enableLogging(logger);
         }
 
         /**
@@ -778,7 +780,7 @@ public class IncludeTransformer extends AbstractTransformer
                     if (element != null) {
                         throw new SAXException("Element " + INCLUDE_ELEMENT + " nested in another one.");
                     }
-                    element = new IncludeElement(this.base, this.parallel, this.recursive, this.recursiveParallel);
+                    element = new IncludeElement(this.base, this.parallel, this.recursive, this.recursiveParallel, getLogger());
 
                     /* Remember the source we are trying to include */
                     element.source = atts.getValue(SRC_ATTRIBUTE);
