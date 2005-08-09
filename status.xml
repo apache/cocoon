@@ -518,6 +518,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="update">
+     Updated Axis to 1.2 and wsdl4j to 1.5.1.
+    </action>
     <action dev="AG" type="update">
       Updated xercesImpl to 2.7.1, log4j to 1.2.11, nekohtml to 0.9.5,
       geromino-spec-jms and geronimo-spec-jta to M3.
