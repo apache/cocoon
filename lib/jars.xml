@@ -745,7 +745,7 @@
       describing services
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/wsdl4j-1.4.jar</lib>
+    <lib>optional/wsdl4j-1.5.1.jar</lib>
     <homepage>http://sourceforge.net/projects/wsdl4j</homepage>
   </file>
 
@@ -756,7 +756,7 @@
       SOAP 1.1 specification and SOAP with Attachments note.
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-saaj-1.1.jar</lib>
+    <lib>optional/axis-saaj-1.2.jar</lib>
     <homepage>http://java.sun.com/xml/saaj/</homepage>
   </file>
 
@@ -781,7 +781,7 @@
       on the Java platform.
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-jaxrpc-1.1.jar</lib>
+    <lib>optional/axis-jaxrpc-1.2jar</lib>
     <homepage>http://java.sun.com/xml/jaxrpc/</homepage>
   </file>
 
@@ -792,7 +792,7 @@
       Protocol")
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-1.1.jar</lib>
+    <lib>optional/axis-1.2.jar</lib>
     <homepage>http://ws.apache.org/axis/</homepage>
   </file>
 
