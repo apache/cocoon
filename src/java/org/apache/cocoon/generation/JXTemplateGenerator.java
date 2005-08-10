@@ -54,9 +54,11 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.ServiceableTransformer;
+import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -135,6 +137,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     private static final JXPathContextFactory jxpathContextFactory = JXPathContextFactory.newInstance();
 
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
+    
+    private final NamespacesTable namespaces = new NamespacesTable();
 
     private static final Iterator EMPTY_ITER = new Iterator() {
         public boolean hasNext() {
@@ -2332,6 +2336,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         this.variables = null;
         this.definitions = null;
         this.cocoon = null;
+        this.namespaces.clear();
         super.recycle();
     }
 
@@ -2444,6 +2449,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             fillContext(contextObject, map);
         }
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
+        jxpathContext.setNamespaceContextPointer(new NamespacesTablePointer(namespaces));
         jxpathContext.setVariables(variables);
         jxpathContext.setLenient(parameters.getParameterAsBoolean("lenient-xpath", false));
         globalJexlContext = new MyJexlContext();
@@ -2624,9 +2630,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 EndElement endElement = (EndElement)ev;
                 StartElement startElement = endElement.startElement;
                 consumer.endElement(startElement.namespaceURI, startElement.localName, startElement.raw);
+                namespaces.leaveScope(consumer);
             } else if (ev instanceof EndPrefixMapping) {
                 EndPrefixMapping endPrefixMapping = (EndPrefixMapping)ev;
-                consumer.endPrefixMapping(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
                 TextEvent text = (TextEvent)ev;
                 characters(jexlContext, jxpathContext, text, new CharHandler() {
@@ -2740,6 +2746,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     if (value instanceof Pointer) {
                         Pointer ptr = (Pointer)value;
                         localJXPathContext = jxpathContext.getRelativeContext(ptr);
+                        localJXPathContext.setNamespaceContextPointer(new NamespacesTablePointer(namespaces));
                         try {
                             value = ptr.getNode();
                         } catch (Exception exc) {
@@ -2747,6 +2754,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         }
                     } else {
                         localJXPathContext = jxpathContextFactory.newContext(jxpathContext, value);
+                        localJXPathContext.setNamespaceContextPointer(new NamespacesTablePointer(namespaces));
                     }
                     localJXPathContext.setVariables(localJXPathVariables);
                     if (var != null) {
@@ -2902,6 +2910,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         vars.declareVariable(key, val);
                     }
                     JXPathContext localJXPathContext = jxpathContextFactory.newContext(null, jxpathContext.getContextBean());
+                    localJXPathContext.setNamespaceContextPointer(new NamespacesTablePointer(namespaces));
                     localJXPathContext.setVariables(vars);
                     call(ev.location, startElement, consumer, localJexlContext, localJXPathContext, def.body, def.endInstruction);
                     ev = startElement.endElement.next;
@@ -2937,6 +2946,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         attrs.addAttribute(attrEvent.namespaceURI, attrEvent.localName, attrEvent.raw, attrEvent.type, buf.toString());
                     }
                 }
+                namespaces.enterScope(consumer);
                 consumer.startElement(startElement.namespaceURI, startElement.localName, startElement.raw, attrs);
             } else if (ev instanceof StartFormatNumber) {
                 StartFormatNumber startFormatNumber = (StartFormatNumber)ev;
@@ -2962,7 +2972,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 }
             } else if (ev instanceof StartPrefixMapping) {
                 StartPrefixMapping startPrefixMapping = (StartPrefixMapping)ev;
-                consumer.startPrefixMapping(startPrefixMapping.prefix, startPrefixMapping.uri);
+                namespaces.addDeclaration(startPrefixMapping.prefix, startPrefixMapping.uri);
             } else if (ev instanceof StartComment) {
                 StartComment startJXComment = (StartComment)ev;
                 // Parse the body of the comment
@@ -3138,6 +3148,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     try {
                         Object obj = getValue(startImport.select, jexlContext, jxpathContext);
                         selectJXPath = jxpathContextFactory.newContext(null, obj);
+                        selectJXPath.setNamespaceContextPointer(new NamespacesTablePointer(namespaces));
                         selectJXPath.setVariables(variables);
                         selectJexl = new MyJexlContext(jexlContext);
                         fillContext(obj, selectJexl);
