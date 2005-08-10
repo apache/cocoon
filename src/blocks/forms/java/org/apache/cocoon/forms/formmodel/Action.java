@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,13 +27,15 @@ import org.apache.cocoon.forms.event.*;
  * or as a hidden field which gets its value set by javascript. The Action widget will generate its associated
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
- * 
+ *
  * @version $Id$
  */
 public class Action extends AbstractWidget implements ActionListenerEnabled {
+
     private final ActionDefinition definition;
     /** Additional listeners to those defined as part of the widget definition (if any). */
     private ActionListener listener;
+
 
     public Action(ActionDefinition definition) {
         super(definition);
@@ -45,8 +47,9 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     public void readFromRequest(final FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         Form form = getForm();
 
@@ -73,7 +76,6 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
 
         if (form.getSubmitWidget() == this) {
             form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
-
             handleActivate();
         }
     }
@@ -89,8 +91,8 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
 
     /**
      * Always return <code>true</code> (an action has no validation)
-     * 
-     * TODO is there a use case for actions having validators?
+     *
+     * <br>TODO is there a use case for actions having validators?
      */
     public boolean validate() {
         return true;
@@ -102,15 +104,15 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     public boolean isValid() {
         return true;
     }
-    
+
     private static final String ACTION_EL = "action";
 
     /**
      * @return "action"
      */
-    public String getXMLElementName() {        
+    public String getXMLElementName() {
         return ACTION_EL;
-    }  
+    }
 
     /**
      * Adds a ActionListener to this widget instance. Listeners defined
@@ -140,5 +142,4 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
             super.broadcastEvent(event);
         }
     }
-
 }

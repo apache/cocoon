@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,12 +33,12 @@ import org.xml.sax.SAXException;
 /**
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstractWidget implements Widget {
 
-    /** 
+    /**
      * Containing parent-widget to this widget.
      * NOTE: avoid directly accessing this member since subclasses can mask this
      * property through own implemented getParent()
@@ -70,6 +70,7 @@ public abstract class AbstractWidget implements Widget {
      */
     protected boolean wasValid = true;
 
+
     protected AbstractWidget(AbstractWidgetDefinition definition) {
         this.state = definition.getState();
     }
@@ -90,29 +91,29 @@ public abstract class AbstractWidget implements Widget {
         return getDefinition().getId();
     }
 
-    /** 
+    /**
      * Concrete subclasses should allow access to their underlaying Definition
      * through this method.
      *
-     * If subclasses decide to return <code>null</code> they should also organize 
+     * If subclasses decide to return <code>null</code> they should also organize
      * own implementations of {@link #getId()}, {@link #getLocation()},
      * {@link #validate()}, {@link #generateLabel(ContentHandler)} and
      * {@link #generateDisplayData(ContentHandler)} to avoid NPE's.
-     * 
-     * @return the widgetDefinition from which this widget was instantiated. 
+     *
+     * @return the widgetDefinition from which this widget was instantiated.
      *        (@link WidgetDefinition#createInstance()}
      */
     public abstract WidgetDefinition getDefinition();
 
     /**
-     * @return the location-information (file, line and column) where this widget was 
+     * @return the location-information (file, line and column) where this widget was
      * configured.
      */
     public String getLocation() {
         return getDefinition().getLocation();
     }
 
-    /** 
+    /**
      * @return The parent-widget of this widget.
      */
     // This method is final in order for other methods in this class to use this.parent
@@ -120,20 +121,22 @@ public abstract class AbstractWidget implements Widget {
         return this.parent;
     }
 
-    /** 
+    /**
      * Sets the parent-widget of this widget.
      * This is a write-once property.
-     * 
+     *
      * @param widget the parent-widget of this one.
      * @throws IllegalStateException when the parent had already been set.
-     */    
+     */
     public void setParent(Widget widget) {
-        if (this.parent != null) throw new IllegalStateException("The parent of widget " + getRequestParameterName() + " should only be set once.");
+        if (this.parent != null) {
+            throw new IllegalStateException("The parent of widget " + getRequestParameterName() + " should only be set once.");
+        }
         this.parent = widget;
     }
 
     /**
-     * @return the form where this widget belongs to.  
+     * @return the form where this widget belongs to.
      */
     public Form getForm() {
         if (this.form == null) {
@@ -164,12 +167,12 @@ public abstract class AbstractWidget implements Widget {
     public WidgetState getCombinedState() {
         if (this.parent == null) {
             return this.state;
-        } 
+        }
         return WidgetState.strictest(this.state, this.parent.getCombinedState());
     }
 
     public String getRequestParameterName() {
-        
+
         // Default if no parent or parent with empty id
         String requestParamName = getId();
 
@@ -187,11 +190,12 @@ public abstract class AbstractWidget implements Widget {
 
     public Widget lookupWidget(String path) {
 
-        if (path == null || path.equals(""))
+        if (path == null || path.equals("")) {
             return this;
+        }
 
         Widget relativeWidget;
-        String relativePath = null;        
+        String relativePath = null;
         int sepPosition = path.indexOf("" + Widget.PATH_SEPARATOR);
 
         if (sepPosition < 0) {
@@ -208,7 +212,7 @@ public abstract class AbstractWidget implements Widget {
                 relativePath = path.substring(3);
             } else {
                 String childId = path.substring(0, sepPosition );
-                relativeWidget = getChild(childId);            
+                relativeWidget = getChild(childId);
                 relativePath = path.substring(sepPosition+1);
             }
         }
@@ -218,9 +222,9 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * Concrete widgets that contain actual child widgets should override to 
+     * Concrete widgets that contain actual child widgets should override to
      * return the actual child-widget.
-     * 
+     *
      * @param id of the child-widget
      * @return <code>null</code> if not overriden.
      */
@@ -247,7 +251,7 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Abstract implementation throws a {@link UnsupportedOperationException}.
      * Concrete subclass widgets need to override when supporting event broadcasting.
      */
@@ -261,7 +265,7 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * Add a validator to this widget instance.
-     * 
+     *
      * @param validator
      */
     public void addValidator(WidgetValidator validator) {
@@ -273,7 +277,7 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * Remove a validator from this widget instance
-     * 
+     *
      * @param validator
      * @return <code>true</code> if the validator was found.
      */
@@ -299,14 +303,14 @@ public abstract class AbstractWidget implements Widget {
             // Failed
             this.wasValid = false;
             return false;
-        } 
+        }
         // Definition successful, test local validators
         if (this.validators == null) {
             // No local validators
             this.wasValid = true;
             return true;
         }
-        
+
         // Iterate on local validators
         Iterator iter = this.validators.iterator();
         while(iter.hasNext()) {
@@ -316,7 +320,7 @@ public abstract class AbstractWidget implements Widget {
                 return false;
             }
         }
-        
+
         // All local iterators successful
         this.wasValid = true;
         return true;
@@ -331,13 +335,13 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Delegates to the {@link #getDefinition()} to generate the 'label' part of
-     * the display-data of this widget.  
-     * 
+     * the display-data of this widget.
+     *
      * Subclasses should override if the getDefinition can return <code>null</code>
      * to avoid NPE's
-     * 
+     *
      * @param contentHandler
      * @throws SAXException
      */
@@ -348,12 +352,12 @@ public abstract class AbstractWidget implements Widget {
     }
 
     /**
-     * Generates nested additional content nested inside the main element for this 
+     * Generates nested additional content nested inside the main element for this
      * widget which is generated by {@link #generateSaxFragment(ContentHandler, Locale)}
-     * 
+     *
      * The implementation on the AbstractWidget level inserts no additional XML.
      * Subclasses need to override to insert widget specific content.
-     * 
+     *
      * @param contentHandler to send the SAX events to
      * @param locale in which context potential content needs to be put.
      * @throws SAXException
@@ -362,26 +366,26 @@ public abstract class AbstractWidget implements Widget {
         // Do nothing
     }
 
-    /** 
+    /**
      * The XML element name used in {@link #generateSaxFragment(ContentHandler, Locale)}
      * to produce the wrapping element for all the XML-instance-content of this Widget.
-     * 
-     * @return the main elementname for this widget's sax-fragment. 
+     *
+     * @return the main elementname for this widget's sax-fragment.
      */
     protected abstract String getXMLElementName();
 
-    /** 
+    /**
      * The XML attributes used in {@link #generateSaxFragment(ContentHandler, Locale)}
      * to be placed on the wrapping element for all the XML-instance-content of this Widget.
-     * 
+     *
      * This automatically adds @id={@link #getRequestParameterName()} to that element.
      * Concrete subclasses should call super.getXMLElementAttributes and possibly
      * add additional attributes.
-     * 
-     * Note: the @id is not added for those widgets who's getId() returns <code>null</code> 
+     *
+     * Note: the @id is not added for those widgets who's getId() returns <code>null</code>
      * (e.g. top-level container widgets like 'form').  The contract of returning a non-null
      * {@link AttributesImpl} is however maintained.
-     * 
+     *
      * @return the attributes for the main element for this widget's sax-fragment.
      */
     protected AttributesImpl getXMLElementAttributes() {
@@ -403,14 +407,14 @@ public abstract class AbstractWidget implements Widget {
     /**
      * Delegates to the {@link #getDefinition()} of this widget to generate a common
      * set of 'display' data. (i.e. help, label, hint,...)
-     * 
+     *
      * Subclasses should override if the getDefinition can return <code>null</code>
      * to avoid NPE's.
-     * 
+     *
      * @param contentHandler where to send the SAX events to.
      * @throws SAXException
-     * 
-     * @see WidgetDefinition#generateDisplayData(ContentHandler) 
+     *
+     * @see WidgetDefinition#generateDisplayData(ContentHandler)
      */
     protected void generateDisplayData(ContentHandler contentHandler) throws SAXException {
         getDefinition().generateDisplayData(contentHandler);
@@ -418,26 +422,26 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * {@inheritDoc}
-     * 
-     * This will generate some standard XML consisting of a simple wrapper 
+     *
+     * This will generate some standard XML consisting of a simple wrapper
      * element (name provided by {@link #getXMLElementName()}) with attributes
-     * (provided by {@link #getXMLElementAttributes()} around anything injected 
+     * (provided by {@link #getXMLElementAttributes()} around anything injected
      * in by both {@link #generateDisplayData(ContentHandler)} and
      * {@link #generateItemSaxFragment(ContentHandler, Locale)}.
-     * 
+     *
      * <pre>
      * &lt;fi:{@link #getXMLElementName()} {@link #getXMLElementAttributes()} &gt;
      *   {@link #generateDisplayData(ContentHandler)} (i.e. help, label, ...)
-     * 
+     *
      *   {@link #generateItemSaxFragment(ContentHandler, Locale)}
-     * &lt;/fi:{@link #getXMLElementName()} &gt; 
+     * &lt;/fi:{@link #getXMLElementName()} &gt;
      * </pre>
-     * 
+     *
      * @param contentHandler to send the SAX events to
      * @param locale in which context potential content needs to be put.
-     * @throws SAXException 
+     * @throws SAXException
      */
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale)    
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale)
     throws SAXException {
 
         if (getCombinedState().isDisplayingValues()) {
@@ -463,13 +467,17 @@ public abstract class AbstractWidget implements Widget {
 
 	public Object getAttribute(String name) {
         Object result = null;
-        
+
         // First check locally
-        if (this.attributes != null) result = this.attributes.get(name);
-        
+        if (this.attributes != null) {
+            result = this.attributes.get(name);
+        }
+
         // Fall back to the definition's attributes
-        if (result == null) result = getDefinition().getAttribute(name);
-        
+        if (result == null) {
+            result = getDefinition().getAttribute(name);
+        }
+
         return result;
     }
 
@@ -485,7 +493,7 @@ public abstract class AbstractWidget implements Widget {
             this.attributes.remove(name);
         }
     }
-    
+
     public String toString() {
         String className = this.getClass().getName();
         int last = className.lastIndexOf('.');

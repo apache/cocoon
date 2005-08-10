@@ -45,8 +45,8 @@ import java.util.Locale;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
-        ValueChangedListenerEnabled {
+public class Field extends AbstractWidget
+                   implements ValidationErrorAware, DataWidget, SelectableWidget, ValueChangedListenerEnabled {
 
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
@@ -107,13 +107,12 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     // At startup, we have no value to parse (both enteredValue and value are null),
     // but need to validate (e.g. error if field is required)
-    protected int valueState = VALUE_PARSED;
-
-
     /**
      * Transient widget processing state indicating that the widget is currently validating
      * (used to avoid endless loops when a validator calls getValue)
      */
+    protected int valueState = VALUE_PARSED;
+
     protected ValidationError validationError;
 
 
@@ -129,7 +128,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public WidgetDefinition getDefinition() {
         return this.fieldDefinition;
     }
-    
+
     public void initialize() {
         Object value = this.fieldDefinition.getInitialValue();
         if (value != null) {
@@ -193,7 +192,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             // Do we need to call listeners? If yes, keep (and parse if needed) old value.
             boolean callListeners = changed && hasValueChangedListeners();
             Object oldValue = callListeners ? getValue() : null;
-            
+
             this.value = newValue;
             this.validationError = null;
             // Force validation, even if set by the application
@@ -212,8 +211,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
         // FIXME: Should we consider only non-null values?
@@ -224,7 +224,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         //if (newEnteredValue != null) {
         readFromRequest(newEnteredValue);
         //}
-
     }
 
     protected void readFromRequest(String newEnteredValue) {
@@ -245,14 +244,15 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         } else {
             changed = !enteredValue.equals(newEnteredValue);
         }
+
         if (changed) {
             ValidationError oldError = this.validationError;
-            
+
             // If we have some value-changed listeners, we must make sure the current value has been
             // parsed, to fill the event. Otherwise, we don't need to spend that extra CPU time.
             boolean hasListeners = hasValueChangedListeners();
             Object oldValue = hasListeners ? getValue() : null;
-            
+
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
@@ -302,7 +302,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
 
         this.wasValid = this.validationError == null;
-        return this.validationError == null;
+        return this.wasValid;
     }
 
     /**
@@ -318,9 +318,11 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         if (this.valueState != VALUE_UNPARSED) {
             throw new IllegalStateException("Field is not in UNPARSED state (" + this.valueState + ")");
         }
+
         // Clear value, it will be recomputed
         this.value = null;
         this.validationError = null;
+
         if (this.enteredValue != null) {
             // Parse the value
             ConversionResult conversionResult = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
@@ -346,7 +348,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * validation failed.
      */
     private void doValidate() {
-
         if (this.valueState != VALUE_PARSED) {
             throw new IllegalStateException("Field is not in PARSED state (" + this.valueState + ")");
         }
