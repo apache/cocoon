@@ -15,30 +15,69 @@
  */
 package org.apache.cocoon.xml;
 
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This utility class is used to keep track namespaces declarations and resolve
- * namespaces names.
+ * Keeps track of namespaces declarations and resolve namespaces names.
+ * <p>
+ * This class also provides a very convenient and safe way of handling
+ * namespace declarations in SAX pipes. It also allows to filter duplicate namespace
+ * declarations that too often clutter up XML documents that went through
+ * several transformations, and avoid useless namespace declarations that aren't followed
+ * by element events.
+ * <p>
+ * Usage example in a SAX pipe:
+ * <pre>
+ *   NamespacesTable namespaces = new NamespacesTable();
+ *   ContentHandler nextHandler;
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id: NamespacesTable.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ *   public void startPrefixMapping(String prefix, String uri) throws SAXException {
+ *       namespaces.addDeclaration(prefix, uri);
+ *   }
+ *   
+ *   public void startElement(...) throws SAXException {
+ *       // automatically start mappings for this scope
+ *       namespaces.enterScope(nextHandler);
+ *       nextHandler.startElement(...);
+ *   }
+ *   
+ *   public void endElement(...) throws SAXException {
+ *       nextHandler.endElement(...);
+ *       // automatically end mappings for this scope
+ *       namespaces.leaveScope(nextHandler);
+ *   }
+ *   
+ *   public void endPrefixMapping(String prefix) throws SAXException {
+ *       // Ignore, it is handled by the call to leaveScope above.
+ *   }
+ * </pre>
+ * 
+ * @version $Id$
  */
 public class NamespacesTable {
-    /** The initial namespace declaration. */
-    private Entry entry=null;
+    /** The last namespace declaration. */
+    private Entry lastEntry = null;
+    
+    private boolean filterDuplicate = true;
 
     /**
      * Construct a new <code>NamespacesTable</code> instance.
      */
     public NamespacesTable() {
-        super();
-        this.entry=Entry.create("","");
-        // Set the previous declaration of this namespace as self, so it will
-        // not be possible to remove it :)
-        this.entry.previousDeclaration=this.entry;
+        clear();
+    }
+    
+    /**
+     * Clear and reinitialize this namespace table before reuse.
+     *
+     * @since 2.1.8
+     */
+    public void clear() {
+        this.lastEntry=Entry.create("","");
         this.addDeclaration("xml", "http://www.w3.org/XML/1998/namespace");
+        // Lock this scope
+        this.lastEntry.closedScopes = 1;
     }
 
     /**
@@ -47,28 +86,24 @@ public class NamespacesTable {
      * @return The newly added <code>Declaration</code>.
      */
     public Declaration addDeclaration(String prefix, String uri) {
-        Entry e=Entry.create(prefix,uri);
-        Entry previous=null;
-        Entry current=this.entry;
-        while (current!=null) {
-            if (current.prefixHash==e.prefixHash) {
-                // Set the current entry to be the previous declaration for the
-                // specified prefix and remove it from the chain.
-                e.previousDeclaration=current;
-                e.nextEntry=current.nextEntry;
-                current.nextEntry=null;
-                // Set the new entry in the chain
-                if (previous==null) this.entry=e;
-                else previous.nextEntry=e;
-                return(e);
-            } else {
-                previous=current;
-                current=current.nextEntry;
-            }
+        // Find a previous declaration of the same prefix
+        Entry dup = this.lastEntry;
+        while (dup != null && !dup.prefix.equals(prefix)) {
+            dup = dup.previous;
         }
-        if (previous==null) this.entry=e;
-        else previous.nextEntry=e;
-        return(e);
+        
+        if (dup != null) {
+            if (filterDuplicate && dup.uri.equals(uri)) {
+                return dup;
+            }
+            dup.overriden = true;
+        }
+        
+        Entry e = Entry.create(prefix, uri);
+        e.previous = this.lastEntry;
+        e.overrides = dup;
+        this.lastEntry = e;
+        return e;
     }
 
     /**
@@ -80,26 +115,149 @@ public class NamespacesTable {
      * @return The removed <code>Declaration</code> or <b>null</b>.
      */
     public Declaration removeDeclaration(String prefix) {
-        int hash=prefix.hashCode();
-        Entry previous=null;
-        Entry current=this.entry;
-        while (current!=null) {
-            if (current.prefixHash==hash) {
-                if (current.previousDeclaration==null) {
-                    if (previous==null) this.entry=current.nextEntry;
-                    else previous.nextEntry=current.nextEntry;
-                } else {
-                    current.previousDeclaration.nextEntry=current.nextEntry;
-                    if (previous==null) this.entry=current.previousDeclaration;
-                    else previous.nextEntry=current.previousDeclaration;
+        
+        Entry current = this.lastEntry;
+        Entry afterCurrent = null;
+        while(current != null) {
+            if (current.closedScopes > 0) {
+                // Don't undeclare mappings not declared in this scope
+                return null;
+            }
+            
+            if (current.prefix.equals(prefix)) {
+                // Got it
+                // Remove it from the chain
+                if (afterCurrent != null) {
+                    afterCurrent.previous = current.previous;
                 }
-                return(current);
-            } else {
-                previous=current;
-                current=current.nextEntry;
+                // And report closed scopes on the previous entry
+                current.previous.closedScopes += current.closedScopes;
+                Entry overrides = current.overrides;
+                if (overrides != null) {
+                    // No more overriden
+                    overrides.overriden = false;
+                }
+                
+                return current;
+            }
+            
+            afterCurrent = current;
+            current = current.previous;
+        }
+        
+        // Not found
+        return null;
+    }
+    
+    /**
+     * Enter a new scope, with no declared mappings.
+     * 
+     * @see #getCurrentScopeDeclarations()
+     * @since 2.1.8
+     */
+    public void enterScope() {
+        this.lastEntry.closedScopes++;
+    }
+    
+    /**
+     * Start all declared mappings of the current scope and enter a new scope.
+     * Typically called in a SAX handler <em>before</em> sending a <code>startElement()</code>
+     * event.
+     * 
+     * @param handler the handler that will receive startPrefixMapping events.
+     * @throws SAXException
+     * @since 2.1.8
+     */
+    public void enterScope(ContentHandler handler) throws SAXException {
+        Entry current = this.lastEntry;
+        while (current != null && current.closedScopes == 0) {
+            handler.startPrefixMapping(current.prefix, current.uri);
+            current = current.previous;
+        }
+        enterScope();
+    }
+    
+    /**
+     * Leave a scope. If <code>autoRemove</code> is true, all declared mappings for the
+     * scope that is left are automatically removed, without having to explicitely call
+     * {@link #removeDeclaration(String)}.
+     * 
+     * @param autoRemove if <code>true</code>, remove all mappings for the current scope.
+     * @since 2.1.8
+     */
+    public void leaveScope(boolean autoUndeclare) {
+        Entry current = this.lastEntry;
+        if (current.closedScopes <= 0) {
+            throw new IllegalStateException("Misbalanced enter and leaving of scope.");
+        }
+        current.closedScopes--;
+        if (autoUndeclare) {
+            while (current != null && current.closedScopes == 0) {
+                Entry overrides = current.overrides;
+                if (overrides != null) {
+                    // No more overriden
+                    overrides.overriden = false;
+                }
+                current = current.previous;
             }
         }
-        return(null);
+        this.lastEntry = current;
+    }
+    
+    /**
+     * Leave a scope and end all declared mappings of the new scope.
+     * Typically called in a SAX handler <em>after</em> sending a <code>endElement()</code>
+     * event.
+     * 
+     * @param handler the handler that will receive endPrefixMapping events.
+     * @throws SAXException
+     * @since 2.1.8
+     */
+    public void leaveScope(ContentHandler handler) throws SAXException {
+        Entry current = this.lastEntry;
+        if (current.closedScopes <= 0) {
+            throw new IllegalStateException("Misbalanced enter and leaving of scope.");
+        }
+        while (current != null && current.closedScopes == 0) {
+            handler.endPrefixMapping(current.prefix);
+            Entry overrides = current.overrides;
+            if (overrides != null) {
+                // No more overriden
+                overrides.overriden = false;
+            }
+            current = current.previous;
+        }
+
+        current.closedScopes--;
+        this.lastEntry = current;
+    }
+    
+    private static final Declaration[] NO_DECLS = new Declaration[0];
+
+    /**
+     * Get the declarations that were declared within the current scope.
+     * 
+     * @return the declarations (never null)
+     * @since 2.1.8
+     */
+    public Declaration[] getCurrentScopeDeclarations() {
+        int count = 0;
+        Entry current = this.lastEntry;
+        while (current != null && current.closedScopes == 0) {
+            count++;
+            current = current.previous;
+        }
+
+        if (count == 0) return NO_DECLS;
+
+        Declaration[] decls = new Declaration[count];
+        count = 0;
+        current = this.lastEntry;
+        while (current != null && current.closedScopes == 0) {
+            decls[count++] = current;
+            current = current.previous;
+        }
+        return decls;
     }
 
     /**
@@ -107,13 +265,16 @@ public class NamespacesTable {
      * prefix was not mapped.
      */
     public String getUri(String prefix) {
-        int hash=prefix.hashCode();
-        Entry current=this.entry;
-        while (current!=null) {
-            if(current.prefixHash==hash) return(current.uri);
-            else current=current.nextEntry;
+        Entry current = this.lastEntry;
+        while (current != null) {
+            if (current.prefix.equals(prefix)) {
+                return current.uri;
+            }
+            current = current.previous;
         }
-        return(null);
+        
+        // Not found
+        return null;
     }
 
     /**
@@ -125,21 +286,25 @@ public class NamespacesTable {
      * @return A <b>non-null</b> <code>String</code> array.
      */
     public String[] getPrefixes(String uri) {
-        int hash=uri.hashCode();
-        Entry current=this.entry;
+
+        Entry current=this.lastEntry;
         int count=0;
         while (current!=null) {
-            if(current.uriHash==hash) count++;
-            current=current.nextEntry;
+            if(!current.overriden && current.uri.equals(uri))
+                count++;
+            current=current.previous;
         }
         if (count==0) return(new String[0]);
+
         String prefixes[]=new String[count];
         count=0;
+        current = this.lastEntry;
         while (current!=null) {
-            if(current.uriHash==hash) prefixes[count++]=current.prefix;
-            current=current.nextEntry;
+            if(!current.overriden && current.uri.equals(uri))
+                prefixes[count++] = current.prefix;
+            current = current.previous;
         }
-        return(prefixes);
+        return prefixes;
     }
 
 
@@ -148,13 +313,13 @@ public class NamespacesTable {
      * <b>null</b>.
      */
     public String getPrefix(String uri) {
-        int hash=uri.hashCode();
-        Entry current=this.entry;
-        while (current!=null) {
-            if(current.uriHash==hash) return(current.prefix);
-            current=current.nextEntry;
+        Entry current = this.lastEntry;
+        while (current != null) {
+            if(!current.overriden && current.uri.equals(uri))
+                return current.prefix;
+            current = current.previous;
         }
-        return(null);
+        return null;
     }
 
     /**
@@ -233,37 +398,32 @@ public class NamespacesTable {
 
     /** The internal entry structure for this table. */
     private static class Entry implements Declaration {
-        /** The URI hashcode. */
-        protected int uriHash=0;
-        /** The prefix hashcode. */
-        protected int prefixHash=0;
         /** The URI string. */
         protected String uri="";
         /** The prefix string. */
         protected String prefix="";
-        /** The previous declaration for the same prefix. */
-        protected Entry previousDeclaration;
-        /** The declaration following this one in the table. */
-        protected Entry nextEntry;
+        /** The previous declaration. */
+        protected Entry previous;
+        protected Entry overrides;
+        protected int closedScopes = 0;
+        protected boolean overriden = false;
 
         /** Create a new namespace declaration. */
         protected static Entry create(String prefix, String uri) {
             // Create a new entry
-            Entry e=new Entry();
-            // Set the prefix string and hash code.
-            if (prefix!=null) e.prefix=prefix;
-            e.prefixHash=e.prefix.hashCode();
-            // Set the uri string and hash code.
-            if (uri!=null) e.uri=uri;
-            e.uriHash=e.uri.hashCode();
+            Entry e = new Entry();
+            // Set the prefix string.
+            if (prefix != null) e.prefix=prefix;
+            // Set the uri string.
+            if (uri != null) e.uri=uri;
             // Return the entry
-            return(e);
+            return e;
         }
 
         /** Return the namespace URI. */
-        public String getUri() { return(this.uri); }
+        public String getUri() { return this.uri; }
         /** Return the namespace prefix. */
-        public String getPrefix() { return(this.prefix); }
+        public String getPrefix() { return this.prefix; }
     }
 
     /** The default namespace-aware name declaration implementation */
@@ -278,13 +438,13 @@ public class NamespacesTable {
         protected String raw;
 
         /** Return the namespace URI. */
-        public String getUri() { return(this.uri); }
+        public String getUri() { return this.uri; }
         /** Return the namespace prefix. */
-        public String getPrefix() { return(this.prefix); }
+        public String getPrefix() { return this.prefix; }
         /** Return the namespace local name. */
-        public String getLocalName() { return(this.local); }
+        public String getLocalName() { return this.local; }
         /** Return the namespace raw name. */
-        public String getQName() { return(this.raw); }
+        public String getQName() { return this.raw; }
     }
 
     /**
