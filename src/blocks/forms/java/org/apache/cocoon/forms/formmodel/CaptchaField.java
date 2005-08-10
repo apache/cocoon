@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A {@link Field} for CAPTCHA validation. Upon generation, a secret random string is stored
- * in a session attribute having a randomly generated name, for use by a 
+ * in a session attribute having a randomly generated name, for use by a
  * {@link org.apache.cocoon.forms.validation.impl.CaptchaValidator}.
  * <br>
  * Usage sample:
@@ -46,8 +46,8 @@ import org.xml.sax.SAXException;
       &lt;/fd:validation>
     &lt;/fd:captcha>
  * </pre>
- * 
- * @see http://www.captcha.net/
+ *
+ * @see <a href="http://www.captcha.net/">captcha.net</a>
  * @version CVS $Id$
  */
 public class CaptchaField extends Field {
@@ -57,7 +57,7 @@ public class CaptchaField extends Field {
     private static final String IMAGE_EL = "captcha-image";
     private static final String SECRET_CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
     private static final int SESSION_ATTR_NAME_LENGTH = 6;
-    
+
     private Context avalonContext;
     private int length;
 
@@ -85,12 +85,12 @@ public class CaptchaField extends Field {
         this.avalonContext = avalonContext;
         this.length = fieldDefinition.getLength();
     }
-    
+
     private String generateSecret() {
         StringBuffer secret = new StringBuffer(length);
         for (int n = 0 ; n < length ; n++) {
             int randomnumber = random.nextInt(SECRET_CHARS.length());
-            secret.append(SECRET_CHARS.charAt(randomnumber)); 
+            secret.append(SECRET_CHARS.charAt(randomnumber));
         }
         return secret.toString();
     }
@@ -116,5 +116,4 @@ public class CaptchaField extends Field {
         contentHandler.startElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL, attrs);
         contentHandler.endElement(Constants.INSTANCE_NS, IMAGE_EL, Constants.INSTANCE_PREFIX_COLON + IMAGE_EL);
     }
-    
 }

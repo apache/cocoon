@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,14 +40,22 @@ import org.xml.sax.SAXException;
  *
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
- * 
+ *
  * @version $Id$
  */
-public class Repeater extends AbstractWidget implements ValidationErrorAware //, ContainerWidget 
-{
+public class Repeater extends AbstractWidget
+                      implements ValidationErrorAware {
+
+    private static final String REPEATER_EL = "repeater";
+    private static final String HEADINGS_EL = "headings";
+    private static final String HEADING_EL = "heading";
+    private static final String LABEL_EL = "label";
+    private static final String REPEATER_SIZE_EL = "repeater-size";
+
     private final RepeaterDefinition definition;
     private final List rows = new ArrayList();
     protected ValidationError validationError;
+
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         super(repeaterDefinition);
@@ -62,7 +70,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
     public WidgetDefinition getDefinition() {
         return definition;
     }
-    
+
     public void initialize() {
         for (int i = 0; i < this.rows.size(); i++) {
             ((RepeaterRow)rows.get(i)).initialize();
@@ -81,7 +89,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         getForm().addWidgetUpdate(this);
         return repeaterRow;
     }
-    
+
     public RepeaterRow addRow(int index) {
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         if (index >= this.rows.size()) {
@@ -97,30 +105,33 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
     public RepeaterRow getRow(int index) {
         return (RepeaterRow)rows.get(index);
     }
-    
+
     /**
-     * Overrides {@link AbstractWidget#getChild(String)} to return the 
+     * Overrides {@link AbstractWidget#getChild(String)} to return the
      * repeater-row indicated by the index in 'id'
-     * 
+     *
      * @param id index of the row as a string-id
      * @return the repeater-row at the specified index
      */
     public Widget getChild(String id) {
-        int rowIndex = -1;
+        int rowIndex;
         try {
             rowIndex = Integer.parseInt(id);
         } catch (NumberFormatException nfe) {
             // Not a number
             return null;
         }
-        if (rowIndex < 0 || rowIndex >= getSize()) 
+
+        if (rowIndex < 0 || rowIndex >= getSize()) {
             return null;
+        }
+
         return getRow(rowIndex);
     }
-    
+
     /**
      * Crawls up the parents of a widget up to finding a repeater row.
-     * 
+     *
      * @param widget the widget whose row is to be found
      * @return the repeater row
      */
@@ -129,14 +140,14 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         while(result != null && ! (result instanceof Repeater.RepeaterRow)) {
             result = result.getParent();
         }
-        
+
         if (result == null) {
             throw new RuntimeException("Could not find a parent row for widget " + widget);
 
         }
         return (Repeater.RepeaterRow)result;
     }
-    
+
     /**
      * Get the position of a row in this repeater.
      * @param row the row which we search the index for
@@ -153,7 +164,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         rows.remove(index);
         getForm().addWidgetUpdate(this);
     }
-    
+
     public void moveRowLeft(int index) {
         if (index == 0 || index >= this.rows.size()) {
             // do nothing
@@ -175,7 +186,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         }
         getForm().addWidgetUpdate(this);
     }
-    
+
     /**
      * @deprecated {@see #clear()}
      *
@@ -184,13 +195,13 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         clear();
         getForm().addWidgetUpdate(this);
     }
-    
+
     /**
      * Clears all rows from the repeater and go back to the initial size
      */
     public void clear() {
         rows.clear();
-        
+
         // and reset to initial size
         for (int i = 0; i < this.definition.getInitialSize(); i++) {
             addRow();
@@ -208,7 +219,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         RepeaterRow row = (RepeaterRow)rows.get(rowIndex);
         return row.getChild(id);
     }
-    
+
     public void readFromRequest(FormContext formContext) {
         if (!getCombinedState().isAcceptingInputs())
             return;
@@ -256,33 +267,33 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
             this.wasValid = true;
             return true;
         }
+
         boolean valid = true;
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
             valid = valid & row.validate();
         }
-        this.wasValid = (valid ? super.validate() : false) && this.validationError == null;
+
+        if (!valid) {
+            valid = super.validate();
+        }
+
+        this.wasValid = valid && this.validationError == null;
         return this.wasValid;
     }
 
 
-    private static final String REPEATER_EL = "repeater";
-    private static final String HEADINGS_EL = "headings";
-    private static final String HEADING_EL = "heading";
-    private static final String LABEL_EL = "label";
-    private static final String REPEATER_SIZE_EL = "repeater-size";
-    
 
     /**
      * @return "repeater"
      */
     public String getXMLElementName() {
         return REPEATER_EL;
-    }   
-    
-    
-    
+    }
+
+
+
 	/**
 	 * Adds @size attribute
 	 */
@@ -291,8 +302,8 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         attrs.addCDATAAttribute("size", String.valueOf(getSize()));
 		return attrs;
 	}
-    
-        
+
+
 	public void generateDisplayData(ContentHandler contentHandler)
 			throws SAXException {
         // the repeater's label
@@ -311,8 +322,8 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         }
         contentHandler.endElement(Constants.INSTANCE_NS, HEADINGS_EL, Constants.INSTANCE_PREFIX_COLON + HEADINGS_EL);
 	}
-    
-    
+
+
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // the actual rows in the repeater
         Iterator rowIt = rows.iterator();
@@ -337,11 +348,11 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
      * Generates a repeater-size element with a size attribute indicating the size of this repeater.
      */
     public void generateSize(ContentHandler contentHandler) throws SAXException {
-        AttributesImpl attrs = getXMLElementAttributes(); 
+        AttributesImpl attrs = getXMLElementAttributes();
         contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
         contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL);
     }
-    
+
     /**
      * Set a validation error on this field. This allows repeaters be externally marked as invalid by
      * application logic.
@@ -361,16 +372,14 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
 
     public class RepeaterRow extends AbstractContainerWidget {
 
+        private static final String ROW_EL = "repeater-row";
+
         public RepeaterRow(RepeaterDefinition definition) {
             super(definition);
             setParent(Repeater.this);
-            ((ContainerDefinition)definition).createWidgets(this);
+            definition.createWidgets(this);
         }
 
-//        public String getLocation() {
-//            return Repeater.this.getLocation();
-//        }
-//        
         public WidgetDefinition getDefinition() {
             return Repeater.this.definition;
         }
@@ -383,7 +392,7 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
         public Form getForm() {
             return Repeater.this.getForm();
         }
-        
+
         public void initialize() {
             // Initialize children but don't call super.initialize() that would call the repeater's
             // on-create handlers for each row.
@@ -398,9 +407,6 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
             // Validate only child widtgets, as the definition's validators are those of the parent repeater
             return widgets.validate();
         }
-        
-        private static final String ROW_EL = "repeater-row";
-
 
         /**
          * @return "repeater-row"
@@ -411,16 +417,15 @@ public class Repeater extends AbstractWidget implements ValidationErrorAware //,
 
         public void generateLabel(ContentHandler contentHandler) throws SAXException {
             // this widget has its label generated in the context of the repeater
-        }     
-        
+        }
+
         public void generateDisplayData(ContentHandler contentHandler)
                 throws SAXException {
             // this widget has its display-data generated in the context of the repeater
         }
-        
+
         public void broadcastEvent(WidgetEvent event) {
             throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
         }
     }
-
 }

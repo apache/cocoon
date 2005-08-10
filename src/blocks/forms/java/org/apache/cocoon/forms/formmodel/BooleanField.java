@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,10 +38,11 @@ import org.apache.commons.lang.BooleanUtils;
  * has no purpose here (there would always be only 2 choices: true or false),
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
- * 
+ *
  * @version $Id$
  */
-public class BooleanField extends AbstractWidget implements ValidationErrorAware, ValueChangedListenerEnabled {
+public class BooleanField extends AbstractWidget
+                          implements ValidationErrorAware, ValueChangedListenerEnabled {
 
     private static final String BOOLEAN_FIELD_EL = "booleanfield";
     private static final String VALUE_EL = "value";
@@ -55,6 +56,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     private ValueChangedListener listener;
     protected ValidationError validationError;
 
+
     public BooleanField(BooleanFieldDefinition definition) {
         super(definition);
         this.definition = definition;
@@ -63,7 +65,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     public WidgetDefinition getDefinition() {
         return this.definition;
     }
-    
+
     public void initialize() {
         Boolean value = this.definition.getInitialValue();
         if (value != null) {
@@ -76,6 +78,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         if (!getCombinedState().isAcceptingInputs()) {
             return;
         }
+
         validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,8 @@ import org.outerj.expression.ExpressionException;
  */
 public class AggregateField extends Field implements ContainerWidget {
 
+    private static final String AGGREGATEFIELD_EL = "aggregatefield";
+
     /**
      * List of nested fields
      */
@@ -71,7 +73,7 @@ public class AggregateField extends Field implements ContainerWidget {
     public final AggregateFieldDefinition getAggregateFieldDefinition() {
         return (AggregateFieldDefinition)getDefinition();
     }
-    
+
     public void initialize() {
         this.selectionList = getAggregateFieldDefinition().getSelectionList();
     }
@@ -99,8 +101,9 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
+        }
 
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
         if (newEnteredValue != null) {
@@ -198,6 +201,7 @@ public class AggregateField extends Field implements ContainerWidget {
             this.wasValid = true;
             return true;
         }
+
         if (enteredValue != null && !fieldsHaveValues()) {
             XMLizable failMessage = getAggregateFieldDefinition().getSplitFailMessage();
             if (failMessage != null) {
@@ -229,8 +233,6 @@ public class AggregateField extends Field implements ContainerWidget {
 
         return super.validate();
     }
-
-    private static final String AGGREGATEFIELD_EL = "aggregatefield";
 
     /**
      * @return "aggregatefield"

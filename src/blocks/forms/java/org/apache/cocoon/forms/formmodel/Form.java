@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,10 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class Form extends AbstractContainerWidget implements ValidationErrorAware {
+public class Form extends AbstractContainerWidget
+                  implements ValidationErrorAware {
+
+    private static final String FORM_EL = "form";
 
     private final FormDefinition definition;
 
@@ -57,15 +60,16 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
     //to read their value before events get fired.
     private boolean bufferEvents = false;
     private CursorableLinkedList events;
-    
+
     // Widgets that need to be updated in the client when in AJAX mode
     private Set updatedWidgets;
+
 
     public Form(FormDefinition definition) {
         super(definition);
         this.definition = definition;
     }
-    
+
     /**
      * Initialize the form by recursively initializing all its children. Any events occuring within the
      * initialization phase are buffered and fired after initialization is complete, so that any action
@@ -110,13 +114,13 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
             event.getSourceWidget().broadcastEvent(event);
         }
     }
-    
+
     public void addWidgetUpdate(Widget widget) {
         if (this.updatedWidgets != null) {
             this.updatedWidgets.add(widget.getRequestParameterName());
         }
     }
-    
+
     public Set getUpdatedWidgets() {
         return this.updatedWidgets == null ? Collections.EMPTY_SET : this.updatedWidgets;
     }
@@ -235,7 +239,7 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
         if (formContext.getRequest().getParameter("cocoon-ajax") != null) {
             this.updatedWidgets = new HashSet();
         }
-        
+
         // Fire the binding phase events
         fireEvents();
 
@@ -323,7 +327,7 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
         // let all individual widgets read their value from the request object
         super.readFromRequest(formContext);
     }
-    
+
     /**
      * Set a validation error on this field. This allows the form to be externally marked as invalid by
      * application logic.
@@ -340,7 +344,7 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
     public void setValidationError(ValidationError error) {
         this.validationError = error;
     }
-    
+
     /**
      * Performs validation phase of form processing.
      */
@@ -369,8 +373,6 @@ public class Form extends AbstractContainerWidget implements ValidationErrorAwar
         this.wasValid = this.isValid && this.validationError == null;
         return this.wasValid;
     }
-
-    private static final String FORM_EL = "form";
 
     public String getXMLElementName() {
         return FORM_EL;

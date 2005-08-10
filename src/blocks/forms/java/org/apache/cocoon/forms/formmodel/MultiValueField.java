@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget, DataWidget {
+public class MultiValueField extends AbstractWidget
+                             implements ValidationErrorAware, SelectableWidget, DataWidget {
 
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
     private static final String VALUES_EL = "values";
@@ -67,7 +68,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         super(definition);
         this.definition = definition;
     }
-    
+
     public void initialize() {
         this.selectionList = this.definition.getSelectionList();
         super.initialize();
@@ -121,10 +122,10 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
 
         if (values != null) {
             validationError = definition.getDatatype().validate(values, new ExpressionContextImpl(this));
-        }
-        else {
+        } else {
             validationError = new ValidationError(new I18nMessage("multivaluefield.conversionfailed", Constants.I18N_CATALOGUE));
         }
+
         this.wasValid = validationError == null ? super.validate() : false;
         return this.wasValid;
     }
@@ -200,7 +201,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         if (selectionList == null) {
             throw new IllegalArgumentException("An MultiValueField's selection list cannot be null.");
         }
-        
+
         if (selectionList.getDatatype() != null &&
             selectionList.getDatatype() != definition.getDatatype()) {
 
