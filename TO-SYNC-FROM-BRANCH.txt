@@ -19,3 +19,5 @@ Xsltal block is in branch only for now, it can wait for more examples before
 "porting" to trunk.
 
 Forms block: port support for "factory" attribute in binding.
+
+cocoon stack traces
