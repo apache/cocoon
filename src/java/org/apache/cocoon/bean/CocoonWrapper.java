@@ -97,7 +97,6 @@ public class CocoonWrapper {
     private LogKitLoggerManager logManager;
     private Cocoon cocoon;
     protected Logger log;
-    private Map attributes = new HashMap();
     private HashMap empty = new HashMap();
 
     private boolean initialized = false;
@@ -472,7 +471,7 @@ public class CocoonWrapper {
         parameters.put("accept", accept);
 
         LinkSamplingEnvironment env =
-            new LinkSamplingEnvironment(deparameterizedURI, context, attributes,
+            new LinkSamplingEnvironment(deparameterizedURI, context, null,
                                         parameters, cliContext, log);
         processLenient(env);
         return env.getLinks();
@@ -501,7 +500,7 @@ public class CocoonWrapper {
 
         FileSavingEnvironment env =
             new FileSavingEnvironment(deparameterizedURI, lastModified, context,
-                                      attributes, parameters, links,
+                                      null, parameters, links,
                                       gatheredLinks, cliContext, stream, log);
 
         // Here Cocoon can throw an exception if there are errors in processing the page
@@ -538,7 +537,7 @@ public class CocoonWrapper {
 
         FileSavingEnvironment env =
             new FileSavingEnvironment(deparameterizedURI, lastModified, context,
-                                      attributes, parameters, links,
+                                      null, parameters, links,
                                       gatheredLinks, cliContext, null, log);
 
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
@@ -584,7 +583,7 @@ public class CocoonWrapper {
         parameters.put("accept", accept);
 
         FileSavingEnvironment env =
-            new FileSavingEnvironment(deparameterizedURI, context, attributes,
+            new FileSavingEnvironment(deparameterizedURI, context, null,
                                       parameters, empty, null, cliContext,
                                       new NullOutputStream(), log);
         processLenient(env);
