@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.xml;
 
-import java.util.Enumeration;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -28,13 +26,15 @@ import org.xml.sax.SAXException;
  * no element inbetween) that can be produced by some components (e.g. JXTG or
  * BrowserUpdateTransformer). Such empty scopes confuse the Xalan serializer which
  * then produces weird namespace declarations (<code>xmlns:%@$#^@#="%@$#^@#"</code>).
+ * <p>
+ * This is a the most simple use of {@link NamespaceHelper}.
  * 
  * @version CVS $Id$
  */
 public class RedundantNamespacesFilter extends AbstractXMLPipe {
     
     /** Layered storage for all namespace declarations */
-    private NamespaceSupport ns = new NamespaceSupport();
+    private NamespacesTable ns = new NamespacesTable();
     
     /**
      * No-arg constructor. Requires an explicit call to
@@ -55,31 +55,19 @@ public class RedundantNamespacesFilter extends AbstractXMLPipe {
     }
     
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if (!uri.equals(ns.getURI(prefix))) {
-            // New declaration: store it
-            ns.declarePrefix(prefix, uri);
-        }
+        // Just declare it: duplicate declarations are ignorede by NamespacesTable
+        ns.addDeclaration(prefix, uri);
     }
 
     public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
         // Declare namespaces for this scope, if any
-        Enumeration prefixes = ns.getDeclaredPrefixes();
-        while (prefixes.hasMoreElements()) {
-            String prefix = (String) prefixes.nextElement();
-            super.startPrefixMapping(prefix, ns.getURI(prefix));
-        }
-        ns.pushContext();
+        ns.enterScope(this.contentHandler);
         super.startElement(uri, loc, raw, a);
     }
 
     public void endElement(String uri, String loc, String raw) throws SAXException {
         super.endElement(uri, loc, raw);
-        ns.popContext();
-        // Undeclare namespaces for this scope, if any
-        Enumeration prefixes = ns.getDeclaredPrefixes();
-        while (prefixes.hasMoreElements()) {
-            super.endPrefixMapping((String) prefixes.nextElement());
-        }
+        ns.leaveScope(this.contentHandler);
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
