@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,30 +35,30 @@ import org.xml.sax.SAXException;
  *   public void startPrefixMapping(String prefix, String uri) throws SAXException {
  *       namespaces.addDeclaration(prefix, uri);
  *   }
- *   
+ *
  *   public void startElement(...) throws SAXException {
  *       // automatically start mappings for this scope
  *       namespaces.enterScope(nextHandler);
  *       nextHandler.startElement(...);
  *   }
- *   
+ *
  *   public void endElement(...) throws SAXException {
  *       nextHandler.endElement(...);
  *       // automatically end mappings for this scope
  *       namespaces.leaveScope(nextHandler);
  *   }
- *   
+ *
  *   public void endPrefixMapping(String prefix) throws SAXException {
  *       // Ignore, it is handled by the call to leaveScope above.
  *   }
  * </pre>
- * 
+ *
  * @version $Id$
  */
 public class NamespacesTable {
     /** The last namespace declaration. */
-    private Entry lastEntry = null;
-    
+    private Entry lastEntry;
+
     private boolean filterDuplicate = true;
 
     /**
@@ -67,7 +67,7 @@ public class NamespacesTable {
     public NamespacesTable() {
         clear();
     }
-    
+
     /**
      * Clear and reinitialize this namespace table before reuse.
      *
@@ -91,14 +91,14 @@ public class NamespacesTable {
         while (dup != null && !dup.prefix.equals(prefix)) {
             dup = dup.previous;
         }
-        
+
         if (dup != null) {
             if (filterDuplicate && dup.uri.equals(uri)) {
                 return dup;
             }
             dup.overriden = true;
         }
-        
+
         Entry e = Entry.create(prefix, uri);
         e.previous = this.lastEntry;
         e.overrides = dup;
@@ -115,7 +115,7 @@ public class NamespacesTable {
      * @return The removed <code>Declaration</code> or <b>null</b>.
      */
     public Declaration removeDeclaration(String prefix) {
-        
+
         Entry current = this.lastEntry;
         Entry afterCurrent = null;
         while(current != null) {
@@ -123,7 +123,7 @@ public class NamespacesTable {
                 // Don't undeclare mappings not declared in this scope
                 return null;
             }
-            
+
             if (current.prefix.equals(prefix)) {
                 // Got it
                 // Remove it from the chain
@@ -137,33 +137,33 @@ public class NamespacesTable {
                     // No more overriden
                     overrides.overriden = false;
                 }
-                
+
                 return current;
             }
-            
+
             afterCurrent = current;
             current = current.previous;
         }
-        
+
         // Not found
         return null;
     }
-    
+
     /**
      * Enter a new scope, with no declared mappings.
-     * 
+     *
      * @see #getCurrentScopeDeclarations()
      * @since 2.1.8
      */
     public void enterScope() {
         this.lastEntry.closedScopes++;
     }
-    
+
     /**
      * Start all declared mappings of the current scope and enter a new scope.
      * Typically called in a SAX handler <em>before</em> sending a <code>startElement()</code>
      * event.
-     * 
+     *
      * @param handler the handler that will receive startPrefixMapping events.
      * @throws SAXException
      * @since 2.1.8
@@ -176,13 +176,13 @@ public class NamespacesTable {
         }
         enterScope();
     }
-    
+
     /**
      * Leave a scope. If <code>autoRemove</code> is true, all declared mappings for the
      * scope that is left are automatically removed, without having to explicitely call
      * {@link #removeDeclaration(String)}.
-     * 
-     * @param autoRemove if <code>true</code>, remove all mappings for the current scope.
+     *
+     * @param autoUndeclare if <code>true</code>, remove all mappings for the current scope.
      * @since 2.1.8
      */
     public void leaveScope(boolean autoUndeclare) {
@@ -203,12 +203,12 @@ public class NamespacesTable {
         }
         this.lastEntry = current;
     }
-    
+
     /**
      * Leave a scope and end all declared mappings of the new scope.
      * Typically called in a SAX handler <em>after</em> sending a <code>endElement()</code>
      * event.
-     * 
+     *
      * @param handler the handler that will receive endPrefixMapping events.
      * @throws SAXException
      * @since 2.1.8
@@ -231,12 +231,12 @@ public class NamespacesTable {
         current.closedScopes--;
         this.lastEntry = current;
     }
-    
+
     private static final Declaration[] NO_DECLS = new Declaration[0];
 
     /**
      * Get the declarations that were declared within the current scope.
-     * 
+     *
      * @return the declarations (never null)
      * @since 2.1.8
      */
@@ -272,7 +272,7 @@ public class NamespacesTable {
             }
             current = current.previous;
         }
-        
+
         // Not found
         return null;
     }
