@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  *   }
  *
  *   public void endPrefixMapping(String prefix) throws SAXException {
- *       // Ignore, it is handled by the call to leaveScope above.
+ *       namespaces.removeDeclaration(prefix);
  *   }
  * </pre>
  *
@@ -115,7 +115,6 @@ public class NamespacesTable {
      * @return The removed <code>Declaration</code> or <b>null</b>.
      */
     public Declaration removeDeclaration(String prefix) {
-
         Entry current = this.lastEntry;
         Entry afterCurrent = null;
         while(current != null) {
@@ -136,6 +135,10 @@ public class NamespacesTable {
                 if (overrides != null) {
                     // No more overriden
                     overrides.overriden = false;
+                }
+
+                if (this.lastEntry == current) {
+                    this.lastEntry = current.previous;
                 }
 
                 return current;
@@ -174,7 +177,7 @@ public class NamespacesTable {
             handler.startPrefixMapping(current.prefix, current.uri);
             current = current.previous;
         }
-        enterScope();
+        this.lastEntry.closedScopes++;
     }
 
     /**
