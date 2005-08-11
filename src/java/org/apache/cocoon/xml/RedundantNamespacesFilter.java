@@ -73,6 +73,6 @@ public class RedundantNamespacesFilter extends AbstractXMLPipe {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        // Ignore, this is handled in endElement()
+        ns.removeDeclaration(prefix);
     }
 }
