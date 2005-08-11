@@ -53,8 +53,10 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
     }
     
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        // always let them trough
-        super.startPrefixMapping(prefix, uri);
+        // Passthrough if not in ajax mode or if in a bu:replace
+        if (!this.ajaxMode || this.replaceDepth > 0) {
+            super.startPrefixMapping(prefix, uri);
+        }
     }
 
     public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
@@ -94,8 +96,10 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        // always let them trough
-        super.endPrefixMapping(prefix);
+        // Passthrough if not in ajax mode or if in a bu:replace
+        if (!this.ajaxMode || this.replaceDepth > 0) {
+            super.endPrefixMapping(prefix);
+        }
     }
 
     public void endDocument() throws SAXException {
