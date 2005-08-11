@@ -34,6 +34,8 @@ import org.xml.sax.SAXException;
  * Example: &lt;h1&gt;Hello {#user.getName()}&lt;/h1&gt; &lt;img or
  * src=&quot;image_{#image.getId()}&quot;/&gt;
  * <p>
+ *
+ * @version SVN $Id$
  */
 public class XSPExpressionParser {
 
