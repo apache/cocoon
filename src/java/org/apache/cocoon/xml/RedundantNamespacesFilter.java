@@ -20,22 +20,24 @@ import org.xml.sax.SAXException;
 
 /**
  * A SAX filter that strips out redundant namespace declarations.
+ *
  * <p>
  * It handles both duplicate declarations (i.e. a namespace already declared by a
  * parent element) and empty namespaces scopes (i.e. start/stopPrefixMapping with
  * no element inbetween) that can be produced by some components (e.g. JXTG or
  * BrowserUpdateTransformer). Such empty scopes confuse the Xalan serializer which
  * then produces weird namespace declarations (<code>xmlns:%@$#^@#="%@$#^@#"</code>).
+ *
  * <p>
- * This is a the most simple use of {@link NamespaceHelper}.
- * 
+ * This is a the most simple use of {@link NamespacesTable}.
+ *
  * @version CVS $Id$
  */
 public class RedundantNamespacesFilter extends AbstractXMLPipe {
-    
+
     /** Layered storage for all namespace declarations */
     private NamespacesTable ns = new NamespacesTable();
-    
+
     /**
      * No-arg constructor. Requires an explicit call to
      * <code>setConsumer()</code>.
@@ -46,14 +48,14 @@ public class RedundantNamespacesFilter extends AbstractXMLPipe {
 
     /**
      * Creates a filter directly linked to its consumer
-     * 
+     *
      * @param consumer
      *            the SAX stream consumer
      */
     public RedundantNamespacesFilter(XMLConsumer consumer) {
         setConsumer(consumer);
     }
-    
+
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         // Just declare it: duplicate declarations are ignorede by NamespacesTable
         ns.addDeclaration(prefix, uri);
