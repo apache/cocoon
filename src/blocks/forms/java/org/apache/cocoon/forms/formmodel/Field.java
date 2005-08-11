@@ -362,11 +362,11 @@ public class Field extends AbstractWidget
             if (this.value == null && getFieldDefinition().isRequired()) {
                 // Field is required
                 this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
-            } else {
-                if (super.validate() && value != null) {
-                    // New-style validators were successful. Check the old-style ones.
-                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
-                }
+            } else if (!super.validate()) {
+                // New-style validators failed.
+            } else if (this.value != null) {
+                // Check the old-style ones.
+                this.validationError = getDatatype().validate(this.value, new ExpressionContextImpl(this));
             }
         } finally {
             // Consider validation finished even in case of exception
@@ -376,11 +376,12 @@ public class Field extends AbstractWidget
 
     /**
      * Returns the validation error, if any. There will always be a validation error in case the
-     * {@link #validate()} method returned false.
+     * {@link #validate} method returned false.
+     *
+     * <br>This method does not cause parsing to take effect, use {@link #getValue} if value
+     * is not parsed yet.
      */
     public ValidationError getValidationError() {
-        // If needed, getValue() will do the validation
-        getValue();
         return this.validationError;
     }
 
@@ -391,7 +392,10 @@ public class Field extends AbstractWidget
      * @param error the validation error
      */
     public void setValidationError(ValidationError error) {
-        this.valueState = VALUE_DISPLAY_VALIDATION;
+        if (this.valueState >= VALUE_VALIDATED) {
+            this.valueState = VALUE_DISPLAY_VALIDATION;
+        }
+
         if (!ObjectUtils.equals(this.validationError, error)) {
             this.validationError = error;
             getForm().addWidgetUpdate(this);
