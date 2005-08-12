@@ -16,6 +16,7 @@
 package org.apache.cocoon.util.location;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -24,6 +25,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
  * A cascading and located <code>RuntimeException</code>. It is also {@link MultiLocatable} to easily build
  * stack traces.
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocatedRuntimeException extends CascadingRuntimeException implements LocatableException, MultiLocatable {
@@ -53,7 +55,7 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     }
 
     public List getLocations() {
-        return locations;
+        return locations == null ? Collections.EMPTY_LIST : locations;
     }
 
     public String getRawMessage() {
@@ -71,21 +73,28 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small
         }
-        locations.add(loc);
+        locations.add(LocationImpl.get(loc));
     }
 
     /**
-     * A convenience method to get a located exception for an existing <code>Throwable</code>.
-     * If the throwable already is {@link MultiLocatable}, the location is added to its location
-     * list. Otherwise, a new <code>LocatedRuntimeException</code> is created.
+     * Build a located exception given an existing exception and the location where
+     * this exception was catched. If the exception is already a <code>LocatedRuntimeException</code>,
+     * then the location is added to the original exception's location chain and the result is
+     * the original exception (and <code>description</code> is ignored. Otherwise, a new
+     * <code>LocatedRuntimeException</code> is built, wrapping the original exception.
+     * 
+     * @param message a message (can be <code>null</code>)
+     * @param thr the original exception (can be <code>null</code>)
+     * @param location the location (can be <code>null</code>)
+     * @return a located exception
      */
-    public static LocatedRuntimeException getLocatedException(String description, Throwable thr, Location location) {
+    public static LocatedRuntimeException getLocatedException(String message, Throwable thr, Location location) {
         if (thr instanceof LocatedRuntimeException) {
             LocatedRuntimeException re = (LocatedRuntimeException)thr;
             re.addLocation(location);
             return re;
         }
         
-        return new LocatedRuntimeException(description, thr, location);
+        return new LocatedRuntimeException(message, thr, location);
     }
 }

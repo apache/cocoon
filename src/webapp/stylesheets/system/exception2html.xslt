@@ -29,7 +29,7 @@
   <!-- let sitemap override default page title -->
   <xsl:param name="pageTitle">An error has occured</xsl:param>
 
-  <xsl:template match="ex:exception">
+  <xsl:template match="ex:exception-report">
     <html>
       <head>
         <title>
@@ -42,6 +42,9 @@
           p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
           p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
           pre { font-size: 120%; }
+          .row-1 { background-color: #F0F0F0;}
+          table { border-collapse: collapse; margin-top: 0.3em; }
+          td { padding: 0.1em; }
         </style>
         <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
       </head>
@@ -60,22 +63,37 @@
                 <xsl:value-of select="."/>
              </xsl:if>
           </xsl:for-each>
-          <xsl:if test="@uri">
-             <br/><span style="font-weight: normal"><xsl:call-template name="dump-location"/></span>
+          <xsl:if test="ex:location">
+             <br/><span style="font-weight: normal"><xsl:apply-templates select="ex:location"/></span>
           </xsl:if>
         </p>
 
-        <xsl:if test="count(ex:locations/*)">
-          <p><span class="description">Cocoon stacktrace</span>
-             <span class="switch" id="locations-switch" onclick="toggle('locations')">[hide]</span>
-          </p>
-          <div id="locations">
-            <xsl:for-each select="ex:locations/*">
-              <xsl:sort select="position()" order="descending"/>
-              <xsl:apply-templates select="."/>
-            </xsl:for-each>
-          </div>
-        </xsl:if>
+        <p><span class="description">Cocoon stacktrace</span>
+           <span class="switch" id="locations-switch" onclick="toggle('locations')">[hide]</span>
+        </p>
+        <div id="locations">
+          <xsl:for-each select="ex:cocoon-stacktrace/ex:exception">
+            <strong>
+               <xsl:for-each select="str:split(ex:message, '&#10;')">
+                  <xsl:if test="normalize-space(.)">
+                     <xsl:value-of select="."/>
+                     <br/>
+                  </xsl:if>
+               </xsl:for-each>
+            </strong>
+            <table>
+              <xsl:for-each select="ex:locations/*">
+                <!--xsl:sort select="position()" order="descending"/-->
+                <tr class="row-{position() mod 2}">
+                   <td><xsl:call-template name="print-location"/></td>
+                   <td><em><xsl:value-of select="."/></em></td>
+                </tr>
+                <!--xsl:apply-templates select="."/><br/-->
+              </xsl:for-each>
+            </table>
+            <br/>
+           </xsl:for-each>
+        </div>
 
         <xsl:apply-templates select="ex:stacktrace"/>
         <xsl:apply-templates select="ex:full-stacktrace"/>
@@ -130,37 +148,7 @@
       </body>
     </html>
   </xsl:template>
-
-  <xsl:template match="ex:location">
-       <p>
-          <strong>
-             <xsl:for-each select="str:split(., '&#10;')">
-                <xsl:if test="normalize-space(.)">
-                  <xsl:value-of select="."/>
-                </xsl:if>
-             </xsl:for-each>
-          </strong>
-          <br/>
-          <xsl:call-template name="dump-location"/>
-       </p>
-  </xsl:template>
   
-  <xsl:template match="ex:location-list">
-     <p>
-        <strong>
-           <xsl:for-each select="str:split(ex:description, '&#10;')">
-              <xsl:if test="normalize-space(.)">
-                <xsl:value-of select="."/>
-              </xsl:if>
-           </xsl:for-each>
-        </strong>
-        <xsl:for-each select="ex:location">
-           <br/>
-           <xsl:call-template name="dump-location"/>
-         </xsl:for-each>
-     </p>
-  </xsl:template>
-
   <xsl:template match="ex:stacktrace|ex:full-stacktrace">
       <p class="stacktrace">
        <span class="description">Java <xsl:value-of select="translate(local-name(), '-', ' ')"/></span>
@@ -171,18 +159,26 @@
       </p>
   </xsl:template>
   
-  <xsl:template name="dump-location">
-   <xsl:choose>
-     <xsl:when test="contains(@uri, $realPath)">
-       <xsl:text>context:/</xsl:text>
-       <xsl:value-of select="substring-after(@uri, $realPath)"/>
-     </xsl:when>
-     <xsl:otherwise>
-       <xsl:value-of select="@uri"/>
-     </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text> - </xsl:text>
-    <xsl:value-of select="@line"/>:<xsl:value-of select="@column"/>
+  <xsl:template match="ex:location">
+   <xsl:if test="string-length(.) > 0">
+     <em><xsl:value-of select="."/></em>
+     <xsl:text> - </xsl:text>
+   </xsl:if>
+   <xsl:call-template name="print-location"/>
+  </xsl:template>
+  
+  <xsl:template name="print-location">
+     <xsl:choose>
+       <xsl:when test="contains(@uri, $realPath)">
+         <xsl:text>context:/</xsl:text>
+         <xsl:value-of select="substring-after(@uri, $realPath)"/>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:value-of select="@uri"/>
+       </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text> - </xsl:text>
+      <xsl:value-of select="@line"/>:<xsl:value-of select="@column"/>
   </xsl:template>
 
 </xsl:stylesheet>

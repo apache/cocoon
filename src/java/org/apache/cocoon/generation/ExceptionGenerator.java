@@ -33,6 +33,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+/**
+ * A generator that dumps an XML representation of the exception raised during a pipeline execution.
+ * <p>
+ * The Cocoon stack trace is produced, reflecting all locations the original exception went through,
+ * along with the root exception stacktrace and the full exception stacktrace.
+ * 
+ * @since 2.1.8
+ * @version $Id$
+ */
 public class ExceptionGenerator extends AbstractGenerator {
     
     private Throwable thr;
@@ -60,67 +69,53 @@ public class ExceptionGenerator extends AbstractGenerator {
         AttributesImpl attr = new AttributesImpl();
         handler.startPrefixMapping("ex", EXCEPTION_NS);
         attr.addCDATAAttribute("class", root.getClass().getName());
-        Location loc = ExceptionUtils.getLocation(root);
+        handler.startElement(EXCEPTION_NS, "exception-report", "ex:exception-report", attr);
+        
+        // Root exception location
+        Location loc = ExceptionUtils.getLocation(root);        
         if (loc != null) {
-            attr.addCDATAAttribute("uri", loc.getURI());
-            attr.addCDATAAttribute("line", Integer.toString(loc.getLine()));
-            attr.addCDATAAttribute("column", Integer.toString(loc.getColumn()));
+            attr.clear();
+            dumpLocation(loc, attr, handler);
         }
-        handler.startElement(EXCEPTION_NS, "exception", "ex:exception", attr);
 
         // Root exception message
         attr.clear();
-        simpleElement("message", attr, root.getMessage(), handler);
+        String message = root instanceof LocatableException ? ((LocatableException)root).getRawMessage() : root.getMessage();
+        simpleElement("message", attr, message, handler);
         
-        // Locations
-        handler.startElement(EXCEPTION_NS, "locations", "ex:locations", attr);
+        // Cocoon stacktrace: dump all located exceptions in the exception stack
+        handler.startElement(EXCEPTION_NS, "cocoon-stacktrace", "ex:cocoon-stacktrace", attr);
         Throwable current = thr;
         while (current != null) {
-            if (current instanceof MultiLocatable) {
-                List locations = ((MultiLocatable)current).getLocations();
-                if (locations != null) {
-                    // Get raw message for LocatableExceptions, message otherwise
-                    String message = current instanceof LocatableException ?
-                            ((LocatableException)current).getRawMessage() :
-                            current.getMessage();
-    
-                    attr.clear();
-                    handler.startElement(EXCEPTION_NS, "location-list", "ex:location-list", attr);
-                    simpleElement("description", attr, message, handler);
-                    for (int i = 0; i < locations.size(); i++) {
+            loc = ExceptionUtils.getLocation(current);
+            if (loc != null) {
+                // One or more locations: dump it
+                handler.startElement(EXCEPTION_NS, "exception", "ex:exception", attr);
+                
+                message = current instanceof LocatableException ? ((LocatableException)current).getRawMessage() : current.getMessage();
+                simpleElement("message", attr, message, handler);
+
+                attr.clear();
+                handler.startElement(EXCEPTION_NS, "locations", "ex:locations", attr);
+                dumpLocation(loc, attr, handler);
+                
+                if (current instanceof MultiLocatable) {
+                    List locations = ((MultiLocatable)current).getLocations();
+                    for (int i = 1; i < locations.size(); i++) { // start at 1 because we already dumped the first one
                         attr.clear();
-                        dumpLocation((Location)locations.get(i), attr, null, handler);
-                    }
-                    handler.endElement(EXCEPTION_NS, "location-list", "ex:location-list");
-                }
-            } else {
-                // Not a MultiLocatable
-                loc = ExceptionUtils.getLocation(current);
-                if (loc != null) {
-                    // Get raw message for LocatableExceptions, message otherwise
-                    String message = current instanceof LocatableException ?
-                            ((LocatableException)current).getRawMessage() :
-                            current.getMessage();
-    
-                    attr.clear();                
-                    dumpLocation(loc, attr, message, handler);
-                    
-                    // Dump additional locations (explains "1" below) if it's a MultiLocatable (e.g. ProcessingException)
-                    if (current instanceof MultiLocatable) {
-                        List locations = ((MultiLocatable)current).getLocations();
-                        for (int i = 1; i < locations.size(); i++) {
-                            attr.clear();
-                            dumpLocation((Location)locations.get(i), attr, null, handler);
-                        }
+                        dumpLocation((Location)locations.get(i), attr, handler);
                     }
                 }
+                handler.endElement(EXCEPTION_NS, "locations", "ex:locations");
+                handler.endElement(EXCEPTION_NS, "exception", "ex:exception");
             }
+            
             
             // Dump parent location
             current = ExceptionUtils.getCause(current);
         }
         
-        handler.endElement(EXCEPTION_NS, "locations", "ex:locations");
+        handler.endElement(EXCEPTION_NS, "cocoon-stacktrace", "ex:cocoon-stacktrace");
         
         // Root exception stacktrace
         attr.clear();
@@ -135,16 +130,15 @@ public class ExceptionGenerator extends AbstractGenerator {
             simpleElement("full-stacktrace", attr, trace, handler);
         }
         
-        handler.endElement(EXCEPTION_NS, "exception", "ex:exception");
+        handler.endElement(EXCEPTION_NS, "exception-report", "ex:exception-report");
         handler.endPrefixMapping("ex");
     }
     
-    private static void dumpLocation(Location loc, AttributesImpl attr, String message, ContentHandler handler) throws SAXException {
+    private static void dumpLocation(Location loc, AttributesImpl attr, ContentHandler handler) throws SAXException {
         attr.addCDATAAttribute("uri", loc.getURI());
-        attr.addCDATAAttribute("line", Integer.toString(loc.getLine()));
-        attr.addCDATAAttribute("column", Integer.toString(loc.getColumn()));
-        
-        simpleElement("location", attr, message, handler);
+        attr.addCDATAAttribute("line", Integer.toString(loc.getLineNumber()));
+        attr.addCDATAAttribute("column", Integer.toString(loc.getColumnNumber()));        
+        simpleElement("location", attr, loc.getDescription(), handler);
     }
 
     private static void simpleElement(String name, Attributes attr, String value, ContentHandler handler) throws SAXException {

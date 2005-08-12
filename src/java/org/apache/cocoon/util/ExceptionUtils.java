@@ -15,15 +15,14 @@
  */
 package org.apache.cocoon.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Vector;
 
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.TransformerException;
 
 import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.JavaScriptException;
 import org.xml.sax.SAXParseException;
@@ -34,6 +33,7 @@ import org.xml.sax.SAXParseException;
  * to handle exception chains, with additional heuristics to unroll exceptions, and other Cocoon-specific stuff
  * such as getting the {@link Location} of an exception.
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionUtils {
@@ -115,7 +115,7 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
         } else if (thr instanceof SAXParseException) {
             SAXParseException spe = (SAXParseException)thr;
             if (spe.getSystemId() != null) {
-                return new Location(spe.getSystemId(), spe.getLineNumber(), spe.getColumnNumber());
+                return new LocationImpl(null, spe.getSystemId(), spe.getLineNumber(), spe.getColumnNumber());
             } else {
                 return null;
             }
@@ -124,7 +124,7 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
             TransformerException ex = (TransformerException)thr;
             SourceLocator locator = ex.getLocator();
             if (locator != null && locator.getSystemId() != null) {
-                return new Location(locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
+                return new LocationImpl(null, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
             } else {
                 return null;
             }
@@ -132,7 +132,7 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
         } else if (thr instanceof EcmaError) {
             EcmaError ex = (EcmaError)thr;
             if (ex.getSourceName() != null) {
-                return new Location(ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
+                return new LocationImpl(ex.getName(), ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
             } else {
                 return null;
             }
@@ -140,14 +140,7 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
         } else if (thr instanceof JavaScriptException) {
             JavaScriptException ex = (JavaScriptException)thr;
             if (ex.sourceName() != null) {
-                return new Location(ex.sourceName(), ex.lineNumber(), -1);
-//            Vector stackTrace = ex.getJSStackTrace();
-//            if (stackTrace != null) {
-//                // see JavaScriptException.getMessage()
-//                int i = stackTrace.size() - 1;
-//                String sourceName = (String)stackTrace.elementAt(i-2);
-//                int lineNum = ((Integer)stackTrace.elementAt(i)).intValue();
-//                return new Location(sourceName, lineNum, -1);
+                return new LocationImpl(null, ex.sourceName(), ex.lineNumber(), -1);
             } else {
                 return null;
             }

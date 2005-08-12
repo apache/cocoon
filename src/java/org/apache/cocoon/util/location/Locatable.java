@@ -19,6 +19,7 @@ package org.apache.cocoon.util.location;
  * A interface that should be implemented by objects knowning their location (i.e. where they
  * have been created from).
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public interface Locatable {

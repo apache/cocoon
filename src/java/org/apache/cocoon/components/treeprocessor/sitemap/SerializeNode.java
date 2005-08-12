@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
@@ -28,7 +27,6 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.util.location.Location;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
@@ -119,12 +117,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
 
         if (! context.isBuildingPipelineOnly()) {
             // Process pipeline
-            try {
-                return pipeline.process(env);
-            } catch(Exception e) {
-                // Indicate error location
-                throw ProcessingException.getLocatedException("Sitemap: error during pipeline execution", e, Location.parse(getLocation()));
-            }
+            return pipeline.process(env);
 
         } else {
             // Return true : pipeline is finished.

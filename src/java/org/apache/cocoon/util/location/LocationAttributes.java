@@ -26,6 +26,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * These attributes are typically setup using {@link LocatorToAttributesPipe}
  * 
  * @see LocatorToAttributesPipe
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocationAttributes {
@@ -81,29 +82,31 @@ public class LocationAttributes {
      * Returns the {@link Location} pointed to by a SAX <code>Locator</code>.
      * 
      * @param locator the locator (can be null)
+     * @param description a description for the location (can be null)
      * @return the location
      */
-    public static Location getLocation(Locator locator) {
+    public static Location getLocation(Locator locator, String description) {
         if (locator == null || locator.getSystemId() == null) {
             return Location.UNKNOWN;
         }
         
-        return new Location(locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
+        return new LocationImpl(description, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
     }
     
     /**
      * Returns the {@link Location} of an element (SAX flavor).
      * 
      * @param attrs the element's attributes that hold the location information
+     * @param description a description for the location (can be null)
      * @return a {@link Location} object
      */
-    public static Location getLocation(Attributes attrs) {
+    public static Location getLocation(Attributes attrs, String description) {
         String src = attrs.getValue(URI, SRC_ATTR);
         if (src == null) {
             return Location.UNKNOWN;
         }
         
-        return new Location(src, getLine(attrs), getColumn(attrs));
+        return new LocationImpl(description, src, getLine(attrs), getColumn(attrs));
     }
 
     /**
@@ -117,7 +120,7 @@ public class LocationAttributes {
     public static String getLocationString(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
         if (src == null) {
-            return Location.UNKNOWN_STRING;
+            return LocationImpl.UNKNOWN_STRING;
         }
         
         return src + ":" + attrs.getValue(URI, LINE_ATTR) + ":" + attrs.getValue(URI, COL_ATTR);
@@ -132,7 +135,7 @@ public class LocationAttributes {
      */
     public static String getURI(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
-        return src != null ? src : Location.UNKNOWN_STRING;
+        return src != null ? src : LocationImpl.UNKNOWN_STRING;
     }
     
     /**
@@ -163,16 +166,26 @@ public class LocationAttributes {
      * Returns the {@link Location} of an element (DOM flavor).
      * 
      * @param attrs the element that holds the location information
+     * @param description a description for the location (if <code>null</code>, the element's name is used)
      * @return a {@link Location} object
      */
-    public static Location getLocation(Element elem) {
+    public static Location getLocation(Element elem, String description) {
         Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
         if (srcAttr == null) {
             return Location.UNKNOWN;
         }
-        
-        return new Location(srcAttr.getValue(), getLine(elem), getColumn(elem));
+
+        return new LocationImpl(description == null ? elem.getNodeName() : description,
+                srcAttr.getValue(), getLine(elem), getColumn(elem));
     }
+    
+    /**
+     * Same as <code>getLocation(elem, null)</code>.
+     */
+    public static Location getLocation(Element elem) {
+        return getLocation(elem, null);
+    }
+   
 
     /**
      * Returns the location of an element that has been processed by this pipe (DOM flavor).
@@ -185,7 +198,7 @@ public class LocationAttributes {
     public static String getLocationString(Element elem) {
         Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
         if (srcAttr == null) {
-            return Location.UNKNOWN_STRING;
+            return LocationImpl.UNKNOWN_STRING;
         }
         
         return srcAttr.getValue() + ":" + elem.getAttributeNS(URI, LINE_ATTR) + ":" + elem.getAttributeNS(URI, COL_ATTR);
@@ -200,7 +213,7 @@ public class LocationAttributes {
      */
     public static String getURI(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, SRC_ATTR);
-        return attr != null ? attr.getValue() : Location.UNKNOWN_STRING;
+        return attr != null ? attr.getValue() : LocationImpl.UNKNOWN_STRING;
     }
 
     /**

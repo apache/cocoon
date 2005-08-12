@@ -15,22 +15,23 @@
  */
 package org.apache.cocoon.components.treeprocessor.variables;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.SitemapParameters;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
+
 /**
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: VariableResolver.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class VariableResolver {
 
@@ -86,14 +87,19 @@ public abstract class VariableResolver {
      * @return a fully resolved <code>Parameters</code>.
      */
     public static Parameters buildParameters(Map expressions, InvokeContext context, Map objectModel) throws PatternException {
-        if (expressions == null || expressions.size() == 0) {
+        Location location;
+        if (expressions instanceof Locatable) {
+            location = ((Locatable)expressions).getLocation();
+        } else {
+            location = Location.UNKNOWN;
+        }
+        
+        if (expressions == null || expressions.size() == 0 && location.equals(Location.UNKNOWN)) {
             return Parameters.EMPTY_PARAMETERS;
         }
 
-        SitemapParameters result = new SitemapParameters();
-        if ( expressions instanceof SitemapParameters.ExtendedHashMap ) {
-            result.setStatementLocation(((SitemapParameters.ExtendedHashMap)expressions).getLocation());    
-        }
+        SitemapParameters result = new SitemapParameters(location);
+
         Iterator iter = expressions.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry)iter.next();
@@ -119,9 +125,8 @@ public abstract class VariableResolver {
         }
 
         Map result;
-        if ( expressions instanceof SitemapParameters.ExtendedHashMap ) {
-            Configuration config = ((SitemapParameters.ExtendedHashMap)expressions).getConfiguration();
-            result = new SitemapParameters.ExtendedHashMap(config, size );   
+        if ( expressions instanceof Locatable ) {
+            result = new SitemapParameters.LocatedHashMap(((Locatable)expressions).getLocation(), size);   
         } else {
             result = new HashMap(size);
         }

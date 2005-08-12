@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,68 +17,73 @@ package org.apache.cocoon.sitemap;
 
 import java.util.HashMap;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
 
 /**
- * Extension to the Avalon Parameters
+ * Extension to the Avalon Parameters to give location information
  *
- * @version CVS $Id: SitemapParameters.java,v 1.3 2004/03/09 11:24:43 cziegeler Exp $
+ * @version CVS $Id$
  */
-public class SitemapParameters extends Parameters {
+public class SitemapParameters extends Parameters implements Locatable {
     
-    protected String statementLocation;
+    private Location location = Location.UNKNOWN;
+    
+    public SitemapParameters(Location location) {
+        this.location = location;
+    }
+    
+    /*
+     * Get the location of the statement defining these parameters.
+     * 
+     * @since 2.1.8
+     * @see org.apache.cocoon.util.location.Locatable#getLocation()
+     */
+    public Location getLocation() {
+        return this.location;
+    }
     
     /**
-    public String getParameterLocation(String name) {
-        return null;   
+     * Get the location of a <code>Parameters</code> object, returning
+     * {@link Location#UNKNOWN} if no location could be found.
+     * 
+     * @param param
+     * @return the location
+     * @since 2.1.8
+     */
+    public static Location getLocation(Parameters param) {
+        Location loc = null;
+        if (param instanceof Locatable) {
+            loc = ((Locatable)param).getLocation();
+        }
+        return loc == null ? Location.UNKNOWN : loc;
     }
-    */
-    public String getStatementLocation() {
-        return this.statementLocation;   
-    }
-    
-    public void setStatementLocation(String value) {
-        this.statementLocation = value;   
-    }
-    
+
     /**
-     * Return the location  - if available
+     * @deprecated use {@link #getLocation(Parameters)}
      */
     public static String getStatementLocation(Parameters param) {
-        String value = null;
-        if ( param instanceof SitemapParameters ) {
-            value = ((SitemapParameters)param).getStatementLocation();
-        }
-        if ( value == null ) {
-            value = "[unknown location]";
-        }
-        return value;
-    }
-    
-    public static class ExtendedHashMap extends HashMap {
-        
-        protected Configuration configuration;
-        
-        public ExtendedHashMap(Configuration conf) {
-            super();
-            this.configuration = conf;
+        return getLocation(param).toString();
+    }    
+
+    /**
+     * For internal use only.
+     */
+    public static class LocatedHashMap extends HashMap implements Locatable {
+        private Location loc;
+
+        public Location getLocation() {
+            return this.loc;
         }
         
-        public ExtendedHashMap(Configuration conf, int capacity) {
-            super(capacity);
-            this.configuration = conf;
+        public LocatedHashMap(Location loc) {
+            this.loc = loc;
         }
 
-        public String getLocation() {
-            if ( this.configuration != null ) {
-                return this.configuration.getLocation();
-            } 
-            return null;
-        }
-        
-        public Configuration getConfiguration() {
-            return this.configuration;
+        public LocatedHashMap(Location loc, int size) {
+            super(size);
+            this.loc = loc;
         }
     }
 }

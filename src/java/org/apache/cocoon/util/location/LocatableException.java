@@ -22,10 +22,12 @@ package org.apache.cocoon.util.location;
  * a {@link Locatable} exception should return a concatenation of the raw message (given in the
  * constructor) and the exception's location, e.g. "<code>foo failed (file.xml:12:3)</code>". However,
  * {@link Locatable}-aware classes will want to handle the raw message (i.e. "<code>foo failed</code>")
- * and location separately.
+ * and location separately. This interface gives access to the raw message.
  * <p>
- * This interface gives access to the raw message.
+ * <strong>Note:</strong> care should be taken for locatable exceptions to use only immutable and
+ * serializable implementations of {@link Location} ({@see org.apache.cocoon.util.location.LocationImpl#get(Location)}).
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public interface LocatableException extends Locatable {

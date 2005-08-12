@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.location.Location;
 
 /**
  *
@@ -28,7 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
 
 public abstract class AbstractProcessingNode extends AbstractLogEnabled implements ProcessingNode {
 
-    protected String location = "unknown location";
+    protected Location location = Location.UNKNOWN;
 
     /**
      * Get the <code>SourceResolver</code> in an object model.
@@ -40,14 +41,14 @@ public abstract class AbstractProcessingNode extends AbstractLogEnabled implemen
     /**
      * Get the location of this node.
      */
-    public String getLocation() {
+    public Location getLocation() {
         return this.location;
     }
 
     /**
      * Set the location of this node.
      */
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 }

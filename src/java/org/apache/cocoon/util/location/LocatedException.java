@@ -16,6 +16,7 @@
 package org.apache.cocoon.util.location;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.avalon.framework.CascadingException;
@@ -24,6 +25,7 @@ import org.apache.avalon.framework.CascadingException;
  * A cascading and located <code>Exception</code>. It is also {@link MultiLocatable} to easily build
  * stack traces.
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocatedException extends CascadingException implements LocatableException, MultiLocatable {
@@ -53,7 +55,7 @@ public class LocatedException extends CascadingException implements LocatableExc
     }
 
     public List getLocations() {
-        return locations;
+        return locations == null ? Collections.EMPTY_LIST : locations;
     }
 
     public String getRawMessage() {
@@ -93,6 +95,6 @@ public class LocatedException extends CascadingException implements LocatableExc
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small
         }
-        locations.add(loc);
+        locations.add(LocationImpl.get(loc));
     }
 }

@@ -56,6 +56,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
@@ -105,7 +106,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.LocatorImpl;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -125,12 +125,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     
     // Quick'n dirty hack to replace all SAXParseException by a located runtime exception
     private static final class JXTException extends LocatedRuntimeException {
-        JXTException(String message, Locator loc, Throwable thr) {
-            super(message, thr, LocationAttributes.getLocation(loc));
+        JXTException(String message, Location loc, Throwable thr) {
+            super(message, thr, loc);
         }
         
-        static LocatedRuntimeException get(String message, Locator loc, Throwable thr) {
-            return LocatedRuntimeException.getLocatedException(message, thr, LocationAttributes.getLocation(loc));
+        static LocatedRuntimeException get(String message, Location loc, Throwable thr) {
+            return LocatedRuntimeException.getLocatedException(message, thr, loc);
         }
     }
 
@@ -168,8 +168,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
     };
 
-    private static final Locator NULL_LOCATOR = new LocatorImpl();
-
     private XMLConsumer getConsumer() {
         return this.xmlConsumer;
     }
@@ -202,18 +200,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     /**
-     * Facade to the Locator to be set on the consumer prior to
+     * Facade to the Location to be set on the consumer prior to
      * sending other events, location member changeable
      */
-    public static class LocatorFacade implements Locator {
-        private Locator locator;
+    public static class LocationFacade implements Locator {
+        private Location locator;
 
-        public LocatorFacade(Locator initialLocator) {
-            this.locator = initialLocator;
+        public LocationFacade(Location initialLocation) {
+            this.locator = initialLocation;
         }
 
-        public void setDocumentLocator(Locator newLocator) {
-            this.locator = newLocator;
+        public void setDocumentLocation(Location newLocation) {
+            this.locator = newLocation;
         }
 
         public int getColumnNumber() {
@@ -225,11 +223,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public String getPublicId() {
-            return this.locator.getPublicId();
+            return null;
         }
 
         public String getSystemId() {
-            return this.locator.getSystemId();
+            return this.locator.getURI();
         }
     }
 
@@ -694,7 +692,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * (contained in #{})
      */
 
-    private static JXTExpression compileExpr(String expr, String errorPrefix, Locator location) throws JXTException {
+    private static JXTExpression compileExpr(String expr, String errorPrefix, Location location) throws JXTException {
         try {
             return compileExpr(expr);
         } catch (Exception exc) {
@@ -751,7 +749,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * Compile an integer expression (returns either a Compiled Expression
      * or an Integer literal)
      */
-    private static JXTExpression compileInt(String val, String msg, Locator location) throws SAXException {
+    private static JXTExpression compileInt(String val, String msg, Location location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
@@ -762,7 +760,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return null;
     }
 
-    private static JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException {
+    private static JXTExpression compileBoolean(String val, String msg, Location location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null) {
             if (res.compiledExpression == null) {
@@ -910,29 +908,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class Event {
-        final Locator location;
+        final Location location;
         Event next; // in document order
-        Event(Locator locator) {
-            this.location = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
+        Event(Location locator) {
+            this.location = locator != null ? locator : Location.UNKNOWN;
         }
 
         public String locationString() {
-            StringBuffer buf = new StringBuffer();
-            buf.append(location.getSystemId());
-            if (buf.length() > 0) {
-                buf.append(", ");
-            }
-            buf.append("Line " + location.getLineNumber());
-            int col = location.getColumnNumber();
-            if (col > 0) {
-                buf.append("." + col);
-            }
-            return buf.toString();
+            return location.toString();
         }
     }
 
     static class TextEvent extends Event {
-        TextEvent(Locator location, char[] chars, int start, int length)
+        TextEvent(Location location, char[] chars, int start, int length)
                                                           throws SAXException {
             super(location);
             StringBuffer buf = new StringBuffer();
@@ -1016,13 +1004,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class Characters extends TextEvent {
-        Characters(Locator location, char[] chars, int start, int length) throws SAXException {
+        Characters(Location location, char[] chars, int start, int length) throws SAXException {
             super(location, chars, start, length);
         }
     }
 
     static class StartDocument extends Event {
-        StartDocument(Locator location) {
+        StartDocument(Location location) {
             super(location);
             templateProperties = new HashMap();
         }
@@ -1032,13 +1020,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class EndDocument extends Event {
-        EndDocument(Locator location) {
+        EndDocument(Location location) {
             super(location);
         }
     }
 
     static class EndElement extends Event {
-        EndElement(Locator location, StartElement startElement) {
+        EndElement(Location location, StartElement startElement) {
             super(location);
             this.startElement = startElement;
         }
@@ -1046,7 +1034,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class EndPrefixMapping extends Event {
-        EndPrefixMapping(Locator location, String prefix) {
+        EndPrefixMapping(Location location, String prefix) {
             super(location);
             this.prefix = prefix;
         }
@@ -1054,13 +1042,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class IgnorableWhitespace extends TextEvent {
-        IgnorableWhitespace(Locator location, char[] chars, int start, int length) throws SAXException {
+        IgnorableWhitespace(Location location, char[] chars, int start, int length) throws SAXException {
             super(location, chars, start, length);
         }
     }
 
     static class ProcessingInstruction extends Event {
-        ProcessingInstruction(Locator location, String target, String data) {
+        ProcessingInstruction(Location location, String target, String data) {
             super(location);
             this.target = target;
             this.data = data;
@@ -1070,7 +1058,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class SkippedEntity extends Event {
-        SkippedEntity(Locator location, String name) {
+        SkippedEntity(Location location, String name) {
             super(location);
             this.name = name;
         }
@@ -1127,7 +1115,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartElement extends Event {
-        StartElement(Locator location, String namespaceURI, String localName,
+        StartElement(Location location, String namespaceURI, String localName,
                             String raw, Attributes attrs) throws SAXException {
             super(location);
             this.namespaceURI = namespaceURI;
@@ -1227,7 +1215,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartPrefixMapping extends Event {
-        StartPrefixMapping(Locator location, String prefix, String uri) {
+        StartPrefixMapping(Location location, String prefix, String uri) {
             super(location);
             this.prefix = prefix;
             this.uri = uri;
@@ -1237,19 +1225,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class EndCDATA extends Event {
-        EndCDATA(Locator location) {
+        EndCDATA(Location location) {
             super(location);
         }
     }
 
     static class EndDTD extends Event {
-        EndDTD(Locator location) {
+        EndDTD(Location location) {
             super(location);
         }
     }
 
     static class EndEntity extends Event {
-        EndEntity(Locator location, String name) {
+        EndEntity(Location location, String name) {
             super(location);
             this.name = name;
         }
@@ -1257,13 +1245,13 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartCDATA extends Event {
-        StartCDATA(Locator location) {
+        StartCDATA(Location location) {
             super(location);
         }
     }
 
     static class StartDTD extends Event {
-        StartDTD(Locator location, String name, String publicId, String systemId) {
+        StartDTD(Location location, String name, String publicId, String systemId) {
             super(location);
             this.name = name;
             this.publicId = publicId;
@@ -1275,7 +1263,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class StartEntity extends Event {
-        public StartEntity(Locator location, String name) {
+        public StartEntity(Location location, String name) {
             super(location);
             this.name = name;
         }
@@ -1292,7 +1280,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     }
 
     static class EndInstruction extends Event {
-        EndInstruction(Locator locator, StartInstruction startInstruction) {
+        EndInstruction(Location locator, StartInstruction startInstruction) {
             super(locator);
             this.startInstruction = startInstruction;
             startInstruction.endInstruction = this;
@@ -1871,7 +1859,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         Event lastEvent;
         Stack stack = new Stack();
         Locator locator;
-        Locator charLocation;
+        Location charLocation;
         StringBuffer charBuf;
 
         public Parser() {
@@ -1895,7 +1883,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         private void addEvent(Event ev) throws SAXException {
             if (ev != null) {
                 if (lastEvent == null) {
-                    lastEvent = startEvent = new StartDocument(locator);
+                    lastEvent = startEvent = new StartDocument(LocationAttributes.getLocation(locator, "template"));
                 } else {
                     flushChars();
                 }
@@ -1922,14 +1910,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer(length);
-                charLocation = locator != null ? new LocatorImpl(locator) : NULL_LOCATOR;
+                charLocation = LocationAttributes.getLocation(locator, "[text]");
             }
             charBuf.append(ch, start, length);
         }
 
         public void endDocument() throws SAXException {
             StartDocument startDoc = (StartDocument)stack.pop();
-            EndDocument endDoc = new EndDocument(locator);
+            EndDocument endDoc = new EndDocument(LocationAttributes.getLocation(locator, "template"));
             startDoc.endDocument = endDoc;
             addEvent(endDoc);
         }
@@ -1939,7 +1927,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             Event newEvent = null;
             if (NS.equals(namespaceURI)) {
                 StartInstruction startInstruction = (StartInstruction)start;
-                EndInstruction endInstruction = new EndInstruction(locator, startInstruction);
+                EndInstruction endInstruction = new EndInstruction(LocationAttributes.getLocation(locator, "<"+raw+">"), startInstruction);
                 newEvent = endInstruction;
                 if (start instanceof StartWhen) {
                     StartWhen startWhen = (StartWhen)start;
@@ -1960,7 +1948,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = startElement.endElement = new EndElement(locator, startElement);
+                newEvent = startElement.endElement = new EndElement(LocationAttributes.getLocation(locator, "<"+raw+">"), startElement);
             }
             addEvent(newEvent);
             if (start instanceof StartDefine) {
@@ -1970,17 +1958,17 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void endPrefixMapping(String prefix) throws SAXException {
-            EndPrefixMapping endPrefixMapping = new EndPrefixMapping(locator, prefix);
+            EndPrefixMapping endPrefixMapping = new EndPrefixMapping(LocationAttributes.getLocation(locator, null), prefix);
             addEvent(endPrefixMapping);
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-            Event ev = new IgnorableWhitespace(locator, ch, start, length);
+            Event ev = new IgnorableWhitespace(LocationAttributes.getLocation(locator, null), ch, start, length);
             addEvent(ev);
         }
 
         public void processingInstruction(String target, String data) throws SAXException {
-            Event pi = new ProcessingInstruction(locator, target, data);
+            Event pi = new ProcessingInstruction(LocationAttributes.getLocation(locator, null), target, data);
             addEvent(pi);
         }
 
@@ -1989,17 +1977,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void skippedEntity(String name) throws SAXException {
-            addEvent(new SkippedEntity(locator, name));
+            addEvent(new SkippedEntity(LocationAttributes.getLocation(locator, null), name));
         }
 
         public void startDocument() {
-            startEvent = new StartDocument(locator);
+            startEvent = new StartDocument(LocationAttributes.getLocation(locator, null));
             lastEvent = startEvent;
             stack.push(lastEvent);
         }
 
         public void startElement(String namespaceURI, String localName, String qname, Attributes attrs) throws SAXException {
             Event newEvent = null;
+            Location locator = LocationAttributes.getLocation(this.locator, "<"+qname+">");
             AttributesImpl elementAttributes = new AttributesImpl(attrs);
             int attributeCount = elementAttributes.getLength();
             for (int i = 0; i < attributeCount; i++) {
@@ -2210,7 +2199,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
-            addEvent(new StartPrefixMapping(locator, prefix, uri));
+            addEvent(new StartPrefixMapping(LocationAttributes.getLocation(locator, null), prefix, uri));
         }
 
         public void comment(char ch[], int start, int length) throws SAXException {
@@ -2218,27 +2207,27 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void endCDATA() throws SAXException {
-            addEvent(new EndCDATA(locator));
+            addEvent(new EndCDATA(LocationAttributes.getLocation(locator, null)));
         }
 
         public void endDTD() throws SAXException {
-            addEvent(new EndDTD(locator));
+            addEvent(new EndDTD(LocationAttributes.getLocation(locator, null)));
         }
 
         public void endEntity(String name) throws SAXException {
-            addEvent(new EndEntity(locator, name));
+            addEvent(new EndEntity(LocationAttributes.getLocation(locator, null), name));
         }
 
         public void startCDATA() throws SAXException {
-            addEvent(new StartCDATA(locator));
+            addEvent(new StartCDATA(LocationAttributes.getLocation(locator, null)));
         }
 
         public void startDTD(String name, String publicId, String systemId) throws SAXException {
-            addEvent(new StartDTD(locator, name, publicId, systemId));
+            addEvent(new StartDTD(LocationAttributes.getLocation(locator, null), name, publicId, systemId));
         }
 
         public void startEntity(String name) throws SAXException {
-            addEvent(new StartEntity(locator, name));
+            addEvent(new StartEntity(LocationAttributes.getLocation(locator, null), name));
         }
     }
 
@@ -2532,7 +2521,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         streamer.stream(node);
    }
 
-    private void call(Locator location, StartElement macroCall, final XMLConsumer consumer, MyJexlContext jexlContext,
+    private void call(Location location, StartElement macroCall, final XMLConsumer consumer, MyJexlContext jexlContext,
             JXPathContext jxpathContext, Event startEvent, Event endEvent) throws SAXException {
         try {
             execute(consumer, jexlContext, jxpathContext, macroCall, startEvent, endEvent);
@@ -2580,10 +2569,10 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     private void execute(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext,
             StartElement macroCall, Event startEvent, Event endEvent) throws SAXException {
         Event ev = startEvent;
-        LocatorFacade loc = new LocatorFacade(ev.location);
+        LocationFacade loc = new LocationFacade(ev.location);
         consumer.setDocumentLocator(loc);
         while (ev != endEvent) {
-            loc.setDocumentLocator(ev.location);
+            loc.setDocumentLocation(ev.location);
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent)ev;
                 Iterator iter = text.substitutions.iterator();
@@ -2629,10 +2618,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
                 StartElement startElement = endElement.startElement;
-                consumer.endElement(startElement.namespaceURI, startElement.localName, startElement.raw);
-                namespaces.leaveScope(consumer);
+                StartDefine def =
+                    (StartDefine)definitions.get(startElement.qname);
+                if (def == null) {
+                    consumer.endElement(startElement.namespaceURI, startElement.localName, startElement.raw);
+                    namespaces.leaveScope(consumer);
+                }
             } else if (ev instanceof EndPrefixMapping) {
                 EndPrefixMapping endPrefixMapping = (EndPrefixMapping)ev;
+                namespaces.removeDeclaration(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
                 TextEvent text = (TextEvent)ev;
                 characters(jexlContext, jxpathContext, text, new CharHandler() {
@@ -2682,7 +2676,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             Object result = e.evaluate(jexlContext);
                             if (result != null) {
                                 iter = Introspector.getUberspect().getIterator(result,
-                                        new Info(ev.location.getSystemId(), ev.location.getLineNumber(), ev.location.getColumnNumber()));
+                                        new Info(ev.location.getURI(), ev.location.getLineNumber(), ev.location.getColumnNumber()));
                             }
                             if (iter == null) {
                                 iter = EMPTY_ITER;

@@ -18,6 +18,8 @@ package org.apache.cocoon.components.treeprocessor;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
 
 /**
  *
@@ -25,7 +27,7 @@ import org.apache.cocoon.environment.Environment;
  * @version CVS $Id$
  */
 
-public interface ProcessingNode extends ThreadSafe {
+public interface ProcessingNode extends ThreadSafe, Locatable {
 
     /**
      * The key of the <code>SourceResolver</code> in the object model.
@@ -40,5 +42,5 @@ public interface ProcessingNode extends ThreadSafe {
     /**
      * Get the location of this node.
      */
-    String getLocation();
+    Location getLocation();
 }

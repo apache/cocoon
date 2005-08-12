@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
@@ -36,6 +36,7 @@ import org.mozilla.javascript.debug.Debugger;
  * This debugger implementation is designed to be as lightweight and fast as possible, in order to have a
  * negligible impact on the performances of the Rhino interpreter.
  * 
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocationTrackingDebugger implements Debugger {
@@ -68,7 +69,7 @@ public class LocationTrackingDebugger implements Debugger {
      * Rhino 1.6 API
      */
     public DebugFrame getFrame(Context cx, DebuggableScript fnOrScript) {
-        // Rhion 1.6 API
+        // Rhino 1.6 API
         return new StackTrackingFrame(fnOrScript);
     }
 
@@ -79,27 +80,21 @@ public class LocationTrackingDebugger implements Debugger {
      * @param originalException the original exception
      * 
      * @return a suitable exception to throw
-     * @see ProcessingException#getLocatedException(String, Throwable, Location)
+     * @see ProcessingException#throwLocated(String, Throwable, Location)
      */
-    public Exception getException(String description, Exception originalException) {
+    public Exception getException(String description, Exception originalException) throws ProcessingException {
         if (throwable == null || locations == null) {
             // Cannot to better for now
             return originalException;
         }
 
-        // Unwrap JavaScriptException
-        if (throwable instanceof JavaScriptException) {
-            Throwable cause = ((JavaScriptException)throwable).getWrappedException();
-            if (cause != null)
-                throwable = cause;
-        }
-        
-        ProcessingException pe = ProcessingException.getLocatedException(description, throwable, null);
-        for (int i = 0; i < locations.size(); i++) {
-            pe.addLocation((Location)locations.get(i));
-        }
-        
-        return pe;
+        // Unwrap original exception, if any, wrapped by Rhino (the wrapping
+        // class is different in Rhino+cont and Rhino 1.6)
+        Throwable cause = ExceptionUtils.getCause(throwable);
+        if (cause != null)
+            throwable = cause;
+
+        return ProcessingException.throwLocated(description, throwable, locations);
     }
 
     private class StackTrackingFrame implements DebugFrame {
@@ -131,9 +126,10 @@ public class LocationTrackingDebugger implements Debugger {
 
         public void onExit(Context cx, boolean byThrow, Object resultOrException) {
             if (byThrow) {
+                  String name = null;
 // Revisit: Rhino+cont and Rhino 1.6 have different debugger APIs, and we currently don't use this information
 //                Scriptable obj = script.getScriptable();
-//                String name = obj instanceof NativeFunction ? ((NativeFunction)obj).getFunctionName() : "Top-level script";
+//                name = obj instanceof NativeFunction ? ((NativeFunction)obj).getFunctionName() : "Top-level script";
 //                if (name == null || name.length() == 0) {
 //                    name = "[unnamed]";
 //                }
@@ -142,7 +138,7 @@ public class LocationTrackingDebugger implements Debugger {
                     locations = new ArrayList(1); // start small
                 }
 
-                locations.add(new Location(script.getSourceName(), line, -1));
+                locations.add(new LocationImpl(name, script.getSourceName(), line, -1));
 
             } else if (locations != null) {
                 // The exception was handled by the script: clear any recorded locations
