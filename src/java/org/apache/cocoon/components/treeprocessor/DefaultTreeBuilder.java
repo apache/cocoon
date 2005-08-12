@@ -26,6 +26,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Recomposable;
+import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -41,6 +42,8 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.excalibur.source.Source;
 
 import java.util.ArrayList;
@@ -438,14 +441,15 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
      */
     public ProcessingNode setupNode(ProcessingNode node, Configuration config)
       throws Exception {
+        Location location = getLocation(config);
         if (node instanceof AbstractProcessingNode) {
-            ((AbstractProcessingNode)node).setLocation(config.getLocation());
+            ((AbstractProcessingNode)node).setLocation(location);
         }
 
         this.lifecycle.setupComponent(node, false);
 
         if (node instanceof ParameterizableProcessingNode) {
-            Map params = getParameters(config);
+            Map params = getParameters(config, location);
             ((ParameterizableProcessingNode)node).setParameters(params);
         }
 
@@ -460,23 +464,56 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         return node;
     }
 
+    protected LocationImpl getLocation(Configuration config) {
+        String prefix = "";
+
+        if (config instanceof AbstractConfiguration) {
+            //FIXME: AbstractConfiguration has a _protected_ getPrefix() method.
+            // So make some reasonable guess on the prefix until it becomes public
+            String namespace = null;
+            try {
+                namespace = ((AbstractConfiguration)config).getNamespace();
+            } catch (ConfigurationException e) {
+                // ignore
+            }
+            if ("http://apache.org/cocoon/sitemap/1.0".equals(namespace)) {
+                prefix="map";
+            }
+        }
+        
+        StringBuffer desc = new StringBuffer().append('<');
+        if (prefix.length() > 0) {
+            desc.append(prefix).append(':').append(config.getName());
+        } else {
+            desc.append(config.getName());
+        }
+        String type = config.getAttribute("type", null);
+        if (type != null) {
+            desc.append(" type=\"").append(type).append('"');
+        }
+        desc.append('>');
+        
+        Location rawLoc = LocationImpl.valueOf(config.getLocation());
+        return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc.getColumnNumber());
+    }
+
     /**
      * Get &lt;xxx:parameter&gt; elements as a <code>Map</code> of </code>ListOfMapResolver</code>s,
      * that can be turned into parameters using <code>ListOfMapResolver.buildParameters()</code>.
      *
      * @return the Map of ListOfMapResolver, or <code>null</code> if there are no parameters.
      */
-    protected Map getParameters(Configuration config) throws ConfigurationException {
+    protected Map getParameters(Configuration config, Location location) throws ConfigurationException {
 
         Configuration[] children = config.getChildren(this.parameterElement);
-
+        
         if (children.length == 0) {
             // Parameters are only the component's location
             // TODO Optimize this
-            return new SitemapParameters.ExtendedHashMap(config);
+            return new SitemapParameters.LocatedHashMap(location, 0);
         }
 
-        Map params = new SitemapParameters.ExtendedHashMap(config, children.length+1);
+        Map params = new SitemapParameters.LocatedHashMap(location, children.length+1);
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             if (true) { // FIXME : check namespace

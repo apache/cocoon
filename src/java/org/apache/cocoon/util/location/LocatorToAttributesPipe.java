@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
  * attributes point to the same string.
  * 
  * @see org.apache.cocoon.util.location.LocationAttributes
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocatorToAttributesPipe extends AbstractXMLPipe {

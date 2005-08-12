@@ -15,11 +15,10 @@
  */
 package org.apache.cocoon;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.LocatedException;
+import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.MultiLocatable;
 
@@ -65,14 +64,87 @@ public class ProcessingException extends LocatedException implements MultiLocata
         super(message, t, location);
     }
     
-    public static ProcessingException getLocatedException(String description, Throwable thr, Location location) {
+    /**
+     * Throw a located exception given an existing exception and the location where
+     * this exception was catched.
+     * <p>
+     * If the exception is already a <code>ProcessingException</code> or a {@link LocatedRuntimeException},
+     * the location is added to the original exception's location chain and the original exception
+     * is rethrown (<code>description</code> is ignored) to limit exception nesting. Otherwise, a new
+     * <code>ProcessingException</code> is thrown, wrapping the original exception.
+     * <p>
+     * Note: this method returns an exception as a convenience if you want to keep the <code>throw</code>
+     * semantics in the caller code, i.e. write<br>
+     * <code>&nbsp;&nbsp;throw ProcessingException.throwLocated(...);</code><br>
+     * instead of<br>
+     * <code>&nbsp;&nbsp;ProcessingException.throwLocated(...);</code><br>
+     * <code>&nbsp;&nbsp;return;</code>
+     * 
+     * @param message a message (can be <code>null</code>)
+     * @param thr the original exception (can be <code>null</code>)
+     * @param location the location (can be <code>null</code>)
+     * @return a (fake) located exception
+     * @throws ProcessingException or <code>LocatedRuntimeException</code>
+     */
+    public static ProcessingException throwLocated(String message, Throwable thr, Location location) throws ProcessingException {
         if (thr instanceof ProcessingException) {
             ProcessingException pe = (ProcessingException)thr;
             pe.addLocation(location);
-            return pe;
+            throw pe;
+
+        } else if (thr instanceof LocatedRuntimeException) {
+            LocatedRuntimeException re = (LocatedRuntimeException)thr;
+            re.addLocation(location);
+            // Rethrow
+            throw re;
         }
         
-        return new ProcessingException(description, thr, location);
+        throw new ProcessingException(message, thr, location);
+    }
+    
+    /**
+     * Throw a located exception given an existing exception and the locations where
+     * this exception was catched.
+     * <p>
+     * If the exception is already a <code>ProcessingException</code> or a {@link LocatedRuntimeException},
+     * the locations are added to the original exception's location chain and the original exception
+     * is rethrown (<code>description</code> is ignored) to limit exception nesting. Otherwise, a new
+     * <code>ProcessingException</code> is thrown, wrapping the original exception.
+     * <p>
+     * Note: this method returns an exception as a convenience if you want to keep the <code>throw</code>
+     * semantics in the caller code, i.e. write<br>
+     * <code>&nbsp;&nbsp;throw ProcessingException.throwLocated(...);</code><br>
+     * instead of<br>
+     * <code>&nbsp;&nbsp;ProcessingException.throwLocated(...);</code><br>
+     * <code>&nbsp;&nbsp;return;</code>
+     * 
+     * @param message a message (can be <code>null</code>)
+     * @param thr the original exception (can be <code>null</code>)
+     * @param locations the locations (can be <code>null</code>)
+     * @return a (fake) located exception
+     * @throws ProcessingException or <code>LocatedRuntimeException</code>
+     */
+    public static ProcessingException throwLocated(String message, Throwable thr, List locations) throws ProcessingException {
+        MultiLocatable multiloc;
+        if (thr instanceof ProcessingException) {
+            multiloc = (ProcessingException)thr;
+        } else if (thr instanceof LocatedRuntimeException) {
+            multiloc = (LocatedRuntimeException)thr;
+        } else {
+            multiloc = new ProcessingException(message, thr);
+        }
+        
+        if (locations != null) {
+            for (int i = 0; i < locations.size(); i++) {
+                multiloc.addLocation((Location)locations.get(i));
+            }
+        }
+        
+        if (multiloc instanceof LocatedRuntimeException) {
+            throw (LocatedRuntimeException)multiloc;
+        } else {
+            throw (ProcessingException)multiloc;
+        }
     }
 
 

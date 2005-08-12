@@ -61,41 +61,6 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
     }
 
     /**
-     * Get &lt;xxx:parameter&gt; elements as a <code>Map</code> of </code>ListOfMapResolver</code>s,
-     * that can be turned into parameters using <code>ListOfMapResolver.buildParameters()</code>.
-     *
-     * @return the Map of ListOfMapResolver, or <code>null</code> if there are no parameters.
-     */
-    protected Map getParameters(Configuration config) throws ConfigurationException {
-        Configuration[] children = config.getChildren("parameter");
-
-        if (children.length == 0) {
-            // Parameters are only the component's location
-            // TODO Optimize this
-            return new SitemapParameters.ExtendedHashMap(config);
-        }
-
-        Map params = new SitemapParameters.ExtendedHashMap(config, children.length+1);
-        for (int i = 0; i < children.length; i++) {
-            Configuration child = children[i];
-            if (true) { // FIXME : check namespace
-                String name = child.getAttribute("name");
-                String value = child.getAttribute("value");
-                try {
-                    params.put(
-                        VariableResolverFactory.getResolver(name, this.manager),
-                        VariableResolverFactory.getResolver(value, this.manager));
-                } catch(PatternException pe) {
-                    String msg = "Invalid pattern '" + value + " at " + child.getLocation();
-                    throw new ConfigurationException(msg, pe);
-                }
-            }
-        }
-
-        return params;
-    }
-
-    /**
      * Check if the namespace URI of the given configuraition is the same as the
      * one given by the builder.
      */

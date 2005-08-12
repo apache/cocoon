@@ -30,7 +30,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.util.location.Location;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -119,7 +118,7 @@ public class MountNode extends AbstractProcessingNode
             }
         } catch(Exception e) {
             // Wrap with our location
-            throw ProcessingException.getLocatedException("Sitemap: error when calling sub-sitemap", e, Location.parse(getLocation()));
+            throw ProcessingException.throwLocated("Sitemap: error when calling sub-sitemap", e, getLocation());
 
         } finally {
             // We restore the context only if no pipeline was built. This allows the pipeline
