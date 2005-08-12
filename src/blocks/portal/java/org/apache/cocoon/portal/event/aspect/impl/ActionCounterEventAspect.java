@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,17 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 
 /**
+ * This aspect "disables" the back button of the browser and tries to avoid
+ * problems with the user browsing in multiple windows.
+ * This event attaches a unique number to each request. For each user only the
+ * current number is "active". Every request comming in containing an older
+ * number is disregarded and therefore ignored.
+ * WARNING: This aspect solves some problems while introducing new ones. Some
+ *          features of the portal do NOT work when this aspect is used.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
+ *
  * @version CVS $Id$
  */
 public class ActionCounterEventAspect
