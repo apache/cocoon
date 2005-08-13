@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
+ * @version $Id$
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public Map invokeAction(final ExecutionContext context,
@@ -55,7 +55,7 @@ public class DefaultExecutor
                 resolvedSource, resolvedParams);        
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.Matcher, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public Map invokeMatcher(ExecutionContext context, 
@@ -67,7 +67,7 @@ public class DefaultExecutor
         return matcher.match(pattern, objectModel, resolvedParams);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#invokePreparableMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.PreparableMatcher, java.lang.Object, org.apache.avalon.framework.parameters.Parameters)
      */
     public Map invokePreparableMatcher(ExecutionContext  context,
@@ -79,7 +79,7 @@ public class DefaultExecutor
         return matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public boolean invokeSelector(ExecutionContext context, Map objectModel,
@@ -87,17 +87,16 @@ public class DefaultExecutor
         return selector.select(expression, objectModel, parameters);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSwitchSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.selection.SwitchSelector, java.lang.String, org.apache.avalon.framework.parameters.Parameters, Object)
      */
     public boolean invokeSwitchSelector(ExecutionContext context,
             Map objectModel, SwitchSelector selector, String expression,
             Parameters parameters, Object selectorContext) {
-        // TODO Auto-generated method stub
         return selector.select(expression, selectorContext);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
      */
     public void popVariables(ExecutionContext context,
@@ -105,7 +104,7 @@ public class DefaultExecutor
         // nothing to do
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, java.util.Map)
      */
     public Map pushVariables(ExecutionContext context, 
@@ -114,7 +113,7 @@ public class DefaultExecutor
         return variables;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#enterSitemap(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String)
      */
     public String enterSitemap(ExecutionContext context, Map objectModel,
@@ -122,7 +121,7 @@ public class DefaultExecutor
         return source;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#addGenerator(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
      */
     public PipelineComponentDescription addGenerator(ExecutionContext context,
@@ -130,7 +129,7 @@ public class DefaultExecutor
         return desc;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#addReader(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
      */
     public PipelineComponentDescription addReader(ExecutionContext context,
@@ -138,7 +137,7 @@ public class DefaultExecutor
         return desc;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#addSerializer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
      */
     public PipelineComponentDescription addSerializer(ExecutionContext context,
@@ -146,7 +145,7 @@ public class DefaultExecutor
         return desc;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#addTransformer(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
      */
     public PipelineComponentDescription addTransformer(
@@ -154,4 +153,19 @@ public class DefaultExecutor
             PipelineComponentDescription desc) {
         return desc;
     }
+
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#leaveSitemap(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
+     */
+    public void leaveSitemap(ExecutionContext context, Map objectModel) {
+        // nothing to do
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#redirectTo(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, boolean, boolean, boolean)
+     */
+    public String redirectTo(ExecutionContext context, Map objectModel, String uri, boolean createSession, boolean global, boolean permanent) {
+        return uri;
+    }
+
 }
