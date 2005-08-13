@@ -118,6 +118,7 @@ public class MountNode extends AbstractProcessingNode
                 env.removeAttribute(COCOON_PASS_THROUGH);
             }
 
+            this.executor.leaveSitemap(this, objectModel);
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
             // Recompose pipelines which may have been recomposed by subsitemap

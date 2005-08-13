@@ -36,7 +36,7 @@ import org.apache.cocoon.selection.SwitchSelector;
  * TODO - we should add invocation of a Redirector as well
  * 
  * @since 2.2
- * @version CVS $Id: SitemapExecutor.java,v 1.6 2004/07/14 13:17:45 cziegeler Exp $
+ * @version CVS $Id$
  */
 public interface SitemapExecutor {
     
@@ -151,6 +151,12 @@ public interface SitemapExecutor {
                         String           source);
 
     /**
+     * Leaves a sitemap.
+     */
+    void leaveSitemap(ExecutionContext context,
+                      Map              objectModel);
+
+    /**
      * Add a generator
      * @param context
      * @param objectModel
@@ -193,4 +199,16 @@ public interface SitemapExecutor {
     PipelineComponentDescription addReader(ExecutionContext context, 
                                            Map              objectModel,
                                            PipelineComponentDescription desc);
+
+    /**
+     * Informs about a redirect.
+     * @return The uri to redirect to.
+     */
+    String redirectTo(ExecutionContext context,
+                      Map              objectModel,
+                      String           uri,
+                      boolean          createSession,
+                      boolean          global,
+                      boolean          permanent);
+    
 }

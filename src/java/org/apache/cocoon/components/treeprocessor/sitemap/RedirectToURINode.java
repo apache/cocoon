@@ -60,6 +60,12 @@ public class RedirectToURINode extends AbstractProcessingNode {
             getLogger().info("Redirecting to '" + resolvedURI + "' at " + this.getLocation());
         }
 
+        resolvedURI = this.executor.redirectTo(this,
+                                               env.getObjectModel(),
+                                               resolvedURI,
+                                               this.createSession,
+                                               this.global,
+                                               this.permanent);
         final Redirector redirector = context.getRedirector();
 
         if( this.global ) {
