@@ -82,8 +82,9 @@
                </xsl:for-each>
             </strong>
             <table>
-              <xsl:for-each select="ex:locations/*">
-                <!--xsl:sort select="position()" order="descending"/-->
+               <xsl:for-each select="ex:locations/*[string(.) != '[cause location]']">
+                 <!-- [cause location] indicates location of a cause, which 
+                      the exception generator outputs separately -->
                 <tr class="row-{position() mod 2}">
                    <td><xsl:call-template name="print-location"/></td>
                    <td><em><xsl:value-of select="."/></em></td>

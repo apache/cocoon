@@ -30,7 +30,7 @@ public interface Location {
     /**
      * Constant for unknown locations.
      */
-    public static final Location UNKNOWN = new LocationImpl(null, null);
+    public static final Location UNKNOWN = LocationImpl.UNKNOWN;
     
     /**
      * Get the description of this location
