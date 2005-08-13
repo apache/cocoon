@@ -31,18 +31,19 @@ public class LocationTestCase extends TestCase {
     static final String str = "path/to/file.xml:1:40";
 
     public void testParse() throws Exception {
-        String str = "path/to/file.xml:1:40";
-        Location loc = Location.parse(str);
+        String str = "<map:generate> - path/to/file.xml:1:40";
+        Location loc = LocationImpl.valueOf(str);
         
+        assertEquals("<map:generate>", loc.getDescription());
         assertEquals("URI", "path/to/file.xml", loc.getURI());
-        assertEquals("line", 1, loc.getLine());
-        assertEquals("column", 40, loc.getColumn());
+        assertEquals("line", 1, loc.getLineNumber());
+        assertEquals("column", 40, loc.getColumnNumber());
         assertEquals("string representation", str, loc.toString());
     }
     
     public void testEquals() throws Exception {
-        Location loc1 = Location.parse(str);
-        Location loc2 = new Location("path/to/file.xml", 1, 40);
+        Location loc1 = LocationImpl.valueOf(str);
+        Location loc2 = new LocationImpl(null, "path/to/file.xml", 1, 40);
         
         assertEquals("locations", loc1, loc2);
         assertEquals("hashcode", loc1.hashCode(), loc2.hashCode());
