@@ -30,6 +30,9 @@ public class LocationImpl implements Location, Serializable {
     private final int line;
     private final int column;
     private final String description;
+    
+    // Package private: outside this package, use Location.UNKNOWN.
+    static final LocationImpl UNKNOWN = new LocationImpl(null, null);
 
     /**
      * The string representation of an unknown location: "<code>[unknown location]</code>".
@@ -92,7 +95,7 @@ public class LocationImpl implements Location, Serializable {
         if (location instanceof LocationImpl) {
             return (LocationImpl)location;
         } else if (location == null) {
-            return (LocationImpl)Location.UNKNOWN;
+            return UNKNOWN;
         } else {
             return new LocationImpl(location);
         }
@@ -103,11 +106,11 @@ public class LocationImpl implements Location, Serializable {
      * "<code>path/to/file.xml:3:40</code>") to a Location object.
      * 
      * @param text the text to parse
-     * @return the location
+     * @return the location (possibly UNKNOWN if text was null or in an incorrect format)
      */
-    public static LocationImpl valueOf(String text) {
+    public static LocationImpl valueOf(String text) throws IllegalArgumentException {
         if (text == null || text.length() == 0) {
-            return (LocationImpl)Location.UNKNOWN;
+            return UNKNOWN;
         }
 
         // Do we have a description?
@@ -138,10 +141,10 @@ public class LocationImpl implements Location, Serializable {
                 }
             }
         } catch(Exception e) {
-            // Ignore: we throw another one below
+            // Ignore: handled below
         }
         
-        throw new IllegalArgumentException("Invalid location string: " + text);
+        return UNKNOWN;
     }
 
     /**

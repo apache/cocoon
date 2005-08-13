@@ -33,20 +33,21 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     private List locations;
 
     public LocatedRuntimeException(String message) {
-        super(message, null);
+        this(message, null, null);
     }
     
-    public LocatedRuntimeException(String message, Throwable thr) {
-        super(message, thr);
+    public LocatedRuntimeException(String message, Throwable cause) {
+        this(message, cause, null);
     }
     
     public LocatedRuntimeException(String message, Location location) {
-        super(message, null);
+        this(message, null, location);
         addLocation(location);
     }
     
-    public LocatedRuntimeException(String message, Throwable thr, Location location) {
-        super(message, thr);
+    public LocatedRuntimeException(String message, Throwable cause, Location location) {
+        super(message, cause);
+        LocatedException.addCauseLocations(this, cause);
         addLocation(location);
     }
 

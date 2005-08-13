@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.avalon.framework.CascadingException;
+import org.apache.cocoon.util.ExceptionUtils;
 
 /**
  * A cascading and located <code>Exception</code>. It is also {@link MultiLocatable} to easily build
@@ -33,21 +34,50 @@ public class LocatedException extends CascadingException implements LocatableExc
     private List locations;
 
     public LocatedException(String message) {
-        super(message, null);
+        this(message, null, null);
     }
     
-    public LocatedException(String message, Throwable thr) {
-        super(message, thr);
+    public LocatedException(String message, Throwable cause) {
+        this(message, cause, null);
     }
     
     public LocatedException(String message, Location location) {
-        super(message, null);
+        this(message, null, location);
+    }
+    
+    public LocatedException(String message, Throwable cause, Location location) {
+        super(message, cause);
+        addCauseLocations(this, cause);
         addLocation(location);
     }
     
-    public LocatedException(String message, Throwable thr, Location location) {
-        super(message, thr);
-        addLocation(location);
+    /**
+     * Add to the location stack all locations of an exception chain. This allows to have all possible
+     * location information in the stacktrace, as some exceptions like SAXParseException don't output
+     * their location in printStackTrace().
+     * <p>
+     * Traversal of the call chain stops at the first <code>Locatable</code> exception which is supposed
+     * to handle the loction of its causes by itself.
+     * <p>
+     * This method is static as a convenience for {@link LocatedRuntimeException other implementations}
+     * of locatable exceptions.
+     * 
+     * @param self the current locatable exception
+     * @param cause the cause of <code>self</code>
+     */
+    public static void addCauseLocations(MultiLocatable self, Throwable cause) {
+        if (cause == null || cause instanceof Locatable) {
+            // Locatable handles its location itself
+            return;
+        }
+        // Add parent location first
+        addCauseLocations(self, ExceptionUtils.getCause(cause));
+        // then ourselve's
+        Location loc = ExceptionUtils.getLocation(cause);
+        if (loc != null) {
+            loc = new LocationImpl("[cause location]", loc.getURI(), loc.getLineNumber(), loc.getColumnNumber());
+            self.addLocation(loc);
+        }
     }
 
     public Location getLocation() {
