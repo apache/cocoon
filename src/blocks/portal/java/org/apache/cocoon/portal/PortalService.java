@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -28,7 +27,8 @@ import org.apache.cocoon.portal.layout.Layout;
  * of the portal, the current name etc.
  * The main use of this component is to get the {@link PortalComponentManager}
  * to get all the other portal components.
- * 
+ * This component is a singleton.
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
@@ -36,8 +36,12 @@ import org.apache.cocoon.portal.layout.Layout;
  */
 public interface PortalService extends Component {
 
+    /** The role to lookup this component. */
     String ROLE = PortalService.class.getName();
     
+    /**
+     * The name of the portal - as defined in the portal configuration.
+     */
     String getPortalName();
     
     void setPortalName(String value);
