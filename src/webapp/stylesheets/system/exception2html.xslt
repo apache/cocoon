@@ -73,6 +73,7 @@
         </p>
         <div id="locations">
           <xsl:for-each select="ex:cocoon-stacktrace/ex:exception">
+            <xsl:sort select="position()" order="descending"/>
             <strong>
                <xsl:for-each select="str:split(ex:message, '&#10;')">
                   <xsl:if test="normalize-space(.)">
