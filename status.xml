@@ -196,6 +196,8 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="add">
+	Add geronimo-specs-javamail-1.3.1-rc5 and geronimo-spec-activation-1.0.2-rc4.jar. This jars replace mock classes for mail block.
     <action dev="SW" type="fix">
      JXTemplate: ensure JXPath expressions can use namespace prefix mappings declared in the template document.
     </action>
