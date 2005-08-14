@@ -406,4 +406,19 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
     public void setAttribute(String name, Object o, int scope) {
         this.req.setAttribute(name, o, scope);
     }
+
+    /**
+     * @see org.apache.cocoon.environment.Request#getSitemapURIPrefix()
+     */
+    public String getSitemapURIPrefix() {
+        return this.req.getSitemapURIPrefix();
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        return this.req.searchAttribute(name);
+    }
+
 }

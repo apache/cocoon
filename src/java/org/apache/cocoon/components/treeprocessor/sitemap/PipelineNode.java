@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
@@ -25,8 +26,10 @@ import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 
 import java.util.Map;
 
@@ -128,7 +131,17 @@ public class PipelineNode extends AbstractParentProcessingNode
                                                 env.getURIPrefix() + env.getURI());
         }
 
-        context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
+        Parameters params = VariableResolver.buildParameters(this.parameters,
+                context,
+                env.getObjectModel());
+
+        SitemapExecutor.PipelineComponentDescription desc = new SitemapExecutor.PipelineComponentDescription();
+        desc.type = this.processingPipeline;
+        desc.parameters = params;
+
+        desc = this.executor.enteringPipeline(this, env.getObjectModel(), desc);
+        context.inform(desc.type, desc.parameters, env.getObjectModel());
+
         try {
             if (this.errorHandlerHelper.isInternal()) {
                 // Set internal error handler in the pipeline

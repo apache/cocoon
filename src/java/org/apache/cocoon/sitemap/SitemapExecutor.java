@@ -201,6 +201,23 @@ public interface SitemapExecutor {
                                            PipelineComponentDescription desc);
 
     /**
+     * This informs the executor about a new pipeline section.
+     * @param context
+     * @param objectModel
+     * @param desc
+     * @return
+     */
+    PipelineComponentDescription enteringPipeline(ExecutionContext context,
+                                                  Map              objectModel,
+                                                  PipelineComponentDescription desc);
+
+    /**
+     * This informs the executor about a finished processing of the pipeline.
+     */
+    void notifyPipelineProcessed(ExecutionContext context,
+            Map              objectModel);
+    
+    /**
      * Informs about a redirect.
      * @return The uri to redirect to.
      */
