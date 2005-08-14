@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.mail.datasource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.activation.DataSource;
 
 import org.apache.excalibur.source.Source;
@@ -90,7 +94,7 @@ public class SourceDataSource implements DataSource {
      * @return The InputStream object from the <code>Source</code> object.
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
-    public java.io.InputStream getInputStream() throws java.io.IOException {
+    public InputStream getInputStream() throws IOException {
         return src.getInputStream();
     }
 
@@ -116,7 +120,7 @@ public class SourceDataSource implements DataSource {
      * @throws java.io.IOException since unimplemented
      * @return nothing
      */
-    public java.io.OutputStream getOutputStream() throws java.io.IOException {
-        throw new java.io.IOException("no data sink available");
+    public OutputStream getOutputStream() throws IOException {
+        throw new IOException("no data sink available");
     }
 }

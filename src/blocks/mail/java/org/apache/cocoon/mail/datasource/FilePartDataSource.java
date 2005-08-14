@@ -16,6 +16,10 @@
 
 package org.apache.cocoon.mail.datasource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.activation.DataSource;
 
 import org.apache.cocoon.servlet.multipart.Part;
@@ -27,13 +31,13 @@ import org.apache.cocoon.servlet.multipart.Part;
  *
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FilePartDataSource.java,v 1.5 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FilePartDataSource implements DataSource {
     private Part part;
     private String contentType = null;
     private String name = null;
-    
+
     /** Creates a new instance of FilePartDataSource from an
      * {@link Part} object.
      * @param part An {@link Part} object.
@@ -41,7 +45,7 @@ public class FilePartDataSource implements DataSource {
     public FilePartDataSource(Part part) {
         this(part,null,null);
     }
-    
+
     /** Creates a new instance of FilePartDataSource from an
      * {@link Part} object.
      * @param part An {@link Part} object.
@@ -62,7 +66,7 @@ public class FilePartDataSource implements DataSource {
      private boolean isNullOrEmpty(String str) {
          return (str == null || "".equals(str) || "null".equals(str));
      }
-        
+
     /** Return the content type (mime type) obtained from
      * {@link Part#getMimeType()}.
      * Return <CODE>application/octet-stream</CODE> if <CODE>getMimeType()</CODE>
@@ -79,23 +83,23 @@ public class FilePartDataSource implements DataSource {
         }
         return mimeType;
     }
-    
+
     /** The InputStream object obtained from
      * {@link Part#getInputStream()}
      * object.
      * @throws java.io.IOException if an I/O error occurs.
      * @return The InputStream object for this <CODE>DataSource</CODE> object.
      */    
-    public java.io.InputStream getInputStream() throws java.io.IOException {
-        java.io.InputStream inp;
+    public InputStream getInputStream() throws IOException {
+        InputStream inp;
         try {
             inp = part.getInputStream();
         } catch (Exception e) {
-            throw new java.io.IOException(e.getMessage());
+            throw new IOException(e.getMessage());
         }
         return inp;
     }
-    
+
     /** Returns the name for this <CODE>DataSource</CODE> object. This is
      * what is returned by
      * {@link Part#getFileName()}.
@@ -106,13 +110,12 @@ public class FilePartDataSource implements DataSource {
         if (isNullOrEmpty(name)) name="attachment";
         return name;
     }
-    
+
     /** Unimplemented. Directly throws <CODE>IOException</CODE>.
      * @throws java.io.IOException since unimplemented
      * @return nothing
      */    
-    public java.io.OutputStream getOutputStream() throws java.io.IOException {
-        throw new java.io.IOException("no data sink available");
+    public OutputStream getOutputStream() throws IOException {
+        throw new IOException("no data sink available");
     }
-    
 }
