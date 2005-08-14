@@ -859,6 +859,8 @@
     <depend project="javamail"/>
     <depend project="jaf"/>
 
+    <library name="geronimo-spec-activation"/>
+    <library name="geronimo-spec-javamail"/>
     <library name="javamail"/>
     <library name="jaf"/>
 
