@@ -26,6 +26,11 @@
  </header>
 
  <body>
+     <p>NOTE: this file is moved to the Daisy repository and updated there! Please do subsequent 
+         updates in Daisy: 
+         <link href="http://cocoon.zones.apache.org/daisy/documentation/602.html">
+             http://cocoon.zones.apache.org/daisy/documentation/602.html</link>
+     </p>
   <s1 title="Overview">
    <p>This document gives an overview over configuring coplets.
      The sample portal that comes with the Cocoon distribution contains several

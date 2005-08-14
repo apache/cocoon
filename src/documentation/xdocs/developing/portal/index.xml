@@ -26,6 +26,12 @@
  </header>
 
  <body>
+     <p>NOTE: this file is moved to the Daisy repository and updated there! Please do subsequent 
+         updates in Daisy: 
+         <link href="http://cocoon.zones.apache.org/daisy/documentation/599.html">
+             http://cocoon.zones.apache.org/daisy/documentation/599.html</link>
+     </p>
+     
  <s1 title="Overview">
  <p>This section contains several documents about developing a portal with Cocoon.</p>
  <p>The <link href="../webapps/portal.html">portal framework</link> is a stable
