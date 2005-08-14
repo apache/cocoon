@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -73,7 +74,7 @@ public class InvokeContext extends AbstractLogEnabled
     protected String processingPipelineName;
 
     /** The parameters for the processing pipeline */
-    protected Map processingPipelineParameters;
+    protected Parameters processingPipelineParameters;
 
     /** The object model used to resolve processingPipelineParameters */
     protected Map processingPipelineObjectModel;
@@ -125,9 +126,9 @@ public class InvokeContext extends AbstractLogEnabled
     /**
      * Informs the context about a new pipeline section
      */
-    public void inform(String pipelineName,
-                       Map    parameters,
-                       Map    objectModel) {
+    public void inform(String     pipelineName,
+                       Parameters parameters,
+                       Map        objectModel) {
         this.processingPipelineName = pipelineName;
         this.processingPipelineParameters = parameters;
         this.processingPipelineObjectModel = objectModel;
@@ -146,11 +147,7 @@ public class InvokeContext extends AbstractLogEnabled
             this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
             this.processingPipeline.setProcessorManager(this.currentManager);
 
-            this.processingPipeline.setup(
-                  VariableResolver.buildParameters(this.processingPipelineParameters,
-                                                   this,
-                                                   this.processingPipelineObjectModel)
-            );
+            this.processingPipeline.setup(this.processingPipelineParameters);
         }
         return this.processingPipeline;
     }

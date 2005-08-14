@@ -168,4 +168,18 @@ public class DefaultExecutor
         return uri;
     }
 
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#enteringPipeline(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.sitemap.SitemapExecutor.PipelineComponentDescription)
+     */
+    public PipelineComponentDescription enteringPipeline(ExecutionContext context, Map objectModel, PipelineComponentDescription desc) {
+        return desc;
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#notifyPipelineProcessed(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
+     */
+    public void notifyPipelineProcessed(ExecutionContext context, Map objectModel) {
+        // nothing to do
+    }
+
 }
