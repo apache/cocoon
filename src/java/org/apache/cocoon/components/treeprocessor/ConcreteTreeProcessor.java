@@ -41,6 +41,7 @@ import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.EnterSitemapEvent;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
+import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -54,7 +55,7 @@ import org.apache.commons.jci.monitor.FilesystemAlterationListener;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor, Disposable, FilesystemAlterationListener {
+                                   implements Processor, Disposable, FilesystemAlterationListener, ExecutionContext {
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -329,6 +330,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                 }
             }
 
+            this.sitemapExecutor.enterSitemap(this, environment.getObjectModel(), this.wrappingProcessor.source.getURI());
             // and now process
             EnvironmentHelper.enterProcessor(this, this.manager, environment);
             final Redirector oldRedirector = context.getRedirector();
@@ -350,6 +352,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
 
         } finally {
+            this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() && this.leaveSitemapEventListeners.size() > 0 ) {
@@ -528,4 +531,19 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     public void setAttribute(String name, Object value) {
         this.processorAttributes.put(name, value);
     }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ExecutionContext#getLocation()
+     */
+    public String getLocation() {
+        return "Sitemap";
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ExecutionContext#getType()
+     */
+    public String getType() {
+        return "sitemap";
+    }
+
 }

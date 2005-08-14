@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,8 +85,11 @@ public class MountNode extends AbstractProcessingNode
         if (resolvedSource.length() == 0) {
             throw new ProcessingException("Source of mount statement is empty");
         }
+        // Handle directory mounts
+        if (resolvedSource.charAt(resolvedSource.length() - 1) == '/') {
+            resolvedSource = resolvedSource + "sitemap.xmap";
+        }
 
-        resolvedSource = this.executor.enterSitemap(this, objectModel, resolvedSource);
         TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
 
         // Save context
@@ -118,7 +121,6 @@ public class MountNode extends AbstractProcessingNode
                 env.removeAttribute(COCOON_PASS_THROUGH);
             }
 
-            this.executor.leaveSitemap(this, objectModel);
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
             // Recompose pipelines which may have been recomposed by subsitemap
@@ -131,15 +133,8 @@ public class MountNode extends AbstractProcessingNode
 
         TreeProcessor processor = (TreeProcessor) processors.get(source);
         if (processor == null) {
-            // Handle directory mounts
-            String actualSource;
-            if (source.charAt(source.length() - 1) == '/') {
-                actualSource = source + "sitemap.xmap";
-            } else {
-                actualSource = source;
-            }
 
-            processor = this.parentProcessor.createChildProcessor(actualSource, this.checkReload, prefix);
+            processor = this.parentProcessor.createChildProcessor(source, this.checkReload, prefix);
 
             // Associate to the original source
             processors.put(source, processor);

@@ -30,7 +30,6 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 

@@ -116,9 +116,8 @@ public class DefaultExecutor
     /**
      * @see org.apache.cocoon.sitemap.SitemapExecutor#enterSitemap(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String)
      */
-    public String enterSitemap(ExecutionContext context, Map objectModel,
-            String source) {
-        return source;
+    public void enterSitemap(ExecutionContext context, Map objectModel, String source) {
+        // nothing to do
     }
     
     /**
@@ -173,13 +172,6 @@ public class DefaultExecutor
      */
     public PipelineComponentDescription enteringPipeline(ExecutionContext context, Map objectModel, PipelineComponentDescription desc) {
         return desc;
-    }
-
-    /**
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#notifyPipelineProcessed(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
-     */
-    public void notifyPipelineProcessed(ExecutionContext context, Map objectModel) {
-        // nothing to do
     }
 
 }
