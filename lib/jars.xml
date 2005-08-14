@@ -238,7 +238,7 @@
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.6.1-dev-20041008T0304.jar</lib>
+    <lib>endorsed/xalan-2.7.0.jar</lib>
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 
