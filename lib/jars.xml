@@ -945,6 +945,31 @@
   </file>
   <!-- OJB block end (6-Aug-2003) -->
 
+  <file>
+    <title>Javamail Spec</title>
+    <description>
+      J2EE Javamail Specification.  This implentation
+      developed by the (currently incubating) Apache Geronimo project is an
+      open source implementation from the original spec.  As such it is licensed
+      under the Apache license and therefore freely distributable.
+    </description>
+    <used-by>Mail</used-by>
+    <lib>optional/geronimo-spec-javamail-1.3.1-rc5.jar</lib>
+    <homepage>http://geronimo.apache.org/</homepage>
+  </file>
+
+  <file>
+    <title>Activation Spec</title>
+    <description>
+      J2EE Activation Specification.  This implentation
+      developed by the (currently incubating) Apache Geronimo project is an
+      open source implementation from the original spec.  As such it is licensed
+      under the Apache license and therefore freely distributable.
+    </description>
+    <used-by>Mail</used-by>
+    <lib>optional/geronimo-spec-activation-1.0.2-rc4.jar</lib>
+    <homepage>http://geronimo.apache.org/</homepage>
+  </file>
   <!-- JMS block begin -->
   <file id="geronimo-spec-jms">
     <title>JMS Spec</title>
