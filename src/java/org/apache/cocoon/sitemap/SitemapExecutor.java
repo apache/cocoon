@@ -144,11 +144,10 @@ public interface SitemapExecutor {
      * @param context     The execution context
      * @param objectModel The object model
      * @param source The uri of the sitemap
-     * @return The uri of the sitemap to read
      */
-    String enterSitemap(ExecutionContext context, 
-                        Map              objectModel,
-                        String           source);
+    void enterSitemap(ExecutionContext context, 
+                      Map              objectModel,
+                      String           source);
 
     /**
      * Leaves a sitemap.
@@ -211,12 +210,6 @@ public interface SitemapExecutor {
                                                   Map              objectModel,
                                                   PipelineComponentDescription desc);
 
-    /**
-     * This informs the executor about a finished processing of the pipeline.
-     */
-    void notifyPipelineProcessed(ExecutionContext context,
-            Map              objectModel);
-    
     /**
      * Informs about a redirect.
      * @return The uri to redirect to.

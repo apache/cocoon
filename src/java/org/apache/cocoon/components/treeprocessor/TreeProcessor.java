@@ -174,6 +174,9 @@ public class TreeProcessor extends AbstractLogEnabled
         this.fom = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null ) {
