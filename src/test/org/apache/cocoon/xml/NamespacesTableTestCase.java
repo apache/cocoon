@@ -1,14 +1,15 @@
 package org.apache.cocoon.xml;
 
-import org.xml.sax.helpers.DefaultHandler;
-
 import junit.framework.TestCase;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class NamespacesTableTestCase extends TestCase {
     public NamespacesTableTestCase(String name) {
         super(name);
     }
-        
+
     public void testSimple() {
         NamespacesTable ns = new NamespacesTable();
         
@@ -26,9 +27,10 @@ public class NamespacesTableTestCase extends TestCase {
         assertNull(ns.getPrefix(ns.getPrefix("http://ns3")));
         assertNull(ns.getUri("ns3"));
         
-        ns.leaveScope(false);
-        assertNotNull(ns.removeDeclaration("ns1"));
-        assertNotNull(ns.removeDeclaration("ns2"));
+        ns.leaveScope();
+        // Declarations that occured before this scope are no more visible
+        assertNull(ns.removeDeclaration("ns1"));
+        assertNull(ns.removeDeclaration("ns2"));
         assertNull(ns.removeDeclaration("ns3"));
     }
     
@@ -44,7 +46,7 @@ public class NamespacesTableTestCase extends TestCase {
         ns.addDeclaration("ns3", "http://ns3");
         
         try {
-            ns.leaveScope(false);
+            ns.leaveScope();
         } catch(IllegalStateException e) {
             return;
         }
@@ -65,13 +67,13 @@ public class NamespacesTableTestCase extends TestCase {
         assertEquals("http://yetanotherns1", ns.getUri("ns1"));
         assertEquals(0, ns.getPrefixes("http://ns1").length);
         
-        ns.leaveScope(true);
-        ns.leaveScope(true);
+        ns.leaveScope();
+        ns.leaveScope();
         
         assertEquals("http://ns1", ns.getUri("ns1"));
         assertEquals(1, ns.getPrefixes("http://ns1").length);
         
-        ns.leaveScope(true);
+        ns.leaveScope();
         assertNull(ns.getUri("ns1"));
     }
     
@@ -106,7 +108,7 @@ public class NamespacesTableTestCase extends TestCase {
         // Enter and leave a nested scope
         ns.addDeclaration("ns3", "http://ns3");
         ns.enterScope();
-        ns.leaveScope(true);
+        ns.leaveScope();
         
         ns.leaveScope(new DefaultHandler() {
             public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException {
@@ -114,4 +116,48 @@ public class NamespacesTableTestCase extends TestCase {
             };
         });
     }
+    
+    /**
+     * A scenario that occurs in with jx:import where some prefixes are started but not used.
+     * @throws Exception
+     */
+    public void testJXImport() throws Exception {
+        NamespacesTable ns = new NamespacesTable();
+        ContentHandler handler = new DefaultHandler();
+        
+        ns.addDeclaration("ft", "http://apache.org/cocoon/forms/1.0#template");
+        ns.addDeclaration("fi", "http://apache.org/cocoon/forms/1.0#instance");
+        ns.addDeclaration("jx", "http://apache.org/cocoon/templates/jx/1.0");
+//        ns.enterScope(handler);
+          ns.addDeclaration("jx", "http://apache.org/cocoon/templates/jx/1.0");
+          ns.addDeclaration("fi", "http://apache.org/cocoon/forms/1.0#instance");
+          ns.addDeclaration("bu", "http://apache.org/cocoon/browser-update/1.0");
+          ns.removeDeclaration("jx");
+          ns.removeDeclaration("fi");
+          ns.removeDeclaration("bu");
+//        ns.leaveScope(handler);
+        assertEquals("ft", ns.getPrefix("http://apache.org/cocoon/forms/1.0#template"));
+        assertEquals("fi", ns.getPrefix("http://apache.org/cocoon/forms/1.0#instance"));
+        assertEquals("jx", ns.getPrefix("http://apache.org/cocoon/templates/jx/1.0"));
+        ns.removeDeclaration("ft");
+        ns.removeDeclaration("fi");
+        ns.removeDeclaration("jx");
+
+    }
+    
+    public void testDuplicate() throws Exception {
+        NamespacesTable ns = new NamespacesTable();
+        
+        ns.addDeclaration("ns1", "http://ns1");
+          ns.enterScope();
+            ns.addDeclaration("ns1", "http://ns1");
+              ns.enterScope();
+              ns.leaveScope();
+            ns.removeDeclaration("ns1");
+            assertEquals("http://ns1", ns.getUri("ns1"));
+          ns.leaveScope();
+        ns.removeDeclaration("ns1");
+        assertNull(ns.getUri("ns1"));
+    }
+
 }
