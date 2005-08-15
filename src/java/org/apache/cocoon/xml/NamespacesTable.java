@@ -59,7 +59,7 @@ public class NamespacesTable {
     /** The last namespace declaration. */
     private Entry lastEntry;
 
-    private boolean filterDuplicate = true;
+    private boolean usesScopes = false;
 
     /**
      * Construct a new <code>NamespacesTable</code> instance.
@@ -93,7 +93,7 @@ public class NamespacesTable {
         }
 
         if (dup != null) {
-            if (filterDuplicate && dup.uri.equals(uri)) {
+            if (usesScopes && dup.uri.equals(uri)) {
                 return dup;
             }
             dup.overriden = true;
@@ -115,6 +115,11 @@ public class NamespacesTable {
      * @return The removed <code>Declaration</code> or <b>null</b>.
      */
     public Declaration removeDeclaration(String prefix) {
+        if (usesScopes) {
+            // Automatically handled in leaveScope
+            return null; // or throw and IllegalStateException if enterScope(handler) was used?
+        }
+
         Entry current = this.lastEntry;
         Entry afterCurrent = null;
         while(current != null) {
@@ -159,6 +164,7 @@ public class NamespacesTable {
      * @since 2.1.8
      */
     public void enterScope() {
+        this.usesScopes = true;
         this.lastEntry.closedScopes++;
     }
 
@@ -172,6 +178,7 @@ public class NamespacesTable {
      * @since 2.1.8
      */
     public void enterScope(ContentHandler handler) throws SAXException {
+        this.usesScopes = true;
         Entry current = this.lastEntry;
         while (current != null && current.closedScopes == 0) {
             handler.startPrefixMapping(current.prefix, current.uri);
@@ -188,13 +195,13 @@ public class NamespacesTable {
      * @param autoUndeclare if <code>true</code>, remove all mappings for the current scope.
      * @since 2.1.8
      */
-    public void leaveScope(boolean autoUndeclare) {
+    public void leaveScope() {
         Entry current = this.lastEntry;
         if (current.closedScopes <= 0) {
             throw new IllegalStateException("Misbalanced enter and leaving of scope.");
         }
         current.closedScopes--;
-        if (autoUndeclare) {
+        if (usesScopes) {
             while (current != null && current.closedScopes == 0) {
                 Entry overrides = current.overrides;
                 if (overrides != null) {
@@ -221,6 +228,7 @@ public class NamespacesTable {
         if (current.closedScopes <= 0) {
             throw new IllegalStateException("Misbalanced enter and leaving of scope.");
         }
+        current.closedScopes--;
         while (current != null && current.closedScopes == 0) {
             handler.endPrefixMapping(current.prefix);
             Entry overrides = current.overrides;
@@ -231,7 +239,6 @@ public class NamespacesTable {
             current = current.previous;
         }
 
-        current.closedScopes--;
         this.lastEntry = current;
     }
 
