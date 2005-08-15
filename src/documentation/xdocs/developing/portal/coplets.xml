@@ -315,6 +315,28 @@
        coplet.setAttribute("doNotCache", "1");
      ...]]>
      </source>
+   <p>
+     By default the caching uri adapter ignores sizing events for clearing the cache. This
+     ensures that minimizing a coplet does not clear the cache. However, if you want to
+     disable the cache on a sizing event you can turn this on in the configuration for
+     a coplet data:
+   </p>
+   <source>
+   <![CDATA[...
+     <coplet-data id="Portal-Demo" name="standard">
+       <title>Introduction</title>
+       <coplet-base-data>CachingURICoplet</coplet-base-data>
+       <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-demo.html</value>
+       </attribute>
+       <attribute>
+         <name>ignore-sizing-events</name>
+         <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">false</value>
+       </attribute>
+     </coplet-data>
+   ...]]>
+   </source>
    <s2 title="Global Caching">
      <p>
        The default caching mechanism caches the contents in the user session. If you
