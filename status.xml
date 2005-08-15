@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Portal block: Add support for portal bridges and add CoWarp for authentication.
+    </action>
     <action dev="AN" type="add">
       XSP block: Extend {#expr} interpolation parser to understand {}, "}", '}'
       as not being the closing brace.

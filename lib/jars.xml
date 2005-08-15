@@ -1058,6 +1058,26 @@
     <lib>optional/pluto-1.0.1-rc2.jar</lib>
     <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
+  <file id="portals-bridges-common">
+    <title>Portals Bridges</title>
+    <description>
+      Portals Bridges provides support for JSR-168 compliant Portlet development
+      using common web frameworks like Struts, JSF, PHP, Perl and Velocity. 
+    </description>
+    <used-by>Portal</used-by>
+    <lib>optional/portals-bridges-common-0.4-20050815.jar</lib>
+    <homepage>http://portals.apache.org/bridges/</homepage>
+  </file>
+  <file id="cowarp">
+    <title>CoWarp</title>
+    <description>
+      A web application framework for Cocoon providing an authentication mechanism
+      with special support for the portal.
+    </description>
+    <used-by>Portal</used-by>
+    <lib>optional/cowarp-0.3.jar</lib>
+    <homepage>http://osoco.sourceforge.net/cowarp/</homepage>
+  </file>
 
   <file id="jakarta-bcel">
     <title>Jakarta BCEL</title>
