@@ -923,13 +923,17 @@
     <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
-    <depend project="jakarta-pluto" inherit="runtime"/>
+    <depend project="portals-pluto" inherit="runtime"/>
+    <depend project="portals-bridges-common"/>
+    <depend project="cowarp"/>
 
     <library name="jtidy"/>
     <library name="castor"/>
     <library name="commons-collections"/>
     <library name="pluto"/>
     <library name="portlet-api"/>
+    <library name="portals-bridges-common"/>
+    <library name="cowarp"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1550,6 +1554,12 @@
     <url href="http://incubator.apache.org/jackrabbit"/>
     <package>org.apache.jackrabbit</package>
     <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
+  </project>
+
+  <project name="cowarp">
+    <url href="http://osoco.sourceforge.net/cowarp/"/>
+    <package>org.osoco.cowarp</package>
+    <jar name="lib/optional/cowarp-0.3.jar"/>
   </project>
 
   <project name="garbage">
