@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Portal block: Add global caching to caching uri adapter.
+    </action>
     <action dev="AG" type="update">
       Updated xalan to 2.7.0.
     </action>

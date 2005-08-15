@@ -140,10 +140,14 @@
    </coplet-data>
    <coplet-data id="Portal-Demo" name="standard">
       <title>Introduction</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
          <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-demo.html</value>
+      </attribute>
+      <attribute>
+        <name>cache-global</name>
+        <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
       </attribute>
       <aspect>
         <name>mandatory</name>
