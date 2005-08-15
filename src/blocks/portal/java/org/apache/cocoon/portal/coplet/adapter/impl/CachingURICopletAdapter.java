@@ -27,6 +27,7 @@ import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
+import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
@@ -41,14 +42,23 @@ import org.xml.sax.SAXException;
  * the user session.
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
- *
+ * @author <a href="mailto:cziegeler.at.apache.dot.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
     implements Parameterizable {
 
-    /** The attribute name for the storing the cached coplet content. */
+    /** The configuration name for enabling/disabling the cache. */
+    public static final String CONFIGURATION_ENABLE_CACHING = "cache-enabled";
+
+    /** The configuration name for using the global cache. */
+    public static final String CONFIGURATION_CACHE_GLOBAL= "cache-global";
+
+    /** The configuration name for ignoring sizing events to clear the cache. */
+    public static final String CONFIGURATION_IGNORE_SIZING_EVENTS = "ignore-sizing-events";
+
+    /** The attribute name for storing the cached coplet content. */
     public static final String CACHE = "cacheData";
 
     /** This attribute can be set on the instance to not cache the current response. */
@@ -119,9 +129,9 @@ public class CachingURICopletAdapter
                                final ContentHandler contentHandler)
     throws SAXException {
         // Is caching enabled?
-        boolean cachingEnabled = ((Boolean)this.getConfiguration(coplet, "cache-enabled", this.enableCaching)).booleanValue();
+        boolean cachingEnabled = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_ENABLE_CACHING, this.enableCaching)).booleanValue();
         // do we cache globally?
-        boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, "cache-global", Boolean.FALSE)).booleanValue();
+        boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL, Boolean.FALSE)).booleanValue();
 
         Object data = null;
         // If caching is enabed and the cache is still valid, then use the cache
@@ -192,17 +202,33 @@ public class CachingURICopletAdapter
     public void handleCopletInstanceEvent(CopletInstanceEvent event) {
         final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
 
-        // do we cache globally?
-        boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, "cache-global", Boolean.FALSE)).booleanValue();
-        if ( cacheGlobal ) {
-            final String key = this.getCacheKey(coplet,
-                                                (String) coplet.getCopletData().getAttribute("uri"));
-            this.cache.remove(key);
-        } else {
-            coplet.removeAttribute(CACHE);
+        // do we ignore SizingEvents
+        boolean ignoreSizing = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_IGNORE_SIZING_EVENTS, Boolean.TRUE)).booleanValue();
+
+        if ( !ignoreSizing || !isSizingEvent(event)) {
+            // do we cache globally?
+            boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL, Boolean.FALSE)).booleanValue();
+            if ( cacheGlobal ) {
+                final String key = this.getCacheKey(coplet,
+                                                    (String) coplet.getCopletData().getAttribute("uri"));
+                this.cache.remove(key);
+            } else {
+                coplet.removeAttribute(CACHE);
+            }
         }
     }
 
+    /**
+     * Tests if the event is a sizing event for the coplet.
+     */
+    protected boolean isSizingEvent(CopletInstanceEvent event) {
+        if ( event instanceof ChangeCopletInstanceAspectDataEvent ) {
+            if (((ChangeCopletInstanceAspectDataEvent)event).getAspectName().equals("size")) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Build the key for the global cache.
      */
