@@ -43,12 +43,12 @@
         </p>
         <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
      </s1> 
-     <s1 title="The JSR-168">
-        <p>The Cocoon portal supports portlets conforming to the JSR-168. The JSR-168 contains 
-           a sample that uses the testsuite from the <fork href="http://jakarta.apache.org/pluto">Jakarta-Pluto project</fork>.</p>
+     <s1 title="The JSR 168">
+        <p>The Cocoon portal supports portlets conforming to the JSR 168. The JSR 168 tab contains 
+           a sample using the testsuite from the <fork href="http://portals.apache.org/pluto">Pluto project</fork>.</p>
         <p>These samples only work if you follow these installation instructions:</p>
         <ul>
-         <li>Get the jakarta pluto project and install it into Tomcat (Test Pluto now).</li>
+         <li>Get the Pluto project and install it into Tomcat (Test Pluto now).</li>
          <li>Install Cocoon as a web application in Tomcat and remove the Pluto webapp. Please note,
              that it is currently not possible to start Cocoon directly from a war file; it has 
              to be expanded.</li>

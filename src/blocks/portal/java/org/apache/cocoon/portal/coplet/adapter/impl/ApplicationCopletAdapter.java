@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,27 +43,29 @@ import org.xml.sax.SAXException;
 
 /**
  * This coplet adapter is used to connect to external applications that are 
- * plugged into the portal
+ * plugged into the portal.
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
- * 
+ *
  * @version CVS $Id$
  */
 public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
-    public void streamContent(
-        final CopletInstanceData coplet,
-        final String uri,
-        final ContentHandler contentHandler)
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, java.lang.String, org.xml.sax.ContentHandler)
+     */
+    public void streamContent(final CopletInstanceData coplet,
+                              final String uri,
+                              final ContentHandler contentHandler)
     throws SAXException {
         try {
             super.streamContent(coplet, uri, contentHandler);
         } catch (SAXException se) {
-            getLogger().error(
+            this.getLogger().error(
                 "ApplicationCopletAdapter: Exception while getting coplet resource",
                 se);
 
-            renderErrorContent(coplet, contentHandler);
+            this.renderErrorContent(coplet, contentHandler);
         }
     }
 
@@ -91,8 +93,8 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
                 // this is a normal link event, so save the url in the instance data
                 // for ProxyTransformer
                 String linkValue = event.getLink();
-                Boolean addParams = (Boolean)this.getConfiguration(coplet, "appendParameters");
-                if ( addParams != null && addParams.booleanValue() ) {
+                Boolean addParams = (Boolean)this.getConfiguration(coplet, "appendParameters", Boolean.FALSE);
+                if ( addParams.booleanValue() ) {
                     final StringBuffer uri = new StringBuffer(event.getLink());
                     boolean hasParams = (uri.toString().indexOf("?") != -1);
                     

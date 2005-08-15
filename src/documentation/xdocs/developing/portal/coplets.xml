@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -282,6 +282,70 @@
     error message.
    </p>
   </s2>
+ </s1>
+ <s1 title="The CachingURICoplet">
+   <p>
+     The CachingURICoplet is an extension of the URICoplet (see previous chapter) providing
+     caching of the coplet content. Usually the user of a portal only interacts with
+     one single coplet at a time. As the interaction redraws the whole portal page
+     with several coplets, all coplets are asked to give their content. In many
+     situations this is not wanted. For example if the coplet contains a form or
+     has a state, asking the coplet to give its content although the user has
+     not submitted the form, might result in unwanted responses.
+   </p>
+   <p>
+     Therefore the CachingURICoplet caches the content of a coplet in the session
+     of the user. All further requests are served from the cache until the user
+     interacts with exactly this coplet. In this case the cache is cleared,
+     the coplet is invoked again and the new content is cached for further requests.
+   </p>
+   <p>
+     If you want to disable the caching, you can specify the boolean attribute
+     <em>cache-enabled</em> with the value <em>false</em> in the coplet data
+     configuration.
+   </p>
+   <p>
+     You can also programmatically turn off caching for a coplet for a single request
+     by setting the attribute <em>doNotCache</em> with any value on the coplet instance
+     data. For example if you want to set this from flow:
+   </p>
+     <source>
+     <![CDATA[...
+       var coplet = GET_THE_COPLET_INSTANCE_DATA;
+       coplet.setAttribute("doNotCache", "1");
+     ...]]>
+     </source>
+   <s2 title="Global Caching">
+     <p>
+       The default caching mechanism caches the contents in the user session. If you
+       want to use a global cache across all users, you can turn this on with an
+       attribute on the coplet data configuration:
+     </p>
+     <source>
+     <![CDATA[...
+       <coplet-data id="Portal-Demo" name="standard">
+         <title>Introduction</title>
+         <coplet-base-data>CachingURICoplet</coplet-base-data>
+         <attribute>
+           <name>uri</name>
+           <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/docs/portal-demo.html</value>
+         </attribute>
+         <attribute>
+           <name>cache-global</name>
+           <value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+         </attribute>
+       </coplet-data>
+     ...]]>
+     </source>
+     <p>
+       By using the boolean <em>cache-global</em> attribute with the value <em>true</em>
+       the contents of the coplet is cached in the usual Cocoon cache making it available
+       to all users.
+     </p>
+     <p>
+       The global cache is useful for static content that is the same for all users.
+     </p>
+   </s2>
  </s1>
  <s1 title="Coplet Rendering">
   <p>

@@ -94,6 +94,22 @@ public abstract class AbstractCopletAdapter
     }
     
     /**
+     * Get a configuration value
+     * First the coplet data is queried and if it doesn't provide an
+     * attribute with the given name, the coplet base data is used.
+     * If no value is found the default value is returned.
+     */
+    protected Object getConfiguration(CopletInstanceData coplet,
+                                      String key,
+                                      Object defaultValue) {
+        Object data = this.getConfiguration(coplet, key);
+        if ( data == null ) {
+            data = defaultValue;
+        }
+        return data;
+    }
+
+    /**
      * Implement this and not toSAX()
      */
     public abstract void streamContent(CopletInstanceData coplet, 

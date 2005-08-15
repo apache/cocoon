@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,171 +17,162 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.Cache;
+import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
+import org.apache.cocoon.util.Deprecation;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This is the adapter to use pipelines as coplets. The result of the called 
- * pipeline is cached until a 
- * {@link org.apache.cocoon.portal.event.CopletInstanceEvent}
- * for that coplet is received. Configuration options of super
- * classes apply.
+ * This adapter extends the {@link org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter}
+ * by a caching mechanism. The result of the called uri/pipeline is cached until a 
+ * {@link org.apache.cocoon.portal.event.CopletInstanceEvent} for that coplet instance
+ * is received.
+ * The content can eiter be cached in the user session or globally. The default is
+ * the user session.
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
- * 
- * @version CVS $Id$
+ *
+ * @version $Id$
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
     implements Parameterizable {
-    
-    /**
-     * The cache for saving the coplet data
-     */
+
+    /** The attribute name for the storing the cached coplet content. */
     public static final String CACHE = "cacheData";
 
-    /**
-     * Marks the validity of the cached data
-     */
-    public static final String CACHE_VALIDITY = "cacheValidity";
-
-    /**
-     * Tells the adapter to not cache the current response
-     */
+    /** This attribute can be set on the instance to not cache the current response. */
     public static final String DO_NOT_CACHE = "doNotCache";
-    
-    /**
-     * Marks cache valid.
-     */
-    public static final String CACHE_VALID = "1";
 
-    /**
-     * Marks cache invalid
-     */
-    public static final String CACHE_INVALID = "0";
-
-    /**
-     * Caching can be basically disabled with this parameter
+    /** 
+     * Caching can be basically disabled with this boolean parameter.
+     * @deprecated Use coplet base data configuration.
      */
     public static final String PARAMETER_DISABLE_CACHING = "disable_caching";
 
-    /**
-     * instance variable, that shows, if caching is disabled
-     */
-    private boolean disableCaching = false;
+    /** Is caching enabled? */
+    protected Boolean enableCaching = Boolean.TRUE;
 
-    /* (non-Javadoc)
+    /** The cache to use for global caching. */
+    protected Cache cache;
+
+    /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) {
-        if (parameters != null) {
-            this.disableCaching = parameters.getParameterAsBoolean(PARAMETER_DISABLE_CACHING, false);
-            if (this.disableCaching) {
-                getLogger().info(this.getClass().getName() + " Caching is disabled.");
-            } else {
-                getLogger().info(this.getClass().getName() + " Caching is enabled.");
-            }
+        if ( parameters.getParameter(PARAMETER_DISABLE_CACHING, null) != null ) {
+            Deprecation.logger.info("The 'disable_caching' parameter on the caching uri coplet adapter is deprecated. "
+                                   +"Use the configuration of the base coplet data instead.");
+        }
+        boolean disableCaching = parameters.getParameterAsBoolean(PARAMETER_DISABLE_CACHING,
+                                                                  !this.enableCaching.booleanValue());
+        this.enableCaching = new Boolean(!disableCaching);
+        if ( this.getLogger().isInfoEnabled() ) {
+            this.getLogger().info(this.getClass().getName() + ": enable-caching=" + this.enableCaching);
         }
     }
 
-    /* (non-Javadoc)
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.cache = (Cache)this.manager.lookup(Cache.ROLE);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release(this.cache);
+            this.cache = null;
+        }
+        super.dispose();
+    }
+
+    /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
      */
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-        this.streamContent( coplet, (String) coplet.getCopletData().getAttribute("uri"), contentHandler);
+        this.streamContent( coplet, 
+                            (String) coplet.getCopletData().getAttribute("uri"),
+                            contentHandler);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, java.lang.String, org.xml.sax.ContentHandler)
      */
     public void streamContent( final CopletInstanceData coplet,
                                final String uri,
                                final ContentHandler contentHandler)
     throws SAXException {
-        if (this.isValidCache(coplet)) {
-            this.toSAXFromCache(coplet, contentHandler);
-        } else {
-            XMLByteStreamCompiler bc = new XMLByteStreamCompiler();
+        // Is caching enabled?
+        boolean cachingEnabled = ((Boolean)this.getConfiguration(coplet, "cache-enabled", this.enableCaching)).booleanValue();
+        // do we cache globally?
+        boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, "cache-global", Boolean.FALSE)).booleanValue();
 
-            super.streamContent(coplet, uri, bc);
-
-            if ( coplet.getAttribute(DO_NOT_CACHE) != null ) {
-                coplet.removeAttribute(DO_NOT_CACHE);
-                this.setCacheInvalid(coplet);
-                XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
-                bi.setContentHandler(contentHandler);
-
-                bi.deserialize(bc.getSAXFragment());
+        Object data = null;
+        // If caching is enabed and the cache is still valid, then use the cache
+        if (cachingEnabled) {
+            if ( cacheGlobal ) {
+                final String key = this.getCacheKey(coplet, uri);
+                CachedResponse response = this.cache.get(key);
+                if (response != null ) {
+                    data = response.getResponse();
+                }
             } else {
-                this.toCache(coplet, bc.getSAXFragment());
+                data = coplet.getAttribute(CACHE);
+            }
+        } 
+        if (data == null) {
+            // if caching is permanently or temporary disabled, flush the cache and invoke coplet
+            if ( !cachingEnabled || coplet.getAttribute(DO_NOT_CACHE) != null ) {
+                coplet.removeAttribute(DO_NOT_CACHE);
+                if ( cacheGlobal ) {
+                    final String key = this.getCacheKey(coplet, uri);
+                    this.cache.remove(key); 
+                } else {
+                    coplet.removeAttribute(CACHE);
+                }
+                super.streamContent(coplet, uri, contentHandler);                
+            } else {
 
-                this.toSAXFromCache(coplet, contentHandler);
+                XMLByteStreamCompiler bc = new XMLByteStreamCompiler();
+
+                super.streamContent(coplet, uri, bc);
+                data = bc.getSAXFragment();
+                if ( cacheGlobal ) {
+                    CachedResponse response = new CachedResponse((SourceValidity[])null, (byte[])data);
+                    try {
+                        final String key = this.getCacheKey(coplet, uri);
+                        this.cache.store(key, response);
+                    } catch (ProcessingException pe) {
+                        // we ignore this
+                        this.getLogger().warn("Exception during storing response into cache.", pe);
+                    }
+                } else {
+                    coplet.setAttribute(CACHE, data);
+                }
             }
         }
-    }
-
-    /**
-     * Caches the data of the coplet resource in the coplet instance.
-     * @param coplet the coplet instance data
-     * @param data the data of the coplet resource
-     */
-    private void toCache(CopletInstanceData coplet, Object data) {
-        coplet.setAttribute(CACHE, data);
-
-        this.setCacheValid(coplet);
-    }
-
-    /**
-     * Creates SAX events from the cached coplet data.
-     * @param coplet the coplet instance data
-     * @param contentHandler the handler, that should receive the SAX events
-     * @throws SAXException
-     */
-    private void toSAXFromCache(CopletInstanceData coplet,
-                                ContentHandler contentHandler)
-    throws SAXException {
-        XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
-        bi.setContentHandler(contentHandler);
-
-        bi.deserialize(coplet.getAttribute(CACHE));
-    }
-
-    /**
-     * Tests the cache for validity.
-     * @param coplet the coplet instance data
-     */
-    public boolean isValidCache(CopletInstanceData coplet) {
-        if (disableCaching) {
-            return false;
+        // and now stream the data
+        if ( data != null ) {
+            XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
+            bi.setContentHandler(contentHandler);
+            bi.deserialize(data);
         }
-        String cacheValidity = (String) coplet.getAttribute(CACHE_VALIDITY);
-
-        if (cacheValidity == null) {
-            return false;
-        }
-        return CACHE_VALID.equals(cacheValidity);
-    }
-
-    /**
-     * Sets the cache valid.
-     * @param coplet the coplet instance data
-     */
-    public void setCacheValid(CopletInstanceData coplet) {
-        coplet.setAttribute(CACHE_VALIDITY, CACHE_VALID);
-    }
-
-    /**
-     * Sets the cache invalid.
-     * @param coplet the coplet instance data
-     */
-    public void setCacheInvalid(CopletInstanceData coplet) {
-        coplet.setAttribute(CACHE_VALIDITY, CACHE_INVALID);
     }
 
     /**
@@ -201,7 +192,21 @@ public class CachingURICopletAdapter
     public void handleCopletInstanceEvent(CopletInstanceEvent event) {
         final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
 
-        this.setCacheInvalid(coplet);
+        // do we cache globally?
+        boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, "cache-global", Boolean.FALSE)).booleanValue();
+        if ( cacheGlobal ) {
+            final String key = this.getCacheKey(coplet,
+                                                (String) coplet.getCopletData().getAttribute("uri"));
+            this.cache.remove(key);
+        } else {
+            coplet.removeAttribute(CACHE);
+        }
     }
 
+    /**
+     * Build the key for the global cache.
+     */
+    protected String getCacheKey(CopletInstanceData coplet, String uri) {
+        return "coplet:" + coplet.getCopletData().getId() + '/' + uri;
+    }
 }

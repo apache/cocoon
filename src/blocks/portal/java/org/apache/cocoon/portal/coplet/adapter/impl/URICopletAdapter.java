@@ -63,14 +63,14 @@ public class URICopletAdapter
     /** The application context */
     protected Context context;
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -100,11 +100,11 @@ public class URICopletAdapter
 			if (uri.startsWith("cocoon:")) {
                 portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-                Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters");
+                Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters", Boolean.FALSE);
                 
                 String sourceUri = uri;
                 
-                if ( handlePars != null && handlePars.booleanValue() ) {
+                if ( handlePars.booleanValue() ) {
                     List list = (List) portalService.getTemporaryAttribute(URICopletAdapter.class.getName());
                     if ( list != null && list.contains( coplet )) {
                         // add parameters
