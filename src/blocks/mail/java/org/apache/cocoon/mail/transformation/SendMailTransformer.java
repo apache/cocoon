@@ -136,9 +136,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </li>
  *  </ul>
  * </p>
- * <p>
+ * 
  *  Example:
- *
+ *<pre>
  *   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
  *   &lt;document xmlns:email="http://apache.org/cocoon/transformation/sendmail"&gt;
  *     &lt;email:sendmail&gt;
@@ -159,11 +159,12 @@ import org.xml.sax.helpers.AttributesImpl;
  *       &lt;email:attachment name="hello2.html" mime-type="text/html" src="cocoon:/src1"/&gt;
  *       &lt;email:attachment name="hello3.html" mime-type="text/html"
  *          url="C:\path\softwareupdate.html"/&gt;
- *       &lt;email:attachment name="hello.gif" mime- type="image/gif"
+ *       &lt;email:attachment name="hello.gif" mime-type="image/gif"
  *          url="c:\path\powered.gif"/&gt;
  *     &lt;/email:sendmail&gt;
  *   &lt;/document&gt;
- * </p>
+ *</pre>
+ * 
  *
  * <p>
  *   After the transformation a report will be generated, where the state for each sent mail can be seen.
