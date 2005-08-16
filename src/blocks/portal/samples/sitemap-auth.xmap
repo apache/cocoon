@@ -59,6 +59,10 @@
     <map:matchers default="wildcard"/>
     <map:selectors default="browser"/>
     <map:actions>
+      <map:action name="portal-login"
+                  src="org.apache.cocoon.portal.acting.LoginAction"/>
+      <map:action name="portal-logout"
+                  src="org.apache.cocoon.portal.acting.LogoutAction"/>
       <map:action name="portal-set-object-model"
                   src="org.apache.cocoon.acting.SetterAction"/>
       <map:action name="portal-set-data"
@@ -72,13 +76,6 @@
                   src="org.apache.cocoon.portal.acting.PreparePortalAction"/>
       <map:action name="portal-urlhelper"
                   src="org.apache.cocoon.portal.acting.URLAction"/>
-
-      <map:action name="cowarp-is-logged-in"
-                  src="org.osoco.cowarp.acting.LoggedInAction"/>
-      <map:action name="cowarp-login"
-                  src="org.osoco.cowarp.acting.LoginAction"/>
-      <map:action name="cowarp-logout"
-                  src="org.osoco.cowarp.acting.LogoutAction"/>
     </map:actions>
   </map:components>
 
@@ -94,12 +91,42 @@
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
+
     <map:component-configurations>
+      <authentication-manager>
+        <handlers>
+          <handler name="portal-handler">
+            <redirect-to uri="cocoon:/login"/>
+            <authentication uri="cocoon:raw:/sunrise-authuser"/>
+            <applications>
+              <application loadondemand="true" name="portal">
+                <configuration name="portal">
+                  <profiles>
+                    <copletbasedata-load uri="cocoon:raw:/load-global-profile?profile=copletbasedata"/>
+                    <copletdata-global-load uri="cocoon:raw:/load-global-profile?profile=copletdata"/>
+                    <copletdata-role-load uri="cocoon:raw:/load-role-profile?profile=copletdata"/>
+                    <copletdata-user-load uri="cocoon:raw:/load-user-profile?profile=copletdata"/>
+                    <copletinstancedata-global-load uri="cocoon:raw:/load-global-profile?profile=copletinstancedata"/>
+                    <copletinstancedata-role-load uri="cocoon:raw:/load-role-profile?profile=copletinstancedata"/>
+                    <copletinstancedata-user-load uri="cocoon:raw:/load-user-profile?profile=copletinstancedata"/>
+                    <copletinstancedata-user-save uri="cocoon:raw:/save-user-profile?profile=copletinstancedata"/>
+                    <layout-global-load uri="cocoon:raw:/load-global-profile?profile=layout"/>
+                    <layout-role-load uri="cocoon:raw:/load-role-profile?profile=layout"/>
+                    <layout-user-load uri="cocoon:raw:/load-user-profile?profile=layout"/>
+                    <layout-user-save uri="cocoon:raw:/save-user-profile?profile=layout"/>
+                  </profiles>
+                </configuration>
+              </application>
+            </applications>
+          </handler>
+        </handlers>
+      </authentication-manager>
+
       <!-- select skin to use -->
       <map:global-variables>
-		<skin>common</skin>
-    	<mainTitle>Cocoon Portal</mainTitle>
-	    <toolsTitle>Cocoon Portal Tools</toolsTitle>
+				<skin>common</skin>
+				<mainTitle>Cocoon Portal</mainTitle>
+				<toolsTitle>Cocoon Portal Tools</toolsTitle>
       </map:global-variables>
 
     </map:component-configurations>
@@ -182,21 +209,24 @@
       </map:match>
 
       <!-- Do an auto login as anonymous -->
-      <map:act type="cowarp-is-logged-in">
+      <map:act type="auth-loggedIn">
+        <map:parameter name="handler" value="portal-handler"/>
         <map:parameter name="application" value="portal"/>
         <map:parameter name="negate-result" value="true"/>
 
-        <map:act type="cowarp-login">
+        <map:act type="auth-login">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
-          <map:parameter name="name" value="anonymous"/>
-          <map:parameter name="password" value="anonymous"/>
+          <map:parameter name="parameter_name" value="anonymous"/>
+          <map:parameter name="parameter_password" value="anonymous"/>
         </map:act>
       </map:act>
 
       <!-- Test pipeline for portal engine -->
       <map:match pattern="portal">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
           <map:generate type="portal" label="content"/>
@@ -219,7 +249,8 @@
 
       <!-- Test pipeline for bookmark -->
       <map:match pattern="bookmark">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
           <map:act type="portal-bookmark">
@@ -229,7 +260,8 @@
       </map:match>
 
       <map:match pattern="portalxml">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
             <map:generate type="portal" label="content"/>
@@ -243,14 +275,18 @@
         - if we are anonymous, then logout
         - if we are any other use, redirect to loggedin
         -->
-          <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-loggedIn">
+          <map:parameter name="handler" value="portal-handler"/>
+
+          <map:act type="auth-protect">
+            <map:parameter name="handler" value="portal-handler"/>
             <map:parameter name="application" value="portal"/>
 
             <map:select type="parameter" >
               <map:parameter name="parameter-selector-test" value="{ID}"/>
               <map:when test="anonymous">
-                <map:act type="cowarp-logout">
-                  <map:parameter name="application" value="portal"/>
+                <map:act type="auth-logout">
+                  <map:parameter name="handler" value="portal-handler"/>
                 </map:act>
               </map:when>
               <map:otherwise>
@@ -258,14 +294,18 @@
               </map:otherwise>
             </map:select>
           </map:act>
+        </map:act>
 
         <!-- Start the authentication process -->
-        <map:act type="cowarp-login">
+        <map:act type="auth-login">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
-          <map:parameter name="name" value="{request-param:name}"/>
-          <map:parameter name="password" value="{request-param:password}"/>
+          <map:parameter name="parameter_name" value="{request-param:name}"/>
+          <map:parameter name="parameter_password" value="{request-param:password}"/>
 
           <!-- Authentication succeeded -->
+            <map:act type="portal-login"/>
+
           <map:redirect-to uri="{request-param:resource}"/>
 
         </map:act>
@@ -279,7 +319,8 @@
       </map:match>
 
       <map:match pattern="loggedin">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
           <map:generate src="resources/logged-in.xml"/>
@@ -291,14 +332,14 @@
       </map:match>
 
       <map:match pattern="logout">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="auth-protect">
+          <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 <!--
             <map:act type="portal-save-profile"/>
 -->
-          <map:act type="cowarp-logout">
-		    <map:parameter name="application" value="portal"/>
-        </map:act>
+            <map:act type="portal-logout"/>
+          <map:act type="auth-logout"/>
         </map:act>
         <!-- TODO logout page -->
         <map:redirect-to uri="login"/>
@@ -308,7 +349,8 @@
 	
 	<!-- mount sitemap of the portal tools -->
 	<map:match pattern="tools/**"> 
-		<map:act type="cowarp-is-logged-in">
+		<map:act type="auth-protect">
+			<map:parameter name="handler" value="portal-handler"/> 
 			<map:parameter name="application" value="portal"/> 
 			
 			<map:mount uri-prefix="tools" check-reload="no" src="tools/sitemap.xmap"/>
