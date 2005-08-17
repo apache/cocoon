@@ -18,20 +18,24 @@
 -->
 <samplesxconf xpath="/cocoon/*[@role='org.apache.cocoon.portal.PortalService']/portals" unless="portal[@name='portal']">
 
- <portal name="portal">
-   <!-- This is the sample portal: 
-        - we use the auth profile manager
-   -->
-   <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
-   <!-- These are the skins the user can choose from: -->
-   <skins>
-     <skin name="basic" base-path="context://samples/blocks/portal/skins/basic">
-       <thumbnail-path>images/thumb.jpg</thumbnail-path>
-     </skin>
-     <skin name="common" base-path="context://samples/blocks/portal/skins/common">
-       <thumbnail-path>images/thumb.jpg</thumbnail-path>
-     </skin>
-   </skins>
- </portal>
+    <portal name="portal">
+      <!-- This is the sample portal: 
+         - we use the cowarp profile manager
+       -->
+      <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Cowarp</profile-manager>
+      <!-- If you want to use the authentication framework, comment out the above line
+           and uncomment the following line:
+        <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
+       -->
+      <!-- These are the skins the user can choose from: -->
+      <skins>
+        <skin name="basic" base-path="context://samples/blocks/portal/skins/basic">
+          <thumbnail-path>images/thumb.jpg</thumbnail-path>
+        </skin>
+        <skin name="common" base-path="context://samples/blocks/portal/skins/common">
+          <thumbnail-path>images/thumb.jpg</thumbnail-path>
+        </skin>
+      </skins>
+    </portal>
 
 </samplesxconf>
