@@ -207,10 +207,12 @@
   </dependencies>
   <repositories>
     <repository>
+      <id>Apache Java Repository</id>
       <url>http://www.apache.org/dist/java-repository</url>
       <layout>legacy</layout>
     </repository>
     <repository>
+      <id>Apache CVS Repository</id>
       <url>http://cvs.apache.org/repository</url>
       <layout>legacy</layout>
     </repository>
