@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <!--+
-    | @version $Id:$
+    | @version $Id$
     |
     +-->
 <project>
@@ -36,8 +36,9 @@
                    jcs-1.2.5-dev-20050313
                    knopflerfish-*
                    rhino-1.6R1
-                   xercesImpl should be 2.7.1
                    xalan should be 2.7.0
+                   xercesImpl should be 2.7.1
+                   xmlbeans-1.0.3
     -->
     <dependency>
       <groupId>avalon-framework</groupId>
