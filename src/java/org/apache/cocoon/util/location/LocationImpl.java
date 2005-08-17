@@ -17,7 +17,9 @@ package org.apache.cocoon.util.location;
 
 import java.io.Serializable;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.lang.ObjectUtils;
+import org.xml.sax.Locator;
 
 /**
  * A simple immutable and serializable implementation of {@link Location}.
@@ -108,7 +110,7 @@ public class LocationImpl implements Location, Serializable {
      * @param text the text to parse
      * @return the location (possibly UNKNOWN if text was null or in an incorrect format)
      */
-    public static LocationImpl valueOf(String text) throws IllegalArgumentException {
+    public static LocationImpl get(String text) throws IllegalArgumentException {
         if (text == null || text.length() == 0) {
             return UNKNOWN;
         }
@@ -147,6 +149,42 @@ public class LocationImpl implements Location, Serializable {
         return UNKNOWN;
     }
 
+    /**
+     * Returns the {@link Location} pointed to by a SAX <code>Locator</code>.
+     * 
+     * @param locator the locator (can be null)
+     * @param description a description for the location (can be null)
+     * @return the location (possibly UNKNOWN)
+     */
+    public static LocationImpl get(Locator locator, String description) {
+        if (locator == null || locator.getSystemId() == null) {
+            return UNKNOWN;
+        }
+        
+        return new LocationImpl(description, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
+    }
+    
+    /**
+     * Returns the {@link Location} of an Avalon <code>Configuration</code> object.
+     * 
+     * 
+     */
+    public static LocationImpl get(Configuration config) {
+        if (config == null) {
+            return UNKNOWN;
+        }
+        
+        // Why in hell is "if (config instanceof Locatable)" producing a compilation error???
+        Object obj = config;
+        // We may have a locatable implementation of configuration
+        if (obj instanceof Locatable) {
+            return get(((Locatable)obj).getLocation());
+        }
+        
+        String locString = config.getLocation();
+        return get(locString);
+    }
+    
     /**
      * Get the description of this location
      * 

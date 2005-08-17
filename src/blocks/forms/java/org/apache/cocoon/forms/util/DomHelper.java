@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationAttributes;
-import org.apache.cocoon.util.location.LocatorToAttributesPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -62,6 +62,10 @@ import org.xml.sax.SAXNotSupportedException;
 public class DomHelper {
 
     public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
+
+    public static Location getLocationObject(Element element) {
+        return LocationAttributes.getLocation(element);
+    }
 
     /**
      * Retrieves the location of an element node in the source file from which
@@ -295,7 +299,7 @@ public class DomHelper {
         DOMBuilder builder = new DOMBuilder();
         
         // Enhance the sax stream with location information
-        ContentHandler locationHandler = new LocatorToAttributesPipe(builder);
+        ContentHandler locationHandler = new LocationAttributes.Pipe(builder);
         
         try {
             parser.parse(inputSource, locationHandler);
