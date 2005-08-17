@@ -109,6 +109,13 @@ public interface LinkService extends Component {
     String getRefreshLinkURI();
 
     /**
+     * Get a link that simply refreshs the portal
+     * @param secure true if a secure protocol is required, false otherwise.
+     * @return A URI
+     */
+    String getRefreshLinkURI(Boolean secure);
+
+    /**
      * Determine whether the current url is using a secure protocol
      * @return true if the current url is using a secure protocol
      */
@@ -117,7 +124,7 @@ public interface LinkService extends Component {
     /**
      * @param url The url to encode.
      * @return The enocoded URL.
-     * @see javax.servlet.http.ServletResponse#encodeURL(String).
+     * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String) 
      */
     String encodeURL(String url);
 }

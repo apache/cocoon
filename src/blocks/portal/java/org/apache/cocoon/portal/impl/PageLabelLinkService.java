@@ -70,7 +70,7 @@ public class PageLabelLinkService extends DefaultLinkService {
      */
     public String getLinkURI(Event event, Boolean secure) {
         if (event == null) {
-            return this.getRefreshLinkURI();
+            return this.getRefreshLinkURI(secure);
         }
         if (this.labelManager == null) {
             return super.getLinkURI(event);
@@ -134,7 +134,7 @@ public class PageLabelLinkService extends DefaultLinkService {
      */
     public String getLinkURI(List events, Boolean secure) {
         if (events == null || events.size() == 0) {
-            return this.getRefreshLinkURI();
+            return this.getRefreshLinkURI(secure);
         }
         if (this.labelManager == null) {
             return super.getLinkURI(events);
