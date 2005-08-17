@@ -58,6 +58,7 @@ import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationAttributes;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
@@ -1883,7 +1884,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         private void addEvent(Event ev) throws SAXException {
             if (ev != null) {
                 if (lastEvent == null) {
-                    lastEvent = startEvent = new StartDocument(LocationAttributes.getLocation(locator, "template"));
+                    lastEvent = startEvent = new StartDocument(LocationImpl.get(locator, "template"));
                 } else {
                     flushChars();
                 }
@@ -1910,14 +1911,14 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer(length);
-                charLocation = LocationAttributes.getLocation(locator, "[text]");
+                charLocation = LocationImpl.get(locator, "[text]");
             }
             charBuf.append(ch, start, length);
         }
 
         public void endDocument() throws SAXException {
             StartDocument startDoc = (StartDocument)stack.pop();
-            EndDocument endDoc = new EndDocument(LocationAttributes.getLocation(locator, "template"));
+            EndDocument endDoc = new EndDocument(LocationImpl.get(locator, "template"));
             startDoc.endDocument = endDoc;
             addEvent(endDoc);
         }
@@ -1927,7 +1928,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             Event newEvent = null;
             if (NS.equals(namespaceURI)) {
                 StartInstruction startInstruction = (StartInstruction)start;
-                EndInstruction endInstruction = new EndInstruction(LocationAttributes.getLocation(locator, "<"+raw+">"), startInstruction);
+                EndInstruction endInstruction = new EndInstruction(LocationImpl.get(locator, "<"+raw+">"), startInstruction);
                 newEvent = endInstruction;
                 if (start instanceof StartWhen) {
                     StartWhen startWhen = (StartWhen)start;
@@ -1948,7 +1949,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = startElement.endElement = new EndElement(LocationAttributes.getLocation(locator, "<"+raw+">"), startElement);
+                newEvent = startElement.endElement = new EndElement(LocationImpl.get(locator, "<"+raw+">"), startElement);
             }
             addEvent(newEvent);
             if (start instanceof StartDefine) {
@@ -1958,17 +1959,17 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void endPrefixMapping(String prefix) throws SAXException {
-            EndPrefixMapping endPrefixMapping = new EndPrefixMapping(LocationAttributes.getLocation(locator, null), prefix);
+            EndPrefixMapping endPrefixMapping = new EndPrefixMapping(LocationImpl.get(locator, null), prefix);
             addEvent(endPrefixMapping);
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-            Event ev = new IgnorableWhitespace(LocationAttributes.getLocation(locator, null), ch, start, length);
+            Event ev = new IgnorableWhitespace(LocationImpl.get(locator, null), ch, start, length);
             addEvent(ev);
         }
 
         public void processingInstruction(String target, String data) throws SAXException {
-            Event pi = new ProcessingInstruction(LocationAttributes.getLocation(locator, null), target, data);
+            Event pi = new ProcessingInstruction(LocationImpl.get(locator, null), target, data);
             addEvent(pi);
         }
 
@@ -1977,18 +1978,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void skippedEntity(String name) throws SAXException {
-            addEvent(new SkippedEntity(LocationAttributes.getLocation(locator, null), name));
+            addEvent(new SkippedEntity(LocationImpl.get(locator, null), name));
         }
 
         public void startDocument() {
-            startEvent = new StartDocument(LocationAttributes.getLocation(locator, null));
+            startEvent = new StartDocument(LocationImpl.get(locator, null));
             lastEvent = startEvent;
             stack.push(lastEvent);
         }
 
         public void startElement(String namespaceURI, String localName, String qname, Attributes attrs) throws SAXException {
             Event newEvent = null;
-            Location locator = LocationAttributes.getLocation(this.locator, "<"+qname+">");
+            Location locator = LocationImpl.get(this.locator, "<"+qname+">");
             AttributesImpl elementAttributes = new AttributesImpl(attrs);
             int attributeCount = elementAttributes.getLength();
             for (int i = 0; i < attributeCount; i++) {
@@ -2199,7 +2200,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
-            addEvent(new StartPrefixMapping(LocationAttributes.getLocation(locator, null), prefix, uri));
+            addEvent(new StartPrefixMapping(LocationImpl.get(locator, null), prefix, uri));
         }
 
         public void comment(char ch[], int start, int length) throws SAXException {
@@ -2207,27 +2208,27 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
 
         public void endCDATA() throws SAXException {
-            addEvent(new EndCDATA(LocationAttributes.getLocation(locator, null)));
+            addEvent(new EndCDATA(LocationImpl.get(locator, null)));
         }
 
         public void endDTD() throws SAXException {
-            addEvent(new EndDTD(LocationAttributes.getLocation(locator, null)));
+            addEvent(new EndDTD(LocationImpl.get(locator, null)));
         }
 
         public void endEntity(String name) throws SAXException {
-            addEvent(new EndEntity(LocationAttributes.getLocation(locator, null), name));
+            addEvent(new EndEntity(LocationImpl.get(locator, null), name));
         }
 
         public void startCDATA() throws SAXException {
-            addEvent(new StartCDATA(LocationAttributes.getLocation(locator, null)));
+            addEvent(new StartCDATA(LocationImpl.get(locator, null)));
         }
 
         public void startDTD(String name, String publicId, String systemId) throws SAXException {
-            addEvent(new StartDTD(LocationAttributes.getLocation(locator, null), name, publicId, systemId));
+            addEvent(new StartDTD(LocationImpl.get(locator, null), name, publicId, systemId));
         }
 
         public void startEntity(String name) throws SAXException {
-            addEvent(new StartEntity(LocationAttributes.getLocation(locator, null), name));
+            addEvent(new StartEntity(LocationImpl.get(locator, null), name));
         }
     }
 
@@ -2483,8 +2484,10 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     private void performGeneration(final XMLConsumer consumer, MyJexlContext jexlContext, JXPathContext jxpathContext,
                 StartElement macroCall, Event startEvent, Event endEvent) throws SAXException {
         cocoon.put("consumer", consumer);
-        execute(new RedundantNamespacesFilter(this.xmlConsumer), globalJexlContext, jxpathContext, null,
-                startEvent, null);
+        RedundantNamespacesFilter filter = new RedundantNamespacesFilter(this.xmlConsumer);
+//        EventPrinterPipe log = new EventPrinterPipe();
+//        log.setConsumer(filter);
+        execute(filter, globalJexlContext, jxpathContext, null, startEvent, null);
     }
 
     interface CharHandler {

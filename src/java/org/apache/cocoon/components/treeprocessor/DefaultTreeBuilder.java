@@ -493,7 +493,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         }
         desc.append('>');
         
-        Location rawLoc = LocationImpl.valueOf(config.getLocation());
+        Location rawLoc = LocationImpl.get(config);
         return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc.getColumnNumber());
     }
 
