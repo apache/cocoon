@@ -210,5 +210,9 @@
       <url>http://www.apache.org/dist/java-repository</url>
       <layout>legacy</layout>
     </repository>
+    <repository>
+      <url>http://cvs.apache.org/repository</url>
+      <layout>legacy</layout>
+    </repository>
   </repositories>
   </project>
