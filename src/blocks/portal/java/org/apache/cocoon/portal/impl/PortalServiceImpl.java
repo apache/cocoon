@@ -247,7 +247,7 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#setEntryLayout(org.apache.cocoon.portal.layout.Layout)
+     * @see org.apache.cocoon.portal.PortalService#setEntryLayout(java.lang.String, org.apache.cocoon.portal.layout.Layout)
      */
     public void setEntryLayout(String layoutKey, Layout object) {
         if ( layoutKey == null ) {
@@ -261,7 +261,7 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#getEntryLayout()
+     * @see org.apache.cocoon.portal.PortalService#getEntryLayout(java.lang.String)
      */
     public Layout getEntryLayout(String layoutKey) {
         if ( layoutKey == null ) {
