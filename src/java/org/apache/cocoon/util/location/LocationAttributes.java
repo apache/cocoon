@@ -15,17 +15,29 @@
  */
 package org.apache.cocoon.util.location;
 
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A class to handle location information stored in attributes.
- * These attributes are typically setup using {@link LocatorToAttributesPipe}
+ * These attributes are typically setup using {@link org.apache.cocoon.util.location.LocationAttributes.Pipe}
+ * which augments the SAX stream with additional attributes, e.g.:
+ * <pre>
+ * &lt;root xmlns:loc="http://apache.org/cocoon/location"
+ *       loc:src="file://path/to/file.xml"
+ *       loc:line="1" loc:column="1"&gt;
+ *   &lt;foo loc:src="file://path/to/file.xml" loc:line="2" loc:column="3"/&gt;
+ * &lt;/root&gt;
+ * </pre>
  * 
- * @see LocatorToAttributesPipe
+ * @see org.apache.cocoon.util.location.LocationAttributes.Pipe
+ * @since 2.1.8
  * @version $Id$
  */
 public class LocationAttributes {
@@ -47,9 +59,6 @@ public class LocationAttributes {
     public static final String Q_LINE_ATTR = "loc:line";
     /** Attribute qualified name for the column number */
     public static final String Q_COL_ATTR  = "loc:column";
-    
-    /** Value returned when location is unknown */
-    public static final String UNKNOWN_LOCATION = "[unknown location]";
     
     // Private constructor, we only have static methods
     private LocationAttributes() {
@@ -79,18 +88,35 @@ public class LocationAttributes {
         
         return newAttrs;
     }
-
+    
     /**
-     * Returns the location of an element (SAX flavor).
+     * Returns the {@link Location} of an element (SAX flavor).
      * 
      * @param attrs the element's attributes that hold the location information
-     * @return a location string of type "<code>foo.xml:10:80</code>" or
-     *        "<code>[unknown location]</code>" if <code>attrs</code> has no location information.
+     * @param description a description for the location (can be null)
+     * @return a {@link Location} object
+     */
+    public static Location getLocation(Attributes attrs, String description) {
+        String src = attrs.getValue(URI, SRC_ATTR);
+        if (src == null) {
+            return Location.UNKNOWN;
+        }
+        
+        return new LocationImpl(description, src, getLine(attrs), getColumn(attrs));
+    }
+
+    /**
+     * Returns the location of an element (SAX flavor). If the location is to be kept
+     * into an object built from this element, consider using {@link #getLocation(Attributes)}
+     * and the {@link Locatable} interface.
+     * 
+     * @param attrs the element's attributes that hold the location information
+     * @return a location string as defined by {@link Location#toString()}.
      */
     public static String getLocationString(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
         if (src == null) {
-            return UNKNOWN_LOCATION;
+            return LocationImpl.UNKNOWN_STRING;
         }
         
         return src + ":" + attrs.getValue(URI, LINE_ATTR) + ":" + attrs.getValue(URI, COL_ATTR);
@@ -105,7 +131,7 @@ public class LocationAttributes {
      */
     public static String getURI(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
-        return src != null ? src : UNKNOWN_LOCATION;
+        return src != null ? src : LocationImpl.UNKNOWN_STRING;
     }
     
     /**
@@ -133,16 +159,42 @@ public class LocationAttributes {
     }
     
     /**
+     * Returns the {@link Location} of an element (DOM flavor).
+     * 
+     * @param attrs the element that holds the location information
+     * @param description a description for the location (if <code>null</code>, the element's name is used)
+     * @return a {@link Location} object
+     */
+    public static Location getLocation(Element elem, String description) {
+        Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
+        if (srcAttr == null) {
+            return Location.UNKNOWN;
+        }
+
+        return new LocationImpl(description == null ? elem.getNodeName() : description,
+                srcAttr.getValue(), getLine(elem), getColumn(elem));
+    }
+    
+    /**
+     * Same as <code>getLocation(elem, null)</code>.
+     */
+    public static Location getLocation(Element elem) {
+        return getLocation(elem, null);
+    }
+   
+
+    /**
      * Returns the location of an element that has been processed by this pipe (DOM flavor).
+     * If the location is to be kept into an object built from this element, consider using
+     * {@link #getLocation(Element)} and the {@link Locatable} interface.
      * 
      * @param elem the element that holds the location information
-     * @return a location string of type "<code>foo.xml:10:80</code>" or
-     *        "<code>[unknown location]</code>" if <code>attrs</code> has no location information.
+     * @return a location string as defined by {@link Location#toString()}.
      */
     public static String getLocationString(Element elem) {
         Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
         if (srcAttr == null) {
-            return UNKNOWN_LOCATION;
+            return LocationImpl.UNKNOWN_STRING;
         }
         
         return srcAttr.getValue() + ":" + elem.getAttributeNS(URI, LINE_ATTR) + ":" + elem.getAttributeNS(URI, COL_ATTR);
@@ -157,7 +209,7 @@ public class LocationAttributes {
      */
     public static String getURI(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, SRC_ATTR);
-        return attr != null ? attr.getValue() : UNKNOWN_LOCATION;
+        return attr != null ? attr.getValue() : LocationImpl.UNKNOWN_STRING;
     }
 
     /**
@@ -182,5 +234,64 @@ public class LocationAttributes {
     public static int getColumn(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, COL_ATTR);
         return attr != null ? Integer.parseInt(attr.getValue()) : -1;
+    }
+
+    /**
+     * A SAX filter that adds the information available from the <code>Locator</code> as attributes.
+     * The purpose of having location as attributes is to allow this information to survive transformations
+     * of the document (an XSL could copy these attributes over) or conversion of SAX events to a DOM.
+     * <p>
+     * The location is added as 3 attributes in a specific namespace to each element.
+     * <pre>
+     * &lt;root xmlns:loc="http://apache.org/cocoon/location"
+     *       loc:src="file://path/to/file.xml"
+     *       loc:line="1" loc:column="1"&gt;
+     *   &lt;foo loc:src="file://path/to/file.xml" loc:line="2" loc:column="3"/&gt;
+     * &lt;/root&gt;
+     * </pre>
+     * <strong>Note:</strong> Although this adds a lot of information to the serialized form of the document,
+     * the overhead in SAX events is not that big, as attribute names are interned, and all <code>src</code>
+     * attributes point to the same string.
+     * 
+     * @see org.apache.cocoon.util.location.LocationAttributes
+     * @since 2.1.8
+     */
+    public static class Pipe extends AbstractXMLPipe {
+        
+        private Locator locator;
+        
+        /**
+         * Create a filter. It has to be chained to another handler to be really useful.
+         */
+        public Pipe() {
+        }
+
+        /**
+         * Create a filter that is chained to another handler.
+         * @param next the next handler in the chain.
+         */
+        public Pipe(ContentHandler next) {
+            setContentHandler(next);
+        }
+
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+            super.setDocumentLocator(locator);
+        }
+        
+        public void startDocument() throws SAXException {
+            super.startDocument();
+            super.startPrefixMapping(LocationAttributes.PREFIX, LocationAttributes.URI);
+        }
+        
+        public void endDocument() throws SAXException {
+            endPrefixMapping(LocationAttributes.PREFIX);
+            super.endDocument();
+        }
+
+        public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
+            // Add location attributes to the element
+            super.startElement(uri, loc, raw, LocationAttributes.addLocationAttributes(locator, attrs));
+        }
     }
 }

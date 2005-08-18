@@ -36,7 +36,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      *                document event.
      */
     public void setDocumentLocator(Locator locator) {
-        if (contentHandler != null) contentHandler.setDocumentLocator(locator);
+        contentHandler.setDocumentLocator(locator);
     }
 
     /**
@@ -44,7 +44,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startDocument()
     throws SAXException {
-        if (contentHandler != null) contentHandler.startDocument();
+        contentHandler.startDocument();
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endDocument()
     throws SAXException {
-        if (contentHandler != null) contentHandler.endDocument();
+        contentHandler.endDocument();
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
-        if (contentHandler != null) contentHandler.startPrefixMapping(prefix, uri);
+        contentHandler.startPrefixMapping(prefix, uri);
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endPrefixMapping(String prefix)
     throws SAXException {
-        if (contentHandler != null) contentHandler.endPrefixMapping(prefix);
+        contentHandler.endPrefixMapping(prefix);
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        if (contentHandler != null) contentHandler.startElement(uri, loc, raw, a);
+        contentHandler.startElement(uri, loc, raw, a);
     }
 
 
@@ -108,7 +108,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
-        if (contentHandler != null) contentHandler.endElement(uri, loc, raw);
+        contentHandler.endElement(uri, loc, raw);
     }
 
     /**
@@ -120,7 +120,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void characters(char c[], int start, int len)
     throws SAXException {
-        if (contentHandler != null) contentHandler.characters(c, start, len);
+        contentHandler.characters(c, start, len);
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void ignorableWhitespace(char c[], int start, int len)
     throws SAXException {
-        if (contentHandler != null) contentHandler.ignorableWhitespace(c, start, len);
+        contentHandler.ignorableWhitespace(c, start, len);
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void processingInstruction(String target, String data)
     throws SAXException {
-        if (contentHandler != null) contentHandler.processingInstruction(target, data);
+        contentHandler.processingInstruction(target, data);
     }
 
     /**
@@ -155,7 +155,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void skippedEntity(String name)
     throws SAXException {
-        if (contentHandler != null) contentHandler.skippedEntity(name);
+        contentHandler.skippedEntity(name);
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startDTD(String name, String publicId, String systemId)
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.startDTD(name, publicId, systemId);
+        lexicalHandler.startDTD(name, publicId, systemId);
     }
 
     /**
@@ -177,7 +177,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endDTD()
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.endDTD();
+        lexicalHandler.endDTD();
     }
 
     /**
@@ -188,7 +188,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startEntity(String name)
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.startEntity(name);
+        lexicalHandler.startEntity(name);
     }
 
     /**
@@ -198,7 +198,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endEntity(String name)
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.endEntity(name);
+        lexicalHandler.endEntity(name);
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void startCDATA()
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.startCDATA();
+        lexicalHandler.startCDATA();
     }
 
     /**
@@ -214,7 +214,7 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void endCDATA()
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.endCDATA();
+        lexicalHandler.endCDATA();
     }
 
     /**
@@ -226,6 +226,6 @@ public abstract class AbstractXMLPipe extends AbstractXMLProducer
      */
     public void comment(char ch[], int start, int len)
     throws SAXException {
-        if (lexicalHandler != null) lexicalHandler.comment(ch, start, len);
+        lexicalHandler.comment(ch, start, len);
     }
 }

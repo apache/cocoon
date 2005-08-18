@@ -15,37 +15,36 @@
  */
 package org.apache.cocoon.components.pipeline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.context.Context;
-
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.cocoon.xml.SaxBuffer;
-
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Pipeline used by virtual pipeline components
@@ -157,14 +156,14 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     public void setGenerator(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator != null) {
-            throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Generator already set. Cannot set generator '" + role + "'",
+                getLocation(param));
         }
 
         try {
             this.generator = (Generator) this.newManager.lookup(Generator.ROLE + '/' + role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator '" + role + "' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of generator '" + role + "' failed", ce, getLocation(param));
         }
 
         this.generatorSource = source;
@@ -186,7 +185,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         try {
             this.transformers.add(this.newManager.lookup(Transformer.ROLE + '/' + role));
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of transformer '"+role+"' failed", ce, getLocation(param));
         }
         this.transformerSources.add(source);
         this.transformerParams.add(param);
@@ -200,14 +199,14 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     throws ProcessingException {
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
-            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role + "'",
+                    getLocation(param));
         }
 
         try {
             this.serializer = (Serializer)this.newManager.lookup(Serializer.ROLE + '/' + role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of serializer '" + role + "' failed", ce, getLocation(param));
         }
         this.serializerSource = source;
         this.serializerParam = param;
@@ -605,13 +604,13 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         return null;
     }
 
-    protected String getLocation(Parameters param) {
-        String value = null;
-        if (param instanceof SitemapParameters) {
-            value = ((SitemapParameters) param).getStatementLocation();
+    protected Location getLocation(Parameters param) {
+        Location value = null;
+        if (param instanceof Locatable) {
+            value = ((Locatable) param).getLocation();
         }
         if (value == null) {
-            value = "[unknown location]";
+            value = Location.UNKNOWN;
         }
         return value;
     }

@@ -40,7 +40,7 @@ import org.apache.log.format.Formatter;
  * <p>The syntax of "format" is the same as in <code>CocoonTargetFactory</code>.</p>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: CocoonStreamTargetFactory.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CocoonStreamTargetFactory
     extends StreamTargetFactory {

@@ -15,15 +15,10 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
  *
@@ -52,41 +47,6 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
      */
     protected boolean hasParameters() {
         return true;
-    }
-
-    /**
-     * Get &lt;xxx:parameter&gt; elements as a <code>Map</code> of </code>ListOfMapResolver</code>s,
-     * that can be turned into parameters using <code>ListOfMapResolver.buildParameters()</code>.
-     *
-     * @return the Map of ListOfMapResolver, or <code>null</code> if there are no parameters.
-     */
-    protected Map getParameters(Configuration config) throws ConfigurationException {
-        Configuration[] children = config.getChildren("parameter");
-
-        if (children.length == 0) {
-            // Parameters are only the component's location
-            // TODO Optimize this
-            return new SitemapParameters.ExtendedHashMap(config);
-        }
-
-        Map params = new SitemapParameters.ExtendedHashMap(config, children.length+1);
-        for (int i = 0; i < children.length; i++) {
-            Configuration child = children[i];
-            if (true) { // FIXME : check namespace
-                String name = child.getAttribute("name");
-                String value = child.getAttribute("value");
-                try {
-                    params.put(
-                        VariableResolverFactory.getResolver(name, this.manager),
-                        VariableResolverFactory.getResolver(value, this.manager));
-                } catch(PatternException pe) {
-                    String msg = "Invalid pattern '" + value + " at " + child.getLocation();
-                    throw new ConfigurationException(msg, pe);
-                }
-            }
-        }
-
-        return params;
     }
 
     /**

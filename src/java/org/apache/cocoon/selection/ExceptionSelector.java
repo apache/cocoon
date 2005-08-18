@@ -23,7 +23,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.cocoon.util.ExceptionUtils;
 
 /**
  * In a &lt;map:handle-errors>, selects depending on the exception that caused the error.
@@ -52,7 +52,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.8 2004/06/24 07:32:53 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {

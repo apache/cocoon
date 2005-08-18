@@ -46,6 +46,8 @@ import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.SitemapListener;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 
 /**
@@ -535,8 +537,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /**
      * @see org.apache.cocoon.sitemap.ExecutionContext#getLocation()
      */
-    public String getLocation() {
-        return "Sitemap";
+    public Location getLocation() {
+        return new LocationImpl("[sitemap]", this.wrappingProcessor.source.getURI());
     }
 
     /**

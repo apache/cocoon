@@ -18,6 +18,7 @@ package org.apache.cocoon.components.treeprocessor;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.util.location.Location;
 
 /**
  *
@@ -29,7 +30,7 @@ public abstract class AbstractProcessingNode
     extends AbstractLogEnabled 
     implements ProcessingNode, ExecutionContext {
 
-    protected String location = "unknown location";
+    protected Location location = Location.UNKNOWN;
 
     /** The type of the component */
     protected String componentName;
@@ -48,14 +49,14 @@ public abstract class AbstractProcessingNode
     /**
      * Get the location of this node.
      */
-    public String getLocation() {
+    public Location getLocation() {
         return this.location;
     }
 
     /**
      * Set the location of this node.
      */
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
     

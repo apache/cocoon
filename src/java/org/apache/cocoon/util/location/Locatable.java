@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.sitemap;
-
-import org.apache.cocoon.util.location.Locatable;
-import org.apache.cocoon.util.location.Location;
-
+package org.apache.cocoon.util.location;
 
 /**
- * This context contains information about the current statement that should
- * be executed like the location in the sitemap etc.
- *
- * TODO - This is not finished yet!
+ * A interface that should be implemented by objects knowning their location (i.e. where they
+ * have been created from).
  * 
- * @since 2.2
- * @version CVS $Id$
+ * @since 2.1.8
+ * @version $Id$
  */
-public interface ExecutionContext extends Locatable {
-    
+public interface Locatable {
     /**
-     * Return the location of the statement in the sitemap.
+     * Get the location of this object
+     * 
+     * @return the location
      */
     Location getLocation();
-    
-    /**
-     * Return the component type
-     */
-    String getType();
 }
