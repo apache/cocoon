@@ -30,6 +30,42 @@
   <build>
     <sourceDirectory>../src/java</sourceDirectory>
     <testSourceDirectory>../src/test</testSourceDirectory>
+    <testResources>
+      <testResource>
+      <directory>../src/test</directory>
+      <includes>
+        <include>**/*.xconf</include>
+        <include>**/*.xml</include>
+      </includes>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include implementation="java.lang.String">**/*TestCase.class</include>
+            <include implementation="java.lang.String">**/*Test.class</include>
+          </includes>
+          <excludes>
+            <exclude implementation="java.lang.String">**/AllTest.class</exclude>
+            <exclude implementation="java.lang.String">**/CocoonBeanTestCase.class</exclude>
+            <exclude implementation="java.lang.String">**/*$$*Test.class</exclude>
+            <exclude implementation="java.lang.String">**/Abstract*.class</exclude>
+            <exclude implementation="java.lang.String">**/SitemapComponentTestCase*</exclude>
+            <exclude implementation="java.lang.String">**/SitemapTestCase*</exclude>
+            <exclude implementation="java.lang.String">**/ContainerTestCase*</exclude>
+            <exclude implementation="java.lang.String">**/CocoonTestCase*</exclude>
+          </excludes>
+          <systemProperties>
+            <property>
+              <name>junit.test.loglevel</name>
+              <value>4</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
   <dependencies>
     <dependency>
@@ -292,4 +328,12 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
   </project>
