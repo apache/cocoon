@@ -29,6 +29,9 @@
  </group>
 
  <group name="Profiler">
+    <note>
+      Run the test a few times first, then view the results.
+    </note>
   <sample name="Profiler Result" href="profile.html">Shows the result of the profiler.</sample>
 
   <sample name="Profiler Result 2" href="profile2.html">Another view of the results.</sample>
