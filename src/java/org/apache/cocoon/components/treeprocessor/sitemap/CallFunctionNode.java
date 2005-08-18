@@ -95,10 +95,13 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
         // the function call, so we invoke it here.
         String continuation = continuationId.resolve(context, env.getObjectModel());
         if (continuation != null && continuation.length() > 0) {
-            interpreter.handleContinuation(continuation, args, redirector);
+            try {
+                interpreter.handleContinuation(continuation, args, redirector);
+            } catch(Exception e) {
+                throw ProcessingException.throwLocated("Sitemap: error calling continuation", e, getLocation());
+            }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call continuation> did not send a response, at " +
-                                              getLocation());
+                throw new ProcessingException("Sitemap: <map:call continuation> did not send a response", getLocation());
             }
             return true;
         }
@@ -107,15 +110,18 @@ public class CallFunctionNode extends AbstractProcessingNode implements Paramete
         // the specified function
         String name = functionName.resolve(context, objectModel);
         if (name != null && name.length() > 0) {
-            interpreter.callFunction(name, args, redirector);
+            try {
+                interpreter.callFunction(name, args, redirector);
+            } catch(Exception e) {
+                throw ProcessingException.throwLocated("Sitemap: error calling function '" + name + "'", e, getLocation());
+            }
             if (!redirector.hasRedirected()) {
-                throw new ProcessingException("<map:call function> did not send a response, at " +
-                                              getLocation());
+                throw new ProcessingException("Sitemap: <map:call function> did not send a response", getLocation());
             }
             return true;
         }
 
         // Found neither continuation nor function to call
-        throw new ProcessingException("No function nor continuation given in <map:call function> at " + getLocation());
+        throw new ProcessingException("Sitemap: no function nor continuation given in <map:call function>", getLocation());
     }
 }

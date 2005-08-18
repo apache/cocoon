@@ -21,7 +21,7 @@ import org.apache.cocoon.ProcessingException;
  * This Exception is thrown whenever an invalid continuation is given.
  *
  * @author <a href="mailto:tcollen@neuagency.com">Tony Collen</a>
- * @version CVS $Id: InvalidContinuationException.java,v 1.2 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class InvalidContinuationException extends ProcessingException {
 
@@ -29,7 +29,7 @@ public class InvalidContinuationException extends ProcessingException {
      * Construct a new <code>InvalidContinuationException</code> instance.
      */
     public InvalidContinuationException(String message) {
-        super(message, null);
+        super(message);
     }
 
     /**

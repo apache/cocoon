@@ -30,6 +30,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.sitemap.SitemapParameters;
 
 import java.io.IOException;
 import java.util.Map;
@@ -186,6 +187,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
             errorContext.enableLogging(getLogger());
             errorContext.setRedirector(context.getRedirector());
             errorContext.service(this.manager);
+            errorContext.inform(context.getPipelineType(), context.getPipelineParameters(), env.getObjectModel());
             try {
                 // Process error handling node
                 if (node.invoke(env, errorContext)) {

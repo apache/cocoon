@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  *   }
  *
  *   public void endPrefixMapping(String prefix) throws SAXException {
- *       namespaces.removeDeclaration(prefix);
+ *       // Ignore, it is handled by leaveScope()
  *   }
  * </pre>
  *
@@ -58,6 +58,11 @@ import org.xml.sax.SAXException;
 public class NamespacesTable {
     /** The last namespace declaration. */
     private Entry lastEntry;
+    
+    /** The entry that start the prefix mappings for the scope that's about to be entered
+     * or was just left.
+     */
+    private Entry lastDeclaredEntry;
 
     private boolean usesScopes = false;
 
@@ -74,7 +79,7 @@ public class NamespacesTable {
      * @since 2.1.8
      */
     public void clear() {
-        this.lastEntry=Entry.create("","");
+        this.lastEntry = Entry.create("","");
         this.addDeclaration("xml", "http://www.w3.org/XML/1998/namespace");
         // Lock this scope
         this.lastEntry.closedScopes = 1;
@@ -103,16 +108,19 @@ public class NamespacesTable {
         e.previous = this.lastEntry;
         e.overrides = dup;
         this.lastEntry = e;
+        // this always starts the declared prefix chain
+        this.lastDeclaredEntry = e;
         return e;
     }
 
     /**
-     * Undeclare a namespace prefix-uri mapping.
-     * <br>
-     * If the prefix was previously declared mapping another URI, its value
-     * is restored.
+     * Undeclare a namespace prefix-uri mapping. If the prefix was previously declared
+     * mapping another URI, its value is restored.
+     * <p>
+     * When using {@link #enterScope()}/{@link #leaveScope()}, this method does nothing and always
+     * returns <code>null</code>, as declaration removal is handled in {@link #leaveScope()}.
      *
-     * @return The removed <code>Declaration</code> or <b>null</b>.
+     * @return the removed <code>Declaration</code> or <b>null</b>.
      */
     public Declaration removeDeclaration(String prefix) {
         if (usesScopes) {
@@ -142,6 +150,14 @@ public class NamespacesTable {
                     overrides.overriden = false;
                 }
 
+                if (this.lastDeclaredEntry == current) {
+                    if (current.previous.closedScopes == 0) {
+                        this.lastDeclaredEntry = current.previous;
+                    } else {
+                        this.lastDeclaredEntry = null;
+                    }
+                }
+
                 if (this.lastEntry == current) {
                     this.lastEntry = current.previous;
                 }
@@ -158,18 +174,23 @@ public class NamespacesTable {
     }
 
     /**
-     * Enter a new scope, with no declared mappings.
+     * Enter a new scope. This starts a new, empty list of declarations for the new scope.
+     * <p>
+     * Typically called in a SAX handler <em>before</em> sending a <code>startElement()</code>
+     * event.
      *
-     * @see #getCurrentScopeDeclarations()
      * @since 2.1.8
      */
     public void enterScope() {
         this.usesScopes = true;
         this.lastEntry.closedScopes++;
+        this.lastDeclaredEntry = null;
     }
 
     /**
-     * Start all declared mappings of the current scope and enter a new scope.
+     * Start all declared mappings of the current scope and enter a new scope.  This starts a new,
+     * empty list of declarations for the new scope.
+     * <p>
      * Typically called in a SAX handler <em>before</em> sending a <code>startElement()</code>
      * event.
      *
@@ -185,37 +206,54 @@ public class NamespacesTable {
             current = current.previous;
         }
         this.lastEntry.closedScopes++;
+        this.lastDeclaredEntry = null;
     }
 
     /**
-     * Leave a scope. If <code>autoRemove</code> is true, all declared mappings for the
-     * scope that is left are automatically removed, without having to explicitely call
-     * {@link #removeDeclaration(String)}.
+     * Leave a scope. The namespace declarations that occured before the corresponding
+     * <code>enterScope()</code> are no more visible using the resolution methods, but
+     * still available using {@link #getCurrentScopeDeclarations()} until the next call
+     * to {@link #addDeclaration(String, String)} or {@link #enterScope()}.
+     * <p>
+     * Typically called in a SAX handler <em>after</em> sending a <code>endElement()</code>
+     * event.
      *
-     * @param autoUndeclare if <code>true</code>, remove all mappings for the current scope.
      * @since 2.1.8
      */
     public void leaveScope() {
         Entry current = this.lastEntry;
-        if (current.closedScopes <= 0) {
-            throw new IllegalStateException("Misbalanced enter and leaving of scope.");
+
+        // Purge declarations that were added but not included in a scope
+        while (current.closedScopes == 0) {
+            current = current.previous;
         }
+
         current.closedScopes--;
-        if (usesScopes) {
-            while (current != null && current.closedScopes == 0) {
-                Entry overrides = current.overrides;
-                if (overrides != null) {
-                    // No more overriden
-                    overrides.overriden = false;
-                }
-                current = current.previous;
+
+        if (current.closedScopes == 0) {
+            this.lastDeclaredEntry = current;
+        } else {
+            // More than one scope closed here: no local declarations
+            this.lastDeclaredEntry = null;
+        }
+
+        while (current != null && current.closedScopes == 0) {
+            Entry overrides = current.overrides;
+            if (overrides != null) {
+                // No more overriden
+                overrides.overriden = false;
             }
+            current = current.previous;
         }
         this.lastEntry = current;
     }
 
     /**
-     * Leave a scope and end all declared mappings of the new scope.
+     * Leave a scope. The namespace declarations that occured before the corresponding
+     * <code>enterScope()</code> are no more visible using the resolution methods, but
+     * still available using {@link #getCurrentScopeDeclarations()} until the next call
+     * to {@link #addDeclaration(String, String)} or {@link #enterScope()}.
+     * <p>
      * Typically called in a SAX handler <em>after</em> sending a <code>endElement()</code>
      * event.
      *
@@ -225,10 +263,21 @@ public class NamespacesTable {
      */
     public void leaveScope(ContentHandler handler) throws SAXException {
         Entry current = this.lastEntry;
-        if (current.closedScopes <= 0) {
-            throw new IllegalStateException("Misbalanced enter and leaving of scope.");
+        
+        // Purge declarations that were added but not included in a scope
+        while (current.closedScopes == 0) {
+            current = current.previous;
         }
+
         current.closedScopes--;
+
+        if (current.closedScopes == 0) {
+            this.lastDeclaredEntry = current;
+        } else {
+            // More than one scope closed here: no local declarations
+            this.lastDeclaredEntry = null;
+        }
+
         while (current != null && current.closedScopes == 0) {
             handler.endPrefixMapping(current.prefix);
             Entry overrides = current.overrides;
@@ -247,12 +296,12 @@ public class NamespacesTable {
     /**
      * Get the declarations that were declared within the current scope.
      *
-     * @return the declarations (never null)
+     * @return the declarations (possibly empty, but never null)
      * @since 2.1.8
      */
     public Declaration[] getCurrentScopeDeclarations() {
         int count = 0;
-        Entry current = this.lastEntry;
+        Entry current = this.lastDeclaredEntry;
         while (current != null && current.closedScopes == 0) {
             count++;
             current = current.previous;
@@ -262,7 +311,7 @@ public class NamespacesTable {
 
         Declaration[] decls = new Declaration[count];
         count = 0;
-        current = this.lastEntry;
+        current = this.lastDeclaredEntry;
         while (current != null && current.closedScopes == 0) {
             decls[count++] = current;
             current = current.previous;

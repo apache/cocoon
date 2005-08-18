@@ -27,6 +27,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.util.location.Location;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -112,6 +113,10 @@ public class MountNode extends AbstractProcessingNode
             }
             // Processor will create its own pipelines
             return processor.process(env);
+        } catch(Exception e) {
+            // Wrap with our location
+            throw ProcessingException.throwLocated("Sitemap: error when calling sub-sitemap", e, getLocation());
+
         } finally {
             // Restore context
             env.setURI(oldPrefix, oldURI);

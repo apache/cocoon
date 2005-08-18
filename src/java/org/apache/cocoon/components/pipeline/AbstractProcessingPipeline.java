@@ -15,6 +15,14 @@
  */
 package org.apache.cocoon.components.pipeline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -23,7 +31,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -36,22 +43,14 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.cocoon.xml.SaxBuffer;
-
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
 
 /**
  * This is the base for all implementations of a <code>ProcessingPipeline</code>.
@@ -201,17 +200,17 @@ public abstract class AbstractProcessingPipeline
     public void setGenerator(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         if (this.generator != null) {
-            throw new ProcessingException ("Generator already set. Cannot set generator '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Generator already set. Cannot set generator '" + role + "'",
+                    getLocation(param));
         }
         if (this.reader != null) {
-            throw new ProcessingException ("Reader already set. Cannot set generator '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Reader already set. Cannot set generator '" + role + "'",
+                    getLocation(param));
         }
         try {
             this.generator = (Generator) this.newManager.lookup(Generator.ROLE + '/' + role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of generator '" + role + "' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of generator '" + role + "' failed", ce, getLocation(param));
         }
         this.generatorSource = source;
         this.generatorParam = param;
@@ -232,17 +231,17 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot add transformer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Reader already set. Cannot add transformer '" + role + "'",
+                    getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before adding transformer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Must set a generator before adding transformer '" + role + "'",
+                    getLocation(param));
         }
         try {
             this.transformers.add(this.newManager.lookup(Transformer.ROLE + '/' + role));
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer '"+role+"' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of transformer '"+role+"' failed", ce, getLocation(param));
         }
         this.transformerSources.add(source);
         this.transformerParams.add(param);
@@ -256,23 +255,23 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
-            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role + "'",
+                    getLocation(param));
         }
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot set serializer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Reader already set. Cannot set serializer '" + role + "'",
+                    getLocation(param));
         }
         if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before setting serializer '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Must set a generator before setting serializer '" + role + "'",
+                    getLocation(param));
         }
 
         try {
             this.serializer = (Serializer)this.newManager.lookup(Serializer.ROLE + '/' + role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of serializer '" + role + "' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of serializer '" + role + "' failed", ce, getLocation(param));
         }
         this.serializerSource = source;
         this.serializerParam = param;
@@ -288,19 +287,19 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         if (this.reader != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Reader already set. Cannot set reader '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Reader already set. Cannot set reader '" + role + "'",
+                    getLocation(param));
         }
         if (this.generator != null) {
             // Should normally never happen as setting a reader starts pipeline processing
-            throw new ProcessingException ("Generator already set. Cannot use reader '" + role +
-                                           "' at " + getLocation(param));
+            throw new ProcessingException ("Generator already set. Cannot use reader '" + role + "'",
+                    getLocation(param));
         }
 
         try {
             this.reader = (Reader)this.newManager.lookup(Reader.ROLE + '/' + role);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of reader '"+role+"' failed at " + getLocation(param), ce);
+            throw ProcessingException.throwLocated("Lookup of reader '"+role+"' failed", ce, getLocation(param));
         }
         this.readerSource = source;
         this.readerParam = param;
@@ -367,11 +366,8 @@ public abstract class AbstractProcessingPipeline
                     this.serializerParam
                 );
             }
-
-        } catch (SAXException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
-        } catch (IOException e) {
-            throw new ProcessingException("Could not setup pipeline.", e);
+        } catch (Exception e) {
+            handleException(e);
         }
     }
 
@@ -541,11 +537,8 @@ public abstract class AbstractProcessingPipeline
                     this.generator.generate();
                 }
             }
-        } catch (ProcessingException e) {
-            throw e;
         } catch (Exception e) {
-            // TODO: Unwrap SAXException ?
-            throw new ProcessingException("Failed to execute pipeline.", e);
+            handleException(e);
         }
 
         return true;
@@ -564,12 +557,8 @@ public abstract class AbstractProcessingPipeline
 	            // should this checking be done somewhere else??
 	            this.expires = readerParam.getParameterAsLong("expires");
             }
-        } catch (SAXException e){
-            throw new ProcessingException("Failed to execute reader pipeline.", e);
-        } catch (ParameterException e) {
-            throw new ProcessingException("Expires parameter needs to be of type long.",e);
-        } catch (IOException e){
-            throw new ProcessingException("Failed to execute reader pipeline.", e);
+        } catch (Exception e){
+            handleException(e);
         }
     }
 
@@ -855,23 +844,27 @@ public abstract class AbstractProcessingPipeline
         return expires;
     }
 
-    protected String getLocation(Parameters param) {
-        String value = null;
-        if ( param instanceof SitemapParameters ) {
-            value = ((SitemapParameters)param).getStatementLocation();
+    protected Location getLocation(Parameters param) {
+        Location location = null;
+        if (param instanceof Locatable) {
+            location = ((Locatable)param).getLocation();
         }
-        if ( value == null ) {
-            value = "[unknown location]";
+        if (location == null) {
+            location = Location.UNKNOWN;
         }
-        return value;
+        return location;
     }
 
     /**
      * Handles exception which can happen during pipeline processing.
+     * If this not a connection reset, then all locations for pipeline components are
+     * added to the exception.
+     * 
      * @throws ConnectionResetException if connection reset detected
      * @throws ProcessingException in all other cases
      */
     protected void handleException(Exception e) throws ProcessingException {
+        // Check if the client aborted the connection
         if (e instanceof SocketException) {
             if (e.getMessage().indexOf("reset") > 0
                     || e.getMessage().indexOf("aborted") > 0
@@ -883,10 +876,26 @@ public abstract class AbstractProcessingPipeline
             if (e.getClass().getName().endsWith("ClientAbortException")) {
                 throw new ConnectionResetException("Connection reset by peer", e);
             }
-        } else if (e instanceof ProcessingException) {
-            throw (ProcessingException) e;
+        } else if (e instanceof ConnectionResetException) {
+            // Exception comes up from a deeper pipeline
+            throw (ConnectionResetException)e;
         }
 
-        throw new ProcessingException("Error executing pipeline.", e);
+        // Not a connection reset: add all location information        
+        if (this.reader == null) {
+            // Add all locations in reverse order
+            ArrayList locations = new ArrayList(this.transformers.size() + 2);
+            locations.add(getLocation(this.serializerParam));
+            for (int i = this.transformerParams.size() - 1; i >= 0; i--) {
+                locations.add(getLocation((Parameters)this.transformerParams.get(i)));
+            }
+            locations.add(getLocation(this.generatorParam));
+            
+            throw ProcessingException.throwLocated("Failed to process pipeline", e, locations);
+
+        } else {
+            // Add reader location
+            throw ProcessingException.throwLocated("Failed to process reader", e, getLocation(this.readerParam));
+        }
     }
 }

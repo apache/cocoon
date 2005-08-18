@@ -132,6 +132,14 @@ public class InvokeContext extends AbstractLogEnabled
         this.processingPipelineParameters = parameters;
         this.processingPipelineObjectModel = objectModel;
     }
+    
+    public Parameters getPipelineParameters() {
+        return this.processingPipelineParameters;
+    }
+    
+    public String getPipelineType() {
+        return this.processingPipelineName;
+    }
 
     /**
      * Get the current <code>ProcessingPipeline</code>

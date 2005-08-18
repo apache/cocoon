@@ -15,12 +15,14 @@
  */
 package org.apache.cocoon;
 
+import org.apache.cocoon.util.location.Location;
+
 /**
  * This Exception is thrown every time there is a problem in finding
  * a resource.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: ResourceNotFoundException.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ResourceNotFoundException extends ProcessingException {
 
@@ -28,7 +30,7 @@ public class ResourceNotFoundException extends ProcessingException {
      * Construct a new <code>ResourceNotFoundException</code> instance.
      */
     public ResourceNotFoundException(String message) {
-        super(message, null);
+        super(message);
     }
 
     /**
@@ -37,5 +39,13 @@ public class ResourceNotFoundException extends ProcessingException {
      */
     public ResourceNotFoundException(String message, Throwable t) {
         super(message, t);
+    }
+    
+    public ResourceNotFoundException(String message, Location location) {
+        super(message, location);
+    }
+    
+    public ResourceNotFoundException(String message, Throwable t, Location loc) {
+        super(message, t, loc);
     }
 }

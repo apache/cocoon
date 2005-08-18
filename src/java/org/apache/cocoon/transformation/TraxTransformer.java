@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -47,6 +49,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.ExceptionUtils;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
 
@@ -187,6 +191,9 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
     /** The source resolver */
     private SourceResolver resolver;
 
+    /** Default source, used to create specialized transformers by configuration */
+    private String defaultSrc;
+
     /** The XSLTProcessor */
     private XSLTProcessor xsltProcessor;
 
@@ -198,6 +205,32 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
+    
+    private TransformerException transformerException;
+    
+    private ErrorListener errorListener = new ErrorListener() {
+
+        public void warning(TransformerException ex) throws TransformerException {
+            if (getLogger().isWarnEnabled()) {
+                Location loc = ExceptionUtils.getLocation(ex);
+                getLogger().warn("Warning at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
+            }
+        }
+
+        public void error(TransformerException ex) throws TransformerException {
+            if (getLogger().isWarnEnabled()) {
+                Location loc = ExceptionUtils.getLocation(ex);
+                getLogger().error("Error at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
+            }
+        }
+
+        public void fatalError(TransformerException ex) throws TransformerException {
+            // Keep it for later use
+            transformerException = ex;
+            // and rethrow it
+            throw ex;
+        }
+    };
 
     /**
      * Configure this transformer.
@@ -230,7 +263,12 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         
         child = conf.getChild("check-includes");
         this.checkIncludes = child.getValueAsBoolean(this.checkIncludes);
-        
+
+        child = conf.getChild("default-src",false);
+        if(child!=null) {
+            this.defaultSrc = child.getValue();
+        }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Use parameters is " + this.useParameters);
             getLogger().debug("Use cookies is " + this.useCookies);
@@ -242,6 +280,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
             } else {
                 getLogger().debug("Use default TrAX Transformer Factory.");
             }
+            getLogger().debug("Default source = " + this.defaultSrc);
         }
 
         try {
@@ -279,6 +318,13 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws SAXException, ProcessingException, IOException {
+
+        if(src==null && defaultSrc!=null) {
+            if(getLogger().isDebugEnabled()) {
+                getLogger().debug("src is null, using default source " + defaultSrc);
+            }
+            src = defaultSrc;
+        }
 
         if (src == null) {
             throw new ProcessingException("Stylesheet URI can't be null");
@@ -397,6 +443,8 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         final SAXResult result = new SAXResult(consumer);
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
+        
+        this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 
     /**
@@ -551,6 +599,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         this.transformerHandler = null;
         this.transformerValidity = null;
         this.exceptionDuringSetConsumer = null;
+        this.transformerException = null;
         super.recycle();
     }
 
@@ -559,7 +608,35 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
      */
     public void endDocument()
     throws SAXException {
-        super.endDocument();
+        try {
+            super.endDocument();
+        } catch(SAXException se) {
+            // Rethrow
+            throw se;
+        } catch(Exception e) {
+            if (transformerException != null) {
+                // Ignore the fake RuntimeException sent by Xalan
+                Location loc = ExceptionUtils.getLocation(transformerException);
+                if (loc == null) {
+                    // No location: if it's just a wrapper, consider only the wrapped exception.
+                    Throwable realEx = transformerException.getCause();
+                    if (realEx == null) realEx = transformerException;
+                    
+                    if (realEx instanceof SAXException) {
+                        // Rethrow
+                        throw (SAXException)realEx;
+                    } else {
+                        // Wrap in a SAXException
+                        throw new SAXException(transformerException);
+                    }
+                } else {
+                    throw new SAXException(transformerException);
+                }
+            } else {
+                // It's not a fake exception
+                throw new SAXException(e);
+            }
+        }
         this.finishedDocument = true;
     }
     

@@ -18,14 +18,16 @@ package org.apache.cocoon.components.treeprocessor;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.3 2004/05/25 13:30:10 cziegeler Exp $
+ * @version CVS $Id$
  */
 
-public interface ProcessingNode extends ThreadSafe {
+public interface ProcessingNode extends ThreadSafe, Locatable {
 
     /**
      * Process environment.
@@ -35,5 +37,5 @@ public interface ProcessingNode extends ThreadSafe {
     /**
      * Get the location of this node.
      */
-    String getLocation();
+    Location getLocation();
 }
