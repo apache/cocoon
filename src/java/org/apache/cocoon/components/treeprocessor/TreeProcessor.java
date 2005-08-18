@@ -188,10 +188,10 @@ public class TreeProcessor extends AbstractLogEnabled
 
         // Create sitemap executor
         if (this.parent == null) {
-            try {
+            if ( this.manager.hasService(SitemapExecutor.ROLE) ) {
                 this.sitemapExecutor = (SitemapExecutor) this.manager.lookup(SitemapExecutor.ROLE);
                 this.releaseSitemapExecutor = true;
-            } catch (ServiceException e) {
+            } else {
                 this.sitemapExecutor = new DefaultExecutor();
             }
         } else {
