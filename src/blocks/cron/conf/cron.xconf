@@ -147,7 +147,8 @@
 
   <!--+
       | Sample definition of the TestCronJob cron job, used by
-      | trigger configuration above.
+      | trigger configuration above, as well as by sample page.
+      +-->
   <component role="org.apache.cocoon.components.cron.CronJob/test"
              class="org.apache.cocoon.components.cron.TestCronJob"
              logger="cron.test">
@@ -155,7 +156,6 @@
     <sleep>23000</sleep>
     <pipeline>samples/hello-world/hello.xhtml</pipeline>
   </component>
-      +-->
 
   <!--+
       | Sample definition of the CocoonPipelineCronJob cron job, used by
