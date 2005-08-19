@@ -24,5 +24,8 @@
   <content>
     You selected: ${request.getAttribute("countryselectorform").lookupWidget("us-nonus").getValue()}
     country/state ${request.getAttribute("countryselectorform").lookupWidget("country").getValue()}
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>

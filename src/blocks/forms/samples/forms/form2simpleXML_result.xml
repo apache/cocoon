@@ -16,4 +16,7 @@
 -->
 <jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:out value="#{.}"/>
+  <p>
+    <a href="../">Back to samples</a>
+  </p>
 </jx:template>

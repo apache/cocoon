@@ -22,5 +22,8 @@
     <pre>
 ${uploadContent}
     </pre>
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>

@@ -17,4 +17,7 @@
 <result>
   <data1>#{data1}</data1>
   <data2>#{data2}</data2>
+  <p>
+    <a href="../">Back to samples</a>
+  </p>
 </result>

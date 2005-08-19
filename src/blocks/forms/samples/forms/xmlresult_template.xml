@@ -31,5 +31,8 @@ ${Packages.org.apache.cocoon.xml.XMLUtils.serializeNode(document, props)}
 
       <input type="submit" value="Back to samples page"/>
     </form>
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>

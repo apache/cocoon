@@ -23,5 +23,8 @@
   <title>Sample form result</title>
   <content>
     Repeater has ${request.getAttribute("form_model_gui").lookupWidget("widgets").getSize()} row(s).
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>
