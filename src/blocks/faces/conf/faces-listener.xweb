@@ -23,7 +23,7 @@
       - JavaServer Faces configuration loader. For Sun's RI implementation use
       - com.sun.faces.config.ConfigureListener class.
       -->
-    <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
+    <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
   </listener>
 
 </xweb>

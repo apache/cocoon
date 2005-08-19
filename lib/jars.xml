@@ -1182,7 +1182,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>optional/myfaces-20041005m.jar</lib>
+    <lib>optional/myfaces-impl-r233484.jar</lib>
     <homepage>http://myfaces.apache.org/</homepage>
   </file>
 
@@ -1193,7 +1193,7 @@
       specification.
     </description>
     <used-by>Faces block</used-by>
-    <lib>optional/myfaces-jsf-api-20041005.jar</lib>
+    <lib>optional/myfaces-api-r233484.jar</lib>
     <homepage>http://myfaces.apache.org/</homepage>
   </file>
 
