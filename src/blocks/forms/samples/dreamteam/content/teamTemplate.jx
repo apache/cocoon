@@ -30,6 +30,9 @@
       <div class="legend">
         <table>
           <tr>
+            <td><i>Legend</i></td>
+          </tr>
+          <tr>
             <td>
               <img src="resources/move_up.gif"/>
             </td>

@@ -20,5 +20,8 @@
       You selected: maker: ${make.value},
       type: ${type.value},
       model: ${model.value}
+      <p>
+        <a href="../">Back to samples</a>
+      </p>
     </content>
 </page>

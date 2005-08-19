@@ -25,5 +25,8 @@
     You selected: maker ${request.getAttribute("carselectorform").lookupWidget("make").getValue()},
     type ${request.getAttribute("carselectorform").lookupWidget("type").getValue()},
     model ${request.getAttribute("carselectorform").lookupWidget("model").getValue()}
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>

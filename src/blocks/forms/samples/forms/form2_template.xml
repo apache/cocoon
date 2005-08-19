@@ -112,5 +112,8 @@
 
       <input type="submit"/>
     </ft:form-template>
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>

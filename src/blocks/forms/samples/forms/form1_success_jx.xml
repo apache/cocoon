@@ -39,5 +39,8 @@
     <br/>
     The value of the checkbox is:
     ${request.getAttribute("form1").lookupWidget("somebool").getValue()}
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
   </content>
 </page>
