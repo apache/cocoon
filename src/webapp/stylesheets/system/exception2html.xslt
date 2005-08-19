@@ -19,9 +19,7 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:ex="http://apache.org/cocoon/exception/1.0"
-                xmlns:str="http://exslt.org/strings"
-                extension-element-prefixes="str">
+                xmlns:ex="http://apache.org/cocoon/exception/1.0">
 
   <xsl:param name="contextPath"/>
   <xsl:param name="realPath"/>
@@ -37,8 +35,8 @@
         </title>
         <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
         <style>
-          h1 { color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
-          p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
+          h1 { font-size: 200%; color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
+          p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 110%; border-width: 1px; border-style: dashed; border-color: #336699; }
           p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
           p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
           pre { font-size: 120%; }
@@ -57,12 +55,7 @@
         <h1><xsl:value-of select="$pageTitle"/></h1>
         <p class="message">
           <xsl:value-of select="@class"/>:
-          <xsl:for-each select="str:split(ex:message, '&#10;')">
-             <xsl:if test="normalize-space(.)">
-                <br/>
-                <xsl:value-of select="."/>
-             </xsl:if>
-          </xsl:for-each>
+          <xsl:apply-templates select="ex:message" mode="breakLines"/>
           <xsl:if test="ex:location">
              <br/><span style="font-weight: normal"><xsl:apply-templates select="ex:location"/></span>
           </xsl:if>
@@ -75,12 +68,7 @@
           <xsl:for-each select="ex:cocoon-stacktrace/ex:exception">
             <xsl:sort select="position()" order="descending"/>
             <strong>
-               <xsl:for-each select="str:split(ex:message, '&#10;')">
-                  <xsl:if test="normalize-space(.)">
-                     <xsl:value-of select="."/>
-                     <br/>
-                  </xsl:if>
-               </xsl:for-each>
+               <xsl:apply-templates select="ex:message" mode="breakLines"/>
             </strong>
             <table>
                <xsl:for-each select="ex:locations/*[string(.) != '[cause location]']">
@@ -181,6 +169,24 @@
       </xsl:choose>
       <xsl:text> - </xsl:text>
       <xsl:value-of select="@line"/>:<xsl:value-of select="@column"/>
+  </xsl:template>
+  
+  <!-- output a text by splitting it with <br>s on newlines
+       can be uses either by an explicit call or with <apply-templates mode="breakLines"/> -->
+  <xsl:template match="node()"  mode="breakLines" name="breakLines">
+     <xsl:param name="text" select="string(.)"/>
+     <xsl:choose>
+        <xsl:when test="contains($text, '&#10;')">
+           <xsl:value-of select="substring-before($text, '&#10;')"/>
+           <br/>
+           <xsl:call-template name="breakLines">
+              <xsl:with-param name="text" select="substring-after($text, '&#10;')"/>
+           </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+           <xsl:value-of select="$text"/>
+        </xsl:otherwise>
+     </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
