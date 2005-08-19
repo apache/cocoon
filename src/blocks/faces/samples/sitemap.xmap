@@ -92,13 +92,6 @@
       </map:match>
 
       <!--
-        - MyFaces Patch
-        -->
-      <map:match pattern="*.diff">
-        <map:read mime-type="text/plain" src="{1}.diff"/>
-      </map:match>
-
-      <!--
         - Action invoking JavaServer Faces lifecycle.
         - Render phase of the lifecycle dispatches view render request
         - back to the sitemap.

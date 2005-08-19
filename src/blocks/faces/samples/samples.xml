@@ -30,13 +30,10 @@
       block for supported forms processing framework.
     </note>
     <note>
-      Faces block comes with MyFaces JSF implementation with this small patch
-      applied. Cocoon Faces block can also be run with Sun (JSF 1.1_01) and
-      IBM implementations (WSAD 5.1.2, requires patching).
+      Faces block comes with <a href="http://myfaces.apache.org/">MyFaces</a>
+      JSF implementation. Cocoon Faces block can also be run with Sun (JSF 1.1_01)
+      and IBM implementations (WSAD 5.1.2, requires patching).
     </note>
-    <sample name="Patch" href="myfaces-patch.diff">
-      Patch against MyFaces CVS repository as of 20040916.
-    </sample>
   </group>
 
   <group name="JavaServer Faces">
