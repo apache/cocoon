@@ -518,6 +518,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      Faces block: Updated MyFaces libraries to the SVN r233484, get rid of patched
+      version.
+    </action>
     <action dev="CZ" type="add">
       Portal block: Add support for portal bridges and add CoWarp for authentication.
     </action>
