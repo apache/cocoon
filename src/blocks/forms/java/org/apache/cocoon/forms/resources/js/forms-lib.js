@@ -38,15 +38,20 @@ var forms_onsubmitHandlers = new Array();
 
 function forms_onsubmit() {
     if (forms_onsubmitHandlers == null) {
-        alert("onsubmit called twice!");
-        return;
+        // Form already submited, but the new page is not yet loaded. This can happen when
+        // the focus is in an input with an "onchange" and the user clicks on a submit button.
+        return false;
     }
 
     for (var i = 0; i < forms_onsubmitHandlers.length; i++) {
-        forms_onsubmitHandlers[i].forms_onsubmit();
+        if (forms_onsubmitHandlers[i].forms_onsubmit() == false) {
+            // handler cancels the submit
+            return false;
+        	}
     }
     // clear it
     forms_onsubmitHandlers = null;
+    return true;
 }
 
 /**
@@ -64,8 +69,9 @@ function oldforms_submitForm(element, name) {
     } else {
         form["forms_submit_id"].value = name;
         // FIXME: programmatically submitting the form doesn't trigger onsubmit ? (both in IE and Moz)
-        forms_onsubmit();
-        form.submit();
+        if (forms_onsubmit()) {
+            form.submit();
+        }
     }
 }
 
