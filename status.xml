@@ -196,6 +196,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="fix">
+      XSP block: Add xsp:expr and various other contexts where text must be
+      passed through XSLTExtension:escape in order to preserve non-ASCII
+      characters in Java string constants independently of the XSP source file
+      and compiler expected encodings.
+    </action>
     <action dev="VG" type="update">
       Faces block: Updated MyFaces libraries to the SVN r233484, get rid of patched
       version.
