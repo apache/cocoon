@@ -316,7 +316,18 @@
           <if>
             <available file="@{{dir}}/samples/sitemap.xmap"/>
             <then>
-              <copy filtering="on" todir="${{build.webapp}}/samples/blocks/@{{name}}">
+              <!-- Important to use here encoding="iso-8859-1" to avoid
+                   mutilating LATIN-1 characters in the copy operation.
+                   If these were read assuming UTF-8 encoding, umlauts
+                   are invalid byte sequences and get replaced by '?'.
+              
+                   On the other hand, reading UTF-8 files using LATIN-1
+                   encoding is not a problem in this context since every
+                   UTF-8 byte sequence maps to one or more LATIN-1 characters.
+                   We only need to assume that the tokens to be replaced
+                   by the filtering option are written in ASCII only.
+               -->
+              <copy filtering="on" todir="${{build.webapp}}/samples/blocks/@{{name}}" encoding="iso-8859-1">
                 <fileset dir="@{{dir}}/samples">
                   <exclude name="**/*.gif"/>
                   <exclude name="**/*.jpg"/>
