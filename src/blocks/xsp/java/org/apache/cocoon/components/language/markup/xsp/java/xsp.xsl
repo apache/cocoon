@@ -117,6 +117,10 @@
             this.dependencies = _dependentFiles;
         }
 
+        // Internally used list of attributes for SAX events.  Being on
+        // class scope allows xsp:logic to define markup generating methods.
+        private AttributesImpl _xspAttr = new AttributesImpl();
+
         /* Built-in parameters available for use */
         // context    - org.apache.cocoon.environment.Context
         // request    - org.apache.cocoon.environment.Request
@@ -138,7 +142,7 @@
             </xsl:for-each>
 
             this.contentHandler.startDocument();
-            AttributesImpl xspAttr = new AttributesImpl();
+            _xspAttr.clear();
 
             <!-- Generate top-level processing instructions -->
             <xsl:apply-templates select="/processing-instruction()"/>
@@ -267,10 +271,10 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:copy-of select="$uri"/>,
       <xsl:copy-of select="$name"/>,
       <xsl:copy-of select="$raw-name"/>,
-      xspAttr
+      _xspAttr
     );
 
-    xspAttr.clear();
+    _xspAttr.clear();
 
     <xsl:apply-templates select="node()[not(
       (namespace-uri(.) = $xsp-uri and local-name(.) = 'attribute') or
@@ -365,7 +369,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
       <xsl:if test="not(text()|xsp:expr|xsp:text)"> "" </xsl:if>
     </xsl:variable>
 
-    xspAttr.addAttribute(
+    _xspAttr.addAttribute(
       <xsl:copy-of select="$uri"/>,
       <xsl:copy-of select="$name"/>,
       <xsl:copy-of select="$raw-name"/>,
@@ -456,9 +460,9 @@ Either both 'uri' and 'prefix' or none of them must be specified
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
       "<xsl:value-of select="name(.)"/>",
-      xspAttr
+      _xspAttr
     );
-    xspAttr.clear();
+    _xspAttr.clear();
 
     <xsl:apply-templates select="node()[not(
         (namespace-uri(.) = $xsp-uri and local-name(.) = 'attribute') or
@@ -485,7 +489,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
   <xsl:template match="@*">
     <!-- Filter out namespace declaration attributes -->
     <xsl:if test="not(starts-with(name(.), 'xmlns:'))">
-    xspAttr.addAttribute(
+    _xspAttr.addAttribute(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
       "<xsl:value-of select="name(.)"/>",

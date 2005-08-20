@@ -197,6 +197,12 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="AN" type="fix">
+      XSP block: Move AttributeImpl in xsp.xsl to class scope.
+      That allows top-level xsp:logic to define markup generating methods.
+      Variable xspAttr renamed to _xspAttr to be avoid breaking existing
+      XSPs which already use that trick.
+    </action>
+    <action dev="AN" type="fix">
       XSP block: Add xsp:expr and various other contexts where text must be
       passed through XSLTExtension:escape in order to preserve non-ASCII
       characters in Java string constants independently of the XSP source file
