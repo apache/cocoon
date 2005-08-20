@@ -67,6 +67,9 @@
    <sample name="Util" href="java/resolver" xlink:role="dynamic">
     Util logicsheet tests.
    </sample>
+   <sample name="Escaping" href="java/escaping" xlink:role="dynamic">
+    Escaping of non-ASCII characters.
+   </sample>
   </group>
 
   <group name="eXtensible Server Pages in Javascript">

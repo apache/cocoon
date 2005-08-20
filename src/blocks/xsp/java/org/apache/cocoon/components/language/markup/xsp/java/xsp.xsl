@@ -134,7 +134,7 @@
         public void generate() throws SAXException, IOException, ProcessingException {
             <!-- Do any user-defined necessary initializations -->
             <xsl:for-each select="xsp:init-page">
-              <xsl:copy-of select="."/>
+              <xsl:value-of select="XSLTExtension:escape($extension,.)"/>
             </xsl:for-each>
 
             this.contentHandler.startDocument();
@@ -152,7 +152,7 @@
 
             <!-- Do any user-defined necessary clean-ups -->
             <xsl:for-each select="xsp:exit-page">
-              <xsl:copy-of select="."/>
+              <xsl:value-of select="XSLTExtension:escape($extension,.)"/>
             </xsl:for-each>
         }
     }
@@ -357,9 +357,9 @@ Either both 'uri' and 'prefix' or none of them must be specified
         <xsl:if test="position() &gt; 1"> + </xsl:if>
         <xsl:choose>
           <xsl:when test="namespace-uri(.) = $xsp-uri and local-name(.) = 'expr'">
-            String.valueOf(<xsl:value-of select="."/>)
+            String.valueOf(<xsl:value-of select="XSLTExtension:escape($extension,.)"/>)
           </xsl:when>
-          <xsl:otherwise> "<xsl:value-of select="XSLTExtension:escape($extension,.)"/>" </xsl:otherwise>
+          <xsl:otherwise> "<xsl:value-of select="XSLTExtension:escapeJava($extension,.)"/>" </xsl:otherwise>
         </xsl:choose>
       </xsl:for-each>
       <xsl:if test="not(text()|xsp:expr|xsp:text)"> "" </xsl:if>
@@ -381,14 +381,14 @@ Either both 'uri' and 'prefix' or none of them must be specified
              Expression is nested inside another XSP tag:
              preserve its Java type
         -->
-        (<xsl:value-of select="."/>)
+        (<xsl:value-of select="XSLTExtension:escape($extension,.)"/>)
       </xsl:when>
       <xsl:when test="string-length(.) = 0">
         <!-- Do nothing -->
       </xsl:when>
       <xsl:otherwise>
         <!-- Output the value as elements or character data depending on its type -->
-        XSPObjectHelper.xspExpr(contentHandler, <xsl:value-of select="."/>);
+        XSPObjectHelper.xspExpr(contentHandler, <xsl:value-of select="XSLTExtension:escape($extension,.)"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -490,7 +490,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
       "<xsl:value-of select="local-name(.)"/>",
       "<xsl:value-of select="name(.)"/>",
       "CDATA",
-      "<xsl:value-of select="XSLTExtension:escape($extension,.)"/>"
+      "<xsl:value-of select="XSLTExtension:escapeJava($extension,.)"/>"
     );
     </xsl:if>
   </xsl:template>
@@ -510,12 +510,6 @@ Either both 'uri' and 'prefix' or none of them must be specified
         this.characters("<xsl:value-of select="XSLTExtension:escapeJava($extension, .)"/>");
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-
-  <!-- FIXME: there seems to be no apply-templates with that mode,
-              i.e. can this template be removed? -->
-  <xsl:template match="text()" mode="value">
-    <xsl:value-of select="."/>
   </xsl:template>
 
   <xsl:template match="processing-instruction()">
