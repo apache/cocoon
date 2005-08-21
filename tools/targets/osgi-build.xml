@@ -55,8 +55,8 @@
   
   <target name="osgi.compile-osgi-servlet">
     <path id="osgi.osgi-servlet.classpath">
-      <fileset dir="./lib/osgi">
-        <include name="*/*.jar"/>
+      <fileset dir="./lib/core">
+        <include name="knopflerfish-*.jar"/>
       </fileset>      
       <!-- include Cocoon core -->
       <dirset dir="${build.dest}"/>
