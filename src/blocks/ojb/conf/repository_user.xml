@@ -31,6 +31,16 @@
         <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>
     </class-descriptor>
 
+ 
+     <class-descriptor class="org.apache.cocoon.ojb.samples.bean.User" table="USER">
+        <field-descriptor name="uid"             column="UID"             jdbc-type="INTEGER" primarykey="true"/>
+        <field-descriptor name="lastname"           column="NAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="firstname"           column="FIRSTNAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="username"           column="UNAME"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="password"           column="PWD"           jdbc-type="VARCHAR"/>
+        <field-descriptor name="role"           column="ROLE"           jdbc-type="VARCHAR"/>
+    </class-descriptor>
+    
     <!-- mappings for the QueryBean Block -->
     <class-descriptor class="org.apache.cocoon.bean.query.SimpleLuceneCriterionBean" table="CRITERION">
         <field-descriptor name="id"   column="ID"   jdbc-type="BIGINT" primarykey="true" autoincrement="true"/>

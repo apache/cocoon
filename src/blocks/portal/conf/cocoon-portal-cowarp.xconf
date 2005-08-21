@@ -16,15 +16,21 @@
 -->
 <!--+
     |
-    | SVN $Id:$
+    | SVN $Id$
     +-->
 <xconf xpath="/cocoon" unless="component[@role='org.osoco.cowarp.ApplicationManager']">
   <component role="org.osoco.cowarp.ApplicationManager"
              class="org.osoco.cowarp.impl.StandardApplicationManager"/>
+  <!-- This security handler uses OJB and the hsqldb for the authentication: -->
   <component role="org.osoco.cowarp.SecurityHandler/portal" 
-             class="org.osoco.cowarp.impl.PipelineSecurityHandler">
-    <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
+             class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
   </component>
+  <!-- If you want to use a pipeline for the authentication use this configuration:
+    <component role="org.osoco.cowarp.SecurityHandler/portal" 
+               class="org.osoco.cowarp.impl.PipelineSecurityHandler">
+      <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
+    </component>
+  -->
   <component role="org.osoco.cowarp.Application/portal" 
              class="org.osoco.cowarp.portal.StandardPortalApplication" 
              security-handler="portal">

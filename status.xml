@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add" fixes-bug="36240" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
+      Portal block: Use OJB and the HSQLDB for authentication of the portal sample.
+    </action>
     <action dev="AN" type="fix">
       XSP block: Move AttributeImpl in xsp.xsl to class scope.
       That allows top-level xsp:logic to define markup generating methods.
