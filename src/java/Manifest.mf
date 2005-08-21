@@ -19,10 +19,10 @@ Bundle-Classpath: .,avalon-framework-api-4.1.5.jar,avalon-fra
  1.0.jar,excalibur-pool-api-2.0.0.jar,excalibur-pool-impl-2.0.0.jar,ex
  calibur-pool-instrumented-2.0.0.jar,excalibur-sourceresolve-1.1.jar,e
  xcalibur-store-1.0.jar,excalibur-xmlutil-1.0.jar,jcs-1.2.5-dev-200503
- 13.jar,log4j-1.2.9.jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.j
+ 13.jar,log4j-1.2.11.jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.j
  ar,util.concurrent-1.3.4.jar,xml-commons-resolver-1.1.jar,xmlbeans-1.
- 0.3.jar,jakarta-bcel-20040329.jar,jakarta-regexp-1.3.jar,xalan-2.6.1-
- dev-20041008T0304.jar,xercesImpl-2.7.0.jar,xml-apis.jar
+ 0.3.jar,jakarta-bcel-20040329.jar,jakarta-regexp-1.3.jar,xalan-2.7.0.j
+ ar,xercesImpl-2.7.1.jar,xml-apis.jar
 Export-Package: javax.servlet,
  javax.servlet.http,
  org.apache.avalon.framework.context,
