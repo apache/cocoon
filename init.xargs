@@ -29,9 +29,9 @@
 
 ## Basic KF bundles
 -initlevel 1
--install lib/osgi/knopflerfish/knopflerfish-log_all-1.0.0.jar
--install lib/osgi/knopflerfish/knopflerfish-cm_api-1.0.0.jar
--install lib/osgi/knopflerfish/knopflerfish-console_all-1.0.0.jar
+-install lib/core/knopflerfish-log_all-1.0.0.jar
+-install lib/core/knopflerfish-cm_api-1.0.0.jar
+-install lib/core/knopflerfish-console_all-1.0.0.jar
 
 ## Some library bundles
 -initlevel 2
@@ -40,13 +40,13 @@
 
 ## HTTP Service
 -initlevel 4
--install lib/osgi/knopflerfish/knopflerfish-http_all-1.1.0.jar
+-install lib/core/knopflerfish-http_all-1.1.0.jar
 
 ## console command bundles
 -initlevel 5
--install lib/osgi/knopflerfish/knopflerfish-frameworkcommands-1.0.0.jar
--install lib/osgi/knopflerfish/knopflerfish-logcommands-1.0.0.jar
--install lib/osgi/knopflerfish/knopflerfish-consoletty-1.0.0.jar
+-install lib/core/knopflerfish-frameworkcommands-1.0.0.jar
+-install lib/core/knopflerfish-logcommands-1.0.0.jar
+-install lib/core/knopflerfish-consoletty-1.0.0.jar
 
 -initlevel 7
 -install build/osgi/org.apache.cocoon_webapp_1.0.0.jar
@@ -61,11 +61,11 @@
 # Start of these bundles are delayed since thise makes start
 # order dependencies much easier
 
--start lib/osgi/knopflerfish/knopflerfish-log_all-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-cm_api-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-console_all-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-consoletty-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-frameworkcommands-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-logcommands-1.0.0.jar
--start lib/osgi/knopflerfish/knopflerfish-http_all-1.1.0.jar
+-start lib/core/knopflerfish-log_all-1.0.0.jar
+-start lib/core/knopflerfish-cm_api-1.0.0.jar
+-start lib/core/knopflerfish-console_all-1.0.0.jar
+-start lib/core/knopflerfish-consoletty-1.0.0.jar
+-start lib/core/knopflerfish-frameworkcommands-1.0.0.jar
+-start lib/core/knopflerfish-logcommands-1.0.0.jar
+-start lib/core/knopflerfish-http_all-1.1.0.jar
 -start build/osgi/org.apache.cocoon_servlet_1.0.0.jar

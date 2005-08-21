@@ -198,6 +198,7 @@
       </fileset>
       <fileset dir="${lib.core}">
         <include name="*.jar"/>
+        <exclude name="knopflerfish-*.jar"/>
       </fileset>
       <fileset dir="${lib.endorsed}">
         <include name="*.jar"/>

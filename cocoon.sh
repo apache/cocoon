@@ -174,7 +174,7 @@ case "$ACTION" in
   osgi)
         # -init prevents knopflerfish from using its persistent info about bundles, seems safer for now
         KNOP_OPTIONS="-init"
-        $JAVA $JAVA_OPTIONS -jar lib/osgi/knopflerfish/knopflerfish-framework-1.3.3.jar $KNOP_OPTIONS $ARGS
+        $JAVA $JAVA_OPTIONS -jar lib/core/knopflerfish-framework-1.3.3.jar $KNOP_OPTIONS $ARGS
         ;;
 
   *)
