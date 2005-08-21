@@ -919,6 +919,7 @@
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-ojb"/>
     <depend project="cocoon-block-template" type="samples"/>
     <depend project="jtidy"/>
     <depend project="castor"/>

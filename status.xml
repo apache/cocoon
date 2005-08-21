@@ -530,7 +530,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
-    <action dev="VG" type="update">
+   <action dev="CZ" type="add" fixes-bug="36240" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
+      Portal block: Use OJB and the HSQLDB for authentication of the portal sample.
+    </action>
+     <action dev="VG" type="update">
       Faces block: Updated MyFaces libraries to the SVN r233484, get rid of patched
       version.
     </action>
