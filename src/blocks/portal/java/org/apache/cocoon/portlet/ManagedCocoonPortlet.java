@@ -39,6 +39,7 @@ import org.apache.cocoon.portlet.multipart.RequestFactory;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.Hierarchy;
+import org.apache.pluto.core.impl.PortletContextImpl;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -924,6 +925,9 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             subcontext.put("context-root", logSCDir.toString());
         } else {
             subcontext.put("context-root", this.portletContextPath);
+        }
+        if ( this.portletContext instanceof PortletContextImpl ) {
+            subcontext.put("servlet-context", ((PortletContextImpl)this.portletContext).getServletContext());
         }
 
         try {
