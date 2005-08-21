@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <!--+
-    |
+    | This is the authentication configuration for CoWarp.
     | SVN $Id$
     +-->
 <xconf xpath="/cocoon" unless="component[@role='org.osoco.cowarp.ApplicationManager']">
@@ -24,7 +24,6 @@
   <!-- This security handler uses OJB and the hsqldb for the authentication: -->
   <component role="org.osoco.cowarp.SecurityHandler/portal" 
              class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
-  </component>
   <!-- If you want to use a pipeline for the authentication use this configuration:
     <component role="org.osoco.cowarp.SecurityHandler/portal" 
                class="org.osoco.cowarp.impl.PipelineSecurityHandler">
