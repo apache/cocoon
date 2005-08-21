@@ -29,7 +29,7 @@ import org.osoco.cowarp.AbstractSecurityHandler;
 import org.osoco.cowarp.ApplicationManager;
 
 /**
- * @version $Id:$
+ * @version $Id$
  */
 public class DBSecurityHandler 
     extends AbstractSecurityHandler {
@@ -57,7 +57,9 @@ public class DBSecurityHandler
                 pUser.setLastname(u.getLastname());
                 pUser.setPassword(u.getPassword());
                 pUser.setRole(u.getRole());
-                System.out.println("Loggedin as: " + u.getFirstname() + " " + u.getLastname() + " (" + u.getUsername() + " " + u.getRole() +")");
+                if ( this.getLogger().isInfoEnabled() ) {
+                    this.getLogger().info("Loggedin as: " + u.getFirstname() + " " + u.getLastname() + " (" + u.getUsername() + " " + u.getRole() +")");
+                }
                 return pUser;
             }
         } finally {
