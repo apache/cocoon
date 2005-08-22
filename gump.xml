@@ -922,6 +922,7 @@
     <depend project="cocoon-block-ojb"/>
     <depend project="cocoon-block-template" type="samples"/>
     <depend project="jtidy"/>
+    <depend project="nekohtml"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
     <depend project="portals-pluto" inherit="runtime"/>
@@ -929,6 +930,7 @@
     <depend project="cowarp"/>
 
     <library name="jtidy"/>
+    <library name="nekohtml"/>
     <library name="castor"/>
     <library name="commons-collections"/>
     <library name="pluto"/>
