@@ -93,10 +93,10 @@ public class PortletAdapter
 
     /** The Portlet Container */
     protected PortletContainer portletContainer;
-    
+
     /** The Portlet Container environment */
     protected PortletContainerEnvironmentImpl portletContainerEnvironment;
-    
+
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -248,8 +248,9 @@ public class PortletAdapter
             eventManager.subscribe(this);
         } finally {
             this.manager.release(eventManager);
-}
+        }
     }
+
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
