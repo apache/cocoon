@@ -22,7 +22,7 @@ Bundle-Classpath: .,avalon-framework-api-4.1.5.jar,avalon-fra
  13.jar,log4j-1.2.11.jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.j
  ar,util.concurrent-1.3.4.jar,xml-commons-resolver-1.1.jar,xmlbeans-1.
  0.3.jar,jakarta-bcel-20040329.jar,jakarta-regexp-1.4.jar,xalan-2.7.0.j
- ar,xercesImpl-2.7.1.jar,xml-apis.jar
+ ar,xercesImpl-2.7.1.jar,xml-apis-1.3.02.jar
 Export-Package: javax.servlet,
  javax.servlet.http,
  org.apache.avalon.framework.context,
