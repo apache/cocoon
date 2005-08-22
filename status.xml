@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+      Updated jakarta-regexp to 1.4.
+    </action>
     <action dev="CZ" type="add">
       Portal block: Allow portlet adapter to stream html content through the pipeline using the NekoHTML parser.
     </action>
