@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,7 +69,6 @@ import org.apache.pluto.services.information.DynamicInformationProvider;
 import org.apache.pluto.services.information.InformationProviderService;
 import org.apache.pluto.services.information.PortletActionProvider;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 
