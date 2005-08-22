@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,6 +54,7 @@ import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
+import org.apache.cocoon.portal.util.HtmlSaxParser;
 import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
@@ -68,6 +71,7 @@ import org.apache.pluto.services.information.DynamicInformationProvider;
 import org.apache.pluto.services.information.InformationProviderService;
 import org.apache.pluto.services.information.PortletActionProvider;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 
@@ -166,7 +170,7 @@ public class PortletAdapter
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
      */
     public void streamContent(CopletInstanceData coplet,
@@ -193,17 +197,22 @@ public class PortletAdapter
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
             final String value = res.toString();
-            
-            // stream out the include for the serializer
-            IncludingHTMLSerializer.addPortlet(portlet, value);
-            contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
-            AttributesImpl attr = new AttributesImpl();
-            attr.addCDATAAttribute("portlet", portlet);
-            contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
-                                        "include", "portal:include", attr);
-            contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
-                                      "include", "portal:include");
-            contentHandler.endPrefixMapping("portal");
+
+            final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
+            if ( usePipeline.booleanValue() ) {
+                HtmlSaxParser.parseString(value, contentHandler);
+            } else {
+                // stream out the include for the serializer
+                IncludingHTMLSerializer.addPortlet(portlet, value);
+                contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
+                AttributesImpl attr = new AttributesImpl();
+                attr.addCDATAAttribute("portlet", portlet);
+                contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
+                                            "include", "portal:include", attr);
+                contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
+                                          "include", "portal:include");
+                contentHandler.endPrefixMapping("portal");
+            }
         } catch (SAXException se) {
             throw se;
         } catch (Exception e) {

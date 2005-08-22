@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Portal block: Allow portlet adapter to stream html content through the pipeline using the NekoHTML parser.
+    </action>
     <action dev="CZ" type="add" fixes-bug="36240" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
       Portal block: Use OJB and the HSQLDB for authentication of the portal sample.
     </action>
