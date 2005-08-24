@@ -96,8 +96,11 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
         PreparableMatcher matcher = (PreparableMatcher)getComponent();
         try {
-            result = matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
-
+            result = this.executor.invokePreparableMatcher(this,
+                                                           objectModel,
+                                                           matcher,
+                                                           preparedPattern,
+                                                           resolvedParams);
         } finally {
             releaseComponent(matcher);
         }
