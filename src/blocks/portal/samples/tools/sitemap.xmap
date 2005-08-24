@@ -110,12 +110,13 @@
 
 <!-- mount sub-sitemaps -->
       <map:match pattern="plugins/*/**">
-     	 <map:act type="cowarp-is-loggedin">
+     	 <map:act type="cowarp-is-logged-in">
             <map:parameter name="handler" value="portal-handler"/> 
             <map:parameter name="application" value="portal"/> 
 	      	<map:act type="check-access-action">
 	    		<map:parameter name="url" value="{../1}/{../2}"/>
-      		        <map:mount uri-prefix="plugins/{../../1}" check-reload="yes" src="plugins/{../../1}/sitemap.xmap"/>
+      		    
+      		    <map:mount uri-prefix="plugins/{../../1}" check-reload="yes" src="plugins/{../../1}/sitemap.xmap"/>
 			</map:act>
 		</map:act>
       </map:match>
