@@ -253,7 +253,7 @@ public class FormInstance extends AbstractContinuable {
             source = resolver.resolveURI(bindingURI);
             this.binding = bindingManager.createBinding(source);
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not create bindinh", e);
+            throw new CascadingRuntimeException("Could not create binding", e);
         } finally {
             if (source != null)
                 resolver.release(source);
