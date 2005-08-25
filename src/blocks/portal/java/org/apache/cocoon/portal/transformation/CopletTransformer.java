@@ -204,7 +204,7 @@ extends AbstractCopletTransformer {
             newAttrs.setAttributes(attr);
             newAttrs.removeAttribute("format");
             this.stack.push(newAttrs);
-            
+
             String format = attr.getValue("format");
             if ( format == null ) {
                 format = "html-link";
@@ -248,7 +248,7 @@ extends AbstractCopletTransformer {
                     separator = '&';
                 }
                 href = baseURL + separator + href.substring(pos);
-                
+
             }
             this.output(href, format, newAttrs );
 
@@ -287,8 +287,9 @@ extends AbstractCopletTransformer {
             boolean addParametersAsHiddenFields = false;
             String parameters = null;
             final String enctype = newAttrs.getValue("enctype");
-            if ( enctype== null 
-                 || "application/x-www-form-urlencoded".equals(enctype) )  {
+            if ( enctype== null
+                || "application/x-www-form-urlencoded".equalsIgnoreCase(enctype)
+                || "multipart/form-data".equalsIgnoreCase(enctype) )  {
                 final int pos = uri.indexOf('?');
                 if ( pos != -1 ) {
                     parameters = uri.substring(pos+1);
