@@ -58,10 +58,10 @@ public class CachingURICopletAdapter
     /** The configuration name for ignoring sizing events to clear the cache. */
     public static final String CONFIGURATION_IGNORE_SIZING_EVENTS = "ignore-sizing-events";
 
-    /** The attribute name for storing the cached coplet content. */
+    /** The temporary attribute name for the storing the cached coplet content. */
     public static final String CACHE = "cacheData";
 
-    /** This attribute can be set on the instance to not cache the current response. */
+    /** This temporary attribute can be set on the instance to not cache the current response. */
     public static final String DO_NOT_CACHE = "doNotCache";
 
     /** 
@@ -143,18 +143,18 @@ public class CachingURICopletAdapter
                     data = response.getResponse();
                 }
             } else {
-                data = coplet.getAttribute(CACHE);
+                data = coplet.getTemporaryAttribute(CACHE);
             }
         } 
         if (data == null) {
             // if caching is permanently or temporary disabled, flush the cache and invoke coplet
-            if ( !cachingEnabled || coplet.getAttribute(DO_NOT_CACHE) != null ) {
-                coplet.removeAttribute(DO_NOT_CACHE);
+            if ( !cachingEnabled || coplet.getTemporaryAttribute(DO_NOT_CACHE) != null ) {
+                coplet.removeTemporaryAttribute(DO_NOT_CACHE);
                 if ( cacheGlobal ) {
                     final String key = this.getCacheKey(coplet, uri);
                     this.cache.remove(key); 
                 } else {
-                    coplet.removeAttribute(CACHE);
+                    coplet.removeTemporaryAttribute(CACHE);
                 }
                 super.streamContent(coplet, uri, contentHandler);                
             } else {
@@ -173,7 +173,7 @@ public class CachingURICopletAdapter
                         this.getLogger().warn("Exception during storing response into cache.", pe);
                     }
                 } else {
-                    coplet.setAttribute(CACHE, data);
+                    coplet.setTemporaryAttribute(CACHE, data);
                 }
             }
         }
@@ -213,7 +213,7 @@ public class CachingURICopletAdapter
                                                     (String) coplet.getCopletData().getAttribute("uri"));
                 this.cache.remove(key);
             } else {
-                coplet.removeAttribute(CACHE);
+                coplet.removeTemporaryAttribute(CACHE);
             }
         }
     }

@@ -196,6 +196,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix">
+      Portal block: Fix bugs in CachingURICopletAdapter - store cache information in temporary attributes.
+                    This bug fix introduces incompatible changes: the cache validity attribute is not
+                    used anymore, use the cache temporary attribute instead and update your code to
+                    use temporary attributes instead of (persistent) attributes.
+    </action>
     <action dev="AG" type="update">
       Updated jakarta-regexp to 1.4.
     </action>

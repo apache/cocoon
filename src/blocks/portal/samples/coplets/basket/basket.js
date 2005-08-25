@@ -124,7 +124,7 @@ function eval() {
     }
     
     // we have to reset our state
-    coplet.setAttribute("doNotCache", "1");
+    coplet.setTemporaryAttribute("doNotCache", "1");
     coplet.setTemporaryAttribute("application-uri", coplet.getCopletData().getAttribute("temporary:application-uri"));
 
     // and now do a redirect
