@@ -16,27 +16,12 @@
 -->
 <testcase>
  <roles>
-  <role name="org.apache.excalibur.source.SourceFactorySelector"
-        shorthand="source-factories"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
-
-  <role name="org.apache.excalibur.source.SourceResolver"
-        shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
-
   <role name="org.apache.cocoon.matching.MatcherSelector"
         shorthand="matchers"
         default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
  </roles>
 
  <components>
-  <source-factories>
-   <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
-   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
-  </source-factories>
-
-  <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
-
   <matchers logger="test">
    <component-instance class="org.apache.cocoon.matching.HeaderMatcher" 
                        name="header"/>
