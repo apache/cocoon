@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.container.RoleManager;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -44,14 +45,25 @@ public class RoleManagerTestCase extends MockObjectTestCase {
         Configuration roles[] = new Configuration[1];
         roles[0] = (Configuration) child0.proxy();
         Configuration hints[] = new Configuration[0];
-        conf.expects(once()).method("getChildren").with(eq("role"))
-                .will(returnValue(roles));
+        conf.expects(once()).method("getName").will(returnValue("roles-list"));
+        conf.expects(once()).method("getChildren").will(returnValue(roles));
+        child0.expects(once()).method("getName").will(returnValue("role"));
         child0.expects(once()).method("getAttribute").with(eq("name"))
                 .will(returnValue("testName"));
-        child0.expects(once()).method("getAttribute").with(eq("shorthand"))
+        child0.expects(once()).method("getAttribute").with(eq("shorthand"), eq(null))
                 .will(returnValue("testShorthand"));
         child0.expects(once()).method("getAttribute").with(eq("default-class"), eq(null))
                 .will(returnValue("testClass"));
+        child0.expects(once()).method("getAttribute").with(eq("model"), eq(null))
+                .will(returnValue(ComponentInfo.TYPE_SINGLETON));
+        child0.expects(once()).method("getAttribute").with(eq("init"), eq(null))
+                .will(returnValue(null));
+        child0.expects(once()).method("getAttribute").with(eq("destroy"), eq(null))
+        .will(returnValue(null));
+        child0.expects(once()).method("getAttribute").with(eq("logger"), eq(null))
+                .will(returnValue(null));
+        child0.expects(once()).method("getAttribute").with(eq("logging"), eq(ComponentInfo.LOGGING_LOGKIT))
+                .will(returnValue(ComponentInfo.LOGGING_LOGKIT));
         child0.expects(once()).method("getChildren").with(eq("hint"))
                 .will(returnValue(hints));
         Mock logger = new Mock(Logger.class);
@@ -62,7 +74,7 @@ public class RoleManagerTestCase extends MockObjectTestCase {
         conf.verify();
         child0.verify();
         assertEquals("Role name for shorthand incorrect", "testName", rm.getRoleForName("testShorthand"));
-        assertEquals("Default service info for role incorrect", "testClass", rm.getDefaultServiceInfoForRole("testName"));
+        assertEquals("Default service info for role incorrect", "testClass", rm.getDefaultServiceInfoForRole("testName").getServiceClassName());
         assertNull("Default service info for key must be null", rm.getDefaultServiceInfoForKey("testName", "testShorthand"));
     }
 
