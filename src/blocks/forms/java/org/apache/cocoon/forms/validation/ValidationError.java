@@ -32,16 +32,16 @@ import org.apache.excalibur.xml.sax.XMLizable;
 public class ValidationError {
 
     /** Holds the error message. */
-    private XMLizable saxFragment;
+    private final XMLizable saxFragment;
 
     /**
      * @param i18n should the errorMessage be interpreted as an i18n key?
      */
     public ValidationError(String errorMessage, boolean i18n) {
         if (i18n) {
-            saxFragment = new I18nMessage(errorMessage);
+            this.saxFragment = new I18nMessage(errorMessage);
         } else {
-            saxFragment = new StringMessage(errorMessage);
+            this.saxFragment = new StringMessage(errorMessage);
         }
     }
 
@@ -49,21 +49,21 @@ public class ValidationError {
      * @see I18nMessage#I18nMessage(java.lang.String)
      */
     public ValidationError(String errorMessageKey) {
-        this.saxFragment = new I18nMessage(errorMessageKey);
+        this(new I18nMessage(errorMessageKey));
     }
 
     /**
      * @see I18nMessage#I18nMessage(java.lang.String, java.lang.String[])
      */
     public ValidationError(String errorMessageKey, String[] parameters) {
-        this.saxFragment = new I18nMessage(errorMessageKey, parameters);
+        this(new I18nMessage(errorMessageKey, parameters));
     }
 
     /**
      * @see I18nMessage#I18nMessage(java.lang.String, java.lang.String[], boolean[])
      */
     public ValidationError(String errorMessageKey, String[] parameters, boolean[] keys) {
-        this.saxFragment = new I18nMessage(errorMessageKey, parameters, keys);
+        this(new I18nMessage(errorMessageKey, parameters, keys));
     }
 
     /**
@@ -81,16 +81,15 @@ public class ValidationError {
      * a String error message key was supplied, the necessary I18n tags will be generated.
      */
     public void generateSaxFragment(ContentHandler contentHandler) throws SAXException {
-        if (saxFragment != null) {
-            saxFragment.toSAX(contentHandler);
+        if (this.saxFragment != null) {
+            this.saxFragment.toSAX(contentHandler);
         }
     }
     
     public boolean equals(Object obj) {
         if (obj instanceof ValidationError) {
             return ObjectUtils.equals(this.saxFragment, ((ValidationError)obj).saxFragment);
-        } else {
-            return false;
         }
+        return false;
     }
 }
