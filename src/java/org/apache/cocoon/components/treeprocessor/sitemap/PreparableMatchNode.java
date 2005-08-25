@@ -99,6 +99,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
             result = this.executor.invokePreparableMatcher(this,
                                                            objectModel,
                                                            matcher,
+                                                           this.pattern,
                                                            preparedPattern,
                                                            resolvedParams);
         } finally {

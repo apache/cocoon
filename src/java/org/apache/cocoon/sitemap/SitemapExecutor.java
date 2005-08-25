@@ -80,6 +80,7 @@ public interface SitemapExecutor {
     Map invokePreparableMatcher(ExecutionContext context,
                       Map               objectModel,
                       PreparableMatcher matcher,
+                      String            pattern,
                       Object            preparedPattern,
                       Parameters        parameters )
     throws PatternException;

@@ -68,11 +68,12 @@ public class DefaultExecutor
     }
     
     /**
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokePreparableMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.PreparableMatcher, java.lang.Object, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokePreparableMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.PreparableMatcher, java.lang.String, java.lang.Object, org.apache.avalon.framework.parameters.Parameters)
      */
     public Map invokePreparableMatcher(ExecutionContext  context,
                                        Map               objectModel,
                                        PreparableMatcher matcher,
+                                       String            pattern,
                                        Object            preparedPattern,
                                        Parameters        resolvedParams )
     throws PatternException {
@@ -80,7 +81,7 @@ public class DefaultExecutor
     }
     
     /**
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeSelector(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.selection.Selector, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public boolean invokeSelector(ExecutionContext context, Map objectModel,
             Selector selector, String expression, Parameters parameters) {
