@@ -97,23 +97,28 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
-	/** Local name for the element that contains the included XML snippet. */
-	protected static final String XPATH_NODE_NAME = "xpath";
-	/** Attribute for the XPath query. */
-	protected static final String QUERY_ATTR_NAME = "query";
-	/** The document containing a successful XPath query */
-	protected static final String RESULT_DOCID_ATTR = "docid";
+    /** Local name for the element that contains the included XML snippet. */
+    protected static final String XPATH_NODE_NAME = "xpath";
+    /** Attribute for the XPath query. */
+    protected static final String QUERY_ATTR_NAME = "query";
+    /** The document containing a successful XPath query */
+    protected static final String RESULT_DOCID_ATTR = "docid";
 
-	/** The regular expression for the XML files pattern. */
-	protected RE xmlRE = null;
-	/** The document that should be parsed and (partly) included. */
-	protected Document doc = null;
-	/** The XPath. */
-	protected String xpath = null;
-	/** The XPath processor. */
-	protected XPathProcessor processor = null;
+    /** The regular expression for the XML files pattern. */
+    protected RE xmlRE;
+
+    /** The document that should be parsed and (partly) included. */
+    protected Document doc;
+
+    /** The XPath. */
+    protected String xpath;
+
+    /** The XPath processor. */
+    protected XPathProcessor processor;
+
     /** The prefix resolver for namespaced queries */
-	protected XPathPrefixResolver prefixResolver;
+    protected XPathPrefixResolver prefixResolver;
+
     /** The cocoon context used for mime-type mappings */
     protected Context context;
 
@@ -125,47 +130,47 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         // See if an XPath was specified
         int pointer;
         if ((pointer = this.source.indexOf("#")) != -1) {
-          int endpointer = this.source.indexOf('?');
-          if (endpointer != -1) {
-          	this.xpath = source.substring(pointer + 1, endpointer);
-          } else {
-			this.xpath = source.substring(pointer + 1);
-          }
-          this.source = src.substring(0, pointer);
-          if (endpointer != -1) {
-          	this.source += src.substring(endpointer);
-          }
+            int endpointer = this.source.indexOf('?');
+            if (endpointer != -1) {
+                this.xpath = source.substring(pointer + 1, endpointer);
+            } else {
+                this.xpath = source.substring(pointer + 1);
+            }
+            this.source = src.substring(0, pointer);
+            if (endpointer != -1) {
+                this.source += src.substring(endpointer);
+            }
         } else {
-			this.xpath = par.getParameter("xpath", null);
+            this.xpath = par.getParameter("xpath", null);
         }
         this.cacheKeyParList.add(this.xpath);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Applying XPath: " + xpath + " to collection " + source);
         }
 
-		String xmlFilesPattern = null;
-		try {
-			xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
-			this.cacheKeyParList.add(xmlFilesPattern);
-			this.xmlRE = new RE(xmlFilesPattern);
-			if (this.getLogger().isDebugEnabled()) {
-				this.getLogger().debug("pattern for XML files: " + xmlFilesPattern);
-			}
-		} catch (RESyntaxException rese) {
-			throw new ProcessingException("Syntax error in regexp pattern '"
-										  + xmlFilesPattern + "'", rese);
-		}
+        String xmlFilesPattern = null;
+        try {
+            xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
+            this.cacheKeyParList.add(xmlFilesPattern);
+            this.xmlRE = new RE(xmlFilesPattern);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("pattern for XML files: " + xmlFilesPattern);
+            }
+        } catch (RESyntaxException rese) {
+            throw new ProcessingException("Syntax error in regexp pattern '"
+                    + xmlFilesPattern + "'", rese);
+        }
 
         String[] params = par.getNames();
         this.prefixResolver = new XPathPrefixResolver(this.getLogger());
         for (int i = 0; i < params.length; i++) {
             if (params[i].startsWith("xmlns:")) {
-            	String paramValue = par.getParameter(params[i], "");
-            	String paramName = params[i].substring(6);
-            	if (getLogger().isDebugEnabled()) {
-            		getLogger().debug("add param to prefixResolver: " + paramName);
-            	}
-            	this.prefixResolver.addPrefix(paramName, paramValue);
+                String paramValue = par.getParameter(params[i], "");
+                String paramName = params[i].substring(6);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("add param to prefixResolver: " + paramName);
+                }
+                this.prefixResolver.addPrefix(paramName, paramValue);
             }
         }
 
@@ -185,52 +190,52 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         super.dispose();
     }
 
-    protected void addContent(TraversableSource source) throws SAXException, ProcessingException {
+    protected void addContent(TraversableSource source)
+    throws SAXException, ProcessingException {
         super.addContent(source);
         if (!source.isCollection() && isXML(source) && xpath != null) {
             performXPathQuery(source);
         }
     }
 
-	/**
-	 * Determines if a given TraversableSource shall be handled as XML.
-	 *
-	 * @param path  the TraversableSource to check
-	 * @return true  if the given TraversableSource shall handled as XML, false
-	 * otherwise.
-	 */
-	protected boolean isXML(TraversableSource path) {
+    /**
+     * Determines if a given TraversableSource shall be handled as XML.
+     *
+     * @param path  the TraversableSource to check
+     * @return true  if the given TraversableSource shall handled as XML, false
+     * otherwise.
+     */
+    protected boolean isXML(TraversableSource path) {
         String mimeType = this.context.getMimeType(path.getName());
-		return this.xmlRE.match(path.getName()) || "text/xml".equalsIgnoreCase(mimeType);
-	}
+        return this.xmlRE.match(path.getName()) || "text/xml".equalsIgnoreCase(mimeType);
+    }
 
-	/**
-	 * Performs an XPath query on the source.
-	 * @param in  the Source the XPath is performed on.
-	 * @throws SAXException  if something goes wrong while adding the XML snippet.
-	 */
+    /**
+     * Performs an XPath query on the source.
+     * @param in  the Source the XPath is performed on.
+     * @throws SAXException  if something goes wrong while adding the XML snippet.
+     */
     protected void performXPathQuery(TraversableSource in) throws SAXException {
         doc = null;
         try {
             doc = SourceUtil.toDOM(this.manager, "text/xml", in);
         } catch (SAXException se) {
-             this.getLogger().error("Warning:" + in.getName()
-              + " is not a valid XML document. Ignoring");
+            getLogger().error("Warning:" + in.getName() + " is not a valid XML document. Ignoring");
         } catch (Exception e) {
-             this.getLogger().error("Unable to resolve and parse document" + e);
-         }
-         if (doc != null) {
-             NodeList nl = processor.selectNodeList(doc.getDocumentElement(), xpath, this.prefixResolver);
-             final String id = in.getName();
-             AttributesImpl attributes = new AttributesImpl();
-             attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR," CDATA", id);
-             attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA",xpath);
-             super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
-             DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
-             for (int i = 0; i < nl.getLength(); i++) {
-                 ds.stream(nl.item(i));
-             }
-             super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
+            this.getLogger().error("Unable to resolve and parse document" + e);
+        }
+        if (doc != null) {
+            NodeList nl = processor.selectNodeList(doc.getDocumentElement(), xpath, this.prefixResolver);
+            final String id = in.getName();
+            AttributesImpl attributes = new AttributesImpl();
+            attributes.addAttribute("", RESULT_DOCID_ATTR, RESULT_DOCID_ATTR," CDATA", id);
+            attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA",xpath);
+            super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
+            DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
+            for (int i = 0; i < nl.getLength(); i++) {
+                ds.stream(nl.item(i));
+            }
+            super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
         }
     }
 
@@ -238,28 +243,26 @@ public class XPathTraversableGenerator extends TraversableGenerator {
      * Recycle resources
      *
      */
-   public void recycle() {
-      this.xpath = null;
-      this.doc = null;
-      this.xmlRE = null;
-      this.prefixResolver = null;
-      this.context = null;
-      super.recycle();
+    public void recycle() {
+        this.xpath = null;
+        this.doc = null;
+        this.xmlRE = null;
+        this.prefixResolver = null;
+        this.context = null;
+        super.recycle();
     }
 
     /**
      * A brain-dead PrefixResolver implementation
-     *
      */
-
     class XPathPrefixResolver implements PrefixResolver {
 
-    	private Map params;
+        private Map params;
 
         private Logger logger;
 
         public XPathPrefixResolver(Logger logger) {
-        	this.params = new HashMap();
+            this.params = new HashMap();
             this.logger = logger;
         }
 
@@ -269,22 +272,20 @@ public class XPathTraversableGenerator extends TraversableGenerator {
          * @see org.apache.excalibur.xml.xpath.PrefixResolver#prefixToNamespace(java.lang.String)
          */
         public String prefixToNamespace(String prefix) {
-        	if (this.logger.isDebugEnabled()) {
+            if (this.logger.isDebugEnabled()) {
                 this.logger.debug("prefix: " + prefix);
-        	}
-        	if (this.params.containsKey(prefix)) {
-        		if(this.logger.isDebugEnabled()) {
+            }
+            if (this.params.containsKey(prefix)) {
+                if(this.logger.isDebugEnabled()) {
                     this.logger.debug("prefix; " + prefix + " - namespace: " + this.params.get(prefix));
-        		}
-        		return (String) this.params.get(prefix);
-        	}
+                }
+                return (String) this.params.get(prefix);
+            }
             return null;
         }
 
-    	public void addPrefix(String prefix, String uri) {
-    		this.params.put(prefix, uri);
-    	}
-
+        public void addPrefix(String prefix, String uri) {
+            this.params.put(prefix, uri);
+        }
     }
-
 }
