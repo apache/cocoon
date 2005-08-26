@@ -132,7 +132,7 @@ public class NamespacesTableTestCase extends TestCase {
             public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException {
                 assertEquals("ns2", prefix);
                 assertEquals("http://ns2", uri);
-            };
+            }
         });
         
         // Enter and leave a nested scope
@@ -143,7 +143,7 @@ public class NamespacesTableTestCase extends TestCase {
         ns.leaveScope(new DefaultHandler() {
             public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException {
                 assertEquals("ns2", prefix);
-            };
+            }
         });
     }
     
