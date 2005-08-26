@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,7 +86,7 @@ import java.util.TimeZone;
  *        described in java.text.SimpleDateFormat. If unset, the default
  *        format for the current locale will be used.
  *   <dt> <i>timeZone</i> (optional)
- *   <dd> Sets the time zone offset ID for the date attribute, as 
+ *   <dd> Sets the time zone offset ID for the date attribute, as
  *        described in java.util.TimeZone. If unset, the default
  *        system time zone will be used.
  *   <dt> <i>refreshDelay</i> (optional)
@@ -103,7 +103,8 @@ import java.util.TimeZone;
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
  * @version CVS $Id$
  */
-public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
+public class TraversableGenerator extends ServiceableGenerator
+                                  implements CacheableProcessingComponent {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/collection/1.0";
@@ -123,7 +124,10 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
 
     /** The validity that is being built */
     protected MultiSourceValidity validity;
-    /** Convenience object, so we don't need to create an AttributesImpl for every element. */
+
+    /**
+     * Convenience object, so we don't need to create an AttributesImpl for every element.
+     */
     protected AttributesImpl attributes;
 
     /**
@@ -135,16 +139,21 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      */
     protected List cacheKeyParList;
 
-    /** The depth parameter determines how deep the TraversableGenerator should delve. */
+    /**
+     * The depth parameter determines how deep the TraversableGenerator should delve.
+     */
     protected int depth;
+
     /**
      * The dateFormatter determines into which date format the lastModified
      * time should be converted.
      * FIXME: SimpleDateFormat is not supported by all locales!
      */
     protected SimpleDateFormat dateFormatter;
+
     /** The delay between checks on updates to the source hierarchy. */
     protected long refreshDelay;
+
     /**
      * The sort parameter determines by which attribute the content of one
      * collection should be sorted. Possible values are "name", "size", "time"
@@ -152,14 +161,19 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * collection entries are listed first.
      */
     protected String sort;
+
     /** The reverse parameter reverses the sort order. <code>false</code> is default. */
     protected boolean reverse;
+
     /** The regular expression for the root pattern. */
     protected RE rootRE;
+
     /** The regular expression for the include pattern. */
     protected RE includeRE;
+
     /** The regular expression for the exclude pattern. */
     protected RE excludeRE;
+
     /**
      * This is only set to true for the requested source specified by the
      * <code>src</code> attribute on the generator's configuration.
@@ -176,7 +190,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         if (src == null) {
             throw new ProcessingException("No src attribute pointing to a traversable source to be XMLized specified.");
         }
@@ -200,8 +214,8 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         } else {
             this.dateFormatter = new SimpleDateFormat();
         }
-        
-        String timeZone = par.getParameter("timeZone",null);
+
+        String timeZone = par.getParameter("timeZone", null);
         if (timeZone != null) {
             this.dateFormatter.setTimeZone(TimeZone.getTimeZone(timeZone));
         }
@@ -246,9 +260,9 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             }
             this.cacheKeyParList.add(rePattern);
             this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
-            
+
         } catch (RESyntaxException rese) {
-            throw new ProcessingException("Syntax error in regexp pattern '" 
+            throw new ProcessingException("Syntax error in regexp pattern '"
             			                  + rePattern + "'", rese);
         }
 
@@ -263,7 +277,8 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         StringBuffer buffer = new StringBuffer();
         int len = this.cacheKeyParList.size();
         for (int i = 0; i < len; i++) {
-            buffer.append((String)this.cacheKeyParList.get(i) + ":");
+            buffer.append(this.cacheKeyParList.get(i));
+            buffer.append(':');
         }
         return buffer.toString();
     }
@@ -273,7 +288,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * is initially empty since the resources that define it are not known
      * before generation has occured. So the returned object is kept by the
      * generator and filled with each of the resources that is traversed.
-     * 
+     *
      * @see org.apache.cocoon.components.source.impl.MultiSourceValidity
      */
     public SourceValidity getValidity() {
@@ -288,7 +303,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *
      * @throws  SAXException if an error occurs while outputting the document
      * @throws  ProcessingException if something went wrong while traversing
-     *                              the source hierarchy 
+     *                              the source hierarchy
      */
     public void generate() throws SAXException, ProcessingException {
         Source src = null;
@@ -298,7 +313,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             if (!(src instanceof TraversableSource)) {
                 throw new SourceException(this.source + " is not a traversable source");
             }
-            final TraversableSource inputSource = 
+            final TraversableSource inputSource =
                 (TraversableSource) this.resolver.resolveURI(this.source);
 
             if (!inputSource.exists()) {
@@ -337,7 +352,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
     /**
      * Creates a stack containing the ancestors of a traversable source up to
      * specific parent matching the root pattern.
-     * 
+     *
      * @param source the traversable source whose ancestors shall be retrieved
      * @return a Stack containing the ancestors.
      */
@@ -361,14 +376,14 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
     /**
      * Adds recursively the path from the source matched by the root pattern
      * down to the requested source.
-     * 
+     *
      * @param source       the requested source.
      * @param ancestors  the stack of the ancestors.
      * @throws SAXException
      * @throws ProcessingException
      */
     protected void addAncestorPath(TraversableSource source, Stack ancestors)
-            throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         if (ancestors.empty()) {
             this.isRequestedSource = true;
             addPath(source, depth);
@@ -391,14 +406,14 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      * @throws ProcessingException  if a problem occurs with the source
      */
     protected void addPath(TraversableSource source, int depth)
-            throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         if (source.isCollection()) {
             startNode(COL_NODE_NAME, source);
             addContent(source);
             if (depth > 0) {
 
                 Collection contents = null;
-                
+
                 try {
                     contents = source.getChildren();
                     if (sort.equals("name")) {
@@ -433,7 +448,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
                             public int compare(Object o1, Object o2) {
                                 TraversableSource ts1 = (TraversableSource) o1;
                                 TraversableSource ts2 = (TraversableSource) o2;
-                    
+
                                 if (reverse) {
                                     if (ts2.isCollection() && !ts1.isCollection())
                                         return -1;
@@ -449,17 +464,15 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
                             }
                         });
                     }
-                    
+
                     for (int i = 0; i < contents.size(); i++) {
                         if (isIncluded((TraversableSource) contents.toArray()[i]) && !isExcluded((TraversableSource) contents.toArray()[i])) {
                             addPath((TraversableSource) contents.toArray()[i], depth - 1);
                         }
                     }
-    			}
-                catch (SourceException e) {
+    			} catch (SourceException e) {
                     throw new ProcessingException("Error adding paths", e);
-                }
-                finally {
+                } finally {
                     if (contents != null) {
                         Iterator iter = contents.iterator();
                         while (iter.hasNext()) {
@@ -477,26 +490,26 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
             }
         }
     }
-    
+
     /**
      * Allow subclasses a chance to generate additional elements within collection and resource
      * elements.
-     * 
+     *
      * @param source  the source to generate additional data for.
      */
     protected void addContent(TraversableSource source) throws SAXException, ProcessingException {
     }
-    
+
     /**
      * Begins a named node and calls setNodeAttributes to set its attributes.
      *
      * @param nodeName  the name of the new node
      * @param source    the source a node with its attributes is added for
-     * 
+     *
      * @throws SAXException  if an error occurs while creating the node
      */
     protected void startNode(String nodeName, TraversableSource source)
-            throws SAXException, ProcessingException {
+    throws SAXException, ProcessingException {
         if (this.validity != null) {
             this.validity.addSource(source);
         }
@@ -510,7 +523,8 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *
      * @param source  the source attributes are added for
      */
-    protected void setNodeAttributes(TraversableSource source) throws SAXException, ProcessingException {
+    protected void setNodeAttributes(TraversableSource source)
+    throws SAXException, ProcessingException {
         long lastModified = source.getLastModified();
         attributes.clear();
         attributes.addAttribute("", RES_NAME_ATTR_NAME,RES_NAME_ATTR_NAME,
@@ -552,7 +566,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *         false otherwise.
      */
     protected boolean isRoot(TraversableSource source) {
-        return (this.rootRE == null) ? true : this.rootRE.match(source.getName());
+        return this.rootRE == null ? true : this.rootRE.match(source.getName());
     }
 
     /**
@@ -564,7 +578,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *         false otherwise.
      */
     protected boolean isIncluded(TraversableSource source) {
-        return (this.includeRE == null) ? true : this.includeRE.match(source.getName());
+        return this.includeRE == null ? true : this.includeRE.match(source.getName());
     }
 
     /**
@@ -576,7 +590,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
      *         true otherwise.
      */
     protected boolean isExcluded(TraversableSource source) {
-        return (this.excludeRE == null) ? false : this.excludeRE.match(source.getName());
+        return this.excludeRE == null ? false : this.excludeRE.match(source.getName());
     }
 
     /**
