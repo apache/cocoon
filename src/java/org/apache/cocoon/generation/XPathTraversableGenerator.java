@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,11 +44,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * It can be used both as a plain TraversableGenerator or, if an XPath is
  * specified, it will perform an XPath query on every XML resource, where "xml
  * resource" is, by default, any resource ending with ".xml", which can be
- * overriden by setting the (regexp) pattern "xmlFiles as a sitemap parameter, 
- * or where the name of the resource has a container-wide mime-type mapping to 
- * 'text/xml' such as specified by mime-mapping elements in a web.xml 
+ * overriden by setting the (regexp) pattern "xmlFiles as a sitemap parameter,
+ * or where the name of the resource has a container-wide mime-type mapping to
+ * 'text/xml' such as specified by mime-mapping elements in a web.xml
  * descriptor file.
- * 
+ *
  * The XPath can be specified in two ways:
  * <ol>
  *    <li>By using an XPointerish syntax in the URL: everything following the
@@ -64,7 +64,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;map:match pattern="documents/**"&gt;
  *   &lt;map:generate type="xpathdirectory"
  *     src="    docs/{1}#/article/title|/article/abstract" &gt;
- *     &lt;          map:parameter name="xmlFiles" value="\.xml$"/&gt;   
+ *     &lt;          map:parameter name="xmlFiles" value="\.xml$"/&gt;
  * &lt;/map:generate&gt;
  * &lt;map: serialize type="xml" /&gt; &lt;/map:match&gt;
  *
@@ -86,10 +86,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *   &lt;/collection:resource&gt;
  *   &lt;collection:resource name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
  * &lt;/collection:collection&gt;
- * 
+ *
  * If you need to use namespaces, you can set them as sitemap parameters in
  * the form:
- * lt;map:parameter name="xmlns:<i>your prefix</i>" value="nsURI"/**"&gt; 
+ * lt;map:parameter name="xmlns:<i>your prefix</i>" value="nsURI"/**"&gt;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
@@ -116,16 +116,18 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	protected XPathPrefixResolver prefixResolver;
     /** The cocoon context used for mime-type mappings */
     protected Context context;
-	 	
+
+
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
+
         // See if an XPath was specified
         int pointer;
         if ((pointer = this.source.indexOf("#")) != -1) {
           int endpointer = this.source.indexOf('?');
           if (endpointer != -1) {
-          	this.xpath = source.substring(pointer + 1, endpointer); 
+          	this.xpath = source.substring(pointer + 1, endpointer);
           } else {
 			this.xpath = source.substring(pointer + 1);
           }
@@ -133,18 +135,14 @@ public class XPathTraversableGenerator extends TraversableGenerator {
           if (endpointer != -1) {
           	this.source += src.substring(endpointer);
           }
-		  
-		  this.cacheKeyParList.add(this.xpath); 	
-          if (this.getLogger().isDebugEnabled())
-            this.getLogger().debug("Applying XPath: " + xpath
-              + " to collection " + source);
         } else {
 			this.xpath = par.getParameter("xpath", null);
-			this.cacheKeyParList.add(this.xpath);
-			this.getLogger().debug("Applying XPath: " + xpath
-			   + " to collection " + source);
         }
-        
+        this.cacheKeyParList.add(this.xpath);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Applying XPath: " + xpath + " to collection " + source);
+        }
+
 		String xmlFilesPattern = null;
 		try {
 			xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
@@ -157,7 +155,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 			throw new ProcessingException("Syntax error in regexp pattern '"
 										  + xmlFilesPattern + "'", rese);
 		}
-        
+
         String[] params = par.getNames();
         this.prefixResolver = new XPathPrefixResolver(this.getLogger());
         for (int i = 0; i < params.length; i++) {
@@ -170,10 +168,10 @@ public class XPathTraversableGenerator extends TraversableGenerator {
             	this.prefixResolver.addPrefix(paramName, paramValue);
             }
         }
-        
+
         this.context = ObjectModelHelper.getContext(objectModel);
     }
-    
+
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
@@ -186,14 +184,14 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         }
         super.dispose();
     }
-    
+
     protected void addContent(TraversableSource source) throws SAXException, ProcessingException {
         super.addContent(source);
         if (!source.isCollection() && isXML(source) && xpath != null) {
             performXPathQuery(source);
         }
     }
-    
+
 	/**
 	 * Determines if a given TraversableSource shall be handled as XML.
 	 *
@@ -205,7 +203,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         String mimeType = this.context.getMimeType(path.getName());
 		return this.xmlRE.match(path.getName()) || "text/xml".equalsIgnoreCase(mimeType);
 	}
-	
+
 	/**
 	 * Performs an XPath query on the source.
 	 * @param in  the Source the XPath is performed on.
@@ -229,7 +227,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
              attributes.addAttribute("", QUERY_ATTR_NAME, QUERY_ATTR_NAME, "CDATA",xpath);
              super.contentHandler.startElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME, attributes);
              DOMStreamer ds = new DOMStreamer(super.xmlConsumer);
-             for (int i = 0; i < nl.getLength(); i++) { 
+             for (int i = 0; i < nl.getLength(); i++) {
                  ds.stream(nl.item(i));
              }
              super.contentHandler.endElement(URI, XPATH_NODE_NAME, PREFIX + ":" + XPATH_NODE_NAME);
@@ -241,26 +239,25 @@ public class XPathTraversableGenerator extends TraversableGenerator {
      *
      */
    public void recycle() {
-      super.recycle();
       this.xpath = null;
-      this.attributes = null;
       this.doc = null;
       this.xmlRE = null;
       this.prefixResolver = null;
       this.context = null;
+      super.recycle();
     }
 
     /**
      * A brain-dead PrefixResolver implementation
-     * 
+     *
      */
-    
+
     static class XPathPrefixResolver implements PrefixResolver {
-    	
+
     	private Map params;
 
         private Logger logger;
-        
+
         public XPathPrefixResolver(Logger logger) {
         	this.params = new HashMap();
             this.logger = logger;
@@ -268,7 +265,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 
         /**
          * Get a namespace URI given a prefix.
-         * 
+         *
          * @see org.apache.excalibur.xml.xpath.PrefixResolver#prefixToNamespace(java.lang.String)
          */
         public String prefixToNamespace(String prefix) {
@@ -283,11 +280,11 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         	}
             return null;
         }
-    	
-    	public void addPrefix(String prefix, String uri) {    		
+
+    	public void addPrefix(String prefix, String uri) {
     		this.params.put(prefix, uri);
     	}
 
     }
-    
+
 }
