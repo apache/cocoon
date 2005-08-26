@@ -126,7 +126,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
         super.setup(resolver, objectModel, location, parameters);
 
         this.properties = parameters.getParameterAsBoolean("properties", true);
-        super.cacheKeyParList.add(String.valueOf(this.permissions));
+        super.cacheKeyParList.add(String.valueOf(String.valueOf(this.properties)));
 
         this.permissions = parameters.getParameterAsBoolean("permissions", true);
         super.cacheKeyParList.add(String.valueOf(this.permissions));
