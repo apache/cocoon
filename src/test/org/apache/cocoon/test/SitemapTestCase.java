@@ -138,7 +138,7 @@ public class SitemapTestCase extends TestCase {
         byte[] assertiondocument = null;
 
         try {
-            resolver = (SourceResolver) this.cocoon.getSourceResolver();
+            resolver = this.cocoon.getSourceResolver();
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertionsource = resolver.resolveURI(source);
