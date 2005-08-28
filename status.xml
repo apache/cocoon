@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+      Updated hsqldb to 1.8.0.2.
+    </action>
     <action dev="CZ" type="fix">
       Portal block: Fix bugs in CachingURICopletAdapter - store cache information in temporary attributes.
                     This bug fix introduces incompatible changes: the cache validity attribute is not
