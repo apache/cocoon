@@ -51,94 +51,109 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The SendMailTransformer send mails using SMTP including attachments with
- * the specific parameters read from a configuration-file and delivers
- * furthermore a report, where a state to each sent mail can bee seen.
+ * The SendMailTransformer send mails with optional attachments using a SMTP
+ * server and delivers furthermore a status report of each sent mail.
  *
  * <p>
- *  The SendMailTransformer requires classes of the mail api from sun which comes
- *  with the mail.jar and activation.jar.
- *  In order to use the SendMailtransformer, you have to download the mail.jar
- *  from http://java.sun.com/products/javamail/ also like the activation.jar
- *  from http://java.sun.com/products/javabeans/glasgow/jaf.html
- *  and install it in the Cocoon lib directory.
+ *  The SendMailTransformer requires the Sun's JavaMail API implementation. Please
+ *  download and copy the following files to the Cocoon lib directory:
+ *  <ul>
+ *    <li><code>mail.jar</code> from
+ *        <a href="http://java.sun.com/products/javamail/">http://java.sun.com/products/javamail/</a>
+ *    </li>
+ *    <li><code>activation.jar</code> from
+ *        <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">http://java.sun.com/products/javabeans/glasgow/jaf.html</a>
+ *    </li>
  * </p>
  *
  * <p>
- * These two parameters can be defined already in the components-secion of the sitemap:
+ *  Use the following sitemap component declaration to define, configure and
+ *  parameterize the transformer.
+ *  in the <code>map:sitemap/map:components/map:transformers</code>:
+
+ * <pre>
+ *  &lt;map:transformer name=&quot;sendmail&quot; src=&quot;org.apache.cocoon.mail.transformation.SendMailTransformer&quot;&gt;
+ *     &lt;smtphost&gt;smtp.foo.com&lt;/smtphost&gt;
+ *     &lt;from&gt;sender@localhost&lt;/from&gt;
+ *  &lt;/map:transformer&gt;
+ *  </pre>
+ * 
+ * where
  *  <ul>
  *   <li>
- *     smtphost - the name of the host, e.g. "smtphost.company.com"
+ *     &lt;smtphost&gt; is the SMTP server host name, e.g. smtp.foo.com
  *   </li>
  *   <li>
- *     from - email-adress of mail sender
+ *     &lt;from&gt; is the sender e-mail address
  *   </li>
  *  </ul>
  * </p>
  *
  * <p>
- * Furthermore, these parameters can be defined in the pipeline-section:
+ *  Furthermore, these parameters can be defined in the sitemap pipeline section:
  *  <ul>
  *   <li>
- *     smtphost, from - If these values are available in the pipeline-section,
- *     values from the component-section will be overwritten
+ *     <b>smtphost</b>, <b>from</b> - If they are defined, this values overwrite
+ *     the values from component section described above.
  *   </li>
  *   <li>
- *     to - email-addresses of recipients
- *     e.g.: name="to" value="customer1@target.com,customer2@target.com"
+ *     <b>to</b> - email addresses of recipients
+ *     e.g.: <code>&lt;map:parameter name="to" value="customer1@target.com,customer2@target.com"/&gt;</code>
  *   </li>
  *   <li>
- *     subject - a string-value, can also come from a request-parameter
- *     e.g.; name="subject" value="{request-param:subject}"
+ *     <b>subject</b> - a string, can also come from an input module
+ *     e.g.; &lt;map:parameter name="subject" value="{request-param:subject}"/&gt;
  *   </li>
  *   <li>
- *     body - a string-value, can also come from a request-parameter
- *     e.g.; name="body" value="{request-param:body}"
+ *     <b>body</b> - a string, can also come from an input module
+ *     e.g.; &lt;map:parameter name="body" value="{request-param:body}"/&gt;
  *   </li>
  *   <li>
- *     sendpartial - define, if to send the mails partial or together; the value can
- *     be true or false. The default is true.
- *     ( Note: if you send your mail to more than one recipient and you configure
- *       this parameter with false, all email-addresses will appear concatenated
- *       in the address-field at the mail-client of the recipient )
- *   </li>
- *  </ul>
- * </p>
- * <p>
- *   More configurations can be made in a specific configuration-file, which
- *   can be retrieved with a file-generator as an input document.
- * </p>
- * <p>
- *  The input document should define the following configuration entities:
- *  <ul>
- *   <li>
- *     email:smtphost, email:from and email:subject can be set to overwrite
- *     values from the sitemap
- *   </li>
- *   <li>
- *     email:to - each entry will be append to the list of email-adresses
- *   </li>
- *   <li>
- *     email:body - will overwrite the value from the sitemap
- *     if there is a "src"-attribute, the transformer will try to retrieve
- *     the file and place it instead of a text-string as the mail-body
- *   </li>
- *   <li>
- *     email:attachment - define the attachement
- *     The attribute name defines the name of the attachement. The mime-type
- *     defines the content of the attachment.
- *     If there is a nested <email:content> - tag, text can be included and the
- *     attachement will then be a plain text-file.
- *     Is there a url-attribute, the SendMailTransformer tries to retrieve the
- *     appropriate file and handle it as an attachment.
- *            To use a file as an attachment, retrieved over a protocol like http or
- *     cocoon, use the src-attribute.
+ *     <b>sendpartial</b> - a boolean, define how to send the mails. When mail is being send
+ *       to more than one recipient and the parameter is set to false, then all email addresses
+ *       will appear concatenated in the address field at the mail client of the recipient.
+ *       The default is true.
  *   </li>
  *  </ul>
  * </p>
  * 
- *  Example:
- *<pre>
+ * <p>
+ *   More configurations can be made in a specific configuration file, which
+ *   can be retrieved with a
+ *   <a href="http://cocoon.apache.org/2.1/userdocs/generators/generators.html">generator</a> as
+ *   the input document. The input document should have the following configuration entities:
+ *  <ul>
+ *   <li>
+ *     <b>&lt;email:smtphost&gt;</b>, <b>&lt;email:from&gt;</b> and
+ *     <b>&lt;email:subject&gt;</b> can be set to overwrite values from the
+ *     sitemap
+ *   </li>
+ *   <li>
+ *     <b>&lt;email:to&gt;</b> - each entry will be append to the list of
+ *     email addresses
+ *   </li>
+ *   <li>
+ *     <b>&lt;email:body&gt;</b> - Overwrites the value from the sitemap.
+ *     If there is a <b>src</b> attribute, the transformer will try to retrieve
+ *     the file and place it instead of a text-string as the mail body.
+ *   </li>
+ *   <li>
+ *     <b>&lt;email:attachment&gt;</b> - each entry defines a attachment.
+ *     The attribute <b>name</b> defines the name of the attachment. The <b>mime-type</b> attribute
+ *     defines the content of the attachment.
+ *     If there is a nested &lt;email:content&gt; - element, text can be included and the
+ *     attachment will then be a plain text-file.
+ *     Is there a <b>url</b> attribute, the transformer tries to retrieve the
+ *     appropriate file and handle it as an attachment.
+ *            To use a file as an attachment, retrieved over a protocol like http or
+ *     cocoon, use the <b>src</b> attribute.
+ *   </li>
+ *  </ul>
+ * </p>
+ * 
+ * <p>
+ *  Input document sample:
+ *  <pre>
  *   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
  *   &lt;document xmlns:email="http://apache.org/cocoon/transformation/sendmail"&gt;
  *     &lt;email:sendmail&gt;
@@ -163,20 +178,24 @@ import org.xml.sax.helpers.AttributesImpl;
  *          url="c:\path\powered.gif"/&gt;
  *     &lt;/email:sendmail&gt;
  *   &lt;/document&gt;
- *</pre>
- * 
+ *   </pre>
+ * </p>
  *
  * <p>
  *   After the transformation a report will be generated, where the state for each sent mail can be seen.
  *   In case of an exception, the exception-message and a stacktrace will be reported.
  * </p>
  *
- * <p><b style="font-color: red;">FIXME: Known Issues:</b><ul>
- * <li>Refactor to use MailSender component
- * <li>No support for smtp user/password
- * <li>No support for different mail servers, first one will always be used
- * </ul></p>
- * 
+ * <p>
+ *   <b style="color: red;">FIXME: Known Issues:</b>
+ *   <ul>
+ *     <li>Refactor to use MailSender component</li>
+ *     <li>No support for <a href="http://www.ietf.org/rfc/rfc2554.txt">RFC 2554:
+ *     SMTP Service Extension for Authentication</a></li>
+ *     <li>No support for different mail servers, first one will always be used</li>
+ *   </ul>
+ * </p>
+ *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
  * @version CVS $Id$
  */
@@ -373,7 +392,6 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 getLogger().info("Mail Subject: " + this.subject + "\n" +
                                  "Body: " + this.body);
             }
-
             sendMail();
         } else if (name.equals(ELEMENT_SMTPHOST) ) {
             this.mailHost = endTextRecording();
@@ -397,7 +415,6 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             } else {
                 getLogger().debug("Mail: No Subject");
             }
-
             this.mode = MODE_NONE;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachments.add(this.attachmentDescriptor.copy());
@@ -415,11 +432,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                     getLogger().debug("Mail: No Body as String in config-file available");
                 }
             }
-
             if (strB != null) {
                 this.body = strB;
             }
-
             this.mode = MODE_NONE;
         } else {
             throw new SAXException("Unknown element <" + name + ">");
@@ -584,7 +599,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
                 inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
                 this.usedSources.add(inputSource);
-                
+
                 dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
 
                 messageBodyPart.setDataHandler(new DataHandler(dataSource));
