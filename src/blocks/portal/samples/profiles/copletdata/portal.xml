@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.net/weblogs/rael/index.xml</value>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.org/weblogs/rael/index.xml</value>
       </attribute>
       <attribute>
          <name>buffer</name>
