@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,7 +46,7 @@ import org.apache.cocoon.util.NetUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -85,7 +85,7 @@ public class DefaultLinkService
 
     protected Boolean eventsMarshalled;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -115,9 +115,8 @@ public class DefaultLinkService
                     }
                     if ( request.getContextPath().length() > 0 ) {
                         info.linkBase.append(request.getContextPath());
-                    } else {
-                        info.linkBase.append('/');                        
                     }
+                    info.linkBase.append('/');                        
                     if ( request.getSitemapURIPrefix().length() > 0 ) {
                         info.linkBase.append(request.getSitemapURIPrefix());
                     }
@@ -128,30 +127,30 @@ public class DefaultLinkService
         return info;
     }
 
-    /* (non-Javadoc)
-    * @see org.apache.cocoon.portal.LinkService#isSecure()
-    */
+    /**
+     * @see org.apache.cocoon.portal.LinkService#isSecure()
+     */
     public boolean isSecure() {
         return ContextHelper.getRequest(this.context).isSecure();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#encodeURL(String url).
      */
     public String encodeURL(String url) {
         return ContextHelper.getResponse(this.context).encodeURL(url);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
      */
     public String getLinkURI(Event event) {
         return this.getLinkURI(event, null);
     }
 
-    /* (non-Javadoc)
-    * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, boolean)
-    */
+    /**
+     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, boolean)
+     */
     public String getLinkURI(Event event, Boolean secure) {
         if (event == null) {
             return this.getRefreshLinkURI(secure);
@@ -207,16 +206,16 @@ public class DefaultLinkService
         return true;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
      */
     public String getLinkURI(List events) {
         return this.getLinkURI(events, null);
     }
 
-    /* (non-Javadoc)
-    * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
-    */
+    /**
+     * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
+     */
     public String getLinkURI(List events, Boolean secure) {
         if (events == null || events.size() == 0) {
             return this.getRefreshLinkURI(secure);
@@ -274,7 +273,7 @@ public class DefaultLinkService
         return buffer.toString();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
      */
     public void addEventToLink(Event event) {
@@ -302,7 +301,7 @@ public class DefaultLinkService
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#addParameterToLink(java.lang.String, java.lang.String)
      */
     public void addParameterToLink(String name, String value) {
@@ -320,7 +319,7 @@ public class DefaultLinkService
         info.hasParameters = true;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.LinkService#addUniqueParameterToLink(java.lang.String, java.lang.String)
      */
     public void addUniqueParameterToLink(String name, String value) {
@@ -385,7 +384,7 @@ public class DefaultLinkService
         return buffer.toString();
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -396,7 +395,7 @@ public class DefaultLinkService
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
