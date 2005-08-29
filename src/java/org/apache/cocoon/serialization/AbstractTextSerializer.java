@@ -27,6 +27,7 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -86,6 +87,18 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      */
     private String cachingKey = "1";
 
+    /**
+     * Do we remove all comments?
+     */
+    private boolean removeComments = false;
+
+    /**
+     * If we remove comments, do we keep the document comment?
+     */
+    private boolean keepDocumentComment = true;
+
+    /** Did we get the root element already? */
+    private boolean gotRootElement = false;
 
     /**
      * Interpose namespace pipe if needed.
@@ -257,14 +270,25 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         } catch (Exception e) {
             getLogger().warn("Cannot know if transformer needs namespaces attributes - assuming NO.", e);
         }
+
+        this.removeComments = conf.getChild("remove-comments").getValueAsBoolean(this.removeComments);
+        this.keepDocumentComment = conf.getChild("keep-document-comment").getValueAsBoolean(this.keepDocumentComment);
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Comment settings: remove comments: " + this.removeComments
+                                 + ", keep document comment: " + this.keepDocumentComment);
+        }
     }
 
+    /**
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public void recycle() {
         super.recycle();
 
         if (this.namespacePipe != null) {
             this.namespacePipe.recycle();
         }
+        this.gotRootElement = false;
     }
 
     /**
@@ -335,7 +359,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
 
             getLogger().debug("Trax handler " + handler.getClass().getName() + msg);
 
-            needsNamespaceCache.put(factory.getClass().getName(), new Boolean(needsIt));
+            needsNamespaceCache.put(factory.getClass().getName(), BooleanUtils.toBooleanObject(needsIt));
 
             return needsIt;
         }
@@ -554,6 +578,23 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //       } catch (IOException ignored) {
         //       }
         //   }
+    }
+
+    /**
+     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
+     */
+    public void comment(char[] ch, int start, int len) throws SAXException {
+        if ( !this.removeComments
+             || (!this.gotRootElement && this.keepDocumentComment)) {
+            super.comment(ch, start, len);
+        }
+    }
+    /**
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
+    public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
+        this.gotRootElement = true;
+        super.startElement(uri, loc, raw, a);
     }
 
 }

@@ -32,6 +32,7 @@ import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -182,7 +183,7 @@ public class CIncludeTransformer extends AbstractSAXTransformer
      * Set the namespace
      */
     public CIncludeTransformer() {
-        super.defaultNamespaceURI = CINCLUDE_NAMESPACE_URI;
+        this.defaultNamespaceURI = CINCLUDE_NAMESPACE_URI;
     }
 
     /**
@@ -276,8 +277,8 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             if (ignoreErrors == null || ignoreErrors.length() == 0) {
                 ignoreErrors = "false";
             }
-            this.stack.push(new Boolean(this.ignoreEmptyCharacters));
-            this.stack.push(new Boolean(this.ignoreWhitespaces));
+            this.stack.push(BooleanUtils.toBooleanObject(this.ignoreEmptyCharacters));
+            this.stack.push(BooleanUtils.toBooleanObject(this.ignoreWhitespaces));
             this.stack.push(ignoreErrors);
 
             this.ignoreEmptyCharacters = false;
@@ -537,8 +538,8 @@ public class CIncludeTransformer extends AbstractSAXTransformer
                     int length = list.getLength();
                     for (int i=0; i<length; i++) {
                           IncludeXMLConsumer.includeNode(list.item(i),
-                                               this,
-                                               this);
+                                               this.filter,
+                                               this.filter);
                     }
                 } finally {
                     this.manager.release(parser);
@@ -626,7 +627,9 @@ public class CIncludeTransformer extends AbstractSAXTransformer
      * @see org.xml.sax.ContentHandler#startDocument()
      */
     public void startDocument() throws SAXException {
-        this.filter = new MyFilter(this.xmlConsumer, this);
+        this.filter = new MyFilter(this.xmlConsumer,
+                                   this, 
+                                   this.parameters.getParameterAsBoolean("remove-comments", false));
         super.startDocument();
     }
 
@@ -679,18 +682,25 @@ public class CIncludeTransformer extends AbstractSAXTransformer
 
 final class MyFilter extends IncludeXMLConsumer {
 
-    private CIncludeTransformer transformer;
+    private final CIncludeTransformer transformer;
+
+    private final boolean removeComments;
 
     /**
      * This filter class post-processes the parallel fetching
      * @param consumer
      */
-    public MyFilter(XMLConsumer consumer, CIncludeTransformer transformer) {
+    public MyFilter(XMLConsumer consumer,
+                    CIncludeTransformer transformer,
+                    boolean removeComments) {
         super(consumer);
         this.transformer = transformer;
+        this.removeComments = removeComments;
     }
 
-
+    /**
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     */
     public void endElement(String uri, String local, String qName)
     throws SAXException {
         if (uri != null
@@ -702,6 +712,9 @@ final class MyFilter extends IncludeXMLConsumer {
         }
     }
 
+    /**
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
     public void startElement(String uri,
                                 String local,
                                 String qName,
@@ -722,4 +735,12 @@ final class MyFilter extends IncludeXMLConsumer {
         }
     }
 
+    /**
+     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
+     */
+    public void comment(char[] ary, int start, int length) throws SAXException {
+        if ( !this.removeComments ) {
+            super.comment(ary, start, length);
+        }
+    }
 }
