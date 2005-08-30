@@ -531,6 +531,9 @@
   </release>
   <release version="2.1.8" date="TBD">
     <action dev="CZ" type="add">
+      Portal block: Add WSRP consumer support (through WSRP4J).
+    </action>
+    <action dev="CZ" type="add">
       Add possibility to remove comments to all text based serializers and to cinclude transformer.
     </action>
     <action dev="AG" type="update">

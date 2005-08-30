@@ -928,6 +928,10 @@
     <depend project="portals-pluto" inherit="runtime"/>
     <depend project="portals-bridges-common"/>
     <depend project="cowarp"/>
+    <depend project="ws-axis"/>
+    <depend project="wsdl4j"/>
+    <depend project="wsrp4j"/>
+    <depend project="commons-discovery"/>
 
     <library name="jtidy"/>
     <library name="nekohtml"/>
@@ -937,6 +941,13 @@
     <library name="portlet-api"/>
     <library name="portals-bridges-common"/>
     <library name="cowarp"/>
+    <library name="axis"/>
+    <library name="axis-saaj"/>
+    <library name="axis-jaxrpc"/>
+    <library name="wsdl4j"/>
+    <library name="commons-discovery"/>
+    <library name="wsrp4j-shared"/>
+    <library name="wsrp4j-consumer"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1570,5 +1581,12 @@
     <!-- It would be better to *build* Garbage actually. -->
     <package>org.apache.garbage</package>
     <jar name="lib/optional/apache-garbage-0.0.jar"/>
+  </project>
+
+  <project name="wsrp4j">
+    <url href="http://ws.apache.org/wsrp4j/"/>
+    <package>org.apache.wsrp4j</package>
+    <jar name="lib/optional/wsrp4j-shared-0.3-dev.jar"/>
+    <jar name="lib/optional/wsrp4j-consumer-0.3-dev.jar"/>
   </project>
 </module>
