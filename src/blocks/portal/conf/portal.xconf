@@ -41,6 +41,8 @@
 
   <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
+        <!--  The client should not cache the page. -->
+        <aspect type="no-client-caching"/>
         <!-- Uncomment this aspect when marshalling JSR168 portlet events 
         <aspect type="convertable"/>
         -->
