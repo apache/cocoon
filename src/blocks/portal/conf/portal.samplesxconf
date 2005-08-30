@@ -168,6 +168,25 @@
              <aspect type="coplet-cinclude"/>
          </aspects>
      </renderer>
+     <renderer name="wsrp-window"
+               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
+               logger="portal">
+         <aspects>
+             <aspect type="xslt">
+                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
+             </aspect>
+             <aspect type="parameter">
+                 <parameter name="tag-name" value="window"/>
+             </aspect>
+             <aspect type="wsrp-window">
+                 <parameter name="root-tag" value="false"/>
+             </aspect>
+             <aspect type="coplet-removing"/>
+             <aspect type="history"/>
+             <aspect type="basket"/>
+             <aspect type="coplet-cinclude"/>
+         </aspects>
+     </renderer>
      <renderer name="link" 
                class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" 
                logger="portal"/>

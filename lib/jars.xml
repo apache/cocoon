@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -1257,4 +1257,23 @@
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
   </file>
 
+  <file>
+    <title>WSRP4J Shared</title>
+    <description>
+      WSRP implementation from the WSRP4J project.
+    </description>
+    <used-by>Portal block</used-by>
+    <lib>optional/wsrp4j-shared-0.3-dev.jar</lib>
+    <homepage>http://ws.apache.org/wsrp4j/</homepage>
+  </file>
+
+  <file>
+    <title>WSRP4J Consumer</title>
+    <description>
+      WSRP implementation from the WSRP4J project.
+    </description>
+    <used-by>Portal block</used-by>
+    <lib>optional/wsrp4j-consumer-0.3-dev.jar</lib>
+    <homepage>http://ws.apache.org/wsrp4j/</homepage>
+  </file>
 </jars>

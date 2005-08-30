@@ -29,6 +29,8 @@
 
     <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
     <aspect logger="portal" name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
+    <!-- This aspect is required for wsrp: -->
+    <aspect logger="portal" name="wsrp" class="org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect"/>
   </component>
 
   <!-- Portal Manager Aspect Configuration -->
@@ -51,6 +53,8 @@
         <!-- Uncomment the following when using PageLabels
         <aspect type="page-label"/>
         -->
+        <!-- Comment the following out if you don't need WSRP: -->
+        <aspect type="wsrp"/>
         <aspect type="request-parameter">
           <!-- Uncomment the following when marshalling JSR168 portlet events
           <parameter name="parameter-name" value="cocoon-portal-event,url"/>
@@ -90,12 +94,15 @@
        The portal manager can be extended with different aspects.
        Currently the JSR-168 aspect is configured/activated.
        If you don't need the JSR-168 support uncomment the aspect.
+       In a similar manner the wsrp support works.       
   -->
   <component class="org.apache.cocoon.portal.impl.PortalManagerImpl" 
              logger="portal" role="org.apache.cocoon.portal.PortalManager">
     <aspects>
       <!-- JSR-168 support: -->
       <aspect adapter="portlet"/>
+      <!-- wsrp support: -->
+      <aspect adapter="wsrp"/>
     </aspects>
   </component>
 
@@ -142,6 +149,13 @@
     <coplet-adapter name="application"
                     class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
                     logger="portal"/>
+    <!-- This is the wsrp adapter -->
+    <coplet-adapter name="wsrp"
+                    class="org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter"
+                    logger="portal">
+      <!-- This is the wsrp configuration containing the producers etc. -->
+      <parameter name="wsrp-config" value="profiles/wsrp-config.xml"/>
+    </coplet-adapter>
  </component>
 
 
@@ -152,6 +166,8 @@
     <aspect logger="portal" name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
     <aspect logger="portal" name="portlet-window"
             class="org.apache.cocoon.portal.layout.renderer.aspect.impl.PortletWindowAspect"/>
+    <aspect logger="portal" name="wsrp-window"
+            class="org.apache.cocoon.portal.wsrp.adapter.WSRPPortletWindowAspect"/>
 
     <!-- This aspect can be used to render the minimize/maximize buttons -->
     <aspect logger="portal" name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
@@ -199,6 +215,12 @@
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" logger="portal"/>
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" logger="portal"/>
+
+ <!--  User Context Provider for WSRP -->
+ <component role="org.apache.cocoon.portal.wsrp.consumer.UserContextProvider"
+            class="org.apache.cocoon.portal.wsrp.consumer.UserContextProviderImpl"
+            logger="portal"/>
+
  <!-- This is the basket manager -->
  <component class="org.apache.cocoon.portal.coplets.basket.BasketManagerImpl" 
             role="org.apache.cocoon.portal.coplets.basket.BasketManager"

@@ -16,6 +16,7 @@
 -->
 <!-- SVN $Id$ -->
 <composite-layout name="tab" id="maintab">
+
   <named-item name="Main">
     <coplet-layout name="coplet">
       <coplet-instance-data>Portal-Demo-1</coplet-instance-data>
@@ -212,6 +213,21 @@
             </coplet-layout>
           </item>
         </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="WSRP">
+    <composite-layout name="column">
+      <item>
+        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
+          <coplet-instance-data>WSRP-Calc-1</coplet-instance-data>
+      </coplet-layout>
+      </item>
+      <item>
+        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
+          <coplet-instance-data>WSRP-Test-1</coplet-instance-data>
+      </coplet-layout>
       </item>
     </composite-layout>
   </named-item>
