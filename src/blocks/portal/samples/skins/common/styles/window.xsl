@@ -85,6 +85,9 @@
 	  			</a>
             </td>
 			</xsl:if>
+          <xsl:if test="edit-uri or view-uri or help-uri">
+			  <td width="15">&#160;</td>
+          </xsl:if>
 			<xsl:if test="fullscreen-uri and not(maximize-uri)">
             <td width="15">
 				<a href="{fullscreen-uri}">
