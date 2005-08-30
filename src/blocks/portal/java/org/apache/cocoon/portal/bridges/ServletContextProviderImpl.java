@@ -20,7 +20,9 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.pluto.core.impl.PortletContextImpl;
 import org.apache.portals.bridges.common.ServletContextProvider;
@@ -36,16 +38,14 @@ public class ServletContextProviderImpl implements ServletContextProvider {
      * @see org.apache.portals.bridges.common.ServletContextProvider#getHttpServletRequest(javax.portlet.GenericPortlet, javax.portlet.PortletRequest)
      */
     public HttpServletRequest getHttpServletRequest(GenericPortlet portlet, PortletRequest request) {
-        //return (HttpServletRequest) ((HttpServletRequestWrapper) request).getRequest();
-        return null;
+        return (HttpServletRequest) ((HttpServletRequestWrapper) request).getRequest();
     }
 
     /**
      * @see org.apache.portals.bridges.common.ServletContextProvider#getHttpServletResponse(javax.portlet.GenericPortlet, javax.portlet.PortletResponse)
      */
     public HttpServletResponse getHttpServletResponse(GenericPortlet portlet, PortletResponse response) {
-        //return (HttpServletResponse) ((HttpServletResponseWrapper) response).getResponse();
-        return null;
+        return (HttpServletResponse) ((HttpServletResponseWrapper) response).getResponse();
     }
 
     /**
