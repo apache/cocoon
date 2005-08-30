@@ -42,6 +42,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -606,16 +607,18 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
         String message = "";
         String target = systemID;
         try {
-            source = this.resolver.resolveURI( systemID );
-            if ( ! (source instanceof ModifiableSource)) {
-                throw new ProcessingException("Source '"+systemID+"' is not writeable.");
+            source = this.resolver.resolveURI(systemID);
+            if (! (source instanceof ModifiableSource)) {
+                throw new ProcessingException("Source '" + systemID + "' is not writeable.");
             }
-            ModifiableSource ws = (ModifiableSource)source;
+            ModifiableSource ws = (ModifiableSource) source;
             exists = ws.exists();
             target = source.getURI();
-            if ( exists && this.state == STATE_INSERT ) {
-                                message = "content inserted at: " + path;
-                resource = SourceUtil.toDOM( source );
+
+            // Insert?
+            if (exists && this.state == STATE_INSERT) {
+                message = "content inserted at: " + path;
+                resource = SourceUtil.toDOM(source);
                 // import the fragment
                 Node importNode = resource.importNode(fragment, true);
                 // get the node
@@ -626,20 +629,15 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
                     try {
                         Node replaceNode = DOMUtil.getSingleNode(parent, replacePath, this.xpathProcessor);
                         // now get the parent of this node until it is the parent node for insertion
-                        while (replaceNode != null && replaceNode.getParentNode().equals(parent) == false) {
+                        while (replaceNode != null && !replaceNode.getParentNode().equals(parent)) {
                            replaceNode = replaceNode.getParentNode();
                         }
+
                         if (replaceNode != null) {
                             if (overwrite) {
                                 if (parent.getNodeType() == Node.DOCUMENT_NODE) {
                                     // replacing of the document element is not allowed
-                                    DOMParser parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
-                                    try {
-                                        resource = parser.createDocument();
-                                    } finally {
-                                        this.manager.release( parser );
-                                    }
-
+                                    resource = newDocument();
                                     resource.appendChild(resource.importNode(importNode, true));
                                     parent = resource;
                                     replaceNode = resource.importNode(replaceNode, true);
@@ -671,36 +669,63 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
                 } else { // no replace path, just do an insert at end
                     parent.appendChild(importNode);
                 }
+
+            // Create?
             } else if (create) {
-                DOMParser parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
-                try {
-                    resource = parser.createDocument();
-                } finally {
-                    this.manager.release( parser );
-                }
-                // import the fragment
+                // Create new document
+                resource = newDocument();
+
+                // Import the fragment
                 Node importNode = resource.importNode(fragment, true);
-                if ( path.equals("") ) {  // this is allowed in write
-                    resource.appendChild(importNode.getFirstChild());
+
+                if (path.equals("")) {
+                    // Parent node is document itself
+                    NodeList nodes = importNode.getChildNodes();
+                    for (int i = 0; i < nodes.getLength();) {
+                        Node node = nodes.item(i);
+                        switch (node.getNodeType()) {
+                            case Node.ELEMENT_NODE:
+                                // May throw exception if fragment has more than one element
+                                resource.appendChild(node);
+                                break;
+
+                            case Node.DOCUMENT_TYPE_NODE:
+                            case Node.PROCESSING_INSTRUCTION_NODE:
+                            case Node.COMMENT_NODE:
+                                resource.appendChild(node);
+                                break;
+
+                            default:
+                                // Ignore all other nodes
+                                i++;
+                                break;
+                        }
+                    }
                     message = "entire source overwritten";
 
                 } else {
-                    // get the node
+                    // Get the parent node
                     Node parent = DOMUtil.selectSingleNode(resource, path, this.xpathProcessor);
-                    // add fragment
+                    // Add a fragment
                     parent.appendChild(importNode);
                     message = "content appended to: " + path;
                 }
+
+            // Oops: Document does not exist and create is not allowed.
             } else {
                 message = "create not allowed";
                 resource = null;/**/
             }
 
-            // write source
-            if ( resource != null) {
+
+            // Write source
+            if (resource != null) {
                 resource.normalize();
                 // use serializer
-                if (localSerializer == null) localSerializer = this.configuredSerializerName;
+                if (localSerializer == null) {
+                    localSerializer = this.configuredSerializerName;
+                }
+
                 if (localSerializer != null) {
                     // Lookup the Serializer
                     ServiceSelector selector = null;
@@ -725,16 +750,16 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
                                 }
                                 throw new ProcessingException("Could not process your document.", t);
                             } finally {
-                                if ( selector != null ) {
-                                        selector.release( serializer );
-                                        this.manager.release( selector );
+                                if (selector != null) {
+                                    selector.release(serializer);
+                                    this.manager.release(selector);
                                 }
                             }
                         }
                     }
                 } else {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("ERROR no serializer");
+                        getLogger().debug("ERROR: No serializer");
                     }
                     //throw new ProcessingException("No serializer specified for writing to source " + systemID);
                     message = "That source requires a serializer, please add the appropirate tag to your code.";
@@ -756,15 +781,17 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
             }
             message = "There was a problem resolving that source: [" + systemID + "] : " + se;
         } finally {
-            this.resolver.release( source );
+            this.resolver.release(source);
         }
 
         // Report result
         String result = (failed) ? RESULT_FAILED : RESULT_SUCCESS;
         String action = ACTION_NONE;
-        if (!failed) { action = (exists) ? ACTION_OVER : ACTION_NEW; }
+        if (!failed) {
+            action = (exists) ? ACTION_OVER : ACTION_NEW;
+        }
 
-        this.reportResult(localSerializer, tagname, message, target, result, action);
+        reportResult(localSerializer, tagname, message, target, result, action);
     }
 
     private void reportResult(String localSerializer,
@@ -798,13 +825,21 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
         sendEndElementEvent(RESULT_ELEMENT);
     }
 
+    private Document newDocument() throws SAXException, ServiceException {
+        DOMParser parser = (DOMParser) this.manager.lookup(DOMParser.ROLE);
+        try {
+            return parser.createDocument();
+        } finally {
+            this.manager.release(parser);
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+        this.xpathProcessor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
 
     /* (non-Javadoc)
