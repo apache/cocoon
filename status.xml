@@ -197,6 +197,10 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="VG" type="update">
+      SourceWritingTransformer supports all allowed nodes when using
+      <code>source:write</code> to create new document.
+    </action>
+    <action dev="VG" type="update">
       LocaleMatcher can save resulting locale into request, session or cookie
       (if configured).
     </action>
