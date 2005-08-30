@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.matching;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -148,7 +149,7 @@ import java.util.Map;
  * @version CVS $Id$
  */
 public class LocaleMatcher extends AbstractLogEnabled
-                         implements Matcher, ThreadSafe, Serviceable, Configurable {
+                           implements Matcher, ThreadSafe, Serviceable, Configurable, Disposable {
 
     private static final String DEFAULT_LOCALE_ATTRIBUTE = "locale";
     private static final String DEFAULT_DEFAULT_LANG = "en";
@@ -235,6 +236,13 @@ public class LocaleMatcher extends AbstractLogEnabled
         }
     }
 
+    public void dispose() {
+        this.manager.release(this.resolver);
+        this.resolver = null;
+        this.manager = null;
+    }
+
+
     public Map match(final String pattern, Map objectModel, Parameters parameters)
     throws PatternException {
         final Map map = new HashMap();
@@ -257,17 +265,27 @@ public class LocaleMatcher extends AbstractLogEnabled
                                              useBlankLocale,
                                              validator);
 
-        if (locale != null) {
+        if (locale == null) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Locale " + locale + " found for resource: " + pattern);
+                getLogger().debug("No locale found for resource: " + pattern);
             }
-            return map;
+            return null;
         }
 
+        String localeStr = locale.toString();
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("No locale found for resource: " + pattern);
+            getLogger().debug("Locale " + localeStr + " found for resource: " + pattern);
         }
-        return null;
+
+        I18nUtils.storeLocale(objectModel,
+                              localeAttribute,
+                              localeStr,
+                              storeInRequest,
+                              storeInSession,
+                              storeInCookie,
+                              createSession);
+
+        return map;
     }
 
     private boolean isValidResource(String pattern, Locale locale, Map map) {
