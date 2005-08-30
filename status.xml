@@ -530,6 +530,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      LocaleMatcher can save resulting locale into request, session or cookie
+      (if configured).
+    </action>
     <action dev="CZ" type="add">
       Portal block: Add WSRP consumer support (through WSRP4J).
     </action>
