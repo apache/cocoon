@@ -530,6 +530,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="36373" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
+      getTime(...) of CocoonLogFormatter implemented incorrectly
+    </action>
     <action dev="VG" type="update">
       SourceWritingTransformer supports all allowed nodes when using
       <code>source:write</code> to create new document.
