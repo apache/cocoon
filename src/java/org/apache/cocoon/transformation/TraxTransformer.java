@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,18 +62,18 @@ import org.xml.sax.SAXException;
 /**
  * @cocoon.sitemap.component.documentation
  * The stylesheet processor
- * 
+ *
  * @cocoon.sitemap.component.name   xslt
  * @cocoon.sitemap.component.logger sitemap.transformer.xslt
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xslt document for validation
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  32
- * 
+ * <p>
  * This Transformer is used to transform the incoming SAX stream using
  * a TrAXProcessor. Use the following sitemap declarations to define, configure
  * and parameterize it:
- *
+ * </p>
  * <b>In the map:sitemap/map:components/map:transformers:</b><br>
  * <pre>
  * &lt;map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"&gt;<br>
@@ -82,8 +82,8 @@ import org.xml.sax.SAXException;
  *   &lt;use-session-info&gt;false&lt;/use-session-info&gt;
  *   &lt;xslt-processor-role&gt;xslt&lt;/xslt-processor-role&gt;
  *   &lt;transformer-factory&gt;org.apache.xalan.processor.TransformerFactoryImpl&lt;/transformer-factory&gt;
+ *   &lt;check-includes&gt;true&lt;/check-includes&gt;
  * &lt;/map:transformer&gt;
- *   &lt;check-includess&gt;true&lt;/check-includes&gt
  * </pre>
  *
  * The &lt;use-request-parameter&gt; configuration forces the transformer to make all
@@ -109,13 +109,13 @@ import org.xml.sax.SAXException;
  *
  * The &lt;xslt-processor-role&gt; configuration allows to specify the TrAX processor (defined in
  * the cocoon.xconf) that will be used to obtain the XSLT processor. This allows to have
- * several XSLT processors in the configuration (e.g. Xalan, XSTLC, Saxon, ...) and choose
+ * several XSLT processors in the configuration (e.g. Xalan, XSLTC, Saxon, ...) and choose
  * one or the other depending on the needs of stylesheet specificities.<br>
  * If no processor is specified, this transformer will use the XSLT implementation
  * that Cocoon uses internally.
  *
  * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
- * implementation that will be used to obtain the XSLT processor. This is only usefull for
+ * implementation that will be used to obtain the XSLT processor. This is only useful for
  * compatibility reasons. Please configure the XSLT processor in the cocoon.xconf properly
  * and use the xslt-processor-role configuration mentioned above.
  *
@@ -123,11 +123,11 @@ import org.xml.sax.SAXException;
  * also checked for changes during caching. If this is set to true (default), the
  * included stylesheets are also checked for changes; if this is set to false, only
  * the main stylesheet is checked. Setting this to false improves the performance,
- * and should be used whenever no includs are in the stylesheet. However, if
+ * and should be used whenever no includes are in the stylesheet. However, if
  * you have includes, you have to be careful when changing included stylesheets
  * as the changes might not take effect immediately. You should touch the main
  * stylesheet as well.
- * 
+ *
  * <p>
  * <b>In a map:sitemap/map:pipelines/map:pipeline:</b><br>
  * <pre>
@@ -145,8 +145,8 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * 
- * @version CVS $Id$
+ *
+ * @version SVN $Id$
  */
 public class TraxTransformer extends AbstractTransformer
 implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
@@ -174,7 +174,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
     /** Do we check included stylesheets for changes? */
     private boolean checkIncludes = true;
-    
+
     /** The trax TransformerHandler */
     protected TransformerHandler transformerHandler;
 
@@ -202,9 +202,9 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
-    
+
     private TransformerException transformerException;
-    
+
     private ErrorListener errorListener = new ErrorListener() {
 
         public void warning(TransformerException ex) throws TransformerException {
@@ -257,7 +257,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         if (!xsltProcessorRole.startsWith(XSLTProcessor.ROLE)) {
             xsltProcessorRole = XSLTProcessor.ROLE + '/' + xsltProcessorRole;
         }
-        
+
         child = conf.getChild("check-includes");
         this.checkIncludes = child.getValueAsBoolean(this.checkIncludes);
 
@@ -339,7 +339,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         _useCookies = par.getParameterAsBoolean("use-cookies", this.useCookies);
         _useSessionInfo = par.getParameterAsBoolean("use-session-info", this.useSessionInfo);
         final boolean _checkIncludes = par.getParameterAsBoolean("check-includes", this.checkIncludes);
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Using stylesheet: '" + this.inputSource.getURI() + "' in " + this);
             getLogger().debug("Use parameters is " + this._useParameters);
@@ -361,7 +361,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
             }
         } catch (XSLTProcessorException se) {
             throw new ProcessingException("Unable to get transformer handler for " + this.inputSource.getURI(), se);
-        }            
+        }
     }
 
     /**
@@ -412,7 +412,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
         if ( this.transformerHandler == null ) {
             try {
-                this.transformerHandler = this.xsltProcessor.getTransformerHandler(this.inputSource);            
+                this.transformerHandler = this.xsltProcessor.getTransformerHandler(this.inputSource);
             } catch (XSLTProcessorException se) {
                 // the exception will be thrown during startDocument()
                 this.exceptionDuringSetConsumer =
@@ -440,7 +440,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         final SAXResult result = new SAXResult(consumer);
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
-        
+
         this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 
@@ -618,7 +618,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
                     // No location: if it's just a wrapper, consider only the wrapped exception.
                     Throwable realEx = transformerException.getCause();
                     if (realEx == null) realEx = transformerException;
-                    
+
                     if (realEx instanceof SAXException) {
                         // Rethrow
                         throw (SAXException)realEx;
@@ -636,7 +636,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         }
         this.finishedDocument = true;
     }
-    
+
     /* (non-Javadoc)
      * @see org.xml.sax.ContentHandler#startDocument()
      */
