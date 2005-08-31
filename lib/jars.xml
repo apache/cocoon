@@ -755,15 +755,14 @@
     <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
-  <!-- Currently only used by the build
+  <!-- Build uses this jar from tools/lib/jing-20030619.jar -->
   <file>
     <title>Jing</title>
     <description>RELAX NG validator</description>
-    <used-by>build</used-by>
-    <lib>tools/lib/jing-20030619.jar</lib>
+    <used-by>JARV transformer (validation block) and build</used-by>
+    <lib>optional/jing-20030619.jar</lib>
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
-  -->
 
   <file>
     <title>Cocoon Serializers Block Encodings</title>
@@ -1276,4 +1275,13 @@
     <lib>optional/wsrp4j-consumer-0.3-dev.jar</lib>
     <homepage>http://ws.apache.org/wsrp4j/</homepage>
   </file>
+
+  <file>
+    <title>ISO-RELAX Validation API</title>
+    <description>Validate documents in a provider-independent fashion.</description>
+    <used-by>JARV transformer (validation block)</used-by>
+    <lib>optional/isorelax-20041111.jar</lib>
+    <homepage>http://iso-relax.sourceforge.net/</homepage>
+  </file>
+
 </jars>

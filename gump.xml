@@ -1597,6 +1597,31 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-validation" status="unstable" dir="src/blocks/validation">
+    <package>org.apache.cocoon</package>
+
+    <description>In-pipeline validation of document using JING or JARV</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jing"/>
+    <depend project="isorelax"/>
+
+    <library name="jing"/>
+    <library name="isorelax"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/validation-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
@@ -1624,7 +1649,7 @@
   </project>
 
   <project name="jing">
-    <package>com/thaiopensource</package>
+    <package>com.thaiopensource</package>
     <url href="http://www.thaiopensource.com/relaxng/jing.html"/>
     <description>
       Jing performs XML Validation using RelaxNG schemas
@@ -1765,4 +1790,11 @@
     <jar name="lib/optional/wsrp4j-shared-0.3-dev.jar"/>
     <jar name="lib/optional/wsrp4j-consumer-0.3-dev.jar"/>
   </project>
+
+  <project name="isorelax">
+    <url href="http://iso-relax.sourceforge.net/"/>
+    <package>org.iso_relax</package>
+    <jar name="lib/optional/isorelax-20041111.jar"/>
+  </project>
+
 </module>
