@@ -35,6 +35,8 @@
         <directory>../src/java</directory>
         <excludes>
           <exclude>**/*.java</exclude>
+          <exclude>**/.svn</exclude>
+          <exclude>**/.svn/**</exclude>
         </excludes>
       </resource>
     </resources>
