@@ -50,7 +50,11 @@ CForms.submitForm = function(element, name) {
         
         var req = CForms.newXMLHttpRequest();
         if (req) {
-            var uri = form.action;
+	    // The "ajax-action" attribute specifies an alternate submit location used in Ajax mode.
+	    // This allows to use Ajax in the portal where forms are normally posted to the portal URL.
+	    var uri = form.getAttribute("ajax-action");
+	    if (! uri)
+	        uri = form.action;
             if ( uri == "" )
                 uri = document.location;
                 
