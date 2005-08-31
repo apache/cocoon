@@ -63,7 +63,6 @@ import org.xml.sax.InputSource;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -146,7 +145,7 @@ public class Cocoon
 
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
-        instance = this;
+        Cocoon.instance = this;
     }
 
     public void enableLogging(Logger logger) {
@@ -486,6 +485,9 @@ public class Cocoon
         }
 
         this.context = null;
+        if (Cocoon.instance == this) {
+            Cocoon.instance = null;
+        }
         this.disposed = true;
     }
 
