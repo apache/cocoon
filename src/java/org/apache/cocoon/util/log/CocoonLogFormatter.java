@@ -23,12 +23,11 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.ExceptionUtils;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
 import org.apache.log.Logger;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -76,7 +75,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
     protected final static String  TYPE_QUERY_STR       = "query";
     protected final static String  TYPE_ROOTTHROWABLE_STR = "rootThrowable";
 
-    protected final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("(yyyy-MM-dd) HH:mm.ss:SSS");
+    private static final String DEFAULT_TIME_PATTERN = "(yyyy-MM-dd) HH:mm.ss:SSS";
 
     /**
      * Hack to get the call stack as an array of classes. The
@@ -299,10 +298,17 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * Utility method to format time.
      *
      * @param time the time
-     * @param format ancilliary format parameter - allowed to be null
+     * @param pattern ancilliary pattern parameter - allowed to be null
      * @return the formatted string
      */
-    protected String getTime(final long time, final String format) {
-        return DATE_FORMATTER.format(new Date());
+    protected String getTime(final long time, String pattern) {
+        String result;
+
+        if (pattern == null) {
+            pattern = DEFAULT_TIME_PATTERN;
+        }
+        FastDateFormat format = FastDateFormat.getInstance(pattern);
+        result = format.format(time);
+        return result;
     }
 }
