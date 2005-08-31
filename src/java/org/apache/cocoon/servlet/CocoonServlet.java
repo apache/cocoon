@@ -108,7 +108,7 @@ public class CocoonServlet extends HttpServlet {
     protected ServletContext servletContext;
 
     /** The classloader that will be set as the context classloader if init-classloader is true */
-    protected final ClassLoader classLoader = this.getClass().getClassLoader();
+    protected ClassLoader classLoader = getClass().getClassLoader();
 
     /**
      * This is the path to the servlet context (or the result
@@ -252,10 +252,18 @@ public class CocoonServlet extends HttpServlet {
      */
     public void destroy() {
         this.servletContext.log("Destroying Cocoon Servlet.");
-        if ( this.coreUtil != null ) {
+        if (this.coreUtil != null) {
             this.coreUtil.destroy();
             this.coreUtil = null;
+            // coreUtil will dispose it.
+            this.cocoon = null;
         }
+
+        this.requestFactory = null;
+        this.servletContext = null;
+        this.environmentContext = null;
+        this.classLoader = null;
+        this.log = null;
         super.destroy();
     }
 
