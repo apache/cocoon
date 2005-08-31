@@ -632,6 +632,13 @@
   <xsl:template match="fi:placeholder">
     <span id="{@id}"/>
   </xsl:template>
+  
+  <!--+
+      | fi:struct - has no visual representation by default
+      +-->
+  <xsl:template match="fi:struct">
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
