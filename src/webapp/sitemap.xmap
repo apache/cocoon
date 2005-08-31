@@ -441,7 +441,7 @@
    </map:pipes>
    
    <!-- include some additional components -->
-   <include src="sitemap-additions.xconf"/>
+   <map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>
 
  </map:components>
 
