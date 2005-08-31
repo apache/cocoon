@@ -140,24 +140,14 @@ CForms._handleBrowserUpdate = function(form, request) {
             // Handle browser update directives
             var doc = request.responseXML;
             if (!doc) {
-                alert("no xml answer");
+                BrowserUpdate.handleError("No xml answer", request);
                 return;
             }
         
-           BrowserUpdate.processResponse(doc);
+           BrowserUpdate.processResponse(doc, request);
        }
     } else {
-/*        var str = "";
-        for(prop in request) {
-           str += prop
-           str += " = " 
-           str += request[prop];
-           str += '\n';
-        }
-        alert(str);
-        alert(request.getAllResponseHeaders());
-*/
-        alert("request failed - status: " + request.status);
+        BrowserUpdate.handleError("Request failed - status=" + request.status, request);
     }
 }
 
@@ -248,7 +238,7 @@ DOMUtils._importNode = function(node, targetDoc) {
 
 BrowserUpdate = {};
 
-BrowserUpdate.processResponse = function(doc) {
+BrowserUpdate.processResponse = function(doc, request) {
     var nodes = doc.documentElement.childNodes;
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
@@ -264,7 +254,7 @@ BrowserUpdate.processResponse = function(doc) {
             if (handlerFunc) {
                 handlerFunc(node);
             } else {
-                alert("no handler found for " + handler);
+                BrowserUpdate.handleError("No handler found for element " + handler, request);
             }
         }
     }
@@ -276,7 +266,7 @@ BrowserUpdate.handlers = {
            alert("no id found on update element");
            return;
         }    
-        // Get the first child element (the first child not may be some text!)
+        // Get the first child element (the first child may be some text!)
         var firstChild = DOMUtils.firstChildElement(element);
     
         var oldElement = document.getElementById(id);
@@ -298,6 +288,21 @@ BrowserUpdate.handlers = {
         }
     }
 }
+
+BrowserUpdate.handleError = function(message, request) {
+    if (confirm(message + "\nShow server response?")) {
+        var w = window.open(undefined, "Cocoon Error", "location=no");
+        if (w == undefined) {
+            alert("You must allow popups from this server to display the response.");
+        } else {
+	        var doc = w.document;
+	        doc.open();
+	        doc.write(request.responseText);
+	        doc.close();
+	    }
+    }
+}
+
 
 //-------------------------------------------------------------------------------------------------
 // Fader used to highlight page areas that have been updated
