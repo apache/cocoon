@@ -508,6 +508,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
+                // Ignored
             }
         }
 
@@ -515,7 +516,7 @@ public class CocoonServlet extends HttpServlet {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Servlet destroyed - disposing Cocoon");
             }
-            this.disposeCocoon();
+            disposeCocoon();
         }
 
         if (this.enableInstrumentation) {
@@ -525,6 +526,11 @@ public class CocoonServlet extends HttpServlet {
         if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
             ((Disposable) this.parentComponentManager).dispose();
         }
+
+        this.appContext = null;
+        this.classLoader = null;
+        this.log = null;
+        this.loggerManager = null;
     }
 
     /**
