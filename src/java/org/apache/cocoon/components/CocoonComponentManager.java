@@ -58,7 +58,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
 
     /** The key used to store the current process environment */
     private static final String PROCESS_KEY = CocoonComponentManager.class.getName();
-    
+
     /** The environment attribute used to keep track of the actual environment in which the pipeline was built. */
     private static final String PROCESSOR_ATTR = "CocoonComponentManager.processor";
 
@@ -81,25 +81,26 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /** has this been disposed? */
     private boolean wasDisposed;
 
+
     /** Create the ComponentManager */
     public CocoonComponentManager() {
-        super( null, Thread.currentThread().getContextClassLoader() );
+        super(null, Thread.currentThread().getContextClassLoader());
     }
 
     /** Create the ComponentManager with a Classloader */
     public CocoonComponentManager(final ClassLoader loader) {
-        super( null, loader );
+        super(null, loader);
     }
 
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
-        super( manager, loader );
+        super(manager, loader);
         this.parentManager = manager;
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
-        super( manager);
+        super(manager);
         this.parentManager = manager;
     }
 
@@ -111,21 +112,22 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     public static void enterEnvironment(Environment      env,
                                         ComponentManager manager,
                                         Processor        processor) {
-        if ( null == env || null == manager || null == processor) {
-            throw new RuntimeException("CocoonComponentManager.enterEnvironment: all parameters must be set: " + env + " - " + manager + " - " + processor);
+        if (null == env || null == manager || null == processor) {
+            throw new RuntimeException("CocoonComponentManager.enterEnvironment: " +
+                                       "All parameters must be set: " + env + " - " + manager + " - " + processor);
         }
 
         EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-		if (stack == null) {
+        if (stack == null) {
             stack = new EnvironmentStack();
-			environmentStack.set(stack);
-		}
-		stack.push(new EnvironmentStack.Item(env, processor, manager, stack.getOffset()));
+            environmentStack.set(stack);
+        }
+        stack.push(new EnvironmentStack.Item(env, processor, manager, stack.getOffset()));
         stack.setOffset(stack.size()-1);
 
         env.setAttribute(PROCESSOR_ATTR, processor);
     }
-    
+
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
      * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
@@ -138,7 +140,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
      * It's the counterpart to {@link #enterEnvironment(Environment, ComponentManager, Processor)}.
-     * 
+     *
      * @param success indicates if the request was successfully handled by the environment that's being left
      */
     public static void leaveEnvironment(boolean success) {
@@ -146,19 +148,22 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         final EnvironmentStack.Item objs = (EnvironmentStack.Item)stack.pop();
         stack.setOffset(objs.offset);
 
-        if ( stack.isEmpty() ) {
+        if (stack.isEmpty()) {
             final Environment env = objs.env;
             final Map globalComponents = (Map)env.getAttribute(GlobalRequestLifecycleComponent.class.getName());
-            if ( globalComponents != null) {
+            if (globalComponents != null) {
 
                 final Iterator iter = globalComponents.values().iterator();
-                while ( iter.hasNext() ) {
+                while (iter.hasNext()) {
                     final Object[] o = (Object[])iter.next();
                     final Component c = (Component)o[0];
                     ((CocoonComponentManager)o[1]).releaseRLComponent( c );
                 }
             }
             env.removeAttribute(GlobalRequestLifecycleComponent.class.getName());
+
+            // Setting this ThreadLocal to null allows it to be garbage collected
+            CocoonComponentManager.environmentStack.set(null);
         } else {
             if (!success) {
                 // Restore the current processor as being the active one
@@ -216,12 +221,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      * @return A unique key within this thread.
      */
     public static Object startProcessing(Environment env) {
-		if (null == env) {
-			throw new RuntimeException("CocoonComponentManager.startProcessing: environment must be set.");
-		}
+        if (null == env) {
+            throw new RuntimeException("CocoonComponentManager.startProcessing: environment must be set.");
+        }
         final EnvironmentDescription desc = new EnvironmentDescription(env);
         env.getObjectModel().put(PROCESS_KEY, desc);
-		env.startingProcessing();
+        env.startingProcessing();
         return desc;
     }
 
@@ -582,7 +587,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
         }
         parentAwareComponents = null;  // null to save memory, and catch logic bugs.
     }
-    
+
     /**
      * A runnable wrapper that inherits the environment stack of the thread it is
      * created in.
@@ -619,7 +624,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             // A CocoonThread is meant to start and die within the execution period of the parent request,
             // and it is an error if it lives longer as the parent environment is no more valid.
         }
-        
+
         abstract protected void doRun();
     }
 }
