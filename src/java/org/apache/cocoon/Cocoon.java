@@ -131,7 +131,7 @@ public class Cocoon
 
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
-        instance = this;
+        Cocoon.instance = this;
     }
 
     /**
@@ -368,6 +368,9 @@ public class Cocoon
             this.parentServiceManager = null;
         }
         this.context = null;
+        if (Cocoon.instance == this) {
+            Cocoon.instance = null;
+        }
         this.disposed = true;
     }
 
