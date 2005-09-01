@@ -88,19 +88,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
     private String cachingKey = "1";
 
     /**
-     * Do we remove all comments?
-     */
-    private boolean removeComments = false;
-
-    /**
-     * If we remove comments, do we keep the document comment?
-     */
-    private boolean keepDocumentComment = true;
-
-    /** Did we get the root element already? */
-    private boolean gotRootElement = false;
-
-    /**
      * Interpose namespace pipe if needed.
      */
     public void setConsumer(XMLConsumer consumer) {
@@ -271,12 +258,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             getLogger().warn("Cannot know if transformer needs namespaces attributes - assuming NO.", e);
         }
 
-        this.removeComments = conf.getChild("remove-comments").getValueAsBoolean(this.removeComments);
-        this.keepDocumentComment = conf.getChild("keep-document-comment").getValueAsBoolean(this.keepDocumentComment);
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Comment settings: remove comments: " + this.removeComments
-                                 + ", keep document comment: " + this.keepDocumentComment);
-        }
     }
 
     /**
@@ -288,7 +269,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         if (this.namespacePipe != null) {
             this.namespacePipe.recycle();
         }
-        this.gotRootElement = false;
     }
 
     /**
@@ -578,23 +558,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //       } catch (IOException ignored) {
         //       }
         //   }
-    }
-
-    /**
-     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
-     */
-    public void comment(char[] ch, int start, int len) throws SAXException {
-        if ( !this.removeComments
-             || (!this.gotRootElement && this.keepDocumentComment)) {
-            super.comment(ch, start, len);
-        }
-    }
-    /**
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
-     */
-    public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
-        this.gotRootElement = true;
-        super.startElement(uri, loc, raw, a);
     }
 
 }

@@ -628,8 +628,7 @@ public class CIncludeTransformer extends AbstractSAXTransformer
      */
     public void startDocument() throws SAXException {
         this.filter = new MyFilter(this.xmlConsumer,
-                                   this, 
-                                   this.parameters.getParameterAsBoolean("remove-comments", false));
+                                   this);
         super.startDocument();
     }
 
@@ -684,18 +683,14 @@ final class MyFilter extends IncludeXMLConsumer {
 
     private final CIncludeTransformer transformer;
 
-    private final boolean removeComments;
-
     /**
      * This filter class post-processes the parallel fetching
      * @param consumer
      */
     public MyFilter(XMLConsumer consumer,
-                    CIncludeTransformer transformer,
-                    boolean removeComments) {
+                    CIncludeTransformer transformer) {
         super(consumer);
         this.transformer = transformer;
-        this.removeComments = removeComments;
     }
 
     /**
@@ -732,15 +727,6 @@ final class MyFilter extends IncludeXMLConsumer {
             }
         } else {
             super.startElement(uri, local, qName, attr);
-        }
-    }
-
-    /**
-     * @see org.xml.sax.ext.LexicalHandler#comment(char[], int, int)
-     */
-    public void comment(char[] ary, int start, int length) throws SAXException {
-        if ( !this.removeComments ) {
-            super.comment(ary, start, length);
         }
     }
 }
