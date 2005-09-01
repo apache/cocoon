@@ -332,7 +332,6 @@
                   <exclude name="**/*.gif"/>
                   <exclude name="**/*.jpg"/>
                 </fileset>
-                <fileset dir="@{{dir}}/conf" includes="*.xsamples"/>
               </copy>
               <copy filtering="off" todir="${{build.webapp}}/samples/blocks/@{{name}}">
                 <fileset dir="@{{dir}}/samples">
