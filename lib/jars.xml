@@ -1276,12 +1276,4 @@
     <homepage>http://ws.apache.org/wsrp4j/</homepage>
   </file>
 
-  <file>
-    <title>ISO-RELAX Validation API</title>
-    <description>Validate documents in a provider-independent fashion.</description>
-    <used-by>JARV transformer (validation block)</used-by>
-    <lib>optional/isorelax-20041111.jar</lib>
-    <homepage>http://iso-relax.sourceforge.net/</homepage>
-  </file>
-
 </jars>
