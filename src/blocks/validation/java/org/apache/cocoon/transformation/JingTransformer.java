@@ -235,6 +235,7 @@ implements Configurable, Serviceable, Disposable, XMLReaderCreator,
     public void recycle() {
         this.parsedSourceStack.clear();
         this.validationHandler = null;
+        this.uniqueIdentifier = null;
         this.sourceResolver = null;
         this.sourceValidity = null;
         this.inputSource = null;
@@ -280,7 +281,6 @@ implements Configurable, Serviceable, Disposable, XMLReaderCreator,
     public InputSource resolveEntity(String publicId, String systemId)
     throws SAXException, IOException {
         if (this.sourceResolver == null) throw new IllegalStateException();
-        System.err.println("RESOLVING: " + systemId);
 
         /* Try to resolve the public id if we don't have a system id */
         if (systemId == null) {
@@ -295,9 +295,7 @@ implements Configurable, Serviceable, Disposable, XMLReaderCreator,
         /* Use Cocoon's SourceResolver to resolve the system id */
         InputSource parsing = (InputSource) this.parsedSourceStack.peek();
         String base = parsing != null? parsing.getSystemId(): null;
-        System.err.println("BASE URI:  " + base);
         Source source = this.sourceResolver.resolveURI(systemId, base, null);
-        System.err.println("RESOLVED:  " + source.getURI());
         try {
             this.sourceValidity.add(source.getValidity());
             InputSource inputSource = new InputSource();
