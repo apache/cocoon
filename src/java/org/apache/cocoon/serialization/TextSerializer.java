@@ -22,7 +22,6 @@ import org.apache.cocoon.xml.XMLUtils;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.sax.TransformerHandler;
