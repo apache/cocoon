@@ -685,13 +685,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getInputStream(java.lang.String)
-         */
-        public InputStream getInputStream(String path) {
-            return this.config.getServletContext().getResourceAsStream(path);
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
          */
         public void configure(MutableSettings settings) {

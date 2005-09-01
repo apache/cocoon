@@ -83,24 +83,12 @@ public class TestBootstrapEnvironment
     }
 
     /**
-     * Get the input stream from a resource at the given
-     * path. Only paths relative to the bootstrap context are
-     * supported. Returns null if no resource exists at the
-     * specified path
+     * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
      */
-    public InputStream getInputStream(String path) {
-        try {
-            return (new URL(this.contextPath + path)).openStream();
-        } catch (IOException e) {
-            this.log("Couldn't open " + this.contextPath + path);
-            return null;
-        }
-    }
-    
     public void configure(MutableSettings settings) {
         settings.setConfiguration(this.configuration);
         settings.setWorkDirectory("work");
-	settings.setInitClassloader(true);
+        settings.setInitClassloader(true);
     }
 
     public void configureLoggingContext(DefaultContext context) {

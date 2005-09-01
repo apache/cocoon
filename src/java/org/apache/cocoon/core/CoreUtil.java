@@ -109,18 +109,8 @@ public class CoreUtil {
 
     protected void init()
     throws Exception {
-        // create settings
-        this.settings = this.createSettings();
-
-        if (this.settings.isInitClassloader()) {
-            // Force context classloader so that JAXP can work correctly
-            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
-            try {
-                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
-            } catch (Exception e) {
-                // ignore this
-            }
-        }
+        // first let's set up the appContext with some values to make
+        // the simple source resolver work
 
         // add root url
         try {
@@ -136,6 +126,19 @@ public class CoreUtil {
 
         // now add environment specific information
         this.env.configure(appContext);
+
+        // create settings
+        this.settings = this.createSettings();
+
+        if (this.settings.isInitClassloader()) {
+            // Force context classloader so that JAXP can work correctly
+            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
+            try {
+                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
+            } catch (Exception e) {
+                // ignore this
+            }
+        }
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
@@ -337,23 +340,57 @@ public class CoreUtil {
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
+        // we need our own resolver
+        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.env));
+
         String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
 
         // read cocoon-settings.properties - if available
-        InputStream propsIS = env.getInputStream("cocoon-settings.properties");
-        if ( propsIS != null ) {
-            env.log("Reading settings from 'cocoon-settings.properties'");
-            final Properties p = new Properties();
-            try {
+        Source source = null;
+        try {
+            source = resolver.resolveURI("context://WEB-INF/cocoon-settings.properties");
+            if ( source.exists() ) {
+                final InputStream propsIS = source.getInputStream();
+                env.log("Reading settings from '" + source.getURI() + "'");
+                final Properties p = new Properties();
                 p.load(propsIS);
                 propsIS.close();
                 s.fill(p);
-                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);
-            } catch (IOException ignore) {
-                env.log("Unable to read 'cocoon-settings.properties'.", ignore);
-                env.log("Continuing initialization.");
+                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);                
             }
+        } catch (IOException ignore) {
+            env.log("Unable to read 'WEB-INF/cocoon-settings.properties'.", ignore);
+            env.log("Continuing initialization.");            
+        } finally {
+            resolver.release(source);
         }
+
+        // now read all properties from the properties directory
+        Source directory = null;
+        try {
+            directory = resolver.resolveURI("context://WEB-INF/properties", null, CONTEXT_PARAMETERS);
+            if (directory.exists() && directory instanceof TraversableSource) {
+                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
+                while (c.hasNext()) {
+                    final Source src = (Source) c.next();
+                    if ( src.getURI().endsWith(".properties") ) {
+                        final InputStream propsIS = src.getInputStream();
+                        env.log("Reading settings from '" + src.getURI() + "'.");
+                        final Properties p = new Properties();
+                        p.load(propsIS);
+                        propsIS.close();
+                        s.fill(p);
+                        additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);                
+                    }
+                }
+            }
+        } catch (IOException ignore) {
+            env.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
+            env.log("Continuing initialization.");            
+        } finally {
+            resolver.release(directory);
+        }
+
         // fill from the environment configuration, like web.xml etc.
         env.configure(s);
 
@@ -401,6 +438,22 @@ public class CoreUtil {
         }
     }
 
+    /**
+     * Create a simple source resolver.
+     */
+    protected SourceResolver createSourceResolver(Logger logger) {
+        // Create our own resolver
+        final SimpleSourceResolver resolver = new SimpleSourceResolver();
+        resolver.enableLogging(logger);
+        try {
+            resolver.contextualize(this.appContext);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException(
+                    "Cannot setup source resolver.", ce);
+        }
+        return resolver;        
+    }
+
     protected void initLogger() {
         String logLevel = settings.getBootstrapLogLevel();
         if (logLevel == null) {
@@ -417,14 +470,8 @@ public class CoreUtil {
         final Logger bootstrapLogger = this.env.getBootstrapLogger(level);
 
         // Create our own resolver
-        final SimpleSourceResolver resolver = new SimpleSourceResolver();
-        resolver.enableLogging(bootstrapLogger);
-        try {
-            resolver.contextualize(this.appContext);
-        } catch (ContextException ce) {
-            throw new CascadingRuntimeException(
-                    "Cannot setup source resolver.", ce);
-        }
+        final SourceResolver resolver = this.createSourceResolver(bootstrapLogger);
+
         // create an own service manager for the logger manager
         final ServiceManager loggerManagerServiceManager = new SingleComponentServiceManager(
                  null, resolver, SourceResolver.ROLE);
@@ -834,4 +881,83 @@ public class CoreUtil {
         return "";
     }
 
+    protected static final class LoggerWrapper implements Logger {
+        private final BootstrapEnvironment env;
+
+        public LoggerWrapper(BootstrapEnvironment env) {
+            this.env = env;
+        }
+
+        protected void text(String arg0, Throwable arg1) {
+            if ( arg1 != null ) {
+                this.env.log(arg0, arg1);
+            } else {
+                this.env.log(arg0);
+            }
+        }
+
+        public void debug(String arg0, Throwable arg1) {
+            // we ignore debug
+        }
+
+        public void debug(String arg0) {
+            // we ignore debug
+        }
+
+        public void error(String arg0, Throwable arg1) {
+            this.text(arg0, arg1);
+        }
+
+        public void error(String arg0) {
+            this.text(arg0, null);
+        }
+
+        public void fatalError(String arg0, Throwable arg1) {
+            this.text(arg0, arg1);
+        }
+
+        public void fatalError(String arg0) {
+            this.text(arg0, null);
+        }
+
+        public Logger getChildLogger(String arg0) {
+            return this;
+        }
+
+        public void info(String arg0, Throwable arg1) {
+            // we ignore info
+        }
+
+        public void info(String arg0) {
+            // we ignore info
+        }
+
+        public boolean isDebugEnabled() {
+            return false;
+        }
+
+        public boolean isErrorEnabled() {
+            return true;
+        }
+
+        public boolean isFatalErrorEnabled() {
+            return true;
+        }
+
+        public boolean isInfoEnabled() {
+            return false;
+        }
+
+        public boolean isWarnEnabled() {
+            return false;
+        }
+
+        public void warn(String arg0, Throwable arg1) {
+            // we ignore warn
+        }
+
+        public void warn(String arg0) {
+            // we ignore warn
+        }
+    }
 }
