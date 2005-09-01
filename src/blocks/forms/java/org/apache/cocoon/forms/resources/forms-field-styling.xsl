@@ -139,11 +139,38 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="apos-replace">
+    <xsl:param name="text"/>
+    <xsl:variable name="pattern">'</xsl:variable>
+    <xsl:choose>
+      <xsl:when test="contains($text,$pattern)">
+        <xsl:value-of select="substring-before($text,$pattern)"/>
+        <xsl:text>\'</xsl:text>
+        <xsl:call-template name="apos-replace">
+          <xsl:with-param name="text" 
+            select="substring-after($text,$pattern)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!--+
       |
       +-->
-  <xsl:template match="fi:validation-message | fi:validation-error">
-    <a href="#" class="forms-validation-message" onclick='alert("{normalize-space(.)}");return false;'>&#160;!&#160;</a>
+  <xsl:template match="fi:validation-message">
+    <a href="#" class="forms-validation-message">
+      <xsl:attribute name="onclick">
+        <xsl:text>alert('</xsl:text>
+        <xsl:call-template name="apos-replace">
+          <xsl:with-param name="text" select="normalize-space(.)"/>
+        </xsl:call-template>
+        <xsl:text>'); return false;</xsl:text>
+      </xsl:attribute>
+      <xsl:text>&#160;!&#160;</xsl:text>
+    </a>
   </xsl:template>
 
   <!--+
