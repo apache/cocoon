@@ -197,6 +197,16 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Add property mechanism for Cocoon configuration. All settings for Cocoon can now
+      be configured using properties instead of putting them in web.xml.
+    </action>
+    <action dev="CZ" type="add">
+      Allow the use of property replacements in logging, xconf and sitemap configurations.
+    </action>
+    <action dev="CZ" type="add">
+      Use includes for logkit configurations and for sitemap components.
+    </action>
     <action dev="AN" type="fix">
       XSP block: Move AttributeImpl in xsp.xsl to class scope.
       That allows top-level xsp:logic to define markup generating methods.

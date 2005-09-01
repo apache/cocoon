@@ -17,7 +17,6 @@
 package org.apache.cocoon.core;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
@@ -79,6 +78,7 @@ public interface BootstrapEnvironment {
             return this.name;
         }
     }
+
     /**
      * Get the bootstrap logger.
      * @param logLevel The log level to use according to the {@link Logger} interface.
@@ -105,8 +105,6 @@ public interface BootstrapEnvironment {
      */
     void setLogger(Logger rootLogger);
 
-    InputStream getInputStream(String path);
-    
     /**
      * This callback can be used by the environment to add environment specific
      * settings. For example the servlet environment parsed the web.xml and adjusts

@@ -719,21 +719,6 @@ public class CocoonWrapper {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getInputStream(java.lang.String)
-         */
-        public InputStream getInputStream(String path) {
-            final File f = new File(this.contextDirectory, path);
-            if ( f.exists() ) {
-                try {
-                    return new FileInputStream(f);
-                } catch (FileNotFoundException fnfe) {
-                    // this can't occure as we checked it already
-                }
-            }
-            return null;
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
          */
         public void log(String message, Throwable error) {
