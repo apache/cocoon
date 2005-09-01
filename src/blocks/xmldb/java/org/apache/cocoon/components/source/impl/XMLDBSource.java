@@ -15,17 +15,26 @@
  */
 package org.apache.cocoon.components.source.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -34,7 +43,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -47,13 +55,6 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
 
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
@@ -433,31 +434,25 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     /**
-     * Get an InputSource for the given URL. Shamelessly stolen
-     * from SitemapSource.
-     *
+     * Get an InputSource for the given URL.
      */
     public InputStream getInputStream()
     throws IOException {
 
-        ServiceManager manager = null;
         ServiceSelector serializerSelector = null;
         Serializer serializer = null;
         // this.manager does not have Serializer
         try {
-            manager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-            serializerSelector = (ServiceSelector) manager.lookup(Serializer.ROLE + "Selector");
-            serializer = (Serializer)serializerSelector.select("xml");
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            serializer.setOutputStream(os);
+            TransformerFactory tf = TransformerFactory.newInstance();
+            TransformerHandler th =
+                ((SAXTransformerFactory) tf).newTransformerHandler();
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            StreamResult result = new StreamResult(bOut);
+            th.setResult(result);
 
-            toSAX(serializer);
+            toSAX(th);
 
-            return new ByteArrayInputStream(os.toByteArray());
-        } catch (ServiceException e) {
-            throw new CascadingIOException("Could not lookup pipeline components", e);
-        } catch (ContextException ce) {
-            throw new CascadingIOException("Could not get service manager.", ce);
+            return new ByteArrayInputStream(bOut.toByteArray());
         } catch (Exception e) {
             throw new CascadingIOException("Exception during processing of " + getURI(), e);
         } finally {
