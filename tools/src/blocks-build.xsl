@@ -241,14 +241,8 @@
         <attribute name="name"/>
         <attribute name="dir"/>
         <sequential>
-          <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="@{{dir}}">
-            <include name="conf/*.xmap"/>
-          </xpatch>
           <xpatch file="${{build.webapp}}/WEB-INF/cocoon.xconf" srcdir="@{{dir}}" addcomments="true">
             <include name="conf/*.xconf"/>
-          </xpatch>
-          <xpatch file="${{build.webapp}}/WEB-INF/logkit.xconf" srcdir="@{{dir}}">
-            <include name="conf/*.xlog"/>
           </xpatch>
           <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="@{{dir}}">
             <include name="conf/*.xweb"/>
