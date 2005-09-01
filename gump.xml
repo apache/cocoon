@@ -919,8 +919,6 @@
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
-    <depend project="cocoon-block-ojb"/>
-    <depend project="cocoon-block-template" type="samples"/>
     <depend project="jtidy"/>
     <depend project="nekohtml"/>
     <depend project="castor"/>
@@ -953,6 +951,58 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/portal-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-portal-sample" status="stable" dir="src/blocks/portal-sample/trunk">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="portal-sample"/>
+      <property name="build" value="build/cocoon-@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-authentication-fw"/>
+    <depend project="cocoon-block-forms"/>
+    <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-ojb"/>
+    <depend project="cocoon-block-portal"/>
+    <depend project="cocoon-block-template" type="samples"/>
+    <depend project="jtidy"/>
+    <depend project="nekohtml"/>
+    <depend project="castor"/>
+    <depend project="commons-collections"/>
+    <depend project="portals-pluto" inherit="runtime"/>
+    <depend project="portals-bridges-common"/>
+    <depend project="cowarp"/>
+    <depend project="ws-axis"/>
+    <depend project="wsdl4j"/>
+    <depend project="wsrp4j"/>
+    <depend project="commons-discovery"/>
+
+    <library name="jtidy"/>
+    <library name="nekohtml"/>
+    <library name="castor"/>
+    <library name="commons-collections"/>
+    <library name="pluto"/>
+    <library name="portlet-api"/>
+    <library name="portals-bridges-common"/>
+    <library name="cowarp"/>
+    <library name="axis"/>
+    <library name="axis-saaj"/>
+    <library name="axis-jaxrpc"/>
+    <library name="wsdl4j"/>
+    <library name="commons-discovery"/>
+    <library name="wsrp4j-shared"/>
+    <library name="wsrp4j-consumer"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/portal-sample-block.jar"/>
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
