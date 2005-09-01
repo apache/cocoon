@@ -196,6 +196,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix" fixes-bug="35575" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
+  	   XMLdb block: Don't rely on the sitemap components to stream the contents of a xmldb source.
+    </action>
+  	 <action dev="SW" type="fix" fixes-bug="35574" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
+      CForms block: Escape apostrophes in validation messages formatted as JavaScript alerts.
+	 </action>
     <action dev="AG" type="fix" fixes-bug="36373" due-to="Johan Stuyts" due-to-email="j.stuyts@hippo.nl">
       getTime(...) of CocoonLogFormatter implemented incorrectly
     </action>
