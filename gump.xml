@@ -1609,10 +1609,8 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="jing"/>
-    <depend project="isorelax"/>
 
     <library name="jing"/>
-    <library name="isorelax"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1789,12 +1787,6 @@
     <package>org.apache.wsrp4j</package>
     <jar name="lib/optional/wsrp4j-shared-0.3-dev.jar"/>
     <jar name="lib/optional/wsrp4j-consumer-0.3-dev.jar"/>
-  </project>
-
-  <project name="isorelax">
-    <url href="http://iso-relax.sourceforge.net/"/>
-    <package>org.iso_relax</package>
-    <jar name="lib/optional/isorelax-20041111.jar"/>
   </project>
 
 </module>
