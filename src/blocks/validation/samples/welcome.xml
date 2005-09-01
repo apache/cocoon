@@ -17,7 +17,7 @@
 
 <!-- CVS $Id: samples.xml 230598 2005-08-06 21:53:09Z antonio $ -->
 
-<samples name="HTML Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+<samples name="Validation Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <group name="Back">
     <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -35,5 +35,17 @@
       Shows the output of a pipeline configured with a wrong schema.
     </sample>
   </group>
+
+  <group name="Avaliable Documentation">
+    <sample name="Validation Block Documentation"
+            href="http://cocoon.zones.apache.org/daisy/documentation/blocks/validation.html">
+      On-line documentation for the Validation block.
+    </sample>
+    <sample name="JING Transformer Documentation"
+            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/jingtransformer.html">
+      On-line documentation for the JingTransformer.
+    </sample>
+  </group>
+    
 
 </samples>
