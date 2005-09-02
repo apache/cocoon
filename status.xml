@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="LG" type="fix" fixes-bug="35845" due-to="Henric Mueller" due-to-email="henric@trillian.se">
+      JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
+    </action>
     <action dev="CZ" type="add">
       Add property mechanism for Cocoon configuration. All settings for Cocoon can now
       be configured using properties instead of putting them in web.xml.
