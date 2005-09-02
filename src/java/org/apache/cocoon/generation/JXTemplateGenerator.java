@@ -57,7 +57,6 @@ import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.Location;
-import org.apache.cocoon.util.location.LocationAttributes;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;

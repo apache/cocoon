@@ -21,11 +21,6 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.SitemapParameters;
-
-import java.util.Map;
 
 /**
  *
