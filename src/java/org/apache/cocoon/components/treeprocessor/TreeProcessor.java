@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
