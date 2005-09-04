@@ -211,7 +211,7 @@ public class XSPExpressionParser {
                     parser.setState(EXPRESSION_CHAR_STATE);
                     break;
 
-                case '�':
+                case '\u00B4':
                     parser.append(ch);
                     parser.setState(EXPRESSION_SHELL_STATE);
                     break;
@@ -235,10 +235,10 @@ public class XSPExpressionParser {
     protected static final State EXPRESSION_CHAR_STATE = new QuotedState('\'');
 
     /**
-     * The parser has encountered '�' in <code>{@link EXPRESSION_STATE}</code>
-     * to start a Python string constant.
+     * The parser has encountered '\u00B4' (Unicode Latin-1 Acute Accent) in
+     * <code>{@link EXPRESSION_STATE}</code> to start a Python string constant.
      */
-    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('�');
+    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('\u00B4');
 
     /**
      * The parser state
