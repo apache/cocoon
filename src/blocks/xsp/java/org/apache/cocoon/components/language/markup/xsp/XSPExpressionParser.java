@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.xml.XMLUtils;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -213,7 +211,7 @@ public class XSPExpressionParser {
                     parser.setState(EXPRESSION_CHAR_STATE);
                     break;
 
-                case '´':
+                case 'ï¿½':
                     parser.append(ch);
                     parser.setState(EXPRESSION_SHELL_STATE);
                     break;
@@ -237,10 +235,10 @@ public class XSPExpressionParser {
     protected static final State EXPRESSION_CHAR_STATE = new QuotedState('\'');
 
     /**
-     * The parser has encountered '´' in <code>{@link EXPRESSION_STATE}</code>
+     * The parser has encountered 'ï¿½' in <code>{@link EXPRESSION_STATE}</code>
      * to start a Python string constant.
      */
-    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('´');
+    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('ï¿½');
 
     /**
      * The parser state

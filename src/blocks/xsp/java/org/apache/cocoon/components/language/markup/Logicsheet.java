@@ -25,11 +25,7 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLFilterImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 

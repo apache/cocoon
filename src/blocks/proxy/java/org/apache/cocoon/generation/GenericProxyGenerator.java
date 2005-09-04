@@ -38,7 +38,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This is a generic HTTP proxy, designed to handle any possible HTTP method,

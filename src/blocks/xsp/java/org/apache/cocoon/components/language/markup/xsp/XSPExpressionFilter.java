@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetFilter;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -26,9 +25,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.XMLFilterImpl;
 import java.util.LinkedList;
 
 /**
