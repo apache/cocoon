@@ -18,7 +18,6 @@ package org.apache.cocoon.woody;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Various constants used in the Woody form framework.

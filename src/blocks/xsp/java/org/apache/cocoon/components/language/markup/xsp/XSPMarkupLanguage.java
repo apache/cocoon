@@ -19,13 +19,6 @@ import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetFilter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.xml.XMLUtils;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-
-import java.util.Stack;
 
 /**
  * This class implements <code>MarkupLanguage</code> for Cocoon's

@@ -15,19 +15,18 @@
  */
 package org.apache.cocoon.samples.parentcm;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * Generator for the parent component manager sample. The generator outputs
