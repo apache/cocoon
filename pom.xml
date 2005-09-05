@@ -32,6 +32,7 @@
     <module>src/blocks/authentication-fw/trunk</module>
     <module>src/blocks/cron/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
+    <module>src/blocks/spring-app/trunk</module>
     <module>src/blocks/template/trunk</module>
   </modules>
 </project>
