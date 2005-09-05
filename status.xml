@@ -197,6 +197,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="LG" type="add">
+      support for following use cases: &lt;jx:out value=&quot;${xmlString}&quot; xmlize=&quot;true&quot; strip-root=&quot;true&quot;/&gt;
+      and &lt;jx:out value=&quot;${domDocument}&quot; strip-root=&quot;true&quot;/&gt;
+    </action>
     <action dev="CZ" type="update">
       Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
       Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
