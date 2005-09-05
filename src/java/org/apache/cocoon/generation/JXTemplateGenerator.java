@@ -1496,7 +1496,28 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     private static final String CURRENCY = "currency";
     private static final String PERCENT = "percent";
 
-    static class StartFormatNumber extends StartInstruction {
+    static class LocaleAwareInstruction extends StartInstruction {
+        private JXTExpression locale;
+
+        LocaleAwareInstruction(StartElement startElement, JXTExpression locale) {
+            super(startElement);
+            this.locale = locale;
+        }
+
+        protected Locale getLocale(JexlContext jexl, JXPathContext jxp) throws Exception {
+            Object locVal = getValue(this.locale, jexl, jxp);
+            if (locVal == null)
+                locVal = getStringValue(this.locale, jexl, jxp);
+
+            if (locVal != null) {
+                return locVal instanceof Locale ? (Locale) locVal : parseLocale(locVal.toString(), null);
+            } else {
+                return Locale.getDefault();
+            }
+        }
+    }
+    
+    static class StartFormatNumber extends LocaleAwareInstruction {
 
         JXTExpression value;
         JXTExpression type;
@@ -1508,7 +1529,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         JXTExpression minIntegerDigits;
         JXTExpression maxFractionDigits;
         JXTExpression minFractionDigits;
-        JXTExpression locale;
 
         JXTExpression var;
 
@@ -1536,7 +1556,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                  JXTExpression maxFractionDigits,
                                  JXTExpression minFractionDigits,
                                  JXTExpression locale) {
-            super(raw);
+            super(raw, locale);
             this.var = var;
             this.value = value;
             this.type = type;
@@ -1548,7 +1568,6 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             this.minIntegerDigits = minIntegerDigits;
             this.maxFractionDigits = maxFractionDigits;
             this.minFractionDigits = minFractionDigits;
-            this.locale = locale;
         }
 
         String format(JexlContext jexl, JXPathContext jxp) throws Exception {
@@ -1564,8 +1583,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             Number minIntegerDigits = getNumberValue(this.minIntegerDigits, jexl, jxp);
             Number maxFractionDigits = getNumberValue(this.maxFractionDigits, jexl, jxp);
             Number minFractionDigits = getNumberValue(this.minFractionDigits, jexl, jxp);
-            String localeStr = getStringValue(this.locale, jexl, jxp);
-            Locale loc = localeStr != null ? parseLocale(localeStr, null) : Locale.getDefault(); 
+            Locale loc = getLocale(jexl,jxp);
             String formatted;
             if (loc != null) {
                 // Create formatter
@@ -1719,7 +1737,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
     // formatDate tag (borrows from Jakarta taglibs JSTL)
 
-    static class StartFormatDate extends StartInstruction {
+    static class StartFormatDate extends LocaleAwareInstruction {
 
         private static final String DATE = "date";
         private static final String TIME = "time";
@@ -1743,7 +1761,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                         JXTExpression dateStyle,
                         JXTExpression timeStyle,
                         JXTExpression locale) {
-            super(raw);
+            super(raw, locale);
             this.var = var;
             this.value = value;
             this.type = type;
@@ -1751,14 +1769,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             this.timeZone = timeZone;
             this.dateStyle = dateStyle;
             this.timeStyle = timeStyle;
-            this.locale = locale;
         }
 
         String format(JexlContext jexl, JXPathContext jxp)
             throws Exception {
             String var = getStringValue(this.var, jexl, jxp);
             Object value = getValue(this.value, jexl, jxp);
-            Object locVal = getValue(this.locale, jexl, jxp);
             String pattern = getStringValue(this.pattern, jexl, jxp);
             Object timeZone = getValue(this.timeZone, jexl, jxp);
 
@@ -1769,12 +1785,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             String formatted = null;
 
             // Create formatter
-            Locale locale;
-            if (locVal != null) {
-                locale = locVal instanceof Locale ? (Locale)locVal : parseLocale(locVal.toString(), null);  
-            } else {
-                locale = Locale.getDefault();
-            }
+            Locale locale = getLocale(jexl, jxp);
             DateFormat formatter = createFormatter(locale, type, dateStyle, timeStyle);
             // Apply pattern, if present
             if (pattern != null) {
