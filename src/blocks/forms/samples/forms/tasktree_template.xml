@@ -47,7 +47,7 @@
       padding-bottom: 0.4em;
       padding-left: 0.4em;
       border: 1px dotted black;
-      mmargin-top: 0.4em;
+      margin-top: 0.4em;
       margin-bottom: -1px;
     }
     
