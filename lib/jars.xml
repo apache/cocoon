@@ -42,7 +42,7 @@
       support high level server development. 
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/excalibur-datasource-1.2.0.jar</lib>
+    <lib>optional/excalibur-datasource-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -68,14 +68,14 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file id="excalibur-instrument">
+  <file id="excalibur-instrument-api">
     <title>Excalibur Instrument</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-instrument-1.0.jar</lib>
+    <lib>core/excalibur-instrument-api-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -97,7 +97,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-logger-1.1.jar</lib>
+    <lib>core/excalibur-logger-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -119,7 +119,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-pool-api-2.0.0.jar</lib>
+    <lib>core/excalibur-pool-api-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -130,7 +130,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-pool-impl-2.0.0.jar</lib>
+    <lib>core/excalibur-pool-impl-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -141,7 +141,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-pool-instrumented-2.0.0.jar</lib>
+    <lib>core/excalibur-pool-instrumented-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -152,7 +152,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-sourceresolve-1.1.jar</lib>
+    <lib>core/excalibur-sourceresolve-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -163,7 +163,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-store-1.0.jar</lib>
+    <lib>core/excalibur-store-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -174,7 +174,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-xmlutil-1.0.jar</lib>
+    <lib>core/excalibur-xmlutil-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 

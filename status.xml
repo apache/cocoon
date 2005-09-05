@@ -198,7 +198,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="update">
-      Update Avalon framework to 4.3, Avalon LogKit to 2.1.
+      Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
+      Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
+      Excalibur Store to 2.1, Excalibur XMLUtils to 2.1 and Excalibur Database to 2.1.
     </action>
     <action dev="LG" type="fix" fixes-bug="35845" due-to="Henric Mueller" due-to-email="henric@trillian.se">
       JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
