@@ -31,5 +31,6 @@
     <module>webapp</module>
     <module>src/blocks/authentication-fw/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
+    <module>src/blocks/template/trunk</module>
   </modules>
 </project>
