@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/generators"
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/generators"
       unless="generator[@name='script']">
 
     <map:generator name="script" src="org.apache.cocoon.generation.ScriptGenerator" logger="sitemap.generation.scriptgenerator">

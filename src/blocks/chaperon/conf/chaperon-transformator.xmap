@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='lexer']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/transformers" unless="transformer[@name='lexer']">
     <map:transformer logger="sitemap.transformer.lexer" name="lexer"
                      src="org.apache.cocoon.transformation.LexicalTransformer"/>
     <map:transformer logger="sitemap.transformer.parser" name="parser"

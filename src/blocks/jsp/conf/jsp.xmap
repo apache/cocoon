@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/readers"
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/readers"
       unless="reader[@name='jsp']">
     <map:reader name="jsp" src="org.apache.cocoon.reading.JSPReader">
     <!-- The configuration for the JSPReader with its default values:

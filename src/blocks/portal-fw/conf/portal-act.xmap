@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/actions"
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/actions"
       unless="action[@name='portal-auth']">
 
     <map:action name="portal-auth"

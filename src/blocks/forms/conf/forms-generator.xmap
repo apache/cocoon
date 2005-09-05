@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='forms']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/generators" unless="generator[@name='forms']">
     <map:generator name="forms" logger="forms"
                    src="org.apache.cocoon.forms.generation.FormsGenerator"/>
 </xmap>

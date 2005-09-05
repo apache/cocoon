@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='extractor']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/transformers" unless="transformer[@name='extractor']">
 
     <map:transformer logger="sitemap.transformer.extractor" name="extractor" src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
 </xmap>

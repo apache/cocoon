@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xmap xpath="/sitemap/components/serializers" unless="serializer[@name='xls']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/serializers" unless="serializer[@name='xls']">
  <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer" mime-type="application/vnd.ms-excel"/>
 </xmap>

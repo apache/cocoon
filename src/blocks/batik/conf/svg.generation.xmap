@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='extractor']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/generators" unless="generator[@name='extractor']">
 
    <map:generator label="content" logger="sitemap.generator.extractor" name="extractor" src="org.apache.cocoon.generation.FragmentExtractorGenerator"/>
 </xmap>
