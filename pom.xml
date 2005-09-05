@@ -29,5 +29,7 @@
   <modules>
     <module>core</module>
     <module>webapp</module>
+    <module>src/blocks/authentication-fw/trunk</module>
+    <module>src/blocks/session-fw/trunk</module>
   </modules>
 </project>
