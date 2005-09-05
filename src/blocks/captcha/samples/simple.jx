@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Simple use of CAPTCHAs</title>
+  </head>
+  <body>
+    <div style="text-align: center">
+      <p><a href="welcome">Back to the samples</a></p>
+
+      <p>
+        This page demonstrate the use of a simple CAPTCHA, implemented using
+        Cocoon's <code>CaptchaReader</code> through server-side sessions.
+      </p>
+
+      <form action="continue" method="post">
+        <img src="simple.jpeg" width="100" height="50"/><br />
+        Enter the text written in the image above and click on <b>Verify</b>.<br />
+        <input type="hidden" name="continuation" value="${continuation.id}"/>
+        <input type="text" name="captcha"/>
+        <input type="submit" value="Verify"/>
+      </form>
+    </div>
+  </body>
+</html>
