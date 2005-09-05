@@ -15,8 +15,9 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/transformers"
-      unless="generator[@name='jing']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/transformers"
+      unless="transformer[@name='jing']">
 
     <map:transformer name="jing"
                      logger="sitemap.transformer.jing"
