@@ -226,7 +226,7 @@
       performance oriented logging in applications.
     </description>
     <used-by>Cocoon logging</used-by>
-    <lib>core/logkit-1.2.2.jar</lib>
+    <lib>core/avalon-logkit-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
