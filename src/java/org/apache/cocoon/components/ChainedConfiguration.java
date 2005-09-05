@@ -249,4 +249,32 @@ public final class ChainedConfiguration implements Configuration {
         return this.wrappedConfiguration.getValueAsLong(arg0);
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configuration#getAttributeAsDouble(java.lang.String, double)
+     */
+    public double getAttributeAsDouble(String arg0, double arg1) {
+        return this.wrappedConfiguration.getAttributeAsDouble(arg0, arg1);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.configuration.Configuration#getAttributeAsDouble(java.lang.String)
+     */
+    public double getAttributeAsDouble(String arg0) throws ConfigurationException {
+        return this.wrappedConfiguration.getAttributeAsDouble(arg0);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.configuration.Configuration#getValueAsDouble()
+     */
+    public double getValueAsDouble() throws ConfigurationException {
+        return this.wrappedConfiguration.getValueAsDouble();
+    }
+
+    /**
+     * @see org.apache.avalon.framework.configuration.Configuration#getValueAsDouble(double)
+     */
+    public double getValueAsDouble(double arg0) {
+        return this.wrappedConfiguration.getValueAsDouble(arg0);
+    }
+
 }

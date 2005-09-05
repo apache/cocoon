@@ -185,7 +185,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/avalon-framework-api-4.1.5.jar</lib>
+    <lib>core/avalon-framework-api-4.3.jar</lib>
     <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
@@ -196,7 +196,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/avalon-framework-impl-4.1.5.jar</lib>
+    <lib>core/avalon-framework-impl-4.3.jar</lib>
     <homepage>http://excalibur.apache.org/framework/index.html</homepage>
   </file>
 
