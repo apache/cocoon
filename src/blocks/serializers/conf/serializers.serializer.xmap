@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/serializers" unless="serializer[@name='exml']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/serializers" unless="serializer[@name='exml']">
     <map:serializer name="exml"
                     logger="sitemap.serializer.exml"
                     src="org.apache.cocoon.components.serializers.XMLSerializer"

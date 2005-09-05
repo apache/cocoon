@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xmap xpath="/sitemap/components/pipes" unless="pipe[@name='profile-caching']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/pipes" unless="pipe[@name='profile-caching']">
      <!-- The following two can be used for profiling:-->
      <map:pipe name="profile-caching"
                    src="org.apache.cocoon.components.profiler.ProfilingCachingProcessingPipeline"/>

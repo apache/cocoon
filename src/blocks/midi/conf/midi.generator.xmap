@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='xmidi']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/generators" unless="generator[@name='xmidi']">
     <map:generator name="xmidi" src="org.apache.cocoon.generation.XMidiGenerator" label="content"/>
 </xmap>

@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='xmldb']">
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/transformers" unless="transformer[@name='xmldb']">
 
     <map:transformer logger="sitemap.transformer.xmldb" name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer">
       <!-- Driver class (optional). Uncomment if you want XMLDBTransformer

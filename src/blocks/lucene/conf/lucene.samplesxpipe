@@ -15,8 +15,9 @@
   limitations under the License.
 -->
 <!-- CVS $Id: lucene.samplesxpipe,v 1.5 2004/07/11 19:47:56 antonio Exp $ -->
-<samplesxpipe xpath="/sitemap/pipelines"
-       unless="pipeline/match[@pattern='search/**']">
+<samplesxpipe xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+              xpath="/sitemap/pipelines"
+              unless="pipeline/match[@pattern='search/**']">
 
   <map:pipeline>
     <!-- Mount search pages sitemap, for using indexing & searching -->
