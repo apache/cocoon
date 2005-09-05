@@ -235,10 +235,10 @@ public class XSPExpressionParser {
     protected static final State EXPRESSION_CHAR_STATE = new QuotedState('\'');
 
     /**
-     * The parser has encountered '\u00B4' (Unicode Latin-1 Acute Accent) in
+     * The parser has encountered '`' (Backtick, ASCII 0x60) in
      * <code>{@link EXPRESSION_STATE}</code> to start a Python string constant.
      */
-    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('\u00B4');
+    protected static final State EXPRESSION_SHELL_STATE = new QuotedState('`');
 
     /**
      * The parser state
