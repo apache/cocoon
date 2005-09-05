@@ -1599,27 +1599,47 @@
 
   <project name="cocoon-block-validation" status="unstable" dir="src/blocks/validation">
     <package>org.apache.cocoon</package>
-
-    <description>In-pipeline validation of document using JING or JARV</description>
-
+    
+    <description>In-pipeline validation of documents</description>
+    
     <ant target="gump-block">
       <property name="block-name" value="validation"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
-
+    
     <depend project="cocoon" inherit="all"/>
     <depend project="jing"/>
-
+    
     <library name="jing"/>
-
+    
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
-
+    
     <jar name="blocks/validation-block.jar"/>
-
+    
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-captcha" status="unstable" dir="src/blocks/captcha">
+    <package>org.apache.cocoon</package>
+    
+    <description>Utilites to generate simple CAPTCHAs</description>
+    
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    
+    <jar name="blocks/captcha-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+  
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
