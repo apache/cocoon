@@ -18,19 +18,47 @@ package org.apache.cocoon.components.validation;
 import java.io.IOException;
 
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
- * <p>TODO: ...</p>
- *
+ * <p>A component parsing schemas usable for XML validation and returning them as
+ * {@link Schema} instances.</p>
+ * 
+ * <p>This interface does not imply any requirement in terms of the language used
+ * to produce {@link Schema} instances. Normally multiple-language selection is
+ * provided looking up the {@link SELECTOR} role, and from there determining
+ * the implementation required.</p>
+ * 
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public interface SchemaParser {
     
+    /** <p>Avalon Role name of this component.</p> */
     public static final String ROLE = SchemaParser.class.getName();
+    /** <p>Role name to use when this component is accessed via a selector.</p> */
     public static final String SELECTOR = ROLE + "Selector";
 
-    public Schema parseSchema(Source source)
+    /**
+     * <p>Parse the specified URI and return a {@link Schema}.</p>
+     * 
+     * <p>Once parsed, the returned {@link Schema} can be used multiple time to
+     * validate documents by sending their SAX events to the handler returned by
+     * the {@link Schema#createXMLConsumer(ErrorHandler)}.</p>
+     * 
+     * <p>As different schema languages allow inclusion of sub-schemas, the
+     * {@link SourceValidity} of the resolved schema might not equivalent to the
+     * one returned by {@link Source#getValidity()}. After parsing is complete, the
+     * validity of the parsed schema and its sub-schemas is available calling the 
+     * {@link Schema#getValidity()} method.</p>
+     *
+     * @param source the {@link Source} of the {@link Schema} to return.
+     * @return a <b>non-null</b> {@link Schema} instance.
+     * @throws SAXException if an error occurred parsing the {@link Source}.
+     * @throws IOException if an I/O error occurred parsing the {@link Source}.
+     */
+    public Schema getSchema(String uri)
     throws SAXException, IOException;
 
 }
