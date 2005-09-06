@@ -179,7 +179,7 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
      * {@link Stack} of {@link InputSource}s kept for URI resolution as explained
      * in the description of the {@link #resolveEntity(String, String)} method.</p>
      * 
-     * @see JingReader
+     * @link JingReader
      * @return a <b>non-null</b> {@link XMLReader} instance.
      * @throws SAXException if an error occurrent creating the {@link XMLReader}.
      */

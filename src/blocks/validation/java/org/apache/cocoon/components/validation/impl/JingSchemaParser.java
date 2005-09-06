@@ -21,7 +21,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
-import org.apache.excalibur.source.Source;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -55,10 +54,10 @@ public class JingSchemaParser extends CachingSchemaParser {
     /**
      * <p>Parse the specified URI and return a {@link Schema}.</p>
      *
-     * @param source the {@link Source} of the {@link Schema} to return.
+     * @param uri the URI of the {@link Schema} to return.
      * @return a <b>non-null</b> {@link Schema} instance.
-     * @throws SAXException if an error occurred parsing the {@link Source}.
-     * @throws IOException if an I/O error occurred parsing the {@link Source}.
+     * @throws SAXException if an error occurred parsing the schema.
+     * @throws IOException if an I/O error occurred parsing the schema.
      */
     public Schema parseSchema(String uri)
     throws SAXException, IOException {

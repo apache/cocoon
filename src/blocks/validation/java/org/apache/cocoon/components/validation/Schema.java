@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.validation;
 
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLConsumer;
 import org.xml.sax.ErrorHandler;
@@ -34,11 +33,9 @@ public interface Schema {
     /**
      * <p>Return the {@link SourceValidity} associated with this {@link Schema}.</p>
      * 
-     * <p>Schema implementations might return simple schema implementations as
-     * returned by {@link Source#getValidity()}, but if the current schema language
-     * allow inclusion of sub-schemas, the {@link SourceValidity} returned by this
-     * method <b>must</b> validate the original schema {@link Source} <b>and</b> all
-     * its sub-schema {@link Source}s.</p>
+     * <p>If the current schema language allow inclusion of sub-schemas, the
+     * {@link SourceValidity} returned by this method <b>must</b> validate both the
+     * original schema URI <b>and</b> all its sub-schemas.</p>
      * 
      * @return a {@link SourceValidity} instance or <b>null</b> if not known.
      */
@@ -69,7 +66,7 @@ public interface Schema {
      * 
      * <p>Once used, the returned {@link XMLConsumer} <b>can not</b> be reused.</p> 
      * 
-     * @param errorHandler an {@link ErrorHandler} to notify of validation errors.
+     * @param handler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link XMLConsumer} instance.
      */
     public XMLConsumer newValidator(ErrorHandler handler);
