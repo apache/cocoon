@@ -18,7 +18,6 @@
 package org.apache.cocoon.components.validation.impl;
 
 import org.apache.cocoon.components.validation.Schema;
-import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLConsumer;
 import org.xml.sax.ErrorHandler;
@@ -26,7 +25,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * <p>A simple implementation of the {@link Scema} interface.</p>
+ * <p>A simple implementation of the {@link Schema} interface.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -43,12 +42,6 @@ public abstract class AbstractSchema implements Schema {
 
     /**
      * <p>Return the {@link SourceValidity} associated with this {@link Schema}.</p>
-     * 
-     * <p>Schema implementations might return simple schema implementations as
-     * returned by {@link Source#getValidity()}, but if the current schema language
-     * allow inclusion of sub-schemas, the {@link SourceValidity} returned by this
-     * method <b>must</b> validate the original schema {@link Source} <b>and</b> all
-     * its sub-schema {@link Source}s.</p>
      * 
      * @return a {@link SourceValidity} instance or <b>null</b> if not known.
      */
