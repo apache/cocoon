@@ -32,8 +32,6 @@
     <property name="build.osgi.bundles.template" value="org.apache.cocoon.template_1.0.0.jar"/>        
     <property name="build.osgi.knopflerfish.fwdir" value="fwdir"/>
 
-    <property name="lib.osgi" value="${lib}/osgi"/>
-    
     <property name="src.osgi.servlet" value="${src}/osgi-servlet"/>
     <property name="src.blocks.template" value="${blocks}/template/trunk/java"/>    
     
@@ -44,7 +42,7 @@
     <mkdir dir="${build.osgi.blocks.template}"/>      
   </target>
   
-  <target name="osgi" depends="osgi.bundling" 
+  <target name="osgi" depends="osgi.bundle.core, osgi.bundle.osgi-servlet, osgi.bundle.webapp, osgi.bundle.block.template" 
     description="Setup Cocoon to run within OSGi containers">
   </target>
   
@@ -53,7 +51,7 @@
     <delete dir="${build.osgi.knopflerfish.fwdir}"/>
   </target>
   
-  <target name="osgi.compile-osgi-servlet">
+  <target name="osgi.compile-osgi-servlet" depends="osgi.init, compile-core">
     <path id="osgi.osgi-servlet.classpath">
       <fileset dir="./lib/core">
         <include name="knopflerfish-*.jar"/>
@@ -76,12 +74,12 @@
       classpathref="osgi.osgi-servlet.classpath"/>
   </target>
   
-  <target name="osgi.prepare-webapp">
+  <target name="osgi.prepare-webapp" depends="osgi.init">
     <copy file="${webapp}/welcome.xml" tofile="${build.osgi.webapp}/welcome.xml" filtering="on"/>
     <copy file="${webapp}/not-found.xml" tofile="${build.osgi.webapp}/not-found.xml" filtering="on"/>
     <copy file="${webapp}/welcome.xslt" tofile="${build.osgi.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.osgi.webapp}/sitemap.xmap"/>
-    <copy file="${webapp}/sitemap-additions.xconf" tofile="${build.osgi.webapp}/sitemap-additions.xconf"/>
+    <copy file="${webapp}/WEB-INF/sitemap-additions/cocoon-core.xconf" tofile="${build.osgi.webapp}/WEB-INF/sitemap-additions/cocoon-core.xconf"/>
     <copy file="${webapp}/wiring.xml" tofile="${build.osgi.webapp}/wiring.xml" filtering="on"/>
       
     <copy todir="${build.osgi.webapp}/stylesheets" filtering="on">
@@ -113,6 +111,12 @@
       </fileset>
     </copy>
       
+    <replace file="${build.osgi.webapp}/sitemap.xmap">
+      <replacetoken><![CDATA[<map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>]]></replacetoken>
+      <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
+        map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/-->]]></replacevalue>
+    </replace>  
+    
     <replace file="${build.osgi.webapp}/WEB-INF/cocoon.xconf">
       <replacetoken><![CDATA[<include dir="context://WEB-INF/xconf" pattern="*.xconf"/>]]></replacetoken>
       <replacevalue><![CDATA[<!-- replaced by the OSGi Ant task
@@ -150,7 +154,7 @@
     
   </target>
   
-  <target name="osgi.block.template">
+  <target name="osgi.block.template" depends="osgi.init, compile-core">
     <path id="osgi.blocks.template.classpath">
       <fileset dir="${lib.core}">
         <include name="*.jar"/>
@@ -158,9 +162,6 @@
       <fileset dir="${lib.endorsed}">
         <include name="*.jar"/>
       </fileset>         
-      <fileset dir="${lib.osgi}">
-        <include name="*/*.jar"/>
-      </fileset>          
       <!-- include Cocoon core -->
       <dirset dir="${build.dest}"/>
     </path>    
@@ -186,7 +187,7 @@
     
   </target>
   
-  <target name="osgi.bundling" depends="osgi.init, compile-core, osgi.compile-osgi-servlet, osgi.prepare-webapp, osgi.block.template"> 
+  <target name="osgi.bundle.core" depends="osgi.init, compile-core"> 
     
     <!-- note: packaging OSGI packages is only provisional; of course we will need a more generic build system in the future -->
   
@@ -204,15 +205,24 @@
         <include name="*.jar"/>
       </fileset>      
     </jar>
-    <!-- the Cocoon webapp bundle -->
-    <jar file="${build.osgi}/${build.osgi.bundles.cocoon_webapp}" manifest="${webapp}/Manifest.mf">
-      <fileset dir="${build.osgi.webapp}"/>
-    </jar>
-    <!-- the osgi-servlet bundle -->
+  </target>
+
+  <!-- the osgi-servlet bundle -->
+  <target name="osgi.bundle.osgi-servlet" depends="osgi.compile-osgi-servlet"> 
     <jar file="${build.osgi}/${build.osgi.bundles.cocoon_servlet}" manifest="${src.osgi.servlet}/Manifest.mf">
       <fileset dir="${build.osgi.servlet}"/>
     </jar>
-    <!-- the templating bundle -->
+  </target>
+
+  <!-- the Cocoon webapp bundle -->
+  <target name="osgi.bundle.webapp" depends="osgi.prepare-webapp"> 
+    <jar file="${build.osgi}/${build.osgi.bundles.cocoon_webapp}" manifest="${webapp}/Manifest.mf">
+      <fileset dir="${build.osgi.webapp}"/>
+    </jar>
+  </target>
+
+  <!-- the templating bundle -->
+  <target name="osgi.bundle.block.template" depends="osgi.block.template"> 
     <jar file="${build.osgi}/${build.osgi.bundles.template}" manifest="${src.blocks.template}/Manifest.mf">
       <fileset dir="${build.osgi.blocks.template}"/>
     </jar>
