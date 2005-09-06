@@ -21,8 +21,8 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * Our response wrapper
@@ -30,9 +30,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-public class ServletResponseImpl implements HttpServletResponse {
+public class ServletResponseImpl extends HttpServletResponseWrapper {
 
-    protected final HttpServletResponse response;
     protected MyOutputStream stream;
     protected PrintWriter writer;
 
@@ -42,7 +41,7 @@ public class ServletResponseImpl implements HttpServletResponse {
     protected String redirectURL;
 
     public ServletResponseImpl(HttpServletResponse response) {
-        this.response = response;
+        super(response);
         this.stream = new MyOutputStream();
         this.writer = new PrintWriter(this.stream);
     }
@@ -80,94 +79,6 @@ public class ServletResponseImpl implements HttpServletResponse {
     /*
      * (non-Javadoc)
      *
-     * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
-     */
-    public void addCookie(Cookie arg0) {
-        this.response.addCookie(null);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String,
-     *      long)
-     */
-    public void addDateHeader(String arg0, long arg1) {
-        this.response.addDateHeader(arg0, arg1);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String,
-     *      java.lang.String)
-     */
-    public void addHeader(String arg0, String arg1) {
-        this.response.addHeader(arg0, arg1);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String,
-     *      int)
-     */
-    public void addIntHeader(String arg0, int arg1) {
-        this.response.addIntHeader(arg0, arg1);
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
-     */
-    public boolean containsHeader(String arg0) {
-        return this.response.containsHeader(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
-     */
-    public String encodeRedirectUrl(String arg0) {
-        return this.response.encodeRedirectURL(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#encodeRedirectURL(java.lang.String)
-     */
-    public String encodeRedirectURL(String arg0) {
-        return this.response.encodeRedirectURL(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
-     */
-    public String encodeUrl(String arg0) {
-        return this.response.encodeURL(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
-     */
-    public String encodeURL(String arg0) {
-        return this.response.encodeURL(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see javax.servlet.http.HttpServletResponse#sendError(int,
      *      java.lang.String)
      */
@@ -191,36 +102,6 @@ public class ServletResponseImpl implements HttpServletResponse {
      */
     public void sendRedirect(String arg0) throws IOException {
         this.redirectURL = arg0;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String,
-     *      long)
-     */
-    public void setDateHeader(String arg0, long arg1) {
-        this.response.setDateHeader(arg0, arg1);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String,
-     *      java.lang.String)
-     */
-    public void setHeader(String arg0, String arg1) {
-        this.response.setHeader(arg0, arg1);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String,
-     *      int)
-     */
-    public void setIntHeader(String arg0, int arg1) {
-        this.response.setIntHeader(arg0, arg1);
     }
 
     /*
@@ -258,24 +139,6 @@ public class ServletResponseImpl implements HttpServletResponse {
      */
     public int getBufferSize() {
         return this.bufferSize = 1024;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletResponse#getCharacterEncoding()
-     */
-    public String getCharacterEncoding() {
-        return this.response.getCharacterEncoding();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletResponse#getLocale()
-     */
-    public Locale getLocale() {
-        return this.response.getLocale();
     }
 
     /*

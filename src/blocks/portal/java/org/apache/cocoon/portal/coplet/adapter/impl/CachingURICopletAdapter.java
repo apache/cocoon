@@ -229,6 +229,7 @@ public class CachingURICopletAdapter
         }
         return false;
     }
+
     /**
      * Build the key for the global cache.
      */

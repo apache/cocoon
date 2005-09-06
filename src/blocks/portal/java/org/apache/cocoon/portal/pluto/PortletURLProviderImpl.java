@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.information.PortletURLProvider;
 
 /**
- * Creste the URL for a portlet
+ * Create the URL for a portlet.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
@@ -64,7 +64,7 @@ public class PortletURLProviderImpl
     protected boolean action;
     
     /** Secure link? */
-    protected Boolean secure = null;
+    protected Boolean secure;
     
     /** Clear parameters */
     protected boolean clearParameters;
@@ -74,7 +74,7 @@ public class PortletURLProviderImpl
     
     /** The generated url */
     protected String generatedURL;
-    private LinkService linkService;
+    private final LinkService linkService;
     private static final String DEFAULT_PORTLET_URL_REQUEST_PARAM = "url";
 
     /**
@@ -139,7 +139,7 @@ public class PortletURLProviderImpl
         return this.portletWindow;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#setPortletMode(javax.portlet.PortletMode)
      */
     public void setPortletMode(PortletMode mode) {
@@ -153,7 +153,7 @@ public class PortletURLProviderImpl
         return this.mode;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#setWindowState(javax.portlet.WindowState)
      */
     public void setWindowState(WindowState state) {
@@ -167,7 +167,7 @@ public class PortletURLProviderImpl
         return this.state;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#setAction()
      */
     public void setAction() {
@@ -181,21 +181,21 @@ public class PortletURLProviderImpl
         return this.action;
     }
         
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#setSecure()
      */
     public void setSecure() {
         this.secure =  new Boolean(true);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#clearParameters()
      */
     public void clearParameters() {
         this.clearParameters = true;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.PortletURLProvider#setParameters(java.util.Map)
      */
     public void setParameters(Map parameters) {
@@ -212,11 +212,14 @@ public class PortletURLProviderImpl
         return this.parameters;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return new PortletURLProviderImpl(this).getURL();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.lang.Object#toString()
      */
     private String getURL() {
@@ -252,11 +255,10 @@ public class PortletURLProviderImpl
                 this.generatedURL = this.linkService.getLinkURI(l, secure);
             }
         }
-
         return linkService.encodeURL(this.generatedURL);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.event.ActionEvent#getTarget()
      */
     public Object getTarget() {        
