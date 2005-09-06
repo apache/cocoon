@@ -225,6 +225,9 @@ public class MutableSettings implements Settings {
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
+    /** The property providers. */
+    protected List propertyProviders = new ArrayList();
+
     /**
      * Create a new settings object
      */
@@ -298,6 +301,8 @@ public class MutableSettings implements Settings {
                         this.addToLoadClasses(value);
                     } else if ( key.startsWith(KEY_EXTRA_CLASSPATHS) ) {
                         this.addToExtraClasspaths(value);
+                    } else if ( key.startsWith(KEY_PROPERTY_PROVIDER) ) {
+                        this.addToPropertyProviders(value);
                     } else if ( key.startsWith(KEY_FORCE_PROPERTIES) ) {
                         key = key.substring(KEY_FORCE_PROPERTIES.length() + 1);
                         this.addToForceProperties(key, value);
@@ -582,6 +587,8 @@ public class MutableSettings implements Settings {
                 this.toString(this.extraClasspaths);
             } else if ( key.equals(KEY_FORCE_PROPERTIES) ) {
                 this.toString(this.forceProperties);
+            } else if ( key.equals(KEY_PROPERTY_PROVIDER) ) {
+                this.toString(this.propertyProviders);
             }
         }
 
@@ -923,5 +930,20 @@ public class MutableSettings implements Settings {
         // Don't check read only here as this will change if Cocoon
         // is reloaded while the settings remain the same.
         this.creationTime = value;
+    }
+
+    /**
+     * @see org.apache.cocoon.core.BaseSettings#getPropertyProviders()
+     */
+    public List getPropertyProviders() {
+        return this.propertyProviders;
+    }
+
+    /**
+     * Add a property provider.
+     */
+    public void addToPropertyProviders(String className) {
+        this.checkWriteable();
+        this.propertyProviders.add(className);
     }
 }
