@@ -10,19 +10,19 @@ Bundle-Vendor: Apache
 Bundle-DocURL: http://cocoon.apache.org
 Bundle-ContactAddress: http://cocoon.apache.org
 Bundle-Category: library
-Bundle-Classpath: .,avalon-framework-api-4.1.5.jar,avalon-fra
- mework-impl-4.1.5.jar,commons-cli-1.0.jar,commons-collections-3.1.jar
- ,commons-httpclient-2.0.2.jar,commons-jci-r159148.jar,commons-jexl-1.
- 0.jar,commons-jxpath-1.2.jar,commons-lang-2.1.jar,commons-logging-1.0
- .4.jar,ehcache-1.1.jar,excalibur-i18n-1.1.jar,excalibur-instrument-1.
- 0.jar,excalibur-io-1.1.jar,excalibur-logger-1.1.jar,excalibur-naming-
- 1.0.jar,excalibur-pool-api-2.0.0.jar,excalibur-pool-impl-2.0.0.jar,ex
- calibur-pool-instrumented-2.0.0.jar,excalibur-sourceresolve-1.1.jar,e
- xcalibur-store-1.0.jar,excalibur-xmlutil-1.0.jar,jcs-1.2.5-dev-200503
- 13.jar,log4j-1.2.11.jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.j
- ar,util.concurrent-1.3.4.jar,xml-commons-resolver-1.1.jar,xmlbeans-1.
- 0.3.jar,jakarta-bcel-20040329.jar,jakarta-regexp-1.4.jar,xalan-2.7.0.j
- ar,xercesImpl-2.7.1.jar,xml-apis-1.3.02.jar
+Bundle-Classpath: .,avalon-framework-api-4.3.jar,avalon-framework-impl
+ -4.3.jar,commons-cli-1.0.jar,commons-collections-3.1.jar,commons-http
+ client-2.0.2.jar,commons-jci-r159148.jar,commons-jexl-1.0.jar,commons
+ -jxpath-1.2.jar,commons-lang-2.1.jar,commons-logging-1.0.4.jar,ehcach
+ e-1.1.jar,excalibur-i18n-1.1.jar,excalibur-instrument-2.1.jar,excalib
+ ur-io-1.1.jar,excalibur-logger-2.1.jar,excalibur-naming-1.0.jar,excal
+ ibur-pool-api-2.1.jar,excalibur-pool-impl-2.1.jar,excalibur-pool-inst
+ rumented-2.1.jar,excalibur-sourceresolve-2.1.jar,excalibur-store-2.1.
+ jar,excalibur-xmlutil-2.1.jar,jcs-1.2.5-dev-20050313.jar,log4j-1.2.11
+ .jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.jar,util.concurrent
+ -1.3.4.jar,xml-commons-resolver-1.1.jar,xmlbeans-1.0.3.jar,jakarta-bc
+ el-20040329.jar,jakarta-regexp-1.4.jar,xalan-2.7.0.jar,xercesImpl-2.7
+ .1.jar,xml-apis-1.3.02.jar
 Export-Package: javax.servlet,
  javax.servlet.http,
  org.apache.avalon.framework.context,
