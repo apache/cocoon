@@ -391,6 +391,18 @@ public class CoreUtil {
             resolver.release(directory);
         }
 
+        // Next look for custom property providers
+        Iterator i = s.getPropertyProviders().iterator();
+        while ( i.hasNext() ) {
+            final String className = (String)i.next();
+            try {
+                PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
+                s.fill(provider.getProperties());
+            } catch (Exception ignore) {
+                env.log("Unable to get property provider for class " + className, ignore);
+                env.log("Continuing initialization.");            
+            }
+        }
         // fill from the environment configuration, like web.xml etc.
         env.configure(s);
 

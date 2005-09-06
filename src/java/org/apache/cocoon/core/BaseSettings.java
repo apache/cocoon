@@ -163,6 +163,11 @@ public interface BaseSettings {
     String KEY_LOGGING_OVERRIDE_LOGLEVEL = "override.loglevel";
 
     /**
+     * This key allows to add own {@link PropertyProvider}s.
+     */
+    String KEY_PROPERTY_PROVIDER = "property.provider";
+
+    /**
      * @return Returns the configuration.
      * @see #KEY_CONFIGURATION
      */
@@ -268,4 +273,10 @@ public interface BaseSettings {
      * The creation time of the current Cocoon instance.
      */
     long getCreationTime();
+
+    /**
+     * @return All property providers.
+     * @see #KEY_PROPERTY_PROVIDER
+     */
+    List getPropertyProviders();
 }
