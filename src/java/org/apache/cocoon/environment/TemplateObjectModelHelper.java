@@ -122,18 +122,18 @@ public class TemplateObjectModelHelper {
         try {
             // cocoon.request
             final Request request = ObjectModelHelper.getRequest( objectModel );
-            cocoon.put("request", new FOM_Cocoon.FOM_Request(getScope(), request));
+            cocoon.put("request", request);
             
             // cocoon.session
             final Session session = request.getSession(false);
             if (session != null) {
-                cocoon.put("session", new FOM_Cocoon.FOM_Session(getScope(), session));
+                cocoon.put("session", session);
             }
         
             // cocoon.context
             final org.apache.cocoon.environment.Context context =
                 ObjectModelHelper.getContext( objectModel );
-            cocoon.put("context", new FOM_Cocoon.FOM_Context(getScope(), context));
+            cocoon.put("context", context);
 
         } finally {
             Context.exit();
