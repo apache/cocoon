@@ -19,10 +19,12 @@ import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.excalibur.source.Source;
@@ -40,7 +42,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public abstract class CachingSchemaParser
-implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
+implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
 
     /** <p>The {@link ServiceManager} configured for this instance.</p> */
     protected ServiceManager serviceManager = null;
@@ -48,8 +50,10 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
     protected SourceResolver sourceResolver = null;
     /** <p>The {@link EntityResolver} resolving against catalogs of public IDs.</p> */
     protected EntityResolver entityResolver = null;
-    /** <p>The {@link Store} used for caching {@link Schema}s.</p> */
+    /** <p>The {@link Store} used for caching {@link Schema}s (if enabled).</p> */
     protected Store transientStore = null;
+    /** <p>A flag indicating whether schemas can be cached or not.</p> */
+    private boolean enableCache = true;
 
     /**
      * <p>Contextualize this component specifying a {@link ServiceManager} instance.</p>
@@ -57,6 +61,20 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
     public void service(ServiceManager manager)
     throws ServiceException {
         this.serviceManager = manager;
+    }
+
+    /**
+     * <p>Configure this instance.</p>
+     * 
+     * <p>The only configuration sub-element allowed by this instance is
+     * <code>&lt;cache-schemas&gt;<i>true|false</i>&lt;/cache-schemas&gt;</code>
+     * indicating where parsed schema should be cached. The default value for this
+     * is <code>true</code>.</p>
+     */
+    public void configure(Configuration configuration)
+    throws ConfigurationException {
+        Configuration subconfiguration = configuration.getChild("cache-schemas");
+        this.enableCache = subconfiguration.getValueAsBoolean(true);
     }
 
     /**
@@ -85,6 +103,8 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
      */
     public final Schema getSchema(String uri)
     throws IOException, SAXException {
+        
+        /* First of all resolve the source, and use the resolved URI */
         Source source = null;
         try {
             source = this.sourceResolver.resolveURI(uri); 
@@ -93,10 +113,12 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
             if (source != null) this.sourceResolver.release(source);
         }
 
+        /* Prepare a key, and try to get the cached copy of the schema */
         String key = this.getClass().getName() + ":" + uri;
         Schema schema = (Schema) this.transientStore.get(key);
         SourceValidity validity = null;
 
+        /* If the schema was found verify its validity and optionally clear */
         if (schema != null) {
             validity = schema.getValidity();
             if (validity == null) {
@@ -108,6 +130,7 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
             }
         }
 
+        /* If the schema was not cached or was cleared, parse and cache it */
         if (schema == null) {
             schema = this.parseSchema(uri);
             validity = schema.getValidity();
@@ -116,6 +139,7 @@ implements Serviceable, Initializable, Disposable, SchemaParser, ThreadSafe {
             }
         }
         
+        /* Return the parsed or cached schema */
         return schema;
     }
     

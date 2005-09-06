@@ -17,6 +17,7 @@ package org.apache.cocoon.components.validation;
 
 import java.io.IOException;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ErrorHandler;
@@ -31,14 +32,15 @@ import org.xml.sax.SAXException;
  * provided looking up the {@link SELECTOR} role, and from there determining
  * the implementation required.</p>
  * 
+ * <p>The only requirement imposed by this interface is that the final class
+ * implementing this interface must be {@link ThreadSafe}.</p>
+ *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public interface SchemaParser {
-    
+public interface SchemaParser extends ThreadSafe {
+
     /** <p>Avalon Role name of this component.</p> */
     public static final String ROLE = SchemaParser.class.getName();
-    /** <p>Role name to use when this component is accessed via a selector.</p> */
-    public static final String SELECTOR = ROLE + "Selector";
 
     /**
      * <p>Parse the specified URI and return a {@link Schema}.</p>
@@ -60,5 +62,16 @@ public interface SchemaParser {
      */
     public Schema getSchema(String uri)
     throws SAXException, IOException;
+
+    /**
+     * <p>Return an array of {@link String}s containing all schema languages
+     * supported by this {@link SchemaParser}.</p>
+     * 
+     * <p>All {@link String}s in the array returned by this method should be
+     * valid language names as defined in the {@link Validator} class.</p>
+     *
+     * @return a <b>non-null</b> array of {@link String}s.
+     */
+    public String[] getSupportedLanguages();
 
 }

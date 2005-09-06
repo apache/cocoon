@@ -17,9 +17,12 @@ package org.apache.cocoon.components.validation.impl;
 
 import java.io.IOException;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.components.validation.Validator;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,6 +39,10 @@ import com.thaiopensource.validate.rng.SAXSchemaReader;
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class JingSchemaParser extends CachingSchemaParser {
+
+    /** <p>The list of languages supported by the {@link JingSchemaParser}.</p> */
+    private static final String[] LANGUAGES =
+                                        new String[] { Validator.LANGUAGE_RELAX_NG };
 
     /** <p>The {@link ServiceManager} to resolve other components.</p> */
     private ServiceManager serviceManager;
@@ -69,5 +76,16 @@ public class JingSchemaParser extends CachingSchemaParser {
             String message = "Incorrect schema \"" + uri + "\"";
             throw new SAXException(message, exception);
         }
+    }
+
+    /**
+     * <p>Return an array of {@link String}s containing all schema languages
+     * supported by this {@link SchemaParser}.</p>
+     * 
+     * <p>The {@link JingSchemaParser} supports only the
+     * {@link Validator#LANGUAGE_RELAX_NG RELAX NG} language.</p>
+     */
+    public String[] getSupportedLanguages() {
+        return LANGUAGES;
     }
 }
