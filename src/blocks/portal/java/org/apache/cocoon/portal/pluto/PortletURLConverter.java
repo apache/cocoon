@@ -43,9 +43,9 @@ public class PortletURLConverter {
     public static final String PARAM = "pm";
     public static final String STATE = "st";
 
-    private Map urlData = new HashMap();
-    private Map parameters = new HashMap();
-    private String portletId = null;
+    private final Map urlData = new HashMap();
+    private final Map parameters = new HashMap();
+    private String portletId;
 
     /**
      * Constructor used when the URL will be marshalled.
@@ -87,14 +87,12 @@ public class PortletURLConverter {
      * Return the PortletMode
      * @return The PortletMode
      */
-    public PortletMode getMode()
-    {
+    public PortletMode getMode() {
         String mode = (String)urlData.get(getModeKey());
         if (mode!=null) {
             return new PortletMode(mode);
-        } else {
-            return PortletMode.VIEW;
         }
+        return PortletMode.VIEW;
     }
 
     /**
@@ -106,9 +104,7 @@ public class PortletURLConverter {
         if (state != null) {
             return new WindowState(state);
         }
-        else {
-            return WindowState.NORMAL;
-        }
+        return WindowState.NORMAL;
     }
 
     /**
@@ -122,8 +118,7 @@ public class PortletURLConverter {
     /**
      * Indicates that the URL is an action.
      */
-    public void setAction()
-    {
+    public void setAction() {
         urlData.put(getActionKey(),ACTION.toUpperCase());
     }
 
@@ -131,8 +126,7 @@ public class PortletURLConverter {
      * Sets the PortletMode.
      * @param mode The PortletMode
      */
-    public void setMode(PortletMode mode)
-    {
+    public void setMode(PortletMode mode) {
         urlData.put(getModeKey(), mode.toString());
     }
 
@@ -173,8 +167,7 @@ public class PortletURLConverter {
      * @param name The parameter name
      * @param values An array of Strings.
      */
-    public void setParam(String name, String[] values)
-    {
+    public void setParam(String name, String[] values) {
         this.parameters.put(encodeParameterName(name), encodeParameterValues(values));
     }
 

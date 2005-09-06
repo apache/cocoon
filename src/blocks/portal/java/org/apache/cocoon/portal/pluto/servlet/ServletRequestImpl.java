@@ -15,22 +15,15 @@
  */
 package org.apache.cocoon.portal.pluto.servlet;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.Principal;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
 import org.apache.pluto.om.window.PortletWindow;
@@ -41,9 +34,7 @@ import org.apache.pluto.om.window.PortletWindow;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-public class ServletRequestImpl implements HttpServletRequest {
-
-    final protected HttpServletRequest request;
+public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /** Cache the parameter map */
     protected Map portletParameterMap;
@@ -54,97 +45,20 @@ public class ServletRequestImpl implements HttpServletRequest {
 
     public ServletRequestImpl(HttpServletRequest request,
                               PortletURLProviderImpl provider) {
-        this.request = request;
+        super(request);
         this.provider = provider;
     }
 
     public ServletRequestImpl(HttpServletRequest request,
                               PortletURLProviderImpl provider,
                               PortletWindow window) {
-        this.request = request;
+        super(request);
         this.provider = provider;
         this.window = window;
     }
 
     public ServletRequestImpl getRequest(PortletWindow window) {
-        return new ServletRequestImpl(request, provider, window);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getAuthType()
-     */
-    public String getAuthType() {
-        return this.request.getAuthType();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getContextPath()
-     */
-    public String getContextPath() {
-        return this.request.getContextPath();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getCookies()
-     */
-    public Cookie[] getCookies() {
-        return this.request.getCookies();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
-     */
-    public long getDateHeader(String arg0) {
-        return this.request.getDateHeader(arg0);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
-     */
-    public String getHeader(String arg0) {
-        return this.request.getHeader(arg0);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
-     */
-    public Enumeration getHeaderNames() {
-        return this.request.getHeaderNames();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
-     */
-    public Enumeration getHeaders(String arg0) {
-        return this.request.getHeaders(arg0);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
-     */
-    public int getIntHeader(String arg0) {
-        return this.request.getIntHeader(arg0);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getMethod()
-     */
-    public String getMethod() {
-        return this.request.getMethod();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getPathInfo()
-     */
-    public String getPathInfo() {
-        return this.request.getPathInfo();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
-     */
-    public String getPathTranslated() {
-        return this.request.getPathTranslated();
+        return new ServletRequestImpl((HttpServletRequest)this.getRequest(), provider, window);
     }
 
     /**
@@ -155,229 +69,10 @@ public class ServletRequestImpl implements HttpServletRequest {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
-     */
-    public String getRemoteUser() {
-        return this.request.getRemoteUser();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
-     */
-    public String getRequestedSessionId() {
-        return this.request.getRequestedSessionId();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getRequestURI()
-     */
-    public String getRequestURI() {
-        return this.request.getRequestURI();
-    }
-
-    /**
      * @see javax.servlet.http.HttpServletRequest#getRequestURL()
      */
     public StringBuffer getRequestURL() {
-        //return this.request.getRequestURL();
         return null;
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getServletPath()
-     */
-    public String getServletPath() {
-        return this.request.getServletPath();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getSession()
-     */
-    public HttpSession getSession() {
-        return this.request.getSession();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
-     */
-    public HttpSession getSession(boolean arg0) {
-        return this.request.getSession(arg0);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
-     */
-    public Principal getUserPrincipal() {
-        return this.request.getUserPrincipal();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
-     */
-    public boolean isRequestedSessionIdFromCookie() {
-        return this.request.isRequestedSessionIdFromCookie();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
-     */
-    public boolean isRequestedSessionIdFromUrl() {
-        return this.request.isRequestedSessionIdFromURL();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
-     */
-    public boolean isRequestedSessionIdFromURL() {
-        return this.request.isRequestedSessionIdFromURL();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
-     */
-    public boolean isRequestedSessionIdValid() {
-        return this.request.isRequestedSessionIdValid();
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
-     */
-    public boolean isUserInRole(String arg0) {
-        return this.request.isUserInRole(arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(String arg0) {
-        return this.request.getAttribute(arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getAttributeNames()
-     */
-    public Enumeration getAttributeNames() {
-        return this.request.getAttributeNames();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getCharacterEncoding()
-     */
-    public String getCharacterEncoding() {
-        return this.request.getCharacterEncoding();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getContentLength()
-     */
-    public int getContentLength() {
-        return this.request.getContentLength();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getInputStream()
-     */
-    public ServletInputStream getInputStream() throws IOException {
-        return this.request.getInputStream();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getLocale()
-     */
-    public Locale getLocale() {
-        return this.request.getLocale();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getLocales()
-     */
-    public Enumeration getLocales() {
-        return this.request.getLocales();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getProtocol()
-     */
-    public String getProtocol() {
-        return this.request.getProtocol();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getReader()
-     */
-    public BufferedReader getReader() throws IOException {
-        return this.request.getReader();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
-     */
-    public String getRealPath(String arg0) {
-        return this.request.getRealPath(arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getRemoteAddr()
-     */
-    public String getRemoteAddr() {
-        return this.request.getRemoteAddr();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getRemoteHost()
-     */
-    public String getRemoteHost() {
-        return this.request.getRemoteHost();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
-     */
-    public RequestDispatcher getRequestDispatcher(String arg0) {
-        return this.request.getRequestDispatcher(arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getScheme()
-     */
-    public String getScheme() {
-        return this.request.getScheme();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getServerName()
-     */
-    public String getServerName() {
-        return this.request.getServerName();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#getServerPort()
-     */
-    public int getServerPort() {
-        return this.request.getServerPort();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#isSecure()
-     */
-    public boolean isSecure() {
-        return this.request.isSecure();
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
-     */
-    public void removeAttribute(String arg0) {
-        this.request.removeAttribute(arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
-    public void setAttribute(String arg0, Object arg1) {
-        this.request.setAttribute(arg0, arg1);
     }
 
     /**
@@ -415,7 +110,7 @@ public class ServletRequestImpl implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
-        if (this.portletParameterMap == null) {
+        // TODO - readd caching
             //get control params
             this.portletParameterMap = new HashMap();
 
@@ -438,14 +133,13 @@ public class ServletRequestImpl implements HttpServletRequest {
                 }
 
                 //get request params
-                Enumeration parameters = this.request.getParameterNames();
+            Enumeration parameters = this.getRequest().getParameterNames();
                 while (parameters.hasMoreElements()) {
                     String paramName = (String) parameters.nextElement();
-                    String[] paramValues =
-                        this.request.getParameterValues(paramName);
-                    String[] values =
-                        (String[]) this.portletParameterMap.get(paramName);
+                String[] paramValues = this.getRequest().getParameterValues(paramName);
+                String[] values = (String[]) this.portletParameterMap.get(paramName);
 
+                if ( !paramName.startsWith("cocoon-") ) {
                     if (values != null) {
                         String[] temp =
                             new String[paramValues.length + values.length];

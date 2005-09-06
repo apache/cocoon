@@ -395,12 +395,6 @@ public class PortletAdapter
                 final ServletRequestImpl req = (ServletRequestImpl) objectModel.get("portlet-request");
                 final ServletResponseImpl res= (ServletResponseImpl)objectModel.get("portlet-response");
                 this.portletContainer.processPortletAction(actionWindow, req.getRequest(actionWindow), res);
-
-                // this redirect is only for 2.1.x, don't add it to 2.2 
-                // (see #32157 for more information)
-                final String redirectURL = res.getRedirectURL();
-                HttpServletResponse response = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-                response.sendRedirect(redirectURL);
             } catch (Exception ignore) {
                 this.getLogger().error("Error during processing of portlet action.", ignore);
             }
@@ -423,7 +417,7 @@ public class PortletAdapter
         final Map objectModel = aspectContext.getObjectModel();
 
         // don't generate a response, if we issued a redirect
-        if (objectModel.get("portlet-event") == null) {
+        if (objectModel.remove("portlet-event") == null) {
             aspectContext.invokeNext(ch, parameters);
         }
     }

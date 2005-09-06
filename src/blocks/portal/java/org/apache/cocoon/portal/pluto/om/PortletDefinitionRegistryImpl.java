@@ -93,14 +93,14 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     /** The entity resolver */
     protected EntityResolver resolver;
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) 
@@ -109,7 +109,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
         this.resolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -121,12 +121,14 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
         this.context = null;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
-        this.getLogger().debug("Initializing PortletDefinitionRegistry");
-        ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Initializing PortletDefinitionRegistry");
+        }
+        ServletConfig servletConfig = (ServletConfig) this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
         
         ServletContext servletContext = servletConfig.getServletContext();
 
@@ -178,7 +180,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            this.getLogger().error("Error during initialization of registry.", e);
         } finally {
             this.manager.release(resolver);
         } 
@@ -186,10 +188,16 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
         ((PortletApplicationEntityListCtrl)this.portletApplicationEntities).add("cocoon");
     }
 
+    /**
+     * @see org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry#getPortletApplicationDefinitionList()
+     */
     public PortletApplicationDefinitionList getPortletApplicationDefinitionList() {
         return registry;
     }
 
+    /**
+     * @see org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry#getPortletDefinition(org.apache.pluto.om.common.ObjectID)
+     */
     public PortletDefinition getPortletDefinition(ObjectID id) {
         return (PortletDefinition)portletsKeyObjectId.get(id);
     }
@@ -383,7 +391,7 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry#getPortletApplicationEntityList()
      */
     public PortletApplicationEntityList getPortletApplicationEntityList() {

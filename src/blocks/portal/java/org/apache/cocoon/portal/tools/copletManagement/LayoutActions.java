@@ -60,7 +60,7 @@ public class LayoutActions {
     /**
      * Delets the Object with the id in the layout
      * @param id 
-     * @return
+     * @return true if the object could be deleted.
      */
 	public boolean del(String id) {
 		
@@ -108,7 +108,7 @@ public class LayoutActions {
 	 * Moves the object one position up or down
 	 * @param id id of the element
 	 * @param moveUp set 'true', to move the element up ('false' to move it down)
-	 * @return 
+	 * @return true if the object could be moved.
 	 */
 	public boolean move(String id, boolean moveUp) {
 		
@@ -299,7 +299,9 @@ public class LayoutActions {
 				   cl.addItem(item);
 			   }
 			   
-			} catch (ProcessingException e) {}
+			} catch (ProcessingException e) {
+                // ignore it
+            }
 		}
 		return copletDatas;
     }
@@ -308,9 +310,8 @@ public class LayoutActions {
         Object obj = getLayoutElement(layout, id, "", 1);
         if(obj instanceof CopletLayout) {
             return ((CopletLayout) obj).getCopletInstanceData();
-        } else {
-            return null;    
         }
+        return null;    
     }
     
     /**
