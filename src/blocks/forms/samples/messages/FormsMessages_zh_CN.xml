@@ -52,4 +52,5 @@
 
   <message key="aggregatedfield.split-failed">域的内容不能满足如下表达式: {0}</message>
   <message key="upload.invalid-type">内容类型不正确.</message>
+  <message key="calendar.alt"></message>
 </catalogue>

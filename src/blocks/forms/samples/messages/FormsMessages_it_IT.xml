@@ -53,4 +53,5 @@
 
   <message key="aggregatedfield.split-failed">Il valore non corrisponde alla seguente espressione regolare: {0}</message>
   <message key="upload.invalid-type">Tipo del contenuto non valido.</message>
+  <message key="calendar.alt">Calendario</message>
 </catalogue>

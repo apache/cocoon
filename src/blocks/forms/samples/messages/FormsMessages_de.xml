@@ -17,7 +17,6 @@
 <!-- This catalogue file contains translations for built-in Woody messages. -->
 <catalogue xml:lang="de">
   <message key="general.field-required">Dieses Feld muss aufgefüllt werden.</message>
-
   <message key="datatype.conversion-failed">Ungültige {0}.</message>
   <message key="datatype.decimal">Dezimalzahl</message>
   <message key="datatype.integer">natürliche Zahl</message>
@@ -52,4 +51,5 @@
 
   <message key="aggregatedfield.split-failed">Der Inhalt des Feldes entspricht nicht dem regul. Ausdruck: {0}</message>
   <message key="upload.invalid-type">Falscher Inhaltstyp.</message>
+  <message key="calendar.alt">Kalender</message>
 </catalogue>

@@ -52,4 +52,5 @@
 
   <message key="aggregatedfield.split-failed">Ne correspond pas à l'expression régulière: {0}</message>
   <message key="upload.invalid-type">Type de fichier incorrect.</message>
+  <message key="calendar.alt">Calendrier</message>
 </catalogue>
