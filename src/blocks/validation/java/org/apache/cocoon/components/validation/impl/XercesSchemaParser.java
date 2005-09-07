@@ -54,13 +54,19 @@ public class XercesSchemaParser extends XercesGrammarParser implements SchemaPar
         return GRAMMARS;
     }
 
+    /**
+     * <p>Return a {@link XMLGrammarLoader} for the XML Schema grammar.</p>
+     */
     protected XMLGrammarLoader newGrammarLoader() {
         XMLSchemaLoader loader = new XMLSchemaLoader();
         loader.setFeature(F_SCHEMA_FULL_CHECK, true);
         return loader;
     }
 
-    protected Class getValidationHandler() {
+    /**
+     * <p>Return a {@link Class} implementing the final validation handler.</p>
+     */
+    protected Class getValidationHandlerClass() {
         return VALIDATOR;
     }
 }

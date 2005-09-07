@@ -30,17 +30,21 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * <p>TODO: ...</p>
+ * <p>An implementation of the {@link ContentHandler} interface wrapping around
+ * a Xerces {@link XMLDocumentHandler} instance.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class XercesValidationHandler implements ContentHandler {
+public class XercesContentHandler implements ContentHandler {
     
     private final XMLDocumentHandler validationHandler;
     private final NamespaceContext namespaceContext = new NamespaceSupport();
     private final SAXLocatorWrapper locator = new SAXLocatorWrapper();
 
-    public XercesValidationHandler(XMLDocumentHandler validationHandler) {
+    /**
+     * <p>Create a new {@link XercesContentHandler} instance.</p>
+     */
+    public XercesContentHandler(XMLDocumentHandler validationHandler) {
         this.validationHandler = validationHandler;
     }
 

@@ -24,7 +24,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
- * <p>TODO: ...</p>
+ * <p>A wrapper around a schema parsed by Xerces.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -34,6 +34,9 @@ public class XercesSchema extends AbstractSchema {
     private final XMLGrammarPool grammarPool;
     private final Class validatorClass;
 
+    /**
+     * <p>Create a new {@link XercesSchema} instance.</p>
+     */
     public XercesSchema(XMLGrammarPool grammarPool, SourceValidity sourceValidity,
                         XercesEntityResolver entityResolver, Class validatorClass) {
         super(sourceValidity);
@@ -43,13 +46,23 @@ public class XercesSchema extends AbstractSchema {
         this.grammarPool = grammarPool;
     }
 
+    /**
+     * <p>Return a {@link ContentHandler} able to receive SAX events and performing
+     * validation according to the schema wrapped by this instance.</p>
+     *
+     * @param errorHandler {@link ErrorHandler} to be notified of validation errors.
+     * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * @throws SAXException if an error occurred creating the {@link ContentHandler}.
+     */
     public ContentHandler newValidator(ErrorHandler errorHandler)
     throws SAXException {
-        XercesComponentManager manager = new XercesComponentManager(this.grammarPool, entityResolver, errorHandler);
+        XercesContext context = new XercesContext(this.grammarPool,
+                                                  this.entityResolver,
+                                                  errorHandler);
         try {
-            Object instance = validatorClass.newInstance();
-            ((XMLComponent) instance).reset(manager);
-            return new XercesValidationHandler((XMLDocumentHandler) instance);
+            Object instance = this.validatorClass.newInstance();
+            ((XMLComponent) instance).reset(context);
+            return new XercesContentHandler((XMLDocumentHandler) instance);
         } catch (Exception exception) {
             throw new SAXException("Unable to access validator", exception);
         }
