@@ -66,6 +66,7 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
         this.validatorProperties = builder.toPropertyMap();
         this.sourceResolver = sourceResolver;
         this.entityResolver = entityResolver;
+        this.parsedSourceStack.push(null);
     }
 
     /**
