@@ -32,6 +32,7 @@ import org.apache.cocoon.util.Deprecation;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This adapter extends the {@link org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter}
@@ -181,6 +182,9 @@ public class CachingURICopletAdapter
         if ( data != null ) {
             XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
             bi.setContentHandler(contentHandler);
+            if ( contentHandler instanceof LexicalHandler ) {
+                bi.setLexicalHandler((LexicalHandler)contentHandler);
+            }
             bi.deserialize(data);
         }
     }

@@ -29,7 +29,7 @@ import java.util.HashMap;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.7 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
@@ -236,7 +236,7 @@ public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
         }
     }
 
-    public final void writeEvent( final int event) throws SAXException {
+    public final void writeEvent( final int event) {
         this.write(event);
     }
 
@@ -263,7 +263,7 @@ public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
         }
     }
 
-    public final void writeChars( final char[] ch, final int start, final int length) throws SAXException {
+    public final void writeChars( final char[] ch, final int start, final int length) {
         int utflen = 0;
         int c;
 
