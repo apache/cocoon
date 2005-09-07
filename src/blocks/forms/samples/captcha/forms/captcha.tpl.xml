@@ -18,6 +18,7 @@
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
 
+  <h4 class="samplesGroup">CAPTCHA widget</h4>
   <title>CAPTCHA validation sample form</title>
   <content>
     <p>This is a demonstration of <a href="http://www.captcha.net/">CAPTCHA</a>
@@ -29,7 +30,11 @@
           <ft:widget id="f1"/>
         </fi:items>
       </fi:group>
+      After entering the string, press Enter.
     </ft:form-template>
+    <p>
+      <a href="../">Back to Forms samples</a>
+    </p>
   </content>
 </page>
 

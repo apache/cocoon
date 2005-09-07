@@ -20,7 +20,7 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  
+  <h4 class="samplesGroup">Union widget sample (with AJAX)</h4>
   <title>Datasource chooser</title>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
@@ -58,7 +58,7 @@
       
       <ft:widget id="ok"/>
       <br/>
-      <a href="./do-datasourceChooser.flow">Restart this sample</a> -  <a href="./">Back to samples</a>
+      <a href="./do-datasourceChooser.flow">Restart this sample</a> -  <a href="./">Back to Forms samples</a>
 
     </ft:form-template>
   </content>

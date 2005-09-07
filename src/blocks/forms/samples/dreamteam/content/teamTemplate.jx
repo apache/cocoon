@@ -242,7 +242,7 @@
         function takes over and hands the selected team to the Manager class for further processing. Finally the
         function passes flow onto the <i>showteam</i> pipeline. </p>        
     <p>
-      <a href="../">Back to samples</a>
+      <a href="../">Back to Forms samples</a>
     </p>            
     </body>
   </html>

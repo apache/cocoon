@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <page>
+  <h4 class="samplesGroup">Upload widget</h4>
   <title>Sample form result</title>
   <content>
     User '${username}' uploaded file '${filename}' whose content is :
@@ -23,7 +24,7 @@
 ${uploadContent}
     </pre>
     <p>
-      <a href="../">Back to samples</a>
+      <a href="./">Back to Forms samples</a>
     </p>
   </content>
 </page>

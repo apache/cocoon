@@ -116,6 +116,9 @@
       <p class="developer-note"> This page also uses some i18n tags to show words rather than codes (for positions and
         countries). </p>
       <h2>Do study the code</h2>
+      <p>
+        <a href="../">Back to Forms samples</a>
+      </p>            
     </body>
   </html>
 </jx:template>
