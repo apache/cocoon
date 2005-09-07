@@ -38,22 +38,25 @@
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="jing-transformer-ok">
+      <map:match pattern="validation-ok">
         <map:generate src="source-ok.xml"/>
-        <map:transform type="jing" src="schema-ok.rng"/>
-        <map:serialize type="xml"/>
+        <map:transform type="validate-relaxng" src="schema-ok.rng"/>
+        <map:transform src="validation.xslt"/>
+        <map:serialize/>
       </map:match>
 
-      <map:match pattern="jing-transformer-invalid">
+      <map:match pattern="validation-invalid">
         <map:generate src="source-no.xml"/>
-        <map:transform type="jing" src="schema-ok.rng"/>
-        <map:serialize type="xml"/>
+        <map:transform type="validate-relaxng" src="schema-ok.rng"/>
+        <map:transform src="validation.xslt"/>
+        <map:serialize/>
       </map:match>
 
-      <map:match pattern="jing-transformer-noschema">
+      <map:match pattern="validation-noschema">
         <map:generate src="source-ok.xml"/>
-        <map:transform type="jing" src="schema-no.rng"/>
-        <map:serialize type="xml"/>
+        <map:transform type="validate-relaxng" src="schema-no.rng"/>
+        <map:transform src="validation.xslt"/>
+        <map:serialize/>
       </map:match>
 
     </map:pipeline>

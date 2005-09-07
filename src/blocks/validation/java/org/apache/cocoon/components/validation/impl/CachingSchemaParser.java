@@ -22,6 +22,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public abstract class CachingSchemaParser
+public abstract class CachingSchemaParser extends AbstractLogEnabled
 implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
 
     /** <p>The {@link ServiceManager} configured for this instance.</p> */
@@ -62,7 +63,7 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
     throws ServiceException {
         this.serviceManager = manager;
     }
-
+    
     /**
      * <p>Configure this instance.</p>
      * 
@@ -120,11 +121,14 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
 
         /* If the schema was found verify its validity and optionally clear */
         if (schema != null) {
+            super.getLogger().debug("Accessing cached schema " + uri);
             validity = schema.getValidity();
             if (validity == null) {
+                super.getLogger().debug("Cached schema " + uri + " has no validity");
                 this.transientStore.remove(key);
                 schema = null;
             } else if (validity.isValid() != SourceValidity.VALID) {
+                super.getLogger().debug("Cached schema " + uri + " is not valid");
                 this.transientStore.remove(key);
                 schema = null;
             }
@@ -132,6 +136,7 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
 
         /* If the schema was not cached or was cleared, parse and cache it */
         if (schema == null) {
+            super.getLogger().debug("Parsing schema " + uri);
             schema = this.parseSchema(uri);
             validity = schema.getValidity();
             if ((validity != null) && (validity.isValid() == SourceValidity.VALID)) {

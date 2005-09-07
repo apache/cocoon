@@ -24,14 +24,14 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
-  <group name="JING Transformer">
-    <sample name="Successful validation" href="jing-transformer-ok">
+  <group name="ValidatingTransformer Samples">
+    <sample name="Successful validation" href="validation-ok">
       Shows the output of a pipeline with a valid document being processed.
     </sample>
-    <sample name="Validation failure" href="jing-transformer-invalid">
+    <sample name="Validation failure" href="validation-invalid">
       Shows the output of a pipeline with an invalid document being processed.
     </sample>
-    <sample name="Schema parsing failure" href="jing-transformer-noschema">
+    <sample name="Schema parsing failure" href="validation-noschema">
       Shows the output of a pipeline configured with a wrong schema.
     </sample>
   </group>
@@ -41,9 +41,9 @@
             href="http://cocoon.zones.apache.org/daisy/documentation/blocks/validation.html">
       On-line documentation for the Validation block.
     </sample>
-    <sample name="JING Transformer Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/jingtransformer.html">
-      On-line documentation for the JingTransformer.
+    <sample name="ValidatingTransformer Documentation"
+            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/validatingtransformer.html">
+      On-line documentation for the ValidatingTransformer.
     </sample>
   </group>
     

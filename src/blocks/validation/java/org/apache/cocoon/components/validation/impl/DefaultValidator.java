@@ -40,6 +40,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
 
@@ -48,7 +49,7 @@ import org.apache.cocoon.components.validation.Validator;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class DefaultValidator implements Validator, LogEnabled,
+public class DefaultValidator implements Validator, LogEnabled, ThreadSafe,
 Contextualizable, Serviceable, Configurable, Initializable, Disposable {
     
     /** <p>The default shorthand code to use in subcomponent configurations.</p> */
@@ -133,16 +134,23 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
      */
     public void initialize()
     throws Exception {
+        this.logger.debug("Initializing " + this.getClass().getName());
+
         if (this.logger == null) throw new IllegalStateException("Null logger");
         if (this.context == null) throw new IllegalStateException("Null context");
         if (this.manager == null) throw new IllegalStateException("Null manager");
         if (this.conf == null) throw new IllegalStateException("Null configuration");
         
         Configuration configurations[] = this.conf.getChildren(this.shorthand);
+        this.logger.debug("Configuring " + configurations.length + " schema parsers"
+                          + " from " + this.conf.getLocation());
+
         for (int x = 0; x < configurations.length; x++) try {
             Configuration configuration = configurations[x];
             String className = configuration.getAttribute("class");
             String selectionKey = configuration.getAttribute("name");
+            this.logger.debug("Configuring schema parser " + selectionKey + " as "
+                              + className + " from " + configuration.getLocation());
 
             Class clazz;
             try {
@@ -152,7 +160,7 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
                 throw new ConfigurationException(message, configuration, exception);
             }
 
-            if (!clazz.isAssignableFrom(this.componentClass)) {
+            if (!this.componentClass.isAssignableFrom(clazz)) {
                 String message = "Class " + className + " does not represent a "
                                  + this.componentClass.getName();
                 throw new ConfigurationException(message, configuration);
@@ -168,6 +176,7 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
 
             this.components.add(this.setupComponent(component, configuration));
             this.selections.put(selectionKey, component);
+            this.logger.debug("SchemaParser " + selectionKey + " class" + className);
             if (component instanceof SchemaParser) {
                 SchemaParser parser = (SchemaParser) component;
                 String languages[] = parser.getSupportedLanguages();
@@ -175,6 +184,8 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
                     for (int k = 0; x < languages.length; x++) {
                         if (this.selections.containsKey(languages[x])) continue;
                         this.selections.put(languages[x], component);
+                        this.logger.debug("SchemaParser " + selectionKey
+                                          + "provides language " + languages[x]);
                     }
                 }
             }
@@ -204,7 +215,7 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
     public Object select(Object key)
     throws ServiceException {
         if (this.isSelectable(key)) return this.selections.get(key);
-        throw new ServiceException((String) key, "Non existing component" + key);
+        throw new ServiceException((String) key, "Schema parser not configured");
     }
 
     /**
@@ -268,7 +279,7 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
             if (component instanceof Startable)
                 ((Startable) component).start();
             started = true;
-            
+
             return component;
 
         } catch (Exception exception) {
