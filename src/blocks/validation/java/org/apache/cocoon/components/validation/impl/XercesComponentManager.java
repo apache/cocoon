@@ -1,0 +1,113 @@
+/*
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.cocoon.components.validation.impl;
+
+import org.apache.xerces.impl.Constants;
+import org.apache.xerces.impl.XMLEntityManager;
+import org.apache.xerces.impl.XMLErrorReporter;
+import org.apache.xerces.impl.validation.ValidationManager;
+import org.apache.xerces.impl.xs.XSMessageFormatter;
+import org.apache.xerces.util.NamespaceSupport;
+import org.apache.xerces.util.ParserConfigurationSettings;
+import org.apache.xerces.util.SymbolTable;
+import org.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.apache.xerces.xni.parser.XMLEntityResolver;
+import org.apache.xerces.xni.parser.XMLErrorHandler;
+import org.xml.sax.ErrorHandler;
+
+
+/**
+ * <p>TODO: ...</p>
+ *
+ * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
+ */
+public class XercesComponentManager extends ParserConfigurationSettings {
+
+    private static final String P_ENTITY_MANAGER =        
+            Constants.XERCES_PROPERTY_PREFIX + Constants.ENTITY_MANAGER_PROPERTY;
+    private static final String P_ENTITY_RESOLVER =       
+            Constants.XERCES_PROPERTY_PREFIX + Constants.ENTITY_RESOLVER_PROPERTY;
+    private static final String P_ERROR_REPORTER =        
+            Constants.XERCES_PROPERTY_PREFIX + Constants.ERROR_REPORTER_PROPERTY;
+    private static final String P_NAMESPACE_CONTEXT =     
+            Constants.XERCES_PROPERTY_PREFIX + Constants.NAMESPACE_CONTEXT_PROPERTY;
+    private static final String P_SYMBOL_TABLE =          
+            Constants.XERCES_PROPERTY_PREFIX + Constants.SYMBOL_TABLE_PROPERTY;
+    private static final String P_VALIDATION_MANAGER =    
+            Constants.XERCES_PROPERTY_PREFIX + Constants.VALIDATION_MANAGER_PROPERTY;
+    private static final String P_XMLGRAMMAR_POOL =       
+            Constants.XERCES_PROPERTY_PREFIX + Constants.XMLGRAMMAR_POOL_PROPERTY;
+    private static final String P_ERROR_HANDLER =
+            Constants.XERCES_PROPERTY_PREFIX + Constants.ERROR_HANDLER_PROPERTY;
+
+    private static final String PROPERTIES[] = {
+                P_ENTITY_MANAGER,
+                P_ENTITY_RESOLVER,
+                P_ERROR_REPORTER,
+                P_NAMESPACE_CONTEXT,
+                P_SYMBOL_TABLE,
+                P_VALIDATION_MANAGER,
+                P_XMLGRAMMAR_POOL,
+                P_ERROR_HANDLER
+            };       
+
+    private static final String F_SCHEMA_VALIDATION =     
+            Constants.XERCES_FEATURE_PREFIX + Constants.SCHEMA_VALIDATION_FEATURE;
+    private static final String F_VALIDATION =            
+            Constants.SAX_FEATURE_PREFIX + Constants.VALIDATION_FEATURE;
+    private static final String F_USE_GRAMMAR_POOL_ONLY = 
+            Constants.XERCES_FEATURE_PREFIX + Constants.USE_GRAMMAR_POOL_ONLY_FEATURE;
+    private static final String F_PARSER_SETTINGS = 
+            Constants.XERCES_FEATURE_PREFIX + Constants.PARSER_SETTINGS;
+    
+    private static final String FEATURES[] = {
+                F_SCHEMA_VALIDATION,
+                F_VALIDATION,
+                F_USE_GRAMMAR_POOL_ONLY,
+                F_PARSER_SETTINGS
+            };
+
+    public XercesComponentManager(XMLGrammarPool grammarPool,
+                                  XMLEntityResolver entityResolver,
+                                  final ErrorHandler errorHandler) {
+
+        super.addRecognizedFeatures(FEATURES);
+        super.addRecognizedProperties(PROPERTIES);
+        
+        XMLErrorReporter errorReporter = new XMLErrorReporter();
+        errorReporter.putMessageFormatter(XSMessageFormatter.SCHEMA_DOMAIN,
+                                          new XSMessageFormatter());
+        XMLErrorHandler xercesHandler = new XercesErrorWrapper(errorHandler);
+
+        super.setProperty(P_XMLGRAMMAR_POOL,    grammarPool);
+        super.setProperty(P_ENTITY_RESOLVER,    entityResolver);
+        super.setProperty(P_ERROR_REPORTER,     errorReporter);
+        super.setProperty(P_ERROR_HANDLER,      xercesHandler);
+
+        super.setProperty(P_ENTITY_MANAGER,     new XMLEntityManager());
+        super.setProperty(P_NAMESPACE_CONTEXT,  new NamespaceSupport());
+        super.setProperty(P_VALIDATION_MANAGER, new ValidationManager());
+        super.setProperty(P_SYMBOL_TABLE,       new SymbolTable());
+
+        super.setFeature(F_USE_GRAMMAR_POOL_ONLY, true);
+        super.setFeature(F_PARSER_SETTINGS,       true);
+        super.setFeature(F_VALIDATION,            true);
+        super.setFeature(F_SCHEMA_VALIDATION,     true);
+
+        /* Initialize the configured Error Reporter */
+        errorReporter.reset(this);
+    }
+}
