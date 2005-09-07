@@ -31,7 +31,8 @@ import org.xml.sax.SAXParseException;
  */
 public abstract class AbstractSchema implements Schema {
     
-    protected final SourceValidity validity;
+    /** <p>The {@link SourceValidity} of this {@link Schema} instance.</p> */
+    private final SourceValidity validity;
 
     /**
      * <p>Create a new {@link AbstractSchema} instance.</p>
