@@ -50,4 +50,5 @@
 
   <message key="aggregatedfield.split-failed">Zawartość tego pola nie odpowiada wyrażeniu regularnemu: {0}.</message>
   <message key="upload.invalid-type">Niepoprawny typ.</message>
+  <message key="calendar.alt"></message>
 </catalogue>
