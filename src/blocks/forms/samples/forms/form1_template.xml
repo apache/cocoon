@@ -23,7 +23,7 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  
+  <h4 class="samplesGroup">Widget sampler (Flowscript)</h4>
   <title>Sample form</title>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
@@ -139,7 +139,7 @@
       </div>
     </ft:form-template>
     <p>
-      <a href="../">Back to samples</a>
+      <a href="./">Back to Forms samples</a>
     </p>
   </content>
 </page>
