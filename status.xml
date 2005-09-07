@@ -198,6 +198,10 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="LG" type="add">
+      JXTG: Pluggable expression parser. New expression syntax: ${expr}, #{expr} -&gt; {jexl:expr}, {jxpath:expr}.
+      This is a target syntax for CTemplate.
+    </action>
+    <action dev="LG" type="add">
       support for following use cases: &lt;jx:out value=&quot;${xmlString}&quot; xmlize=&quot;true&quot; strip-root=&quot;true&quot;/&gt;
       and &lt;jx:out value=&quot;${domDocument}&quot; strip-root=&quot;true&quot;/&gt;
     </action>
