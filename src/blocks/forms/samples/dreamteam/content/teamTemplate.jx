@@ -240,7 +240,10 @@
       <h2>When everything is valid</h2>
       <p class="developer-note"> When <i>Submit</i> is pressed, and all rows validate, the <i>prot_buildTeam</i>
         function takes over and hands the selected team to the Manager class for further processing. Finally the
-        function passes flow onto the <i>showteam</i> pipeline. </p>
+        function passes flow onto the <i>showteam</i> pipeline. </p>        
+    <p>
+      <a href="../">Back to samples</a>
+    </p>            
     </body>
   </html>
 </jx:template>

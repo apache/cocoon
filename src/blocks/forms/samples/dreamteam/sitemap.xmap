@@ -126,7 +126,7 @@
       <!-- images                                    -->
       <!-- ========================================= -->
       <map:match pattern="resources/*.gif">
-        <map:read mime-type="image/gif" src="resource://org/apache/cocoon/forms/resources/{1}.gif"/>
+        <map:read mime-type="image/gif" src="resource://org/apache/cocoon/forms/resources/img/{1}.gif"/>
       </map:match>
       <map:match pattern="flags/*.gif">
         <map:read mime-type="image/gif" src="resources/flags/{1}.gif"/>
