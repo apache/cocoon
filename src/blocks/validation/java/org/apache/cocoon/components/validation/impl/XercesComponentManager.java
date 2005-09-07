@@ -15,22 +15,31 @@
  */
 package org.apache.cocoon.components.validation.impl;
 
+import java.util.Iterator;
+
 import org.apache.xerces.impl.Constants;
 import org.apache.xerces.impl.XMLEntityManager;
 import org.apache.xerces.impl.XMLErrorReporter;
+import org.apache.xerces.impl.msg.XMLMessageFormatter;
 import org.apache.xerces.impl.validation.ValidationManager;
 import org.apache.xerces.impl.xs.XSMessageFormatter;
 import org.apache.xerces.util.NamespaceSupport;
 import org.apache.xerces.util.ParserConfigurationSettings;
 import org.apache.xerces.util.SymbolTable;
+import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.apache.xerces.xni.parser.XMLComponent;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLErrorHandler;
+import org.apache.xerces.xni.parser.XMLParseException;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 /**
- * <p>TODO: ...</p>
+ * <p>An implementation of Xerces' {@link XMLComponentManager} interface
+ * allowing interoperation of components while parsing or validatin.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -81,6 +90,11 @@ public class XercesComponentManager extends ParserConfigurationSettings {
             };
 
     public XercesComponentManager(XMLGrammarPool grammarPool,
+                                  XMLEntityResolver entityResolver) {
+        this(grammarPool, entityResolver, null);
+    }
+
+    public XercesComponentManager(XMLGrammarPool grammarPool,
                                   XMLEntityResolver entityResolver,
                                   final ErrorHandler errorHandler) {
 
@@ -90,7 +104,11 @@ public class XercesComponentManager extends ParserConfigurationSettings {
         XMLErrorReporter errorReporter = new XMLErrorReporter();
         errorReporter.putMessageFormatter(XSMessageFormatter.SCHEMA_DOMAIN,
                                           new XSMessageFormatter());
-        XMLErrorHandler xercesHandler = new XercesErrorWrapper(errorHandler);
+        errorReporter.putMessageFormatter(XMLMessageFormatter.XML_DOMAIN,
+                                          new XMLMessageFormatter());
+        errorReporter.putMessageFormatter(XMLMessageFormatter.XMLNS_DOMAIN,
+                                          new XMLMessageFormatter());
+        XMLErrorHandler xercesHandler = new ErrorHandlerWrapper(errorHandler);
 
         super.setProperty(P_XMLGRAMMAR_POOL,    grammarPool);
         super.setProperty(P_ENTITY_RESOLVER,    entityResolver);
@@ -108,6 +126,69 @@ public class XercesComponentManager extends ParserConfigurationSettings {
         super.setFeature(F_SCHEMA_VALIDATION,     true);
 
         /* Initialize the configured Error Reporter */
-        errorReporter.reset(this);
+        Iterator iterator = super.fProperties.values().iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            if (object instanceof XMLComponent) {
+                ((XMLComponent) object).reset(this);
+            }
+        }
+    }
+
+    /**
+     * <p>A simple wrapper around a SAX {@link ErrorHandler} exposing the
+     * handler as a Xerces {@link XMLErrorHandler}.</p>
+     */
+    private static final class ErrorHandlerWrapper implements XMLErrorHandler {
+        
+        private final ErrorHandler errorHandler;
+        
+        private ErrorHandlerWrapper(ErrorHandler errorHandler) {
+            this.errorHandler = errorHandler;
+        }
+
+        public void warning(String domain, String key, XMLParseException e)
+        throws XNIException {
+            if (this.errorHandler != null) try {
+                this.errorHandler.warning(this.makeException(e));
+            } catch (SAXException saxException) {
+                throw new XNIException(saxException);
+            } else {
+                throw e;
+            }
+        }
+
+        public void error(String domain, String key, XMLParseException e)
+        throws XNIException {
+            if (this.errorHandler != null) try {
+                this.errorHandler.warning(this.makeException(e));
+            } catch (SAXException saxException) {
+                throw new XNIException(saxException);
+            } else {
+                throw e;
+            }
+        }
+
+        public void fatalError(String domain, String key, XMLParseException e)
+        throws XNIException {
+            if (this.errorHandler != null) try {
+                this.errorHandler.warning(this.makeException(e));
+            } catch (SAXException saxException) {
+                throw new XNIException(saxException);
+            } else {
+                throw e;
+            }
+        }
+        
+        private SAXParseException makeException(XMLParseException exception) {
+            final SAXParseException saxParseException;
+            saxParseException = new SAXParseException(exception.getMessage(),
+                                                      exception.getPublicId(),
+                                                      exception.getLiteralSystemId(),
+                                                      exception.getLineNumber(),
+                                                      exception.getColumnNumber(),
+                                                      exception);
+            return (SAXParseException) saxParseException.initCause(exception);
+        }
     }
 }

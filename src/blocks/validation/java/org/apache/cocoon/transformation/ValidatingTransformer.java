@@ -37,6 +37,7 @@ import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLMulticaster;
 import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -56,6 +57,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
     private ServiceManager serviceManager = null;
     private Validator validator = null;
     private SchemaParser schemaParser = null;
+    private ContentHandler handler = null;
     private Schema schema = null;
     private String key = null;
 
@@ -118,6 +120,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
         this.schema = this.schemaParser.getSchema(source);
         this.key = this.getClass().getName() + ":" +
                    this.schemaParser.getClass().getName() + ":" + source;
+        this.handler = this.schema.newValidator();
     }
 
     /**
@@ -127,7 +130,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * @param consumer the {@link XMLConsumer} to send SAX events to.
      */
     public void setConsumer(XMLConsumer consumer) {
-        XMLConsumer handler = new ContentHandlerWrapper(this.schema.newValidator());
+        XMLConsumer handler = new ContentHandlerWrapper(this.handler);
         super.setConsumer(new XMLMulticaster(handler, consumer));
     }
 
@@ -155,6 +158,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * <p>Recycle this component instance at the end of request processing.</p>
      */
     public void recycle() {
+        this.handler = null;
         this.schema = null;
         this.key = null;
         super.recycle();

@@ -19,6 +19,7 @@ import org.apache.cocoon.components.validation.Schema;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
 
 import com.thaiopensource.util.PropertyMap;
 import com.thaiopensource.util.PropertyMapBuilder;
@@ -59,8 +60,10 @@ public class JingSchema extends AbstractSchema {
      * 
      * @param errorHandler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * @throws SAXException if an error occurred creating the validation handler.
      */
-    public ContentHandler newValidator(ErrorHandler errorHandler) {
+    public ContentHandler newValidator(ErrorHandler errorHandler)
+    throws SAXException {
         if (errorHandler == null) errorHandler = new DraconianErrorHandler();
         final PropertyMapBuilder builder = new PropertyMapBuilder();
         ValidateProperty.ERROR_HANDLER.put(builder, errorHandler);

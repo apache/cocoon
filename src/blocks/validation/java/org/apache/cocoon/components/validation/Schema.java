@@ -18,6 +18,7 @@ package org.apache.cocoon.components.validation;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
 
 /**
  * <p>An interface defining a schema used for validation of XML documents.</p>
@@ -53,8 +54,10 @@ public interface Schema {
      * <p>Once used, the returned {@link ContentHandler} <b>can't</b> be reused.</p> 
      * 
      * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * @throws SAXException if an error occurred creating the validation handler.
      */
-    public ContentHandler newValidator();
+    public ContentHandler newValidator()
+    throws SAXException;
 
     /**
      * <p>Return a new {@link ContentHandler} instance that can be used to send SAX
@@ -68,7 +71,9 @@ public interface Schema {
      * 
      * @param handler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * @throws SAXException if an error occurred creating the validation handler.
      */
-    public ContentHandler newValidator(ErrorHandler handler);
+    public ContentHandler newValidator(ErrorHandler handler)
+    throws SAXException;
 
 }
