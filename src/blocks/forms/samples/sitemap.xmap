@@ -485,6 +485,7 @@
              <map:parameter name="form-action" value="{flow-continuation:id}.continue" />
              <map:parameter name="form-method" value="POST" />
            </map:generate>
+		   <map:transform src="resources/fi2page.xsl" />           
          </map:otherwise>
        </map:select>
 

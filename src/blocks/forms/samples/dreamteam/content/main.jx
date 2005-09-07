@@ -78,6 +78,9 @@
             your business layer, we used a function <i>loadDocument</i> to read in the XML file and pass
             it on to the Manager class.
         </p>
+	    <p>
+	        <a href="../">Back to Forms samples</a>
+	    </p>            
 	</body>
 </html>
 </jx:template>

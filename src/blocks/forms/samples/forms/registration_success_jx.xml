@@ -15,8 +15,12 @@
   limitations under the License.
 -->
 <page>
+  <h4 class="samplesGroup">Password styling and validation</h4>
   <title>Registration successful</title>
   <content>
     Registration was successful for ${username}!
   </content>
+  <p>
+    <a href="./">Back to Forms samples</a>
+  </p>
 </page>

@@ -17,8 +17,12 @@
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
 
+  <h4 class="samplesGroup">CAPTCHA widget</h4>
   <title>CAPTCHA validation succeeded</title>
   <content>
     <p>You guessed ${value}. Correct!</p>
+    <p>
+      <a href="../">Back to Forms samples</a>
+    </p>
   </content>
 </page>

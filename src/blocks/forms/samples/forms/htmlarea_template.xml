@@ -16,6 +16,7 @@
 -->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <h4 class="samplesGroup">HTMLArea widget</h4>
   <title>HTMLArea</title>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
@@ -63,7 +64,7 @@
       <input type="submit"/>      
     </ft:form-template>
     <p>
-      <a href="../">Back to samples</a>
+      <a href="./">Back to Forms samples</a>
     </p>
   </content>
 </page>

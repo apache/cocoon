@@ -24,6 +24,7 @@
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
   
+  <h4 class="samplesGroup">Repeater widget</h4>
   <title>Dynamic template</title>
   <style type="text/css">
     /* Additional styles for alternating row colors */
