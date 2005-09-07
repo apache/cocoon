@@ -23,25 +23,58 @@
       if you use the portal for your own projects that you
       remove all unused stuff from the configuration! 
  -->
- <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
- </component>
+  <component role="org.osoco.cowarp.ApplicationManager"
+             class="org.osoco.cowarp.impl.StandardApplicationManager"/>
+  <!-- This security handler uses OJB and the hsqldb for the authentication: -->
+  <component role="org.osoco.cowarp.SecurityHandler/portal" 
+             class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
+  <!-- If you want to use a pipeline for the authentication use this configuration:
+    <component role="org.osoco.cowarp.SecurityHandler/portal" 
+               class="org.osoco.cowarp.impl.PipelineSecurityHandler">
+      <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
+    </component>
+  -->
+  <component role="org.osoco.cowarp.Application/portal" 
+             class="org.osoco.cowarp.portal.StandardPortalApplication" 
+             security-handler="portal">
+    <profiles>
+      <copletbasedata-global-load uri="cocoon:raw:/load-global-profile?profile=copletbasedata"/>
+      <copletdata-global-load uri="cocoon:raw:/load-global-profile?profile=copletdata"/>
+      <copletdata-role-load uri="cocoon:raw:/load-role-profile?profile=copletdata"/>
+      <copletdata-user-load uri="cocoon:raw:/load-user-profile?profile=copletdata"/>
+      <copletinstancedata-global-load uri="cocoon:raw:/load-global-profile?profile=copletinstancedata"/>
+      <copletinstancedata-role-load uri="cocoon:raw:/load-role-profile?profile=copletinstancedata"/>
+      <copletinstancedata-user-load uri="cocoon:raw:/load-user-profile?profile=copletinstancedata"/>
+      <copletinstancedata-user-save uri="cocoon:raw:/save-user-profile?profile=copletinstancedata"/>
+      <layout-global-load uri="cocoon:raw:/load-global-profile?profile=layout"/>
+      <layout-role-load uri="cocoon:raw:/load-role-profile?profile=layout"/>
+      <layout-user-load uri="cocoon:raw:/load-user-profile?profile=layout"/>
+      <layout-user-save uri="cocoon:raw:/save-user-profile?profile=layout"/>
+    </profiles>
+  </component>
+  <component class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Cowarp">
+    <parameter name="userinfo-provider" value="org.osoco.cowarp.portal.UserInfoProviderImpl"/>
+  </component>
+ 
+  <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
+  </component>
 
- <!-- Renderer configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
-     <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
-         <aspects>
-             <aspect type="xslt">
-                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/column.xsl"/>
-             </aspect>
-             <aspect type="parameter">
-                 <parameter name="tag-name" value="column-layout"/>
-             </aspect>
-             <aspect type="composite-content">
-                 <parameter name="root-tag" value="false"/>
-             </aspect>
-         </aspects>
-     </renderer>
-     <renderer name="row" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+  <!-- Renderer configuration -->
+  <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
+    <renderer name="column" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+      <aspects>
+        <aspect type="xslt">
+          <parameter name="style" value="{portal-skin:skin.basepath}/styles/column.xsl"/>
+        </aspect>
+        <aspect type="parameter">
+          <parameter name="tag-name" value="column-layout"/>
+        </aspect>
+        <aspect type="composite-content">
+          <parameter name="root-tag" value="false"/>
+        </aspect>
+      </aspects>
+    </renderer>
+    <renderer name="row" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/row.xsl"/>
@@ -53,8 +86,8 @@
                  <parameter name="root-tag" value="false"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="tab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+    </renderer>
+    <renderer name="tab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/tab.xsl"/>
@@ -68,8 +101,8 @@
                  <parameter name="store"    value="session"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="rawtab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+    </renderer>
+    <renderer name="rawtab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="parameter">
                  <parameter name="tag-name" value="tab-layout"/>
@@ -80,8 +113,8 @@
                  <parameter name="store"    value="session"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="linktab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+    </renderer>
+    <renderer name="linktab" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/linktab.xsl"/>
@@ -95,8 +128,8 @@
                  <parameter name="store" value="session"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+    </renderer>
+    <renderer name="window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
@@ -114,8 +147,8 @@
              <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
-     </renderer>
-     <renderer name="borderless-window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+    </renderer>
+    <renderer name="borderless-window" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/borderless-window.xsl"/>
@@ -133,25 +166,25 @@
              <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
-     </renderer>
-     <renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
+    </renderer>
+    <renderer name="frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal" >
          <aspects>
              <aspect type="frame">
                  <parameter name="store" value="request"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+    </renderer>
+    <renderer name="nowindow" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
              <aspect type="history"/>
              <aspect type="coplet-cinclude">
                 <parameter name="root-tag" value="false"/>
              </aspect>
          </aspects>
-     </renderer>
-     <renderer name="portlet-window"
-               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
-               logger="portal">
+    </renderer>
+    <renderer name="portlet-window"
+              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
+              logger="portal">
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
@@ -167,10 +200,10 @@
              <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
-     </renderer>
-     <renderer name="wsrp-window"
-               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
-               logger="portal">
+    </renderer>
+    <renderer name="wsrp-window"
+              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
+              logger="portal">
          <aspects>
              <aspect type="xslt">
                  <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
@@ -186,11 +219,11 @@
              <aspect type="basket"/>
              <aspect type="coplet-cinclude"/>
          </aspects>
-     </renderer>
-     <renderer name="link" 
-               class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" 
-               logger="portal"/>
-     <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
+    </renderer>
+    <renderer name="link" 
+              class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" 
+              logger="portal"/>
+    <renderer name="decorated-frame" class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer" logger="portal">
          <aspects>
             <aspect type="xslt">
                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/frame.xsl"/>
@@ -203,11 +236,11 @@
             </aspect>
          </aspects>
     </renderer>
- </component>
+  </component>
  
-<!-- Layout factory configuration -->
-<component class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
-           role="org.apache.cocoon.portal.layout.LayoutFactory">
+  <!-- Layout factory configuration -->
+  <component class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+             role="org.apache.cocoon.portal.layout.LayoutFactory">
     <layouts>
         <layout name="column" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
@@ -285,11 +318,11 @@
             </aspects>
          </layout>
     </layouts>
-</component>
+  </component>
 
-<!-- Coplet factory configuration -->
-<component class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
-           role="org.apache.cocoon.portal.coplet.CopletFactory">
+  <!-- Coplet factory configuration -->
+  <component class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
+             role="org.apache.cocoon.portal.coplet.CopletFactory">
     <coplets>
         <coplet name="standard"
                 class="org.apache.cocoon.portal.coplet.CopletData">
@@ -321,6 +354,6 @@
             </coplet-instance-data-aspects>
         </coplet>
     </coplets>
-</component>
+  </component>
 
 </samplesxconf>
