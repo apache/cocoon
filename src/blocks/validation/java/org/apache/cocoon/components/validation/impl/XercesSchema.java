@@ -16,9 +16,12 @@
 package org.apache.cocoon.components.validation.impl;
 
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.apache.xerces.xni.parser.XMLComponent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
 
 /**
  * <p>TODO: ...</p>
@@ -27,15 +30,28 @@ import org.xml.sax.ErrorHandler;
  */
 public class XercesSchema extends AbstractSchema {
     
+    private final XercesEntityResolver entityResolver;
     private final XMLGrammarPool grammarPool;
+    private final Class validatorClass;
 
-    public XercesSchema(XMLGrammarPool grammarPool, SourceValidity validity) {
-        super(validity);
-        this.grammarPool = grammarPool;
+    public XercesSchema(XMLGrammarPool grammarPool, SourceValidity sourceValidity,
+                        XercesEntityResolver entityResolver, Class validatorClass) {
+        super(sourceValidity);
         grammarPool.lockPool();
+        this.entityResolver = entityResolver;
+        this.validatorClass = validatorClass;
+        this.grammarPool = grammarPool;
     }
 
-    public ContentHandler newValidator(ErrorHandler handler) {
-        return new XercesValidationHandler(this.grammarPool);
+    public ContentHandler newValidator(ErrorHandler errorHandler)
+    throws SAXException {
+        XercesComponentManager manager = new XercesComponentManager(this.grammarPool, entityResolver, errorHandler);
+        try {
+            Object instance = validatorClass.newInstance();
+            ((XMLComponent) instance).reset(manager);
+            return new XercesValidationHandler((XMLDocumentHandler) instance);
+        } catch (Exception exception) {
+            throw new SAXException("Unable to access validator", exception);
+        }
     }
 }

@@ -60,8 +60,10 @@ public abstract class AbstractSchema implements Schema {
      * <p>Once used, the returned {@link ContentHandler} <b>can't</b> be reused.</p> 
      * 
      * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * @throws SAXException if an error occurred creating the validation handler.
      */
-    public ContentHandler newValidator() {
+    public ContentHandler newValidator()
+    throws SAXException {
         ErrorHandler handler = new ErrorHandler() {
             public void warning(SAXParseException e) throws SAXException {
                 throw e;

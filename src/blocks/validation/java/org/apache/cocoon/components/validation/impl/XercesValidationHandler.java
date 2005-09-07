@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.validation.impl;
 
-import org.apache.xerces.impl.xs.XMLSchemaValidator;
 import org.apache.xerces.util.NamespaceSupport;
 import org.apache.xerces.util.SAXLocatorWrapper;
 import org.apache.xerces.util.XMLAttributesImpl;
@@ -23,8 +22,8 @@ import org.apache.xerces.util.XMLSymbols;
 import org.apache.xerces.xni.NamespaceContext;
 import org.apache.xerces.xni.QName;
 import org.apache.xerces.xni.XMLAttributes;
+import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.XMLString;
-import org.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -37,13 +36,12 @@ import org.xml.sax.SAXException;
  */
 public class XercesValidationHandler implements ContentHandler {
     
-    private final XMLSchemaValidator validator = new XMLSchemaValidator();
+    private final XMLDocumentHandler validationHandler;
     private final NamespaceContext namespaceContext = new NamespaceSupport();
-    
-    private SAXLocatorWrapper locator = new SAXLocatorWrapper();
-    
-    public XercesValidationHandler(XMLGrammarPool grammarPool) {
-        this.validator.reset(new XercesComponentManager(grammarPool, new XercesEntityResolver(), null));
+    private final SAXLocatorWrapper locator = new SAXLocatorWrapper();
+
+    public XercesValidationHandler(XMLDocumentHandler validationHandler) {
+        this.validationHandler = validationHandler;
     }
 
     public void setDocumentLocator(Locator locator) {
@@ -54,7 +52,7 @@ public class XercesValidationHandler implements ContentHandler {
     public void startDocument()
     throws SAXException {
         System.err.println("START DOCUMENT");
-        this.validator.startDocument(this.locator,
+        this.validationHandler.startDocument(this.locator,
                                      this.locator.getEncoding(),
                                      this.namespaceContext,
                                      null);
@@ -62,7 +60,7 @@ public class XercesValidationHandler implements ContentHandler {
 
     public void endDocument()
     throws SAXException {
-        this.validator.endDocument(null);
+        this.validationHandler.endDocument(null);
     }
 
     public void startPrefixMapping(String pfx, String uri)
@@ -93,32 +91,32 @@ public class XercesValidationHandler implements ContentHandler {
             xmlatts.addAttribute(aQname, aType, aValue);
         }
         this.namespaceContext.pushContext();
-        this.validator.startElement(qname, xmlatts, null);
+        this.validationHandler.startElement(qname, xmlatts, null);
     }
 
     public void endElement(String namespace, String local, String qualified)
     throws SAXException {
         QName qname = this.qname(namespace, local, qualified);
-        this.validator.endElement(qname, null);
+        this.validationHandler.endElement(qname, null);
         this.namespaceContext.popContext();
     }
 
     public void characters(char buffer[], int offset, int length)
     throws SAXException {
         XMLString data = new XMLString(buffer, offset, length);
-        this.validator.characters(data, null);
+        this.validationHandler.characters(data, null);
     }
 
     public void ignorableWhitespace(char buffer[], int offset, int length)
     throws SAXException {
         XMLString data = new XMLString(buffer, offset, length);
-        this.validator.ignorableWhitespace(data, null);
+        this.validationHandler.ignorableWhitespace(data, null);
     }
 
     public void processingInstruction(String target, String extra)
     throws SAXException {
         XMLString data = new XMLString(extra.toCharArray(), 0, extra.length());
-        this.validator.processingInstruction(target, data, null);
+        this.validationHandler.processingInstruction(target, data, null);
     }
 
     public void skippedEntity(String arg0)
