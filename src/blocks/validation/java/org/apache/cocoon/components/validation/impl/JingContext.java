@@ -138,7 +138,7 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
      */
     public InputSource resolveEntity(String publicId, String systemId)
     throws SAXException, IOException {
-        if (this.sourceValidity == null) throw new IllegalStateException();
+        if (this.sourceValidity == null) throw new IOException("Can't resolve now");
 
         /* Try to resolve the public id if we don't have a system id */
         if (systemId == null) {

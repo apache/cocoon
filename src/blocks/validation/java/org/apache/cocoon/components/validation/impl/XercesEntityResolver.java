@@ -17,68 +17,91 @@ package org.apache.cocoon.components.validation.impl;
 
 import java.io.IOException;
 
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.AggregatedValidity;
+import org.apache.excalibur.xml.EntityResolver;
 import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
- * <p>TODO: ...</p>
+ * <p>An implementation of Xerces' {@link XMLEntityResolver} resolving URIs using
+ * Excalibur's {@link SourceResolver} and {@link EntityResolver}.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class XercesEntityResolver implements XMLEntityResolver {
     
-    public SourceValidity getSourceValidity() {
-        return null;
+    private final AggregatedValidity sourceValidity = new AggregatedValidity();
+    private final SourceResolver sourceResolver;
+    private final EntityResolver entityResolver;
+
+    public XercesEntityResolver() {
+        this(null, null);
     }
 
-    public XMLInputSource resolveEntity(String location)
+    public XercesEntityResolver(SourceResolver sourceResolver,
+                                EntityResolver entityResolver) {
+        this.entityResolver = entityResolver;
+        this.sourceResolver = sourceResolver;
+    }
+
+    public SourceValidity getSourceValidity() {
+        return this.sourceValidity;
+    }
+
+    public XMLInputSource resolveUri(String location)
     throws XNIException, IOException {
-        /*
+        if (this.sourceResolver == null) throw new IOException("Can't resolve now");
+
+        /* Use Cocoon's SourceResolver to resolve the system id */
+        Source source = this.sourceResolver.resolveURI(location);
+        location = source.getURI();
         try {
-            URI base = new URI("file://" + System.getProperty("user.dir") + "/");
-            System.err.println("BASE URI: " + base.toASCIIString());
-            URI relative = new URI(location);
-            System.err.println("RELATIVE: " + relative.toASCIIString());
-            URI resolved = base.resolve(relative);
-            System.err.println("RELATIVE: " + resolved.toASCIIString());
-            location = resolved.toASCIIString();
-            XMLInputSource source = new XMLInputSource(null, location, location);
-            source.setByteStream(resolved.toURL().openStream());
-            return source;
-        } catch (URISyntaxException exception) {
-            String message = "Cannot resolve " + location;
-            Throwable throwable = new IOException(message);
-            throw (IOException) throwable.initCause(exception);
+            this.sourceValidity.add(source.getValidity());
+            XMLInputSource input = new XMLInputSource(null, location, location);
+            input.setByteStream(source.getInputStream());
+            return input;
+        } finally {
+            this.sourceResolver.release(source);
         }
-        */
-        throw new IOException("Not implemented"); 
     }
 
     public XMLInputSource resolveEntity(XMLResourceIdentifier identifier)
     throws XNIException, IOException {
-        /*
-        System.err.println("Resolving Identifier: "
-                           + identifier.getLiteralSystemId()
-                           + " from " + identifier.getBaseSystemId()
-                           + " [exp=" + identifier.getExpandedSystemId() + "]");
-        try {
-            URI base = new URI(identifier.getBaseSystemId());
-            URI relative = new URI(identifier.getLiteralSystemId());
-            URI resolved = base.resolve(relative);
-            XMLInputSource source = new XMLInputSource(identifier.getPublicId(),
-                    resolved.toASCIIString(),
-                    base.toASCIIString());
-            source.setByteStream(resolved.toURL().openStream());
-            return source;
-        } catch (URISyntaxException exception) {
-            String message = "Cannot resolve " + identifier.getLiteralSystemId();
-            Throwable throwable = new IOException(message);
-            throw (IOException) throwable.initCause(exception);
+        if (this.sourceResolver == null) throw new IOException("Can't resolve now");
+
+        String publicId = identifier.getPublicId();
+        String systemId = identifier.getLiteralSystemId();
+        String baseURI = identifier.getBaseSystemId();
+
+        /* Try to resolve the public id if we don't have a system id */
+        if ((systemId == null) && (this.entityResolver != null)) try {
+            InputSource source = this.entityResolver.resolveEntity(publicId, null);
+            if ((source == null) || (source.getSystemId() == null)) {
+                throw new IOException("Can't resolve \"" + publicId + "\"");
+            } else {
+                systemId = source.getSystemId();
+            }
+        } catch (SAXException exception) {
+            throw new XNIException("Error resolving public id", exception);
         }
-        */
-        throw new IOException("Not implemented"); 
+
+        /* Use Cocoon's SourceResolver to resolve the system id */
+        Source source = this.sourceResolver.resolveURI(systemId, baseURI, null);
+        systemId = source.getURI();
+        try {
+            this.sourceValidity.add(source.getValidity());
+            XMLInputSource input = new XMLInputSource(publicId, systemId, baseURI);
+            input.setByteStream(source.getInputStream());
+            return input;
+        } finally {
+            this.sourceResolver.release(source);
+        }
     }
 }
