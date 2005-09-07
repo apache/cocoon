@@ -44,8 +44,8 @@ import org.xml.sax.SAXException;
  * validating documents while being processed in a Cocoon pipeline.</p>
  * 
  * <p>The only defined (but not required) configuration for this component is
- * <code>&lt;language&gt;<i>...string...</i>&lt;/language&gt;</code>
- * indicating the language (or optionally the component name) for the
+ * <code>&lt;grammar&gt;<i>...string...</i>&lt;/grammar&gt;</code>
+ * indicating the grammar (or optionally the component name) for the
  * {@link Validator} instance providing access to {@link Schema}s.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
@@ -76,8 +76,8 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * <p>Configure this component instance.</p>
      * 
      * <p>The only defined (but not required) configuration for this component is
-     * <code>&lt;language&gt;<i>...string...</i>&lt;/language&gt;</code>
-     * indicating the language (or optionally the component name) for the
+     * <code>&lt;grammar&gt;<i>...string...</i>&lt;/grammar&gt;</code>
+     * indicating the grammar (or optionally the component name) for the
      * {@link Validator} instance providing access to {@link Schema}s.</p>
      *
      * @param configuration a {@link Configuration} instance for this component.
@@ -85,11 +85,11 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
-        String key = configuration.getChild("language").getValue();
+        String key = configuration.getChild("grammar").getValue();
         try {
             this.schemaParser = (SchemaParser) this.validator.select(key);
         } catch (ServiceException exception) {
-            String message = "Language or instance \"" + key + "\" not recognized";
+            String message = "Grammar or instance \"" + key + "\" not recognized";
             throw new ConfigurationException(message, configuration, exception);
         }
     }

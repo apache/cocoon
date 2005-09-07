@@ -22,11 +22,11 @@
     <map:transformer name="validate-relaxng"
                      logger="sitemap.transformer.validate"
                      src="org.apache.cocoon.transformation.ValidatingTransformer">
-      <!--+ The "language" is either one of the language constants specified
+      <!--+ The "grammar" is either one of the grammar constants specified
           | by the org.apache.cocoon.components.validation.Validator class
           | or the component name with wich the SchemaParser was registered
           | in "cocoon.xconf" (for example "jing").
           +-->
-      <language>http://relaxng.org/ns/structure/0.9</language>
+      <grammar>http://relaxng.org/ns/structure/0.9</grammar>
     </map:transformer>
 </xmap>

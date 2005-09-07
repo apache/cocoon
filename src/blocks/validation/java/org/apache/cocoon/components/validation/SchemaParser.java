@@ -24,8 +24,8 @@ import org.xml.sax.SAXException;
  * <p>A component parsing schemas usable for XML validation and returning them as
  * {@link Schema} instances.</p>
  * 
- * <p>This interface does not imply any requirement in terms of the language used
- * to produce {@link Schema} instances. Normally multiple-language selection is
+ * <p>This interface does not imply any requirement in terms of the grammar used
+ * to produce {@link Schema} instances. Normally multiple-grammar selection is
  * provided through the {@link Validator} class.</p>
  * 
  * <p>The only requirement imposed by this interface is that the final class
@@ -54,14 +54,14 @@ public interface SchemaParser extends ThreadSafe {
     throws SAXException, IOException;
 
     /**
-     * <p>Return an array of {@link String}s containing all schema languages
+     * <p>Return an array of {@link String}s containing all schema grammars
      * supported by this {@link SchemaParser}.</p>
      * 
      * <p>All {@link String}s in the array returned by this method should be
-     * valid language names as defined in the {@link Validator} class.</p>
+     * valid grammar names as defined in the {@link Validator} class.</p>
      *
      * @return a <b>non-null</b> array of {@link String}s.
      */
-    public String[] getSupportedLanguages();
+    public String[] getSupportedGrammars();
 
 }
