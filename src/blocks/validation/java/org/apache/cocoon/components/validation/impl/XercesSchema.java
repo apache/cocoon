@@ -30,7 +30,6 @@ import org.xml.sax.SAXException;
  */
 public class XercesSchema extends AbstractSchema {
     
-    private final XercesEntityResolver entityResolver;
     private final XMLGrammarPool grammarPool;
     private final Class validatorClass;
 
@@ -38,10 +37,9 @@ public class XercesSchema extends AbstractSchema {
      * <p>Create a new {@link XercesSchema} instance.</p>
      */
     public XercesSchema(XMLGrammarPool grammarPool, SourceValidity sourceValidity,
-                        XercesEntityResolver entityResolver, Class validatorClass) {
+                        Class validatorClass) {
         super(sourceValidity);
         grammarPool.lockPool();
-        this.entityResolver = entityResolver;
         this.validatorClass = validatorClass;
         this.grammarPool = grammarPool;
     }
@@ -57,7 +55,7 @@ public class XercesSchema extends AbstractSchema {
     public ContentHandler newValidator(ErrorHandler errorHandler)
     throws SAXException {
         XercesContext context = new XercesContext(this.grammarPool,
-                                                  this.entityResolver,
+                                                  new XercesEntityResolver(),
                                                   errorHandler);
         try {
             Object instance = this.validatorClass.newInstance();

@@ -54,22 +54,23 @@ implements SchemaParser {
     throws IOException, SAXException {
         /* Create a Xerces Grammar Pool and Entity Resolver */
         XMLGrammarPool pool = new XMLGrammarPoolImpl();
-        XercesEntityResolver resolver = new XercesEntityResolver();
+        XercesEntityResolver res = new XercesEntityResolver(super.sourceResolver,
+                                                            super.entityResolver);
 
         /* Create a Xerces component manager contextualizing the loader */
-        XercesContext context = new XercesContext(pool, resolver);
+        XercesContext context = new XercesContext(pool, res);
 
         /* Create a new XML Schema Loader and set the pool into it */
         XMLGrammarLoader loader = this.newGrammarLoader();
         ((XMLComponent) loader).reset(context);
 
         /* Load (parse and interpret) the grammar */
-        loader.loadGrammar(resolver.resolveEntity(uri));
-        
+        loader.loadGrammar(res.resolveUri(uri));
+
         /* Return a new Schema instance */
-        SourceValidity validity = resolver.getSourceValidity();
+        SourceValidity validity = res.getSourceValidity();
         Class validator = this.getValidationHandlerClass();
-        return new XercesSchema(pool, validity, resolver, validator);
+        return new XercesSchema(pool, validity, validator);
     }
 
     /**
