@@ -20,7 +20,6 @@ import java.io.IOException;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.xerces.impl.Constants;
 import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
@@ -35,9 +34,6 @@ import org.xml.sax.SAXException;
  */
 public abstract class XercesGrammarParser extends CachingSchemaParser 
 implements SchemaParser {
-
-    private static final String P_XML_GRAMMAR_POOL =
-            Constants.XERCES_PROPERTY_PREFIX + Constants.XMLGRAMMAR_POOL_PROPERTY;
 
     /**
      * <p>Create a new {@link XercesGrammarParser} instance.</p>
@@ -61,18 +57,18 @@ implements SchemaParser {
         XercesEntityResolver resolver = new XercesEntityResolver();
 
         /* Create a Xerces component manager contextualizing the loader */
-        XercesComponentManager manager = new XercesComponentManager(pool, resolver);
+        XercesContext context = new XercesContext(pool, resolver);
 
         /* Create a new XML Schema Loader and set the pool into it */
         XMLGrammarLoader loader = this.newGrammarLoader();
-        ((XMLComponent) loader).reset(manager);
+        ((XMLComponent) loader).reset(context);
 
         /* Load (parse and interpret) the grammar */
         loader.loadGrammar(resolver.resolveEntity(uri));
         
         /* Return a new Schema instance */
         SourceValidity validity = resolver.getSourceValidity();
-        Class validator = this.getValidationHandler();
+        Class validator = this.getValidationHandlerClass();
         return new XercesSchema(pool, validity, resolver, validator);
     }
 
@@ -85,6 +81,6 @@ implements SchemaParser {
     /**
      * <p>Return the {@link Class} that will implement the validator handler.</p>
      */
-    protected abstract Class getValidationHandler(); 
+    protected abstract Class getValidationHandlerClass(); 
 
 }

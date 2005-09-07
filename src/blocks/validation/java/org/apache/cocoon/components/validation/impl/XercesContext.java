@@ -38,12 +38,12 @@ import org.xml.sax.SAXParseException;
 
 
 /**
- * <p>An implementation of Xerces' {@link XMLComponentManager} interface
- * allowing interoperation of components while parsing or validatin.</p>
+ * <p>An implementation of Xerces {@link XMLComponentManager} interface allowing
+ * interoperation of components while parsing or validating.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class XercesComponentManager extends ParserConfigurationSettings {
+public class XercesContext extends ParserConfigurationSettings {
 
     private static final String P_ENTITY_MANAGER =        
             Constants.XERCES_PROPERTY_PREFIX + Constants.ENTITY_MANAGER_PROPERTY;
@@ -89,15 +89,19 @@ public class XercesComponentManager extends ParserConfigurationSettings {
                 F_PARSER_SETTINGS
             };
 
-    public XercesComponentManager(XMLGrammarPool grammarPool,
-                                  XMLEntityResolver entityResolver) {
-        this(grammarPool, entityResolver, null);
+    /**
+     * <p>Create a new {@link XercesContext} instance.</p>
+     */
+    public XercesContext(XMLGrammarPool grammar, XMLEntityResolver resolver) {
+        this(grammar, resolver, null);
     }
 
-    public XercesComponentManager(XMLGrammarPool grammarPool,
-                                  XMLEntityResolver entityResolver,
-                                  final ErrorHandler errorHandler) {
-
+    /**
+     * <p>Create a new {@link XercesContext} instance specifying the SAX
+     * {@link ErrorHandler} handling errors.</p>
+     */
+    public XercesContext(XMLGrammarPool grammar, XMLEntityResolver resolver,
+                         ErrorHandler errorHandler) {
         super.addRecognizedFeatures(FEATURES);
         super.addRecognizedProperties(PROPERTIES);
         
@@ -110,8 +114,8 @@ public class XercesComponentManager extends ParserConfigurationSettings {
                                           new XMLMessageFormatter());
         XMLErrorHandler xercesHandler = new ErrorHandlerWrapper(errorHandler);
 
-        super.setProperty(P_XMLGRAMMAR_POOL,    grammarPool);
-        super.setProperty(P_ENTITY_RESOLVER,    entityResolver);
+        super.setProperty(P_XMLGRAMMAR_POOL,    grammar);
+        super.setProperty(P_ENTITY_RESOLVER,    resolver);
         super.setProperty(P_ERROR_REPORTER,     errorReporter);
         super.setProperty(P_ERROR_HANDLER,      xercesHandler);
 
