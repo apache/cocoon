@@ -17,7 +17,7 @@ package org.apache.cocoon.components.validation.impl;
 
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.xml.sax.XMLConsumer;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -49,19 +49,19 @@ public abstract class AbstractSchema implements Schema {
     }
 
     /**
-     * <p>Return a new {@link XMLConsumer} instance that can be used to send SAX
+     * <p>Return a new {@link ContentHandler} instance that can be used to send SAX
      * events to for proper validation.</p>
      *
-     * <p>By default, this method will create a {@link XMLConsumer} failing on the
+     * <p>By default, this method will create a {@link ContentHandler} failing on the
      * first occurrence of an warning, error or fatal error . If this behavior is
      * not suitable, use the {@link #newValidator(ErrorHandler)} method instead and
      * specify an {@link ErrorHandler} suitable to your needs.</p>
      *
-     * <p>Once used, the returned {@link XMLConsumer} <b>can not</b> be reused.</p> 
+     * <p>Once used, the returned {@link ContentHandler} <b>can't</b> be reused.</p> 
      * 
-     * @return a <b>non-null</b> {@link XMLConsumer} instance.
+     * @return a <b>non-null</b> {@link ContentHandler} instance.
      */
-    public XMLConsumer newValidator() {
+    public ContentHandler newValidator() {
         ErrorHandler handler = new ErrorHandler() {
             public void warning(SAXParseException e) throws SAXException {
                 throw e;

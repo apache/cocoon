@@ -177,13 +177,13 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
             this.logger.debug("SchemaParser " + selectionKey + " class" + className);
             if (component instanceof SchemaParser) {
                 SchemaParser parser = (SchemaParser) component;
-                String languages[] = parser.getSupportedLanguages();
-                if (languages != null) {
-                    for (int k = 0; x < languages.length; x++) {
-                        if (this.selections.containsKey(languages[x])) continue;
-                        this.selections.put(languages[x], component);
+                String grammars[] = parser.getSupportedGrammars();
+                if (grammars != null) {
+                    for (int k = 0; x < grammars.length; x++) {
+                        if (this.selections.containsKey(grammars[x])) continue;
+                        this.selections.put(grammars[x], component);
                         this.logger.debug("SchemaParser " + selectionKey
-                                          + "provides language " + languages[x]);
+                                          + "provides grammar " + grammars[x]);
                     }
                 }
             }

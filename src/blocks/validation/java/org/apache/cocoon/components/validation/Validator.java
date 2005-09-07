@@ -22,8 +22,8 @@ import org.apache.avalon.framework.service.ServiceSelector;
  * between different {@link SchemaParser}.</p>
  * 
  * <p>Selection can occur either normally, based on a component name specified in
- * the configuration files, or on the {@link SchemaParser#getSupportedLanguages()
- * supported languages} of the configured {@link SchemaParser}s.</p>
+ * the configuration files, or on the {@link SchemaParser#getSupportedGrammars()
+ * supported grammars} of the configured {@link SchemaParser}s.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -32,17 +32,17 @@ public interface Validator extends ServiceSelector {
     /** <p>Role name to use when this component is accessed via a selector.</p> */
     public static final String ROLE = Validator.class.getName();
 
-    /** <p>The <a href="http://www.relaxng.org/">RELAX NG</a/> language identifer.</p> */
-    public static final String LANGUAGE_RELAX_NG = "http://relaxng.org/ns/structure/0.9";
-    /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX CORE</a/> language identifer.</p> */
-    public static final String LANGUAGE_RELAX_CORE = "http://www.xml.gr.jp/xmlns/relaxCore";
-    /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX NAMESPACE</a/> language identifer.</p> */
-    public static final String LANGUAGE_RELAX_NS = "http://www.xml.gr.jp/xmlns/relaxNamespace";
-    /** <p>The <a href="http://www.thaiopensource.com/trex/">TREX</a/> language identifer.</p> */
-    public static final String LANGUAGE_TREX = "http://www.thaiopensource.com/trex";
-    /** <p>The <a href="http://www.w3.org/XML/Schema">XML SCHEMA</a/> language identifer.</p> */
-    public static final String LANGUAGE_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-    /** <p>The <a href="http://www.w3.org/TR/REC-xml">XML DTD</a/> language identifer.</p> */
-    public static final String LANGUAGE_XML_DTD = "http://www.w3.org/XML/1998/namespace";
+    /** <p>The <a href="http://www.relaxng.org/">RELAX NG</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_RELAX_NG = "http://relaxng.org/ns/structure/0.9";
+    /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX CORE</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_RELAX_CORE = "http://www.xml.gr.jp/xmlns/relaxCore";
+    /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX NAMESPACE</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_RELAX_NS = "http://www.xml.gr.jp/xmlns/relaxNamespace";
+    /** <p>The <a href="http://www.thaiopensource.com/trex/">TREX</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_TREX = "http://www.thaiopensource.com/trex";
+    /** <p>The <a href="http://www.w3.org/XML/Schema">XML SCHEMA</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    /** <p>The <a href="http://www.w3.org/TR/REC-xml">XML DTD</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_XML_DTD = "http://www.w3.org/XML/1998/namespace";
 
 }

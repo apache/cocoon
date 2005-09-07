@@ -17,7 +17,6 @@ package org.apache.cocoon.components.validation.impl;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
@@ -29,7 +28,7 @@ import com.thaiopensource.validate.SchemaReader;
 import com.thaiopensource.validate.rng.SAXSchemaReader;
 
 /**
- * <p>A {@link SchemaParser} implementation for the RELAX NG language using the
+ * <p>A {@link SchemaParser} implementation for the RELAX NG grammar using the
  * <a href="http://www.thaiopensource.com/relaxng/jing.html">JING</a> validation
  * engine.</p>
  *
@@ -37,12 +36,9 @@ import com.thaiopensource.validate.rng.SAXSchemaReader;
  */
 public class JingSchemaParser extends CachingSchemaParser {
 
-    /** <p>The list of languages supported by the {@link JingSchemaParser}.</p> */
-    private static final String[] LANGUAGES =
-                                        new String[] { Validator.LANGUAGE_RELAX_NG };
-
-    /** <p>The {@link ServiceManager} to resolve other components.</p> */
-    private ServiceManager serviceManager;
+    /** <p>The list of grammars supported by the {@link JingSchemaParser}.</p> */
+    private static final String[] GRAMMARS =
+                                        new String[] { Validator.GRAMMAR_RELAX_NG };
 
     /**
      * <p>Create a new {@link JingSchemaParser} instance.</p>
@@ -76,13 +72,13 @@ public class JingSchemaParser extends CachingSchemaParser {
     }
 
     /**
-     * <p>Return an array of {@link String}s containing all schema languages
+     * <p>Return an array of {@link String}s containing all schema grammars
      * supported by this {@link SchemaParser}.</p>
      * 
      * <p>The {@link JingSchemaParser} supports only the
-     * {@link Validator#LANGUAGE_RELAX_NG RELAX NG} language.</p>
+     * {@link Validator#GRAMMAR_RELAX_NG RELAX NG} grammar.</p>
      */
-    public String[] getSupportedLanguages() {
-        return LANGUAGES;
+    public String[] getSupportedGrammars() {
+        return GRAMMARS;
     }
 }
