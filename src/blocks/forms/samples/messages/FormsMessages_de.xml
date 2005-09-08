@@ -14,8 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- This catalogue file contains translations for built-in Woody messages. -->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue xml:lang="de">
+  <message key="validation.captcha.mismatch">Ungültige CAPTCHA check.</message>
+
   <message key="general.field-required">Dieses Feld muss aufgefüllt werden.</message>
   <message key="datatype.conversion-failed">Ungültige {0}.</message>
   <message key="datatype.decimal">Dezimalzahl</message>

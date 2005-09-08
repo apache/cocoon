@@ -16,6 +16,8 @@
 -->
 <!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue xml:lang="it_IT">
+  <message key="validation.captcha.mismatch">#CAPTCHA check failed.#</message>
+  
   <message key="general.field-required">Questo campo è obbligatorio.</message>
 
   <message key="datatype.conversion-failed">Formato {0} non valido.</message>

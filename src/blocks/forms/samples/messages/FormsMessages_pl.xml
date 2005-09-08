@@ -16,6 +16,8 @@
 -->
 <!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue>
+  <message key="validation.captcha.mismatch">#CAPTCHA check failed.#</message>
+  
   <message key="general.field-required">To pole jest wymagane.</message>
 
   <message key="datatype.conversion-failed">Niepoprawna wartość typu: {0}.</message>
