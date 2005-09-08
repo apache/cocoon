@@ -16,6 +16,7 @@
 -->
 <html xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <body>
+    <h4 class="samplesGroup">JXPath binding result: java beans</h4>
     Email: ${form2bean.email}
     <br/>
     Phone: +${form2bean.phoneCountry}-${form2bean.phoneZone}-${form2bean.phoneNumber}
@@ -63,6 +64,6 @@
     </table>
 
     <br/>
-    <a href="form2bean.flow">Do it again</a> - <a href="../">Back to samples</a>
+    <a href="form2bean.flow">Do it again</a> - <a href="./">Back to Forms samples</a>
   </body>
 </html>

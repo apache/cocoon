@@ -16,7 +16,6 @@
 -->
 
 <page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-
   <jx:macro name="dumpBean">
     <jx:parameter name="bean"/>
     <table cellspacing="2" cellpadding="1" bgcolor="#222222">
@@ -38,7 +37,7 @@
     </table>
   </jx:macro>
 
-
+  <h4 class="samplesGroup">Binding tutorial</h4>
   <title>BindingSample :: Result</title>
   <content>
     <i>Contents of the #{./backendType} BEAN after using the binding for save():</i>

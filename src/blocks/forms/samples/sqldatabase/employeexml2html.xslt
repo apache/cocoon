@@ -51,6 +51,9 @@
           Click one to edit, or use the XML links to view raw data:
         </p>
         <xsl:apply-templates/>
+        <p>
+          <a href="../">Back to Forms samples</a>
+        </p>
       </body>
     </html>
   </xsl:template>

@@ -22,7 +22,7 @@ cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 function form_model_gui(form) {
 
-    var locale = determineLocale();
+    var locale = _determineLocale();
     var model = form.getModel();
     form.locale = locale;
 
@@ -58,7 +58,8 @@ function form_model_gui(form) {
     cocoon.sendPage("form_model_gui-success-pipeline.xsp");
 }
 
-function determineLocale() {
+function _determineLocale() {
+/* Renamed to avoid conflicts with the same function in forms_flow_example.js */
     var localeParam = cocoon.request.get("locale");
     if (localeParam != null && localeParam.length > 0) {
         return Packages.org.apache.cocoon.i18n.I18nUtils.parseLocale(localeParam);

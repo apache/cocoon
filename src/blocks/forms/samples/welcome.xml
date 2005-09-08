@@ -93,6 +93,8 @@
   <sample name="Flowscript" href="form1.flow?locale=it-IT">Italy</sample>
   <sample name="Flowscript" href="form1.flow?locale=de-DE">Germany</sample>
   <sample name="Flowscript" href="form1.flow?locale=nl-BE">Belgium (dutch)</sample>
+  <sample name="Flowscript" href="form1.flow?locale=el">Greek</sample>
+  <sample name="Flowscript" href="form1.flow?locale=zh_CN">Chinese</sample>
  </group>
  
  <group name="Dynamic templates and recursive forms">

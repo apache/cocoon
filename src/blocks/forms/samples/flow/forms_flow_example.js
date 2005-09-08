@@ -52,14 +52,6 @@ function selectCar() {
     cocoon.sendPage("carselector-success-pipeline.xsp");
 }
 
-function xhrSelectCar() {
-    var form = new Form("forms/xhr_carselector_form.xml");
-    // form.lookupWidget("make").setValue(cocoon.parameters.defaultMake);
-    form.showForm("xhr_carselector-display-pipeline");
-    cocoon.request.setAttribute("carselectorform", form.getWidget());
-    cocoon.sendPage("carselector-success-pipeline.xsp");
-}
-
 var states = [
     { key: "AL", value: "Alabama" },
     { key: "AK", value: "Alaska" },
@@ -80,7 +72,7 @@ function selectCountry() {
 
 function determineLocale() {
     var localeParam = cocoon.request.get("locale");
-    if (localeParam != null && localeParam.length > 0) {
+    if (localeParam != null && localeParam.length() > 0) {
         return Packages.org.apache.cocoon.i18n.I18nUtils.parseLocale(localeParam);
     }
     return null;
