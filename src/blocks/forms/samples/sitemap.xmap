@@ -75,6 +75,7 @@
     <map:script src="flow/binding_example.js"/>
     <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
+    <map:script src="flow/imagemap.js"/>
     <map:script src="flow/bindings.js"/>
     <map:script src="flow/form_model_gui.js"/>
     <map:script src="flow/htmlarea.js"/>
@@ -225,7 +226,6 @@
        <map:serialize/>
      </map:match>
 
-
     <!-- Upload Widget Sample -->
 
      <map:match pattern="upload">
@@ -302,7 +302,15 @@
      <map:match pattern="registration">
        <map:call function="registration"/>
      </map:match>
+     
+     <!--
+        | ImageMap form example
+        -->
 
+     <map:match pattern="imagemap">
+       <map:call function="imagemap"/>
+     </map:match>
+    
      <!--
          | Car selector sample.
          -->

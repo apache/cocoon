@@ -42,6 +42,7 @@
       <widget name="union" src="org.apache.cocoon.forms.formmodel.UnionDefinitionBuilder"/>
       <widget name="group" src="org.apache.cocoon.forms.formmodel.GroupDefinitionBuilder"/>
       <widget name="captcha" src="org.apache.cocoon.forms.formmodel.CaptchaDefinitionBuilder"/>
+      <widget name="imagemap" src="org.apache.cocoon.forms.formmodel.ImageMapDefinitionBuilder"/>
     </widgets>
   </forms-formmanager>
 </xconf>

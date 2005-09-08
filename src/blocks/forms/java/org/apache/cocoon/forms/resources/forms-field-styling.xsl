@@ -483,7 +483,15 @@
   <xsl:template match="fi:upload[@state='output']" priority="3">
       <span id="{@id}"><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
-
+  
+  <!--+
+      | fi:imagemap
+      +-->
+  <xsl:template match="fi:imagemap">
+      <input type ="image" name="{@id}" src="{@imageuri}" title="{fi:hint}" ismap="true">
+          <xsl:apply-templates select="." mode="styling"/>
+      </input>
+  </xsl:template>  
   <!--+
       | fi:repeater
       +-->
