@@ -16,6 +16,7 @@
 -->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <h4 class="samplesGroup">JXPath binding with Flowscript</h4>
   <title>Sample form</title>
   <content>
     <p>This form is used to illustrate the CForms binding framework. The binding
@@ -113,7 +114,7 @@
       <input type="submit"/>
     </ft:form-template>
     <p>
-      <a href="../">Back to samples</a>
+      <a href="./">Back to Forms samples</a>
     </p>
   </content>
 </page>

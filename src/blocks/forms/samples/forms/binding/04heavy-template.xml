@@ -18,6 +18,7 @@
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <h4 class="samplesGroup">Binding a repeater widget</h4>
   <title>Heavy Form</title>
   <content>
     <h3>Lots of select boxes</h3>
@@ -37,9 +38,12 @@
         </ft:repeater-widget>
       </div>
 
-      <p style="float: left; clear: both;">
+      <p>
         <input type="submit" value="Submit"/>
       </p>
     </ft:form-template>
+    <p>
+      <a href="./">Back to Forms Samples</a>
+    </p>
   </content>
 </page>

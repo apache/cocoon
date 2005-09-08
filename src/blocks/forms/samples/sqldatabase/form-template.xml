@@ -31,5 +31,8 @@
 			<input type="submit"/>
 		</ft:form-template>
     <p>(Yes, there's not much to edit- what do you expect from a sample?)</p>
+    <p>
+        <a href="../">Back to Forms samples</a>
+    </p>
 	</body>
 </html>

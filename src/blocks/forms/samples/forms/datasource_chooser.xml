@@ -30,8 +30,8 @@
     <!-- The datasource type. This is the union's "case" widget -->
     <fd:field id="sourcetype">
       <fd:datatype base="string"/>
-      <!-- The union will initially be showing the "SQL" choice -->
-      <fd:initial-value>SQL</fd:initial-value>
+      <!-- If you uncomment the line below the union will initially be showing the "SQL" choice -->
+      <!-- <fd:initial-value>SQL</fd:initial-value> -->
       <fd:selection-list>
         <fd:item value=""/>
         <fd:item value="SQL"/>
