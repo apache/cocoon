@@ -200,7 +200,9 @@
       JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
     </action>
     <action dev="PF" type="add">
-       Added a new "validation" block using (for now) RELAX-NG to validate documents while a pipeline is processed.
+       Added a new "validation" block abstracting the concept of XML validation and providing access to schemas
+       and validation tools from within Cocoon pipelines and/or Cocoon components. As of right now, the
+       "validation" block supports the RELAX-NG grammar using JING and the XML-Schema grammar using Xerces.
     </action>
     <action dev="SW" type="add">
        Add a "cocoon.exit()" method to flowscript, which allows to exit the current flowscript invocation without
