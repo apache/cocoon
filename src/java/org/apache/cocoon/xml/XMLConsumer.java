@@ -18,13 +18,29 @@ package org.apache.cocoon.xml;
 /**
  * This interfaces identifies classes that consume XML data, receiving
  * notification of SAX events.
- * <br>
- * This interface unites the idea of SAX <code>ContentHandler</code> and
- * <code>LexicalHandler</code>.
+ * <p>
+ * An XMLConsumer is also a SAX ContentHandler and a SAX LexicalHandler.  That
+ * means the XMLConsumer has to respect all the contracts with the SAX
+ * interfaces.  SAX stands for Serialized API for XML.  A document start, and
+ * each element start must be matched by the corresponding element end or
+ * document end.  So why does Cocoon use SAX instead of manipulating a DOM?
+ * For two main reasons: performance and scalability.  A DOM tree is much more
+ * heavy on system memory than successive calls to an API.  SAX events can be
+ * sent as soon as they are read from the originating XML, the parsing and
+ * processing can happen essentially at the same time.
+ * </p>
+ * <p>
+ * Most people's needs will be handled just fine with the ContentHandler
+ * interface, as that declares your namespaces.  However if you need lexical
+ * support to resolve entity names and such, you need the LexicalHandler
+ * interface.  The AbstractXMLConsumer base class can make implementing this
+ * interface easier so that you only need to override the events you intend to
+ * do anything with.
+ * </p>
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: XMLConsumer.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface XMLConsumer extends org.apache.excalibur.xml.sax.XMLConsumer {
 }
