@@ -142,7 +142,6 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
         Configuration configurations[] = this.conf.getChildren(this.shorthand);
         this.logger.debug("Configuring " + configurations.length + " schema parsers"
                           + " from " + this.conf.getLocation());
-
         for (int x = 0; x < configurations.length; x++) try {
             Configuration configuration = configurations[x];
             String className = configuration.getAttribute("class");
@@ -179,15 +178,17 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
                 SchemaParser parser = (SchemaParser) component;
                 String grammars[] = parser.getSupportedGrammars();
                 if (grammars != null) {
-                    for (int k = 0; x < grammars.length; x++) {
-                        if (this.selections.containsKey(grammars[x])) continue;
-                        this.selections.put(grammars[x], component);
-                        this.logger.debug("SchemaParser " + selectionKey
-                                          + "provides grammar " + grammars[x]);
+                    for (int k = 0; k < grammars.length; k++) {
+                        if (this.selections.containsKey(grammars[k])) continue;
+                        this.selections.put(grammars[k], component);
+                        this.logger.debug("SchemaParser " + selectionKey +
+                                          "provides grammar " + grammars[k]);
                     }
                 }
             }
         } catch (Exception exception) {
+            this.logger.warn("Exception creating schema parsers", exception);
+
             Iterator iterator = this.components.iterator();
             while (iterator.hasNext()) try {
                 this.decommissionComponent(iterator.next());
@@ -204,6 +205,7 @@ Contextualizable, Serviceable, Configurable, Initializable, Disposable {
                 throw new ConfigurationException(message, configuration, exception);
             }
         }
+        this.logger.debug("Configured successfully");
     }
 
     /**

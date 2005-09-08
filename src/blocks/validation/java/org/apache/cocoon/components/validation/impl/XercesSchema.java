@@ -18,7 +18,6 @@ package org.apache.cocoon.components.validation.impl;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
-import org.apache.xerces.xni.parser.XMLComponent;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -58,8 +57,7 @@ public class XercesSchema extends AbstractSchema {
                                                   new XercesEntityResolver(),
                                                   errorHandler);
         try {
-            Object instance = this.validatorClass.newInstance();
-            ((XMLComponent) instance).reset(context);
+            Object instance = context.initialize(this.validatorClass.newInstance());
             return new XercesContentHandler((XMLDocumentHandler) instance);
         } catch (Exception exception) {
             throw new SAXException("Unable to access validator", exception);
