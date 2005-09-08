@@ -30,11 +30,13 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.reading.ResourceReader;
 import org.xml.sax.SAXException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGDecodeParam;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
@@ -50,13 +52,13 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     <dd> This parameter is optional. When specified, it determines the
  *          width of the binary image.
  *          If no height parameter is specified, the aspect ratio
- *          of the image is kept.
+ *          of the image is kept. The parameter may be expressed as an int or a percentage.
  *     </dd>
  *     <dt>&lt;height&gt;</dt>
  *     <dd> This parameter is optional. When specified, it determines the
  *          height of the binary image.
  *          If no width parameter is specified, the aspect ratio
- *          of the image is kept.
+ *          of the image is kept. The parameter may be expressed as an int or a percentage.
  *     </dd>
  *     <dt>&lt;scale(Red|Green|Blue)&gt;</dt>
  *     <dd>This parameter is optional. When specified it will cause the
@@ -80,11 +82,17 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *         images will be reduced in size, but not enlarged. The default is
  *         "<code>true</code>".
  *     </dd>
+ *     <dt>&lt;quality&gt;</dt>
+ *     <dd>This parameter is optional. By default, the quality uses the
+ *         default for the JVM. If it is specified, the proper JPEG quality
+ *         compression is used. The range is 0.0 to 1.0, if specified. 
+ *     </dd>
  *   </dl>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
+ * @author <a href="mailto:eric@plauditdesign.com">Eric Caron</a>
  * @version CVS $Id$
  */
 final public class ImageReader extends ResourceReader {
@@ -96,9 +104,11 @@ final public class ImageReader extends ResourceReader {
     private int height;
     private float[] scaleColor = new float[3];
     private float[] offsetColor = new float[3];
+    private float[] quality = new float[1];
 
     private boolean enlarge;
     private boolean fitUniform;
+    private boolean usePercent;
     private RescaleOp colorFilter;
     private ColorConvertOp grayscaleFilter;
 
@@ -106,8 +116,9 @@ final public class ImageReader extends ResourceReader {
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
 
-        width = par.getParameterAsInteger("width", 0);
-        height = par.getParameterAsInteger("height", 0);
+        char lastChar;
+        String tmpWidth = par.getParameter("width", "0");
+        String tmpHeight = par.getParameter("height", "0");
 
         scaleColor[0] = par.getParameterAsFloat("scaleRed", -1.0f);
         scaleColor[1] = par.getParameterAsFloat("scaleGreen", -1.0f);
@@ -115,6 +126,7 @@ final public class ImageReader extends ResourceReader {
         offsetColor[0] = par.getParameterAsFloat("offsetRed", 0.0f);
         offsetColor[1] = par.getParameterAsFloat("offsetGreen", 0.0f);
         offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);
+        quality[0] = par.getParameterAsFloat("quality", 0.9f);
 
         boolean filterColor = false;
         for (int i = 0; i < 3; ++i) {
@@ -130,6 +142,23 @@ final public class ImageReader extends ResourceReader {
 
         if (filterColor) {
             this.colorFilter = new RescaleOp(scaleColor, offsetColor, null);
+        }
+
+        usePercent = false;
+        lastChar = tmpWidth.charAt(tmpWidth.length() - 1);
+        if (lastChar == '%') {
+            usePercent = true;
+            width = Integer.parseInt(tmpWidth.substring(0, tmpWidth.length() - 1));
+        } else {
+            width = Integer.parseInt(tmpWidth);
+        }
+
+        lastChar = tmpHeight.charAt(tmpHeight.length() - 1);
+        if(lastChar == '%') {
+            usePercent = true;
+            height = Integer.parseInt(tmpHeight.substring(0, tmpHeight.length() - 1));
+        } else {
+            height = Integer.parseInt(tmpHeight);
         }
 
         if (par.getParameterAsBoolean("grayscale", GRAYSCALE_DEFAULT)) {
@@ -155,7 +184,7 @@ final public class ImageReader extends ResourceReader {
      * @return True if image transform is specified
      */
     private boolean hasTransform() {
-        return width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter;
+        return width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter || (quality[0] != 0.9f);
     }
 
     /**
@@ -231,6 +260,15 @@ final public class ImageReader extends ResourceReader {
                     double ow = decodeParam.getWidth();
                     double oh = decodeParam.getHeight();
 
+                    if (usePercent == true) {
+                        if (width > 0) {
+                            width = Math.round((int)(ow * width) / 100);
+                        }
+                        if (height > 0) {
+                            height = Math.round((int)(oh * height) / 100);
+                        }
+                    }
+
                     AffineTransformOp filter = new AffineTransformOp(getTransform(ow, oh, width, height), AffineTransformOp.TYPE_BILINEAR);
                     WritableRaster scaledRaster = filter.createCompatibleDestRaster(currentImage.getRaster());
 
@@ -247,6 +285,9 @@ final public class ImageReader extends ResourceReader {
                     colorFilter.filter(currentImage, currentImage);
                 }
                 JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+                JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
+                p.setQuality(quality[0], true);
+                encoder.setJPEGEncodeParam(p);
                 encoder.encode(currentImage);
                 out.flush();
             } catch (ImageFormatException e) {
@@ -284,6 +325,7 @@ final public class ImageReader extends ResourceReader {
                 + ":" + this.offsetColor[0]
                 + ":" + this.offsetColor[1]
                 + ":" + this.offsetColor[2]
+                + ":" + this.quality[0]
                 + ":" + ((null == this.grayscaleFilter) ? "color" : "grayscale")
                 + ":" + super.getKey();
     }
