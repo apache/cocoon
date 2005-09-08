@@ -16,6 +16,8 @@
 -->
 <!-- This catalogue file contains translations for built-in Cocoon Forms messages. -->
 <catalogue>
+  <message key="validation.captcha.mismatch">#CAPTCHA check failed.#</message>
+  
   <message key="general.field-required">Cette donnée est obligatoire.</message>
 
   <message key="datatype.conversion-failed">N'est pas un(e) {0}.</message>

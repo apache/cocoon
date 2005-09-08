@@ -16,6 +16,8 @@
 -->
 <!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue>
+  <message key="validation.captcha.mismatch">#CAPTCHA check failed.#</message>
+  
   <message key="general.field-required">此域是必须的</message>
 
   <message key="datatype.conversion-failed">不是一个有效的{0}类型.</message>

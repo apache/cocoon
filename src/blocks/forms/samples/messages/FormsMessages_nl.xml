@@ -14,8 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- This catalogue file contains translations for built-in Woody messages. -->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue xml:lang="nl">
+   <message key="validation.captcha.mismatch">CAPTCHA controle is ongeldig.</message>
+   
    <message key="general.field-required">Dit veld moet ingevuld zijn.</message>
    <message key="datatype.conversion-failed">Ongeldig {0}.</message>
    <message key="datatype.decimal">gebroken getal</message>
