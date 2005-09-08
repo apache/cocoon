@@ -17,7 +17,6 @@ package org.apache.cocoon.components.validation.impl;
 
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
-import org.apache.xerces.impl.Constants;
 import org.apache.xerces.impl.xs.XMLSchemaLoader;
 import org.apache.xerces.impl.xs.XMLSchemaValidator;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
@@ -26,14 +25,14 @@ import org.apache.xerces.xni.grammars.XMLGrammarLoader;
  * <p>The implementation of the {@link SchemaParser} interface for the XML Schema
  * grammar using <a href="http://xml.apache.org/xerces2-j/">Xerces</a>.</p>
  *
+ * <p>Most of this code has been derived from the Xerces JAXP Validation interface
+ * available in the <code>org.xml.xerces.jaxp.validation</code> package.</p>
+ *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class XercesSchemaParser extends XercesGrammarParser implements SchemaParser {
 
-    private static final String F_SCHEMA_FULL_CHECK = 
-            Constants.XERCES_FEATURE_PREFIX + Constants.SCHEMA_FULL_CHECKING;
-    private static final String[] GRAMMARS = 
-            new String[] { Validator.GRAMMAR_XML_SCHEMA };
+    private static final String[] GRAMMARS = new String[] { Validator.GRAMMAR_XML_SCHEMA };
     private static final Class VALIDATOR = XMLSchemaValidator.class;
 
     /**
@@ -58,9 +57,7 @@ public class XercesSchemaParser extends XercesGrammarParser implements SchemaPar
      * <p>Return a {@link XMLGrammarLoader} for the XML Schema grammar.</p>
      */
     protected XMLGrammarLoader newGrammarLoader() {
-        XMLSchemaLoader loader = new XMLSchemaLoader();
-        loader.setFeature(F_SCHEMA_FULL_CHECK, true);
-        return loader;
+        return new XMLSchemaLoader();
     }
 
     /**

@@ -33,6 +33,9 @@ import org.xml.sax.SAXException;
  * <p>An implementation of Xerces' {@link XMLEntityResolver} resolving URIs using
  * Excalibur's {@link SourceResolver} and {@link EntityResolver}.</p>
  *
+ * <p>Most of this code has been derived from the Xerces JAXP Validation interface
+ * available in the <code>org.xml.xerces.jaxp.validation</code> package.</p>
+ *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class XercesEntityResolver implements XMLEntityResolver {

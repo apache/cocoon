@@ -21,6 +21,9 @@
     <schema-parser name="jing" class="org.apache.cocoon.components.validation.impl.JingSchemaParser">
       <cache-schemas>true</cache-schemas>
     </schema-parser>
+    <schema-parser name="xerces-schema" class="org.apache.cocoon.components.validation.impl.XercesSchemaParser">
+      <cache-schemas>true</cache-schemas>
+    </schema-parser>
   </validator>
   
 </xconf>

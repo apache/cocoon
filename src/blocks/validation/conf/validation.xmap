@@ -29,4 +29,10 @@
           +-->
       <grammar>http://relaxng.org/ns/structure/0.9</grammar>
     </map:transformer>
+
+    <map:transformer name="validate-xmlschema"
+                     logger="sitemap.transformer.validate"
+                     src="org.apache.cocoon.transformation.ValidatingTransformer">
+      <grammar>http://www.w3.org/2001/XMLSchema</grammar>
+    </map:transformer>
 </xmap>
