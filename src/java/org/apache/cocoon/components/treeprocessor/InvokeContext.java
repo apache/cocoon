@@ -128,6 +128,14 @@ public class InvokeContext extends AbstractLogEnabled
     public void inform(String     pipelineName,
                        Parameters parameters,
                        Map        objectModel) {
+        // FIXME quick fix to get pipeline section running again
+        if ( this.processingPipeline != null ) {
+            this.pipelineSelector.release(this.processingPipeline);
+            this.pipelinesManager.release(this.pipelineSelector);
+            this.pipelineSelector = null;
+            this.pipelinesManager = null;
+            this.processingPipeline = null;
+        }
         this.processingPipelineName = pipelineName;
         this.processingPipelineParameters = parameters;
         this.processingPipelineObjectModel = objectModel;
