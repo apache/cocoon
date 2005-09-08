@@ -23,6 +23,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -55,6 +56,8 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
     protected Store transientStore = null;
     /** <p>A flag indicating whether schemas can be cached or not.</p> */
     private boolean enableCache = true;
+    /** <p>The current logger.</p> */
+    private Logger logger = null;
 
     /**
      * <p>Contextualize this component specifying a {@link ServiceManager} instance.</p>
@@ -74,8 +77,11 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
+        this.logger = super.getLogger();
         Configuration subconfiguration = configuration.getChild("cache-schemas");
         this.enableCache = subconfiguration.getValueAsBoolean(true);
+        this.logger.debug("Schema caching is " + (this.enableCache? "en": "dis")
+                          + "abled for " + configuration.getAttribute("name"));
     }
 
     /**
@@ -87,7 +93,9 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
     throws Exception {
         this.entityResolver = (EntityResolver) this.serviceManager.lookup(EntityResolver.ROLE);
         this.sourceResolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
-        this.transientStore = (Store) this.serviceManager.lookup(Store.TRANSIENT_STORE);
+        if (this.enableCache) {
+            this.transientStore = (Store) this.serviceManager.lookup(Store.TRANSIENT_STORE);
+        }
     }
     
     /**
@@ -115,35 +123,45 @@ implements Serviceable, Initializable, Disposable, SchemaParser, Configurable {
         }
 
         /* Prepare a key, and try to get the cached copy of the schema */
-        String key = this.getClass().getName() + ":" + uri;
-        Schema schema = (Schema) this.transientStore.get(key);
-        SourceValidity validity = null;
+        Schema schema = null;
 
-        /* If the schema was found verify its validity and optionally clear */
-        if (schema != null) {
-            super.getLogger().debug("Accessing cached schema " + uri);
-            validity = schema.getValidity();
-            if (validity == null) {
-                super.getLogger().debug("Cached schema " + uri + " has no validity");
-                this.transientStore.remove(key);
-                schema = null;
-            } else if (validity.isValid() != SourceValidity.VALID) {
-                super.getLogger().debug("Cached schema " + uri + " is not valid");
-                this.transientStore.remove(key);
-                schema = null;
+        if (this.transientStore != null) {
+            String key = this.getClass().getName() + ":" + uri;
+            SourceValidity validity = null;
+            schema = (Schema) this.transientStore.get(key);
+
+            /* If the schema was found verify its validity and optionally clear */
+            if (schema != null) {
+                this.logger.debug("Accessing cached schema " + uri);
+                validity = schema.getValidity();
+                if (validity == null) {
+                    this.logger.debug("Cached schema " + uri + " has no validity");
+                    this.transientStore.remove(key);
+                    schema = null;
+                } else if (validity.isValid() != SourceValidity.VALID) {
+                    this.logger.debug("Cached schema " + uri + " is not valid");
+                    this.transientStore.remove(key);
+                    schema = null;
+                }
             }
-        }
 
-        /* If the schema was not cached or was cleared, parse and cache it */
-        if (schema == null) {
-            super.getLogger().debug("Parsing schema " + uri);
+            /* If the schema was not cached or was cleared, parse and cache it */
+            if (schema == null) {
+                this.logger.debug("Parsing schema " + uri);
+                schema = this.parseSchema(uri);
+                validity = schema.getValidity();
+                if (validity != null) {
+                    if (validity.isValid() == SourceValidity.VALID) {
+                        this.transientStore.store(key, schema);
+                    }
+                }
+            }
+        } else {
+            /* Caching is disabled */
             schema = this.parseSchema(uri);
-            validity = schema.getValidity();
-            if ((validity != null) && (validity.isValid() == SourceValidity.VALID)) {
-                this.transientStore.store(key, schema);
-            }
         }
-        
+
+
         /* Return the parsed or cached schema */
         return schema;
     }

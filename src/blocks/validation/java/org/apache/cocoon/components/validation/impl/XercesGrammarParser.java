@@ -23,7 +23,6 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
-import org.apache.xerces.xni.parser.XMLComponent;
 import org.xml.sax.SAXException;
 
 /**
@@ -62,10 +61,12 @@ implements SchemaParser {
 
         /* Create a new XML Schema Loader and set the pool into it */
         XMLGrammarLoader loader = this.newGrammarLoader();
-        ((XMLComponent) loader).reset(context);
+        context.initialize(loader);
 
         /* Load (parse and interpret) the grammar */
+        this.getLogger().debug("Loading grammar from " + uri);
         loader.loadGrammar(res.resolveUri(uri));
+        this.getLogger().debug("Grammar successfully loaded from " + uri);
 
         /* Return a new Schema instance */
         SourceValidity validity = res.getSourceValidity();

@@ -29,6 +29,7 @@ import org.apache.xerces.util.SymbolTable;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.apache.xerces.xni.parser.XMLComponent;
+import org.apache.xerces.xni.parser.XMLComponentManager;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLErrorHandler;
 import org.apache.xerces.xni.parser.XMLParseException;
@@ -129,14 +130,35 @@ public class XercesContext extends ParserConfigurationSettings {
         super.setFeature(F_VALIDATION,            true);
         super.setFeature(F_SCHEMA_VALIDATION,     true);
 
-        /* Initialize the configured Error Reporter */
+        /* Initialize all known components */
         Iterator iterator = super.fProperties.values().iterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object instanceof XMLComponent) {
-                ((XMLComponent) object).reset(this);
-            }
+        while (iterator.hasNext()) this.initialize(iterator.next());
+    }
+    
+    public Object initialize(Object object) {
+        if (!(object instanceof XMLComponent)) return object;
+        XMLComponent component = (XMLComponent) object;
+        component.reset(this);
+
+        /* Force setting all known features */
+        Iterator features = super.fFeatures.keySet().iterator();
+        while (features.hasNext()) try {
+            String featureName = (String) features.next();
+            component.setFeature(featureName, this.getFeature(featureName));
+        } catch (XNIException exception) {
+            // Swallow any exception;
         }
+
+        /* Force setting all known properties */
+        Iterator properties = super.fProperties.keySet().iterator();
+        while (properties.hasNext()) try {
+            String propertyName = (String) properties.next();
+            component.setProperty(propertyName, this.getProperty(propertyName));
+        } catch (XNIException exception) {
+            // Swallow any exception;
+        }
+        
+        return object;
     }
 
     /**
@@ -153,33 +175,39 @@ public class XercesContext extends ParserConfigurationSettings {
 
         public void warning(String domain, String key, XMLParseException e)
         throws XNIException {
+            System.err.println("DETECTED " + e.getMessage() + "/" + this.errorHandler);
             if (this.errorHandler != null) try {
                 this.errorHandler.warning(this.makeException(e));
             } catch (SAXException saxException) {
                 throw new XNIException(saxException);
             } else {
+                System.err.println("THROWING " + e.getMessage());
                 throw e;
             }
         }
 
         public void error(String domain, String key, XMLParseException e)
         throws XNIException {
+            System.err.println("DETECTED " + e.getMessage() + "/" + this.errorHandler);
             if (this.errorHandler != null) try {
                 this.errorHandler.warning(this.makeException(e));
             } catch (SAXException saxException) {
                 throw new XNIException(saxException);
             } else {
+                System.err.println("THROWING " + e.getMessage());
                 throw e;
             }
         }
 
         public void fatalError(String domain, String key, XMLParseException e)
         throws XNIException {
+            System.err.println("DETECTED " + e.getMessage() + "/" + this.errorHandler);
             if (this.errorHandler != null) try {
                 this.errorHandler.warning(this.makeException(e));
             } catch (SAXException saxException) {
                 throw new XNIException(saxException);
             } else {
+                System.err.println("THROWING " + e.getMessage());
                 throw e;
             }
         }
