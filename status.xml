@@ -84,6 +84,7 @@
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
   <person name="J&#246;rg Heinicke" email="joerg@apache.org" id="JH"/>
+  <person name="Jorg Heymans" email="jheymans@apache.org" id="JHS"/>
   <person name="Unico Hommes" email="unico@apache.org" id="UH"/>
   <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
@@ -197,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JHS" type="fix" fixes-bug="36326" due-to="Eric Caron" due-to-email="eric@plauditdesign.com">
+      Added percentage-dimensions and jpeg quality handling to the ImageReader.
+    </action>
     <action dev="LG" type="add">
       JXTG: Pluggable expression parser. New expression syntax: ${expr}, #{expr} -&gt; {jexl:expr}, {jxpath:expr}.
       This is a target syntax for CTemplate.
