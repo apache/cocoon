@@ -21,13 +21,18 @@ import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.util.XMLGrammarPoolImpl;
+import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.apache.xerces.xni.parser.XMLParseException;
 import org.xml.sax.SAXException;
 
 /**
  * <p>The implementation of the {@link SchemaParser} interface using the internals
  * of <a href="http://xml.apache.org/xerces2-j/">Xerces</a>.</p>
+ *
+ * <p>Most of this code has been derived from the Xerces JAXP Validation interface
+ * available in the <code>org.xml.xerces.jaxp.validation</code> package.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -51,27 +56,33 @@ implements SchemaParser {
      */
     protected final Schema parseSchema(String uri)
     throws IOException, SAXException {
-        /* Create a Xerces Grammar Pool and Entity Resolver */
-        XMLGrammarPool pool = new XMLGrammarPoolImpl();
-        XercesEntityResolver res = new XercesEntityResolver(super.sourceResolver,
-                                                            super.entityResolver);
+        try {
+            /* Create a Xerces Grammar Pool and Entity Resolver */
+            XMLGrammarPool pool = new XMLGrammarPoolImpl();
+            XercesEntityResolver r = new XercesEntityResolver(super.sourceResolver,
+                                                              super.entityResolver);
 
-        /* Create a Xerces component manager contextualizing the loader */
-        XercesContext context = new XercesContext(pool, res);
+            /* Create a Xerces component manager contextualizing the loader */
+            XercesContext context = new XercesContext(pool, r);
 
-        /* Create a new XML Schema Loader and set the pool into it */
-        XMLGrammarLoader loader = this.newGrammarLoader();
-        context.initialize(loader);
+            /* Create a new XML Schema Loader and set the pool into it */
+            XMLGrammarLoader loader = this.newGrammarLoader();
+            context.initialize(loader);
 
-        /* Load (parse and interpret) the grammar */
-        this.getLogger().debug("Loading grammar from " + uri);
-        loader.loadGrammar(res.resolveUri(uri));
-        this.getLogger().debug("Grammar successfully loaded from " + uri);
+            /* Load (parse and interpret) the grammar */
+            this.getLogger().debug("Loading grammar from " + uri);
+            loader.loadGrammar(r.resolveUri(uri));
+            this.getLogger().debug("Grammar successfully loaded from " + uri);
 
-        /* Return a new Schema instance */
-        SourceValidity validity = res.getSourceValidity();
-        Class validator = this.getValidationHandlerClass();
-        return new XercesSchema(pool, validity, validator);
+            /* Return a new Schema instance */
+            SourceValidity validity = r.getSourceValidity();
+            Class validator = this.getValidationHandlerClass();
+            return new XercesSchema(pool, validity, validator);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        } catch (XNIException exception) {
+            throw new SAXException("Unable to parse schema", exception);
+        }
     }
 
     /**

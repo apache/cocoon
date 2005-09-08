@@ -24,6 +24,7 @@ import org.apache.xerces.xni.QName;
 import org.apache.xerces.xni.XMLAttributes;
 import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.XMLString;
+import org.apache.xerces.xni.parser.XMLParseException;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -32,6 +33,9 @@ import org.xml.sax.SAXException;
 /**
  * <p>An implementation of the {@link ContentHandler} interface wrapping around
  * a Xerces {@link XMLDocumentHandler} instance.</p>
+ * 
+ * <p>Most of this code has been derived from the Xerces JAXP Validation interface
+ * available in the <code>org.xml.xerces.jaxp.validation</code> package.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -49,29 +53,37 @@ public class XercesContentHandler implements ContentHandler {
     }
 
     public void setDocumentLocator(Locator locator) {
-        System.err.println("SETTING LOCATOR");
         this.locator.setLocator(locator);
     }
 
     public void startDocument()
     throws SAXException {
-        System.err.println("START DOCUMENT");
-        this.validationHandler.startDocument(this.locator,
-                                     this.locator.getEncoding(),
-                                     this.namespaceContext,
-                                     null);
+        try {
+            this.validationHandler.startDocument(this.locator,
+                                                 this.locator.getEncoding(),
+                                                 this.namespaceContext,
+                                                 null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void endDocument()
     throws SAXException {
-        this.validationHandler.endDocument(null);
+        try {
+            this.validationHandler.endDocument(null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void startPrefixMapping(String pfx, String uri)
     throws SAXException {
-        String nsPfx = pfx != null? pfx: XMLSymbols.EMPTY_STRING;
-        String nsUri = (uri != null && uri.length() > 0)? uri : null;
-        this.namespaceContext.declarePrefix(nsPfx, nsUri);
+        try {
+            this.namespaceContext.declarePrefix(pfx, uri);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void endPrefixMapping(String arg0)
@@ -82,45 +94,64 @@ public class XercesContentHandler implements ContentHandler {
     public void startElement(String namespace, String local, String qualified,
                              Attributes attributes)
     throws SAXException {
-        System.err.println("STAR ELEM " + this.locator.getLiteralSystemId());
-        QName qname = this.qname(namespace, local, qualified);
-        XMLAttributes xmlatts = new XMLAttributesImpl(attributes.getLength());
-        for (int x = 0; x < attributes.getLength(); x ++) {
-            final String aNamespace = attributes.getURI(x);
-            final String aLocalName = attributes.getLocalName(x);
-            final String aQualified = attributes.getQName(x);
-            final String aType = attributes.getType(x);
-            final String aValue = attributes.getValue(x);
-            QName aQname = this.qname(aNamespace, aLocalName, aQualified);
-            xmlatts.addAttribute(aQname, aType, aValue);
+        try {
+            QName qname = this.qname(namespace, local, qualified);
+            XMLAttributes xmlatts = new XMLAttributesImpl(attributes.getLength());
+            for (int x = 0; x < attributes.getLength(); x ++) {
+                final String aNamespace = attributes.getURI(x);
+                final String aLocalName = attributes.getLocalName(x);
+                final String aQualified = attributes.getQName(x);
+                final String aType = attributes.getType(x);
+                final String aValue = attributes.getValue(x);
+                QName aQname = this.qname(aNamespace, aLocalName, aQualified);
+                xmlatts.addAttribute(aQname, aType, aValue);
+            }
+            this.namespaceContext.pushContext();
+            this.validationHandler.startElement(qname, xmlatts, null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
         }
-        this.namespaceContext.pushContext();
-        this.validationHandler.startElement(qname, xmlatts, null);
     }
 
     public void endElement(String namespace, String local, String qualified)
     throws SAXException {
-        QName qname = this.qname(namespace, local, qualified);
-        this.validationHandler.endElement(qname, null);
-        this.namespaceContext.popContext();
+        try {
+            QName qname = this.qname(namespace, local, qualified);
+            this.validationHandler.endElement(qname, null);
+            this.namespaceContext.popContext();
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void characters(char buffer[], int offset, int length)
     throws SAXException {
-        XMLString data = new XMLString(buffer, offset, length);
-        this.validationHandler.characters(data, null);
+        try {
+            XMLString data = new XMLString(buffer, offset, length);
+            this.validationHandler.characters(data, null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void ignorableWhitespace(char buffer[], int offset, int length)
     throws SAXException {
-        XMLString data = new XMLString(buffer, offset, length);
-        this.validationHandler.ignorableWhitespace(data, null);
+        try {
+            XMLString data = new XMLString(buffer, offset, length);
+            this.validationHandler.ignorableWhitespace(data, null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void processingInstruction(String target, String extra)
     throws SAXException {
-        XMLString data = new XMLString(extra.toCharArray(), 0, extra.length());
-        this.validationHandler.processingInstruction(target, data, null);
+        try {
+            XMLString data = new XMLString(extra.toCharArray(), 0, extra.length());
+            this.validationHandler.processingInstruction(target, data, null);
+        } catch (XMLParseException exception) {
+            throw new XercesParseException(exception);
+        }
     }
 
     public void skippedEntity(String arg0)

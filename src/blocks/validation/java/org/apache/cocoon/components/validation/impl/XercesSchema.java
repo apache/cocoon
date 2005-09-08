@@ -25,6 +25,9 @@ import org.xml.sax.SAXException;
 /**
  * <p>A wrapper around a schema parsed by Xerces.</p>
  *
+ * <p>Most of this code has been derived from the Xerces JAXP Validation interface
+ * available in the <code>org.xml.xerces.jaxp.validation</code> package.</p>
+ *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class XercesSchema extends AbstractSchema {
