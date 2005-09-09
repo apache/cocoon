@@ -17,6 +17,7 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+                xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-advanced-styling.xsl'.
@@ -71,14 +72,12 @@
       <!-- calendar popup -->
       <xsl:choose>
         <xsl:when test="@state = 'disabled'">
-          <!-- TODO: i18n key for @alt -->
-          <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
+          <img src="{$resources-uri}/img/cal.gif" alt="forms:calendar.alt" i18n:attr="alt"/>
         </xsl:when>
         <xsl:otherwise>
           <a href="#" name="{$id}" id="{$id}"
              onclick="forms_calendar.select(forms_getForm(this)['{@id}'],'{$id}','{$format}'); return false;">
-            <!-- TODO: i18n key for @alt -->
-            <img src="{$resources-uri}/img/cal.gif" alt="Calendar"/>
+            <img src="{$resources-uri}/img/cal.gif" alt="forms:calendar.alt" i18n:attr="alt"/>
           </a>
         </xsl:otherwise>
       </xsl:choose>
