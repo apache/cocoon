@@ -1524,7 +1524,7 @@
       Delivery context library
     </description>
     <home nested="lib/optional"/>
-    <jar name="deli-x031104.jar"/>
+    <jar name="deli-x050330.jar"/>
   </project>
 
   <project name="jing">
