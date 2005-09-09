@@ -50,5 +50,13 @@ public interface Validator extends ServiceSelector {
     public static final String GRAMMAR_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     /** <p>The <a href="http://www.w3.org/TR/REC-xml">XML DTD</a/> grammar identifer.</p> */
     public static final String GRAMMAR_XML_DTD = "http://www.w3.org/XML/1998/namespace";
+    
+    /** <p>The list of all known grammars excluding {@link #GRAMMAR_AUTOMATIC}.</p> */
+    public static final String GRAMMARS[] = new String[] { GRAMMAR_RELAX_NG,
+                                                           GRAMMAR_RELAX_CORE,
+                                                           GRAMMAR_RELAX_NS,
+                                                           GRAMMAR_TREX,
+                                                           GRAMMAR_XML_SCHEMA,
+                                                           GRAMMAR_XML_DTD };
 
 }
