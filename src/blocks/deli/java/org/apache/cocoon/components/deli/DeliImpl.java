@@ -72,10 +72,10 @@ import com.hp.hpl.deli.Workspace;
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable, Deli, Serviceable, Disposable, Initializable,
                ThreadSafe, Contextualizable {
-
-    /** The name of the main DELI configuration file */
-    private String deliConfig = "WEB-INF/deli/config/deliConfig.xml";
-
+		       
+     /** The name of the main DELI configuration file */
+     private String deliConfig = "deli/config/deliConfig.xml";
+ 
     /** The service manager */
     protected ServiceManager manager = null;
 

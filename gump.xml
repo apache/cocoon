@@ -2,7 +2,6 @@
 <!--
   Copyright 1999-2005 The Apache Software Foundation
 
-  Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
@@ -75,6 +74,7 @@
     <depend project="commons-cli"/>
     <depend project="commons-httpclient"/>
     <depend project="commons-collections"/>
+    <depend project="commons-fileupload"/>
     <depend project="commons-jexl"/>
     <depend project="commons-jxpath"/>
     <depend project="commons-lang"/>
@@ -1663,7 +1663,7 @@
       Delivery context library
     </description>
     <home nested="lib/optional"/>
-    <jar name="deli-x031104.jar"/>
+    <jar name="deli-x050330.jar"/>
   </project>
 
   <project name="jing">
