@@ -205,12 +205,6 @@
     <action dev="JHS" type="fix" fixes-bug="29712" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
       MultipartParser now removes partially uploaded files
     </action>
-    <action dev="JHS" type="add" fixes-bug="35462" due-to="Luca Morandini" due-to-email="lmorandini@ieee.org">
-      Added ImageMap widget.
-    </action>
-    <action dev="JHS" type="fix" fixes-bug="36326" due-to="Eric Caron" due-to-email="eric@plauditdesign.com">
-      Added percentage-dimensions and jpeg quality handling to the ImageReader.
-    </action>
     <action dev="LG" type="add">
       JXTG: Pluggable expression parser. New expression syntax: ${expr}, #{expr} -&gt; {jexl:expr}, {jxpath:expr}.
       This is a target syntax for CTemplate.
@@ -570,6 +564,12 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="JHS" type="add" fixes-bug="35462" due-to="Luca Morandini" due-to-email="lmorandini@ieee.org">
+      Added ImageMap widget.
+    </action>
+    <action dev="JHS" type="fix" fixes-bug="36326" due-to="Eric Caron" due-to-email="eric@plauditdesign.com">
+      Added percentage-dimensions and jpeg quality handling to the ImageReader.
+    </action>
     <action dev="SW" type="add">
       Add a "cocoon.exit()" method to flowscript, which allows to exit the current flowscript invocation without
       creating a continuation.
