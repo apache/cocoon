@@ -32,6 +32,12 @@ public interface Validator extends ServiceSelector {
     /** <p>Role name to use when this component is accessed via a selector.</p> */
     public static final String ROLE = Validator.class.getName();
 
+    /** 
+     * <p>An grammar identifer specifying tht the {@link SchemaParser} can
+     * automatically detect the grammar while parsing.</p>
+     */
+    public static final String GRAMMAR_AUTOMATIC = "http://apache.org/cocoon/validation/grammars/automatic/1.0";
+
     /** <p>The <a href="http://www.relaxng.org/">RELAX NG</a/> grammar identifer.</p> */
     public static final String GRAMMAR_RELAX_NG = "http://relaxng.org/ns/structure/0.9";
     /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX CORE</a/> grammar identifer.</p> */
