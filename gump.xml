@@ -74,7 +74,6 @@
     <depend project="commons-cli"/>
     <depend project="commons-httpclient"/>
     <depend project="commons-collections"/>
-    <depend project="commons-fileupload"/>
     <depend project="commons-jexl"/>
     <depend project="commons-jxpath"/>
     <depend project="commons-lang"/>
