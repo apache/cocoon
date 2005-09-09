@@ -17,8 +17,6 @@ package org.apache.cocoon.forms.event;
 
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.formmodel.ImageMap;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.forms.FormContext;
 
 /**
  * Currently this event originates from a {@link org.apache.cocoon.forms.formmodel.ImageMap}
