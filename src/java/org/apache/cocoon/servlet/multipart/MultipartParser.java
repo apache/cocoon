@@ -169,15 +169,15 @@ public class MultipartParser {
         headers = readHeaders(ts);
         try {
             if (headers.containsKey("filename")) {
-		        if (!"".equals(headers.get("filename"))) {
-                	parseFilePart(ts, headers);
-		        } else {
-        			// IE6 sends an empty part with filename="" for
-        			// empty upload fields. Just parse away the part
-        			byte[] buf = new byte[32];
-        			while(ts.getState() == TokenStream.STATE_READING)
-        				ts.read(buf);  
-        		}
+                if (!"".equals(headers.get("filename"))) {
+                    parseFilePart(ts, headers);
+                } else {
+                    // IE6 sends an empty part with filename="" for
+                    // empty upload fields. Just parse away the part
+                    byte[] buf = new byte[32];
+                    while(ts.getState() == TokenStream.STATE_READING)
+                        ts.read(buf);  
+                }
             } else if (((String) headers.get("content-disposition"))
                     .toLowerCase().equals("form-data")) {
                 parseInlinePart(ts, headers);
@@ -237,21 +237,32 @@ public class MultipartParser {
                         file = new File(filePath + c++ + "_" + fileName);
                     } while (!file.createNewFile());
                 } else {
-                    throw new MultipartException("Duplicate file "
-                            + file.getName() + ".");
+                    throw new MultipartException("Duplicate file '" + file.getName()
+                        + "' in '" + file.getParent() + "'");
                 }
             }
 
             out = new FileOutputStream(file);
         }
 
-        int read = 0;
-        while (in.getState() == TokenStream.STATE_READING) {    // read data
-            read = in.read(buf);
-            out.write(buf, 0, read);
+        try {
+            int read = 0;
+            while (in.getState() == TokenStream.STATE_READING) {
+                // read data
+                read = in.read(buf);
+                out.write(buf, 0, read);
+            }
+        } catch (IOException ioe) {
+            // don't let incomplete file uploads pile up in the upload dir.
+            // this usually happens with aborted form submits containing very large files.
+            out.close();
+            out = null;
+            if ( file!=null ) file.delete();
+            throw ioe;
+        } finally {
+            if ( out!=null ) out.close();
         }
 
-        out.close();
         if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
 
@@ -273,12 +284,12 @@ public class MultipartParser {
     private void parseInlinePart(TokenStream in, Hashtable headers)
             throws IOException {
 
-		// Buffer incoming bytes for proper string decoding (there can be multibyte chars)
+        // Buffer incoming bytes for proper string decoding (there can be multibyte chars)
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         while (in.getState() == TokenStream.STATE_READING) {
-        	int c = in.read();
-        	if (c != -1) bos.write(c);
+            int c = in.read();
+            if (c != -1) bos.write(c);
         }
         
         String field = (String) headers.get("name");
@@ -312,9 +323,9 @@ public class MultipartParser {
             headers.put(tokenizer.nextToken(" :").toLowerCase(),
                     tokenizer.nextToken(" :;"));
 
-	        // The extra tokenizer.hasMoreTokens() in headers.put
-	        // handles the filename="" case IE6 submits for an empty
-	        // upload field.
+            // The extra tokenizer.hasMoreTokens() in headers.put
+            // handles the filename="" case IE6 submits for an empty
+            // upload field.
             while (tokenizer.hasMoreTokens()) {
                 headers.put(tokenizer.nextToken(" ;=\""),
                         tokenizer.hasMoreTokens()?tokenizer.nextToken("=\""):"");
@@ -352,9 +363,9 @@ public class MultipartParser {
      * @throws IOException
      */
     private String readln(TokenStream in) throws IOException {
-    	
-    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    	
+        
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        
         int b = in.read();
 
         while ((b != -1) && (b != '\r')) {
