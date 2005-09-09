@@ -38,12 +38,16 @@ public interface Validator extends ServiceSelector {
      */
     public static final String GRAMMAR_AUTOMATIC = "http://apache.org/cocoon/validation/grammars/automatic/1.0";
 
+    /** <p>The <a href="http://www.schematron.com/">ISO SCHEMATRON</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_ISO_SCHEMATRON = "http://purl.oclc.org/dsdl/schematron";
     /** <p>The <a href="http://www.relaxng.org/">RELAX NG</a/> grammar identifer.</p> */
     public static final String GRAMMAR_RELAX_NG = "http://relaxng.org/ns/structure/0.9";
     /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX CORE</a/> grammar identifer.</p> */
     public static final String GRAMMAR_RELAX_CORE = "http://www.xml.gr.jp/xmlns/relaxCore";
     /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX NAMESPACE</a/> grammar identifer.</p> */
     public static final String GRAMMAR_RELAX_NS = "http://www.xml.gr.jp/xmlns/relaxNamespace";
+    /** <p>The <a href="http://xml.ascc.net/schematron/">SCHEMATRON</a/> grammar identifer.</p> */
+    public static final String GRAMMAR_SCHEMATRON = "http://www.ascc.net/xml/schematron";
     /** <p>The <a href="http://www.thaiopensource.com/trex/">TREX</a/> grammar identifer.</p> */
     public static final String GRAMMAR_TREX = "http://www.thaiopensource.com/trex";
     /** <p>The <a href="http://www.w3.org/XML/Schema">XML SCHEMA</a/> grammar identifer.</p> */
