@@ -202,9 +202,6 @@
       Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration 
       files that should ensure DELI works on different apps servers or deployed as a WAR.
     </action>
-    <action dev="JHS" type="fix" fixes-bug="29712" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
-      MultipartParser now removes partially uploaded files
-    </action>
     <action dev="LG" type="add">
       JXTG: Pluggable expression parser. New expression syntax: ${expr}, #{expr} -&gt; {jexl:expr}, {jxpath:expr}.
       This is a target syntax for CTemplate.
@@ -217,9 +214,6 @@
       Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
       Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
       Excalibur Store to 2.1, Excalibur XMLUtils to 2.1 and Excalibur Database to 2.1.
-    </action>
-    <action dev="LG" type="fix" fixes-bug="35845" due-to="Henric Mueller" due-to-email="henric@trillian.se">
-      JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
     </action>
     <action dev="CZ" type="add">
       Add property mechanism for Cocoon configuration. All settings for Cocoon can now
@@ -564,11 +558,21 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="JHS" type="fix" fixes-bug="35538" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
+      Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration 
+      files that should ensure DELI works on different apps servers or deployed as a WAR.
+    </action>
+    <action dev="JHS" type="fix" fixes-bug="29712" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
+      MultipartParser now removes partially uploaded files
+    </action>
     <action dev="JHS" type="add" fixes-bug="35462" due-to="Luca Morandini" due-to-email="lmorandini@ieee.org">
       Added ImageMap widget.
     </action>
     <action dev="JHS" type="fix" fixes-bug="36326" due-to="Eric Caron" due-to-email="eric@plauditdesign.com">
       Added percentage-dimensions and jpeg quality handling to the ImageReader.
+    </action>
+    <action dev="LG" type="fix" fixes-bug="35845" due-to="Henric Mueller" due-to-email="henric@trillian.se">
+      JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
     </action>
     <action dev="SW" type="add">
       Add a "cocoon.exit()" method to flowscript, which allows to exit the current flowscript invocation without
