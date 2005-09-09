@@ -232,31 +232,38 @@ public class MultipartParser {
             if (!allowOverwrite && !file.createNewFile()) {
                 if (silentlyRename) {
                     int c = 0;
-
                     do {
                         file = new File(filePath + c++ + "_" + fileName);
                     } while (!file.createNewFile());
                 } else {
-                    throw new MultipartException("Duplicate file "
-                            + file.getName() + ".");
+                    throw new MultipartException("Duplicate file '" + file.getName()
+                        + "' in '" + file.getParent() + "'");
                 }
             }
 
             out = new FileOutputStream(file);
         }
 
-        int read = 0;
-        while (in.getState() == TokenStream.STATE_READING) {    // read data
-            read = in.read(buf);
-            out.write(buf, 0, read);
+        try {
+            int read = 0;
+            while (in.getState() == TokenStream.STATE_READING) {    // read data
+                read = in.read(buf);
+                out.write(buf, 0, read);
+            }
+        } catch (IOException ioe) {
+            // don't let incomplete file uploads pile up in the upload dir.
+            // this usually happens with aborted form submits containing very large files.
+            out.close();
+            out = null;
+            if ( file!=null ) file.delete();
+            throw ioe;
+        } finally {
+            if ( out!=null ) out.close();
         }
-
-        out.close();
         if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
-
             this.parts.put(headers.get("name"),
-                    new PartInMemory(headers, new ByteArrayInputStream(bytes),bytes.length));
+                new PartInMemory(headers, new ByteArrayInputStream(bytes),bytes.length));
         } else {
             this.parts.put(headers.get("name"), new PartOnDisk(headers, file));
         }
