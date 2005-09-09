@@ -32,7 +32,7 @@
         </legend>
         <ft:union id="datasource">
           <ft:case id="">
-            Please choose a datasource type.
+            <span>Please choose a datasource type.</span>
           </ft:case>
           <ft:case id="SQL">
             <ft:group id="SQL">
@@ -48,7 +48,7 @@
           </ft:case>
           <ft:case id="file">
             <ft:group id="file">
-              File name: <ft:widget id="filename"/>
+              <div>File name: <ft:widget id="filename"/></div>
             </ft:group>
           </ft:case>
         </ft:union>

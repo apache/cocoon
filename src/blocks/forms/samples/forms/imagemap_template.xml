@@ -15,6 +15,7 @@
   limitations under the License.
 -->
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+    <h4 class="samplesGroup">Imagemap widget</h4>
     <title>Image map</title>
     <content>
         <p>Click on Cocoon logo.</p>

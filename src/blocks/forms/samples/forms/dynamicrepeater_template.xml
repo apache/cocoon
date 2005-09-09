@@ -49,6 +49,7 @@
       <li>when there are some contacts, the "move up" and "move down" buttons are not shown on the first and last lines, respectively.</li>
     </ul>
       <ft:repeater id="contacts">
+        <div id="contacts">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>
@@ -100,13 +101,14 @@
                 </jx:otherwise>
               </jx:choose>
              <p>
-                  <ft:widget id="addcontact"/>
+                  <ft:widget id="../addcontact"/>
                   <jx:if test="${widget.getChild('contacts').getSize() > 0}">
-                    <ft:widget id="removecontacts"/>
+                    <ft:widget id="../removecontacts"/>
                   </jx:if>
               </p>
+              </div>
             </ft:repeater>
-            <ft:widget id="submit"/><br/>
+            <ft:widget id="ok"/><br/>
             <a href="./do-dynaRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
 
     </ft:form-template>

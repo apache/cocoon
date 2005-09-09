@@ -15,7 +15,8 @@
   limitations under the License.
 -->
 <page>
-    <title>Imagemap result</title>
+  <h4 class="samplesGroup">Imagemap widget</h4>
+  <title>Imagemap result</title>
     <content>
     x:  ${x}
     <br/>

@@ -76,7 +76,7 @@
       <fd:label>Remove selected contacts</fd:label>
     </fd:repeater-action>
 
-    <fd:submit id="submit">
+    <fd:submit id="ok">
       <fd:label>Submit</fd:label>
     </fd:submit>
   </fd:widgets>
