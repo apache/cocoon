@@ -24,7 +24,7 @@ import org.apache.cocoon.xml.AttributesImpl;
  * on the server side, which will be handled by either the event handlers defined in the
  * form definition, and/or by the {@link org.apache.cocoon.forms.event.FormHandler FormHandler}
  * registered with the form, if any. An ImageMap widget is basically an Action widget
- * displayed as an image and with mouse coordinates stored uòon clicking.
+ * displayed as an image and with mouse coordinates stored upon clicking.
  * The image's URI can be set or get, or bind via the binding framework, mouse coordinates
  * can be either retrieved from the ImageMapEvent triggered or from the widget itself.
  * 
