@@ -145,7 +145,8 @@
        <map:transform type="i18n">
        </map:transform>
        <map:transform src="resources/forms-samples-styling.xsl"/>
-
+       <map:transform type="i18n">
+       </map:transform>
        <map:serialize/>
      </map:match>
         
@@ -188,6 +189,8 @@
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform type="i18n">
+       </map:transform>
        <map:serialize/>
      </map:match>
 
@@ -198,12 +201,15 @@
        <map:generate type="jx" src="forms/{1}_template.xml" label="content1"/>
        <map:transform type="browser-update"/>
        <map:transform type="i18n">
-         <!--map:parameter name="locale" value="en-US"/-->
+         <map:parameter name="locale" value="{flow-attribute:locale}"/>
        </map:transform>
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
        <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform type="i18n">
+         <map:parameter name="locale" value="{flow-attribute:locale}"/>
+       </map:transform>
        <map:select type="request-parameter">
          <map:parameter name="parameter-name" value="cocoon-ajax"/>
          <map:when test="true">
@@ -349,50 +355,6 @@
      </map:match>
 
      <!--
-         | Car selector sample with XMLHTTPRequest
-         -->
-
-     <map:match pattern="xhr_carselector">
-       <map:select type="request-method">
-         <map:when test="POST">
-           <map:call continuation="{request-param:continuation-id}"/>
-         </map:when>
-         <map:otherwise>
-           <map:call function="xhrSelectCar">
-             <map:parameter name="defaultMake" value="Maserati"/>
-           </map:call>
-         </map:otherwise>
-       </map:select>
-     </map:match>
-
-     <map:match pattern="xhr_cars">
-       <map:generate src="forms/car-db.xml"/>
-       <map:transform src="xsl/xhr_carfilter.xsl">
-         <map:parameter name="list" value="makes"/>
-       </map:transform>
-       <map:serialize type="xml"/>
-     </map:match>
-
-     <map:match pattern="xhr_cars/*">
-       <map:generate src="forms/car-db.xml"/>
-       <map:transform src="xsl/xhr_carfilter.xsl">
-         <map:parameter name="list" value="types"/>
-         <map:parameter name="make" value="{1}"/>
-       </map:transform>
-       <map:serialize type="xml"/>
-     </map:match>
-
-     <map:match pattern="xhr_cars/*/*">
-       <map:generate src="forms/car-db.xml"/>
-       <map:transform src="xsl/xhr_carfilter.xsl">
-         <map:parameter name="list" value="models"/>
-         <map:parameter name="make" value="{1}"/>
-         <map:parameter name="type" value="{2}"/>
-       </map:transform>
-       <map:serialize type="xml"/>
-     </map:match>
-     
-     <!--
          | Country selector sample.
          -->
 
@@ -488,15 +450,24 @@
              <map:parameter name="form-method" value="POST" />
            </map:transform>
          </map:when>
+         <!-- 
+            | If the template file does not exist, the code below generates the
+            | form, but results in a document fragment rather than a correct HTML
+            | tagged page (i.e. it lacks the HTML, HEAD and BODY tags).
+            |
+            | To simplify the samples, all template files exist and the code
+            | below is not executed.
+            -->
          <map:otherwise>       
            <map:generate type="forms">
              <map:parameter name="form-action" value="{flow-continuation:id}.continue" />
              <map:parameter name="form-method" value="POST" />
            </map:generate>
-		   <map:transform src="resources/fi2page.xsl" />           
          </map:otherwise>
        </map:select>
-
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/{1}_template.xml"/>
+       </map:call>
        <map:transform src="resources/forms-samples-styling.xsl" />
        <map:serialize type="html" />
      </map:match>
