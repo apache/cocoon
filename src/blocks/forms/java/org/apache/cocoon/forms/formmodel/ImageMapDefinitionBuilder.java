@@ -20,7 +20,6 @@ import java.util.Iterator;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.util.Deprecation;
 import org.w3c.dom.Element;
 
 /**
