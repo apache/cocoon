@@ -34,5 +34,9 @@
     <module>src/blocks/session-fw/trunk</module>
     <module>src/blocks/spring-app/trunk</module>
     <module>src/blocks/template/trunk</module>
+    <module>src/blocks/batik/trunk</module>
+    <module>src/blocks/axis/trunk</module>
+    <module>src/blocks/forms/trunk</module>
+    <module>src/blocks/apples/trunk</module>
   </modules>
 </project>
