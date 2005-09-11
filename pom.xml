@@ -38,5 +38,10 @@
     <module>src/blocks/axis/trunk</module>
     <module>src/blocks/forms/trunk</module>
     <module>src/blocks/apples/trunk</module>
+    <module>src/blocks/asciiart/trunk</module>
+    <module>src/blocks/bsf/trunk</module>
+    <module>src/blocks/chaperon/trunk</module>
+    <module>src/blocks/deli/trunk</module>
+    <module>src/blocks/fop/trunk</module>
   </modules>
 </project>
