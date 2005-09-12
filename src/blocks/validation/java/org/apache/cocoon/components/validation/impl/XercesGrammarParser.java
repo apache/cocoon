@@ -19,11 +19,13 @@ import java.io.IOException;
 
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
+import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.xml.sax.SAXException;
 
@@ -36,7 +38,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public abstract class XercesGrammarParser extends CachingSchemaParser 
+public abstract class XercesGrammarParser extends AbstractSchemaParser 
 implements SchemaParser {
 
     /**
@@ -47,14 +49,20 @@ implements SchemaParser {
     }
 
     /**
-     * <p>Parse the specified URI and return a {@link Schema}.</p>
+     * <p>Parse the specified {@link Source} and return a new {@link Schema}.</p>
+     * 
+     * <p>The returned {@link Schema} must be able to validate multiple documents
+     * via multiple invocations of {@link Schema#createValidator(ErrorHandler)}.</p> 
      *
-     * @param uri the URI of the {@link Schema} to return.
+     * @param source the {@link Source} associated with the {@link Schema} to return.
      * @return a <b>non-null</b> {@link Schema} instance.
-     * @throws SAXException if an error occurred parsing the schema.
+     * @throws SAXException if a grammar error occurred parsing the schema.
      * @throws IOException if an I/O error occurred parsing the schema.
+     * @throws IllegalArgumentException if the specified grammar type is not one
+     *                                  of the grammar types returned by the
+     *                                  {@link #getSupportedGrammars()} method.  
      */
-    protected final Schema parseSchema(String uri)
+    public Schema getSchema(Source source, String grammar)
     throws IOException, SAXException {
         try {
             /* Create a Xerces Grammar Pool and Entity Resolver */
@@ -70,8 +78,11 @@ implements SchemaParser {
             context.initialize(loader);
 
             /* Load (parse and interpret) the grammar */
+            String uri = source.getURI();
             this.getLogger().debug("Loading grammar from " + uri);
-            loader.loadGrammar(r.resolveUri(uri));
+            XMLInputSource input = new XMLInputSource(null, uri, uri);
+            input.setByteStream(source.getInputStream());
+            loader.loadGrammar(input);
             this.getLogger().debug("Grammar successfully loaded from " + uri);
 
             /* Return a new Schema instance */

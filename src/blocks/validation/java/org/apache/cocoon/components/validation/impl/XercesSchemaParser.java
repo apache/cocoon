@@ -32,9 +32,6 @@ import org.apache.xerces.xni.grammars.XMLGrammarLoader;
  */
 public class XercesSchemaParser extends XercesGrammarParser implements SchemaParser {
 
-    private static final String[] GRAMMARS = new String[] { Validator.GRAMMAR_XML_SCHEMA };
-    private static final Class VALIDATOR = XMLSchemaValidator.class;
-
     /**
      * <p>Create a new {@link XercesSchemaParser} instance.</p>
      */
@@ -50,7 +47,7 @@ public class XercesSchemaParser extends XercesGrammarParser implements SchemaPar
      * {@link Validator#GRAMMAR_XML_SCHEMA} grammar.</p>
      */
     public String[] getSupportedGrammars() {
-        return GRAMMARS;
+        return new String[] { Validator.GRAMMAR_XML_SCHEMA };
     }
 
     /**
@@ -64,6 +61,6 @@ public class XercesSchemaParser extends XercesGrammarParser implements SchemaPar
      * <p>Return a {@link Class} implementing the final validation handler.</p>
      */
     protected Class getValidationHandlerClass() {
-        return VALIDATOR;
+        return XMLSchemaValidator.class;
     }
 }

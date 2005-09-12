@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.validation.impl;
 
+import org.apache.cocoon.components.validation.ValidationHandler;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
@@ -47,21 +48,23 @@ public class XercesSchema extends AbstractSchema {
     }
 
     /**
-     * <p>Return a {@link ContentHandler} able to receive SAX events and performing
-     * validation according to the schema wrapped by this instance.</p>
+     * <p>Return a {@link ValidationHandler} able to receive SAX events and
+     * performing validation according to the schema wrapped by this instance.</p>
      *
      * @param errorHandler {@link ErrorHandler} to be notified of validation errors.
-     * @return a <b>non-null</b> {@link ContentHandler} instance.
-     * @throws SAXException if an error occurred creating the {@link ContentHandler}.
+     * @return a <b>non-null</b> {@link ValidationHandler} instance.
+     * @throws SAXException if an error occurred creating the handler.
      */
-    public ContentHandler newValidator(ErrorHandler errorHandler)
+    public ValidationHandler createValidator(ErrorHandler errorHandler)
     throws SAXException {
         XercesContext context = new XercesContext(this.grammarPool,
                                                   new XercesEntityResolver(),
                                                   errorHandler);
         try {
             Object instance = context.initialize(this.validatorClass.newInstance());
-            return new XercesContentHandler((XMLDocumentHandler) instance);
+            XMLDocumentHandler documentHandler = (XMLDocumentHandler) instance; 
+            ContentHandler finalHandler = new XercesContentHandler(documentHandler);
+            return new DefaultValidationHandler(this.getValidity(), finalHandler);
         } catch (Exception exception) {
             throw new SAXException("Unable to access validator", exception);
         }
