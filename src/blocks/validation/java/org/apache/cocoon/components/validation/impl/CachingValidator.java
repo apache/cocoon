@@ -40,6 +40,13 @@ public class CachingValidator extends DefaultValidator {
     private Store store = null;
 
     /**
+     * <p>Create a new {@link CachingValidator} instance.</p>
+     */
+    public CachingValidator() {
+        super();
+    }
+    
+    /**
      * <p>Initialize this component instance.</p>
      */
     public void initialize()

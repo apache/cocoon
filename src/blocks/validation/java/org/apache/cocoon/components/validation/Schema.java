@@ -68,10 +68,9 @@ public interface Schema {
      *
      * @param handler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link ValidationHandler} instance.
-     * @throws NullPointerException if the {@link ErrorHandler} was <b>null</b>.
      * @throws SAXException if an error occurred creating the validation handler.
      */
     public ValidationHandler createValidator(ErrorHandler handler)
-    throws NullPointerException, SAXException;
+    throws SAXException;
 
 }
