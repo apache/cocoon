@@ -29,19 +29,19 @@
   <modules>
     <module>core</module>
     <module>webapp</module>
+    <module>src/blocks/apples/trunk</module>
+    <module>src/blocks/asciiart/trunk</module>
     <module>src/blocks/authentication-fw/trunk</module>
+    <module>src/blocks/axis/trunk</module>
+    <module>src/blocks/batik/trunk</module>
+    <module>src/blocks/bsf/trunk</module>
+    <module>src/blocks/chaperon/trunk</module>
     <module>src/blocks/cron/trunk</module>
+    <module>src/blocks/deli/trunk</module>
+    <module>src/blocks/fop/trunk</module>
+    <module>src/blocks/forms/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
     <module>src/blocks/spring-app/trunk</module>
     <module>src/blocks/template/trunk</module>
-    <module>src/blocks/batik/trunk</module>
-    <module>src/blocks/axis/trunk</module>
-    <module>src/blocks/forms/trunk</module>
-    <module>src/blocks/apples/trunk</module>
-    <module>src/blocks/asciiart/trunk</module>
-    <module>src/blocks/bsf/trunk</module>
-    <module>src/blocks/chaperon/trunk</module>
-    <module>src/blocks/deli/trunk</module>
-    <module>src/blocks/fop/trunk</module>
   </modules>
 </project>
