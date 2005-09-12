@@ -40,6 +40,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -93,6 +94,9 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     /** The entity resolver */
     protected EntityResolver resolver;
     
+    /** The portal service. */
+    protected PortalService service;
+
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -107,17 +111,20 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     throws ServiceException {
         this.manager = manager;
         this.resolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
+        this.service = (PortalService) this.manager.lookup(PortalService.ROLE);
     }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.resolver != null ) {
+        if ( this.manager != null ) {
             this.manager.release(this.resolver);
             this.resolver = null;
+            this.manager.release(this.service);
+            this.service = null;
+            this.manager = null;
         }
-        this.manager = null;
         this.context = null;
     }
 
@@ -397,4 +404,12 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     public PortletApplicationEntityList getPortletApplicationEntityList() {
         return this.portletApplicationEntities;
     }
+
+    /**
+     * @see org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry#getPortalService()
+     */
+    public PortalService getPortalService() {
+        return this.service;
+    }
+
 }

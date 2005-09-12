@@ -24,7 +24,6 @@ import java.util.Iterator;
 
 import org.apache.cocoon.portal.factory.impl.AbstractProducible;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.util.AttributedMapItem;
 import org.apache.pluto.om.common.PreferenceSet;
 
@@ -50,9 +49,7 @@ public final class CopletInstanceData
     /** Portlet preferences */
     protected PreferenceSetImpl preferences = new PreferenceSetImpl();
 
-    protected ProfileManager profileManager;
-
-    private String title = null;
+    private String title;
 
 	/**
 	 * Constructor
@@ -157,16 +154,7 @@ public final class CopletInstanceData
         setPreferences((PreferenceSetImpl)castorPreferences);
     }
 
-    public void setProfileManager(ProfileManager manager) {
-        this.profileManager = manager;
-    }
-
-    public ProfileManager getProfileManager() {
-        return this.profileManager;
-    }
-
-
-    /* (non-Javadoc)
+    /**
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {

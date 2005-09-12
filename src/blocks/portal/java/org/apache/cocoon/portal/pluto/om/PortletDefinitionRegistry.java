@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.om;
 
+import org.apache.cocoon.portal.PortalService;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.entity.PortletApplicationEntityList;
 import org.apache.pluto.om.portlet.PortletApplicationDefinitionList;
@@ -26,7 +27,7 @@ import org.apache.pluto.services.ContainerService;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionRegistry.java,v 1.2 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface PortletDefinitionRegistry 
 extends ContainerService {
@@ -36,4 +37,6 @@ extends ContainerService {
     PortletDefinition getPortletDefinition(ObjectID id);
     
     PortletApplicationEntityList getPortletApplicationEntityList();
+
+    PortalService getPortalService();
 }

@@ -33,12 +33,12 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletEntityListImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletEntityListImpl 
     implements PortletEntityList, PortletEntityListCtrl {
 
-    /** all portlet entities */
+    /** all portlet entities. */
     protected Map portlets = new HashMap();
     
     /* (non-Javadoc)
@@ -65,7 +65,7 @@ public class PortletEntityListImpl
         PortletDefinition pd = registry.getPortletDefinition(ObjectIDImpl.createFromString(definitionId));
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         CopletInstanceData coplet = null;
-        PortletEntity portletEntity = new PortletEntityImpl(pae, coplet, pd);
+        PortletEntity portletEntity = new PortletEntityImpl(pae, coplet, pd, registry.getPortalService());
         this.portlets.put(portletEntity.getId(), portletEntity);
         
         return portletEntity;
@@ -74,10 +74,12 @@ public class PortletEntityListImpl
     /* (non-Javadoc)
      * @see org.apache.pluto.om.entity.PortletEntityListCtrl#add(org.apache.pluto.om.entity.PortletApplicationEntity, java.lang.String)
      */
-    public PortletEntity add(PortletApplicationEntity appEntity, String definitionId,
-                             CopletInstanceData coplet, PortletDefinitionRegistry registry) {
+    public PortletEntity add(PortletApplicationEntity appEntity,
+                             String definitionId,
+                             CopletInstanceData coplet,
+                             PortletDefinitionRegistry registry) {
         PortletDefinition pd = registry.getPortletDefinition(ObjectIDImpl.createFromString(definitionId));
-        PortletEntity portletEntity = new PortletEntityImpl(appEntity, coplet, pd);
+        PortletEntity portletEntity = new PortletEntityImpl(appEntity, coplet, pd, registry.getPortalService());
         this.portlets.put(portletEntity.getId(), portletEntity);
         
         return portletEntity;
