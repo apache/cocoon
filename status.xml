@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+      Updated log4j to 1.2.12.
+    </action>
     <action dev="JHS" type="fix" fixes-bug="35538" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
       Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration 
       files that should ensure DELI works on different apps servers or deployed as a WAR.
