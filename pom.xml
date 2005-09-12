@@ -38,10 +38,13 @@
     <module>src/blocks/chaperon/trunk</module>
     <module>src/blocks/cron/trunk</module>
     <module>src/blocks/deli/trunk</module>
+    <module>src/blocks/faces/trunk</module>
     <module>src/blocks/fop/trunk</module>
     <module>src/blocks/forms/trunk</module>
+    <module>src/blocks/portal/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
     <module>src/blocks/spring-app/trunk</module>
+    <module>src/blocks/taglib/trunk</module>
     <module>src/blocks/template/trunk</module>
   </modules>
   <repositories>
