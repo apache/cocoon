@@ -921,7 +921,6 @@
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
-    <depend project="jtidy"/>
     <depend project="nekohtml"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
@@ -933,7 +932,6 @@
     <depend project="wsrp4j"/>
     <depend project="commons-discovery"/>
 
-    <library name="jtidy"/>
     <library name="nekohtml"/>
     <library name="castor"/>
     <library name="commons-collections"/>
