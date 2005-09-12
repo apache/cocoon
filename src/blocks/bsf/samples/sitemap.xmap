@@ -18,7 +18,7 @@
 <!--+
     | Batik block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.2 2004/04/15 08:40:17 bdelacretaz Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -65,7 +65,7 @@
       <map:match pattern="generator/*.gy">
         <map:generate type="script" src="generator/{1}.gy"/>
         <map:transform src="context://samples/hello-world/style/xsl/page2html.xsl"/>
-        <map:serialize type="html"/>
+        <map:serialize type="xml"/>
       </map:match>
     </map:pipeline>
   </map:pipelines>
