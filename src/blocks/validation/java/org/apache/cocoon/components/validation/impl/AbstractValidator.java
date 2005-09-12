@@ -18,6 +18,8 @@ package org.apache.cocoon.components.validation.impl;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -56,18 +58,27 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public abstract class AbstractValidator
-implements Validator, Serviceable, Disposable {
+implements Validator, Serviceable, Disposable, LogEnabled {
 
     /** <p>The configured {@link ServiceManager} instance.</p> */
     protected ServiceManager manager = null;
     /** <p>The configured {@link SourceResolver} instance.</p> */
     protected SourceResolver resolver = null;
+    /** <p>The configured {@link Logger} instance.</p> */
+    protected Logger logger = null;
 
     /**
      * <p>Create a new {@link AbstractValidator} instance.</p>
      */
     public AbstractValidator() {
         super();
+    }
+
+    /**
+     * <p>Enable logging.</p>
+     */
+    public void enableLogging(Logger logger) {
+        this.logger = logger;
     }
 
     /**
@@ -390,8 +401,15 @@ implements Validator, Serviceable, Disposable {
      */
     protected Schema getSchema(SchemaParser parser, Source source, String grammar)
     throws IOException, SAXException {
+        if (this.logger.isDebugEnabled()) {
+            String message = "Parsing schema \"" + source.getURI() + "\" using " +
+                             "grammar \"" + grammar + "\" and SourceParser " +
+                             parser.getClass().getName();
+            this.logger.debug(message);
+        }
+
         try {
-            return parser.getSchema(source, grammar);
+            return parser.parseSchema(source, grammar);
         } catch (IllegalArgumentException exception) {
             String message = "Schema parser " + parser.getClass().getName() +
                              " does not support grammar " + grammar;
@@ -410,6 +428,7 @@ implements Validator, Serviceable, Disposable {
      */
     protected String detectGrammar(Source source)
     throws IOException, SAXException, ValidatorException {
+        this.logger.debug("Detecting grammar for \"" + source.getURI() + "\"");
         SAXParser xmlParser = null;
         String grammar = null;
 
@@ -439,6 +458,10 @@ implements Validator, Serviceable, Disposable {
             String message = "Unable to detect grammar for schema at ";
             throw new ValidatorException(message + source.getURI());
         } else {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Grammar \"" + grammar + "\" detected for " +
+                                  "schema \"" + source.getURI());
+            }
             return grammar;
         }
     }

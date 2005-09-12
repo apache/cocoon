@@ -17,22 +17,23 @@
 
 <xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
       xpath="/sitemap/components/transformers"
-      unless="transformer[@name='validate-relaxng']">
+      unless="transformer[@name='validate']">
 
-    <map:transformer name="validate-relaxng"
+    <map:transformer name="validate"
                      logger="sitemap.transformer.validate"
                      src="org.apache.cocoon.transformation.ValidatingTransformer">
-      <!--+ The "grammar" is either one of the grammar constants specified
-          | by the org.apache.cocoon.components.validation.Validator class
-          | or the component name with wich the SchemaParser was registered
-          | in "cocoon.xconf" (for example "jing").
+
+      <!--+ The "grammar" an optional configuration element specifying the default
+          | grammar used by the validator. When the "grammar" element is specified,
+          | the automatic detection of schema types will be disabled.
+          |
+          | This can also be specifed in pipelines as a parameter:
+          |   <map:parameter name="grammar" value="... grammar identifier ..."/>
+          |
+          | For a list of well known grammars, see the JavaDoc documentation for the
+          | org.apache.cocoon.components.validation.Validator interface.
           +-->
-      <grammar>http://relaxng.org/ns/structure/0.9</grammar>
+      <!-- <grammar>... grammar identifier ...</grammar> -->
     </map:transformer>
 
-    <map:transformer name="validate-xmlschema"
-                     logger="sitemap.transformer.validate"
-                     src="org.apache.cocoon.transformation.ValidatingTransformer">
-      <grammar>http://www.w3.org/2001/XMLSchema</grammar>
-    </map:transformer>
 </xmap>

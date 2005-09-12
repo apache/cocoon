@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.validation.impl;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
 import org.apache.xerces.impl.xs.XMLSchemaLoader;
@@ -30,7 +31,8 @@ import org.apache.xerces.xni.grammars.XMLGrammarLoader;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class XercesSchemaParser extends XercesGrammarParser implements SchemaParser {
+public class XercesSchemaParser extends XercesGrammarParser
+implements SchemaParser, ThreadSafe {
 
     /**
      * <p>Create a new {@link XercesSchemaParser} instance.</p>

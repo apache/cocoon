@@ -17,13 +17,16 @@
 
 <xconf xpath="/cocoon" unless="validator">
 
-  <validator>
-    <schema-parser name="jing" class="org.apache.cocoon.components.validation.impl.JingSchemaParser">
-      <cache-schemas>true</cache-schemas>
-    </schema-parser>
-    <schema-parser name="xerces-schema" class="org.apache.cocoon.components.validation.impl.XercesSchemaParser">
-      <cache-schemas>true</cache-schemas>
-    </schema-parser>
+  <!--+ The shared Validator instance in Cocoon.
+      |
+      | This defaults to an instance of a "CachedValidator". To disable schema
+      | caching add the following attribute to the <validator ... /> element:
+      |
+      |   class="org.apache.cocoon.components.validation.impl.DefaultValidator"
+      +-->
+  <validator logger="core.validation">
+    <schema-parser name="jing" class="org.apache.cocoon.components.validation.impl.JingSchemaParser"/>
+    <schema-parser name="xerces-schema" class="org.apache.cocoon.components.validation.impl.XercesSchemaParser"/>
   </validator>
   
 </xconf>

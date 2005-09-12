@@ -51,7 +51,7 @@ public interface SchemaParser {
      *                                  of the grammar types returned by the
      *                                  {@link #getSupportedGrammars()} method.  
      */
-    public Schema getSchema(Source source, String grammar)
+    public Schema parseSchema(Source source, String grammar)
     throws SAXException, IOException, IllegalArgumentException;
 
     /**

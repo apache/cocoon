@@ -18,6 +18,6 @@
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.validation.Validator']">
 
   <role name="org.apache.cocoon.components.validation.Validator" shorthand="validator"
-        default-class="org.apache.cocoon.components.validation.impl.DefaultValidator"/>
+        default-class="org.apache.cocoon.components.validation.impl.CachingValidator"/>
 
 </xroles>

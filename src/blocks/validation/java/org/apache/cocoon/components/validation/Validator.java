@@ -56,7 +56,7 @@ public interface Validator {
     /** <p>The <a href="http://www.schematron.com/">ISO Schematron</a/> grammar identifer.</p> */
     public static final String GRAMMAR_ISO_SCHEMATRON = "http://purl.oclc.org/dsdl/schematron";
     /** <p>The <a href="http://www.relaxng.org/">RELAX NG</a/> grammar identifer.</p> */
-    public static final String GRAMMAR_RELAX_NG = "http://relaxng.org/ns/structure/0.9";
+    public static final String GRAMMAR_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
     /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX Core</a/> grammar identifer.</p> */
     public static final String GRAMMAR_RELAX_CORE = "http://www.xml.gr.jp/xmlns/relaxCore";
     /** <p>The <a href="http://www.xml.gr.jp/relax">RELAX Namespace</a/> grammar identifer.</p> */

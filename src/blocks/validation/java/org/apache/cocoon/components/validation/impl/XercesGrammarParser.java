@@ -63,7 +63,7 @@ implements SchemaParser {
      *                                  of the grammar types returned by the
      *                                  {@link #getSupportedGrammars()} method.  
      */
-    public Schema getSchema(Source source, String grammar)
+    public Schema parseSchema(Source source, String grammar)
     throws IOException, SAXException {
         try {
             /* Create a Xerces Grammar Pool and Entity Resolver */

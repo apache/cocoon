@@ -55,33 +55,24 @@ import org.apache.cocoon.components.validation.Validator;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class DefaultValidator extends AbstractValidator implements LogEnabled,
-ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector, Configurable {
+public class DefaultValidator extends AbstractValidator implements ServiceSelector,
+ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
     /** <p>A {@link Map} associating {@link SchemaParser}s with their names.</p> */
     private final Map componentx = Collections.synchronizedMap(new HashMap());
     /** <p>A {@link Map} associating component names with grammars.</p> */
     private final Map grammars = Collections.synchronizedMap(new HashMap());
 
-    /** <p>The configured {@link Logger} instance.</p> */
-    protected Logger logger;
     /** <p>The configured {@link Context} instance.</p> */
-    private Context context;
+    private Context context = null;
     /** <p>The configured {@link Configuration} instance.</p> */
-    private Configuration conf;
+    private Configuration conf = null;
 
     /**
      * <p>Create a new {@link DefaultValidator} instance.</p>
      */
     public DefaultValidator() {
         super();
-    }
-
-    /**
-     * <p>Enable logging.</p>
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
     }
 
     /**
@@ -154,7 +145,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector, Config
 
                 /* Instantiate and set up the new SchemaParser */
                 schemaParser = (SchemaParser) clazz.newInstance();
-                this.setupComponent(schemaParser, configuration);
+                this.setupComponent(selectionKey, schemaParser, configuration);
 
             } catch (ConfigurationException exception) {
                 throw exception;
@@ -314,35 +305,43 @@ ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector, Config
     /**
      * <p>Manage the instantiation lifecycle of a specified component.</p>
      */
-    private Object setupComponent(Object component, Configuration configuration)
+    private Object setupComponent(String name, Object component, Configuration conf)
     throws Exception {
         boolean initialized = false;
         boolean started = false;
 
         try {
-            if (component instanceof LogEnabled)
-                    ((LogEnabled) component).enableLogging(this.logger);
+            if (component instanceof LogEnabled) {
+                Logger logger = this.logger.getChildLogger(name);
+                ((LogEnabled) component).enableLogging(logger);
+            }
     
-            if (component instanceof Contextualizable)
-                    ((Contextualizable) component).contextualize(this.context);
+            if (component instanceof Contextualizable) {
+                ((Contextualizable) component).contextualize(this.context);
+            }
+
+            if (component instanceof Serviceable) {
+                ((Serviceable) component).service(this.manager);
+            }
+
+            if (component instanceof Configurable) {
+                ((Configurable) component).configure(conf);
+            }
+
+            if (component instanceof Parameterizable)   {
+                Parameters parameters = Parameters.fromConfiguration(conf); 
+                ((Parameterizable) component).parameterize(parameters);
+            }
     
-            if (component instanceof Serviceable)
-                    ((Serviceable) component).service(this.manager);
-            
-            if (component instanceof Configurable)
-                    ((Configurable) component).configure(configuration);
-    
-            if (component instanceof Parameterizable)
-                    ((Parameterizable) component).parameterize(
-                            Parameters.fromConfiguration(configuration));
-    
-            if (component instanceof Initializable)
-                    ((Initializable) component).initialize();
-            initialized = true;
-    
-            if (component instanceof Startable)
+            if (component instanceof Initializable) {
+                ((Initializable) component).initialize();
+                initialized = true;
+            }
+
+            if (component instanceof Startable) {
                 ((Startable) component).start();
-            started = true;
+                started = true;
+            }
 
             return component;
 
