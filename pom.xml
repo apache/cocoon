@@ -323,7 +323,6 @@
       <artifactId>xml-apis</artifactId>
       <version>[1.3.02]</version>
     </dependency>
-
     <dependency>
       <groupId>easymock</groupId>
       <artifactId>easymock</artifactId>
@@ -349,20 +348,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <repositories>
-    <repository>
-      <id>apache</id>
-      <name>Apache Java Repository</name>
-      <url>http://www.apache.org/dist/java-repository</url>
-      <layout>legacy</layout>
-    </repository>
-    <repository>
-      <id>apache-cvs</id>
-      <name>Apache CVS Repository</name>
-      <url>http://cvs.apache.org/repository</url>
-      <layout>legacy</layout>
-    </repository>
-  </repositories>
   <reporting>
     <plugins>
       <plugin>
