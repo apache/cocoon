@@ -58,7 +58,8 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
     /**
      * <p>Create a new {@link JingContext} instance.</p>
      */
-    protected JingContext(SourceResolver sourceResolver, EntityResolver entityResolver) {
+    protected JingContext(SourceResolver sourceResolver,
+                          EntityResolver entityResolver) {
         PropertyMapBuilder builder = new PropertyMapBuilder();
         ValidateProperty.ENTITY_RESOLVER.put(builder, this);
         ValidateProperty.ERROR_HANDLER.put(builder, new DraconianErrorHandler());
@@ -101,6 +102,28 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
     public PropertyMap getProperties() {
         return this.validatorProperties;
     }
+
+    /* =========================================================================== */
+    /* INTERNAL EXCALIBUR SOURCE RESOLUTION AND CONVERSION METHODS                 */
+    /* =========================================================================== */
+
+    /**
+     * <p>Produce an {@link InputSource} from the specified {@link Source} adding
+     * its {@link SourceValidity} to the aggregate managed by this instance.</p>
+     * 
+     * @param source the {@link Source} to resolve and whose validity must be added.
+     * @return a <b>non-null</b> {@link InputSource} instance.
+     * @throws IOException if an I/O error occurred accessing the {@link Source}.
+     */
+    public InputSource resolveSource(Source source)
+    throws IOException {
+        this.sourceValidity.add(source.getValidity());
+        InputSource inputSource = new InputSource();
+        inputSource.setSystemId(source.getURI());
+        inputSource.setByteStream(source.getInputStream());
+        return inputSource;
+    }
+
 
     /* =========================================================================== */
     /* SAX2 ENTITY RESOLVER INTERFACE IMPLEMENTATION                               */
@@ -155,12 +178,9 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
         String base = parsing != null? parsing.getSystemId(): null;
         Source source = this.sourceResolver.resolveURI(systemId, base, null);
         try {
-            this.sourceValidity.add(source.getValidity());
-            InputSource inputSource = new InputSource();
-            inputSource.setSystemId(source.getURI());
-            inputSource.setPublicId(publicId);
-            inputSource.setByteStream(source.getInputStream());
-            return inputSource;
+            final InputSource input = this.resolveSource(source);
+            if (publicId != null) input.setPublicId(publicId);
+            return input;
         } finally {
             this.sourceResolver.release(source);
         }

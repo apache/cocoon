@@ -59,7 +59,7 @@ public class DefaultValidator extends AbstractValidator implements ServiceSelect
 ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
     /** <p>A {@link Map} associating {@link SchemaParser}s with their names.</p> */
-    private final Map componentx = Collections.synchronizedMap(new HashMap());
+    private final Map components = Collections.synchronizedMap(new HashMap());
     /** <p>A {@link Map} associating component names with grammars.</p> */
     private final Map grammars = Collections.synchronizedMap(new HashMap());
 
@@ -114,7 +114,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             final String selectionKey = configuration.getAttribute("name");
             
             /* Check that we don't have a duplicate schema parser name in configs */
-            if (this.componentx.containsKey(selectionKey)) {
+            if (this.components.containsKey(selectionKey)) {
                 String message = "Duplicate schema parser \"" + selectionKey + "\"";
                 throw new ConfigurationException(message, configuration);
             }
@@ -155,7 +155,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             }
 
             /* Store this instance (and report about it) */
-            this.componentx.put(selectionKey, schemaParser);
+            this.components.put(selectionKey, schemaParser);
             this.logger.debug("SchemaParser \"" + selectionKey + "\" instantiated" +
                               " from class " + className);
 
@@ -178,7 +178,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             this.logger.warn("Exception creating schema parsers", exception);
 
             /* Dispose all previously stored component instances */
-            Iterator iterator = this.componentx.values().iterator();
+            Iterator iterator = this.components.values().iterator();
             while (iterator.hasNext()) try {
                 this.decommissionComponent(iterator.next());
             } catch (Exception nested) {
@@ -204,7 +204,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
      * method is called.</p>
      */
     public void dispose() {
-        Iterator iterator = this.componentx.values().iterator();
+        Iterator iterator = this.components.values().iterator();
         while (iterator.hasNext()) try {
             this.decommissionComponent(iterator.next());
         } catch (Exception exception) {
@@ -272,8 +272,8 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
     public Object select(Object selectionKey)
     throws ServiceException {
         /* Look up for the specified component and return it if found */
-        if ( this.componentx.containsKey(selectionKey)) {
-            return this.componentx.get(selectionKey);
+        if ( this.components.containsKey(selectionKey)) {
+            return this.components.get(selectionKey);
         }
 
         /* Fail miserably */
@@ -287,7 +287,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
      * this {@link ServiceSelector} instance.</p>
      */
     public boolean isSelectable(Object selectionKey) {
-        return this.componentx.containsKey(selectionKey);
+        return this.components.containsKey(selectionKey);
     }
 
     /**

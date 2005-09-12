@@ -428,7 +428,10 @@ implements Validator, Serviceable, Disposable, LogEnabled {
      */
     protected String detectGrammar(Source source)
     throws IOException, SAXException, ValidatorException {
-        this.logger.debug("Detecting grammar for \"" + source.getURI() + "\"");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Detecting grammar for \"" + source.getURI() + "\"");
+        }
+
         SAXParser xmlParser = null;
         String grammar = null;
 

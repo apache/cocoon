@@ -25,7 +25,6 @@ import org.apache.xerces.util.XMLGrammarPoolImpl;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
-import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -79,12 +78,9 @@ implements SchemaParser {
             context.initialize(loader);
 
             /* Load (parse and interpret) the grammar */
-            String uri = source.getURI();
-            this.getLogger().debug("Loading grammar from " + uri);
-            XMLInputSource input = new XMLInputSource(null, uri, uri);
-            input.setByteStream(source.getInputStream());
-            loader.loadGrammar(input);
-            this.getLogger().debug("Grammar successfully loaded from " + uri);
+            this.getLogger().debug("Loading grammar from " + source.getURI());
+            loader.loadGrammar(r.resolveSource(source));
+            this.getLogger().debug("Grammar loaded from " + source.getURI());
 
             /* Return a new Schema instance */
             SourceValidity validity = r.getSourceValidity();

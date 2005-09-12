@@ -68,10 +68,7 @@ public class JingSchemaParser extends AbstractSchemaParser implements ThreadSafe
 
         SchemaReader schemaReader = SAXSchemaReader.getInstance();
         JingContext context = new JingContext(sourceResolver, entityResolver);
-        InputSource input = new InputSource();
-        input.setByteStream(source.getInputStream());
-        input.setSystemId(source.getURI());
-        context.pushInputSource(input);
+        InputSource input = context.resolveSource(source);
 
         try {
             final com.thaiopensource.validate.Schema schema;
