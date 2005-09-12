@@ -48,8 +48,16 @@
   </xsl:template>
 
   <xsl:template match="profile:profilerinfo" mode="pipelines">
-    Sort results by <a href="?sort=uri">uri</a>,
-    <a href="?sort=count">count</a>, <a href="?sort=time">time</a>.
+    <p>
+      Sort results by <a href="?sort=uri">uri</a>,
+      <a href="?sort=count">count</a>, <a href="?sort=time">time</a>.
+    </p>
+    <p>
+      Start at the section which matches the original request, then follow the
+      processing. The right-hand columns are the times (in milliseconds) for 
+      each occasion that a component was processed. The far right column is
+      the initial occasion.
+    </p>
 
     <table noshade="noshade" border="0" cellspacing="1" cellpadding="0">
       <xsl:choose>
