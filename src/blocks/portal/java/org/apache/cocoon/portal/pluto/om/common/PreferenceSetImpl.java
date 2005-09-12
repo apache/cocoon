@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,9 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
     private ClassLoader classLoader;
     private Set preferences = new HashSet();
 
-    // PreferenceSet implementation.
-
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSet#get(java.lang.String)
+     */
     public Preference get(String name) {
         Iterator iterator = this.preferences.iterator();
         while (iterator.hasNext()) {
@@ -55,10 +56,16 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return null;
     }
 
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSet#iterator()
+     */
     public Iterator iterator() {
         return this.preferences.iterator();
     }
 
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSet#getPreferencesValidator()
+     */
     public PreferencesValidator getPreferencesValidator() {
         if (this.classLoader == null)
             throw new IllegalStateException("Portlet class loader not yet available to load preferences validator.");
@@ -68,8 +75,9 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
 
         try {
             Object validator = classLoader.loadClass(castorPreferencesValidator).newInstance();
-            if (validator instanceof PreferencesValidator)
+            if (validator instanceof PreferencesValidator) {
                 return(PreferencesValidator)validator;
+            }
         } catch (Exception ignore) {
             // ignore it
         }
@@ -77,8 +85,9 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return null;
     }
 
-    // PreferenceSetCtrl implementation.
-
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSetCtrl#add(java.lang.String, java.util.List)
+     */
     public Preference add(String name, List values) {
         PreferenceImpl preference = new PreferenceImpl();
         preference.setName(name);
@@ -93,7 +102,9 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return this.preferences.add(preference);
     }
 
-
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSetCtrl#remove(java.lang.String)
+     */
     public Preference remove(String name) {
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
@@ -106,24 +117,24 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
         return null;
     }
 
+    /**
+     * @see org.apache.pluto.om.common.PreferenceSetCtrl#remove(org.apache.pluto.om.common.Preference)
+     */
     public void remove(Preference preference) {
         this.preferences.remove(preference);
     }
 
-    // additional methods.
-    
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
-        return toString(0);
-    }
-
-    public String toString(int indent) {
         StringBuffer buffer = new StringBuffer(50);
-        StringUtils.newLine(buffer,indent);
+        buffer.append(StringUtils.lineSeparator);
         buffer.append(getClass().toString());
         buffer.append(": ");
         Iterator iterator = this.iterator();
         while (iterator.hasNext()) {
-            buffer.append(((PreferenceImpl)iterator.next()).toString(indent+2));
+            buffer.append(((PreferenceImpl)iterator.next()).toString(2));
         }
         return buffer.toString();
     }
@@ -148,17 +159,19 @@ implements PreferenceSet, PreferenceSetCtrl, java.io.Serializable {
     }
 
     /**
+     * Makes a deep copy.
      * @see java.util.Collection#addAll(Collection)
-     * makes a deep copy
      */
     public boolean addAll(Collection c) {
+        boolean changed = false;
         Iterator it = c.iterator();
         while (it.hasNext()) {
+            changed = true;
             PreferenceImpl pref = (PreferenceImpl) it.next();
             this.add(pref.getName(), pref.getClonedCastorValuesAsList());
         }
 
-        return true;  //always assume something changed
+        return changed;
     }
 
 }

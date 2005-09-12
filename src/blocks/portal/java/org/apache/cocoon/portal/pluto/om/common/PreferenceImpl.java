@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,12 +45,16 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         // nothing to do 
     }
 
-    // Preference implementation.
-
+    /**
+     * @see org.apache.pluto.om.common.Preference#getName()
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @see org.apache.pluto.om.common.Preference#getValues()
+     */
     public Iterator getValues() {
         // replace the NULL_VALUE String by NULL
         if (value.contains(NULL_VALUE)) {
@@ -70,6 +74,9 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         return returnValue.iterator();
     }
 
+    /**
+     * @see org.apache.pluto.om.common.Preference#isReadOnly()
+     */
     public boolean isReadOnly() {
         if (readOnly == null) {
             return false;
@@ -77,16 +84,25 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         return readOnly.booleanValue();
     }
 
+    /**
+     * @see org.apache.pluto.om.common.Preference#isValueSet()
+     */
     public boolean isValueSet() {
         return value != null;
     }
 
     // PreferenceCtrl implementation.
     
+    /**
+     * @see org.apache.pluto.om.common.PreferenceCtrl#setName(java.lang.String)
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @see org.apache.pluto.om.common.PreferenceCtrl#setValues(java.util.List)
+     */
     public void setValues(java.util.List _value) {
         if (this.value == null) {
             this.value = new ArrayList();
@@ -114,6 +130,9 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         this.value.addAll(addValue);
     }
 
+    /**
+     * @see org.apache.pluto.om.common.PreferenceCtrl#setReadOnly(java.lang.String)
+     */
     public void setReadOnly(String readOnly) {
         this.readOnly = BooleanUtils.toBooleanObject(readOnly);
     }
