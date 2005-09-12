@@ -18,7 +18,7 @@ Bundle-Classpath: .,avalon-framework-api-4.3.jar,avalon-framework-impl
  ur-io-1.1.jar,excalibur-logger-2.1.jar,excalibur-naming-1.0.jar,excal
  ibur-pool-api-2.1.jar,excalibur-pool-impl-2.1.jar,excalibur-pool-inst
  rumented-2.1.jar,excalibur-sourceresolve-2.1.jar,excalibur-store-2.1.
- jar,excalibur-xmlutil-2.1.jar,jcs-1.2.5-dev-20050313.jar,log4j-1.2.11
+ jar,excalibur-xmlutil-2.1.jar,jcs-1.2.5-dev-20050313.jar,log4j-1.2.12
  .jar,logkit-1.2.2.jar,rhino-1.6R1.jar,servlet-2_3.jar,util.concurrent
  -1.3.4.jar,xml-commons-resolver-1.1.jar,xmlbeans-1.0.3.jar,jakarta-bc
  el-20040329.jar,jakarta-regexp-1.4.jar,xalan-2.7.0.jar,xercesImpl-2.7
