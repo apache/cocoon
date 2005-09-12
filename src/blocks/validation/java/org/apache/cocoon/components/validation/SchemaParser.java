@@ -17,48 +17,45 @@ package org.apache.cocoon.components.validation;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
 /**
- * <p>A component parsing schemas usable for XML validation and returning them as
- * {@link Schema} instances.</p>
+ * <p>The {@link SchemaParser} interface defines the abstraction of a component able
+ * to parse sources and produce {@link Schema} instances suitable for validation of
+ * XML documents.</p>
  * 
- * <p>This interface does not imply any requirement in terms of the grammar used
- * to produce {@link Schema} instances. Normally multiple-grammar selection is
- * provided through the {@link Validator} class.</p>
+ * <p>A {@link SchemaParser} might be able to understand more than one grammar
+ * language at the same time. The list of all supported grammar languages must be
+ * returned by the {@link #getSupportedGrammars()} method.</p>
  * 
- * <p>The only requirement imposed by this interface is that the final class
- * implementing this interface must be {@link ThreadSafe}.</p>
- *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public interface SchemaParser extends ThreadSafe {
+public interface SchemaParser {
 
-    /** <p>Avalon Role name of this component.</p> */
+    /** <p>Avalon Role name of {@link SchemaParser} components.</p> */
     public static final String ROLE = SchemaParser.class.getName();
 
     /**
-     * <p>Parse the specified URI and return a {@link Schema}.</p>
+     * <p>Parse the specified {@link Source} and return a new {@link Schema}.</p>
      * 
-     * <p>Once parsed, the returned {@link Schema} can be used multiple time to
-     * validate documents by sending their SAX events to the handler returned by
-     * the {@link Schema#newValidator()}.</p>
-     * 
-     * @param uri the URI of the {@link Schema} to return.
+     * <p>The returned {@link Schema} must be able to validate multiple documents
+     * via multiple invocations of {@link Schema#createValidator(ErrorHandler)}.</p> 
+     *
+     * @param source the {@link Source} associated with the {@link Schema} to return.
      * @return a <b>non-null</b> {@link Schema} instance.
-     * @throws SAXException if an error occurred parsing the schema.
+     * @throws SAXException if a grammar error occurred parsing the schema.
      * @throws IOException if an I/O error occurred parsing the schema.
+     * @throws IllegalArgumentException if the specified grammar type is not one
+     *                                  of the grammar types returned by the
+     *                                  {@link #getSupportedGrammars()} method.  
      */
-    public Schema getSchema(String uri)
-    throws SAXException, IOException;
+    public Schema getSchema(Source source, String grammar)
+    throws SAXException, IOException, IllegalArgumentException;
 
     /**
-     * <p>Return an array of {@link String}s containing all schema grammars
+     * <p>Return an array of {@link String}s containing all the grammar languages
      * supported by this {@link SchemaParser}.</p>
-     * 
-     * <p>All {@link String}s in the array returned by this method should be
-     * valid grammar names as defined in the {@link Validator} class.</p>
      *
      * @return a <b>non-null</b> array of {@link String}s.
      */

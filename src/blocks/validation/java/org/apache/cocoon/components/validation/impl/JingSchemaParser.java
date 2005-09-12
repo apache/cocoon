@@ -17,9 +17,11 @@ package org.apache.cocoon.components.validation.impl;
 
 import java.io.IOException;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
+import org.apache.excalibur.source.Source;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -34,11 +36,7 @@ import com.thaiopensource.validate.rng.SAXSchemaReader;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class JingSchemaParser extends CachingSchemaParser {
-
-    /** <p>The list of grammars supported by the {@link JingSchemaParser}.</p> */
-    private static final String[] GRAMMARS =
-                                        new String[] { Validator.GRAMMAR_RELAX_NG };
+public class JingSchemaParser extends AbstractSchemaParser implements ThreadSafe {
 
     /**
      * <p>Create a new {@link JingSchemaParser} instance.</p>
@@ -48,25 +46,38 @@ public class JingSchemaParser extends CachingSchemaParser {
     }
 
     /**
-     * <p>Parse the specified URI and return a {@link Schema}.</p>
+     * <p>Parse the specified {@link Source} and return a new {@link Schema}.</p>
+     * 
+     * <p>The returned {@link Schema} must be able to validate multiple documents
+     * via multiple invocations of {@link Schema#createValidator(ErrorHandler)}.</p> 
      *
-     * @param uri the URI of the {@link Schema} to return.
+     * @param source the {@link Source} associated with the {@link Schema} to return.
      * @return a <b>non-null</b> {@link Schema} instance.
-     * @throws SAXException if an error occurred parsing the schema.
+     * @throws SAXException if a grammar error occurred parsing the schema.
      * @throws IOException if an I/O error occurred parsing the schema.
+     * @throws IllegalArgumentException if the specified grammar type is not one
+     *                                  of the grammar types returned by the
+     *                                  {@link #getSupportedGrammars()} method.  
      */
-    public Schema parseSchema(String uri)
+    public Schema getSchema(Source source, String grammar)
     throws SAXException, IOException {
+        if (! Validator.GRAMMAR_RELAX_NG.equals(grammar)) {
+            throw new IllegalArgumentException("Unsupported grammar " + grammar);
+        }
+
         SchemaReader schemaReader = SAXSchemaReader.getInstance();
         JingContext context = new JingContext(sourceResolver, entityResolver);
-        InputSource source = context.resolveEntity(null, uri);
+        InputSource input = new InputSource();
+        input.setByteStream(source.getInputStream());
+        input.setSystemId(source.getURI());
+        context.pushInputSource(input);
 
         try {
             final com.thaiopensource.validate.Schema schema;
-            schema = schemaReader.createSchema(source, context.getProperties());
+            schema = schemaReader.createSchema(input, context.getProperties());
             return new JingSchema(schema, context.getValidity());
         } catch (IncorrectSchemaException exception) {
-            String message = "Incorrect schema \"" + uri + "\"";
+            String message = "Incorrect schema \"" + source.getURI() + "\"";
             throw new SAXException(message, exception);
         }
     }
@@ -79,6 +90,6 @@ public class JingSchemaParser extends CachingSchemaParser {
      * {@link Validator#GRAMMAR_RELAX_NG RELAX NG} grammar.</p>
      */
     public String[] getSupportedGrammars() {
-        return GRAMMARS;
+        return new String[] { Validator.GRAMMAR_RELAX_NG };
     }
 }

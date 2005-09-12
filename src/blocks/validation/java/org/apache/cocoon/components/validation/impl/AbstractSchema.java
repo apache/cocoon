@@ -17,10 +17,6 @@ package org.apache.cocoon.components.validation.impl;
 
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.excalibur.source.SourceValidity;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * <p>A simple implementation of the {@link Schema} interface.</p>
@@ -46,35 +42,5 @@ public abstract class AbstractSchema implements Schema {
      */
     public SourceValidity getValidity() {
         return this.validity;
-    }
-
-    /**
-     * <p>Return a new {@link ContentHandler} instance that can be used to send SAX
-     * events to for proper validation.</p>
-     *
-     * <p>By default, this method will create a {@link ContentHandler} failing on the
-     * first occurrence of an warning, error or fatal error . If this behavior is
-     * not suitable, use the {@link #newValidator(ErrorHandler)} method instead and
-     * specify an {@link ErrorHandler} suitable to your needs.</p>
-     *
-     * <p>Once used, the returned {@link ContentHandler} <b>can't</b> be reused.</p> 
-     * 
-     * @return a <b>non-null</b> {@link ContentHandler} instance.
-     * @throws SAXException if an error occurred creating the validation handler.
-     */
-    public ContentHandler newValidator()
-    throws SAXException {
-        ErrorHandler handler = new ErrorHandler() {
-            public void warning(SAXParseException e) throws SAXException {
-                throw e;
-            }
-            public void error(SAXParseException e) throws SAXException {
-                throw e;
-            }
-            public void fatalError(SAXParseException e) throws SAXException {
-                throw e;
-            }
-        };
-        return this.newValidator(handler);
     }
 }

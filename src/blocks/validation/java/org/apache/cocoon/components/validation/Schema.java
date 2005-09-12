@@ -16,16 +16,26 @@
 package org.apache.cocoon.components.validation;
 
 import org.apache.excalibur.source.SourceValidity;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
- * <p>An interface defining a schema used for validation of XML documents.</p>
+ * <p>The {@link Schema} interface defines an abstraction of a schema usable to
+ * validate an XML document.</p>
+ *
+ * <p>This interface is not tied to any specific validation grammar language
+ * such as the <a href="http://www.w3.org/XML/Schema">W3C XML Shema</a> language
+ * or the <a href="http://www.relaxng.org/">RELAX-NG</a/> language.</p>
+ *
+ * <p>Selection and use of specific schema grammar languages is performed through
+ * the use of the {@link Validator} interface.</p>
  * 
- * <p>A schema, by itself, simply provide access to its {@link SourceValidity}
- * (if any, for caching), and is able to create instances of {@link ContentHandler}s
- * that will receive SAX Events and validate them.</p>
+ * <p>Once returned by the {@link SchemaParser#getSchema()}, a {@link Schema}
+ * instance must be able to validate a number of XML documents: each time a document
+ * needs to be validated, a new {@link ValidationHandler} can be obtained invoking the
+ * {@link #createValidator(ErrorHandler)} method. While validating an XML document,
+ * {@link SAXException}s should be thrown back to the caller only when the specified
+ * {@link ErrorHandler} is configured to do so.</p> 
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -34,46 +44,34 @@ public interface Schema {
     /**
      * <p>Return the {@link SourceValidity} associated with this {@link Schema}.</p>
      * 
-     * <p>If the current schema grammar allow inclusion of sub-schemas, the
-     * {@link SourceValidity} returned by this method <b>must</b> validate both the
-     * original schema URI <b>and</b> all its sub-schemas.</p>
+     * <p>If the schema represented by this instance was parsed from several sources
+     * (through the use of inclusions or referencing to external entities, for
+     * example) the {@link SourceValidity} returned by this method <b>must</b>
+     * consider all of them when the {@link SourceValidity#isValid()} or the
+     * {@link SourceValidity#isValid(SourceValidity)} methods are called.</p>
      * 
      * @return a {@link SourceValidity} instance or <b>null</b> if not known.
      */
     public SourceValidity getValidity();
 
     /**
-     * <p>Return a new {@link ContentHandler} instance that can be used to send SAX
-     * events to for proper validation.</p>
+     * <p>Return a new {@link ValidationHandler} instance that can be used to
+     * validate an XML document by sending SAX events to it.</p>
      *
-     * <p>By default, this method will create a {@link ContentHandler} failing on the
-     * first occurrence of an warning, error or fatal error . If this behavior is
-     * not suitable, use the {@link #newValidator(ErrorHandler)} method instead and
-     * specify an {@link ErrorHandler} suitable to your needs.</p>
-     *
-     * <p>Once used, the returned {@link ContentHandler} <b>can't</b> be reused.</p> 
-     * 
-     * @return a <b>non-null</b> {@link ContentHandler} instance.
-     * @throws SAXException if an error occurred creating the validation handler.
-     */
-    public ContentHandler newValidator()
-    throws SAXException;
-
-    /**
-     * <p>Return a new {@link ContentHandler} instance that can be used to send SAX
-     * events to for proper validation.</p>
-     * 
      * <p>The specified {@link ErrorHandler} will be notified of all warnings or
      * errors encountered validating the SAX events sent to the returned
-     * {@link ContentHandler}.</p>
-     * 
-     * <p>Once used, the returned {@link ContentHandler} <b>can not</b> be reused.</p> 
-     * 
-     * @param handler an {@link ErrorHandler} to notify of validation errors.
-     * @return a <b>non-null</b> {@link ContentHandler} instance.
+     * {@link ValidationHandler}, and <b>must not</b> be <b>null</b>.</p>
+     *
+     * <p>The returned {@link ValidationHandler} can be used to validate <b>only
+     * one</b> XML document. To validate more than one document, this method should
+     * be called once for each document to validate.</p>
+     *
+     * @param errorHandler an {@link ErrorHandler} to notify of validation errors.
+     * @return a <b>non-null</b> {@link ValidationHandler} instance.
+     * @throws NullPointerException if the {@link ErrorHandler} was <b>null</b>.
      * @throws SAXException if an error occurred creating the validation handler.
      */
-    public ContentHandler newValidator(ErrorHandler handler)
-    throws SAXException;
+    public ValidationHandler createValidator(ErrorHandler handler)
+    throws NullPointerException, SAXException;
 
 }

@@ -29,15 +29,14 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.validation.Schema;
-import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.components.validation.ValidationHandler;
 import org.apache.cocoon.components.validation.Validator;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLMulticaster;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,8 +45,15 @@ import org.xml.sax.SAXException;
  * 
  * <p>The only defined (but not required) configuration for this component is
  * <code>&lt;grammar&gt;<i>...string...</i>&lt;/grammar&gt;</code>
- * indicating the grammar (or optionally the component name) for the
- * {@link Validator} instance providing access to {@link Schema}s.</p>
+ * indicating the default grammar language of the schemas to use.</p>
+ * 
+ * <p>This configuration parameter can be overridden by specifying the
+ * <code>grammar</code> parameter when using this {@link Transformer} in a
+ * pipeline.</p>
+ * 
+ * <p>If no grammar is specified (either as a configuration, or a parameter) this
+ * transformer will instruct the {@link Validator} to try and guess the grammar
+ * of the schema being parsed.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
@@ -56,9 +62,9 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
 
     private ServiceManager serviceManager = null;
     private Validator validator = null;
-    private SchemaParser schemaParser = null;
-    private ContentHandler handler = null;
-    private Schema schema = null;
+    private String grammar = null;
+
+    private ValidationHandler handler = null;
     private String key = null;
 
     /**
@@ -79,21 +85,15 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * 
      * <p>The only defined (but not required) configuration for this component is
      * <code>&lt;grammar&gt;<i>...string...</i>&lt;/grammar&gt;</code>
-     * indicating the grammar (or optionally the component name) for the
-     * {@link Validator} instance providing access to {@link Schema}s.</p>
+     * indicating the default grammar used by this transformer used for parsing
+     * schemas.</p>
      *
      * @param configuration a {@link Configuration} instance for this component.
      * @throws ConfigurationException never thrown.
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
-        String key = configuration.getChild("grammar").getValue();
-        try {
-            this.schemaParser = (SchemaParser) this.validator.select(key);
-        } catch (ServiceException exception) {
-            String message = "Grammar or instance \"" + key + "\" not recognized";
-            throw new ConfigurationException(message, configuration, exception);
-        }
+        this.grammar = configuration.getChild("grammar").getValue(null);
     }
 
     /**
@@ -101,7 +101,6 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * required instances back to the {@link ServiceManager}.</p>
      */
     public void dispose() {
-        this.validator.release(this.schemaParser);
         this.serviceManager.release(this.validator);
     }
 
@@ -117,10 +116,18 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
     public void setup(SourceResolver resolver, Map objectModel, String source,
                       Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        this.schema = this.schemaParser.getSchema(source);
-        this.key = this.getClass().getName() + ":" +
-                   this.schemaParser.getClass().getName() + ":" + source;
-        this.handler = this.schema.newValidator();
+        Source s = null;
+        try {
+            s = resolver.resolveURI(source);
+            String g = parameters.getParameter("grammar", this.grammar);
+            if (g == null) {
+                this.handler = this.validator.getValidationHandler(s);
+            } else{
+                this.handler = this.validator.getValidationHandler(s, g);
+            }
+        } finally {
+            if (source != null) resolver.release(s);
+        }
     }
 
     /**
@@ -130,7 +137,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * @param consumer the {@link XMLConsumer} to send SAX events to.
      */
     public void setConsumer(XMLConsumer consumer) {
-        XMLConsumer handler = new ContentHandlerWrapper(this.handler);
+        XMLConsumer handler = new ContentHandlerWrapper(this.handler, this.handler);
         super.setConsumer(new XMLMulticaster(handler, consumer));
     }
 
@@ -151,7 +158,7 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      * @return a non null {@link SourceValidity} instance.
      */
     public SourceValidity getValidity() {
-        return this.schema.getValidity();
+        return this.handler.getValidity();
     }
 
     /**
@@ -159,7 +166,6 @@ implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
      */
     public void recycle() {
         this.handler = null;
-        this.schema = null;
         this.key = null;
         super.recycle();
     }
