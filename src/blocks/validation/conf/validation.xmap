@@ -19,11 +19,11 @@
       xpath="/sitemap/components/transformers"
       unless="transformer[@name='validate']">
 
-    <map:transformer name="validate"
-                     logger="sitemap.transformer.validate"
-                     src="org.apache.cocoon.transformation.ValidatingTransformer">
-
-      <!--+ The "grammar" an optional configuration element specifying the default
+  <map:transformer name="validate"
+    logger="sitemap.transformer.validate"
+    src="org.apache.cocoon.transformation.ValidatingTransformer">
+    
+    <!--+ The "grammar" an optional configuration element specifying the default
           | grammar used by the validator. When the "grammar" element is specified,
           | the automatic detection of schema types will be disabled.
           |
@@ -33,7 +33,24 @@
           | For a list of well known grammars, see the JavaDoc documentation for the
           | org.apache.cocoon.components.validation.Validator interface.
           +-->
-      <!-- <grammar>... grammar identifier ...</grammar> -->
-    </map:transformer>
+    <!-- <grammar>... grammar identifier ...</grammar> -->
+  </map:transformer>
 
+  <map:transformer name="validation-report"
+    logger="sitemap.transformer.validate"
+    src="org.apache.cocoon.transformation.ValidationReportTransformer">
+    
+    <!--+ The "grammar" an optional configuration element specifying the default
+          | grammar used by the validator. When the "grammar" element is specified,
+          | the automatic detection of schema types will be disabled.
+          |
+          | This can also be specifed in pipelines as a parameter:
+          |   <map:parameter name="grammar" value="... grammar identifier ..."/>
+          |
+          | For a list of well known grammars, see the JavaDoc documentation for the
+          | org.apache.cocoon.components.validation.Validator interface.
+          +-->
+    <!-- <grammar>... grammar identifier ...</grammar> -->
+  </map:transformer>
+  
 </xmap>

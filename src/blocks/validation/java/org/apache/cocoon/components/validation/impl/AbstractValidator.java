@@ -37,7 +37,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * <p>The {@link AbstractValidator} provides a generic implementation of the methods
@@ -451,8 +450,6 @@ implements Validator, Serviceable, Disposable, LogEnabled {
             throw new SAXException("Unable to access XML parser", exception);
         } catch (DetectionException exception) {
             grammar = exception.grammar;
-        } catch (SAXParseException exception) {
-            grammar = Validator.GRAMMAR_XML_DTD;
         } finally {
             if (xmlParser != null) this.manager.release(xmlParser);
         }

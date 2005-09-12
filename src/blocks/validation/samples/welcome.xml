@@ -24,21 +24,45 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
-  <group name="ValidatingTransformer Samples">
-    <sample name="Successful validation" href="validate-valid">
+  <group name="ValidatingTransformer (Relax-NG) Samples">
+    <sample name="Successful validation" href="validate-rng-valid">
       Shows the output of a pipeline with a valid document being processed.
     </sample>
-    <sample name="Validation failure" href="validate-invalid">
+    <sample name="Validation failure" href="validate-rng-invalid">
       Shows the output of a pipeline with an invalid document being processed.
     </sample>
-    <sample name="Non-existent schema failure" href="validate-noschema">
-      Shows the output of a pipeline configured with a non-existent schema.
-    </sample>
-    <sample name="Schema parsing failure" href="validate-badschema">
+    <sample name="Schema parsing failure" href="validate-rng-badschema">
       Shows the output of a pipeline configured with an invalid schema.
     </sample>
   </group>
   
+  <group name="ValidatingTransformer (XML-Schema) Samples">
+    <sample name="Successful validation" href="validate-xsd-valid">
+      Shows the output of a pipeline with a valid document being processed.
+    </sample>
+    <sample name="Validation failure" href="validate-xsd-invalid">
+      Shows the output of a pipeline with an invalid document being processed.
+    </sample>
+    <sample name="Schema parsing failure" href="validate-xsd-badschema">
+      Shows the output of a pipeline configured with an invalid schema.
+    </sample>
+  </group>
+
+  <group name="ValidationReportTransformer Samples">
+    <sample name="Invalid Relax-NG report" href="report-rng-invalid">
+      Shows the output of a report produced using the Relax-NG grammar for an invalid source.
+    </sample>
+    <sample name="Invalid XML-Schema report" href="report-xsd-invalid">
+      Shows the output of a report produced using the XML-Schema grammar for an invalid source.
+    </sample>
+    <sample name="Valid Relax-NG report" href="report-rng-valid">
+      Shows the output of a report produced using the Relax-NG grammar for a valid source.
+    </sample>
+    <sample name="Valid XML-Schema report" href="report-xsd-valid">
+      Shows the output of a report produced using the XML-Schema grammar for a valid source.
+    </sample>
+  </group>
+
   <group name="Avaliable Documentation">
     <sample name="Validation Block Documentation"
             href="http://cocoon.zones.apache.org/daisy/documentation/blocks/validation.html">

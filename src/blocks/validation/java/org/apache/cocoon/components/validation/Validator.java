@@ -38,13 +38,16 @@ import org.xml.sax.SAXException;
  * <p>Assuming that two different {@link SchemaParser}s called <code>first</code>
  * and <code>second</code> are both able to understand the
  * {@link #GRAMMAR_RELAX_NG RELAX NG} grammar (identified by the
- * <code>http://relaxng.org/ns/structure/0.9</code> identifier) one could select
+ * <code>http://relaxng.org/ns/structure/1.0</code> identifier) one could select
  * between the two implementation using the following two strings:</p>
  * 
  * <ul>
- *   <li><code>first:http://relaxng.org/ns/structure/0.9</code></li>
- *   <li><code>second:http://relaxng.org/ns/structure/0.9</code></li>
+ *   <li><code>first:http://relaxng.org/ns/structure/1.0</code></li>
+ *   <li><code>second:http://relaxng.org/ns/structure/1.0</code></li>
  * </ul>
+ * 
+ * <p>As a rule (unless when this is impossible) the grammar identifier is
+ * equivalent to the namespace of the root element of a schema.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
