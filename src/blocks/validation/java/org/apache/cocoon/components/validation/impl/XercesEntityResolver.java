@@ -58,18 +58,24 @@ public class XercesEntityResolver implements XMLEntityResolver {
         return this.sourceValidity;
     }
 
+    public XMLInputSource resolveSource(Source source)
+    throws XNIException, IOException {
+        this.sourceValidity.add(source.getValidity());
+        String location = source.getURI();
+        XMLInputSource input = new XMLInputSource(null, location, location);
+        input.setByteStream(source.getInputStream());
+        return input;
+    }
+
     public XMLInputSource resolveUri(String location)
     throws XNIException, IOException {
         if (this.sourceResolver == null) throw new IOException("Can't resolve now");
 
-        /* Use Cocoon's SourceResolver to resolve the system id */
+        /* Use Excalibur's SourceResolver to resolve the system id */
         Source source = this.sourceResolver.resolveURI(location);
         location = source.getURI();
         try {
-            this.sourceValidity.add(source.getValidity());
-            XMLInputSource input = new XMLInputSource(null, location, location);
-            input.setByteStream(source.getInputStream());
-            return input;
+            return this.resolveSource(source);
         } finally {
             this.sourceResolver.release(source);
         }
