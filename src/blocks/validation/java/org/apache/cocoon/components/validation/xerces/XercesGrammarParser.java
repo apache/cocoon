@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.xerces;
 
 import java.io.IOException;
 
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.components.validation.impl.AbstractSchemaParser;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.util.XMLGrammarPoolImpl;
@@ -78,9 +79,9 @@ implements SchemaParser {
             context.initialize(loader);
 
             /* Load (parse and interpret) the grammar */
-            this.getLogger().debug("Loading grammar from " + source.getURI());
+            this.logger.debug("Loading grammar from " + source.getURI());
             loader.loadGrammar(r.resolveSource(source));
-            this.getLogger().debug("Grammar loaded from " + source.getURI());
+            this.logger.debug("Grammar loaded from " + source.getURI());
 
             /* Return a new Schema instance */
             SourceValidity validity = r.getSourceValidity();

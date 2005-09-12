@@ -25,8 +25,11 @@
       |   class="org.apache.cocoon.components.validation.impl.DefaultValidator"
       +-->
   <validator logger="core.validation">
-    <schema-parser name="jing" class="org.apache.cocoon.components.validation.impl.JingSchemaParser"/>
-    <schema-parser name="xerces-schema" class="org.apache.cocoon.components.validation.impl.XercesSchemaParser"/>
+    <schema-parser name="jing" class="org.apache.cocoon.components.validation.jing.JingSchemaParser"/>
+    <schema-parser name="jaxp" class="org.apache.cocoon.components.validation.jaxp.JaxpSchemaParser">
+      <factory-class>org.apache.xerces.jaxp.validation.XMLSchemaFactory</factory-class>
+    </schema-parser>
+    <schema-parser name="xerces-schema" class="org.apache.cocoon.components.validation.xerces.XercesSchemaParser"/>
   </validator>
   
 </xconf>

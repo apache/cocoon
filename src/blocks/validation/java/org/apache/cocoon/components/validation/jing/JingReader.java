@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.jing;
 
 import java.io.IOException;
 import java.util.Stack;
@@ -35,20 +35,20 @@ import com.thaiopensource.xml.sax.DraconianErrorHandler;
 /**
  * <p>A trivial {@link XMLReader} implementation populating and clearing the
  * {@link Stack} of {@link InputSource}s for URI resolution kept inside
- * a {@link JingContext}.</p>
+ * a {@link JingResolver}.</p>
  */
 final class JingReader implements XMLReader {
     
     /** <p>The underlying {@link XMLReader} to use.</p> */
     private final XMLReader reader;
-    /** <p>The {@link JingContext} associated with this instance.</p> */
-    private final JingContext context;
+    /** <p>The {@link JingResolver} associated with this instance.</p> */
+    private final JingResolver context;
 
     /**
      * <p>Create a new {@link JingReader} instance associated with the specified
-     * {@link JingContext}.</p>
+     * {@link JingResolver}.</p>
      */
-    protected JingReader(JingContext context)
+    protected JingReader(JingResolver context)
     throws SAXException {
         /*
          * We have to look up the XMLReader using JAXP or SAX, as the SAXParser

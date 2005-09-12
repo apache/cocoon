@@ -17,7 +17,8 @@ package org.apache.cocoon.components.validation.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -35,8 +36,8 @@ import org.apache.excalibur.xml.EntityResolver;
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public abstract class AbstractSchemaParser extends AbstractLogEnabled
-implements Serviceable, Initializable, Disposable, SchemaParser {
+public abstract class AbstractSchemaParser
+implements LogEnabled, Serviceable, Initializable, Disposable, SchemaParser {
 
     /** <p>The {@link ServiceManager} configured for this instance.</p> */
     protected ServiceManager serviceManager = null;
@@ -44,6 +45,15 @@ implements Serviceable, Initializable, Disposable, SchemaParser {
     protected SourceResolver sourceResolver = null;
     /** <p>The {@link EntityResolver} resolving against catalogs of public IDs.</p> */
     protected EntityResolver entityResolver = null;
+    /** <p>The {@link Logger} configured for this instance.</p> */
+    protected Logger logger = null;
+
+    /**
+     * <p>Enable logging.</p>
+     */
+    public void enableLogging(Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * <p>Contextualize this component specifying a {@link ServiceManager} instance.</p>

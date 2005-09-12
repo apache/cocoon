@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.jing;
 
 import java.io.IOException;
 
@@ -21,13 +21,18 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.cocoon.components.validation.Validator;
+import org.apache.cocoon.components.validation.impl.AbstractSchemaParser;
+import org.apache.cocoon.components.validation.impl.DraconianErrorHandler;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.thaiopensource.util.PropertyMap;
+import com.thaiopensource.util.PropertyMapBuilder;
 import com.thaiopensource.validate.IncorrectSchemaException;
 import com.thaiopensource.validate.SchemaReader;
+import com.thaiopensource.validate.ValidateProperty;
 import com.thaiopensource.validate.rng.SAXSchemaReader;
 
 /**
@@ -67,13 +72,23 @@ public class JingSchemaParser extends AbstractSchemaParser implements ThreadSafe
         }
 
         SchemaReader schemaReader = SAXSchemaReader.getInstance();
-        JingContext context = new JingContext(sourceResolver, entityResolver);
+        JingResolver context = new JingResolver(sourceResolver, entityResolver);
         InputSource input = context.resolveSource(source);
 
         try {
+            /* Create a simple property map builder */
+            PropertyMapBuilder builder = new PropertyMapBuilder();
+            ValidateProperty.ENTITY_RESOLVER.put(builder, context);
+            ValidateProperty.XML_READER_CREATOR.put(builder, context);
+            ValidateProperty.ERROR_HANDLER.put(builder,
+                                               DraconianErrorHandler.INSTANCE);
+            PropertyMap validatorProperties = builder.toPropertyMap();
+
+            /* Parse, rewrap, and return the schema */
             final com.thaiopensource.validate.Schema schema;
-            schema = schemaReader.createSchema(input, context.getProperties());
-            return new JingSchema(schema, context.getValidity());
+            schema = schemaReader.createSchema(input, validatorProperties);
+            return new JingSchema(schema, context.close());
+
         } catch (IncorrectSchemaException exception) {
             String message = "Incorrect schema \"" + source.getURI() + "\"";
             throw new SAXException(message, exception);

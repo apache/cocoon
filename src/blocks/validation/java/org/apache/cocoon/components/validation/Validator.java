@@ -68,7 +68,7 @@ public interface Validator {
     /** <p>The <a href="http://www.w3.org/XML/Schema">XML Schema</a/> grammar identifer.</p> */
     public static final String GRAMMAR_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     /** <p>The <a href="http://www.w3.org/TR/REC-xml">XML DTD</a/> grammar identifer.</p> */
-    public static final String GRAMMAR_XML_DTD = "http://www.w3.org/XML/1998/namespace";
+    public static final String GRAMMAR_XML_DTD = "http://www.w3.org/TR/REC-xml";
 
     /**
      * <p>Return a {@link ValidationHandler} validating an XML document according to
