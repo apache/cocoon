@@ -63,7 +63,7 @@ public class MountNode extends AbstractProcessingNode
     private ComponentManager manager;
 
     /** The value of the 'pass-through' attribute */
-    private final boolean passThrough;
+    private final Boolean passThrough;
 
     public MountNode(VariableResolver prefix,
                      VariableResolver source,
@@ -74,7 +74,7 @@ public class MountNode extends AbstractProcessingNode
         this.source = source;
         this.parentProcessor = parentProcessor;
         this.checkReload = checkReload;
-        this.passThrough = passThrough;
+        this.passThrough = BooleanUtils.toBooleanObject(passThrough);
     }
 
     public void compose(ComponentManager manager) throws ComponentException {
@@ -98,7 +98,7 @@ public class MountNode extends AbstractProcessingNode
         String oldURI    = env.getURI();
         String oldContext   = env.getContext();
         Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
-        env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
+        env.setAttribute(COCOON_PASS_THROUGH, this.passThrough);
 
         boolean pipelineWasBuilt = false;
 
