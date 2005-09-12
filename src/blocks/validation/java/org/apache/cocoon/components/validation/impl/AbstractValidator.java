@@ -46,7 +46,7 @@ import org.xml.sax.SAXParseException;
  * {@link #releaseParser(SchemaParser)}.</p>
  * 
  * <p>In addition to this, they might also override the default implementation of
- * the {@link #getSchema(String, SchemaParser, String)} method, for example when
+ * the {@link #getSchema(SchemaParser, Source, String)} method, for example when
  * caching {@link Schema} instances.</p>
  * 
  * <p>This implementation provides a simple grammar identification mechanism, which

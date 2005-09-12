@@ -30,9 +30,9 @@ import org.xml.sax.SAXException;
  * <p>Selection and use of specific schema grammar languages is performed through
  * the use of the {@link Validator} interface.</p>
  * 
- * <p>Once returned by the {@link SchemaParser#getSchema()}, a {@link Schema}
- * instance must be able to validate a number of XML documents: each time a document
- * needs to be validated, a new {@link ValidationHandler} can be obtained invoking the
+ * <p>Once returned by the {@link SchemaParser}, a {@link Schema} instance must be
+ * able to validate a number of XML documents: each time a document needs to be
+ * validated, a new {@link ValidationHandler} can be obtained invoking the
  * {@link #createValidator(ErrorHandler)} method. While validating an XML document,
  * {@link SAXException}s should be thrown back to the caller only when the specified
  * {@link ErrorHandler} is configured to do so.</p> 
@@ -66,7 +66,7 @@ public interface Schema {
      * one</b> XML document. To validate more than one document, this method should
      * be called once for each document to validate.</p>
      *
-     * @param errorHandler an {@link ErrorHandler} to notify of validation errors.
+     * @param handler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link ValidationHandler} instance.
      * @throws NullPointerException if the {@link ErrorHandler} was <b>null</b>.
      * @throws SAXException if an error occurred creating the validation handler.

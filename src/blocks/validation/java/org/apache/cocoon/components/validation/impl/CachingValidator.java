@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * <p>An extension of the {@link DefaultValidator} class allowing {@link Schema}
  * instances to be cached.</p>
  * 
- * <p>The {@link #getSchema(SchemaParser, String, String)} method will manage
+ * <p>The {@link #getSchema(SchemaParser, Source, String)} method will manage
  * whether to return a cached or a freshly parsed {@link Schema} instance.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>

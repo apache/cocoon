@@ -18,6 +18,7 @@ package org.apache.cocoon.components.validation;
 import java.io.IOException;
 
 import org.apache.excalibur.source.Source;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
