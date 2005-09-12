@@ -24,32 +24,17 @@
     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
-  <group name="ValidatingTransformer RELAX-NG Samples">
-    <sample name="Successful validation" href="relaxng-ok">
+  <group name="ValidatingTransformer Samples">
+    <sample name="Successful validation" href="validate-valid">
       Shows the output of a pipeline with a valid document being processed.
     </sample>
-    <sample name="Validation failure" href="relaxng-invalid">
+    <sample name="Validation failure" href="validate-invalid">
       Shows the output of a pipeline with an invalid document being processed.
     </sample>
-    <sample name="Non-existent schema failure" href="relaxng-noschema">
+    <sample name="Non-existent schema failure" href="validate-noschema">
       Shows the output of a pipeline configured with a non-existent schema.
     </sample>
-    <sample name="Schema parsing failure" href="relaxng-badschema">
-      Shows the output of a pipeline configured with an invalid schema.
-    </sample>
-  </group>
-  
-  <group name="ValidatingTransformer XML-Schema Samples">
-    <sample name="Successful validation" href="xmlschema-ok">
-      Shows the output of a pipeline with a valid document being processed.
-    </sample>
-    <sample name="Validation failure" href="xmlschema-invalid">
-      Shows the output of a pipeline with an invalid document being processed.
-    </sample>
-    <sample name="Non-existent schema failure" href="xmlschema-noschema">
-      Shows the output of a pipeline configured with a non-existent schema.
-    </sample>
-    <sample name="Schema parsing failure" href="xmlschema-badschema">
+    <sample name="Schema parsing failure" href="validate-badschema">
       Shows the output of a pipeline configured with an invalid schema.
     </sample>
   </group>

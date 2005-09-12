@@ -60,7 +60,7 @@ public class JingSchemaParser extends AbstractSchemaParser implements ThreadSafe
      *                                  of the grammar types returned by the
      *                                  {@link #getSupportedGrammars()} method.  
      */
-    public Schema getSchema(Source source, String grammar)
+    public Schema parseSchema(Source source, String grammar)
     throws SAXException, IOException {
         if (! Validator.GRAMMAR_RELAX_NG.equals(grammar)) {
             throw new IllegalArgumentException("Unsupported grammar " + grammar);
@@ -91,6 +91,8 @@ public class JingSchemaParser extends AbstractSchemaParser implements ThreadSafe
      * {@link Validator#GRAMMAR_RELAX_NG RELAX NG} grammar.</p>
      */
     public String[] getSupportedGrammars() {
-        return new String[] { Validator.GRAMMAR_RELAX_NG };
+        /* Jing supports spec 1.0 and 0.9 */
+        return new String[] { Validator.GRAMMAR_RELAX_NG,
+                              "http://relaxng.org/ns/structure/0.9" };
     }
 }
