@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.XMLConstants;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -31,6 +32,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.validation.Schema;
 import org.apache.cocoon.components.validation.Validator;
 import org.apache.cocoon.components.validation.impl.AbstractSchemaParser;
+import org.apache.cocoon.components.validation.impl.DraconianErrorHandler;
 import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
@@ -52,7 +54,7 @@ implements Configurable, ThreadSafe {
         try {
             fact = (SchemaFactory) Class.forName(this.className).newInstance();
         } catch (Exception exception) {
-            String message = "Unable to instantiate factory " + className;
+            String message = "Unable to instantiate factory " + this.className;
             throw new ConfigurationException(message, conf, exception);
         }
 
@@ -63,9 +65,16 @@ implements Configurable, ThreadSafe {
 
             /* If the configuration specified (formally) a list of grammars use it */
             for (int x = 0; x < languages.length; x++) {
-                grammars.add(languages[x].getValue());
+                String language = languages[x].getValue();
+                if (fact.isSchemaLanguageSupported(language)) {
+                    grammars.add(language);
+                    continue;
+                }
+                /* If the configured language is not supported throw an exception */
+                String message = "JAXP SchemaFactory \"" + this.className + "\" " +
+                                 "does not support configured grammar " + language;
+                throw new ConfigurationException(message, languages[x]);
             }
-
         } else {
 
             /* Attempt to detect the languages directly using the JAXP factory */
@@ -86,7 +95,20 @@ implements Configurable, ThreadSafe {
 
     public Schema parseSchema(Source source, String grammar)
     throws SAXException, IOException {
-        throw new UnsupportedOperationException();
+        final SchemaFactory factory;
+        try {
+            factory = (SchemaFactory) Class.forName(this.className).newInstance();
+        } catch (Exception exception) {
+            String message = "Unable to instantiate factory " + this.className;
+            throw new SAXException(message, exception);
+        }
+        
+        JaxpResolver r = new JaxpResolver(this.sourceResolver, this.entityResolver);
+        SAXSource s = new SAXSource(r.resolveSource(source));
+        factory.setErrorHandler(DraconianErrorHandler.INSTANCE);
+        factory.setResourceResolver(r);
+        
+        return new JaxpSchema(factory.newSchema(s), r.close());
     }
 
     public String[] getSupportedGrammars() {
