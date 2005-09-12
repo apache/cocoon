@@ -164,7 +164,7 @@ public class ValidationResolver implements EntityResolver {
     }
 
     /**
-     * <p>Close this {@link ValidatorResolver} instance, releasing all created
+     * <p>Close this {@link ValidationResolver} instance, releasing all created
      * {@link Source}s back to the {@link SourceResolver} and returning an
      * aggregated {@link SourceValidity}.</p>
      */

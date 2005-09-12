@@ -21,13 +21,29 @@ import java.io.Reader;
 import org.w3c.dom.ls.LSInput;
 import org.xml.sax.InputSource;
 
-final class JaxpInput implements LSInput {
-    
+/**
+ * <p>An implementation of the {@link LSInput} interface wrapping a nested
+ * {@link InputSource}.</p>
+ *
+ * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
+ */
+public class JaxpInput implements LSInput {
+
+    /** <p>The wrapped {@link InputSource} instance.</p> */
     private final InputSource input;
+    /** <p>The flag to return by the {@link #getCertifiedText()} method.</p> */
     private boolean cert = false;
+    /** <p>A string wrapping the data to parse.</p> */
     private String data = null;
+    /** <p>The optional base URI for relative resolution.</p> */
     private String base = null;
 
+    /**
+     * <p>Create a new {@link JaxpInput} instance.</p>
+     *
+     * @param input a <b>non-null</b> {@link InputSource} instance to wrap.
+     * @throws NullPointerException if the {@link InputSource} was <b>null</b>.
+     */
     public JaxpInput(InputSource input) {
         if (input == null) throw new NullPointerException("Null InputSource");
         this.input = input;

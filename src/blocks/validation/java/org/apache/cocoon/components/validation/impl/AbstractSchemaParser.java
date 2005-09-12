@@ -49,6 +49,13 @@ implements LogEnabled, Serviceable, Initializable, Disposable, SchemaParser {
     protected Logger logger = null;
 
     /**
+     * <p>Create a new {@link AbstractSchemaParser} instance.</p>
+     */
+    public AbstractSchemaParser() {
+        super();
+    }
+
+    /**
      * <p>Enable logging.</p>
      */
     public void enableLogging(Logger logger) {

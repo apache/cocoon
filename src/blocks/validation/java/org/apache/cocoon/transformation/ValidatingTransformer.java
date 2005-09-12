@@ -60,12 +60,24 @@ import org.xml.sax.SAXException;
 public class ValidatingTransformer extends AbstractTransformer
 implements Configurable, Serviceable, Disposable, CacheableProcessingComponent {
 
+    /** <p>The configured {@link ServiceManager} instance.</p> */
     private ServiceManager serviceManager = null;
+    /** <p>The configured {@link Validator} instance.</p> */
     private Validator validator = null;
+    /** <p>The configured default grammar language.</p> */
     private String grammar = null;
 
+    /** <p>The {@link ValidationHandler} to use in this transformation.</p> */
     private ValidationHandler handler = null;
+    /** <p>A unique key identifying the schema source for caching.</p> */
     private String key = null;
+
+    /**
+     * <p>Create a new {@link ValidatingTransformer} instance.</p>
+     */
+    public ValidatingTransformer() {
+        super();
+    }
 
     /**
      * <p>Contextualize this component instance specifying its associated

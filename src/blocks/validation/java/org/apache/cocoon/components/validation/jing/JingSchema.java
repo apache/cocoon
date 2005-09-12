@@ -18,6 +18,7 @@ package org.apache.cocoon.components.validation.jing;
 import org.apache.cocoon.components.validation.ValidationHandler;
 import org.apache.cocoon.components.validation.impl.AbstractSchema;
 import org.apache.cocoon.components.validation.impl.DefaultValidationHandler;
+import org.apache.cocoon.components.validation.impl.DraconianErrorHandler;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -28,7 +29,6 @@ import com.thaiopensource.util.PropertyMapBuilder;
 import com.thaiopensource.validate.Schema;
 import com.thaiopensource.validate.ValidateProperty;
 import com.thaiopensource.validate.Validator;
-import com.thaiopensource.xml.sax.DraconianErrorHandler;
 
 /**
  * <p>An extension of {@link AbstractSchema} used by the {@link JingSchemaParser}
@@ -60,15 +60,13 @@ public class JingSchema extends AbstractSchema {
      * errors encountered validating the SAX events sent to the returned
      * {@link ValidationHandler}.</p>
      * 
-     * <p>Once used, the returned {@link ValidationHandler} <b>can't</b> be reused.</p> 
-     * 
      * @param errorHandler an {@link ErrorHandler} to notify of validation errors.
      * @return a <b>non-null</b> {@link ValidationHandler} instance.
      * @throws SAXException if an error occurred creating the validation handler.
      */
     public ValidationHandler createValidator(ErrorHandler errorHandler)
     throws SAXException {
-        if (errorHandler == null) errorHandler = new DraconianErrorHandler();
+        if (errorHandler == null) errorHandler = DraconianErrorHandler.INSTANCE;
         final PropertyMapBuilder builder = new PropertyMapBuilder();
         ValidateProperty.ERROR_HANDLER.put(builder, errorHandler);
         final PropertyMap properties = builder.toPropertyMap();
