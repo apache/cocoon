@@ -165,17 +165,27 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
             /* Iterate through the grammars and store them (default lookup) */
             for (int k = 0; k < grammars.length; k++) {
-                if (this.grammars.containsKey(grammars[k])) continue;
+                if (this.grammars.containsKey(grammars[k])) {
+                    if (this.logger.isDebugEnabled()) {
+                        this.logger.debug("SchemaParser \"" + selectionKey + "\" " +
+                                          "supports grammar \"" + grammars[k] +
+                                          "\" but is not the default provider");
+                    }
+                    continue;
+                }
 
                 /* Noone yet supports this grammar, make this the default */
                 this.grammars.put(grammars[k], selectionKey);
-                this.logger.debug("SchemaParser \"" + selectionKey + "\" is the " +
-                                  "default grammar provider for " + grammars[k]);
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("SchemaParser \"" + selectionKey + "\" is the "
+                                      + "default grammar provider for "+grammars[k]);
+                }
             }
 
         } catch (Exception exception) {
             /* Darn, we had an exception instantiating one of the components */
-            this.logger.warn("Exception creating schema parsers", exception);
+            exception.printStackTrace();
+            this.logger.fatalError("Exception creating schema parsers", exception);
 
             /* Dispose all previously stored component instances */
             Iterator iterator = this.components.values().iterator();

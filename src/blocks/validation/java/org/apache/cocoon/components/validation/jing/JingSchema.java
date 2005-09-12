@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.jing;
 
 import org.apache.cocoon.components.validation.ValidationHandler;
+import org.apache.cocoon.components.validation.impl.AbstractSchema;
+import org.apache.cocoon.components.validation.impl.DefaultValidationHandler;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;

@@ -13,60 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.jing;
 
 import java.io.IOException;
 import java.util.Stack;
 
-import org.apache.excalibur.source.Source;
+import org.apache.cocoon.components.validation.impl.ValidationResolver;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.thaiopensource.util.PropertyMap;
-import com.thaiopensource.util.PropertyMapBuilder;
-import com.thaiopensource.validate.ValidateProperty;
-import com.thaiopensource.xml.sax.DraconianErrorHandler;
 import com.thaiopensource.xml.sax.XMLReaderCreator;
 
 /**
- * <p>A simple context used when parsing RELAX NG schemas through the use of
+ * <p>A simple resolver used when parsing RELAX NG schemas through the use of
  * <a href="http://www.thaiopensource.com/relaxng/jing.html">JING</a>.</p>
- * 
+ *
  * <p>This is not thread safe and not recyclable. Once used, it <b>must</b> be
  * garbage collected.</p>
  *
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
-public class JingContext implements EntityResolver, XMLReaderCreator {
+public class JingResolver extends ValidationResolver implements XMLReaderCreator {
 
     /** <p>The current {@link Stack} of {@link InputSource}s being parsed. </p> */
     private final Stack parsedSourceStack = new Stack();
-    /** <p>The {@link SourceValidity} associated with the schema.</p> */
-    private final AggregatedValidity sourceValidity = new AggregatedValidity();
-    /** <p>The {@link SourceResolver} to resolve URIs to {@link Source}s.</p> */
-    private final SourceResolver sourceResolver;
-    /** <p>The global {@link EntityResolver} for catalog resolution.</p> */
-    private final EntityResolver entityResolver;
-    /** <p>The {@link PropertyMap} to use with JING's factories.</p> */
-    private final PropertyMap validatorProperties;
 
     /**
-     * <p>Create a new {@link JingContext} instance.</p>
+     * <p>Create a new {@link JingResolver} instance.</p>
      */
-    protected JingContext(SourceResolver sourceResolver,
-                          EntityResolver entityResolver) {
-        PropertyMapBuilder builder = new PropertyMapBuilder();
-        ValidateProperty.ENTITY_RESOLVER.put(builder, this);
-        ValidateProperty.ERROR_HANDLER.put(builder, new DraconianErrorHandler());
-        ValidateProperty.XML_READER_CREATOR.put(builder, this);
-        this.validatorProperties = builder.toPropertyMap();
-        this.sourceResolver = sourceResolver;
-        this.entityResolver = entityResolver;
+    public JingResolver(SourceResolver sourceResolver,
+                       EntityResolver entityResolver) {
+        super(sourceResolver, entityResolver);
         this.parsedSourceStack.push(null);
     }
 
@@ -88,42 +68,12 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
     }
 
     /**
-     * <p>Return the {@link SourceValidity} of all sources resolved by this
-     * instance through the {@link #resolveEntity(String, String)} method.</p>
-     */
-    public SourceValidity getValidity() {
-        return this.sourceValidity;
-    }
-
-    /**
      * <p>Return the {@link PropertyMap} associated with this instance and usable
      * by <a href="http://www.thaiopensource.com/relaxng/jing.html">JING</a>.</p>
      */
-    public PropertyMap getProperties() {
-        return this.validatorProperties;
-    }
-
-    /* =========================================================================== */
-    /* INTERNAL EXCALIBUR SOURCE RESOLUTION AND CONVERSION METHODS                 */
-    /* =========================================================================== */
-
-    /**
-     * <p>Produce an {@link InputSource} from the specified {@link Source} adding
-     * its {@link SourceValidity} to the aggregate managed by this instance.</p>
-     * 
-     * @param source the {@link Source} to resolve and whose validity must be added.
-     * @return a <b>non-null</b> {@link InputSource} instance.
-     * @throws IOException if an I/O error occurred accessing the {@link Source}.
-     */
-    public InputSource resolveSource(Source source)
-    throws IOException {
-        this.sourceValidity.add(source.getValidity());
-        InputSource inputSource = new InputSource();
-        inputSource.setSystemId(source.getURI());
-        inputSource.setByteStream(source.getInputStream());
-        return inputSource;
-    }
-
+    //public PropertyMap getProperties() {
+    //    return this.validatorProperties;
+    //}
 
     /* =========================================================================== */
     /* SAX2 ENTITY RESOLVER INTERFACE IMPLEMENTATION                               */
@@ -161,28 +111,11 @@ public class JingContext implements EntityResolver, XMLReaderCreator {
      */
     public InputSource resolveEntity(String publicId, String systemId)
     throws SAXException, IOException {
-        if (this.sourceValidity == null) throw new IOException("Can't resolve now");
-
-        /* Try to resolve the public id if we don't have a system id */
-        if (systemId == null) {
-            InputSource source = this.entityResolver.resolveEntity(publicId, null);
-            if ((source == null) || (source.getSystemId() == null)) {
-                throw new IOException("Can't resolve \"" + publicId + "\"");
-            } else {
-                systemId = source.getSystemId();
-            }
-        }
-
-        /* Use Cocoon's SourceResolver to resolve the system id */
-        InputSource parsing = (InputSource) this.parsedSourceStack.peek();
-        String base = parsing != null? parsing.getSystemId(): null;
-        Source source = this.sourceResolver.resolveURI(systemId, base, null);
-        try {
-            final InputSource input = this.resolveSource(source);
-            if (publicId != null) input.setPublicId(publicId);
-            return input;
-        } finally {
-            this.sourceResolver.release(source);
+        InputSource source = (InputSource) this.parsedSourceStack.peek();
+        if (source == null) {
+            return super.resolveEntity(publicId, systemId);
+        } else {
+            return super.resolveEntity(source.getSystemId(), publicId, systemId);
         }
     }
 

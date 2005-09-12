@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.validation.impl;
+package org.apache.cocoon.components.validation.xerces;
 
 import org.apache.cocoon.components.validation.ValidationHandler;
+import org.apache.cocoon.components.validation.impl.AbstractSchema;
+import org.apache.cocoon.components.validation.impl.DefaultValidationHandler;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.xerces.xni.XMLDocumentHandler;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
