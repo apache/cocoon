@@ -27,6 +27,7 @@ import org.apache.xerces.xni.grammars.XMLGrammarLoader;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xni.parser.XMLParseException;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
