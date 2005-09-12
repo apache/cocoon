@@ -56,7 +56,7 @@ import org.apache.cocoon.components.validation.Validator;
  * @author <a href="mailto:pier@betaversion.org">Pier Fumagalli</a>
  */
 public class DefaultValidator extends AbstractValidator implements LogEnabled,
-ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector {
+ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector, Configurable {
 
     /** <p>A {@link Map} associating {@link SchemaParser}s with their names.</p> */
     private final Map componentx = Collections.synchronizedMap(new HashMap());
@@ -64,11 +64,11 @@ ThreadSafe, Contextualizable, Initializable, Disposable, ServiceSelector {
     private final Map grammars = Collections.synchronizedMap(new HashMap());
 
     /** <p>The configured {@link Logger} instance.</p> */
-    protected Logger logger = null;
+    protected Logger logger;
     /** <p>The configured {@link Context} instance.</p> */
-    private Context context = null;
+    private Context context;
     /** <p>The configured {@link Configuration} instance.</p> */
-    private Configuration conf = null;
+    private Configuration conf;
 
     /**
      * <p>Create a new {@link DefaultValidator} instance.</p>
