@@ -27,7 +27,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.util.location.Location;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -59,7 +58,7 @@ public class MountNode extends AbstractProcessingNode
     private final boolean checkReload;
 
     /** The value of the 'pass-through' attribute */
-    private final boolean passThrough;
+    private final Boolean passThrough;
 
     public MountNode(VariableResolver prefix,
                      VariableResolver source,
@@ -70,7 +69,7 @@ public class MountNode extends AbstractProcessingNode
         this.source = source;
         this.parentProcessor = parentProcessor;
         this.checkReload = checkReload;
-        this.passThrough = passThrough;
+        this.passThrough = BooleanUtils.toBooleanObject(passThrough);
     }
 
     /* (non-Javadoc)
@@ -97,7 +96,7 @@ public class MountNode extends AbstractProcessingNode
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
         Object oldPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
-        env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
+        env.setAttribute(COCOON_PASS_THROUGH, this.passThrough);
 
         try {
             processor.getEnvironmentHelper().changeContext(env);

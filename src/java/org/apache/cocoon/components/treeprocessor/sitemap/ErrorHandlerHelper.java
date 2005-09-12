@@ -30,7 +30,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.sitemap.SitemapParameters;
 
 import java.io.IOException;
 import java.util.Map;
