@@ -137,7 +137,6 @@ public class AuthenticationProfileManager
         Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
         while ( iter.hasNext() ) {
             CopletInstanceData cid = (CopletInstanceData) iter.next();
-            cid.setProfileManager(this);
             CopletAdapter adapter = null;
             try {
                 adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
