@@ -513,7 +513,7 @@
     <title>Log4j</title>
     <description>Logging for java</description>
     <used-by>Core and DELI (deli block)</used-by>
-    <lib>core/log4j-1.2.11.jar</lib>
+    <lib>core/log4j-1.2.12.jar</lib>
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 
