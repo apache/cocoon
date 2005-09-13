@@ -108,16 +108,15 @@ public class CachingValidator extends DefaultValidator {
                 schema = null;
             } else if (validity.isValid() != SourceValidity.VALID) {
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.warn("Cached schema " + uri + " is no longer valid");
+                    this.logger.debug("Cached schema " + uri + " no longer valid");
                 }
                 this.store.remove(key);
                 schema = null;
             } else if (this.logger.isDebugEnabled()) {
-                String m = "Valid cached schema found for " + uri;
-                this.logger.debug(m);
+                this.logger.debug("Valid cached schema found for " + uri);
             }
         } else if (this.logger.isDebugEnabled()) {
-            this.logger.warn("Schema " + uri + " not found in cache");
+            this.logger.debug("Schema " + uri + " not found in cache");
         }
 
         /* If the schema was not cached or was cleared, parse and cache it */
@@ -160,19 +159,17 @@ public class CachingValidator extends DefaultValidator {
         if (grammar != null) {
             if (grammar.validity == null) {
                 /* Why did we cache it in the first place? */
-                this.logger.warn("Cached grammar for " + uri + " has null validity");
+                this.logger.warn("Grammar for " + uri + " has null validity");
                 this.store.remove(key);
                 grammar = null;
             } else if (grammar.validity.isValid() != SourceValidity.VALID) {
                 if (this.logger.isDebugEnabled()) {
-                    String m = "Cached grammar for " + uri + " is no longer valid";
-                    this.logger.debug(m);
+                    this.logger.debug("Grammar for " + uri + " no longer valid");
                 }
                 this.store.remove(key);
                 grammar = null;
             } else if (this.logger.isDebugEnabled()) {
-                String m = "Valid cached grammar " + grammar + " for " + uri;
-                this.logger.debug(m);
+                this.logger.debug("Valid cached grammar " + grammar + " for " + uri);
             }
         }
 
