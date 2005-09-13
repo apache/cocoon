@@ -72,6 +72,10 @@
             href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/validatingtransformer.html">
       On-line documentation for the ValidatingTransformer.
     </sample>
+    <sample name="ValidationReportTransformer Documentation"
+            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/validationreporttransformer.html">
+      On-line documentation for the ValidationReportTransformer.
+    </sample>
   </group>
     
 
