@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.cocoon.util.location.LocationUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
@@ -40,6 +43,34 @@ import org.mozilla.javascript.debug.Debugger;
  * @version $Id$
  */
 public class LocationTrackingDebugger implements Debugger {
+    
+    static {
+        // Register what's needed to analyze exceptions produced by Rhino
+        ExceptionUtils.addCauseMethodName("getWrappedException");
+        LocationUtils.addFinder(new LocationUtils.LocationFinder() {
+
+            public Location getLocation(Object obj, String description) {
+                if (obj instanceof EcmaError) {
+                    EcmaError ex = (EcmaError)obj;
+                    if (ex.getSourceName() != null) {
+                        return new LocationImpl(ex.getName(), ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
+                    } else {
+                        return Location.UNKNOWN;
+                    }
+        
+                } else if (obj instanceof JavaScriptException) {
+                    JavaScriptException ex = (JavaScriptException)obj;
+                    if (ex.sourceName() != null) {
+                        return new LocationImpl(description, ex.sourceName(), ex.lineNumber(), -1);
+                    } else {
+                        return Location.UNKNOWN;
+                    }
+                }
+                
+                return null;
+            } 
+        });
+    }
     
     private List locations;
     private Throwable throwable;

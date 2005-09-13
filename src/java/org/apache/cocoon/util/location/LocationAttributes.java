@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.util.location;
 
-import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -256,9 +255,11 @@ public class LocationAttributes {
      * @see org.apache.cocoon.util.location.LocationAttributes
      * @since 2.1.8
      */
-    public static class Pipe extends AbstractXMLPipe {
+    public static class Pipe implements ContentHandler {
         
         private Locator locator;
+        
+        private ContentHandler nextHandler;
         
         /**
          * Create a filter. It has to be chained to another handler to be really useful.
@@ -271,27 +272,55 @@ public class LocationAttributes {
          * @param next the next handler in the chain.
          */
         public Pipe(ContentHandler next) {
-            setContentHandler(next);
+            nextHandler = next;
         }
 
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;
-            super.setDocumentLocator(locator);
+            nextHandler.setDocumentLocator(locator);
         }
         
         public void startDocument() throws SAXException {
-            super.startDocument();
-            super.startPrefixMapping(LocationAttributes.PREFIX, LocationAttributes.URI);
+            nextHandler.startDocument();
+            nextHandler.startPrefixMapping(LocationAttributes.PREFIX, LocationAttributes.URI);
         }
         
         public void endDocument() throws SAXException {
             endPrefixMapping(LocationAttributes.PREFIX);
-            super.endDocument();
+            nextHandler.endDocument();
         }
 
         public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
             // Add location attributes to the element
-            super.startElement(uri, loc, raw, LocationAttributes.addLocationAttributes(locator, attrs));
+            nextHandler.startElement(uri, loc, raw, LocationAttributes.addLocationAttributes(locator, attrs));
+        }
+
+        public void endElement(String arg0, String arg1, String arg2) throws SAXException {
+            nextHandler.endElement(arg0, arg1, arg2);
+        }
+
+        public void startPrefixMapping(String arg0, String arg1) throws SAXException {
+            nextHandler.startPrefixMapping(arg0, arg1);
+        }
+
+        public void endPrefixMapping(String arg0) throws SAXException {
+            nextHandler.endPrefixMapping(arg0);
+        }
+
+        public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
+            nextHandler.characters(arg0, arg1, arg2);
+        }
+
+        public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws SAXException {
+            nextHandler.ignorableWhitespace(arg0, arg1, arg2);
+        }
+
+        public void processingInstruction(String arg0, String arg1) throws SAXException {
+            nextHandler.processingInstruction(arg0, arg1);
+        }
+
+        public void skippedEntity(String arg0) throws SAXException {
+            nextHandler.skippedEntity(arg0);
         }
     }
 }

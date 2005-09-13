@@ -25,6 +25,7 @@ import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.validation.WidgetValidator;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.ContentHandler;
@@ -40,7 +41,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     protected WidgetDefinition parent;
 
     //TODO consider final on these
-    private String location = null;
+    private Location location = Location.UNKNOWN;
     private String id;
     /** the definition is mutable when being built */
     private boolean mutable = true;
@@ -105,12 +106,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         this.state = state;
     }
 
-    protected void setLocation(String location) {
+    protected void setLocation(Location location) {
         checkMutable();
         this.location = location;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 

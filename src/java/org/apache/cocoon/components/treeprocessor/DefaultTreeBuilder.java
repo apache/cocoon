@@ -44,6 +44,7 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 
 import java.util.ArrayList;
@@ -493,7 +494,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
         }
         desc.append('>');
         
-        Location rawLoc = LocationImpl.get(config);
+        Location rawLoc = LocationUtils.getLocation(config, null);
         return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc.getColumnNumber());
     }
 

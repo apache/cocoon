@@ -25,6 +25,7 @@ import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
+import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
@@ -339,8 +340,8 @@ public class Repeater extends AbstractWidget
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
         WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null)
-            throw new SAXException("Repeater \"" + getRequestParameterName() + "\" at " + this.getLocation()
-                                   + " contains no widget with id \"" + widgetId + "\".");
+            throw new LocatedRuntimeException("Repeater \"" + getRequestParameterName()
+                                   + " contains no widget with id \"" + widgetId + "\".", this.getLocation());
         widgetDefinition.generateLabel(contentHandler);
     }
 

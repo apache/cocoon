@@ -17,9 +17,7 @@ package org.apache.cocoon.util.location;
 
 import java.io.Serializable;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.lang.ObjectUtils;
-import org.xml.sax.Locator;
 
 /**
  * A simple immutable and serializable implementation of {@link Location}.
@@ -34,7 +32,7 @@ public class LocationImpl implements Location, Serializable {
     private final String description;
     
     // Package private: outside this package, use Location.UNKNOWN.
-    static final LocationImpl UNKNOWN = new LocationImpl(null, null);
+    static final LocationImpl UNKNOWN = new LocationImpl(null, null, -1, -1);
 
     /**
      * The string representation of an unknown location: "<code>[unknown location]</code>".
@@ -84,8 +82,15 @@ public class LocationImpl implements Location, Serializable {
     }
     
     /**
+     * Create a location from an existing one, but with a different description
+     */
+    public LocationImpl(String description, Location location) {
+        this(description, location.getURI(), location.getLineNumber(), location.getColumnNumber());
+    }
+    
+    /**
      * Obtain a <code>LocationImpl</code> from a {@link Location}. If <code>location</code> is
-     * alredy a <code>LocationImpl</code>, it is returned, otherwise it is copied.
+     * already a <code>LocationImpl</code>, it is returned, otherwise it is copied.
      * <p>
      * This method is useful when an immutable and serializable location is needed, such as in locatable
      * exceptions.
@@ -101,88 +106,6 @@ public class LocationImpl implements Location, Serializable {
         } else {
             return new LocationImpl(location);
         }
-    }
-
-    /**
-     * Parse a location string of the form "<code><em>uri</em>:<em>line</em>:<em>column</em></code>" (e.g.
-     * "<code>path/to/file.xml:3:40</code>") to a Location object.
-     * 
-     * @param text the text to parse
-     * @return the location (possibly UNKNOWN if text was null or in an incorrect format)
-     */
-    public static LocationImpl get(String text) throws IllegalArgumentException {
-        if (text == null || text.length() == 0) {
-            return UNKNOWN;
-        }
-
-        // Do we have a description?
-        String description;
-        int uriStart = text.lastIndexOf(" - "); // lastIndexOf to allow the separator to be in the description
-        if (uriStart > -1) {
-            description = text.substring(0, uriStart);
-            uriStart += 3; // strip " - "
-        } else {
-            description = null;
-            uriStart = 0;
-        }
-        
-        try {
-            int colSep = text.lastIndexOf(':');
-            if (colSep > -1) {
-                int column = Integer.parseInt(text.substring(colSep + 1));
-                
-                int lineSep = text.lastIndexOf(':', colSep - 1);
-                if (lineSep > -1) {
-                    int line = Integer.parseInt(text.substring(lineSep + 1, colSep));
-                    return new LocationImpl(description, text.substring(uriStart, lineSep), line, column);
-                }
-            } else {
-                // unkonwn?
-                if (text.endsWith(UNKNOWN_STRING)) {
-                    return new LocationImpl(description, null);
-                }
-            }
-        } catch(Exception e) {
-            // Ignore: handled below
-        }
-        
-        return UNKNOWN;
-    }
-
-    /**
-     * Returns the {@link Location} pointed to by a SAX <code>Locator</code>.
-     * 
-     * @param locator the locator (can be null)
-     * @param description a description for the location (can be null)
-     * @return the location (possibly UNKNOWN)
-     */
-    public static LocationImpl get(Locator locator, String description) {
-        if (locator == null || locator.getSystemId() == null) {
-            return UNKNOWN;
-        }
-        
-        return new LocationImpl(description, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber());
-    }
-    
-    /**
-     * Returns the {@link Location} of an Avalon <code>Configuration</code> object.
-     * 
-     * 
-     */
-    public static LocationImpl get(Configuration config) {
-        if (config == null) {
-            return UNKNOWN;
-        }
-        
-        // Why in hell is "if (config instanceof Locatable)" producing a compilation error???
-        Object obj = config;
-        // We may have a locatable implementation of configuration
-        if (obj instanceof Locatable) {
-            return get(((Locatable)obj).getLocation());
-        }
-        
-        String locString = config.getLocation();
-        return get(locString);
     }
     
     /**

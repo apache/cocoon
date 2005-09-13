@@ -228,12 +228,12 @@ public abstract class AbstractProcessingPipeline
         try {
             this.generatorSelector = (ComponentSelector) this.newManager.lookup(Generator.ROLE + "Selector");
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of generator selector failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of generator selector failed", ce, getLocation(param));
         }
         try {
             this.generator = (Generator) this.generatorSelector.select(role);
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of generator '" + role + "' failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of generator '" + role + "' failed", ce, getLocation(param));
         }
         this.generatorSource = source;
         this.generatorParam = param;
@@ -266,13 +266,13 @@ public abstract class AbstractProcessingPipeline
         try {
             selector = (ComponentSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of transformer selector failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of transformer selector failed", ce, getLocation(param));
         }
         try {
             this.transformers.add(selector.select(role));
             this.transformerSelectors.add(selector);
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of transformer '"+role+"' failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of transformer '"+role+"' failed", ce, getLocation(param));
         }
         this.transformerSources.add(source);
         this.transformerParams.add(param);
@@ -302,12 +302,12 @@ public abstract class AbstractProcessingPipeline
         try {
             this.serializerSelector = (OutputComponentSelector) this.newManager.lookup(Serializer.ROLE + "Selector");
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of serializer selector failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of serializer selector failed", ce, getLocation(param));
         }
         try {
             this.serializer = (Serializer)serializerSelector.select(role);
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of serializer '" + role + "' failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of serializer '" + role + "' failed", ce, getLocation(param));
         }
         this.serializerSource = source;
         this.serializerParam = param;
@@ -336,12 +336,12 @@ public abstract class AbstractProcessingPipeline
         try {
             this.readerSelector = (OutputComponentSelector) this.newManager.lookup(Reader.ROLE + "Selector");
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of reader selector failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of reader selector failed", ce, getLocation(param));
         }
         try {
             this.reader = (Reader)readerSelector.select(role);
         } catch (ComponentException ce) {
-            throw new ProcessingException("Lookup of reader '"+role+"' failed", ce, getLocation(param));
+            throw ProcessingException.throwLocated("Lookup of reader '"+role+"' failed", ce, getLocation(param));
         }
         this.readerSource = source;
         this.readerParam = param;
@@ -424,7 +424,7 @@ public abstract class AbstractProcessingPipeline
         // Connect next component.
         producer.setConsumer(consumer);
     }
-    
+
     /**
      * Connect the XML pipeline.
      */
@@ -937,7 +937,7 @@ public abstract class AbstractProcessingPipeline
             // Exception comes up from a deeper pipeline
             throw (ConnectionResetException)e;
         }
-        
+
         // Not a connection reset: add all location information        
         if (this.reader == null) {
             // Add all locations in reverse order
