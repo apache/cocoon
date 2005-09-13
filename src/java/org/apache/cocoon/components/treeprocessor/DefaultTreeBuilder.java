@@ -46,6 +46,7 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -514,7 +515,7 @@ public class DefaultTreeBuilder
         }
         desc.append('>');
         
-        Location rawLoc = LocationImpl.get(config);
+        Location rawLoc = LocationUtils.getLocation(config);
         return new LocationImpl(desc.toString(), rawLoc.getURI(), rawLoc.getLineNumber(), rawLoc.getColumnNumber());
     }
 

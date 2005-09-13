@@ -48,8 +48,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
@@ -209,14 +209,14 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
         public void warning(TransformerException ex) throws TransformerException {
             if (getLogger().isWarnEnabled()) {
-                Location loc = ExceptionUtils.getLocation(ex);
+                Location loc = LocationUtils.getLocation(ex);
                 getLogger().warn("Warning at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
             }
         }
 
         public void error(TransformerException ex) throws TransformerException {
             if (getLogger().isWarnEnabled()) {
-                Location loc = ExceptionUtils.getLocation(ex);
+                Location loc = LocationUtils.getLocation(ex);
                 getLogger().error("Error at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
             }
         }
@@ -613,7 +613,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         } catch(Exception e) {
             if (transformerException != null) {
                 // Ignore the fake RuntimeException sent by Xalan
-                Location loc = ExceptionUtils.getLocation(transformerException);
+                Location loc = LocationUtils.getLocation(transformerException);
                 if (loc == null) {
                     // No location: if it's just a wrapper, consider only the wrapped exception.
                     Throwable realEx = transformerException.getCause();
