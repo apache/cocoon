@@ -114,7 +114,7 @@ public class CocoonStoreJanitor extends StoreJanitorImpl
      * @param delay the delay to apply before next run
      */
     private void relaunch(final long delay) {
-        getLogger().debug("(Re-)Start CocoonStoreJaitor");
+        getLogger().debug("(Re-)Start CocoonStoreJanitor");
         this.runnableManager.execute(this.threadPool, this, delay, 0);
     }
 }
