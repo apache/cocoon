@@ -19,34 +19,50 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * A cascading and located <code>RuntimeException</code>. It is also {@link MultiLocatable} to easily build
- * stack traces.
+ * location stack traces.
+ * <p>
+ * If a <code>LocatedRuntimeException</code> is built with a location and a cause which is also a
+ * <code>LocatedRuntimeException</code>, then the default behavior is to add the location to the cause
+ * exception and immediately rethrow the cause. This avoids exception nesting and builds a location
+ * stack.
  * 
  * @since 2.1.8
  * @version $Id$
  */
-public class LocatedRuntimeException extends CascadingRuntimeException implements LocatableException, MultiLocatable {
+public class LocatedRuntimeException extends NestableRuntimeException implements LocatableException, MultiLocatable {
     
     private List locations;
 
     public LocatedRuntimeException(String message) {
-        this(message, null, null);
+        this(message, null, null, true);
     }
     
-    public LocatedRuntimeException(String message, Throwable cause) {
-        this(message, cause, null);
+    public LocatedRuntimeException(String message, Throwable cause) throws LocatedRuntimeException {
+        this(message, cause, null, true);
     }
     
     public LocatedRuntimeException(String message, Location location) {
-        this(message, null, location);
-        addLocation(location);
+        this(message, null, location, true);
     }
     
-    public LocatedRuntimeException(String message, Throwable cause, Location location) {
+    public LocatedRuntimeException(String message, Throwable cause, Location location) throws LocatedRuntimeException {
+        this(message, cause, location, true);
+    }
+
+    public LocatedRuntimeException(String message, Throwable cause, Location location, boolean rethrowLocated)
+        throws LocatedRuntimeException {
         super(message, cause);
+        if (rethrowLocated && cause instanceof LocatedRuntimeException) {
+            LocatedRuntimeException lreCause = (LocatedRuntimeException)cause;
+            lreCause.addLocation(location);
+            // Rethrow the cause
+            throw lreCause;
+        }
+        
         LocatedException.addCauseLocations(this, cause);
         addLocation(location);
     }
@@ -68,34 +84,12 @@ public class LocatedRuntimeException extends CascadingRuntimeException implement
     }
     
     public void addLocation(Location loc) {
-        if (loc == null || loc.equals(Location.UNKNOWN))
+        if (LocationUtils.isUnknown(loc))
             return;
 
         if (locations == null) {
             this.locations = new ArrayList(1); // Start small
         }
         locations.add(LocationImpl.get(loc));
-    }
-
-    /**
-     * Build a located exception given an existing exception and the location where
-     * this exception was catched. If the exception is already a <code>LocatedRuntimeException</code>,
-     * then the location is added to the original exception's location chain and the result is
-     * the original exception (and <code>description</code> is ignored. Otherwise, a new
-     * <code>LocatedRuntimeException</code> is built, wrapping the original exception.
-     * 
-     * @param message a message (can be <code>null</code>)
-     * @param thr the original exception (can be <code>null</code>)
-     * @param location the location (can be <code>null</code>)
-     * @return a located exception
-     */
-    public static LocatedRuntimeException getLocatedException(String message, Throwable thr, Location location) {
-        if (thr instanceof LocatedRuntimeException) {
-            LocatedRuntimeException re = (LocatedRuntimeException)thr;
-            re.addLocation(location);
-            return re;
-        }
-        
-        return new LocatedRuntimeException(message, thr, location);
     }
 }

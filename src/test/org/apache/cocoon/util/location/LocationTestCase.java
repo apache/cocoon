@@ -32,7 +32,7 @@ public class LocationTestCase extends TestCase {
 
     public void testParse() throws Exception {
         String str = "<map:generate> - path/to/file.xml:1:40";
-        Location loc = LocationImpl.get(str);
+        Location loc = LocationUtils.getLocation(str);
         
         assertEquals("<map:generate>", loc.getDescription());
         assertEquals("URI", "path/to/file.xml", loc.getURI());
@@ -42,7 +42,7 @@ public class LocationTestCase extends TestCase {
     }
     
     public void testEquals() throws Exception {
-        Location loc1 = LocationImpl.get(str);
+        Location loc1 = LocationUtils.getLocation(str);
         Location loc2 = new LocationImpl(null, "path/to/file.xml", 1, 40);
         
         assertEquals("locations", loc1, loc2);
