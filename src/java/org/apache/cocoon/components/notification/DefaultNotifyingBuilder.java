@@ -17,8 +17,8 @@ package org.apache.cocoon.components.notification;
 
 import org.apache.avalon.framework.component.Component;
 
-import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.transform.SourceLocator;

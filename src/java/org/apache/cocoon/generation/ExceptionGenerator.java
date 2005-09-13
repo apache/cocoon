@@ -23,12 +23,13 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.ExceptionUtils;
 import org.apache.cocoon.util.location.LocatableException;
 import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.cocoon.util.location.MultiLocatable;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -72,8 +73,8 @@ public class ExceptionGenerator extends AbstractGenerator {
         handler.startElement(EXCEPTION_NS, "exception-report", "ex:exception-report", attr);
         
         // Root exception location
-        Location loc = ExceptionUtils.getLocation(root);        
-        if (loc != null) {
+        Location loc = LocationUtils.getLocation(root);        
+        if (LocationUtils.isKnown(loc)) {
             attr.clear();
             dumpLocation(loc, attr, handler);
         }
@@ -87,8 +88,8 @@ public class ExceptionGenerator extends AbstractGenerator {
         handler.startElement(EXCEPTION_NS, "cocoon-stacktrace", "ex:cocoon-stacktrace", attr);
         Throwable current = thr;
         while (current != null) {
-            loc = ExceptionUtils.getLocation(current);
-            if (loc != null) {
+            loc = LocationUtils.getLocation(current);
+            if (LocationUtils.isKnown(loc)) {
                 // One or more locations: dump it
                 handler.startElement(EXCEPTION_NS, "exception", "ex:exception", attr);
                 

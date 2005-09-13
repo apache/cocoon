@@ -18,6 +18,8 @@ package org.apache.cocoon.forms.formmodel;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -51,7 +53,7 @@ import java.util.Locale;
  * 
  * @version $Id$
  */
-public interface Widget {
+public interface Widget extends Locatable {
 
     /**
      * Widget-Separator used in path-like notations
@@ -69,7 +71,7 @@ public interface Widget {
     /**
      * @return  the source location of this widget.
      */
-    String getLocation();
+    Location getLocation();
 
     /**
      * @return the id of this widget.  This should never be <code>null</code>

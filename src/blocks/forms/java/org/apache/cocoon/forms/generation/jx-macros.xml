@@ -216,7 +216,8 @@
     
     <jx:macro name="repeater" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      <jx:set var="repeater" value="${cformsHelper.getWidget(widget, id)}"/>
+      <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
+      <jx:set var="repeater" value="${widget}"/>
       <jx:if test="${cformsHelper.isVisible(widget)}">
         <jx:choose>
           <jx:when test="${cformsHelper.isModified(repeater)}">

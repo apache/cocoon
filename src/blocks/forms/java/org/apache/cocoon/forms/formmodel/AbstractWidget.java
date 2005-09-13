@@ -26,6 +26,7 @@ import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.validation.WidgetValidator;
+import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -109,7 +110,7 @@ public abstract class AbstractWidget implements Widget {
      * @return the location-information (file, line and column) where this widget was
      * configured.
      */
-    public String getLocation() {
+    public Location getLocation() {
         return getDefinition().getLocation();
     }
 

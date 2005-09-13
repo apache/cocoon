@@ -182,7 +182,14 @@ public class JXMacrosHelper {
     }
 
     public void generateRepeaterWidgetLabel(Widget widget, String id, String widgetId) throws SAXException {
-        getRepeater(widget, id).generateWidgetLabel(widgetId, this.cocoonConsumer);
+        // a <fd:repeater-widget-label> can be placed either within a <ft:repeater> or outside a <ft:repeater-widget>
+        Repeater repeater;
+        if (widget instanceof Repeater) {
+            repeater = (Repeater)widget;
+        } else {
+            repeater = getRepeater(widget, id);
+        }
+        repeater.generateWidgetLabel(widgetId, this.cocoonConsumer);
     }
 
     public void generateRepeaterSize(Widget widget, String id) throws SAXException {

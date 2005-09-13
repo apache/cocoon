@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.cocoon.util.location.Location;
+
 // TODO: Refine and i18n the exception messages.
 /**
  * Helper class for the Definition implementation of widgets containing
@@ -49,9 +51,9 @@ public class WidgetDefinitionList {
         // Do not add NewDefinition id's hash.
         if (!(widgetDefinition instanceof NewDefinition)) {
             if (widgetDefinitionsById.containsKey(id)) {
-                String duplicateLocation = widgetDefinition.getLocation();
-                String containerLocation = containerDefinition.getLocation();
-                String firstLocation = getWidgetDefinition(id).getLocation();
+                Location duplicateLocation = widgetDefinition.getLocation();
+                Location containerLocation = containerDefinition.getLocation();
+                Location firstLocation = getWidgetDefinition(id).getLocation();
                 throw new DuplicateIdException(
                     "Duplicate widget id \"" + id + "\" detected at " + duplicateLocation + ".\n" +
                     "Container widget \"" + containerDefinition.getId() + "\" at " + containerLocation + "\n" +
@@ -109,7 +111,7 @@ public class WidgetDefinitionList {
                     if (widgetDefinition instanceof UnionDefinition) break;
                     if (widgetDefinition instanceof RepeaterDefinition) break;
                     if (widgetDefinition == containerDefinition) {
-                        String location = containerDefinition.getLocation();
+                        Location location = containerDefinition.getLocation();
                         if (parent instanceof FormDefinition) {
                             throw new Exception("Container: Non-terminating recursion detected in form definition (" + location + ")");
                         } 

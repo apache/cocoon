@@ -42,7 +42,7 @@ FOM_Cocoon.prototype.createWebContinuation = function(ttl) {
  * Exit the current flowscript invocation.
  * <p>
  * There are some flowscript use cases where we want to stop the current 
- * flowscript without creating a continuation, as we don't want to the user 
+ * flowscript without creating a continuation, as we don't want the user 
  * to go back to the script.
  * <p>
  * An example is a "login" function where the caller function expects this 

@@ -72,7 +72,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
 
     private void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         // location
-        widgetDefinition.setLocation(DomHelper.getLocation(widgetElement));
+        widgetDefinition.setLocation(DomHelper.getLocationObject(widgetElement));
 
         // id
         if (widgetDefinition instanceof FormDefinition) {

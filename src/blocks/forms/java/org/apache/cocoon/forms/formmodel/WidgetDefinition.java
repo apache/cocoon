@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.util.location.Locatable;
+import org.apache.cocoon.util.location.Location;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -26,7 +28,7 @@ import org.xml.sax.SAXException;
  * 
  * @version $Id$
  */
-public interface WidgetDefinition {
+public interface WidgetDefinition extends Locatable {
 
     /**
      * Gets the {@link FormDefinition}.
@@ -41,7 +43,7 @@ public interface WidgetDefinition {
     /**
      * Gets source location of this widget definition.
      */
-    String getLocation();
+    Location getLocation();
 
     /**
      * Gets id of this widget definition.

@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.avalon.framework.CascadingException;
-import org.apache.cocoon.util.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.NestableException;
+
 
 /**
  * A cascading and located <code>Exception</code>. It is also {@link MultiLocatable} to easily build
@@ -29,7 +30,7 @@ import org.apache.cocoon.util.ExceptionUtils;
  * @since 2.1.8
  * @version $Id$
  */
-public class LocatedException extends CascadingException implements LocatableException, MultiLocatable {
+public class LocatedException extends NestableException implements LocatableException, MultiLocatable {
 
     private List locations;
 
@@ -63,7 +64,7 @@ public class LocatedException extends CascadingException implements LocatableExc
      * of locatable exceptions.
      * 
      * @param self the current locatable exception
-     * @param cause the cause of <code>self</code>
+     * @param cause a cause of <code>self</code>
      */
     public static void addCauseLocations(MultiLocatable self, Throwable cause) {
         if (cause == null || cause instanceof Locatable) {
@@ -73,9 +74,15 @@ public class LocatedException extends CascadingException implements LocatableExc
         // Add parent location first
         addCauseLocations(self, ExceptionUtils.getCause(cause));
         // then ourselve's
-        Location loc = ExceptionUtils.getLocation(cause);
-        if (loc != null) {
-            loc = new LocationImpl("[cause location]", loc.getURI(), loc.getLineNumber(), loc.getColumnNumber());
+        Location loc = LocationUtils.getLocation(cause);
+        if (LocationUtils.isKnown(loc)) {
+            // Get the exception's short name
+            String name = cause.getClass().getName();
+            int pos = name.lastIndexOf('.');
+            if (pos != -1) {
+                name = name.substring(pos+1);
+            }
+            loc = new LocationImpl("[" + name + "]", loc.getURI(), loc.getLineNumber(), loc.getColumnNumber());
             self.addLocation(loc);
         }
     }
@@ -119,7 +126,7 @@ public class LocatedException extends CascadingException implements LocatableExc
     }
     
     public void addLocation(Location loc) {
-        if (loc == null || loc.equals(Location.UNKNOWN))
+        if (LocationUtils.isUnknown(loc))
             return;
 
         if (locations == null) {
