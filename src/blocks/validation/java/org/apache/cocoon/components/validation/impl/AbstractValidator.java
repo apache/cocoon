@@ -401,10 +401,9 @@ implements Validator, Serviceable, Disposable, LogEnabled {
     protected Schema getSchema(SchemaParser parser, Source source, String grammar)
     throws IOException, SAXException {
         if (this.logger.isDebugEnabled()) {
-            String message = "Parsing schema \"" + source.getURI() + "\" using " +
-                             "grammar \"" + grammar + "\" and SourceParser " +
-                             parser.getClass().getName();
-            this.logger.debug(message);
+            this.logger.debug("Parsing schema \"" + source.getURI() + "\" using " +
+                              "grammar \"" + grammar + "\" and SourceParser " +
+                              parser.getClass().getName());
         }
 
         try {
