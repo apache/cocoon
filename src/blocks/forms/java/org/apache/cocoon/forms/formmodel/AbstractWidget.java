@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -306,23 +307,24 @@ public abstract class AbstractWidget implements Widget {
             return false;
         }
         // Definition successful, test local validators
-        if (this.validators == null) {
-            // No local validators
-            this.wasValid = true;
-            return true;
-        }
-
-        // Iterate on local validators
-        Iterator iter = this.validators.iterator();
-        while(iter.hasNext()) {
-            WidgetValidator validator = (WidgetValidator)iter.next();
-            if (!validator.validate(this)) {
-                this.wasValid = false;
-                return false;
+        if (this.validators != null) {
+            Iterator iter = this.validators.iterator();
+            while(iter.hasNext()) {
+                WidgetValidator validator = (WidgetValidator)iter.next();
+                if (!validator.validate(this)) {
+                    this.wasValid = false;
+                    return false;
+                }
             }
         }
 
-        // All local iterators successful
+        // Successful validation
+        
+        if (this instanceof ValidationErrorAware) {
+            // Clear validation error if any
+            ((ValidationErrorAware)this).setValidationError(null);
+        }
+
         this.wasValid = true;
         return true;
     }

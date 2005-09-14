@@ -54,5 +54,6 @@
 
   <message key="aggregatedfield.split-failed">Ne correspond pas à l'expression régulière: {0}</message>
   <message key="upload.invalid-type">Type de fichier incorrect.</message>
+  <message key="upload.rejected">Téléchargement trop gros ({0} ko). Un maximum de {1} ko est autorisé.</message>
   <message key="calendar.alt">Calendrier</message>
 </catalogue>

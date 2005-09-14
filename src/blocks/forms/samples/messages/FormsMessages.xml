@@ -53,5 +53,6 @@
    <message key="aggregatedfield.split-failed">Content of this field does not
       match the following regular expression: {0}</message>
    <message key="upload.invalid-type">Invalid content type.</message>
+   <message key="upload.rejected">Upload size too large ({0} kbytes). Only {1} kbytes are allowed.</message>
    <message key="calendar.alt">Calendar</message>
 </catalogue>
