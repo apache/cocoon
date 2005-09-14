@@ -32,6 +32,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.sitemap.SitemapErrorHandler;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -87,6 +88,9 @@ public class InvokeContext extends AbstractLogEnabled
     /** The internal pipeline description */
     protected Processor.InternalPipelineDescription internalPipelineDescription;
 
+    /** The error handler for the pipeline. */
+    protected SitemapErrorHandler errorHandler;
+
     /** The last processor */
     protected Processor lastProcessor;
 
@@ -128,14 +132,6 @@ public class InvokeContext extends AbstractLogEnabled
     public void inform(String     pipelineName,
                        Parameters parameters,
                        Map        objectModel) {
-        // FIXME quick fix to get pipeline section running again
-        if ( this.processingPipeline != null ) {
-            this.pipelineSelector.release(this.processingPipeline);
-            this.pipelinesManager.release(this.pipelineSelector);
-            this.pipelineSelector = null;
-            this.pipelinesManager = null;
-            this.processingPipeline = null;
-        }
         this.processingPipelineName = pipelineName;
         this.processingPipelineParameters = parameters;
         this.processingPipelineObjectModel = objectModel;
@@ -163,6 +159,7 @@ public class InvokeContext extends AbstractLogEnabled
             this.processingPipeline.setProcessorManager(this.currentManager);
 
             this.processingPipeline.setup(this.processingPipelineParameters);
+            this.processingPipeline.setErrorHandler(this.errorHandler);
         }
         return this.processingPipeline;
     }
@@ -323,5 +320,12 @@ public class InvokeContext extends AbstractLogEnabled
             this.processingPipelineParameters = null;
             this.processingPipelineObjectModel = null;
         }
+    }
+
+    /**
+     * Set the error handler for the pipeline.
+     */
+    public void setErrorHandler(SitemapErrorHandler handler) {
+        this.errorHandler = handler;
     }
 }
