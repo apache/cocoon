@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * This is the interface of Request Wrapper in Cocoon.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: RequestFactory.java,v 1.3 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestFactory {
 
@@ -74,9 +74,6 @@ public class RequestFactory {
         String contentType = request.getContentType();
         
         if ((contentType != null) && (contentType.toLowerCase().indexOf("multipart/form-data") > -1)) {
-            if (request.getContentLength() > maxUploadSize) {
-                throw new IOException("Content length exceeds maximum upload size.");
-            }
  
             String charEncoding = request.getCharacterEncoding();
             if (charEncoding == null || charEncoding.equals("")) {
