@@ -17,6 +17,7 @@ package org.apache.cocoon.servlet.multipart;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartOnDisk.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PartOnDisk extends Part {
 
@@ -74,7 +75,7 @@ public class PartOnDisk extends Part {
      *
      * @throws Exception
      */
-    public InputStream getInputStream() throws Exception {
+    public InputStream getInputStream() throws IOException {
         if (this.file != null) {
             return new FileInputStream(file);
         } else {
@@ -89,6 +90,9 @@ public class PartOnDisk extends Part {
         return file.getPath();
     }
     
+    /**
+     * Delete the underlying file.
+     */
     public void dispose() {
         if (this.file != null) {
             this.file.delete();
@@ -96,6 +100,9 @@ public class PartOnDisk extends Part {
         }
     }
     
+    /**
+     * Ensures the underlying file has been deleted
+     */
     public void finalize() throws Throwable {
         // Ensure the file has been deleted
         dispose();

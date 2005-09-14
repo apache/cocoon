@@ -18,12 +18,14 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.apache.cocoon.faces.taglib.ValidateRequiredTag;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.servlet.multipart.Part;
+import org.apache.cocoon.servlet.multipart.RejectedPart;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -64,7 +66,7 @@ public class Upload extends AbstractWidget
     }
 
     public Object getValue() {
-        return this.part;
+        return this.isValid() ? this.part : null;
     }
 
     public void setValue(Object object) {
@@ -94,8 +96,11 @@ public class Upload extends AbstractWidget
             // Keep the request part
             requestPart.setDisposeWithRequest(false);
             this.part = requestPart;
-            this.validationError = null;
             getForm().addWidgetUpdate(this);
+            if (validateOversize()) {
+                // Clear any validation error
+                setValidationError(null);
+            }
 
         // If it's not a part and not null, clear any existing value
         // We also check if we're the submit widget, as a result of clicking the "..." button
@@ -105,7 +110,8 @@ public class Upload extends AbstractWidget
                 this.part.dispose();
                 this.part = null;
             }
-            this.validationError = null;
+            setValidationError(null);
+            // Ensure we redisplay it
             getForm().addWidgetUpdate(this);
         }
 
@@ -117,17 +123,37 @@ public class Upload extends AbstractWidget
         if (mimeTypes != null) {
             StringTokenizer tok = new StringTokenizer(mimeTypes, ", ");
             String contentType = this.part.getMimeType();
-            boolean found = false;
             while(tok.hasMoreTokens()) {
                 if (tok.nextToken().equals(contentType)) {
                     return true;
                 }
             }
+            setValidationError(new ValidationError(new I18nMessage("upload.invalid-type", Constants.I18N_CATALOGUE)));
             return false;
         }
 
         // No mime type restriction
         return true;
+    }
+    
+    /**
+     * Check if the part is oversized, and if yes sets the validation error accordingly
+     */
+    private boolean validateOversize() {
+        if (this.part.isRejected()) {
+            // Set a validation error indicating the sizes in kbytes (rounded)
+            RejectedPart rjp = (RejectedPart)this.part;
+            int size = (rjp.getContentLength() + 512) / 1024;
+            int maxSize = (rjp.getMaxContentLength() + 512) / 1024;
+            setValidationError(new ValidationError(new I18nMessage(
+                    "upload.rejected",
+                    new String[] { String.valueOf(size), String.valueOf(maxSize) },
+                    Constants.I18N_CATALOGUE))
+            );
+            return false;
+        } else {
+            return false;
+        }
     }
 
     public boolean validate() {
@@ -135,21 +161,16 @@ public class Upload extends AbstractWidget
             this.wasValid = true;
             return true;
         }
-        ValidationError newError = null;
 
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
-                newError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
-                getForm().addWidgetUpdate(this);
+                setValidationError(new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE)));
             }
-        } else if (!validateMimeType()) {
-            newError = new ValidationError(new I18nMessage("upload.invalid-type", Constants.I18N_CATALOGUE));
+        } else if (validateOversize() && validateMimeType()) {
+            super.validate();
         }
 
-        if (!ObjectUtils.equals(this.validationError, newError)) {
-            setValidationError(newError);
-        }
-        this.wasValid = validationError == null ? super.validate() : false;
+        this.wasValid = validationError == null;
         return this.wasValid;
     }
 
@@ -168,8 +189,10 @@ public class Upload extends AbstractWidget
      * @param error the validation error
      */
     public void setValidationError(ValidationError error) {
-        this.validationError = error;
-        getForm().addWidgetUpdate(this);
+        if(!ObjectUtils.equals(this.validationError, error)) {
+            this.validationError = error;
+            getForm().addWidgetUpdate(this);
+        }
     }
 
     /**

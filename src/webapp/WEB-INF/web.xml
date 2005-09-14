@@ -192,12 +192,12 @@
 
     <!--
       Causes all files in multipart requests to be processed.
-      Default is false for security reasons.
+      Default is true but the maximum allowed size is kept small for security reasons.
       Unsupported values will be interpreted as false.
     -->
     <init-param>
       <param-name>enable-uploads</param-name>
-      <param-value>false</param-value>
+      <param-value>true</param-value>
     </init-param>
 
     <!--
@@ -237,12 +237,12 @@
 
     <!--
       Specify maximum allowed size of the upload. Defaults to 10 Mb.
-
+      Set here to a very low 100 kb to allow samples to run.
+    -->
     <init-param>
       <param-name>upload-max-size</param-name>
-      <param-value>10000000</param-value>
+      <param-value>102400</param-value>
     </init-param>
-    -->
 
     <!--
       This parameter allows to specify where Cocoon should create its page
