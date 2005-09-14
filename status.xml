@@ -198,7 +198,7 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="SW" type="update">
-      When the upload size exceeds the configured limit, an OversizedPart is associated to the request
+      When the upload size exceeds the configured limit, a RejectedPart is associated to the request
       rather than throwing a exception at the servlet level. This allows the application to handle
       oversized uploads and provide meaningful messages. The upload widget in CForms has been updated
       to use this new feature.
