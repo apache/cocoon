@@ -92,51 +92,52 @@ public class Cocoon
                    InstrumentManageable {
 
     // Register the location finder for Avalon configuration objects and exceptions
-    static {
-        LocationUtils.addFinder(new LocationUtils.LocationFinder() {
-
-            public Location getLocation(Object obj, String description) {
-                if (obj instanceof Configuration) {
-                    Configuration config = (Configuration)obj;
-                    String locString = config.getLocation();
-                    Location result = LocationUtils.parse(locString);
-                    if (LocationUtils.isKnown(result)) {
-                        // Add description
-                        StringBuffer desc = new StringBuffer().append('<');
-                        // Unfortunately Configuration.getPrefix() is not public
-                        try {
-                            if (config.getNamespace().startsWith("http://apache.org/cocoon/sitemap/")) {
-                                desc.append("map:");
-                            }
-                        } catch (ConfigurationException e) {
-                            // no namespace: ignore
+    // and keep a strong reference to it.
+    private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
+        public Location getLocation(Object obj, String description) {
+            if (obj instanceof Configuration) {
+                Configuration config = (Configuration)obj;
+                String locString = config.getLocation();
+                Location result = LocationUtils.parse(locString);
+                if (LocationUtils.isKnown(result)) {
+                    // Add description
+                    StringBuffer desc = new StringBuffer().append('<');
+                    // Unfortunately Configuration.getPrefix() is not public
+                    try {
+                        if (config.getNamespace().startsWith("http://apache.org/cocoon/sitemap/")) {
+                            desc.append("map:");
                         }
-                        desc.append(config.getName()).append('>');
-                        return new LocationImpl(desc.toString(), result);
-                    } else {
-                        return result;
+                    } catch (ConfigurationException e) {
+                        // no namespace: ignore
                     }
+                    desc.append(config.getName()).append('>');
+                    return new LocationImpl(desc.toString(), result);
+                } else {
+                    return result;
                 }
-                
-                if (obj instanceof Exception) {
-                    // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
-                    String msg = ((Exception)obj).getMessage();
-                    if (msg == null) return null;
-                    
-                    int pos = msg.lastIndexOf(" at ");
-                    if (pos != -1) {
-                        return LocationUtils.parse(msg.substring(pos + 4));
-                    } else {
-                        // Will try other finders
-                        return null;
-                    }
-                }
-                
-                // Try next finders.
-                return null;
             }
-        });
-        
+            
+            if (obj instanceof Exception) {
+                // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
+                String msg = ((Exception)obj).getMessage();
+                if (msg == null) return null;
+                
+                int pos = msg.lastIndexOf(" at ");
+                if (pos != -1) {
+                    return LocationUtils.parse(msg.substring(pos + 4));
+                } else {
+                    // Will try other finders
+                    return null;
+                }
+            }
+            
+            // Try next finders.
+            return null;
+        }
+    };
+    
+    static {
+        LocationUtils.addFinder(confLocFinder);
     }
     
     static Cocoon instance;
