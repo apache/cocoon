@@ -41,11 +41,23 @@
     <module>src/blocks/faces/trunk</module>
     <module>src/blocks/fop/trunk</module>
     <module>src/blocks/forms/trunk</module>
+    <module>src/blocks/hsqldb/trunk</module>
+    <module>src/blocks/html/trunk</module>
+    <module>src/blocks/itext/trunk</module>
+    <module>src/blocks/javaflow/trunk</module>
+    <module>src/blocks/jfor/trunk</module>
+    <!--<module>src/blocks/jms/trunk</module>-->
+    <module>src/blocks/linkrewriter/trunk</module>
+    <module>src/blocks/lucene/trunk</module>
+    <module>src/blocks/mail/trunk</module>
+    <module>src/blocks/midi/trunk</module>
+    <module>src/mocks</module>
     <module>src/blocks/portal/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
     <module>src/blocks/spring-app/trunk</module>
     <module>src/blocks/taglib/trunk</module>
     <module>src/blocks/template/trunk</module>
+    <!--<module>src/blocks/xsp/trunk</module>-->
   </modules>
   <repositories>
     <!-- Apache specific maven repositories available to all blocks -->
