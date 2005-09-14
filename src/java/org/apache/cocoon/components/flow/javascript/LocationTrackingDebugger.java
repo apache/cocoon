@@ -44,32 +44,36 @@ import org.mozilla.javascript.debug.Debugger;
  */
 public class LocationTrackingDebugger implements Debugger {
     
+    // Strong reference to the location finder
+    private static final LocationUtils.LocationFinder rhinoLocFinder = new LocationUtils.LocationFinder() {
+
+        public Location getLocation(Object obj, String description) {
+            if (obj instanceof EcmaError) {
+                EcmaError ex = (EcmaError)obj;
+                if (ex.getSourceName() != null) {
+                    return new LocationImpl(ex.getName(), ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
+                } else {
+                    return Location.UNKNOWN;
+                }
+    
+            } else if (obj instanceof JavaScriptException) {
+                JavaScriptException ex = (JavaScriptException)obj;
+                if (ex.sourceName() != null) {
+                    return new LocationImpl(description, ex.sourceName(), ex.lineNumber(), -1);
+                } else {
+                    return Location.UNKNOWN;
+                }
+            }
+            
+            return null;
+        } 
+    };
+
+    
     static {
         // Register what's needed to analyze exceptions produced by Rhino
         ExceptionUtils.addCauseMethodName("getWrappedException");
-        LocationUtils.addFinder(new LocationUtils.LocationFinder() {
-
-            public Location getLocation(Object obj, String description) {
-                if (obj instanceof EcmaError) {
-                    EcmaError ex = (EcmaError)obj;
-                    if (ex.getSourceName() != null) {
-                        return new LocationImpl(ex.getName(), ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
-                    } else {
-                        return Location.UNKNOWN;
-                    }
-        
-                } else if (obj instanceof JavaScriptException) {
-                    JavaScriptException ex = (JavaScriptException)obj;
-                    if (ex.sourceName() != null) {
-                        return new LocationImpl(description, ex.sourceName(), ex.lineNumber(), -1);
-                    } else {
-                        return Location.UNKNOWN;
-                    }
-                }
-                
-                return null;
-            } 
-        });
+        LocationUtils.addFinder(rhinoLocFinder);
     }
     
     private List locations;
