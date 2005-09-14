@@ -33,6 +33,11 @@ import org.xml.sax.SAXParseException;
  */
 public class LocationUtils {
     
+    /**
+     * The string representation of an unknown location: "<code>[unknown location]</code>".
+     */
+    public static final String UNKNOWN_STRING = "[unknown location]";
+    
     private static List finders = new ArrayList();
     
     /**
@@ -55,6 +60,33 @@ public class LocationUtils {
         // Forbid instanciation
     }
     
+    
+    /**
+     * Builds a string representation of a location, in the
+     * "<code><em>descripton</em> - <em>uri</em>:<em>line</em>:<em>column</em></code>"
+     * format (e.g. "<code>foo - file://path/to/file.xml:3:40</code>"). For {@link Location#UNKNOWN an unknown location}, returns
+     * {@link #UNKNOWN_STRING}.
+     * 
+     * @return the string representation
+     */
+    public static String toString(Location location) {
+        StringBuffer result = new StringBuffer();
+
+        String description = location.getDescription();
+        if (description != null) {
+            result.append(description).append(" - ");
+        }
+
+        String uri = location.getURI();
+        if (uri != null) {
+            result.append(uri).append(':').append(location.getLineNumber()).append(':').append(location.getColumnNumber());
+        } else {
+            result.append(UNKNOWN_STRING);
+        }
+        
+        return result.toString();
+    }
+
     /**
      * Parse a location string of the form "<code><em>uri</em>:<em>line</em>:<em>column</em></code>" (e.g.
      * "<code>path/to/file.xml:3:40</code>") to a Location object. Additionally, a description may
@@ -91,7 +123,7 @@ public class LocationUtils {
                 }
             } else {
                 // unkonwn?
-                if (text.endsWith(LocationImpl.UNKNOWN_STRING)) {
+                if (text.endsWith(UNKNOWN_STRING)) {
                     return LocationImpl.UNKNOWN;
                 }
             }

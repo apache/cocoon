@@ -35,11 +35,6 @@ public class LocationImpl implements Location, Serializable {
     static final LocationImpl UNKNOWN = new LocationImpl(null, null, -1, -1);
 
     /**
-     * The string representation of an unknown location: "<code>[unknown location]</code>".
-     */
-    public static final String UNKNOWN_STRING = "[unknown location]";
-
-    /**
      * Build a location for a given URI, with unknown line and column numbers.
      * 
      * @param uri the resource URI
@@ -168,33 +163,7 @@ public class LocationImpl implements Location, Serializable {
     }
     
     public String toString() {
-        return toString(this);
-    }
-    
-    /**
-     * Builds a string representation of a location, in the
-     * "<code><em>descripton</em> - <em>uri</em>:<em>line</em>:<em>column</em></code>"
-     * format (e.g. "<code>path/to/file.xml:3:40</code>"). For {@link Location#UNKNOWN an unknown location}, returns
-     * {@link #UNKNOWN_STRING}.
-     * 
-     * @return the string representation
-     */
-    public static String toString(Location location) {
-        StringBuffer result = new StringBuffer();
-
-        String description = location.getDescription();
-        if (description != null) {
-            result.append(description).append(" - ");
-        }
-
-        String uri = location.getURI();
-        if (uri != null) {
-            result.append(uri).append(':').append(location.getLineNumber()).append(':').append(location.getColumnNumber());
-        } else {
-            result.append(UNKNOWN_STRING);
-        }
-        
-        return result.toString();
+        return LocationUtils.toString(this);
     }
     
     /**
