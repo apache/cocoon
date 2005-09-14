@@ -17,6 +17,7 @@ package org.apache.cocoon.servlet.multipart;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class PartOnDisk extends Part {
      *
      * @throws Exception
      */
-    public InputStream getInputStream() throws Exception {
+    public InputStream getInputStream() throws IOException {
         if (this.file != null) {
             return new FileInputStream(file);
         }
@@ -88,6 +89,9 @@ public class PartOnDisk extends Part {
         return file.getPath();
     }
     
+    /**
+     * Delete the underlying file.
+     */
     public void dispose() {
         if (this.file != null) {
             this.file.delete();
@@ -95,6 +99,9 @@ public class PartOnDisk extends Part {
         }
     }
     
+    /**
+     * Ensures the underlying file has been deleted
+     */
     public void finalize() throws Throwable {
         // Ensure the file has been deleted
         dispose();

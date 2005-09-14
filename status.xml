@@ -561,6 +561,15 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="SW" type="update">
+      When the upload size exceeds the configured limit, an RejectedPart is associated to the request
+      rather than throwing a exception at the servlet level. This allows the application to handle
+      oversized uploads and provide meaningful messages. The upload widget in CForms has been updated
+      to use this new feature.
+      <br/>
+      Uploads are now allowed in the provided web.xml, but with a low 100 kbytes limit to allow samples
+      to be functional without endangering security.
+    </action>
     <action dev="AG" type="update">
       Updated log4j to 1.2.12, asm to 2.0, asm-util to 2.0,
        groovy to 1.0-jsr-03.

@@ -31,6 +31,8 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.util.NullOutputStream;
+
 /**
  * This class is used to implement a multipart request wrapper.
  * It will parse the http post stream and and fill it's hashtable with values.
@@ -62,6 +64,10 @@ public class MultipartParser {
     
     private Hashtable parts;
     
+    private boolean oversized = false;
+    
+    private int contentLength;
+    
     /**
      * Constructor, parses given request
      *
@@ -90,8 +96,9 @@ public class MultipartParser {
 
     private void parseParts(int contentLength, String contentType, InputStream requestStream)
     throws IOException, MultipartException {
+        this.contentLength = contentLength;
         if (contentLength > this.maxUploadSize) {
-            throw new IOException("Content length exceeds maximum upload size");
+            this.oversized = true;
         }
 
         BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
@@ -213,10 +220,12 @@ public class MultipartParser {
             throws IOException, MultipartException {
 
         byte[] buf = new byte[FILE_BUFFER_SIZE];
-        OutputStream out = null;
+        OutputStream out;
         File file = null;
 
-        if (!saveUploadedFilesToDisk) {
+        if (oversized) {
+            out = new NullOutputStream();
+        } else if (!saveUploadedFilesToDisk) {
             out = new ByteArrayOutputStream();
         } else {
             String fileName = (String) headers.get("filename");
@@ -232,7 +241,6 @@ public class MultipartParser {
             if (!allowOverwrite && !file.createNewFile()) {
                 if (silentlyRename) {
                     int c = 0;
-
                     do {
                         file = new File(filePath + c++ + "_" + fileName);
                     } while (!file.createNewFile());
@@ -245,11 +253,13 @@ public class MultipartParser {
             out = new FileOutputStream(file);
         }
 
+        int length = 0; // Track length for OversizedPart
         try {
             int read = 0;
             while (in.getState() == TokenStream.STATE_READING) {
                 // read data
                 read = in.read(buf);
+                length += read;
                 out.write(buf, 0, read);
             }
         } catch (IOException ioe) {
@@ -262,14 +272,15 @@ public class MultipartParser {
         } finally {
             if ( out!=null ) out.close();
         }
-
-        if (file == null) {
+        
+        String name = (String)headers.get("name");
+        if (oversized) {
+            this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
+        } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
-
-            this.parts.put(headers.get("name"),
-                    new PartInMemory(headers, new ByteArrayInputStream(bytes),bytes.length));
+            this.parts.put(name, new PartInMemory(headers, new ByteArrayInputStream(bytes), bytes.length));
         } else {
-            this.parts.put(headers.get("name"), new PartOnDisk(headers, file));
+            this.parts.put(name, new PartOnDisk(headers, file));
         }
     }
 

@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.servlet.multipart;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -62,11 +63,12 @@ public class PartInMemory extends Part {
      *
      * @throws Exception
      */
-    public InputStream getInputStream() throws Exception {
+    public InputStream getInputStream() throws IOException {
         if (this.in != null) {
             return this.in;
+        } else {
+            throw new IllegalStateException("This part has already been disposed.");
         }
-        throw new IllegalStateException("This part has already been disposed.");
     }
     
     /**
