@@ -37,7 +37,10 @@
     <module>src/blocks/bsf/trunk</module>
     <module>src/blocks/chaperon/trunk</module>
     <module>src/blocks/cron/trunk</module>
+    <module>src/blocks/databases/trunk</module>
+    <module>src/blocks/databases/trunk/mocks</module>
     <module>src/blocks/deli/trunk</module>
+    <module>src/blocks/eventcache/trunk</module>
     <module>src/blocks/faces/trunk</module>
     <module>src/blocks/fop/trunk</module>
     <module>src/blocks/forms/trunk</module>
@@ -46,18 +49,47 @@
     <module>src/blocks/itext/trunk</module>
     <module>src/blocks/javaflow/trunk</module>
     <module>src/blocks/jfor/trunk</module>
-    <!--<module>src/blocks/jms/trunk</module>-->
+    <module>src/blocks/jms/trunk</module>
+    <module>src/blocks/jsp/trunk</module>
+    <module>src/blocks/jsp/trunk/mocks</module>
     <module>src/blocks/linkrewriter/trunk</module>
     <module>src/blocks/lucene/trunk</module>
     <module>src/blocks/mail/trunk</module>
     <module>src/blocks/midi/trunk</module>
     <module>src/mocks</module>
+    <module>src/blocks/naming/trunk</module>
+    <module>src/blocks/ojb/trunk</module>
+    <module>src/blocks/ojb/trunk/mocks</module>
+    <module>src/blocks/paranoid/trunk</module>
+    <module>src/blocks/petstore/trunk</module>
+    <module>src/blocks/poi/trunk</module>
     <module>src/blocks/portal/trunk</module>
+    <module>src/blocks/portal-sample/trunk</module>
+    <module>src/blocks/profiler/trunk</module>
+    <module>src/blocks/proxy/trunk</module>
+    <module>src/blocks/python/trunk</module>
+    <module>src/blocks/python/trunk/mocks</module>
+    <module>src/blocks/qdox/trunk</module>
+    <module>src/blocks/querybean/trunk</module>
+    <module>src/blocks/repository/trunk</module>
+    <module>src/blocks/scratchpad/trunk</module>
+    <module>src/blocks/scratchpad/trunk/garbage</module>
+    <module>src/blocks/scratchpad/trunk/mocks</module>
+    <module>src/blocks/serializers/trunk</module>
     <module>src/blocks/session-fw/trunk</module>
+    <module>src/blocks/slide/trunk</module>
+    <module>src/blocks/slop/trunk</module>
     <module>src/blocks/spring-app/trunk</module>
+    <module>src/blocks/stx/trunk</module>
     <module>src/blocks/taglib/trunk</module>
     <module>src/blocks/template/trunk</module>
-    <!--<module>src/blocks/xsp/trunk</module>-->
+    <module>src/blocks/tour/trunk</module>
+    <module>src/blocks/velocity/trunk</module>
+    <module>src/blocks/web3/trunk</module>
+    <module>src/blocks/webdav/trunk</module>
+    <module>src/blocks/xmldb/trunk</module>
+    <module>src/blocks/xsp/trunk</module>
+    <module>src/blocks/xsp/trunk/mocks</module>
   </modules>
   <repositories>
     <!-- Apache specific maven repositories available to all blocks -->
