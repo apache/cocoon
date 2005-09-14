@@ -115,7 +115,7 @@ public class LocationAttributes {
     public static String getLocationString(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
         if (src == null) {
-            return LocationImpl.UNKNOWN_STRING;
+            return LocationUtils.UNKNOWN_STRING;
         }
         
         return src + ":" + attrs.getValue(URI, LINE_ATTR) + ":" + attrs.getValue(URI, COL_ATTR);
@@ -130,7 +130,7 @@ public class LocationAttributes {
      */
     public static String getURI(Attributes attrs) {
         String src = attrs.getValue(URI, SRC_ATTR);
-        return src != null ? src : LocationImpl.UNKNOWN_STRING;
+        return src != null ? src : LocationUtils.UNKNOWN_STRING;
     }
     
     /**
@@ -193,7 +193,7 @@ public class LocationAttributes {
     public static String getLocationString(Element elem) {
         Attr srcAttr = elem.getAttributeNodeNS(URI, SRC_ATTR);
         if (srcAttr == null) {
-            return LocationImpl.UNKNOWN_STRING;
+            return LocationUtils.UNKNOWN_STRING;
         }
         
         return srcAttr.getValue() + ":" + elem.getAttributeNS(URI, LINE_ATTR) + ":" + elem.getAttributeNS(URI, COL_ATTR);
@@ -208,7 +208,7 @@ public class LocationAttributes {
      */
     public static String getURI(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, SRC_ATTR);
-        return attr != null ? attr.getValue() : LocationImpl.UNKNOWN_STRING;
+        return attr != null ? attr.getValue() : LocationUtils.UNKNOWN_STRING;
     }
 
     /**
