@@ -116,7 +116,7 @@ public class LocatedException extends NestableException implements LocatableExce
         // Produce a Java-like stacktrace with locations
         StringBuffer buf = message == null ? new StringBuffer() : new StringBuffer(message);
         for (int i = 0; i < locations.size(); i++) {
-            buf.append("\n\tat ").append(locations.get(i));
+            buf.append("\n\tat ").append(LocationUtils.toString((Location)locations.get(i)));
         }
         return buf.toString();
     }
