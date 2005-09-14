@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.util.location;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.TransformerException;
 
@@ -29,7 +33,7 @@ import org.xml.sax.SAXParseException;
  */
 public class LocationUtils {
     
-    private static LocationFinder[] finders = new LocationFinder[] {};
+    private static List finders = new ArrayList();
     
     /**
      * An finder or object locations
@@ -121,6 +125,24 @@ public class LocationUtils {
     /**
      * Add a {@link LocationFinder} to the list of finders that will be queried for an object's
      * location by {@link #getLocation(Object, String)}.
+     * <p>
+     * <b>Important:</b> LocationUtils internally stores a weak reference to the finder. This
+     * avoids creating strong links between the classloader holding this class and the finder's
+     * classloader, which can cause some weird memory leaks if the finder's classloader is to
+     * be reloaded. Therefore, you <em>have</em> to keep a strong reference to the finder in the
+     * calling code, e.g.:
+     * <pre>
+     *   private static LocationUtils.LocationFinder myFinder =
+     *       new LocationUtils.LocationFinder() {
+     *           public Location getLocation(Object obj, String desc) {
+     *               ...
+     *           }
+     *       };
+     *
+     *   static {
+     *       LocationUtils.addFinder(myFinder);
+     *   }
+     * </pre>
      * 
      * @param finder the location finder to add
      */
@@ -129,11 +151,11 @@ public class LocationUtils {
             return;
         }
 
-        synchronized(LocationUtils.class) {
-            int length = finders.length;
-            LocationFinder[] newFinders = new LocationFinder[length + 1];
-            System.arraycopy(finders, 0, newFinders, 0, length);
-            newFinders[length] = finder;
+        synchronized(LocationFinder.class) {
+            // Update a clone of the current finder list to avoid breaking
+            // any iteration occuring in another thread.
+            List newFinders = new ArrayList(finders);
+            newFinders.add(new WeakReference(finder));
             finders = newFinders;
         }
     }
@@ -192,15 +214,27 @@ public class LocationUtils {
             }
         }
 
-        Location result;
-        LocationFinder[] currentFinders = finders;
-        for (int i = 0; i < currentFinders.length; i++) {
-            result = currentFinders[i].getLocation(obj, description);
+        List currentFinders = finders; // Keep the current list
+        int size = currentFinders.size();
+        for (int i = 0; i < size; i++) {
+            WeakReference ref = (WeakReference)currentFinders.get(i);
+            LocationFinder finder = (LocationFinder)ref.get();
+            if (finder == null) {
+                // This finder was garbage collected: update finders
+                synchronized(LocationFinder.class) {
+                    // Update a clone of the current list to avoid breaking current iterations
+                    List newFinders = new ArrayList(finders);
+                    newFinders.remove(ref);
+                    finders = newFinders;
+                }
+            }
+            
+            Location result = finder.getLocation(obj, description);
             if (result != null) {
                 return result;
             }
         }
-        
+
         return Location.UNKNOWN;
     }
 }
