@@ -18,17 +18,20 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.faces.taglib.ValidateRequiredTag;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
+
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.servlet.multipart.RejectedPart;
+
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.ObjectUtils;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -51,7 +54,6 @@ public class Upload extends AbstractWidget
     private Part part;
     private ValidationError validationError;
 
-
     public Upload(UploadDefinition uploadDefinition) {
         super(uploadDefinition);
         this.uploadDefinition = uploadDefinition;
@@ -62,7 +64,7 @@ public class Upload extends AbstractWidget
     }
 
     public WidgetDefinition getDefinition() {
-        return uploadDefinition;
+        return this.uploadDefinition;
     }
 
     public Object getValue() {
@@ -135,7 +137,7 @@ public class Upload extends AbstractWidget
         // No mime type restriction
         return true;
     }
-    
+
     /**
      * Check if the part is oversized, and if yes sets the validation error accordingly
      */
@@ -145,15 +147,12 @@ public class Upload extends AbstractWidget
             RejectedPart rjp = (RejectedPart)this.part;
             int size = (rjp.getContentLength() + 512) / 1024;
             int maxSize = (rjp.getMaxContentLength() + 512) / 1024;
-            setValidationError(new ValidationError(new I18nMessage(
-                    "upload.rejected",
-                    new String[] { String.valueOf(size), String.valueOf(maxSize) },
-                    Constants.I18N_CATALOGUE))
-            );
-            return false;
-        } else {
+            String[] i18nParams = new String[] { String.valueOf(size), String.valueOf(maxSize) };
+            I18nMessage i18nMessage = new I18nMessage("upload.rejected", i18nParams, Constants.I18N_CATALOGUE);
+            setValidationError(new ValidationError(i18nMessage));
             return false;
         }
+        return false;
     }
 
     public boolean validate() {
@@ -164,13 +163,14 @@ public class Upload extends AbstractWidget
 
         if (this.part == null) {
             if (this.uploadDefinition.isRequired()) {
-                setValidationError(new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE)));
+                I18nMessage i18nMessage = new I18nMessage("general.field-required", Constants.I18N_CATALOGUE);
+                setValidationError(new ValidationError(i18nMessage));
             }
         } else if (validateOversize() && validateMimeType()) {
             super.validate();
         }
 
-        this.wasValid = validationError == null;
+        this.wasValid = this.validationError == null;
         return this.wasValid;
     }
 
@@ -179,7 +179,7 @@ public class Upload extends AbstractWidget
      * {@link #validate()} method returned false.
      */
     public ValidationError getValidationError() {
-        return validationError;
+        return this.validationError;
     }
 
     /**
@@ -208,9 +208,9 @@ public class Upload extends AbstractWidget
     public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("id", getRequestParameterName());
-        attrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
-        if (uploadDefinition.getMimeTypes() != null) {
-            attrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());
+        attrs.addCDATAAttribute("required", String.valueOf(this.uploadDefinition.isRequired()));
+        if (this.uploadDefinition.getMimeTypes() != null) {
+            attrs.addCDATAAttribute("mime-types", this.uploadDefinition.getMimeTypes());
         }
         return attrs;
     }
@@ -224,9 +224,9 @@ public class Upload extends AbstractWidget
         }
 
         // validation message element: only present if the value is not valid
-        if (validationError != null) {
+        if (this.validationError != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
-            validationError.generateSaxFragment(contentHandler);
+            this.validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
     }
