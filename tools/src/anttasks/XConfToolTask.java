@@ -267,7 +267,7 @@ public final class XConfToolTask extends MatchingTask {
             log("Skipping: " + filename, Project.MSG_DEBUG);
             return false;
         } else if (testPath != null && testPath.length() > 0 &&
-            XPathAPI.selectNodeList(root, testPath).getLength() != 0) {
+            XPathAPI.eval(root, testPath).bool()) {
             log("Skipping: " + filename, Project.MSG_DEBUG);
             return false;
         } else {
