@@ -120,22 +120,22 @@ final public class ImageReader extends ResourceReader {
         String tmpWidth = par.getParameter("width", "0");
         String tmpHeight = par.getParameter("height", "0");
 
-        scaleColor[0] = par.getParameterAsFloat("scaleRed", -1.0f);
-        scaleColor[1] = par.getParameterAsFloat("scaleGreen", -1.0f);
-        scaleColor[2] = par.getParameterAsFloat("scaleBlue", -1.0f);
-        offsetColor[0] = par.getParameterAsFloat("offsetRed", 0.0f);
-        offsetColor[1] = par.getParameterAsFloat("offsetGreen", 0.0f);
-        offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);
-        quality[0] = par.getParameterAsFloat("quality", 0.9f);
+        this.scaleColor[0] = par.getParameterAsFloat("scaleRed", -1.0f);
+        this.scaleColor[1] = par.getParameterAsFloat("scaleGreen", -1.0f);
+        this.scaleColor[2] = par.getParameterAsFloat("scaleBlue", -1.0f);
+        this.offsetColor[0] = par.getParameterAsFloat("offsetRed", 0.0f);
+        this.offsetColor[1] = par.getParameterAsFloat("offsetGreen", 0.0f);
+        this.offsetColor[2] = par.getParameterAsFloat("offsetBlue", 0.0f);
+        this.quality[0] = par.getParameterAsFloat("quality", 0.9f);
 
         boolean filterColor = false;
         for (int i = 0; i < 3; ++i) {
-            if (scaleColor[i] != -1.0f) {
+            if (this.scaleColor[i] != -1.0f) {
                 filterColor = true;
             } else {
-                scaleColor[i] = 1.0f;
+                this.scaleColor[i] = 1.0f;
             }
-            if (offsetColor[i] != 0.0f) {
+            if (this.offsetColor[i] != 0.0f) {
                 filterColor = true;
             }
         }
@@ -184,7 +184,7 @@ final public class ImageReader extends ResourceReader {
      * @return True if image transform is specified
      */
     private boolean hasTransform() {
-        return width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter || (quality[0] != 0.9f);
+        return width > 0 || height > 0 || null != colorFilter || null != grayscaleFilter || (this.quality[0] != 0.9f);
     }
 
     /**
@@ -286,7 +286,7 @@ final public class ImageReader extends ResourceReader {
                 }
                 JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
                 JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
-                p.setQuality(quality[0], true);
+                p.setQuality(this.quality[0], true);
                 encoder.setJPEGEncodeParam(p);
                 encoder.encode(currentImage);
                 out.flush();
@@ -328,5 +328,11 @@ final public class ImageReader extends ResourceReader {
                 + ":" + this.quality[0]
                 + ":" + ((null == this.grayscaleFilter) ? "color" : "grayscale")
                 + ":" + super.getKey();
+    }
+
+    public void recycle(){
+        super.recycle();
+        this.colorFilter = null;
+        this.grayscaleFilter = null;
     }
 }
