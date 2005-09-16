@@ -35,6 +35,7 @@ import org.apache.cocoon.transformation.helpers.ParametersRecorder;
 import org.apache.cocoon.transformation.helpers.TextRecorder;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -1072,5 +1073,15 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         }
 
         return null;
+    }
+
+    /**
+     * Helper method to get a modifiable attribute set.
+     */
+    protected AttributesImpl getMutableAttributes(Attributes a) {
+        if ( a instanceof AttributesImpl ) {
+            return (AttributesImpl)a;
+        }
+        return new AttributesImpl(a);
     }
 }
