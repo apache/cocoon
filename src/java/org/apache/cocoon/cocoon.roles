@@ -19,6 +19,8 @@
 <!ELEMENT role-list (role+)>
 <!ELEMENT role (hint*)>
 <!ELEMENT hint EMPTY>
+<!ATTLIST role-list cocoon-version CDATA #IMPLIED
+>
 <!ATTLIST role name CDATA #REQUIRED
                shorthand CDATA #REQUIRED
                default-class CDATA #IMPLIED
@@ -28,7 +30,9 @@
 >
 ]>
 
-<role-list>
+<!-- Roles for the cocoon core. The "cocoon-version" attribute is used by the Cocoon build system
+     for shared blocks, that should add their roles here in 2.1 but not in 2.2 -->
+<role-list cocoon-version = '2.2'>
   <role name="org.apache.cocoon.components.classloader.ClassLoaderFactory"
         default-class="org.apache.cocoon.components.classloader.DefaultClassLoaderFactory"/>
 
