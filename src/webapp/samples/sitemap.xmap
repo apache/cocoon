@@ -175,10 +175,16 @@
       <map:parameter name="year" value="1998"/>
       -->
       <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
-      <map:parameter name="lang" value="en"/>
-      <map:parameter name="country" value="US"/>
+      <map:parameter name="lang" value="{request-param:lang}"/>
+      <map:parameter name="country" value="{request-param:country}"/>
     </map:generate>
     <map:transform src="context://stylesheets/system/calendar2html.xslt"/>
+	<!-- to localize the column headers, remove the comments below -->
+	<!--
+    <map:transform type="i18n">
+       <map:parameter name="locale" value="{request-param:lang}-{request-param:country}"/>
+    </map:transform>
+  	-->
     <map:serialize/>
    </map:match>
 

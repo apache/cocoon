@@ -15,10 +15,11 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: calendar2html.xslt,v 1.3 2004/04/09 14:31:48 ugo Exp $ -->
+<!-- CVS $Id$ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
                 xmlns:calendar="http://apache.org/cocoon/calendar/1.0">
 
   <xsl:template match="/">
@@ -60,6 +61,10 @@
   padding-bottom: 2px;
 }
 
+.calendar .weekend {
+  background-color: #c0c0c0;
+}
+
 .calendar .daytitle {
   position: relative;
   left: 0;
@@ -91,6 +96,22 @@ td {
         </style>
       </head>
       <body>
+        <p>
+        This sample shows a calendar that can be filled with events. The calendar is localized, try one of the
+        following examples:
+        </p>
+        <p>
+        <a href="cal?lang=en&amp;country=US">US English</a><br/>
+        <a href="cal?lang=en&amp;country=UK">UK English</a><br/>
+        <a href="cal?lang=nl">Dutch</a><br/>
+        <a href="cal?lang=fr">French</a><br/>
+        <a href="cal?lang=el">Greek</a>
+        </p>
+        <p>Note: the column headers and date format are not localized, you can do that by simply inserting the appropriate
+          i18n tags and transformer. Check the sample sources (sitemap and XSLT style sheet) and uncomment
+          the lines.
+        </p>
+        <hr/>
         <xsl:apply-templates/>
       </body>
     </html>
@@ -104,13 +125,21 @@ td {
         </caption>
         <thead>
           <tr>
-            <th>Sunday</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
+            <xsl:for-each select="calendar:week[2]/calendar:day">
+              <th>
+                <xsl:if test="@weekday = 'Saturday' or @weekday='Sunday'">
+                    <xsl:attribute name="class">weekend</xsl:attribute>
+                </xsl:if>
+                <!-- uncomment the lines below for i18n localization -->
+                <!-- Note that you also need to provide the appropriate message files
+                <i18n:text>
+                -->
+                <xsl:value-of select="@weekday"/>
+                <!--
+                </i18n:text>
+                -->
+              </th>
+            </xsl:for-each>
           </tr>
         </thead>
         <tbody>
@@ -119,7 +148,7 @@ td {
       </table>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="calendar:week">
     <tr>
       <xsl:if test="position() = 1">
@@ -146,6 +175,9 @@ td {
       </xsl:if>
       <xsl:for-each select="calendar:day">
         <td>
+          <xsl:if test="@weekday = 'Saturday' or @weekday = 'Sunday'">
+            <xsl:attribute name="class">weekend</xsl:attribute>
+          </xsl:if>
           <div class="daytitle"><xsl:value-of select="@number"/></div>
           <p><xsl:value-of select="@date"/></p>
         </td>
