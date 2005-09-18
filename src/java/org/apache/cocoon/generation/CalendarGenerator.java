@@ -55,10 +55,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *     year="2004" month="January" prevMonth="12" prevYear="2003"
  *     nextMonth="02" nextYear="2004"&gt;
  *   &lt;calendar:week number="1"&gt;
- *     &lt;calendar:day number="1" date="January 1, 2004"/&gt;
- *     &lt;calendar:day number="2" date="January 2, 2004"/&gt;
- *     &lt;calendar:day number="3" date="January 3, 2004"/&gt;
- *     &lt;calendar:day number="4" date="January 4, 2004"/&gt;
+ *     &lt;calendar:day number="1" weekday="THURSDAY" date="January 1, 2004"/&gt;
+ *     &lt;calendar:day number="2" weekday="FRIDAY" date="January 2, 2004"/&gt;
+ *     &lt;calendar:day number="3" weekday="SATURDAY" date="January 3, 2004"/&gt;
+ *     &lt;calendar:day number="4" weekday="SUNDAY" date="January 4, 2004"/&gt;
  *   &lt;/calendar:week&gt;
  *   ...
  * &lt;/calendar:calendar&gt;
@@ -106,6 +106,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     protected static final String YEAR_ATTR_NAME       = "year";
     protected static final String DATE_ATTR_NAME       = "date";
     protected static final String NUMBER_ATTR_NAME     = "number";
+	protected static final String WEEKDAY_ATTR_NAME    = "weekday";
     protected static final String PREV_MONTH_ATTR_NAME = "prevMonth";
     protected static final String PREV_YEAR_ATTR_NAME  = "prevYear";
     protected static final String NEXT_MONTH_ATTR_NAME = "nextMonth";
@@ -141,6 +142,16 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     /** Do we need to pad out the first and last weeks? */
     protected boolean padWeeks;
     
+	/* Add the day of the week 
+	 * 
+	 * since SUNDAY=1, we start with a dummy
+	 * entry. 
+	 */
+	protected String weekdays[] = { "",
+			"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", 
+			"Friday", "Saturday"
+	};
+	
     /**
      * Set the request parameters. Must be called before the generate method.
      *
@@ -241,6 +252,8 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                     attributes.clear();
                     attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA",
                             String.valueOf(previous.get(Calendar.DAY_OF_MONTH)));
+					attributes.addAttribute("", WEEKDAY_ATTR_NAME, WEEKDAY_ATTR_NAME, "CDATA",
+							weekdays[previous.get(Calendar.DAY_OF_WEEK)]);
                     attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME, "CDATA",
                             dateFormatter.format(previous.getTime()));
                     this.contentHandler.startElement(URI, DAY_NODE_NAME,
@@ -263,6 +276,8 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
             attributes.clear();
             attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA",
                     String.valueOf(start.get(Calendar.DAY_OF_MONTH)));
+			attributes.addAttribute("", WEEKDAY_ATTR_NAME, WEEKDAY_ATTR_NAME, "CDATA",
+					weekdays[start.get(Calendar.DAY_OF_WEEK)]);
             attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME, "CDATA",
                     dateFormatter.format(start.getTime()));
             this.contentHandler.startElement(URI, DAY_NODE_NAME,
@@ -283,6 +298,8 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                 attributes.clear();
                 attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA",
                         String.valueOf(end.get(Calendar.DAY_OF_MONTH)));
+				attributes.addAttribute("", WEEKDAY_ATTR_NAME, WEEKDAY_ATTR_NAME, "CDATA",
+						weekdays[end.get(Calendar.DAY_OF_WEEK)]);
                 attributes.addAttribute("", DATE_ATTR_NAME, DATE_ATTR_NAME, "CDATA",
                         dateFormatter.format(end.getTime()));
                 this.contentHandler.startElement(URI, DAY_NODE_NAME,
