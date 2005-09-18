@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="AG" type="add" fixes-bug="31600" due-to="Frans Englich" due-to-email="frans.englich@telia.com">
+      Caching support for XInclude Transformer
+    </action>
     <action dev="SW" type="update">
       When the upload size exceeds the configured limit, a RejectedPart is associated to the request
       rather than throwing a exception at the servlet level. This allows the application to handle
