@@ -197,7 +197,7 @@
 
   <changes>
   <release version="@version@" date="@date@">
-    <action dev="AG" type="add" fixes-bug="31600" due-to="Frans Englich" due-to-email="frans.englich@telia.com">
+    <action dev="AG" type="add" fixes-bug="31600" due-to="Jason Johnston" due-to-email="apache.bugs@lojjic.net">
       Caching support for XInclude Transformer
     </action>
     <action dev="SW" type="update">
