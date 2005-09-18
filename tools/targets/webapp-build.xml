@@ -54,7 +54,6 @@
     <copy todir="${build.webapp.lib}">
       <fileset dir="${lib}/endorsed">
         <include name="*.jar"/>
-        <exclude name="servlet*.jar"/>
       </fileset>
       <fileset dir="${lib.core}">
         <include name="*.jar"/>
@@ -67,7 +66,6 @@
       -->
       <fileset dir="${lib.local}">
         <include name="*.jar"/>
-        <exclude name="servlet*.jar"/>
       </fileset>
     </copy>
 
