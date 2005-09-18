@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable; 
 import java.net.MalformedURLException;
 import java.util.Map;
 
@@ -30,7 +31,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent; 
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.MultiSourceValidity; 
 import org.apache.cocoon.components.xpointer.XPointer;
 import org.apache.cocoon.components.xpointer.XPointerContext;
 import org.apache.cocoon.components.xpointer.parser.ParseException;
@@ -43,6 +46,7 @@ import org.apache.cocoon.xml.XMLBaseSupport;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity; 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -64,9 +68,9 @@ import org.xml.sax.ext.LexicalHandler;
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id$
+ * @version SVN $Id$
  */
-public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
+public class XIncludeTransformer extends AbstractTransformer implements Serviceable, CacheableProcessingComponent { 
     protected SourceResolver resolver;
     protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
@@ -79,11 +83,16 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     public static final String XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE = "href";
     public static final String XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE = "parse";
 
+    private static final String XINCLUDE_CACHE_KEY = "XInclude"; 
+
+    /** The {@link SourceValidity} instance associated with this request. */ 
+    private MultiSourceValidity validity; 
 
     public void setup(SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
         this.resolver = resolver;
-        this.xIncludePipe = new XIncludePipe();
+        this.validity = new MultiSourceValidity(resolver, MultiSourceValidity.CHECK_ALWAYS); 
+        this.xIncludePipe = new XIncludePipe(); 
         this.xIncludePipe.enableLogging(getLogger());
         this.xIncludePipe.init(null);
         super.setContentHandler(xIncludePipe);
@@ -106,10 +115,21 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         this.manager = manager;
     }
 
+    /** Key to be used for caching */ 
+    public Serializable getKey() { 
+        return XINCLUDE_CACHE_KEY; 
+    } 
+
+    /** Get the validity for this transform */ 
+    public SourceValidity getValidity() { 
+        return this.validity; 
+    } 
+
     public void recycle()
     {
         // Reset all variables to initial state.
         this.resolver = null;
+        this.validity = null; 
         this.xIncludePipe = null;
         super.recycle();
     }
@@ -158,6 +178,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             return href;
         }
 
+        public void endDocument() throws SAXException { 
+            // We won't be getting any more sources so mark the MultiSourceValidity as finished. 
+            validity.close(); 
+            super.endDocument(); 
+        } 
+
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
             if (xIncludeLevel == 1 && useFallback && XINCLUDE_NAMESPACE_URI.equals(uri) && XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
                 fallbackLevel++;
@@ -172,7 +198,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                 return;
             } else if (xIncludeLevel > 0 && fallbackLevel > 0) {
                 fallbackLevel++;
-            } 
+            }
 
             xmlBaseSupport.startElement(uri, name, raw, attr);
             if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
@@ -367,6 +393,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     getLogger().debug("URL: " + url.getURI() + "\nSuffix: " + suffix);
                 }
 
+                // add the source to the SourceValidity 
+                validity.addSource(url); 
+ 
                 // check loop inclusion
                 String canonicURI = url.getURI() + (suffix.length() > 0 ? "#" + suffix: "");
                 if (isLoopInclusion(canonicURI))
@@ -453,7 +482,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             }
             return false;
         }
-        
+
         private String getLocation() {
             if (this.locator == null) {
                 return "unknown location";
