@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Main-Class: org.apache.cocoon.Main
-Specification-Vendor: The Apache Software Fundation
-Implementation-Vendor: The Apache Software Fundation
+Specification-Vendor: The Apache Software Foundation
+Implementation-Vendor: The Apache Software Foundation
 Bundle-Name: cocoon
 Bundle-SymbolicName: org.apache.cocoon:cocoon:1.0.0
 Bundle-Version: 1.0.0
