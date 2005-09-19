@@ -86,6 +86,7 @@
     <module>src/blocks/tour/trunk</module>
     <module>src/blocks/velocity/trunk</module>
     <module>src/blocks/web3/trunk</module>
+    <module>src/blocks/web3/trunk/mocks</module>
     <module>src/blocks/webdav/trunk</module>
     <module>src/blocks/xmldb/trunk</module>
     <module>src/blocks/xsp/trunk</module>
