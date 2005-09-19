@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="35162" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      XSP: EclipseJavaCompiler chokes on warnings. Changed to errors.
+    </action>
     <action dev="JH" type="fix" fixes-bug="33318" due-to="Dan Durkin" due-to-email="ddurkin@scilearn.com">
       CForms: Fixed JavaScript error in forms-lib.js when using keyword <code>undefined</code> and Mac IE 5.0.
     </action>

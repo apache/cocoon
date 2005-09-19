@@ -362,12 +362,12 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         final ICompilerRequestor requestor = new ICompilerRequestor() {
                 public void acceptResult(CompilationResult result) {
                     try {
-                        if (result.hasProblems()) {
-                            IProblem[] problems = result.getProblems();
-                            for (int i = 0; i < problems.length; i++) {
-                                IProblem problem = problems[i];
-                                String name = new String(problems[i].getOriginatingFileName());
-                                handleError(name, problem.getSourceLineNumber(), -1, problem.getMessage());
+                        if (result.hasErrors()) {
+                            IProblem[] errors = result.getErrors();
+                            for (int i = 0; i < errors.length; i++) {
+                                IProblem error = errors[i];
+                                String name = new String(errors[i].getOriginatingFileName());
+                                handleError(name, error.getSourceLineNumber(), -1, error.getMessage());
                             }
                         } else {
                             ClassFile[] classFiles = result.getClassFiles();
