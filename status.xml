@@ -198,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="33318" due-to="Dan Durkin" due-to-email="ddurkin@scilearn.com">
+      CForms: Fixed JavaScript error in forms-lib.js when using keyword <code>undefined</code> and Mac IE 5.0.
+    </action>
     <action dev="CZ" type="add">
       Portal block: Remove aspect datas from coplet datas. Attributes are now used instead.
     </action>
