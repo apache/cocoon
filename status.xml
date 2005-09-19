@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="33318" due-to="Dan Durkin" due-to-email="ddurkin@scilearn.com">
+      CForms: Fixed JavaScript error in forms-lib.js when using keyword <code>undefined</code> and Mac IE 5.0.
+    </action>
     <action dev="AG" type="add" fixes-bug="31600" due-to="Jason Johnston" due-to-email="apache.bugs@lojjic.net">
       Caching support for XInclude Transformer
     </action>
