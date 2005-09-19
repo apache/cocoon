@@ -28,6 +28,7 @@
   <url>http://cocoon.apache.org</url>
   <modules>
     <module>core</module>
+    <module>core/test-core</module>
     <module>webapp</module>
     <module>src/blocks/apples/trunk</module>
     <module>src/blocks/asciiart/trunk</module>
