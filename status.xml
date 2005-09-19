@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="update" fixes-bug="35475" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
+      CForms: Improved error message for wrong content type on upload.
+    </action>
     <action dev="JH" type="fix" fixes-bug="35162" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
       XSP: EclipseJavaCompiler chokes on warnings. Changed to errors.
     </action>
