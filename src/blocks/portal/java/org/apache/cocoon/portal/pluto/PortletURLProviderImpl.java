@@ -185,7 +185,7 @@ public class PortletURLProviderImpl
      * @see org.apache.pluto.services.information.PortletURLProvider#setSecure()
      */
     public void setSecure() {
-        this.secure =  new Boolean(true);
+        this.secure = Boolean.TRUE;
     }
 
     /**
