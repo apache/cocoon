@@ -570,6 +570,12 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="update" fixes-bug="32994" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+      Portal Block: Provide sample for caching uri coplet adapter (Gallery coplet).
+    </action>
+    <action dev="CZ" type="fix">
+      Portal Block: Add missing interface CopletInstanceEvent to FullScreenCopletEvent.
+    </action>
     <action dev="AG" type="add" fixes-bug="31600" due-to="Jason Johnston" due-to-email="apache.bugs@lojjic.net">
       Caching support for XInclude Transformer
     </action>
