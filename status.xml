@@ -197,6 +197,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update" fixes-bug="32994" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+      Portal Block: Provide sample for caching uri coplet adapter (Gallery coplet).
+    </action>
+    <action dev="CZ" type="fix">
+      Portal Block: Add missing interface CopletInstanceEvent to FullScreenCopletEvent.
+    </action>
     <action dev="JH" type="update" fixes-bug="35475" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
       CForms: Improved error message for wrong content type on upload.
     </action>
