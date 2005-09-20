@@ -36,7 +36,8 @@ public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
         FlowNode node = new FlowNode(language);
 
         if ( !this.treeBuilder.registerNode("flow", node) ) {
-            throw new ConfigurationException("Only one flow node per sitemap allowed.");
+            throw new ConfigurationException("Only one <map:flow> is allowed in a sitemap. Another one is declared at " +
+                    config.getLocation());
         }
         this.treeBuilder.setupNode(node, config);
 

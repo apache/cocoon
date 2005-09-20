@@ -73,7 +73,9 @@ public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
 
         // Register node to allow lookup by other nodes
         if ( !this.treeBuilder.registerNode(PREFIX + this.name, node) ) {
-            throw new ConfigurationException("There can only be one category with the name: " + this.name);
+            throw new ConfigurationException("Only one <map:" + this.name +
+                    "> is allowed in a sitemap. Another one is declared at " +
+                    config.getLocation());
         }
 
         return node;
