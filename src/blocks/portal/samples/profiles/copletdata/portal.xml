@@ -196,7 +196,11 @@
      -->
    <coplet-data id="Gallery" name="standard">
       <title>Picture Gallery</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+        <name>buffer</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
       <attribute>
          <name>uri</name>
          <value xsi:type="java:java.lang.String">cocoon:/coplets/gallery/browser</value>
@@ -216,7 +220,11 @@
    </coplet-data>
    <coplet-data id="GalleryViewer" name="standard">
       <title>Gallery Viewer</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+        <name>buffer</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
       <attribute>
          <name>uri</name>
          <value xsi:type="java:java.lang.String">cocoon:/coplets/gallery/viewer</value>

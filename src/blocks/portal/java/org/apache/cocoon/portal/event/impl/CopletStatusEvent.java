@@ -17,6 +17,7 @@ package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.ComparableEvent;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
 
 /**
@@ -28,7 +29,7 @@ import org.apache.cocoon.portal.event.Event;
  * @version CVS $Id$
  */
 public abstract class CopletStatusEvent
-    implements Event, ComparableEvent {
+    implements Event, ComparableEvent, CopletInstanceEvent {
 
     protected CopletInstanceData coplet;
 
@@ -45,6 +46,13 @@ public abstract class CopletStatusEvent
             return ((CopletStatusEvent)event).getCopletInstanceData().getId().equals( this.coplet.getId() );
         }
         return false;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.ActionEvent#getTarget()
+     */
+    public Object getTarget() {
+        return this.coplet;
     }
 
 }
