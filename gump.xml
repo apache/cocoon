@@ -1261,7 +1261,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-midi" status="unstable" dir="src/blocks/midi">
+  <project name="cocoon-block-midi" status="stable" dir="src/blocks/midi">
     <package>org.apache.cocoon</package>
 
     <description>The MIDI block provides components to generate XMidi (an XML 
