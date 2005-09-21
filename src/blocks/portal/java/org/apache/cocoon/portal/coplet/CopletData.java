@@ -92,8 +92,8 @@ implements DeltaApplicable {
         this.copletBaseData = copletBaseData;
     }
 
-    public void removeAttribute(String key) {
-        this.attributes.remove(key);
+    public Object removeAttribute(String key) {
+        return this.attributes.remove(key);
     }
     
     public Object getAttribute(String key) {

@@ -81,8 +81,8 @@ public final class CopletInstanceData
         this.attributes.put(key, value);
     }
     
-    public void removeAttribute(String key) {
-        this.attributes.remove(key);
+    public Object removeAttribute(String key) {
+        return this.attributes.remove(key);
     }
     
     public Map getAttributes() {
@@ -115,8 +115,8 @@ public final class CopletInstanceData
         this.temporaryAttributes.put(key, value);
     }
     
-    public void removeTemporaryAttribute(String key) {
-        this.temporaryAttributes.remove(key);
+    public Object removeTemporaryAttribute(String key) {
+        return this.temporaryAttributes.remove(key);
     }
     
     public Map getTemporaryAttributes() {
