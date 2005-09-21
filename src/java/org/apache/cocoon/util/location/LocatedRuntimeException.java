@@ -62,7 +62,8 @@ public class LocatedRuntimeException extends NestableRuntimeException implements
             // Rethrow the cause
             throw lreCause;
         }
-        
+
+        LocatedException.ensureCauseChainIsSet(cause);
         LocatedException.addCauseLocations(this, cause);
         addLocation(location);
     }
