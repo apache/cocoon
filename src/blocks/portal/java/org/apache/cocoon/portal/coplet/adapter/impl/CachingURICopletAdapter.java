@@ -164,17 +164,19 @@ public class CachingURICopletAdapter
 
                 super.streamContent(coplet, uri, bc);
                 data = bc.getSAXFragment();
-                if ( cacheGlobal ) {
-                    CachedResponse response = new CachedResponse((SourceValidity[])null, (byte[])data);
-                    try {
-                        final String key = this.getCacheKey(coplet, uri);
-                        this.cache.store(key, response);
-                    } catch (ProcessingException pe) {
-                        // we ignore this
-                        this.getLogger().warn("Exception during storing response into cache.", pe);
+                if (coplet.removeTemporaryAttribute(DO_NOT_CACHE) == null) {
+                    if ( cacheGlobal ) {
+                        CachedResponse response = new CachedResponse((SourceValidity[])null, (byte[])data);
+                        try {
+                            final String key = this.getCacheKey(coplet, uri);
+                            this.cache.store(key, response);
+                        } catch (ProcessingException pe) {
+                            // we ignore this
+                            this.getLogger().warn("Exception during storing response into cache.", pe);
+                        }
+                    } else {
+                        coplet.setTemporaryAttribute(CACHE, data);
                     }
-                } else {
-                    coplet.setTemporaryAttribute(CACHE, data);
                 }
             }
         }
