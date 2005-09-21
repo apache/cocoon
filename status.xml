@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="update" fixes-bug="28056">
+      Midi Block: Marked as stable.
+    </action>
     <action dev="CZ" type="update" fixes-bug="32994" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
       Portal Block: Provide sample for caching uri coplet adapter (Gallery coplet).
     </action>
