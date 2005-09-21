@@ -52,6 +52,7 @@ import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -607,32 +608,40 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
     throws SAXException {
         try {
             super.endDocument();
-        } catch(SAXException se) {
-            // Rethrow
-            throw se;
         } catch(Exception e) {
+            Throwable realEx = e;
+            
+            // Did we had an exception reported to the error listener?
             if (transformerException != null) {
-                // Ignore the fake RuntimeException sent by Xalan
+                // this is the real exception
                 Location loc = LocationUtils.getLocation(transformerException);
-                if (loc == null) {
-                    // No location: if it's just a wrapper, consider only the wrapped exception.
-                    Throwable realEx = transformerException.getCause();
-                    if (realEx == null) realEx = transformerException;
-
-                    if (realEx instanceof SAXException) {
-                        // Rethrow
-                        throw (SAXException)realEx;
-                    } else {
-                        // Wrap in a SAXException
-                        throw new SAXException(transformerException);
+                if (LocationUtils.isUnknown(loc)) {
+                    // No location: if it's just a wrapper, consider only the wrapped exception
+                    realEx = transformerException.getCause();
+                    if (realEx == null) {
+                        // no cause: keep the transformer exception
+                        realEx = transformerException;
                     }
-                } else {
-                    throw new SAXException(transformerException);
                 }
-            } else {
-                // It's not a fake exception
-                throw new SAXException(e);
             }
+            
+            if (realEx instanceof RuntimeException) {
+                throw (RuntimeException)realEx;
+            }
+            
+            if (realEx instanceof SAXException) {
+                throw (SAXException)realEx;
+            }
+            
+            if (realEx instanceof Exception) {
+                throw new SAXException((Exception)realEx);
+            }
+        
+            if (realEx instanceof Error) {
+                throw (Error)realEx;
+            }
+            
+            throw new NestableRuntimeException(realEx);
         }
         this.finishedDocument = true;
     }
