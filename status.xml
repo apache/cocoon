@@ -198,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="update" fixes-bug="28056">
+      Midi Block: Marked as stable.
+    </action>
     <action dev="JH" type="update" fixes-bug="35475" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
       CForms: Improved error message for wrong content type on upload.
     </action>
