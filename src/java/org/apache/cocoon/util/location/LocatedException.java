@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.util.location;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,8 +49,41 @@ public class LocatedException extends NestableException implements LocatableExce
     
     public LocatedException(String message, Throwable cause, Location location) {
         super(message, cause);
+        ensureCauseChainIsSet(cause);
         addCauseLocations(this, cause);
         addLocation(location);
+    }
+    
+    private static Method INIT_CAUSE_METHOD = null;
+    static {
+        try {
+            INIT_CAUSE_METHOD = Throwable.class.getMethod("initCause", new Class[] { Throwable.class} );
+        } catch(Exception e) {
+            // JDK < 1.4: ignore
+        }
+    }
+    
+    /**
+     * Crawl the cause chain and ensure causes are properly set using "initCause" on JDK >= 1.4.
+     * This is needed because some exceptions (e.g. SAXException) don't have a getCause() that is
+     * used to print stacktraces.
+     */
+    static void ensureCauseChainIsSet(Throwable thr) {
+        if (INIT_CAUSE_METHOD == null)
+            return;
+        
+        // Loop either until null or encountering exceptions that use this method.
+        while(thr != null && !(thr instanceof LocatedRuntimeException) && !(thr instanceof LocatedException)) {
+            Throwable parent = ExceptionUtils.getCause(thr);
+            if (parent != null) {
+                try {
+                    INIT_CAUSE_METHOD.invoke(thr, new Object[]{ parent });
+                } catch(Exception e) {
+                    // unlikely, so ignore
+                }
+            }
+            thr = parent;
+        }
     }
     
     /**
