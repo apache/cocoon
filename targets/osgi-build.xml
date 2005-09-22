@@ -53,11 +53,15 @@
   
   <target name="osgi.compile-osgi-servlet" depends="osgi.init, compile-core">
     <path id="osgi.osgi-servlet.classpath">
-      <fileset dir="./lib/core">
+      <fileset dir="${lib.core}">
         <include name="knopflerfish-*.jar"/>
       </fileset>      
       <!-- include Cocoon core -->
       <dirset dir="${build.dest}"/>
+      <pathelement location="${lib.core}/avalon-framework-api-4.3.jar"/>
+      <pathelement location="${lib.core}/avalon-framework-impl-4.3.jar"/>
+      <pathelement location="${lib.core}/commons-lang-2.1.jar"/>
+      <pathelement location="${lib.core}/excalibur-logger-2.1.jar"/>
       <pathelement location="${lib.core}/servlet-2_3.jar"/>
     </path>    
     
