@@ -29,7 +29,7 @@ document
   | /* empty */
   ;
 
-// each row seprated with one break
+// each row separated with one break
 // and optional last space
 rows
   : rows Break row
