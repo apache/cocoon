@@ -600,11 +600,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     thrScope.setLock(true);
                     ScriptRuntime.call(context, fun, thrScope, new Object[0], thrScope);
                 } catch (JavaScriptException ex) {
-                    throw locationTracker.getException("Calling function " + funName, ex);
+                    throw locationTracker.getException("Error calling flowscript function " + funName, ex);
                 } catch (EcmaError ee) {
-                    throw locationTracker.getException("Calling function " + funName, ee);
+                    throw locationTracker.getException("Error calling function " + funName, ee);
                 } catch (WrappedException ee) {
-                    throw locationTracker.getException("Calling function " + funName, ee);
+                    throw locationTracker.getException("Error calling function " + funName, ee);
                 }
             } finally {
                 thrScope.setLock(false);
@@ -680,7 +680,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     ScriptableObject.callMethod(cocoon,
                                                 "handleContinuation", args);
                 } catch (JavaScriptException ex) {
-                    throw locationTracker.getException("Calling continuation", ex);
+                    throw locationTracker.getException("Error calling continuation", ex);
 //                    EvaluatorException ee = Context.reportRuntimeError(
 //                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
 //                                                                                                    ex.getMessage()));
@@ -691,7 +691,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 //                    throw new CascadingRuntimeException(ee.getMessage(),
 //                                                        unwrapped);
                 } catch (EcmaError ee) {
-                    throw locationTracker.getException("Calling continuation", ee);
+                    throw locationTracker.getException("Error calling continuation", ee);
 //                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
 //                    if (ee.getSourceName() != null) {
 //                        Context.reportRuntimeError(msg, ee.getSourceName(),
