@@ -17,11 +17,15 @@ package org.apache.cocoon.service.servlet.impl;
 
 import java.util.Hashtable;
 import java.net.URL;
-import java.io.InputStream;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cocoon.servlet.CocoonServlet;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.core.CoreUtil;
+import org.apache.cocoon.core.osgi.OSGiBootstrapEnvironment;
+import org.apache.cocoon.environment.Context;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -32,8 +36,6 @@ import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
-import org.osgi.service.log.LogService;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Activator which register a Cocoon servlet
@@ -42,23 +44,37 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator implements BundleActivator {
 
     static BundleContext bc;
-    static ServiceTracker logTracker;
     static final String  SERVLET_ALIAS = "/";     // the http server root
     static final String  SITEMAP = "sitemap";
 
     private Hashtable registrations = new Hashtable();
     private Bundle sitemapBundle;
-    
+    private ClassLoader classLoader = getClass().getClassLoader();;
+    private String contextURL;
+    private Context environmentContext;
+    private Logger logger;
+    private CoreUtil coreUtil;
+
     public void start(BundleContext bc) throws BundleException {
 
         this.bc  = bc;
-        this.logTracker = new ServiceTracker(bc, LogService.class.getName(), null);
-        this.logTracker.open();
+        try {
+            BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, this.bc);
+            env.log("OSGiBootstrapEnvironment created");
+            this.coreUtil = new CoreUtil(env);
+            env.log("CoreUtil created");
+            this.contextURL = env.getContextURL();
+            this.environmentContext = env.getEnvironmentContext();
+            this.logger = env.getBootstrapLogger(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BundleException("Failed to create core util", e);
+        }
 
         // FIXME: Add a BundleListener to detect if a sitemap bundle
         // is installed, updated or uninstalled.
         this.sitemapBundle = getSitemapBundle();
-        ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "set sitemap bundle " + this.sitemapBundle);
+        this.logger.info("set sitemap bundle " + this.sitemapBundle);
 
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {
@@ -86,8 +102,7 @@ public class Activator implements BundleActivator {
                                                          srl[i]));
             }
         } catch (Exception e) {
-            ((LogService)this.logTracker.getService()).log(LogService.LOG_ERROR,
-                                                           "Failed to set up listener for http service", e);
+            this.logger.info("Failed to set up listener for http service", e);
         }
     }
   
@@ -99,13 +114,13 @@ public class Activator implements BundleActivator {
         for (int i = 0; i < bundles.length; i++) {
             Bundle bundle = bundles[i];
             try {
-                ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "checking bundle " + bundle + " name=" + bundle.getHeaders().get(Constants.BUNDLE_NAME) + " category=" + bundle.getHeaders().get(Constants.BUNDLE_CATEGORY) + " state=" + bundle.getState());
+                this.logger.info("checking bundle " + bundle + " name=" + bundle.getHeaders().get(Constants.BUNDLE_NAME) + " category=" + bundle.getHeaders().get(Constants.BUNDLE_CATEGORY) + " state=" + bundle.getState());
                 if ((bundle.getState() == Bundle.INSTALLED ||
                      bundle.getState() == Bundle.RESOLVED ||
                      bundle.getState() == Bundle.ACTIVE)) {
-                    ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "ok state");
+                    this.logger.info("ok state");
                     if (SITEMAP.equals(bundle.getHeaders().get(Constants.BUNDLE_CATEGORY))) {
-                        ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "sitemap");
+                        this.logger.info("sitemap");
                         return bundle;
                     }
                 }
@@ -123,14 +138,14 @@ public class Activator implements BundleActivator {
             return; // already done
         }
         
-        ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "set root for " + sr);
+        this.logger.info("set root for " + sr);
 
         HttpService http = (HttpService)bc.getService(sr);
 
         HttpContext context = new HttpContext() {
                 public boolean handleSecurity(HttpServletRequest  request,
                                               HttpServletResponse response) 
-                    throws java.io.IOException {
+                    throws IOException {
                     return true;
                 }
         
@@ -151,12 +166,19 @@ public class Activator implements BundleActivator {
             Hashtable parameters = new Hashtable();
             parameters.put("init-classloader", "true");
             parameters.put("work-directory", "work");
-            http.registerServlet(SERVLET_ALIAS, new CocoonServlet(), parameters, context);
+            http.registerServlet(SERVLET_ALIAS,
+                                 new BlocksServlet(),
+//                                   new CocoonServlet(this.classLoader,
+//                                                     this.contextURL,
+//                                                     this.environmentContext,
+//                                                     this.logger,
+//                                                     this.coreUtil),
+                                 parameters,
+                                 context);
 
             registrations.put(sr, context);
         } catch (Exception e) {
-            ((LogService)this.logTracker.getService()).log(LogService.LOG_ERROR,
-                                                           "Failed to register resource", e);
+            this.logger.info("Failed to register resource", e);
         }
     } 
 
@@ -165,7 +187,7 @@ public class Activator implements BundleActivator {
             return; // nothing to do
         }
 
-        ((LogService)this.logTracker.getService()).log(LogService.LOG_INFO, "unset root for " + sr);
+        this.logger.info("unset root for " + sr);
     
         HttpService http = (HttpService)bc.getService(sr);
     
@@ -175,5 +197,4 @@ public class Activator implements BundleActivator {
         }
         registrations.remove(sr);
     }
-
 }
