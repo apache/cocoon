@@ -40,14 +40,14 @@ import org.osgi.service.log.LogService;
 public class OSGiBootstrapEnvironment
     implements BootstrapEnvironment {
     
-    private final String configuration = "/WEB-INF/block.xconf";
+    private final String configuration = "/WEB-INF/block.xml";
     private final ClassLoader classLoader;
     public Logger logger = null;
     private final String contextPath;
     private final Context environmentContext;
 
     public OSGiBootstrapEnvironment(ClassLoader classLoader, BundleContext bc)
-	throws IOException {
+        throws Exception {
         this.classLoader = classLoader;
 
         // Create a logger manager that delegates to OSGi
@@ -55,12 +55,15 @@ public class OSGiBootstrapEnvironment
         LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
         this.logger = logManager.getDefaultLogger();
 
-	Bundle bundle = getSitemapBundle(bc, this.logger); //bc.getBundle();
-	// Try to figure out the path of the root from that of /WEB-INF/block.xconf
-        String path = bundle.getResource(this.configuration).toString();
-	if (path == null)
-	    throw new FileNotFoundException("Unable to get resource '/WEB-INF/block.xconf'.");
-	path = path.substring(0, path.length() - this.configuration.length() - 1);
+        Bundle bundle = getSitemapBundle(bc, this.logger); //bc.getBundle();
+        if (bundle == null)
+            throw new Exception("No sitemap bundle");
+        // Try to figure out the path of the root from that of /WEB-INF/block.xml
+        URL pathURL = bundle.getResource(this.configuration);
+        if (pathURL == null)
+            throw new FileNotFoundException("Unable to get resource '/WEB-INF/block.xml' from bundle ." + bundle);
+        String path = pathURL.toString();
+        path = path.substring(0, path.length() - this.configuration.length() - 1);
         this.contextPath = path;
 
         this.environmentContext = new OSGiContext(bundle);
@@ -167,7 +170,7 @@ public class OSGiBootstrapEnvironment
     }
 
     private Bundle getSitemapBundle(BundleContext bc, Logger log) {
-	String SITEMAP = "sitemap";
+        String SITEMAP = "sitemap";
         Bundle[] bundles = bc.getBundles();
         for (int i = 0; i < bundles.length; i++) {
             Bundle bundle = bundles[i];
@@ -192,55 +195,56 @@ public class OSGiBootstrapEnvironment
 
     public class OSGiContext extends AbstractContext {
 
-	Bundle bundle;
-	private Hashtable attributes = new Hashtable();
-	private Hashtable initparameters = new Hashtable();
+        Bundle bundle;
+        private Hashtable attributes = new Hashtable();
+        private Hashtable initparameters = new Hashtable();
 
-	public OSGiContext(Bundle bundle) {
-	    this.bundle = bundle;
+        public OSGiContext(Bundle bundle) {
+            this.bundle = bundle;
             this.initparameters.put("init-classloader", "true");
             this.initparameters.put("work-directory", "work");
-	}
+        }
 
-	public Object getAttribute(String name) {
-	    return attributes.get(name);
-	}
+        public Object getAttribute(String name) {
+            return attributes.get(name);
+        }
 
-	public void setAttribute(String name, Object value) {
-	    attributes.put(name, value);
-	}
+        public void setAttribute(String name, Object value) {
+            attributes.put(name, value);
+        }
 
-	public void removeAttribute(String name) {
-	    attributes.remove(name);
-	}
+        public void removeAttribute(String name) {
+            attributes.remove(name);
+        }
 
-	public Enumeration getAttributeNames() {
-	    return attributes.keys();
-	}
+        public Enumeration getAttributeNames() {
+            return attributes.keys();
+        }
 
-	public URL getResource(String path) throws MalformedURLException {
-	    return this.bundle.getResource(path);
-	}
+        public URL getResource(String path) throws MalformedURLException {
+            return this.bundle.getResource(path);
+        }
 
-	public String getRealPath(String path) {
-	    try {
-		return getResource(path).toString();
-	    } catch (MalformedURLException me) {
-		// Will not happen, Bundle getResource does not throw MalformedURLException
-		return null;
-	    }
-	}
+        public String getRealPath(String path) {
+            try {
+                URL pathURL = getResource(path);
+                return pathURL == null ? null : pathURL.toString();
+            } catch (MalformedURLException me) {
+                // Will not happen, Bundle getResource does not throw MalformedURLException
+                return null;
+            }
+        }
 
-	public String getMimeType(String file) {
-	    return null;
-	}
+        public String getMimeType(String file) {
+            return null;
+        }
 
-	public String getInitParameter(String name) {
-	    return (String)initparameters.get(name);
-	}
+        public String getInitParameter(String name) {
+            return (String)initparameters.get(name);
+        }
 
-	public InputStream getResourceAsStream(String path) {
-	    return null;
-	}
+        public InputStream getResourceAsStream(String path) {
+            return null;
+        }
     }
 }

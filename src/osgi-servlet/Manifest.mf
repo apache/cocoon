@@ -13,11 +13,30 @@ Bundle-Category: servlet
 Import-Package: 
  javax.servlet,
  javax.servlet.http,
+ org.apache.avalon.excalibur.logger,
+ org.apache.avalon.framework.context,
+ org.apache.avalon.framework.logger,
+ org.apache.cocoon,
+ org.apache.cocoon.core,
+ org.apache.cocoon.core.osgi,
+ org.apache.cocoon.components.notification,
+ org.apache.cocoon.environment,
+ org.apache.cocoon.environment.http,
  org.apache.cocoon.servlet,
+ org.apache.cocoon.servlet.multipart,
+ org.apache.cocoon.util,
+ org.apache.commons.lang,
+ org.apache.commons.lang.time,
+ org.apache.excalibur.source.impl,
+ org.apache.excalibur.xml.impl,
+ org.apache.excalibur.xml.xpath,
+ org.apache.excalibur.xml.xslt,
+ org.apache.excalibur.xmlizer,
  org.osgi.framework,
  org.osgi.service.http,
  org.osgi.service.log,
  org.osgi.util.tracker
+DynamicImport-Package: org.apache.cocoon.*
 Bundle-UUID: org.apache.cocoon:cocoon_servlet:1.0.0:impl
 Built-From: C:\cygwin\usr\local\svn\cocoon\osgi\bundles\cocoon_servlet
 Build-Date: Fri July 15 2005, 22:46:00
