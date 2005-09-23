@@ -68,7 +68,7 @@ public class LocatedException extends NestableException implements LocatableExce
      * This is needed because some exceptions (e.g. SAXException) don't have a getCause() that is
      * used to print stacktraces.
      */
-    static void ensureCauseChainIsSet(Throwable thr) {
+    public static void ensureCauseChainIsSet(Throwable thr) {
         if (INIT_CAUSE_METHOD == null)
             return;
         
@@ -79,7 +79,7 @@ public class LocatedException extends NestableException implements LocatableExce
                 try {
                     INIT_CAUSE_METHOD.invoke(thr, new Object[]{ parent });
                 } catch(Exception e) {
-                    // unlikely, so ignore
+                    // can happen if parent already set on exception
                 }
             }
             thr = parent;

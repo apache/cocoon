@@ -20,6 +20,7 @@ import org.apache.avalon.framework.logger.LogKitLogger;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.location.LocatedException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -76,6 +77,7 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
     protected final static String  TYPE_ROOTTHROWABLE_STR = "rootThrowable";
 
     private static final String DEFAULT_TIME_PATTERN = "(yyyy-MM-dd) HH:mm.ss:SSS";
+    private static final FastDateFormat dateFormatter = FastDateFormat.getInstance(DEFAULT_TIME_PATTERN);
 
     /**
      * Hack to get the call stack as an array of classes. The
@@ -288,7 +290,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      */
     protected String getStackTrace(final Throwable throwable, final String format) {
         if (throwable != null) {
-            return ExceptionUtil.printStackTrace(throwable, m_stackDepth);
+            LocatedException.ensureCauseChainIsSet(throwable);
+            return ExceptionUtils.getStackTrace(throwable);
+            //return ExceptionUtil.printStackTrace(throwable, m_stackDepth);
         }
 
         return null;
@@ -302,13 +306,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      * @return the formatted string
      */
     protected String getTime(final long time, String pattern) {
-        String result;
-
-        if (pattern == null) {
-            pattern = DEFAULT_TIME_PATTERN;
+        if (pattern == null || DEFAULT_TIME_PATTERN.equals(pattern)) {
+            return dateFormatter.format(time);
         }
-        FastDateFormat format = FastDateFormat.getInstance(pattern);
-        result = format.format(time);
-        return result;
+        return FastDateFormat.getInstance(pattern).format(time);
     }
 }
