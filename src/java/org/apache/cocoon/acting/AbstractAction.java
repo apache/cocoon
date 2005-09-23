@@ -19,7 +19,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * AbstractAction gives you the infrastructure for easily deploying more
@@ -27,15 +26,14 @@ import java.util.TreeMap;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractAction.java,v 1.3 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractAction extends AbstractLogEnabled
     implements Action {
 
     /**
-     * Empty unmodifiable map. Replace with Collections.EMPTY_MAP when
-     * pre-jdk1.3 support is dropped.
+     * Empty unmodifiable map.
      */
-    protected static final Map EMPTY_MAP = Collections.unmodifiableMap(new TreeMap());
+    protected static final Map EMPTY_MAP = Collections.EMPTY_MAP;
 
 }
