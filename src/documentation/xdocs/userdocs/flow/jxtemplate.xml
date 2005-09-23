@@ -211,10 +211,10 @@ tag is evaluated, if present:</p>
 <source>
 &lt;jx:choose&gt;
   &lt;jx:when test="${!user.loggedIn}"&gt;
-    &lt;jx:set var="label" value="Log in"&gt;
+    &lt;jx:set var="label" value="Log in"/&gt;
   &lt;/jx:when&gt;
   &lt;jx:otherwise&gt;
-    &lt;jx:set var="label" value="Log out"&gt;
+    &lt;jx:set var="label" value="Log out"/&gt;
   &lt;/jx:otherwise&gt;
 &lt;/jx:choose&gt;
 </source>
@@ -223,10 +223,10 @@ tag is evaluated, if present:</p>
 <source>
 &lt;jx:choose&gt;
   &lt;jx:when test="#{not(user/loggedIn)}"&gt;
-    &lt;jx:set var="label" value="Log in"&gt;
+    &lt;jx:set var="label" value="Log in"/&gt;
   &lt;/jx:when&gt;
   &lt;jx:otherwise&gt;
-    &lt;jx:set var="label" value="Log out"&gt;
+    &lt;jx:set var="label" value="Log out"/&gt;
   &lt;/jx:otherwise&gt;
 &lt;/jx:choose&gt;
 </source>
