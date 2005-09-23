@@ -20,6 +20,7 @@ import org.apache.avalon.framework.logger.LogKitLogger;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.location.LocatedException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -289,7 +290,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      */
     protected String getStackTrace(final Throwable throwable, final String format) {
         if (throwable != null) {
-            return ExceptionUtil.printStackTrace(throwable, m_stackDepth);
+            LocatedException.ensureCauseChainIsSet(throwable);
+            return ExceptionUtils.getStackTrace(throwable);
+            //return ExceptionUtil.printStackTrace(throwable, m_stackDepth);
         }
 
         return null;
