@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,32 +16,32 @@
 -->
 <!-- SVN $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<map:components>
-  <map:generators default="file">
-    <map:generator name="basket" src="org.apache.cocoon.portal.coplets.basket.BasketGenerator"/>
-    <map:generator name="content" src="org.apache.cocoon.portal.coplets.basket.BasketContentGenerator"/>
-  </map:generators>
-  <map:transformers default="xslt">
-    <map:transformer name="basket" src="org.apache.cocoon.portal.coplets.basket.BasketTransformer"/>
+  <map:components>
+    <map:generators default="file">
+      <map:generator name="basket" src="org.apache.cocoon.portal.coplets.basket.BasketGenerator"/>
+      <map:generator name="content" src="org.apache.cocoon.portal.coplets.basket.BasketContentGenerator"/>
+    </map:generators>
+    <map:transformers default="xslt">
+      <map:transformer name="basket" src="org.apache.cocoon.portal.coplets.basket.BasketTransformer"/>
       <map:transformer name="folder" src="org.apache.cocoon.portal.coplets.basket.FolderTransformer"/>
-  </map:transformers>
-</map:components>
+    </map:transformers>
+  </map:components>
 
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
     <map:script src="basket.js"/>
   </map:flow>
     
-<map:pipelines>
-  <map:pipeline>	
+  <map:pipelines>
+    <map:pipeline>	
 
-        <map:match pattern="application">
-            <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
-            <map:transform type="portal-html-eventlink">
-                <map:parameter name="attribute-name" value="application-uri"/>
-            </map:transform>
+      <map:match pattern="application">
+        <map:generate src="{coplet:temporaryAttributes/application-uri}?copletid={coplet:#}"/>
+        <map:transform type="portal-html-eventlink">
+          <map:parameter name="attribute-name" value="application-uri"/>
+        </map:transform>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
       <!-- This is the preprocessing pipeline: 
            First a function in flow script is called which in turn
@@ -72,22 +72,22 @@
         </map:call>
       </map:match>
 
-    <map:match pattern="sample">
+      <map:match pattern="sample">
         <map:generate src="sample.xml"/>
         <map:transform type="basket"/>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
-    <!-- this is a coplet showing one item -->
-    <map:match pattern="content">
+      <!-- this is a coplet showing one item -->
+      <map:match pattern="content">
         <map:generate type="content" src="content-error.xml">
-            <map:parameter name="attribute-name" value="item-content"/>
+          <map:parameter name="attribute-name" value="item-content"/>
         </map:generate>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
-     <!-- show the whole basket -->
-    <map:match pattern="basket">
+      <!-- show the whole basket -->
+      <map:match pattern="basket">
         <map:call function="getQuota">
           <map:parameter name="type" value="{coplet:attributes/type}"/>
           <map:parameter name="view" value="basket-view"/>
@@ -96,9 +96,9 @@
 
       <map:match pattern="basket-view">
         <map:generate type="basket">
-            <map:parameter name="show-coplet" value="BasketContent"/>
-            <map:parameter name="show-layout" value="basket-content"/>
-            <map:parameter name="admin-mode" value="false"/>
+          <map:parameter name="show-coplet" value="BasketContent"/>
+          <map:parameter name="show-layout" value="basket-content"/>
+          <map:parameter name="admin-mode" value="false"/>
           <map:parameter name="type" value="{coplet:attributes/type}"/>
           <map:parameter name="type-location" value="group"/>
         </map:generate>
@@ -109,27 +109,27 @@
         <map:transform type="basket"/>
         <map:transform src="xsl/basket-post.xsl"/>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
-    <map:match pattern="basket.admin">
+      <map:match pattern="basket.admin">
         <map:generate type="basket">
-            <map:parameter name="show-coplet" value="BasketContent"/>
-            <map:parameter name="show-layout" value="basket-content-admin"/>
-            <map:parameter name="admin-mode" value="false"/>
+          <map:parameter name="show-coplet" value="BasketContent"/>
+          <map:parameter name="show-layout" value="basket-content-admin"/>
+          <map:parameter name="admin-mode" value="false"/>
         </map:generate>
         <map:transform type="xslt" src="basket.admin.xsl"/>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
-    <map:match pattern="basket-admin">
+      <map:match pattern="basket-admin">
         <map:generate type="basket">
-            <map:parameter name="show-coplet" value="BasketContent"/>
-            <map:parameter name="show-layout" value="basket-content-admin"/>
-            <map:parameter name="admin-mode" value="true"/>
+          <map:parameter name="show-coplet" value="BasketContent"/>
+          <map:parameter name="show-layout" value="basket-content-admin"/>
+          <map:parameter name="admin-mode" value="true"/>
         </map:generate>
         <map:transform src="xsl/basket-pre.xsl"/>
         <map:serialize type="xml"/>
-    </map:match>
+      </map:match>
 
       <!-- This is the static sample coplet -->
       <map:match pattern="staticcoplet">
@@ -176,6 +176,7 @@
         </map:generate>
         <map:serialize type="xml"/>
       </map:match>
+      
       <!-- This is the pipeline for the coplet with input process show sample -->
       <map:match pattern="copletwithinputshow">
         <map:generate src="xml/copletwithinputshow.xml" type="jx">
@@ -211,8 +212,12 @@
       <!-- This pipeline is used to fetch the quota for a user -->
       <map:match pattern="fetch-quota">
         <!-- we need the user ID -->
+        <!-- If you're using the authentication-fw replace the action with this one:
         <map:act type="auth-protect">
           <map:parameter name="handler" value="portal-handler"/>
+          <map:parameter name="application" value="portal"/>
+         -->
+        <map:act type="cowarp-is-logged-in">
           <map:parameter name="application" value="portal"/>
  
           <map:select type="resource-exists">
@@ -227,13 +232,12 @@
             </map:otherwise>
           </map:select>
           <map:transform src="xsl/quota2result.xsl">
-             <map:parameter name="storage" value="{flow-attribute:storage}"/> 
-             <map:parameter name="type" value="{flow-attribute:type}"/> 
+            <map:parameter name="storage" value="{flow-attribute:storage}"/> 
+            <map:parameter name="type" value="{flow-attribute:type}"/> 
           </map:transform>
           <map:serialize type="xml"/>
         </map:act>
       </map:match>
-
-  </map:pipeline>
-</map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>
