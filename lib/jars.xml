@@ -608,7 +608,7 @@
     <title>Eclipse Java Development Tools Core</title>
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
-    <lib>optional/jdtcore-3.0.2.jar</lib>
+    <lib>optional/jdtcore-3.1.0.jar</lib>
     <homepage>http://www.eclipse.org/jdt/</homepage>
   </file>
 
@@ -1149,7 +1149,7 @@
       API for compiling java
     </description>
     <used-by>javaflow</used-by>
-    <lib>core/commons-jci-r159148.jar</lib>
+    <lib>core/commons-jci-r291284.jar</lib>
     <homepage></homepage>
   </file>
 
@@ -1159,7 +1159,7 @@
       API java continuations
     </description>
     <used-by>javaflow</used-by>
-    <lib>optional/commons-javaflow-0.1-dev.jar</lib>
+    <lib>core/commons-javaflow-r291286.jar</lib>
     <homepage></homepage>
   </file>
 

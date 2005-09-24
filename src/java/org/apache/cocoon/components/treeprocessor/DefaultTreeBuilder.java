@@ -27,6 +27,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -213,6 +214,12 @@ public class DefaultTreeBuilder
         return this.context;
     }
 
+    protected ClassLoader createClassLoader(Configuration tree) throws Exception {
+        // Useless method as it's redefined in SitemapLanguage
+        // which is the only used incarnation.
+        return Thread.currentThread().getContextClassLoader();        
+    }
+    
     /**
      * Create a service manager that will be used for all <code>Serviceable</code>
      * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
@@ -226,11 +233,8 @@ public class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected ServiceManager createServiceManager(Context context, Configuration tree)
+    protected ServiceManager createServiceManager(ClassLoader classloader, Context context, Configuration tree)
     throws Exception {
-        // Useless method as it's redefined in SitemapLanguage
-        // which is the only used incarnation.
-        this.itsClassLoader = Thread.currentThread().getContextClassLoader();
         return this.manager;
     }
 
@@ -371,9 +375,25 @@ public class DefaultTreeBuilder
         // The namespace used in the whole sitemap is the one of the root element
         this.itsNamespace = tree.getNamespace();
 
-        // Context and manager for the sitemap we build
+        Configuration componentConfig = tree.getChild("components", false);
+
+        if (componentConfig == null) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
+            }
+            componentConfig = new DefaultConfiguration("", "");
+        }
+
+        // Context and manager and classloader for the sitemap we build
         this.itsContext = createContext(tree);
-        this.itsManager = createServiceManager(this.itsContext, tree);
+//        this.itsClassLoader = createClassLoader(componentConfig);
+//        
+//        Thread currentThread = Thread.currentThread();
+        //ClassLoader oldClassLoader = currentThread.getContextClassLoader();
+//        currentThread.setContextClassLoader(this.itsClassLoader);
+        this.itsClassLoader = Thread.currentThread().getContextClassLoader();
+
+        this.itsManager = createServiceManager(this.itsClassLoader, this.itsContext, componentConfig);
         this.itsComponentInfo = (ProcessorComponentInfo)this.itsManager.lookup(ProcessorComponentInfo.ROLE);
 
         // Create a helper object to setup components

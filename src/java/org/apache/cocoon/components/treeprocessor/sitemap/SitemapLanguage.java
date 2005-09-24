@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -33,7 +32,6 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.classloader.ClassLoaderFactory;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
@@ -65,105 +63,87 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
     private static final String EQUALS_SPLIT_REGEXP = "[\\s]*=[\\s]*";
 
+//    protected ClassLoader createClassLoader(Configuration config)
+//    throws Exception {
+//        ClassLoader newClassLoader;
+//        Configuration classpathConfig = config.getChild("classpath", false);
+//        if (classpathConfig == null) {
+//            return Thread.currentThread().getContextClassLoader();
+//        }
+//        
+//        String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE + "/ReloadingClassLoaderFactory");
+//        // Create a new classloader
+//        ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentProcessorManager.lookup(factoryRole);
+//        try {
+//            return clFactory.createClassLoader(
+//                    Thread.currentThread().getContextClassLoader(),
+//                    classpathConfig
+//            );
+//        } finally {
+//            this.parentProcessorManager.release(clFactory);
+//        }
+//    }
+    
     /**
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ServiceManager createServiceManager(Context context, Configuration tree)
+    protected ServiceManager createServiceManager(ClassLoader classloader, Context context, Configuration config)
     throws Exception {
 
-        // Get the map:component node
-        // Don't check namespace here : this will be done by node builders
-        Configuration config = tree.getChild("components", false);
-
-        if (config == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
-            }
-            config = new DefaultConfiguration("", "");
-        }
-        
         // Create the classloader, if needed.
-        ClassLoader newClassLoader;
-        Configuration classpathConfig = config.getChild("classpath", false);
-        if (classpathConfig == null) {
-            newClassLoader = Thread.currentThread().getContextClassLoader();
-        } else {
-            String factoryRole = config.getAttribute("factory-role", ClassLoaderFactory.ROLE);
-            // Create a new classloader
-            ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentProcessorManager.lookup(factoryRole);
-            try {
-                newClassLoader = clFactory.createClassLoader(
-                        Thread.currentThread().getContextClassLoader(),
-                        classpathConfig
-                );
-            } finally {
-                this.parentProcessorManager.release(clFactory);
-            }
-        }
-        
-        this.itsClassLoader = newClassLoader;
-        
-        // Create the manager within its own classloader
-        Thread currentThread = Thread.currentThread();
-        ClassLoader oldClassLoader = currentThread.getContextClassLoader();
-        currentThread.setContextClassLoader(newClassLoader);
         ServiceManager newManager;
         
-        try {
-            newManager = new CocoonServiceManager(this.parentProcessorManager, newClassLoader);
-    
+        newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
+
+        // Go through the component lifecycle
+        ContainerUtil.enableLogging(newManager, this.getLogger());
+        ContainerUtil.contextualize(newManager, context);
+        // before we pass the configuration we have to strip the
+        // additional configuration parts, like classpath etc. as these
+        // are not configurations for the service manager
+        final DefaultConfiguration c = new DefaultConfiguration(config.getName(), 
+                                                                config.getLocation(),
+                                                                config.getNamespace(),
+                                                                "");
+        c.addAll(config);
+        c.removeChild(config.getChild("application-container"));
+        c.removeChild(config.getChild("classpath"));
+        c.removeChild(config.getChild("listeners"));
+
+        ContainerUtil.configure(newManager, c);
+        ContainerUtil.initialize(newManager);
+
+        // check for an application specific container
+        final Configuration appContainer = config.getChild("application-container", false);
+        if ( appContainer != null ) {
+            final String clazzName = appContainer.getAttribute("class");
+
+            final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
             // Go through the component lifecycle
-            ContainerUtil.enableLogging(newManager, this.getLogger());
-            ContainerUtil.contextualize(newManager, context);
-            // before we pass the configuration we have to strip the
-            // additional configuration parts, like classpath etc. as these
-            // are not configurations for the service manager
-            final DefaultConfiguration c = new DefaultConfiguration(config.getName(), 
-                                                                    config.getLocation(),
-                                                                    config.getNamespace(),
-                                                                    "");
-            c.addAll(config);
-            c.removeChild(config.getChild("application-container"));
-            c.removeChild(config.getChild("classpath"));
-            c.removeChild(config.getChild("listeners"));
+            LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, appContainer);
 
-            ContainerUtil.configure(newManager, c);
-            ContainerUtil.initialize(newManager);
+            this.applicationContainer = cl;
 
-            // check for an application specific container
-            final Configuration appContainer = config.getChild("application-container", false);
-            if ( appContainer != null ) {
-                final String clazzName = appContainer.getAttribute("class");
+            newManager = new ComponentManager(newManager, cl);
+        }
 
-                final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
-                // Go through the component lifecycle
-                LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, appContainer);
+        // and finally the listeners
+        if ( this.applicationContainer instanceof SitemapListener ) {
+            this.addListener(new TreeBuilder.EventComponent(this.applicationContainer, false));
+        }
 
-                this.applicationContainer = cl;
-
-                newManager = new ComponentManager(newManager, cl);
-            }
-
-            // and finally the listeners
-            if ( this.applicationContainer instanceof SitemapListener ) {
-                this.addListener(new TreeBuilder.EventComponent(this.applicationContainer, false));
-            }
-
-            final Configuration listenersWrapper = config.getChild("listeners", false);
-            if ( listenersWrapper != null ) {
-                final Configuration[] listeners = listenersWrapper.getChildren("listener");                
-                for(int i = 0; i < listeners.length; i++) {
-                    final Configuration current = listeners[i];
-                    final TreeBuilder.EventComponent listener = this.createListener(newManager, context, current);
-                    if ( !(listener.component instanceof SitemapListener) ) {
-                        throw new ConfigurationException("Listener must implement the SitemapListener interface.");
-                    }
-                    this.addListener(listener);
+        final Configuration listenersWrapper = config.getChild("listeners", false);
+        if ( listenersWrapper != null ) {
+            final Configuration[] listeners = listenersWrapper.getChildren("listener");                
+            for(int i = 0; i < listeners.length; i++) {
+                final Configuration current = listeners[i];
+                final TreeBuilder.EventComponent listener = this.createListener(newManager, context, current);
+                if ( !(listener.component instanceof SitemapListener) ) {
+                    throw new ConfigurationException("Listener must implement the SitemapListener interface.");
                 }
+                this.addListener(listener);
             }
-        } finally {
-            currentThread.setContextClassLoader(oldClassLoader);
         }
 
         return newManager;
