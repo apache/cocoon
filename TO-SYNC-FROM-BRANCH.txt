@@ -16,3 +16,5 @@ Xsltal block is in branch only for now, it can wait for more examples before
 "porting" to trunk.
 
 HtmlUnit test framework is in branch only.
+
+The validation block is in branch only.
