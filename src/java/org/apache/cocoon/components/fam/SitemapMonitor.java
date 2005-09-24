@@ -16,14 +16,11 @@
  */
 package org.apache.cocoon.components.fam;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 
 public interface SitemapMonitor {
 	String ROLE = SitemapMonitor.class.getName();
-
-    void subscribeSitemap( FilesystemAlterationListener listener, Configuration sitemap ) throws ConfigurationException;
-
-    void unsubscribeSitemap( FilesystemAlterationListener listener);
+    
+    void subscribe(final FilesystemAlterationListener listener);    
+    void unsubscribe(final FilesystemAlterationListener listener);
 }

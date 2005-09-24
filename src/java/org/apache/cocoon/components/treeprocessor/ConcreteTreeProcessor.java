@@ -15,14 +15,12 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -48,7 +46,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.SitemapListener;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.apache.commons.jci.monitor.FilesystemAlterationListener;
+import org.apache.commons.jci.listeners.NotificationListener;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -57,7 +55,7 @@ import org.apache.commons.jci.monitor.FilesystemAlterationListener;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor, Disposable, FilesystemAlterationListener, ExecutionContext {
+                                   implements Processor, Disposable, ExecutionContext, NotificationListener {
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -93,82 +91,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** Needs a reload? */
     protected volatile boolean needsReload = false;
-    protected boolean fresh = true;
     
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
 
-    public void onChangeDirectory( final File changeDirectory ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    public void onChangeFile( final File changedFile ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    public void onCreateDirectory( final File createdDirectory ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    public void onCreateFile( final File createdFile ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    public void onDeleteDirectory( final File deletedDirectory ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    public void onDeleteFile( final File deletedFile ) {
-        if (!fresh) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Sitemap reload required");
-            }
-            needsReload = true;
-        }
-    }
-
-    /**
-     * @see org.apache.commons.jci.monitor.FilesystemAlterationListener#onStart()
-     */
-    public void onStart() {
-        // nothing to do
-    }
-
-    /**
-     * @see org.apache.commons.jci.monitor.FilesystemAlterationListener#onStop()
-     */
-    public void onStop() {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Now tracking classpath changes");
-        }
-        fresh = false;
-    }
-
+    private Map classpathListeners;
     
     /**
      * Builds a concrete processig, given the wrapping processor
@@ -179,17 +106,32 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.wrappingProcessor = wrappingProcessor;
 
         // Get the sitemap executor - we use the same executor for each sitemap
-        this.sitemapExecutor = sitemapExecutor;
+        this.sitemapExecutor = sitemapExecutor;        
     }
 
+    public void handleNotification() {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug(this + " got notified that a reload is required");
+        }
+        needsReload = true;
+    }
+    
+    public void setClasspathListeners(Map classpathListeners) {
+        this.classpathListeners = classpathListeners;
+    }
+    
+    public Map getClasspathListeners() {
+        return this.classpathListeners;
+    }    
+    
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(ServiceManager manager, 
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
                                  ComponentLocator componentLocator,
-                                 List             enterSitemapEventListeners,
-                                 List             leaveSitemapEventListeners) {
+                                 List enterSitemapEventListeners,
+                                 List leaveSitemapEventListeners) {
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
