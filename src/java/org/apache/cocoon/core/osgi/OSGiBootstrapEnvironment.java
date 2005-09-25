@@ -63,7 +63,7 @@ public class OSGiBootstrapEnvironment
         if (pathURL == null)
             throw new FileNotFoundException("Unable to get resource '/WEB-INF/block.xml' from bundle ." + bundle);
         String path = pathURL.toString();
-        path = path.substring(0, path.length() - this.configuration.length() - 1);
+        path = path.substring(0, path.length() - (this.configuration.length() - 1));
         this.contextPath = path;
 
         this.environmentContext = new OSGiContext(bundle);
@@ -118,9 +118,11 @@ public class OSGiBootstrapEnvironment
     }
     
     public void configure(MutableSettings settings) {
-        settings.setConfiguration(this.configuration);
+        // FIXME: Should be found from block.xml
+        settings.setConfiguration("/WEB-INF/cocoon.xconf");
         settings.setWorkDirectory("work");
         settings.setInitClassloader(true);
+        settings.setLoggingConfiguration("/WEB-INF/logkit.xconf");
     }
 
     public void configureLoggingContext(DefaultContext context) {
@@ -162,6 +164,8 @@ public class OSGiBootstrapEnvironment
      * @throws Exception
      */
     public URL getConfigFile(String configFileName) throws Exception {
+        this.logger.debug("getConfigFile: contextPath=" + this.contextPath +
+                          " configFileName=" + configFileName);
         return new URL(this.contextPath + configFileName);
     }
 
@@ -226,13 +230,7 @@ public class OSGiBootstrapEnvironment
         }
 
         public String getRealPath(String path) {
-            try {
-                URL pathURL = getResource(path);
-                return pathURL == null ? null : pathURL.toString();
-            } catch (MalformedURLException me) {
-                // Will not happen, Bundle getResource does not throw MalformedURLException
-                return null;
-            }
+            return null;
         }
 
         public String getMimeType(String file) {
