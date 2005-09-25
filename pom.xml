@@ -122,9 +122,14 @@
       <version>2.0.2</version>
     </dependency> 
     <dependency>
+      <groupId>commons-javaflow</groupId>
+      <artifactId>commons-javaflow</artifactId>
+      <version>r291286</version>
+    </dependency>
+    <dependency>
       <groupId>commons-jci</groupId>
       <artifactId>commons-jci</artifactId>
-      <version>r159148</version>
+      <version>r291284</version>
     </dependency>
     <dependency>
       <groupId>commons-jexl</groupId>
@@ -348,12 +353,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>
