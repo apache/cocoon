@@ -31,7 +31,7 @@
     <sourceDirectory>../../src/test</sourceDirectory>
     <resources>
       <resource>
-        <directory>.</directory>
+        <directory>../../src/test</directory>
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
