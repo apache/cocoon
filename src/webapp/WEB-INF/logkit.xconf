@@ -42,8 +42,8 @@
       +-->
   <factories>
     <factory type="cocoon" class="org.apache.cocoon.util.log.CocoonTargetFactory"/>
-    <factory type="servlet" class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory"/>
-    <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
+    <!--factory type="servlet" class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory"/-->
+    <!--factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/-->
   </factories>
 
   <!--+
@@ -104,6 +104,9 @@
       <append>@logappend@</append>
     </cocoon>
 
+    <!--+
+        | These targets are used for the more elaborate examples below.
+        |
     <servlet id="servlet">
       <format type="extended">%5.5{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
     </servlet>
@@ -112,6 +115,7 @@
       <stream>System.out</stream>
       <format type="extended">%5.5{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
     </stream>
+        +-->
   </targets>
 
   <!--+

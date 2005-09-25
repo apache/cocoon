@@ -16,32 +16,18 @@
 package org.apache.cocoon.service.servlet.impl;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.SocketException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.excalibur.logger.ServletLogger;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
@@ -50,19 +36,12 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.servlet.SettingsHelper;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.StopWatch;
 
 /**
@@ -99,22 +78,8 @@ public class BlocksServlet extends HttpServlet {
 
     private String containerEncoding;
 
-    protected ServletContext servletContext;
-
     /** The classloader that will be set as the context classloader if init-classloader is true */
-    protected ClassLoader classLoader = getClass().getClassLoader();
-
-    /**
-     * This is the path to the servlet context (or the result
-     * of calling getRealPath('/') on the ServletContext.
-     * Note, that this can be null.
-     */
-    protected String servletContextPath;
-
-    /**
-     * This is the url to the servlet context directory
-     */
-    protected String servletContextURL;
+    protected ClassLoader classLoader;
 
     /**
      * The RequestFactory is responsible for wrapping multipart-encoded
@@ -122,13 +87,23 @@ public class BlocksServlet extends HttpServlet {
      */
     protected RequestFactory requestFactory;
 
+    /** Core */
+    protected Core core;
+
     /** CoreUtil */
     protected CoreUtil coreUtil;
 
     /** The logger */
     protected Logger log;
 
-    protected Context environmentContext;
+    public BlocksServlet(ClassLoader classLoader,
+                         Logger logger,
+                         CoreUtil coreUtil) {
+        this.classLoader = classLoader;
+        this.log = logger;
+        this.coreUtil = coreUtil;
+        this.core = coreUtil.getCore();
+    }
 
     /**
      * Initialize this <code>BlocksServlet</code> instance.  You will
@@ -144,87 +119,16 @@ public class BlocksServlet extends HttpServlet {
      */
     public void init(ServletConfig conf)
     throws ServletException {
-        this.servletContext = conf.getServletContext();
-        this.servletContext.log("Initializing Apache Cocoon " + Constants.VERSION);
-
         super.init(conf);
 
-        this.servletContextPath = this.servletContext.getRealPath("/");
-        String path = this.servletContextPath;
-        // these two variables are just for debugging. We can't log at this point
-        // as the logger isn't initialized yet.
-        String debugPathOne = null, debugPathTwo = null;
-        if (path == null) {
-            // Try to figure out the path of the root from that of WEB-INF/web.xml
-            try {
-                path = this.servletContext.getResource("/WEB-INF/web.xml").toString();
-            } catch (MalformedURLException me) {
-                throw new ServletException("Unable to get resource 'WEB-INF/web.xml'.", me);
-            }
-            debugPathOne = path;
-            path = path.substring(0, path.length() - "WEB-INF/web.xml".length());
-            debugPathTwo = path;
-        }
-        try {
-            if (path.indexOf(':') > 1) {
-                this.servletContextURL = path;
-            } else {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
-            }
-        } catch (MalformedURLException me) {
-            // VG: Novell has absolute file names starting with the
-            // volume name which is easily more then one letter.
-            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-            try {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
-            } catch (MalformedURLException ignored) {
-                throw new ServletException("Unable to determine servlet context URL.", me);
-            }
-        }
-
-        try {
-            // FIXME (VG): We shouldn't have to specify these. Need to override
-            // jaxp implementation of weblogic before initializing logger.
-            // This piece of code is also required in the Cocoon class.
-            String value = System.getProperty("javax.xml.parsers.SAXParserFactory");
-            if (value != null && value.startsWith("weblogic")) {
-                System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
-                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-            }
-        } catch (Exception e) {
-            // Ignore security exception
-            this.servletContext.log("BlocksServlet: Could not check system properties, got: " + e);
-        }
-
-        // initialize settings
-        ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath, this.servletContextURL);
-
-        try {
-            this.coreUtil = new CoreUtil(env);
-            this.environmentContext = env.getEnvironmentContext();
-            this.log = env.logger;
-        } catch (Exception e) {
-            if ( e instanceof ServletException ) {
-                throw (ServletException)e;
-            }
-            throw new ServletException(e);
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this.coreUtil.getSettings().toString());
-            getLogger().debug("getRealPath for /: " + this.servletContextPath);
-            if (this.servletContextPath == null) {
-                getLogger().debug("getResource for /WEB-INF: " + debugPathOne);
-                getLogger().debug("Path for Root: " + debugPathTwo);
-            }
-        }
+        this.getLogger().info("Initializing Apache Cocoon " + Constants.VERSION);
 
         this.containerEncoding = this.getInitParameter("container-encoding", "ISO-8859-1");
-        this.requestFactory = new RequestFactory(coreUtil.getSettings().isAutosaveUploads(),
-                                                 new File(coreUtil.getCore().getSettings().getUploadDirectory()),
-                                                 coreUtil.getSettings().isAllowOverwrite(),
-                                                 coreUtil.getSettings().isSilentlyRename(),
-                                                 coreUtil.getSettings().getMaxUploadSize(),
+        this.requestFactory = new RequestFactory(this.core.getSettings().isAutosaveUploads(),
+                                                 new File(this.core.getSettings().getUploadDirectory()),
+                                                 this.core.getSettings().isAllowOverwrite(),
+                                                 this.core.getSettings().isSilentlyRename(),
+                                                 this.core.getSettings().getMaxUploadSize(),
                                                  this.containerEncoding);
 
         try {
@@ -234,10 +138,10 @@ public class BlocksServlet extends HttpServlet {
             this.exception = e;
         }
         if (this.exception == null) {
-            this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
+            this.getLogger().info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
         } else {
             final String message = "Errors during initializing Apache Cocoon " + Constants.VERSION + " : " + this.exception.getMessage();
-            this.servletContext.log(message, this.exception);
+            this.getLogger().error(message, this.exception);
         }
     }
 
@@ -245,17 +149,14 @@ public class BlocksServlet extends HttpServlet {
      * Dispose Cocoon when servlet is destroyed
      */
     public void destroy() {
-        this.servletContext.log("Destroying Cocoon Servlet.");
+        this.getLogger().info("Destroying Cocoon Servlet.");
         if (this.coreUtil != null) {
-            this.coreUtil.destroy();
             this.coreUtil = null;
             // coreUtil will dispose it.
             this.cocoon = null;
         }
 
         this.requestFactory = null;
-        this.servletContext = null;
-        this.environmentContext = null;
         this.classLoader = null;
         this.log = null;
         super.destroy();
@@ -268,9 +169,8 @@ public class BlocksServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
 
-        /* HACK for reducing class loader problems.                                     */
-        /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.coreUtil.getSettings().isInitClassloader()) {
+        /* Needed in OSGi environment */
+        if (this.core.getSettings().isInitClassloader()) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
             } catch (Exception e) {
@@ -283,14 +183,14 @@ public class BlocksServlet extends HttpServlet {
         stopWatch.start();
 
         // add the cocoon header timestamp
-        if (this.coreUtil.getSettings().isShowCocoonVersion()) {
+        if (this.core.getSettings().isShowCocoonVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
         }
 
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request;
         try{
-            if (this.coreUtil.getSettings().isEnableUploads()) {
+            if (this.core.getSettings().isEnableUploads()) {
                 request = requestFactory.getServletRequest(req);
             } else {
                 request = req;
@@ -445,7 +345,7 @@ public class BlocksServlet extends HttpServlet {
 
             if (contentType != null && contentType.equals("text/html")) {
                 String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
-                boolean show = this.coreUtil.getSettings().isShowTime();
+                boolean show = this.core.getSettings().isShowTime();
                 if (showTime != null) {
                     show = !showTime.equalsIgnoreCase("no");
                 }
@@ -453,7 +353,7 @@ public class BlocksServlet extends HttpServlet {
                     if ( timeString == null ) {
                         timeString = processTime(stopWatch.getTime());
                     }
-                    boolean hide = this.coreUtil.getSettings().isHideShowTime();
+                    boolean hide = this.core.getSettings().isHideShowTime();
                     if (showTime != null) {
                         hide = showTime.equalsIgnoreCase("hide");
                     }
@@ -503,7 +403,7 @@ public class BlocksServlet extends HttpServlet {
                                    String title, String message, String description,
                                    Exception e)
     throws IOException {
-        if (this.coreUtil.getSettings().isManageExceptions()) {
+        if (this.core.getSettings().isManageExceptions()) {
             if (env != null) {
                 env.tryResetResponse();
             } else {
@@ -561,14 +461,14 @@ public class BlocksServlet extends HttpServlet {
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
         if (formEncoding == null) {
-            formEncoding = this.coreUtil.getSettings().getFormEncoding();
+            formEncoding = this.core.getSettings().getFormEncoding();
         }
         env = new HttpEnvironment(uri,
-                                  this.servletContextURL,
+                                  null,
                                   req,
                                   res,
-                                  this.servletContext,
-                                  this.environmentContext,
+                                  null,
+                                  this.core.getEnvironmentContext(),
                                   this.containerEncoding,
                                   formEncoding);
         env.enableLogging(getLogger());
@@ -623,332 +523,5 @@ public class BlocksServlet extends HttpServlet {
 
     protected Logger getLogger() {
         return this.log;
-    }
-
-    protected static final class ServletBootstrapEnvironment
-    implements BootstrapEnvironment {
-
-        private final ServletConfig config;
-        private final ClassLoader   classLoader;
-        private final File          writeableContextPath;
-        private final String        contextPath;
-        public Logger logger;
-        private final HttpContext   environmentContext;
-
-        public ServletBootstrapEnvironment(ServletConfig config,
-                                           ClassLoader   cl,
-                                           String        writeablePath,
-                                           String        path) {
-            this.config = config;
-            this.classLoader = cl;
-            if ( writeablePath == null ) {
-                this.writeableContextPath = null;
-            } else {
-                this.writeableContextPath = new File(writeablePath);
-            }
-            this.contextPath = path;
-            this.environmentContext = new HttpContext(this.config.getServletContext());
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
-         */
-        public Logger getBootstrapLogger(BootstrapEnvironment.LogLevel logLevel) {
-            return new ServletLogger(this.config, logLevel.getLevel());
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String)
-         */
-        public void log(String message) {
-            this.config.getServletContext().log(message);
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
-         */
-        public void log(String message, Throwable error) {
-            this.config.getServletContext().log(message, error);
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
-         */
-        public void setLogger(Logger rootLogger) {
-            this.logger = rootLogger;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
-         */
-        public void configure(MutableSettings settings) {
-            // fill from the servlet parameters
-            SettingsHelper.fill(settings, this.config);
-            if ( settings.getWorkDirectory() == null ) {
-                final File workDir = (File)this.config.getServletContext().getAttribute("javax.servlet.context.tempdir");
-                settings.setWorkDirectory(workDir.getAbsolutePath());
-            }
-            if ( settings.getLoggingConfiguration() == null ) {
-                settings.setLoggingConfiguration("/WEB-INF/logkit.xconf");
-            }
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getInitClassLoader()
-         */
-        public ClassLoader getInitClassLoader() {
-            return this.classLoader;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getEnvironmentContext()
-         */
-        public Context getEnvironmentContext() {
-            return this.environmentContext;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextURL()
-         */
-        public String getContextURL() {
-            return this.contextPath;
-        }
-
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
-         */
-        public File getContextForWriting() {
-            return this.writeableContextPath;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configureLoggingContext(DefaultContext context) {
-            context.put("servlet-context", this.config.getServletContext());
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configure(DefaultContext context) {
-            context.put(CONTEXT_SERVLET_CONFIG, this.config);
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
-         */
-        public URL getConfigFile(final String configFileName)
-        throws Exception {
-            final String usedFileName;
-
-            if (configFileName == null) {
-                if (this.logger.isWarnEnabled()) {
-                    this.logger.warn("Servlet initialization argument 'configurations' not specified, attempting to use '/WEB-INF/cocoon.xconf'");
-                }
-                usedFileName = "/WEB-INF/cocoon.xconf";
-            } else {
-                usedFileName = configFileName;
-            }
-
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Using configuration file: " + usedFileName);
-            }
-
-            URL result;
-            try {
-                // test if this is a qualified url
-                if (usedFileName.indexOf(':') == -1) {
-                    result = this.config.getServletContext().getResource(usedFileName);
-                } else {
-                    result = new URL(usedFileName);
-                }
-            } catch (Exception mue) {
-                String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
-                this.logger.error(msg, mue);
-                throw new ServletException(msg, mue);
-            }
-
-            if (result == null) {
-                File resultFile = new File(usedFileName);
-                if (resultFile.isFile()) {
-                    try {
-                        result = resultFile.getCanonicalFile().toURL();
-                    } catch (Exception e) {
-                        String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
-                        this.logger.error(msg, e);
-                        throw new ServletException(msg, e);
-                    }
-                }
-            }
-
-            if (result == null) {
-                String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
-                this.logger.error(msg);
-                throw new ServletException(msg);
-            }
-            return result;
-        }
-
-        /**
-         * This builds the important ClassPath used by this Servlet.  It
-         * does so in a Servlet Engine neutral way.  It uses the
-         * <code>ServletContext</code>'s <code>getRealPath</code> method
-         * to get the Servlet 2.2 identified classes and lib directories.
-         * It iterates in alphabetical order through every file in the
-         * lib directory and adds it to the classpath.
-         *
-         * Also, we add the files to the ClassLoader for the Cocoon system.
-         * In order to protect ourselves from skitzofrantic classloaders,
-         * we need to work with a known one.
-         *
-         * We need to get this to work properly when Cocoon is in a war.
-         *
-         */
-        public String getClassPath(Settings settings) {
-            StringBuffer buildClassPath = new StringBuffer();
-
-            File root = null;
-            if (this.getContextForWriting() != null) {
-                // Old method.  There *MUST* be a better method than this...
-
-                String classDir = this.config.getServletContext().getRealPath("/WEB-INF/classes");
-                String libDir = this.config.getServletContext().getRealPath("/WEB-INF/lib");
-
-                if (libDir != null) {
-                    root = new File(libDir);
-                }
-
-                if (classDir != null) {
-                    buildClassPath.append(classDir);
-                }
-            } else {
-                // New(ish) method for war'd deployments
-                URL classDirURL = null;
-                URL libDirURL = null;
-
-                try {
-                    classDirURL = this.config.getServletContext().getResource("/WEB-INF/classes");
-                } catch (MalformedURLException me) {
-                    this.logger.warn("Unable to add WEB-INF/classes to the classpath", me);
-                }
-
-                try {
-                    libDirURL = this.config.getServletContext().getResource("/WEB-INF/lib");
-                } catch (MalformedURLException me) {
-                    this.logger.warn("Unable to add WEB-INF/lib to the classpath", me);
-                }
-
-                if (libDirURL != null && libDirURL.toExternalForm().startsWith("file:")) {
-                    root = new File(libDirURL.toExternalForm().substring("file:".length()));
-                }
-
-                if (classDirURL != null) {
-                    buildClassPath.append(classDirURL.toExternalForm());
-                }
-            }
-
-            // Unable to find lib directory. Going the hard way.
-            if (root == null) {
-                root = this.extractLibraries(settings);
-            }
-
-            if (root != null && root.isDirectory()) {
-                File[] libraries = root.listFiles();
-                Arrays.sort(libraries);
-                for (int i = 0; i < libraries.length; i++) {
-                    String fullName = IOUtils.getFullFilename(libraries[i]);
-                    buildClassPath.append(File.pathSeparatorChar).append(fullName);
-                }
-            }
-
-            buildClassPath.append(File.pathSeparatorChar)
-                          .append(SystemUtils.JAVA_CLASS_PATH);
-
-            return buildClassPath.toString();
-        }
-
-        private File extractLibraries(Settings settings) {
-            try {
-                URL manifestURL = this.config.getServletContext().getResource("/META-INF/MANIFEST.MF");
-                if (manifestURL == null) {
-                    this.logger.fatalError("Unable to get Manifest");
-                    return null;
-                }
-
-                Manifest mf = new Manifest(manifestURL.openStream());
-                Attributes attr = mf.getMainAttributes();
-                String libValue = attr.getValue("Cocoon-Libs");
-                if (libValue == null) {
-                    this.logger.fatalError("Unable to get 'Cocoon-Libs' attribute from the Manifest");
-                    return null;
-                }
-
-                List libList = new ArrayList();
-                for (StringTokenizer st = new StringTokenizer(libValue, " "); st.hasMoreTokens();) {
-                    libList.add(st.nextToken());
-                }
-
-                File root = new File(settings.getWorkDirectory(), "lib");
-                root.mkdirs();
-
-                File[] oldLibs = root.listFiles();
-                for (int i = 0; i < oldLibs.length; i++) {
-                    String oldLib = oldLibs[i].getName();
-                    if (!libList.contains(oldLib)) {
-                        this.logger.debug("Removing old library " + oldLibs[i]);
-                        oldLibs[i].delete();
-                    }
-                }
-
-                this.logger.warn("Extracting libraries into " + root);
-                byte[] buffer = new byte[65536];
-                for (Iterator i = libList.iterator(); i.hasNext();) {
-                    String libName = (String) i.next();
-
-                    long lastModified = -1;
-                    try {
-                        lastModified = Long.parseLong(attr.getValue("Cocoon-Lib-" + libName.replace('.', '_')));
-                    } catch (Exception e) {
-                        this.logger.debug("Failed to parse lastModified: " + attr.getValue("Cocoon-Lib-" + libName.replace('.', '_')));
-                    }
-
-                    File lib = new File(root, libName);
-                    if (lib.exists() && lib.lastModified() != lastModified) {
-                        this.logger.debug("Removing modified library " + lib);
-                        lib.delete();
-                    }
-
-                    InputStream is = this.config.getServletContext().getResourceAsStream("/WEB-INF/lib/" + libName);
-                    if (is == null) {
-                        this.logger.warn("Skipping " + libName);
-                    } else {
-                        this.logger.debug("Extracting " + libName);
-                        OutputStream os = null;
-                        try {
-                            os = new FileOutputStream(lib);
-                            int count;
-                            while ((count = is.read(buffer)) > 0) {
-                                os.write(buffer, 0, count);
-                            }
-                        } finally {
-                            if (is != null) is.close();
-                            if (os != null) os.close();
-                        }
-                    }
-
-                    if (lastModified != -1) {
-                        lib.setLastModified(lastModified);
-                    }
-                }
-
-                return root;
-            } catch (IOException e) {
-                this.logger.fatalError("Exception while processing Manifest file", e);
-                return null;
-            }
-        }
-
     }
 }

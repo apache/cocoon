@@ -79,6 +79,7 @@
   </target>
   
   <target name="osgi.prepare-webapp" depends="osgi.init">
+    <delete dir="${build.osgi.webapp}"/>
     <copy file="${webapp}/welcome.xml" tofile="${build.osgi.webapp}/welcome.xml" filtering="on"/>
     <copy file="${webapp}/not-found.xml" tofile="${build.osgi.webapp}/not-found.xml" filtering="on"/>
     <copy file="${webapp}/welcome.xslt" tofile="${build.osgi.webapp}/welcome.xslt" filtering="on"/>

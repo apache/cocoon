@@ -16,25 +16,17 @@
 package org.apache.cocoon.service.servlet.impl;
 
 import java.util.Hashtable;
-import java.net.URL;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.osgi.OSGiBootstrapEnvironment;
-import org.apache.cocoon.environment.Context;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 
 /**
@@ -48,10 +40,7 @@ public class Activator implements BundleActivator {
     static final String  SITEMAP = "sitemap";
 
     private Hashtable registrations = new Hashtable();
-    private Bundle sitemapBundle;
     private ClassLoader classLoader = getClass().getClassLoader();;
-    private String contextURL;
-    private Context environmentContext;
     private Logger logger;
     private CoreUtil coreUtil;
 
@@ -63,18 +52,11 @@ public class Activator implements BundleActivator {
             env.log("OSGiBootstrapEnvironment created");
             this.coreUtil = new CoreUtil(env);
             env.log("CoreUtil created");
-            this.contextURL = env.getContextURL();
-            this.environmentContext = env.getEnvironmentContext();
             this.logger = env.getBootstrapLogger(null);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BundleException("Failed to create core util", e);
         }
-
-        // FIXME: Add a BundleListener to detect if a sitemap bundle
-        // is installed, updated or uninstalled.
-        this.sitemapBundle = getSitemapBundle();
-        this.logger.info("set sitemap bundle " + this.sitemapBundle);
 
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {
@@ -109,29 +91,6 @@ public class Activator implements BundleActivator {
     public void stop(BundleContext bc) throws BundleException {
     }
 
-    private Bundle getSitemapBundle() {
-        Bundle[] bundles = this.bc.getBundles();
-        for (int i = 0; i < bundles.length; i++) {
-            Bundle bundle = bundles[i];
-            try {
-                this.logger.info("checking bundle " + bundle + " name=" + bundle.getHeaders().get(Constants.BUNDLE_NAME) + " category=" + bundle.getHeaders().get(Constants.BUNDLE_CATEGORY) + " state=" + bundle.getState());
-                if ((bundle.getState() == Bundle.INSTALLED ||
-                     bundle.getState() == Bundle.RESOLVED ||
-                     bundle.getState() == Bundle.ACTIVE)) {
-                    this.logger.info("ok state");
-                    if (SITEMAP.equals(bundle.getHeaders().get(Constants.BUNDLE_CATEGORY))) {
-                        this.logger.info("sitemap");
-                        return bundle;
-                    }
-                }
-            } catch (NullPointerException e) {
-                // BUNDLE_CATEGORY not present in the headers of the
-                // bundle, nothing to do.
-            }
-        }
-        return null;
-    }
-
     private void setRoot(ServiceReference sr) {
         
         if(registrations.containsKey(sr)) {
@@ -142,41 +101,15 @@ public class Activator implements BundleActivator {
 
         HttpService http = (HttpService)bc.getService(sr);
 
-        HttpContext context = new HttpContext() {
-                public boolean handleSecurity(HttpServletRequest  request,
-                                              HttpServletResponse response) 
-                    throws IOException {
-                    return true;
-                }
-        
-                public URL getResource(String name) {
-                    if (sitemapBundle != null) {
-                        return sitemapBundle.getResource(name);
-                    } else {
-                        return null;
-                    }
-                }
-        
-                public String getMimeType(String reqEntry) {
-                    return null; // server decides type
-                }
-            };
-    
         try {
-            Hashtable parameters = new Hashtable();
-            parameters.put("init-classloader", "true");
-            parameters.put("work-directory", "work");
             http.registerServlet(SERVLET_ALIAS,
-                                 new BlocksServlet(),
-//                                   new CocoonServlet(this.classLoader,
-//                                                     this.contextURL,
-//                                                     this.environmentContext,
-//                                                     this.logger,
-//                                                     this.coreUtil),
-                                 parameters,
-                                 context);
+                                 new BlocksServlet(this.classLoader,
+                                                   this.logger,
+                                                   this.coreUtil),
+                                 new Hashtable(),
+                                 null);
 
-            registrations.put(sr, context);
+            registrations.put(sr, null);
         } catch (Exception e) {
             this.logger.info("Failed to register resource", e);
         }
