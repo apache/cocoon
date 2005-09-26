@@ -16,8 +16,6 @@
 package org.apache.cocoon.portal.impl;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,19 +24,21 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.event.ComparableEvent;
+import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.RequestEvent;
-import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.util.NetUtils;
 
 /**
@@ -50,31 +50,12 @@ import org.apache.cocoon.util.NetUtils;
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
-    implements ThreadSafe, LinkService, Serviceable, Disposable, Contextualizable {
-
-    /**
-     * Helper class containing the information about the request uri
-     */
-    static class Info {
-        StringBuffer  linkBase = new StringBuffer();
-        boolean       hasParameters = false;
-        ArrayList     comparableEvents = new ArrayList(5);
-
-        public String getBase(Boolean secure) {
-            // TODO - Does null always mean FALSE?
-            // it might be that the current request is also https,
-            // in that case we return https even if secure is FALSE.
-            if ( secure == null || secure.equals(Boolean.FALSE) ) {
-                return linkBase.toString();
-            }
-            // FIXME - Perhaps there is a better way
-            String link = linkBase.toString();
-            if ( link.startsWith("https") ) {
-                return link;
-            }
-            return "https" + linkBase.toString().substring(4);
-        }
-    }
+    implements LinkService,
+               ThreadSafe,
+               Serviceable,
+               Disposable,
+               Contextualizable,
+               Parameterizable {
     
     /** The converter used to convert an event into a request parameter */
     protected EventConverter   converter;
@@ -85,6 +66,11 @@ public class DefaultLinkService
 
     protected Boolean eventsMarshalled;
 
+    /** Default port used for http. */
+    protected int defaultPort = 80;
+    /** Default port used for https. */
+    protected int defaultSecurePort = 443;
+
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -94,33 +80,26 @@ public class DefaultLinkService
     }
 
     /**
-     * Return the current info for the request
-     * @return An Info object
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
-    protected Info getInfo() {
+    public void parameterize(Parameters params) throws ParameterException {
+        this.defaultPort = params.getParameterAsInteger("defaultPort", this.defaultPort);
+        this.defaultSecurePort = params.getParameterAsInteger("defaultSecurePort", this.defaultSecurePort);
+    }
+
+    /**
+     * Return the current info for the request.
+     * @return A LinkInfo object.
+     */
+    protected LinkInfo getInfo() {
         final Request request = ContextHelper.getRequest( this.context );
-        Info info = (Info)request.getAttribute(DefaultLinkService.class.getName());
+        LinkInfo info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
             synchronized ( this ) {
-                info = (Info)request.getAttribute(DefaultLinkService.class.getName());
+                info = (LinkInfo)request.getAttribute(DefaultLinkService.class.getName());
                 if ( info == null ) {
-                    info = new Info();
+                    info = new LinkInfo(request, this.defaultPort, this.defaultSecurePort);
                     request.setAttribute(DefaultLinkService.class.getName(), info);
-                    info.linkBase.append(request.getScheme());
-                    info.linkBase.append("://");
-                    info.linkBase.append(request.getServerName());
-                    if ( request.getServerPort() != 80 ) {
-                        info.linkBase.append(':');
-                        info.linkBase.append(request.getServerPort());
-                    }
-                    if ( request.getContextPath().length() > 0 ) {
-                        info.linkBase.append(request.getContextPath());
-                    }
-                    info.linkBase.append('/');                        
-                    if ( request.getSitemapURIPrefix().length() > 0 ) {
-                        info.linkBase.append(request.getSitemapURIPrefix());
-                    }
-                    info.linkBase.append(request.getSitemapURI());
                 }
             }
         }
@@ -135,7 +114,7 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#encodeURL(String url).
+     * @see org.apache.cocoon.portal.LinkService#encodeURL(String url)
      */
     public String encodeURL(String url) {
         return ContextHelper.getResponse(this.context).encodeURL(url);
@@ -149,15 +128,15 @@ public class DefaultLinkService
     }
 
     /**
-     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, boolean)
+     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event, Boolean)
      */
     public String getLinkURI(Event event, Boolean secure) {
         if (event == null) {
             return this.getRefreshLinkURI(secure);
         }
-        final Info info = this.getInfo();
+        final LinkInfo info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.getBase(secure));
-        boolean hasParams = info.hasParameters;
+        boolean hasParams = info.hasParameters();
 
         // add comparable events
         final boolean comparableEvent = event instanceof ComparableEvent;
@@ -220,8 +199,8 @@ public class DefaultLinkService
         if (events == null || events.size() == 0) {
             return this.getRefreshLinkURI(secure);
         }
-        final Info info = this.getInfo();
-        boolean hasParams = info.hasParameters;
+        final LinkInfo info = this.getInfo();
+        boolean hasParams = info.hasParameters();
         final StringBuffer buffer = new StringBuffer(info.getBase(secure));
 
         // add comparable events
@@ -283,7 +262,7 @@ public class DefaultLinkService
         StringBuffer value = new StringBuffer("");
         String parameterName = processEvent(event, value);
 
-        final Info info = this.getInfo();
+        final LinkInfo info = this.getInfo();
         if (event instanceof ComparableEvent) {
             // search if we already have an event for this!
             final Iterator iter = info.comparableEvents.iterator();
@@ -305,47 +284,16 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#addParameterToLink(java.lang.String, java.lang.String)
      */
     public void addParameterToLink(String name, String value) {
-        final Info info = this.getInfo();
-        if ( info.hasParameters ) {
-            info.linkBase.append('&');
-        } else {
-            info.linkBase.append('?');
-        }
-        try {
-            info.linkBase.append(name).append('=').append(NetUtils.encode(value, "utf-8"));
-        } catch (UnsupportedEncodingException uee) {
-            // ignore this as utf-8 is always supported
-        }
-        info.hasParameters = true;
+        final LinkInfo info = this.getInfo();
+        info.addParameterToBase(name, value);
     }
 
     /**
      * @see org.apache.cocoon.portal.LinkService#addUniqueParameterToLink(java.lang.String, java.lang.String)
      */
     public void addUniqueParameterToLink(String name, String value) {
-        final Info info = this.getInfo();
-        if ( info.hasParameters ) {
-            final int pos = info.linkBase.toString().indexOf("?");
-            final String queryString = info.linkBase.substring(pos + 1);
-            final RequestParameters params = new RequestParameters(queryString);
-            if ( params.getParameter(name) != null ) {
-                // the parameter is available, so remove it
-                info.linkBase.delete(pos, info.linkBase.length() + 1);
-                info.hasParameters = false;
-                
-                Enumeration enumeration = params.getParameterNames();
-                while ( enumeration.hasMoreElements() ) {
-                    final String paramName = (String)enumeration.nextElement();
-                    if ( !paramName.equals(name) ) {
-                        String[] values = params.getParameterValues(paramName);
-                        for( int i = 0; i < values.length; i++ ) {
-                            this.addParameterToLink(paramName, values[i]);
-                        }
-                    }
-                }
-            }
-        }
-        // the parameter is not available, so just add it
+        final LinkInfo info = this.getInfo();
+        info.deleteParameterFromBase(name);
         this.addParameterToLink(name, value);
     }
     
@@ -360,13 +308,13 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#getRefreshLinkURI(java.lang.Boolean)
      */
     public String getRefreshLinkURI(Boolean secure) {
-        final Info info = this.getInfo();
+        final LinkInfo info = this.getInfo();
 
         final StringBuffer buffer = new StringBuffer(info.getBase(secure));
 
         // add comparable events
         Iterator iter = info.comparableEvents.iterator();
-        boolean hasParams = info.hasParameters;
+        boolean hasParams = info.hasParameters();
         while (iter.hasNext()) {
             Object[] objects = (Object[])iter.next();
             if ( hasParams ) {

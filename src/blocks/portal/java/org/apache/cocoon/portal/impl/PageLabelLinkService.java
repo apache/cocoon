@@ -91,8 +91,8 @@ public class PageLabelLinkService extends DefaultLinkService {
                 getKey(item, key);
 
                 if (this.labelManager.getPageLabelEvents(key.toString()) != null) {
-                    final Info info = this.getInfo();
-                    boolean hasParams = info.hasParameters;
+                    final LinkInfo info = this.getInfo();
+                    boolean hasParams = info.hasParameters();
                     final StringBuffer buffer = new StringBuffer(info.getBase(secure));
                     if (hasParams) {
                         buffer.append('&');
@@ -141,9 +141,9 @@ public class PageLabelLinkService extends DefaultLinkService {
         }
 
         String requestParameterName = this.labelManager.getRequestParameterName();
-        final Info info = this.getInfo();
+        final LinkInfo info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.getBase(secure));
-        boolean hasParams = info.hasParameters;
+        boolean hasParams = info.hasParameters();
         Iterator iter = events.iterator();
         StringBuffer value = new StringBuffer("");
 
