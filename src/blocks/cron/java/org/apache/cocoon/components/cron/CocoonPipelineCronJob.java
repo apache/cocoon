@@ -45,11 +45,13 @@ import java.util.Map;
 public class CocoonPipelineCronJob extends ServiceableCronJob
                                    implements Configurable, ConfigurableCronJob  {
 
-	public static final String PIPELINE_PARAM = "pipeline";
+    public static final String PIPELINE_PARAM = "pipeline";
 
-	private String pipeline;
+    private String configuredPipeline;
+    private String pipeline;
 
 	public void execute(String name) {
+
 		if (getLogger ().isDebugEnabled ()) {
 			getLogger().debug ("CocoonPipelineCronJob: " + name + ", calling pipeline: " + pipeline);
 		}
@@ -86,7 +88,7 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
 	}
 
 	public void configure(final Configuration config) throws ConfigurationException {
-		this.pipeline = config.getChild(PIPELINE_PARAM).getValue("samples/hello-world/hello.xhtml");
+		this.configuredPipeline = config.getChild(PIPELINE_PARAM).getValue(null);
 	}
 
 	/* (non-Javadoc)
@@ -94,7 +96,9 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
 	 */
 	public void setup(Parameters params, Map objects) {
 		if (null != params) {
-			pipeline = params.getParameter(PIPELINE_PARAM, pipeline);
-		}
+			pipeline = params.getParameter(PIPELINE_PARAM, configuredPipeline);
+		} else {
+             pipeline = configuredPipeline;      
+        }
 	}
 }
