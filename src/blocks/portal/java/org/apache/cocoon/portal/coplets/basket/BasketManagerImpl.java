@@ -251,7 +251,6 @@ implements BasketManager, Serviceable, Receiver, Contextualizable, Initializable
     /**
      * Show one item of the basket
      * @param event  The event triggering the action
-     * @param basket The basket
      */
     protected void processShowItemEvent(ShowItemEvent event) {
         if ( event.getItem() instanceof ContentItem ) {

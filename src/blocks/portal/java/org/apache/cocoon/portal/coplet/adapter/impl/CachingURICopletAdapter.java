@@ -15,6 +15,12 @@
  */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -29,6 +35,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.util.Deprecation;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -55,6 +62,10 @@ public class CachingURICopletAdapter
 
     /** The configuration name for using the global cache. */
     public static final String CONFIGURATION_CACHE_GLOBAL= "cache-global";
+
+    /** The configuration name for querying instance attributes to generate the key
+     * for the global cache. */
+    public static final String CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES= "cache-global-use-attributes";
 
     /** The configuration name for ignoring sizing events to clear the cache. */
     public static final String CONFIGURATION_IGNORE_SIZING_EVENTS = "ignore-sizing-events";
@@ -240,6 +251,64 @@ public class CachingURICopletAdapter
      * Build the key for the global cache.
      */
     protected String getCacheKey(CopletInstanceData coplet, String uri) {
-        return "coplet:" + coplet.getCopletData().getId() + '/' + uri;
+        final Boolean useAttributes = (Boolean)this.getConfiguration(coplet,
+                                                            CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES,
+                                                            Boolean.FALSE);
+        if ( !useAttributes.booleanValue() ) {
+            return "coplet:" + coplet.getCopletData().getId() + '/' + uri;
+        }
+        final StringBuffer buffer = new StringBuffer("coplet:");
+        buffer.append(coplet.getCopletData().getId());
+        buffer.append('/');
+        buffer.append(uri);
+        boolean hasParams = false;
+        // first add attributes:
+        // sort the keys
+        List keyList = new ArrayList(coplet.getAttributes().keySet());
+        Collections.sort(keyList);
+        Iterator i = keyList.iterator();
+        while ( i.hasNext() ) {
+            final Object name = i.next();
+            final Object value = coplet.getAttribute(name.toString());
+            if ( hasParams ) {
+                buffer.append('&');
+            } else {
+                buffer.append('?');
+                hasParams = true;
+            }
+            buffer.append(name.toString());
+            buffer.append('=');
+            if ( value != null ) {
+                try {
+                    buffer.append(NetUtils.encode(value.toString(), "utf-8"));
+                } catch (UnsupportedEncodingException ignore) {
+                    // we ignore this
+                }
+            }
+        }
+        // second add temporary attributes
+        keyList = new ArrayList(coplet.getTemporaryAttributes().keySet());
+        Collections.sort(keyList);
+        i = keyList.iterator();
+        while ( i.hasNext() ) {
+            final Object name = i.next();
+            final Object value = coplet.getTemporaryAttribute(name.toString());
+            if ( hasParams ) {
+                buffer.append('&');
+            } else {
+                buffer.append('?');
+                hasParams = true;
+            }
+            buffer.append(name.toString());
+            buffer.append('=');
+            if ( value != null ) {
+                try {
+                    buffer.append(NetUtils.encode(value.toString(), "utf-8"));
+                } catch (UnsupportedEncodingException ignore) {
+                    // we ignore this
+                }
+            }
+        }
+        return buffer.toString();            
     }
 }

@@ -67,7 +67,7 @@ public abstract class AbstractContentEventAspect
     /**
      * Publish the event.
      * This method gets the layout object from the first two
-     * values and invokes {@link #publish(Publisher, Layout, String[])}.
+     * values and invokes {@link #publish(EventManager, Layout, String[])}.
      * @param values The values contained in the request
      */
     protected void publish( PortalService service, EventManager publisher, String[] values) {
