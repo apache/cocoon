@@ -16,13 +16,17 @@
 package org.apache.cocoon.components.cron;
 
 import java.net.MalformedURLException;
+import java.util.Map;
 
 import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionException;
@@ -58,6 +62,17 @@ public class CocoonQuartzJobExecutor extends QuartzJobExecutor {
             throw new JobExecutionException(e);
         }
 
+        Request req = ObjectModelHelper.getRequest(m_env.getObjectModel());
+        Map objects = (Map)data.get(QuartzJobScheduler.DATA_MAP_OBJECTMAP);
+        if (objects != null) {
+            req.setAttribute("cron-objectmap", objects);
+        }
+
+        Parameters params = (Parameters)data.get(QuartzJobScheduler.DATA_MAP_PARAMETERS);
+        if (params != null) {
+            req.setAttribute("cron-parameters", params);
+        }
+        
         try {
             m_processor = (Processor) m_manager.lookup(Processor.ROLE);
         } catch (ServiceException e) {
