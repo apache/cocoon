@@ -116,7 +116,12 @@
  </component>
 
  <!-- To enable PageLabels change DefaultLinkService to PageLabelLinkService -->
- <component class="org.apache.cocoon.portal.impl.DefaultLinkService" logger="portal" role="org.apache.cocoon.portal.LinkService"/>
+ <component class="org.apache.cocoon.portal.impl.DefaultLinkService"
+            logger="portal"
+            role="org.apache.cocoon.portal.LinkService">
+   <parameter name="defaultPort" value="8888"/>
+   <parameter name="defaultSecurePort" value="443"/>
+ </component>
 
  <!-- To enable PageLabels change DefaultEventConverter to PageLabelEventConverter -->
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventConverter" logger="portal" role="org.apache.cocoon.portal.event.EventConverter">
