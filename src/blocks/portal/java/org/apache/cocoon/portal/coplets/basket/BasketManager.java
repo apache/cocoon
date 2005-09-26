@@ -77,7 +77,7 @@ public interface BasketManager {
 
     /**
      * Return all configured actions for a basket - this is a list of 
-     * {@link #ActionInfo}s.
+     * {@link ActionInfo}s.
      */
     List getBasketActions();
 
@@ -88,7 +88,7 @@ public interface BasketManager {
     
     /**
      * Return all configured actions for a briefcase - this is a list of 
-     * {@link #ActionInfo}s.
+     * {@link ActionInfo}s.
      */
     List getBriefcaseActions();
 

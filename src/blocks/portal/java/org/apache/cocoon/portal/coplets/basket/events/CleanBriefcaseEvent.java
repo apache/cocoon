@@ -35,7 +35,7 @@ public class CleanBriefcaseEvent extends ContentStoreEvent {
     /**
      * Constructor
      * One briefcase will be cleaned
-     * @param briefcaseId The briefcase
+     * @param briefcase The briefcase
      */
     public CleanBriefcaseEvent(Briefcase briefcase) {
         super(briefcase);
