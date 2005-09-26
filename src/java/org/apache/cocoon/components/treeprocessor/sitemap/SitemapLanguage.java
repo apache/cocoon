@@ -29,6 +29,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -96,8 +97,14 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         
         newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
 
+        // It's possible to define a logger on a per sitemap base.
+        // This is the default logger for all components defined with this sitemap.
+        Logger sitemapLogger = this.getLogger();
+        if ( config.getAttribute("logger", null) != null) {
+            sitemapLogger = sitemapLogger.getChildLogger(config.getAttribute("logger"));
+        }
         // Go through the component lifecycle
-        ContainerUtil.enableLogging(newManager, this.getLogger());
+        ContainerUtil.enableLogging(newManager, sitemapLogger);
         ContainerUtil.contextualize(newManager, context);
         // before we pass the configuration we have to strip the
         // additional configuration parts, like classpath etc. as these
@@ -121,7 +128,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
 
             final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
             // Go through the component lifecycle
-            LifecycleHelper.setupComponent(cl, this.getLogger(), context, newManager, appContainer);
+            LifecycleHelper.setupComponent(cl, sitemapLogger, context, newManager, appContainer);
 
             this.applicationContainer = cl;
 
@@ -138,7 +145,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             final Configuration[] listeners = listenersWrapper.getChildren("listener");                
             for(int i = 0; i < listeners.length; i++) {
                 final Configuration current = listeners[i];
-                final TreeBuilder.EventComponent listener = this.createListener(newManager, context, current);
+                final TreeBuilder.EventComponent listener = this.createListener(newManager, sitemapLogger, context, current);
                 if ( !(listener.component instanceof SitemapListener) ) {
                     throw new ConfigurationException("Listener must implement the SitemapListener interface.");
                 }
@@ -152,7 +159,10 @@ public class SitemapLanguage extends DefaultTreeBuilder {
     /**
      * Create a listener
      */
-    protected TreeBuilder.EventComponent createListener(ServiceManager manager, Context context, Configuration config) 
+    protected TreeBuilder.EventComponent createListener(ServiceManager manager,
+                                                        Logger sitemapLogger,
+                                                        Context context,
+                                                        Configuration config) 
     throws Exception {
         // role or class?
         final String role = config.getAttribute("role", null);
@@ -162,7 +172,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         final String className = config.getAttribute("class");
         final Object component = ClassUtils.newInstance(className);
 
-        LifecycleHelper.setupComponent(component, this.getLogger(), context, manager, config);
+        LifecycleHelper.setupComponent(component, sitemapLogger, context, manager, config);
 
         return new TreeBuilder.EventComponent(component, false);
     }
