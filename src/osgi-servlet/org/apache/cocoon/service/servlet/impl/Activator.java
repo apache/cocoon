@@ -15,12 +15,16 @@
  */
 package org.apache.cocoon.service.servlet.impl;
 
-import java.util.Hashtable;
+import java.util.HashSet;
 
+import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.osgi.OSGiBootstrapEnvironment;
+import org.apache.cocoon.core.osgi.OSGiLoggerManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -28,6 +32,7 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpService;
+import org.osgi.service.log.LogService;
 
 /**
  * Activator which register a Cocoon servlet
@@ -39,10 +44,11 @@ public class Activator implements BundleActivator {
     static final String  SERVLET_ALIAS = "/";     // the http server root
     static final String  SITEMAP = "sitemap";
 
-    private Hashtable registrations = new Hashtable();
+    private HashSet registrations = new HashSet();
     private ClassLoader classLoader = getClass().getClassLoader();;
     private Logger logger;
-    private CoreUtil coreUtil;
+    private Core core;
+    private Processor processor;
 
     public void start(BundleContext bc) throws BundleException {
 
@@ -50,9 +56,12 @@ public class Activator implements BundleActivator {
         try {
             BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, this.bc);
             env.log("OSGiBootstrapEnvironment created");
-            this.coreUtil = new CoreUtil(env);
+            CoreUtil coreUtil = new CoreUtil(env);
             env.log("CoreUtil created");
-            this.logger = env.getBootstrapLogger(null);
+            LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
+            this.logger = logManager.getDefaultLogger();
+            this.core = coreUtil.getCore();
+            this.processor = coreUtil.createCocoon();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BundleException("Failed to create core util", e);
@@ -93,7 +102,7 @@ public class Activator implements BundleActivator {
 
     private void setRoot(ServiceReference sr) {
         
-        if(registrations.containsKey(sr)) {
+        if(registrations.contains(sr)) {
             return; // already done
         }
         
@@ -105,18 +114,19 @@ public class Activator implements BundleActivator {
             http.registerServlet(SERVLET_ALIAS,
                                  new BlocksServlet(this.classLoader,
                                                    this.logger,
-                                                   this.coreUtil),
-                                 new Hashtable(),
+                                                   this.core,
+                                                   this.processor),
+                                 null,
                                  null);
 
-            registrations.put(sr, null);
+            registrations.add(sr);
         } catch (Exception e) {
             this.logger.info("Failed to register resource", e);
         }
     } 
 
     private void unsetRoot(ServiceReference sr) {
-        if(!registrations.containsKey(sr)) {
+        if(!registrations.contains(sr)) {
             return; // nothing to do
         }
 
