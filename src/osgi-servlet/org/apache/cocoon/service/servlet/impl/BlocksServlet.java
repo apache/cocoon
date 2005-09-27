@@ -29,15 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
@@ -67,9 +66,9 @@ public class BlocksServlet extends HttpServlet {
     static final float HOUR   = 60 * MINUTE;
 
     /**
-     * The <code>Cocoon</code> instance
+     * The <code>Processor</code> instance
      */
-    protected Cocoon cocoon;
+    protected Processor processor;
 
     /**
      * Holds exception happened during initialization (if any)
@@ -90,19 +89,17 @@ public class BlocksServlet extends HttpServlet {
     /** Core */
     protected Core core;
 
-    /** CoreUtil */
-    protected CoreUtil coreUtil;
-
     /** The logger */
     protected Logger log;
 
     public BlocksServlet(ClassLoader classLoader,
                          Logger logger,
-                         CoreUtil coreUtil) {
+                         Core core,
+                         Processor processor) {
         this.classLoader = classLoader;
         this.log = logger;
-        this.coreUtil = coreUtil;
-        this.core = coreUtil.getCore();
+        this.core = core;
+        this.processor = processor;
     }
 
     /**
@@ -130,35 +127,17 @@ public class BlocksServlet extends HttpServlet {
                                                  this.core.getSettings().isSilentlyRename(),
                                                  this.core.getSettings().getMaxUploadSize(),
                                                  this.containerEncoding);
-
-        try {
-            this.exception = null;
-            this.cocoon = this.coreUtil.createCocoon();
-        } catch (Exception e) {
-            this.exception = e;
-        }
-        if (this.exception == null) {
-            this.getLogger().info("Apache Cocoon " + Constants.VERSION + " is up and ready.");
-        } else {
-            final String message = "Errors during initializing Apache Cocoon " + Constants.VERSION + " : " + this.exception.getMessage();
-            this.getLogger().error(message, this.exception);
-        }
     }
 
     /**
      * Dispose Cocoon when servlet is destroyed
      */
     public void destroy() {
-        this.getLogger().info("Destroying Cocoon Servlet.");
-        if (this.coreUtil != null) {
-            this.coreUtil = null;
-            // coreUtil will dispose it.
-            this.cocoon = null;
-        }
-
-        this.requestFactory = null;
         this.classLoader = null;
         this.log = null;
+        this.core = null;
+        this.processor = null;
+        this.requestFactory = null;
         super.destroy();
     }
 
@@ -203,25 +182,6 @@ public class BlocksServlet extends HttpServlet {
             manageException(req, res, null, null,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Problem in creating the Request", null, null, e);
-            return;
-        }
-
-        // Get the cocoon engine instance
-        try {
-            this.exception = null;
-            this.cocoon = this.coreUtil.getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
-        } catch (Exception e) {
-            this.exception = e;
-        }
-
-        // Check if cocoon was initialized
-        if (this.cocoon == null) {
-            manageException(request, res, null, null,
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Initialization Problem",
-                            null /* "Cocoon was not initialized" */,
-                            null /* "Cocoon was not initialized, cannot process request" */,
-                            this.exception);
             return;
         }
 
@@ -279,9 +239,10 @@ public class BlocksServlet extends HttpServlet {
 
         try {
             try {
-                handle = this.coreUtil.initializeRequest(env);
+                // FIXME: don't want the Servlet depend on coreUtil, find other way to initialized request
+                // handle = this.coreUtil.initializeRequest(env);
 
-                if (this.cocoon.process(env)) {
+                if (this.processor.process(env)) {
                     contentType = env.getContentType();
                 } else {
                     // We reach this when there is nothing in the processing change that matches
@@ -364,7 +325,8 @@ public class BlocksServlet extends HttpServlet {
                 }
             }
         } finally {
-            this.coreUtil.cleanUpRequest(handle);
+            // FIXME: don't want the Servlet depend on coreUtil, find other way to clean up request
+            // this.coreUtil.cleanUpRequest(handle);
 
             try {
                 if (request instanceof MultipartHttpServletRequest) {
