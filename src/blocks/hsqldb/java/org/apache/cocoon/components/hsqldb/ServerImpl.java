@@ -96,14 +96,15 @@ public class ServerImpl extends AbstractLogEnabled
 
         m_daemonThreadPoolName = params.getParameter("thread-pool-name", m_daemonThreadPoolName);
 
-        String dbPath = params.getParameter("path", DEFAULT_DB_PATH);
+        final String dbCfgPath = params.getParameter("path", DEFAULT_DB_PATH);
+        String dbPath = dbCfgPath;
         // Test if we are running inside a WAR file
         if(dbPath.startsWith(ServerImpl.CONTEXT_PROTOCOL)) {
             dbPath = this.cocoonContext.getRealPath(dbPath.substring(ServerImpl.CONTEXT_PROTOCOL.length()));
         }
         if (dbPath == null) {
-            throw new ParameterException("The hsqldb cannot be used inside a WAR file. " +
-                                         "Real path for <" + dbPath + "> is null.");
+            throw new ParameterException("The hsqldb cannot be used inside an unexpanded WAR file. " +
+                                         "Real path for <" + dbCfgPath + "> is null.");
         }
 
         String dbName = params.getParameter("name", DEFAULT_DB_NAME);
