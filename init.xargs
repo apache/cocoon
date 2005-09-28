@@ -68,4 +68,5 @@
 -start lib/core/knopflerfish-frameworkcommands-1.0.0.jar
 -start lib/core/knopflerfish-logcommands-1.0.0.jar
 -start lib/core/knopflerfish-http_all-1.1.0.jar
+-start build/osgi/org.apache.cocoon_1.0.0.jar
 -start build/osgi/org.apache.cocoon_servlet_1.0.0.jar
