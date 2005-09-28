@@ -119,7 +119,9 @@
     <replace file="${build.osgi.webapp}/sitemap.xmap">
       <replacetoken><![CDATA[<map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>]]></replacetoken>
       <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
-        map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/-->]]></replacevalue>
+        map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/-->
+        <map:include src="context://WEB-INF/sitemap-additions/cocoon-core.xconf"/>
+        ]]></replacevalue>
     </replace>  
     
     <replace file="${build.osgi.webapp}/WEB-INF/cocoon.xconf">
