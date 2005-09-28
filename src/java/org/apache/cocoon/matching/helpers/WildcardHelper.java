@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: WildcardHelper.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class WildcardHelper {
 
@@ -133,14 +133,14 @@ public class WildcardHelper {
      * match a pattern agains a string and isolates wildcard replacement into a
      * <code>Stack</code>.
      */
-    public static boolean match (HashMap map, String data,
-            int[] expr) throws NullPointerException {
-        if (map == null)
-            throw new NullPointerException ("No map provided");
-        if (data == null)
+    public static boolean match (HashMap map, String data, int[] expr) 
+    throws NullPointerException {
+        if (data == null) {
             throw new NullPointerException ("No data provided");
-        if (expr == null)
+        }
+        if (expr == null) {
             throw new NullPointerException ("No pattern expression provided");
+        }
 
 
         char buff[] = data.toCharArray();
@@ -161,8 +161,10 @@ public class WildcardHelper {
         // The matching count
         int mcount = 0;
 
-        // We want the complete data be in {0}
-        map.put(Integer.toString(mcount),data);
+        if ( map != null ) {
+            // We want the complete data be in {0}
+            map.put(Integer.toString(mcount),data);
+        }
 
         // First check for MATCH_BEGIN
         boolean matchBegin = false;
@@ -204,13 +206,15 @@ public class WildcardHelper {
 
             // Check for END's
             if (exprchr == MATCH_END) {
-                if (rsltpos > 0)
+                if (rsltpos > 0 && map != null) {
                     map.put(Integer.toString(++mcount),new String(rslt, 0, rsltpos));
+                }
                 // Don't care about rest of input buffer
                 return (true);
             } else if (exprchr == MATCH_THEEND) {
-                if (rsltpos > 0)
+                if (rsltpos > 0 && map != null ) {
                     map.put (Integer.toString(++mcount),new String(rslt, 0, rsltpos));
+                }
                 // Check that we reach buffer's end
                 return (buffpos == buff.length);
             }
@@ -245,7 +249,9 @@ public class WildcardHelper {
                 }
             }
 
-            map.put(Integer.toString(++mcount),new String (rslt, 0, rsltpos));
+            if ( map != null ) {
+                map.put(Integer.toString(++mcount),new String (rslt, 0, rsltpos));
+            }
             rsltpos = 0;
         }
     }
