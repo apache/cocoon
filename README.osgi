@@ -24,7 +24,7 @@ To build and start under OSGI do:
 
   build osgi
   cocoon osgi or ./cocoon.sh osgi
-  http://localhost:8080 and http://localhost:8080/samples/
+  http://localhost:8888 and http://localhost:8888/samples/
 
 Note that once the (Knopflerfish) OSGI framework starts, you can press
 enter on the console to access the framework command line:
