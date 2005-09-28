@@ -132,7 +132,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * in the map:transform
  *
  * <p>A live example of LinkRewriterTransformer can be found in the <a
- * href="http://xml.apache.org/forrest/">Apache Forrest</a> sitemap.
+ * href="http://forrest.apache.org/">Apache Forrest</a> sitemap.
  *
  * <h3>Transformer Configuration</h3>
  * <p>
@@ -221,7 +221,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class LinkRewriterTransformer extends AbstractSAXTransformer
                                      implements Initializable, Disposable {
 
-    private final static String NAMESPACE = "";
+    private final static String NAMESPACE = "http://www.w3.org/1999/xhtml";
 
     /**
      * A guardian object denoting absense of regexp pattern for a given
