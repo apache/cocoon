@@ -145,6 +145,14 @@ public class Core {
     }
     
     /**
+     * Return the Avalon context.
+     * @return The Avalon context.
+     */
+    public Context getContext() {
+        return this.context;
+    }
+    
+    /**
      * Return the current object model
      * @return The object model.
      */

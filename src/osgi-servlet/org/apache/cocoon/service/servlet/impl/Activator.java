@@ -27,7 +27,6 @@ import org.apache.cocoon.core.osgi.OSGiBootstrapEnvironment;
 import org.apache.cocoon.core.osgi.OSGiLoggerManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -50,22 +49,18 @@ public class Activator implements BundleActivator {
     private Core core;
     private Processor processor;
 
-    public void start(BundleContext bc) throws BundleException {
+    public void start(BundleContext bc) throws Exception {
 
         Activator.bc  = bc;
-        try {
-            BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, Activator.bc);
-            env.log("OSGiBootstrapEnvironment created");
-            CoreUtil coreUtil = new CoreUtil(env);
-            env.log("CoreUtil created");
-            LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
-            this.logger = logManager.getDefaultLogger();
-            this.core = coreUtil.getCore();
-            this.processor = coreUtil.createCocoon();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BundleException("Failed to create core util", e);
-        }
+
+        BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, Activator.bc);
+        env.log("OSGiBootstrapEnvironment created");
+        CoreUtil coreUtil = new CoreUtil(env);
+        env.log("CoreUtil created");
+        LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
+        this.logger = logManager.getDefaultLogger();
+        this.core = coreUtil.getCore();
+        this.processor = coreUtil.createCocoon();
 
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {
@@ -97,7 +92,7 @@ public class Activator implements BundleActivator {
         }
     }
 
-    public void stop(BundleContext bc) throws BundleException {
+    public void stop(BundleContext bc) throws Exception {
     }
 
     private void setRoot(ServiceReference sr) {
