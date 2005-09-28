@@ -25,33 +25,31 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 
 /**
- * A factory for 'create-document:' sources (see {@link CreateDocumentSource}).
- * 
- * @version $Id:$
+ * A factory for 'empty:' sources (see {@link EmptySource}).
+ *
+ * @version $Id$
  * @since 2.1.8
  */
-public class CreateDocumentSourceFactory 
-    extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe {
-    
+public class EmptySourceFactory extends AbstractLogEnabled
+                                implements SourceFactory, ThreadSafe {
+
     /**
-     * Get a {@link CreateDocumentSource} object.
-     * 
+     * Get an {@link EmptySource} object.
+     *
      * @param location   The URI to resolve - this URI includes the scheme.
      * @param parameters this is optional and not used here
      *
      * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
-    public Source getSource( String location, Map parameters )
+    public Source getSource(String location, Map parameters)
     throws IOException, MalformedURLException {
-        return new CreateDocumentSource(location);
+        return new EmptySource(location);
     }
-    
+
     /**
      * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
-    public void release( Source source ) {
+    public void release(Source source) {
         // Do nothing here
     }
-
 }

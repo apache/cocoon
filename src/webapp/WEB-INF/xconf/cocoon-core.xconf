@@ -539,8 +539,7 @@
     <component-instance name="upload" class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
     <component-instance name="module" class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
     <component-instance name="xmodule" class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
-
-    <component-instance name="create-document" class="org.apache.cocoon.components.source.impl.CreateDocumentSourceFactory"/>
+    <component-instance name="empty" class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
 
     <!--+
         | The "*" protocol handles all uri schemes that are not explicitely
