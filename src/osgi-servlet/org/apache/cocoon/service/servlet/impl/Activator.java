@@ -36,8 +36,8 @@ import org.osgi.service.log.LogService;
 
 /**
  * Activator which register a Cocoon servlet
+ * @version $Id$
  */
-
 public class Activator implements BundleActivator {
 
     static BundleContext bc;
@@ -45,16 +45,16 @@ public class Activator implements BundleActivator {
     static final String  SITEMAP = "sitemap";
 
     private HashSet registrations = new HashSet();
-    private ClassLoader classLoader = getClass().getClassLoader();;
+    private ClassLoader classLoader = getClass().getClassLoader();
     private Logger logger;
     private Core core;
     private Processor processor;
 
     public void start(BundleContext bc) throws BundleException {
 
-        this.bc  = bc;
+        Activator.bc  = bc;
         try {
-            BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, this.bc);
+            BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, Activator.bc);
             env.log("OSGiBootstrapEnvironment created");
             CoreUtil coreUtil = new CoreUtil(env);
             env.log("CoreUtil created");
@@ -70,7 +70,7 @@ public class Activator implements BundleActivator {
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {
                     ServiceReference sr = ev.getServiceReference();
-                    
+
                     switch(ev.getType()) {
                     case ServiceEvent.REGISTERED:
                         setRoot(sr);
@@ -81,12 +81,12 @@ public class Activator implements BundleActivator {
                     }
                 }
             };
-        
+
         String filter = "(objectclass=" + HttpService.class.getName() + ")";
-        
+
         try {
             bc.addServiceListener(listener, filter);
-            
+
             ServiceReference[] srl = bc.getServiceReferences(null, filter);
             for(int i = 0; srl != null && i < srl.length; i++) {
                 listener.serviceChanged(new ServiceEvent(ServiceEvent.REGISTERED,
@@ -96,16 +96,16 @@ public class Activator implements BundleActivator {
             this.logger.info("Failed to set up listener for http service", e);
         }
     }
-  
+
     public void stop(BundleContext bc) throws BundleException {
     }
 
     private void setRoot(ServiceReference sr) {
-        
+
         if(registrations.contains(sr)) {
             return; // already done
         }
-        
+
         this.logger.info("set root for " + sr);
 
         HttpService http = (HttpService)bc.getService(sr);
@@ -123,7 +123,7 @@ public class Activator implements BundleActivator {
         } catch (Exception e) {
             this.logger.info("Failed to register resource", e);
         }
-    } 
+    }
 
     private void unsetRoot(ServiceReference sr) {
         if(!registrations.contains(sr)) {
@@ -131,9 +131,9 @@ public class Activator implements BundleActivator {
         }
 
         this.logger.info("unset root for " + sr);
-    
+
         HttpService http = (HttpService)bc.getService(sr);
-    
+
         if(http != null) {
             http.unregister(SERVLET_ALIAS);
             bc.ungetService(sr);
