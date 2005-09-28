@@ -30,27 +30,31 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * A <code>Source</code> that generates an empty XML document or an
- * XML document just containing a root node.
- * The URI syntax is "create-document:" or "create-document:ROOT_ELEMENT_NAME".
+ * A <code>Source</code> that generates completely empty XML document or an
+ * XML document that contains just a root node.
  *
- * @version $Id:$
+ * <p>
+ * The URI syntax is <code>empty:</code> for completely empty XML document
+ * or <code>create-document:root-element</code> for document with root element,
+ * where <code>root-element</code> is the name of the root element to create.
+ *
+ * @version $Id$
  * @since 2.1.8
  */
-public class CreateDocumentSource
-    implements XMLizable, Source {
+public class EmptySource implements XMLizable, Source {
 
     protected String rootElementName;
     protected String scheme;
     protected String uri;
     protected String xmlDocument;
 
-    public CreateDocumentSource(String location) {
+    public EmptySource(String location) {
         this.uri = location;
         final int pos = location.indexOf(':');
         this.scheme = location.substring(0, pos);
-        final String rootName = location.substring(pos+1);
-        if (rootName != null && rootName.trim().length() > 0 ) {
+
+        final String rootName = location.substring(pos + 1);
+        if (rootName != null && rootName.trim().length() > 0) {
             this.rootElementName = rootName.trim();
             this.xmlDocument = '<' + this.rootElementName + "/>";
         } else {
@@ -63,7 +67,7 @@ public class CreateDocumentSource
      */
     public void toSAX(ContentHandler handler) throws SAXException {
         handler.startDocument();
-        if ( rootElementName != null ) {
+        if (rootElementName != null) {
             XMLUtils.createElement(handler, this.rootElementName);
         }
         handler.endDocument();
@@ -132,5 +136,4 @@ public class CreateDocumentSource
     public void refresh() {
         // nothing to do here
     }
-
 }
