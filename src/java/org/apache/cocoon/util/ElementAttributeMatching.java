@@ -28,7 +28,7 @@ import org.apache.regexp.RESyntaxException;
  * here to make it more reusable.
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java 153227 2005-02-10 15:00:57Z cziegeler $
+ * @version CVS $Id$
  */
 public class ElementAttributeMatching {
     /**
