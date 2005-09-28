@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,11 +19,10 @@ package org.apache.cocoon.components.modules.input;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -33,7 +32,7 @@ import java.util.Vector;
  * running in a .war file), <code>null</code> will be returned.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 /*
@@ -66,9 +65,13 @@ public class RealPathModule extends AbstractInputModule implements ThreadSafe {
         returnNames = tmp;
     }
 
-    public Object getAttribute( String name, Configuration modeConf, Map objectModel ) throws ConfigurationException {
-
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         String uri = ObjectModelHelper.getContext(objectModel).getRealPath(name);
+        if (uri == null) {
+            return null;
+        }
+
         int lastCharPos = uri.length() - 1;
         if (uri.charAt(lastCharPos) == '\\') {
             uri = uri.substring(0, lastCharPos);
@@ -76,19 +79,13 @@ public class RealPathModule extends AbstractInputModule implements ThreadSafe {
         return uri;
     }
 
-
-    public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) throws ConfigurationException {
-
+    public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
+    throws ConfigurationException {
         return RealPathModule.returnNames.iterator();
     }
 
-
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
-            List values = new LinkedList();
-            values.add( this.getAttribute(name, modeConf, objectModel) );
-
-            return values.toArray();
+    throws ConfigurationException {
+        return new Object[] { getAttribute(name, modeConf, objectModel) };
     }
 }
