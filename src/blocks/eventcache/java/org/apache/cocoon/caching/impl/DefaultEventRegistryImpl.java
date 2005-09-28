@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,21 +30,20 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.EventRegistry;
 
 /**
- * This implementation of <code>EventRegistry</code> handles 
- * persistence by serializing an <code>EventRegistryDataWrapper</code> to 
+ * This implementation of <code>EventRegistry</code> handles
+ * persistence by serializing an <code>EventRegistryDataWrapper</code> to
  * disk.
- * 
+ *
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class DefaultEventRegistryImpl 
-        extends AbstractDoubleMapEventRegistry
-        implements EventRegistry, 
-                   Contextualizable {
+public class DefaultEventRegistryImpl extends AbstractDoubleMapEventRegistry
+                                      implements EventRegistry, Contextualizable {
+
+    private static final String PERSISTENT_FILE = "/WEB-INF/ev_cache.ser";
 
     private File m_persistentFile;
-    private static final String PERSISTENT_FILE = "ev_cache.ser";    
 
     /**
      * Set up the persistence file.
@@ -53,20 +52,19 @@ public class DefaultEventRegistryImpl
         org.apache.cocoon.environment.Context ctx =
                 (org.apache.cocoon.environment.Context) context.get(
                                     Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-        // set up file 
-        m_persistentFile = new File(
-                    ctx.getRealPath("/WEB-INF"), 
-                        DefaultEventRegistryImpl.PERSISTENT_FILE);
-        if (m_persistentFile == null) {
-            throw new ContextException("Could not obtain persistent file. " +
-                "The cache event registry cannot be " +
-                "used inside an unexpanded WAR file.");
+        // set up file
+        String path = ctx.getRealPath(PERSISTENT_FILE);
+        if (path == null) {
+            throw new ContextException("The cache event registry cannot be used inside an unexpanded WAR file. " +
+                                       "Real path for <" + PERSISTENT_FILE + "> is null.");
         }
+
+        m_persistentFile = new File(path);
     }
-    
-    /** 
-     * Persist by simple object serialization.  If the serialization fails, an 
-     * error is logged but not thrown because missing/invalid state is handled 
+
+    /**
+     * Persist by simple object serialization.  If the serialization fails, an
+     * error is logged but not thrown because missing/invalid state is handled
      * at startup.
      */
     protected void persist(EventRegistryDataWrapper registryWrapper) {
@@ -82,13 +80,13 @@ public class DefaultEventRegistryImpl
         } finally {
             try {
                 if (oos != null) oos.close();
-            } catch (IOException e) {}
+            } catch (IOException e) { /* ignored */ }
         }
     }
 
-    /* 
-     * I don't think this needs to get synchronized because it should 
-     * only be called during initialize, which should only be called 
+    /*
+     * I don't think this needs to get synchronized because it should
+     * only be called during initialize, which should only be called
      * once by the container.
      */
     protected boolean recover() {
@@ -96,8 +94,7 @@ public class DefaultEventRegistryImpl
             ObjectInputStream ois = null;
             EventRegistryDataWrapper ecdw = null;
             try {
-                ois = new ObjectInputStream(
-                    new FileInputStream(this.m_persistentFile));
+                ois = new ObjectInputStream(new FileInputStream(this.m_persistentFile));
                 ecdw = (EventRegistryDataWrapper) ois.readObject();
             } catch (FileNotFoundException e) {
                 getLogger().error("Unable to retrieve EventRegistry", e);
@@ -121,7 +118,7 @@ public class DefaultEventRegistryImpl
             unwrapRegistry(ecdw);
         } else {
             getLogger().warn(this.m_persistentFile + " does not exist - Unable to " +
-                "retrieve EventRegistry.");
+                             "retrieve EventRegistry.");
             createBlankCache();
             return false;
         }
