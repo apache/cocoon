@@ -16,9 +16,14 @@
 package org.apache.cocoon.components.flow;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -102,6 +107,10 @@ public class WebContinuation extends AbstractLogEnabled
      */
     protected ContinuationsDisposer disposer;
 
+    /**
+     * The attributes of this continuation
+     */
+    private Map attributes;
 
     /**
      * Create a <code>WebContinuation</code> object. Saves the object in
@@ -132,6 +141,57 @@ public class WebContinuation extends AbstractLogEnabled
         if (parentContinuation != null) {
             this.parentContinuation.children.add(this);
         }
+    }
+
+    /**
+     * Get an attribute of this continuation
+     * 
+     * @param name the attribute name.
+     */
+    public Object getAttribute(String name) {
+        if (this.attributes == null)
+            return null;
+        
+        return this.attributes.get(name);
+    }
+    
+    /**
+     * Set an attribute of this continuation
+     * 
+     * @param name the attribute name
+     * @param value its value
+     */
+    public void setAttribute(String name, Object value) {
+        if (this.attributes == null) {
+            this.attributes = Collections.synchronizedMap(new HashMap());
+        }
+        
+        this.attributes.put(name, value);
+    }
+    
+    /**
+     * Remove an attribute of this continuation
+     * 
+     * @param name the attribute name
+     */
+    public void removeAttribute(String name) {
+        if (this.attributes == null)
+            return;
+        
+        this.attributes.remove(name);
+    }
+    
+    /**
+     * Enumerate the attributes of this continuation.
+     * 
+     * @return an enumeration of strings
+     */
+    public Enumeration getAttributeNames() {
+        if (this.attributes == null)
+            return new IteratorEnumeration();
+        
+        ArrayList keys = new ArrayList(this.attributes.keySet());
+        return new IteratorEnumeration(keys.iterator());
     }
 
     /**
