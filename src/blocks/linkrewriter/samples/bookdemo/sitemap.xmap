@@ -53,6 +53,9 @@
          <map:parameter name="prefix" value="//*[@label='"/>
          <map:parameter name="suffix" value="']/@href"/>
          -->
+       </map:transform>
+       <!-- For the pages that have a non empty default namespace -->
+       <map:transform type="linkrewriter" src="cocoon:/linkmap">
          <map:parameter name="namespace-uri" value="http://www.w3.org/1999/xhtml"/>
        </map:transform>
        <map:serialize/>
