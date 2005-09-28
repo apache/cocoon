@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,14 +37,18 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.service.log.LogService;
 
-public class OSGiBootstrapEnvironment
-    implements BootstrapEnvironment {
-    
+/**
+ * @version $Id$
+ */
+public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
+
     private final String configuration = "/WEB-INF/block.xml";
+
     private final ClassLoader classLoader;
     public Logger logger = null;
     private final String contextPath;
     private final Context environmentContext;
+
 
     public OSGiBootstrapEnvironment(ClassLoader classLoader, BundleContext bc)
         throws Exception {
@@ -55,13 +59,17 @@ public class OSGiBootstrapEnvironment
         LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
         this.logger = logManager.getDefaultLogger();
 
-        Bundle bundle = getSitemapBundle(bc, this.logger); //bc.getBundle();
-        if (bundle == null)
+        Bundle bundle = getSitemapBundle(bc, this.logger);
+        if (bundle == null) {
             throw new Exception("No sitemap bundle");
+        }
+
         // Try to figure out the path of the root from that of /WEB-INF/block.xml
         URL pathURL = bundle.getResource(this.configuration);
-        if (pathURL == null)
+        if (pathURL == null) {
             throw new FileNotFoundException("Unable to get resource '/WEB-INF/block.xml' from bundle ." + bundle);
+        }
+
         String path = pathURL.toString();
         path = path.substring(0, path.length() - (this.configuration.length() - 1));
         this.contextPath = path;
@@ -116,7 +124,7 @@ public class OSGiBootstrapEnvironment
             return null;
         }
     }
-    
+
     public void configure(MutableSettings settings) {
         // FIXME: Should be found from block.xml
         settings.setConfiguration("/WEB-INF/cocoon.xconf");
@@ -139,7 +147,7 @@ public class OSGiBootstrapEnvironment
     public Context getEnvironmentContext() {
         return this.environmentContext;
     }
-    
+
     /**
      * Returns the URL to the application context.
      */
@@ -197,9 +205,10 @@ public class OSGiBootstrapEnvironment
         return null;
     }
 
+
     public class OSGiContext extends AbstractContext {
 
-        Bundle bundle;
+        private Bundle bundle;
         private Hashtable attributes = new Hashtable();
         private Hashtable initparameters = new Hashtable();
 
@@ -230,19 +239,27 @@ public class OSGiBootstrapEnvironment
         }
 
         public String getRealPath(String path) {
+            // Everything is zipped up, no path.
             return null;
         }
 
         public String getMimeType(String file) {
-            return null;
+            // TODO Implement
+            throw new UnsupportedOperationException("Not Implemented");
         }
 
         public String getInitParameter(String name) {
-            return (String)initparameters.get(name);
+            return (String) initparameters.get(name);
         }
 
         public InputStream getResourceAsStream(String path) {
-            return null;
+            try {
+                return bundle.getResource(path).openStream();
+            } catch (IOException e) {
+                // FIXME Error handling
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }
