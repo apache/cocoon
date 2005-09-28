@@ -221,7 +221,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class LinkRewriterTransformer extends AbstractSAXTransformer
                                      implements Initializable, Disposable {
 
-    private final static String NAMESPACE = "http://www.w3.org/1999/xhtml";
+    private final static String NAMESPACE = "";
 
     /**
      * A guardian object denoting absense of regexp pattern for a given
