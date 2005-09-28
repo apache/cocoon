@@ -15,10 +15,13 @@
   limitations under the License.
 -->
 
-<xroles xpath="/role-list"
-        unless="/role-list[@cocoon-version != '2.1']|role[@name='org.apache.cocoon.components.validation.Validator']">
+<!--+
+    | $Id$
+    +-->
+<role-list>
 
-  <role name="org.apache.cocoon.components.validation.Validator" shorthand="validator"
+  <role name="org.apache.cocoon.components.validation.Validator"
+        shorthand="validator"
         default-class="org.apache.cocoon.components.validation.impl.CachingValidator"/>
 
-</xroles>
+</role-list>
