@@ -15,7 +15,12 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="@version != '2.1' or validator">
+<!--+
+    | $Id$
+    +-->
+<components>
+  <!-- Include roles -->
+  <include src="resource://org/apache/cocoon/components/validation/validation.roles"/>
 
   <!--+
       | The shared Validator instance in Cocoon.
@@ -32,4 +37,4 @@
     </schema-parser>
   </validator>
   
-</xconf>
+</components>
