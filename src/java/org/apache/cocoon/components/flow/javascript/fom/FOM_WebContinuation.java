@@ -103,6 +103,26 @@ public class FOM_WebContinuation extends ScriptableObject {
         return "FOM_WebContinuation";
     }
 
+    public Object jsFunction_getAttribute(String name) {
+        return org.mozilla.javascript.Context.javaToJS(
+                wk.getAttribute(name),
+                getParentScope());
+    }
+
+    public void jsFunction_setAttribute(String name, Object value) {
+        wk.setAttribute(name, unwrap(value));
+    }
+
+    public void jsFunction_removeAttribute(String name) {
+        wk.removeAttribute(name);
+    }
+
+    public Object jsFunction_getAttributeNames() {
+        return org.mozilla.javascript.Context.javaToJS(
+                wk.getAttributeNames(),
+                getParentScope());
+    }
+
     public String jsGet_id() {
         return wk.getId();
     }
