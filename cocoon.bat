@@ -110,6 +110,7 @@ if ""%1"" == ""servlet-debug"" goto doDebug
 IF ""%1"" == ""servlet-profile"" goto doProfile
 IF ""%1"" == ""yourkit-profile"" goto doYourkitProfile
 IF ""%1"" == ""osgi"" goto doOsgiKnopflerfish
+IF ""%1"" == ""osgi-debug"" goto doOsgiKnopflerfishDebug
 
 echo Usage: cocoon (action)
 echo actions:
@@ -120,6 +121,7 @@ echo   servlet-debug   Run Cocoon in a servlet container and turn on remote JVM 
 echo   servlet-profile Run Cocoon in a servlet container and turn on JVM profiling
 echo   yourkit-profile Run Cocoon in a servlet container and turn on Yourkit JVM profiling
 echo   osgi            Run Cocoon within OSGi
+echo   osgi-debug      Run Cocoon within OSGi and turn on remote JVM debug
 goto end
 
 :: ----- Cli -------------------------------------------------------------------
@@ -173,6 +175,10 @@ goto end
 
 :doOsgiKnopflerfish
 %EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -jar lib/core/knopflerfish-framework-1.3.3.jar -init %2 %3 %4 %5 %6 %7 %8 %9
+goto end
+
+:doOsgiKnopflerfishDebug
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -Xdebug -Xrunjdwp:transport=dt_socket,address=%JAVA_DEBUG_PORT%,server=y,suspend=n -jar lib/core/knopflerfish-framework-1.3.3.jar -init %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
 :: ----- End -------------------------------------------------------------------

@@ -60,6 +60,7 @@ usage()
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
     echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
     echo "  osgi              Run Cocoon with the experimental OSGI kernel"
+    echo "  osgi-debug        Run Cocoon with the experimental OSGI kernel and turn on JVM remote debug"
     exit 1
 }
 
@@ -175,6 +176,12 @@ case "$ACTION" in
         # -init prevents knopflerfish from using its persistent info about bundles, seems safer for now
         KNOP_OPTIONS="-init"
         $JAVA $JAVA_OPTIONS -jar lib/core/knopflerfish-framework-1.3.3.jar $KNOP_OPTIONS $ARGS
+        ;;
+
+  osgi-debug)
+        # -init prevents knopflerfish from using its persistent info about bundles, seems safer for now
+        KNOP_OPTIONS="-init"
+        $JAVA $JAVA_OPTIONS $JAVA_DEBUG_ARGS -jar lib/core/knopflerfish-framework-1.3.3.jar $KNOP_OPTIONS $ARGS
         ;;
 
   *)
