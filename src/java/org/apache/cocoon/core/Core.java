@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -140,7 +139,7 @@ public class Core {
         try {
             return (org.apache.cocoon.environment.Context)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the environment object from the context.", ce);
+            throw new CoreResourceNotFoundException("Unable to get the environment object from the context.", ce);
         }
     }
     
@@ -167,7 +166,7 @@ public class Core {
         try {
             return (File)this.context.get(Constants.CONTEXT_WORK_DIR);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the working directory from the context.", ce);
+            throw new CoreResourceNotFoundException("Unable to get the working directory from the context.", ce);
         }        
     }
 
@@ -178,7 +177,7 @@ public class Core {
         try {
             return (File)this.context.get(Constants.CONTEXT_UPLOAD_DIR);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the upload directory from the context.", ce);
+            throw new CoreResourceNotFoundException("Unable to get the upload directory from the context.", ce);
         }        
     }
 
@@ -189,7 +188,7 @@ public class Core {
         try {
             return (File)this.context.get(Constants.CONTEXT_CACHE_DIR);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the cache directory from the context.", ce);
+            throw new CoreResourceNotFoundException("Unable to get the cache directory from the context.", ce);
         }        
     }
     
