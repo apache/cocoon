@@ -17,7 +17,6 @@ package org.apache.cocoon.components;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -64,7 +63,7 @@ public final class ContextHelper {
         try {
             return (Request)context.get(CONTEXT_REQUEST_OBJECT);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the request object from the context.", ce);
+            throw new ContextResourceNotFoundException("Unable to get the request object from the context.", ce);
         }
     }
 
@@ -78,7 +77,7 @@ public final class ContextHelper {
         try {
             return (Response)context.get(CONTEXT_RESPONSE_OBJECT);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the response object from the context.", ce);
+            throw new ContextResourceNotFoundException("Unable to get the response object from the context.", ce);
         }
     }
 
@@ -92,7 +91,7 @@ public final class ContextHelper {
         try {
             return (Map)context.get(CONTEXT_OBJECT_MODEL);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the object model from the context.", ce);
+            throw new ContextResourceNotFoundException("Unable to get the object model from the context.", ce);
         }
     }
     
@@ -107,7 +106,7 @@ public final class ContextHelper {
         try {
             return (ServiceManager)context.get(CONTEXT_SITEMAP_SERVICE_MANAGER);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException("Unable to get the service manager from the context.", ce);
+            throw new ContextResourceNotFoundException("Unable to get the service manager from the context.", ce);
         }        
     }
 
