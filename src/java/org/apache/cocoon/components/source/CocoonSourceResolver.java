@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -263,7 +262,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
                     factory = this.getSourceFactory(m, "*");
                     factory.release(source);
                 } catch (ProcessingException sse ) {
-                    throw new CascadingRuntimeException( "Unable to select source factory for " + source.getURI(), se );
+                    throw new SourceFactoryNotFoundException( "Unable to select source factory for " + source.getURI(), se );
                 }
             } finally {
                 m.release( factory );
