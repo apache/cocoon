@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -45,6 +44,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.CoreResourceNotFoundException;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.AliasComponentHandler;
@@ -780,7 +780,7 @@ public class CoreServiceManager
                     this.cachedSourceResolver = (SourceResolver)this.parentManager.lookup(SourceResolver.ROLE);
                 } catch(ServiceException se) {
                     // Unlikely to happen
-                    throw new CascadingRuntimeException("Cannot get source resolver from parent, at " + location, se);
+                    throw new CoreResourceNotFoundException("Cannot get source resolver from parent, at " + location, se);
                 }
             } else {
                 // Create our own
@@ -789,7 +789,7 @@ public class CoreServiceManager
                 try {
                     simpleSR.contextualize(this.context);
                 } catch (ContextException ce) {
-                    throw new CascadingRuntimeException("Cannot setup source resolver, at " + location, ce);
+                    throw new CoreResourceNotFoundException("Cannot setup source resolver, at " + location, ce);
                 }
                 this.cachedSourceResolver = simpleSR;
             }
