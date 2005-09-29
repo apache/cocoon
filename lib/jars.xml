@@ -650,15 +650,13 @@
     <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
-  <!-- Currently only used by the build
-  <file id="">
+  <file id="jing">
     <title>Jing</title>
     <description>RELAX NG validator</description>
-    <used-by>build</used-by>
-    <lib>tools/lib/jing-20030619.jar</lib>
+    <used-by>validation</used-by>
+    <lib>optional/jing-20030619.jar</lib>
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
-  -->
 
   <file id="cocoon-serializers-charsets">
     <title>Cocoon Serializers Block Encodings</title>
