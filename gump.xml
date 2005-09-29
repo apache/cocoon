@@ -1819,7 +1819,7 @@
   <project name="cowarp">
     <url href="http://osoco.sourceforge.net/cowarp/"/>
     <package>org.osoco.cowarp</package>
-    <jar name="lib/optional/cowarp-0.3.jar"/>
+    <jar name="lib/optional/cowarp-0.4.jar"/>
   </project>
 
   <project name="wsrp4j">
