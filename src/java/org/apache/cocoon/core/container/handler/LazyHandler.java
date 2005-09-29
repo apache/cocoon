@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.core.container.handler;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.core.CoreResourceNotFoundException;
 import org.apache.cocoon.core.container.ComponentEnvironment;
 
 /**
@@ -59,7 +59,7 @@ public class LazyHandler implements ComponentHandler {
         try {
             return getDelegate();
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Cannot get delegate handler", e);
+            throw new CoreResourceNotFoundException("Cannot get delegate handler", e);
         }
     }
 
