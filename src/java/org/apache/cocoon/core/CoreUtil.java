@@ -30,7 +30,6 @@ import java.util.Properties;
 
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -271,9 +270,9 @@ public class CoreUtil {
     public Core getCore() {
         try {
             return (Core)this.parentManager.lookup(Core.ROLE);
-        } catch (ServiceException ignore) {
-            // this can never happen!
-            throw new RuntimeException("Fatal error: no Cocoon core available.");
+        } catch (ServiceException neverIgnore) {
+            // this should never happen!
+            throw new CoreFatalException("Fatal exception: no Cocoon core available.", neverIgnore);
         }
     }
 
@@ -460,7 +459,7 @@ public class CoreUtil {
         try {
             resolver.contextualize(this.appContext);
         } catch (ContextException ce) {
-            throw new CascadingRuntimeException(
+            throw new CoreInitializationException(
                     "Cannot setup source resolver.", ce);
         }
         return resolver;        
