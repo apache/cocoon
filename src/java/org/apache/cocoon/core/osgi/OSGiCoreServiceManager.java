@@ -95,7 +95,7 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
             try {
                 return handler.get();
             } catch (Exception e) {
-                throw new RuntimeException("Cannot get service", e);
+                throw new CoreOSGIServiceException("Cannot get service", e);
             }
         }
 
@@ -103,7 +103,7 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
             try {
                 handler.put(obj);
             } catch (Exception e) {
-                throw new RuntimeException("Cannot unget service", e);
+                throw new CoreOSGIServiceException("Cannot unget service", e);
             }
         }
     }
