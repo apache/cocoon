@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
@@ -224,7 +223,7 @@ public class FOM_Cocoon extends ScriptableObject {
         try {
             sitemapManager = (ServiceManager)avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
         } catch (ContextException e) {
-            throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
+            throw new FOMResourceNotFoundException("Cannot get sitemap service manager", e);
         }
 
         this.currentCall = new CallContext(currentCall, interp, redirector, sitemapManager,
