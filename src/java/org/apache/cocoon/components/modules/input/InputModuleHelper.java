@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -48,9 +47,9 @@ public class InputModuleHelper {
      * Get the input module
      */
     private InputModule getInputModule(String name)
-    throws CascadingRuntimeException {
+    throws InputModuleException {
         if ( this.inputModules == null ) {
-            throw new RuntimeException("ModuleHelper is not setup correctly.");
+            throw new InputModuleInitializationException("ModuleHelper is not setup correctly.");
         }
         InputModule module = (InputModule) this.inputModules.get(name);
         if ( module == null ) {
@@ -59,10 +58,10 @@ public class InputModuleHelper {
                     module = (InputModule) this.serviceInputSelector.select(name);
                 }
             } catch (Exception e) {
-                throw new CascadingRuntimeException("Unable to lookup input module " + name, e);
+                throw new InputModuleNotFoundException("Unable to lookup input module " + name, e);
             }
             if ( module == null ) {
-                throw new RuntimeException("No such InputModule: "+name);
+                throw new InputModuleNotFoundException("No such InputModule: "+name);
             }
             this.inputModules.put(name, module);
         }
@@ -85,10 +84,10 @@ public class InputModuleHelper {
      * @param objectModel a <code>Map</code> value holding the current
      * ObjectModel
      * @return an <code>Object</code> value
-     * @exception CascadingRuntimeException if an error occurs. The real
+     * @throws InputModuleException if an error occurs. The real
      * exception can be obtained with <code>getCause</code>.
      */
-    private Object get(int op, String name, String attr, Map objectModel, Configuration conf) throws CascadingRuntimeException {
+    private Object get(int op, String name, String attr, Map objectModel, Configuration conf) throws InputModuleException {
 
         Object value = null;
         final InputModule input = this.getInputModule(name);
@@ -108,13 +107,13 @@ public class InputModuleHelper {
             }
 
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Error accessing attribute '"+attr+"' from input module '"+name+"'. "+e.getMessage(), e);
+            throw new InputModuleAttributeException("Error accessing attribute '"+attr+"' from input module '"+name+"'. "+e.getMessage(), e);
         }
 
         return value;
     }
 
-    private Object get(int op, String name, String attr, Map objectModel) throws RuntimeException {
+    private Object get(int op, String name, String attr, Map objectModel) throws InputModuleException {
         return get(op, name, attr, objectModel, null);
     }
 
@@ -125,16 +124,16 @@ public class InputModuleHelper {
      * service manager and service selector in instance 
      * 
      * @param manager a <code>ServiceManager</code> value
-     * @exception RuntimeException if an error occurs
+     * @throws InputModuleException if an error occurs
      */
-    public void setup(ServiceManager manager) throws RuntimeException {
+    public void setup(ServiceManager manager) throws InputModuleException {
 
         this.inputModules = new HashMap();
         this.serviceManager = manager;
         try {
             this.serviceInputSelector = (ServiceSelector) this.serviceManager.lookup(INPUT_MODULE_SELECTOR); 
         } catch (Exception e) {
-            throw new CascadingRuntimeException("Could not obtain selector for InputModule.",e);
+            throw new InputModuleInitializationException("Could not obtain selector for InputModule.",e);
         }
     }
 
@@ -149,9 +148,9 @@ public class InputModuleHelper {
      * @param name a <code>String</code> value holding the attribute name
      * @param deflt an <code>Object</code> value holding a default value
      * @return an <code>Object</code> value
-     * @exception RuntimeException if an error occurs
+     * @throws InputModuleException if an error occurs
      */
-    public Object getAttribute(Map objectModel, Configuration conf, String module, String name, Object deflt) throws RuntimeException {
+    public Object getAttribute(Map objectModel, Configuration conf, String module, String name, Object deflt) throws InputModuleException {
 
         Object result = this.get(OP_GET, module, name, objectModel, conf);
         if (result == null) result = deflt;
@@ -163,7 +162,7 @@ public class InputModuleHelper {
      * #getAttribute(Map, Configuration, String, String, Object)} with a
      * <code>null</code> configuration.
      */
-    public Object getAttribute(Map objectModel, String module, String name, Object deflt) throws RuntimeException {
+    public Object getAttribute(Map objectModel, String module, String name, Object deflt) throws InputModuleException {
         return getAttribute(objectModel, null, module, name, deflt);
     }
 
@@ -178,9 +177,9 @@ public class InputModuleHelper {
      * @param name a <code>String</code> value holding the attribute name
      * @param deflt an <code>Object[]</code> value holding a default value
      * @return an <code>Object[]</code> value
-     * @exception RuntimeException if an error occurs
+     * @throws InputModuleException if an error occurs
      */
-    public Object[] getAttributeValues(Map objectModel, Configuration conf, String module, String name, Object[] deflt) throws RuntimeException {
+    public Object[] getAttributeValues(Map objectModel, Configuration conf, String module, String name, Object[] deflt) throws InputModuleException {
 
         Object[] result = (Object[]) this.get(OP_VALUES, module, name, objectModel, conf);
         if (result == null) result = deflt;
@@ -192,7 +191,7 @@ public class InputModuleHelper {
      * {@link #getAttributeValues(Map, Configuration, String, String, Object[])}
      * with a <code>null</code> configuration.
      */
-    public Object[] getAttributeValues(Map objectModel, String module, String name, Object[] deflt) throws RuntimeException {
+    public Object[] getAttributeValues(Map objectModel, String module, String name, Object[] deflt) throws InputModuleException {
         return getAttributeValues(objectModel, null, module, name, deflt);
     }
 
@@ -204,9 +203,9 @@ public class InputModuleHelper {
      * @param objectModel a <code>Map</code> value
      * @param module the module's name
      * @return an <code>Iterator</code> value
-     * @exception RuntimeException if an error occurs
+     * @throws InputModuleException if an error occurs
      */
-    public Iterator getAttributeNames(Map objectModel, Configuration conf, String module) throws RuntimeException {
+    public Iterator getAttributeNames(Map objectModel, Configuration conf, String module) throws InputModuleException {
 
         return (Iterator) this.get(OP_NAMES, module, null, objectModel);
     }
@@ -215,7 +214,7 @@ public class InputModuleHelper {
      * as {@link #getAttributeNames(Map, Configuration, String)} with a
      * <code>null</code> configuration.
      */
-    public Iterator getAttributeNames(Map objectModel, String module) throws RuntimeException {
+    public Iterator getAttributeNames(Map objectModel, String module) throws InputModuleException {
         return getAttributeNames(objectModel, (Configuration)null, module);
     }
 
@@ -224,9 +223,9 @@ public class InputModuleHelper {
     /**
      * Releases all obtained module references.
      *
-     * @exception RuntimeException if an error occurs
+     * @throws InputModuleException if an error occurs
      */
-    public void releaseAll() throws RuntimeException {
+    public void releaseAll() throws InputModuleException {
 
         if ( this.inputModules != null ) {
             if ( this.serviceManager != null ) {
@@ -240,7 +239,7 @@ public class InputModuleHelper {
                     this.serviceManager = null;
                     this.inputModules = null;
                 } catch (Exception e) {
-                    throw new CascadingRuntimeException("Could not release InputModules.",e);
+                    throw new InputModuleDestructionException("Could not release InputModules.",e);
                 }
                 
             }
