@@ -100,6 +100,7 @@
       <!-- blocks lib -->
       <fileset dir="${blocks}">
         <include name="*/trunk/*/*.jar"/>
+        <exclude name="*/trunk/target/*.jar"/>
       </fileset>
       <!-- tools libs -->
       <fileset dir="${tools}/lib">
