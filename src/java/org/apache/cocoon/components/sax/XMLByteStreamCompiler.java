@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.sax;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -167,7 +166,7 @@ public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
             this.write(locator.getLineNumber());
             this.write(locator.getColumnNumber());
         } catch (Exception e) {
-             throw new CascadingRuntimeException("Error while handling locator", e);
+             throw new DocumentLocatorException("Error while handling locator", e);
         }
     }
 
