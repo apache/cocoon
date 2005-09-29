@@ -18,7 +18,7 @@ package org.apache.cocoon.sitemap;
 import org.apache.cocoon.generation.Generator;
 
 /**
- * A content aggregator is a special generator used to implement &ltmap:aggregate&gt;.
+ * A content aggregator is a special generator used to implement &lt;map:aggregate&gt;.
  * It combines several parts into one big XML document which is streamed
  * into the pipeline.
  *

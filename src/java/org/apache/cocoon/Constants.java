@@ -41,11 +41,11 @@ public final class Constants {
         try {
             final InputStream is = Constants.class.getClassLoader().getResourceAsStream(PROPS_FILE);
             if ( null == is ) {
-                throw new RuntimeException("Cocoon cannot find required properties from " + PROPS_FILE);
+                throw new ConstantsInitializationException("Cocoon cannot find required properties from " + PROPS_FILE);
             }
             properties.load(is);
         } catch (IOException ioe) {
-            throw new RuntimeException("Cocoon cannot load required properties from " + PROPS_FILE);
+            throw new ConstantsInitializationException("Cocoon cannot load required properties from " + PROPS_FILE, ioe);
         }
 
     }
