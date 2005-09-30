@@ -57,7 +57,7 @@ implements XMLConsumer {
         try {
             EnvironmentHelper.enterEnvironment(environment);
         } catch (ProcessingException e) {
-            throw new SAXException("PopEnvironmentChanger: ", e);
+            throw new SAXException("Unable to enter the environment: " + environment, e);
         }
     }
 
@@ -67,7 +67,7 @@ implements XMLConsumer {
         try {
             enterEnvironment(environment);
         } catch (SAXException e) {
-            throw new RuntimeException("PopEnvironmentChanger: ", e);
+            throw new UnableToPopEnvironmentException("Unable to re-enter the environment: " + environment, e);
         }
     }
 

@@ -67,7 +67,7 @@ implements XMLConsumer {
         try {
             enterEnvironment();
         } catch (SAXException e) {
-            throw new RuntimeException("PushEnvironmentChanger", e);
+            throw new UnableToPushEnvironmentException("Unable to push the environment", e);
         }
         this.consumer.setDocumentLocator(locator);
         leaveEnvironment();
