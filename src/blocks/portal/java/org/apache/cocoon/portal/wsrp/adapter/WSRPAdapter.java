@@ -84,6 +84,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.wsrp4j.consumer.GroupSession;
@@ -860,7 +861,8 @@ public class WSRPAdapter
                     } catch (SAXException sae) {
                         this.getLogger().error("Unable to read wsrp configuration: " + this.wsrpConfigLocation, sae);
                     } catch (ServiceException se) {
-                        throw new RuntimeException("Unable to get source resolver.", se);
+                        //throw new RuntimeException("Unable to get source resolver.", se);
+                        throw new NestableRuntimeException("Unable to get source resolver.", se);
                     } finally {
                         if ( resolver != null ) {
                             resolver.release(source);

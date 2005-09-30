@@ -119,7 +119,7 @@ public class URLGeneratorImpl
         final CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
         params.put(WSRPEventAspect.REQUEST_PARAMETER_NAME, coplet.getId());
         final StringBuffer buffer = new StringBuffer(this.service.getComponentManager().getLinkService().getRefreshLinkURI(secureLink));
-        boolean hasParams = buffer.indexOf("?") > 0;
+        boolean hasParams = buffer.toString().indexOf("?") > 0;
         Iterator i = params.entrySet().iterator();
         while ( i.hasNext() ) {
             final Map.Entry entry = (Map.Entry)i.next();
