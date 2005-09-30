@@ -647,7 +647,7 @@ public class TreeProcessor extends AbstractLogEnabled
                 }
             }
 
-            if (oldListeners.size() > 0) {
+            if (oldListeners != null && oldListeners.size() > 0) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("unsubscribing " + oldListeners + " from fam");
                 }
