@@ -1232,16 +1232,6 @@
       Jackrabbit JCR implementation
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-api-1.0-dev-LCR209797.jar</lib>
-    <homepage>http://incubator.apache.org/jackrabbit/</homepage>
-  </file>
-
-  <file>
-    <title>Jackrabbit</title>
-    <description>
-      Jackrabbit JCR implementation
-    </description>
-    <used-by>JCR block</used-by>
     <lib>optional/jackrabbit-commons-1.0-dev-LCR209797.jar</lib>
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
   </file>
