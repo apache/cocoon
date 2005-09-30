@@ -30,7 +30,6 @@ import java.lang.ref.WeakReference;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -406,7 +405,7 @@ public final class HttpRequest extends AbstractRequest {
             byte[] bytes = str.getBytes(this.container_encoding);
             return new String(bytes, form_encoding);
         } catch (java.io.UnsupportedEncodingException uee) {
-            throw new CascadingRuntimeException("Unsupported Encoding Exception", uee);
+            throw new RequestEncodingException("Unsupported Encoding Exception", uee);
         }
     }
 

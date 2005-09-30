@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
 /**
@@ -78,7 +77,7 @@ public final class HttpContext extends AbstractContext {
                 try {
                 value = this.servletContext.getResource("/WEB-INF/web.xml").toString();
                 } catch (MalformedURLException mue) {
-                    throw new CascadingRuntimeException("Cannot determine the base URL for " + path, mue);
+                    throw new ContextURLException("Cannot determine the base URL for " + path, mue);
                 }
                 value = value.substring(0,value.length()-"WEB-INF/web.xml".length());
             }
