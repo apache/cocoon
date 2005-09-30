@@ -31,6 +31,7 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractRequest;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
@@ -406,7 +407,7 @@ public class CommandLineRequest extends AbstractRequest {
     public Locale getLocale() { return Locale.getDefault(); }
     public Enumeration getLocales() {
         // FIXME
-        throw new RuntimeException (getClass().getName() + ".getLocales() method not yet implemented!");
+        throw new NotImplementedException (getClass().getName() + ".getLocales() method not yet implemented!");
     }
 
     public String getAuthType() { return null; }
