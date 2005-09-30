@@ -17,6 +17,7 @@ package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -95,7 +96,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
 
-    private Map classpathListeners;
+    /** no listeners by default */ 
+    private Map classpathListeners = Collections.EMPTY_MAP;
     
     /**
      * Builds a concrete processig, given the wrapping processor
