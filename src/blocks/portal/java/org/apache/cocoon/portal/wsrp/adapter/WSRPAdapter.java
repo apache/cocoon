@@ -861,7 +861,6 @@ public class WSRPAdapter
                     } catch (SAXException sae) {
                         this.getLogger().error("Unable to read wsrp configuration: " + this.wsrpConfigLocation, sae);
                     } catch (ServiceException se) {
-                        //throw new RuntimeException("Unable to get source resolver.", se);
                         throw new NestableRuntimeException("Unable to get source resolver.", se);
                     } finally {
                         if ( resolver != null ) {
