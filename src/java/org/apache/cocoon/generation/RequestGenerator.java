@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -29,6 +28,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.http.RequestEncodingException;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -145,14 +145,10 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
                         try {
                             data(values[x], container_encoding, form_encoding);
                         } catch (UnsupportedEncodingException uee) {
-                            throw new CascadingRuntimeException("The suggested encoding is not supported.", uee);
+                            throw new RequestEncodingException("The suggested encoding is not supported.", uee);
                         }
                     } else if (parameter.startsWith("xml:")) {
-                        try {
-                            parse(values[x]);
-                        } catch (Exception e) {
-                            throw new CascadingRuntimeException("Could not parse the xml parameter", e);
-                        }
+                        parse(values[x]);
                     } else {
                         data(values[x]);
                     }
@@ -223,12 +219,18 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
     }
     
     private void parse(String data)
-    throws Exception {
+    throws SAXException {
         SAXParser parser = null;
         try {
             parser = (SAXParser) manager.lookup(SAXParser.ROLE);
             InputSource is = new InputSource(new StringReader(data));
             parser.parse(is, new IncludeXMLConsumer(super.xmlConsumer));
+	} catch (SAXException se) {
+	    // rethrow sax exceptions
+	    throw se;
+	} catch (Exception e) {
+	    // wrap all others
+	    throw new RequestParseException("Could not parse the parameters.", e);
         } finally {
             manager.release(parser);
         }
