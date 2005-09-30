@@ -19,21 +19,38 @@ import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.location.LocatedRuntimeException;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 
 /**
  * Implements a Rhino JavaScript {@link
  * org.mozilla.javascript.ErrorReporter}. 
  * Like ToolErrorReporter but logs to supplied logger instead of stdout
  *
- * @version CVS $Id: JSErrorReporter.java,v 1.6 2004/03/06 02:25:40 antonio Exp $
+ * @version CVS $Id$
  */
 public class JSErrorReporter implements ErrorReporter
 {
   private Logger logger;
+  private Location location;
+  private StringBuffer message;
 
   public JSErrorReporter(Logger logger)
   {
       this.logger = logger;
+  }
+  
+  private void appendMessage(String text, String sourceName, int line, int column) {
+      if (location == null) {
+          location = new LocationImpl(null, sourceName, line, column);
+          message = new StringBuffer();
+      } else {
+          // Append a linefeed
+          message.append("\n");
+      }
+      
+      message.append(text);
   }
 
   public void error(String message,
@@ -42,6 +59,7 @@ public class JSErrorReporter implements ErrorReporter
   {
       String errMsg = getErrorMessage("msg.error", message, 
                                       sourceName, line, lineSrc, column);
+      appendMessage(errMsg, sourceName, line, column);
       System.err.println(errMsg);
       logger.error(errMsg);
   }
@@ -51,6 +69,7 @@ public class JSErrorReporter implements ErrorReporter
   {
       String errMsg = getErrorMessage("msg.warning", message, 
                                     sourceName, line, lineSrc, column);
+      appendMessage(errMsg, sourceName, line, column);
       System.err.println(errMsg);
       logger.warn(errMsg);
   }
@@ -62,8 +81,10 @@ public class JSErrorReporter implements ErrorReporter
       String errMsg = getErrorMessage("msg.error", message,
                                       sourceName, line,
                                       lineSrc, column);
+      appendMessage(errMsg, sourceName, line, column);
       System.err.println(errMsg);
-      return new EvaluatorException(errMsg);
+      // FIXME(SW): need to build a locatable extension to EvaluatorException
+      return new EvaluatorException(this.message.toString());
   }
 
   /**
