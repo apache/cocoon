@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -371,10 +370,11 @@ public class XMLResourceBundleFactory
     protected String getFileName(String base, String name, Locale locale) {
         StringBuffer sb = new StringBuffer();
         if (base == null || base.length() == 0) {
-            // FIXME (SW): can this happen?
+            throw new IllegalArgumentException("'base' cannot be empty or null.");
         } else {
+	    Source src = null;
             try {
-                Source src = this.resolver.resolveURI(base);
+                src = this.resolver.resolveURI(base);
                 String uri = src.getURI();
                 sb.append(uri);
                 if (!uri.endsWith("/")) {
@@ -382,7 +382,9 @@ public class XMLResourceBundleFactory
                 }
                 this.resolver.release(src);
             } catch(IOException ioe) {
-                throw new CascadingRuntimeException("Cannot resolve " + base, ioe);
+                throw new XMLResourceBundleNotFoundException("Cannot resolve " + base, ioe);
+            } finally {
+                this.resolver.release(src);
             }
         }
 
