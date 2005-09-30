@@ -15,13 +15,12 @@
 */
 package org.apache.cocoon.components.flow.javascript;
 
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.tools.ToolErrorReporter;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.util.location.LocatedRuntimeException;
-import org.apache.cocoon.util.location.Location;
-import org.apache.cocoon.util.location.LocationImpl;
 
 /**
  * Implements a Rhino JavaScript {@link

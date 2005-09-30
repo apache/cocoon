@@ -117,7 +117,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     private List topLevelScripts = new ArrayList();
 
-    private JSErrorReporter errorReporter;
     private boolean enableDebugger;
 
     /**
@@ -187,7 +186,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             scope = new Global(context);
             // Access to Cocoon internal objects
             FOM_Cocoon.init(scope);
-            errorReporter = new JSErrorReporter(getLogger());
         } catch (Exception e) {
             Context.exit();
             e.printStackTrace();
@@ -553,7 +551,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
-        context.setErrorReporter(errorReporter);
+        context.setErrorReporter(new JSErrorReporter(getLogger()));
         
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
         if (!enableDebugger) {
