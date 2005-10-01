@@ -8,12 +8,10 @@ Bundle-Description: Cocoon webapp
 Bundle-Vendor: Apache
 Bundle-DocURL: http://cocoon.apache.org
 Bundle-ContactAddress: http://cocoon.apache.org
-Bundle-Activator: 
+Bundle-Activator: org.apache.cocoon.core.osgi.CoreBlockActivator
 Bundle-Category: sitemap
-Import-Package: org.osgi.framework
+Import-Package: 
+ org.osgi.framework,
+ org.apache.cocoon
+DynamicImport-Package: org.apache.cocoon.*
 Bundle-UUID: org.apache.cocoon:cocoon_webapp:1.0.0:impl
-Built-From: F:\os\cocoon\whiteboard\osgi\bundles\cocoon_webapp
-Build-Date: Wed June 29 2005, 12:58:41
-Bundle-SubversionURL: https://svn.apache.org/repos/asf/cocoon/whiteboa
- rd/osgi/
-

@@ -20,11 +20,9 @@ import java.util.HashSet;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.osgi.OSGiBootstrapEnvironment;
 import org.apache.cocoon.core.osgi.OSGiLoggerManager;
+import org.apache.cocoon.core.osgi.OSGiServiceManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
@@ -41,7 +39,6 @@ public class Activator implements BundleActivator {
 
     static BundleContext bc;
     static final String  SERVLET_ALIAS = "/";     // the http server root
-    static final String  SITEMAP = "sitemap";
 
     private HashSet registrations = new HashSet();
     private ClassLoader classLoader = getClass().getClassLoader();
@@ -53,14 +50,12 @@ public class Activator implements BundleActivator {
 
         Activator.bc  = bc;
 
-        BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, Activator.bc);
-        env.log("OSGiBootstrapEnvironment created");
-        CoreUtil coreUtil = new CoreUtil(env);
-        env.log("CoreUtil created");
         LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
         this.logger = logManager.getDefaultLogger();
-        this.core = coreUtil.getCore();
-        this.processor = coreUtil.createCocoon();
+
+        OSGiServiceManager manager = new OSGiServiceManager(Activator.bc);
+        this.core = (Core)manager.lookup(Core.ROLE);
+        this.processor = (Processor)manager.lookup(Processor.ROLE);
 
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {

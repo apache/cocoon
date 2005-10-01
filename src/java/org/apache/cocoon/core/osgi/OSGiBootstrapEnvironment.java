@@ -59,7 +59,7 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
         LoggerManager logManager = new OSGiLoggerManager(bc, LogService.LOG_DEBUG);
         this.logger = logManager.getDefaultLogger();
 
-        Bundle bundle = getSitemapBundle(bc, this.logger);
+        Bundle bundle = bc.getBundle();
         if (bundle == null) {
             throw new Exception("No sitemap bundle");
         }
@@ -180,31 +180,6 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
     public String getClassPath(Settings settings) {
         return null;
     }
-
-    private Bundle getSitemapBundle(BundleContext bc, Logger log) {
-        String SITEMAP = "sitemap";
-        Bundle[] bundles = bc.getBundles();
-        for (int i = 0; i < bundles.length; i++) {
-            Bundle bundle = bundles[i];
-            try {
-                log.info("checking bundle " + bundle + " name=" + bundle.getHeaders().get(Constants.BUNDLE_NAME) + " category=" + bundle.getHeaders().get(Constants.BUNDLE_CATEGORY) + " state=" + bundle.getState());
-                if ((bundle.getState() == Bundle.INSTALLED ||
-                     bundle.getState() == Bundle.RESOLVED ||
-                     bundle.getState() == Bundle.ACTIVE)) {
-                    log.info("ok state");
-                    if (SITEMAP.equals(bundle.getHeaders().get(Constants.BUNDLE_CATEGORY))) {
-                        log.info("sitemap");
-                        return bundle;
-                    }
-                }
-            } catch (NullPointerException e) {
-                // BUNDLE_CATEGORY not present in the headers of the
-                // bundle, nothing to do.
-            }
-        }
-        return null;
-    }
-
 
     public class OSGiContext extends AbstractContext {
 

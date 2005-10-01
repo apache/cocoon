@@ -9,8 +9,7 @@ Bundle-Description: Cocoon bundle
 Bundle-Vendor: Apache
 Bundle-DocURL: http://cocoon.apache.org
 Bundle-ContactAddress: http://cocoon.apache.org
-Bundle-Activator: org.apache.cocoon.core.osgi.CoreBlockActivator
-Bundle-Category: block
+Bundle-Category: library
 Bundle-Classpath: 
  .,
  avalon-framework-api-4.3.jar,
