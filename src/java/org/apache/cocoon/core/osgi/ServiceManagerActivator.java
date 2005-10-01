@@ -96,8 +96,8 @@ public class ServiceManagerActivator implements BundleActivator {
     }
 
     protected Context getContext() throws Exception {
-	Core core = (Core)this.parentManager.lookup(Core.ROLE);
-	return core.getContext();
+        Core core = (Core)this.parentManager.lookup(Core.ROLE);
+        return core.getContext();
     }
 
     /**

@@ -21,6 +21,7 @@ import java.util.Hashtable;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.container.CoreServiceManager;
@@ -58,24 +59,43 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
      */
     public void addComponent(String role, String className, Configuration configuration, ComponentInfo info) throws ConfigurationException {
         super.addComponent(role, className, configuration, info);
-        if (configuration.getAttributeAsBoolean("exported", false)) {
+        if (configuration.getAttributeAsBoolean("exported", true)) {
             ComponentHandler handler = (ComponentHandler)super.componentHandlers.get(role);
             if (!handler.isSingleton()) {
                 throw new ConfigurationException("Only singleton services can be exported as OSGi services, at " +
-                        configuration.getLocation());
+                                                 configuration.getLocation());
             }
-            
-            String itfName = OSGiServiceManager.getServiceInterface(role);
-            String hint = OSGiServiceManager.getServiceHint(role);
-            Dictionary dict = null;
-            if (hint != null) {
-                dict = new Hashtable();
-                dict.put(OSGiServiceManager.HINT_PROPERTY, hint);
-            }
-            
-            Object service = new ComponentHandlerFactory(handler);
-            ctx.registerService(itfName, service, dict);
+            this.addService(role, handler);
         }
+    }
+    
+    /**
+     * Catch a component insertion and register it as OSGi services.
+     */
+    public void addInstance(String role, Object instance) throws ServiceException {
+        super.addInstance(role, instance);
+        ComponentHandler handler = (ComponentHandler)super.componentHandlers.get(role);
+        if (!handler.isSingleton()) {
+            throw new ServiceException("Only singleton services can be exported as OSGi services, at " +
+                                       instance.toString());
+        }
+        this.addService(role, handler);
+    }
+
+    /**
+     * Register a component as an OSGi service.
+     */
+    protected void addService(String role, ComponentHandler handler) {
+        String itfName = OSGiServiceManager.getServiceInterface(role);
+        String hint = OSGiServiceManager.getServiceHint(role);
+        Dictionary dict = null;
+        if (hint != null) {
+            dict = new Hashtable();
+            dict.put(OSGiServiceManager.HINT_PROPERTY, hint);
+        }
+
+        Object service = new ComponentHandlerFactory(handler);
+        ctx.registerService(itfName, service, dict);
     }
     
     /**

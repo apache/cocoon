@@ -21,7 +21,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.Core;
@@ -37,12 +36,12 @@ public class CoreBlockActivator extends ServiceManagerActivator {
 
     public void start(final BundleContext ctx) throws Exception {
         
-	BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, ctx);
-	env.log("OSGiBootstrapEnvironment created");
-	CoreUtil coreUtil = new CoreUtil(env);
-	env.log("CoreUtil created");
-	this.core = coreUtil.getCore();
-	this.processor = coreUtil.createCocoon();
+        BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, ctx);
+        env.log("OSGiBootstrapEnvironment created");
+        CoreUtil coreUtil = new CoreUtil(env);
+        env.log("CoreUtil created");
+        this.core = coreUtil.getCore();
+        this.processor = coreUtil.createCocoon();
 
         super.start(ctx);
     }
@@ -71,6 +70,6 @@ public class CoreBlockActivator extends ServiceManagerActivator {
     protected void addComponents(CoreServiceManager manager) 
     throws ServiceException, ConfigurationException {
         manager.addInstance(Core.ROLE, this.core);
-        manager.addInstance(Cocoon.class.getName(), this.processor);
+        manager.addInstance(Processor.ROLE, this.processor);
     }
 }
