@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.blocks.Block;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
@@ -31,9 +32,9 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 /**
  * BlockPathModule returns the absolute path of a block protocol path.
  *
- * @version $Id:$
+ * @version $Id$
  */
-public class BlockPathModule implements InputModule {
+public class BlockPathModule implements InputModule, ThreadSafe {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
