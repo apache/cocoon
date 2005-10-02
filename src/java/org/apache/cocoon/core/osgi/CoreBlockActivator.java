@@ -21,6 +21,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.Core;
@@ -58,10 +59,10 @@ public class CoreBlockActivator extends ServiceManagerActivator {
      * This method may be overwritten by subclasses to provide an own
      * configuration
      */
-    protected Configuration getConfiguration() {
-        DefaultConfiguration config = new DefaultConfiguration("cocoon", "CoreBlockActivator");
-        return config;
-    }
+//     protected Configuration getConfiguration() {
+//         DefaultConfiguration config = new DefaultConfiguration("cocoon", "CoreBlockActivator");
+//         return config;
+//     }
 
     /**
      * This method may be overwritten by subclasses to add aditional
@@ -70,6 +71,6 @@ public class CoreBlockActivator extends ServiceManagerActivator {
     protected void addComponents(CoreServiceManager manager) 
     throws ServiceException, ConfigurationException {
         manager.addInstance(Core.ROLE, this.core);
-        manager.addInstance(Processor.ROLE, this.processor);
+        manager.addInstance(Cocoon.class.getName(), this.processor);
     }
 }

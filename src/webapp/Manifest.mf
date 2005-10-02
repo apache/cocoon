@@ -12,6 +12,13 @@ Bundle-Activator: org.apache.cocoon.core.osgi.CoreBlockActivator
 Bundle-Category: sitemap
 Import-Package: 
  org.osgi.framework,
- org.apache.cocoon
+ org.apache.cocoon,
+ org.apache.excalibur.source,
+ org.apache.excalibur.store,
+ org.apache.excalibur.xml,
+ org.apache.excalibur.xml.sax,
+ org.apache.excalibur.xml.xpath,
+ org.apache.excalibur.xml.xslt,
+ org.apache.excalibur.xmlizer
 DynamicImport-Package: org.apache.cocoon.*
 Bundle-UUID: org.apache.cocoon:cocoon_webapp:1.0.0:impl

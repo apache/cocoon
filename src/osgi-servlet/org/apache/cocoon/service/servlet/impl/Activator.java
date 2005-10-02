@@ -19,6 +19,7 @@ import java.util.HashSet;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.osgi.OSGiLoggerManager;
@@ -55,7 +56,7 @@ public class Activator implements BundleActivator {
 
         OSGiServiceManager manager = new OSGiServiceManager(Activator.bc);
         this.core = (Core)manager.lookup(Core.ROLE);
-        this.processor = (Processor)manager.lookup(Processor.ROLE);
+        this.processor = (Processor)manager.lookup(Cocoon.class.getName());
 
         ServiceListener listener = new ServiceListener() {
                 public void serviceChanged(ServiceEvent ev) {

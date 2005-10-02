@@ -21,7 +21,7 @@ import java.net.URL;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -82,7 +82,7 @@ public class ServiceManagerActivator implements BundleActivator {
         this.manager.setRoleManager(null);
         
         //---- Configurable
-        this.manager.configure(this.getConfiguration());
+        this.manager.configure(this.getConfiguration(ctx));
         this.addComponents(this.manager);
         
         //---- Initializable
@@ -104,15 +104,13 @@ public class ServiceManagerActivator implements BundleActivator {
      * This method may be overwritten by subclasses to provide an own
      * configuration
      */
-    protected Configuration getConfiguration() {
-        // Create a configuration object with one include directive. ECM++ will do the rest!
-        DefaultConfiguration config = new DefaultConfiguration("cocoon", "ServiceManagerActivator");
-//         DefaultConfiguration include = new DefaultConfiguration("include");
-//         URL confURL = ctx.getBundle().getResource("/BLOCK-INF/block.xconf");
-//         include.setAttribute("src", confURL.toExternalForm());
-//         config.addChild(include);
+    protected Configuration getConfiguration(BundleContext ctx) throws Exception {
+	URL confURL = ctx.getBundle().getResource("/WEB-INF/block.xml");
+	DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+	Configuration block = builder.build(confURL.openStream());
+	Configuration components = block.getChild("components");
 
-        return config;
+        return components;
     }
 
     /**
