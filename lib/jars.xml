@@ -1084,7 +1084,7 @@
       with special support for the portal.
     </description>
     <used-by>Portal</used-by>
-    <lib>optional/cowarp-0.4.jar</lib>
+    <lib>optional/cowarp-0.5-dev-20051002.jar</lib>
     <homepage>http://osoco.sourceforge.net/cowarp/</homepage>
   </file>
 
