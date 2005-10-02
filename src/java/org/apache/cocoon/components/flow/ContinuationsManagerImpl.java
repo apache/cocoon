@@ -77,7 +77,7 @@ public class ContinuationsManagerImpl
         extends AbstractLogEnabled
         implements ContinuationsManager, Component, Configurable,
                    ThreadSafe, Instrumentable, Serviceable, Contextualizable {
-
+    
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
 
@@ -113,20 +113,21 @@ public class ContinuationsManagerImpl
      */
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
-    private String instrumentableName;
-    private ValueInstrument continuationsCount;
-    private int continuationsCounter;
-    private ValueInstrument forestSize;
-    private ValueInstrument expirationsSize;
-    private CounterInstrument continuationsCreated;
-    private CounterInstrument continuationsInvalidated;
-    private boolean isContinuationSharingBugCompatible;
-    private boolean bindContinuationsToSession;
+    protected String instrumentableName;
+    protected ValueInstrument continuationsCount;
+    protected int continuationsCounter;
+    protected ValueInstrument forestSize;
+    protected ValueInstrument expirationsSize;
+    protected CounterInstrument continuationsCreated;
+    protected CounterInstrument continuationsInvalidated;
+    protected boolean isContinuationSharingBugCompatible;
+    protected boolean bindContinuationsToSession;
 
-    private ServiceManager serviceManager;
-    private Context context;
+    protected ServiceManager serviceManager;
+    protected Context context;
 
     public ContinuationsManagerImpl() throws Exception {
+        
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch(java.security.NoSuchAlgorithmException nsae) {
@@ -149,12 +150,17 @@ public class ContinuationsManagerImpl
     }
 
     public void configure(Configuration config) {
+        System.err.println("configure ContinuationsManagerImpl");
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
-        if (!this.bindContinuationsToSession)
-            this.continuationsHolder = new WebContinuationsHolder();
         
+        // create a global ContinuationsHolder if this the "session-bound-continuations" parameter is set to false
+        if(!this.bindContinuationsToSession) {
+            this.continuationsHolder = new WebContinuationsHolder();
+        }        
+        
+        // create a thread that invalidates the continuations
         final Configuration expireConf = config.getChild("expirations-check");
         final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
         final long interval = expireConf.getChild("period", true).getValueAsLong(180000);
@@ -208,18 +214,10 @@ public class ContinuationsManagerImpl
             forest.add(wk);
             forestSize.setValue(forest.size());
         } else {
-            // REVISIT: This places only the "leaf" nodes in the expirations Sorted Set.
-            // do we really want to do this?
-            if (parent.getChildren().size() < 2) {
-                expirations.remove(parent);
-            }
+            handleParentContinuationExpiration(parent);
         }
 
-        expirations.add(wk);
-        expirationsSize.setValue(expirations.size());
-
-        // No need to add the WebContinuation in idToWebCont as it was
-        // already done during its construction.
+        handleLeafContinuationExpiration(wk);
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Created continuation " + wk.getId());
@@ -228,15 +226,37 @@ public class ContinuationsManagerImpl
         return wk;
     }
 
+    /**
+     * When a new continuation is created in @link #createWebContinuation(Object, WebContinuation, int, String, ContinuationsDisposer),
+     * it is registered in the expiration set in order to be evaluated by the invalidation mechanism.
+     */
+    protected void handleLeafContinuationExpiration(WebContinuation wk) {
+        expirations.add(wk);
+        expirationsSize.setValue(expirations.size());
+    }
+
+    /**
+     * When a new continuation is created in @link #createWebContinuation(Object, WebContinuation, int, String, ContinuationsDisposer),
+     * its parent continuation is removed from the expiration set. This way only leaf continuations are part of
+     * the expiration set.
+     */
+    protected void handleParentContinuationExpiration(WebContinuation parent) {
+        if (parent.getChildren().size() < 2) {
+            expirations.remove(parent);
+        }
+    }
+    
+
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
         // REVISIT: Is the following check needed to avoid threading issues:
         // return wk only if !(wk.hasExpired) ?
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(false);
-        if (continuationsHolder == null)
+        if (continuationsHolder == null) {
             return null;
+        }
         
         WebContinuation kont = continuationsHolder.get(id);
-        if ( kont != null ) {
+        if(kont != null) {
             boolean interpreterMatches = kont.interpreterMatches(interpreterId);
             if (!interpreterMatches && getLogger().isWarnEnabled()) {
                 getLogger().warn("WK: Continuation (" + kont.getId() 
@@ -254,9 +274,6 @@ public class ContinuationsManagerImpl
      * for it. The identifier is generated using a cryptographically strong
      * algorithm to prevent people to generate their own identifiers.
      *
-     * <p>It has the side effect of interning the continuation object in
-     * the <code>idToWebCont</code> hash table.
-     *
      * @param kont an <code>Object</code> value representing continuation
      * @param parent value representing parent <code>WebContinuation</code>
      * @param ttl <code>WebContinuation</code> time to live
@@ -265,7 +282,7 @@ public class ContinuationsManagerImpl
      * cleanup of the continuation.
      * @return the generated <code>WebContinuation</code> with unique identifier
      */
-    private WebContinuation generateContinuation(Object kont,
+    protected WebContinuation generateContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int ttl,
                                                  String interpreterId,
@@ -286,13 +303,15 @@ public class ContinuationsManagerImpl
             final String id = new String(result);
             synchronized (continuationsHolder) {
                 if (!continuationsHolder.contains(id)) {
-                    if (this.bindContinuationsToSession)
+                    if (this.bindContinuationsToSession) {
                         wk = new HolderAwareWebContinuation(id, kont, parent,
                                 ttl, interpreterId, disposer,
                                 continuationsHolder);
-                    else
+                    }
+                    else {
                         wk = new WebContinuation(id, kont, parent, ttl,
                                 interpreterId, disposer);
+                    }
                     continuationsHolder.addContinuation(wk);
                     synchronized (continuationsCount) {
                         continuationsCounter++;
@@ -317,7 +336,7 @@ public class ContinuationsManagerImpl
         _invalidate(continuationsHolder, wk);
     }
 
-    private void _invalidate(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
+    protected void _invalidate(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Manual expire of continuation " + wk.getId());
         }
@@ -356,7 +375,7 @@ public class ContinuationsManagerImpl
      *
      * @param wk the continuation to dispose.
      */
-    private void disposeContinuation(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
+    protected void disposeContinuation(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
         continuationsHolder.removeContinuation(wk);
         synchronized( continuationsCount ) {
             continuationsCounter--;
@@ -374,8 +393,7 @@ public class ContinuationsManagerImpl
      *
      * @param wk <code>WebContinuation</code> node
      */
-    private void removeContinuation(WebContinuationsHolder continuationsHolder,
-            WebContinuation wk) {
+    protected void removeContinuation(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
         if (wk.getChildren().size() != 0) {
             return;
         }
@@ -400,7 +418,7 @@ public class ContinuationsManagerImpl
      * Dump to Log file the current contents of
      * the expirations <code>SortedSet</code>
      */
-    private void displayExpireSet() {
+    protected void displayExpireSet() {
         StringBuffer wkSet = new StringBuffer("\nWK; Expire set size: " + expirations.size());
         Iterator i = expirations.iterator();
         while (i.hasNext()) {
@@ -440,24 +458,26 @@ public class ContinuationsManagerImpl
         if (getLogger().isDebugEnabled()) {
             now = System.currentTimeMillis();
 
-            /* Continuations before clean up:
+            /* Continuations before clean up: */
             getLogger().debug("WK: Forest before cleanup: " + forest.size());
             displayAllContinuations();
             displayExpireSet();
-            */
+
         }
 
         // Clean up expired continuations
         int count = 0;
         WebContinuation wk;
         Iterator i = expirations.iterator();
-        while (i.hasNext() && ((wk = (WebContinuation) i.next()).hasExpired())) {
+        while(i.hasNext() && ((wk = (WebContinuation) i.next()).hasExpired())) {
             i.remove();
             WebContinuationsHolder continuationsHolder = null;
-            if ( wk instanceof HolderAwareWebContinuation )
+            if(wk instanceof HolderAwareWebContinuation) {
                 continuationsHolder = ((HolderAwareWebContinuation) wk).getContinuationsHolder();
-            else
+            }
+            else {
                 continuationsHolder = this.continuationsHolder;
+            }
             removeContinuation(continuationsHolder, wk);
             count++;
         }
@@ -465,13 +485,13 @@ public class ContinuationsManagerImpl
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK Cleaned up " + count + " continuations in " +
-                              (System.currentTimeMillis() - now));
+                              (System.currentTimeMillis() - now) + " ms");
 
-            /* Continuations after clean up:
-            getLogger().debug("WK: Forest after cleanup: " + forest.size());
-            displayAllContinuations();
-            displayExpireSet();
-            */
+            /* Continuations after clean up: */
+//            getLogger().debug("WK: Forest after cleanup: " + forest.size());
+//            displayAllContinuations();
+//            displayExpireSet();
+
         }
     }
 
@@ -480,7 +500,7 @@ public class ContinuationsManagerImpl
      * about session invalidation. Invalidates all continuations held by passed
      * continuationsHolder.
      */
-    private void invalidateContinuations(
+    protected void invalidateContinuations(
             WebContinuationsHolder continuationsHolder) {
         // TODO: this avoids ConcurrentModificationException, still this is not
         // the best solution and should be changed
@@ -534,9 +554,8 @@ public class ContinuationsManagerImpl
      * A holder for WebContinuations. When bound to session notifies the
      * continuations manager of session invalidation.
      */
-    private class WebContinuationsHolder implements HttpSessionBindingListener {
-        private final static String CONTINUATIONS_HOLDER = 
-                                       "o.a.c.c.f.SCMI.WebContinuationsHolder";
+    protected class WebContinuationsHolder implements HttpSessionBindingListener {
+        private final static String CONTINUATIONS_HOLDER = "o.a.c.c.f.SCMI.WebContinuationsHolder";
 
         private Map holder = Collections.synchronizedMap(new HashMap());
 
@@ -577,7 +596,7 @@ public class ContinuationsManagerImpl
      * holder. This information is needed to cleanup a proper holder after
      * continuation's expiration time.
      */
-    private static class HolderAwareWebContinuation extends WebContinuation {
+    protected static class HolderAwareWebContinuation extends WebContinuation {
         private WebContinuationsHolder continuationsHolder;
 
         public HolderAwareWebContinuation(String id, Object continuation,
@@ -613,4 +632,5 @@ public class ContinuationsManagerImpl
         }
         return beanList;
     }
+
 }
