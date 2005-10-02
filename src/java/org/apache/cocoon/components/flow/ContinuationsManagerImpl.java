@@ -107,10 +107,10 @@ public class ContinuationsManagerImpl
      */
     protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
-    private boolean bindContinuationsToSession;
+    protected boolean bindContinuationsToSession;
 
-    private ServiceManager serviceManager;
-    private Context context;
+    protected ServiceManager serviceManager;
+    protected Context context;
 
     public ContinuationsManagerImpl() throws Exception {
         try {
@@ -130,8 +130,10 @@ public class ContinuationsManagerImpl
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
-        if (!this.bindContinuationsToSession)
+        // create a global ContinuationsHolder if this the "session-bound-continuations" parameter is set to false
+        if (!this.bindContinuationsToSession) {
             this.continuationsHolder = new WebContinuationsHolder();
+        }
         
         final Configuration expireConf = config.getChild("expirations-check");
         final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
@@ -165,17 +167,10 @@ public class ContinuationsManagerImpl
         if (parent == null) {
             forest.add(wk);
         } else {
-            // REVISIT: This places only the "leaf" nodes in the expirations Sorted Set.
-            // do we really want to do this?
-            if (parent.getChildren().size() < 2) {
-                expirations.remove(parent);
-            }
+            handleParentContinuationExpiration(parent);
         }
 
-        expirations.add(wk);
-
-        // No need to add the WebContinuation in idToWebCont as it was
-        // already done during its construction.
+        handleLeafContinuationExpiration(wk);
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Created continuation " + wk.getId());
@@ -183,6 +178,25 @@ public class ContinuationsManagerImpl
 
         return wk;
     }
+    
+    /**
+     * When a new continuation is created in @link #createWebContinuation(Object, WebContinuation, int, String, ContinuationsDisposer),
+     * it is registered in the expiration set in order to be evaluated by the invalidation mechanism.
+     */
+    protected void handleLeafContinuationExpiration(WebContinuation wk) {
+        expirations.add(wk);
+    }
+
+    /**
+     * When a new continuation is created in @link #createWebContinuation(Object, WebContinuation, int, String, ContinuationsDisposer),
+     * its parent continuation is removed from the expiration set. This way only leaf continuations are part of
+     * the expiration set.
+     */
+    protected void handleParentContinuationExpiration(WebContinuation parent) {
+        if (parent.getChildren().size() < 2) {
+            expirations.remove(parent);
+        }
+    }    
     
     /**
      * Get a list of all web continuations (data only)
@@ -240,7 +254,7 @@ public class ContinuationsManagerImpl
      * @return the generated <code>WebContinuation</code> with unique
      *         identifier
      */
-    private WebContinuation generateContinuation(Object kont,
+    protected WebContinuation generateContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int ttl,
                                                  String interpreterId,
@@ -309,7 +323,7 @@ public class ContinuationsManagerImpl
      * @param continuationsHolder
      * @param wk Continuation to detach from parent.
      */
-    private void _detach(WebContinuation wk) {
+    protected void _detach(WebContinuation wk) {
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) {
             forest.remove(wk);
@@ -324,7 +338,7 @@ public class ContinuationsManagerImpl
      *
      * @param wk the continuation to dispose.
      */
-    private void disposeContinuation(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
+    protected void disposeContinuation(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
         continuationsHolder.removeContinuation(wk);
         wk.dispose();
     }
@@ -337,7 +351,7 @@ public class ContinuationsManagerImpl
      *
      * @param wk <code>WebContinuation</code> node
      */
-    private void removeContinuation(WebContinuationsHolder continuationsHolder,
+    protected void removeContinuation(WebContinuationsHolder continuationsHolder,
             WebContinuation wk) {
         if (wk.getChildren().size() != 0) {
             return;
@@ -363,7 +377,7 @@ public class ContinuationsManagerImpl
      * Dump to Log file the current contents of
      * the expirations <code>SortedSet</code>
      */
-    private void displayExpireSet() {
+    protected void displayExpireSet() {
         StringBuffer wkSet = new StringBuffer("\nWK; Expire set size: " + expirations.size());
         Iterator i = expirations.iterator();
         while (i.hasNext()) {
@@ -442,7 +456,7 @@ public class ContinuationsManagerImpl
      * about session invalidation. Invalidates all continuations held by passed
      * continuationsHolder.
      */
-    private void invalidateContinuations(
+    protected void invalidateContinuations(
             WebContinuationsHolder continuationsHolder) {
         // TODO: this avoids ConcurrentModificationException, still this is not
         // the best solution and should be changed
@@ -539,7 +553,7 @@ public class ContinuationsManagerImpl
      * holder. This information is needed to cleanup a proper holder after
      * continuation's expiration time.
      */
-    private class HolderAwareWebContinuation extends WebContinuation {
+    protected class HolderAwareWebContinuation extends WebContinuation {
         private WebContinuationsHolder continuationsHolder;
 
         public HolderAwareWebContinuation(String id, Object continuation,
