@@ -420,7 +420,7 @@ public class WebContinuation extends AbstractLogEnabled
     public boolean hasExpired() {
         long currentTime = System.currentTimeMillis();
         long expireTime = this.getLastAccessTime() + this.timeToLive;
-
+        
         return (currentTime > expireTime);
     }
 
