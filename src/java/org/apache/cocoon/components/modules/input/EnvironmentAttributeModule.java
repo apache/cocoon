@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
@@ -29,7 +30,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  *
  * @version $Id$
  */
-public class EnvironmentAttributeModule implements InputModule {
+public class EnvironmentAttributeModule implements InputModule, ThreadSafe {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
