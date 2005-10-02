@@ -61,7 +61,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
         DefaultContext appleContext = new DefaultContext(avalonContext);
         if (wk != null) {
-        appleContext.put("continuation-id", wk.getId());
+            appleContext.put("continuation-id", wk.getId());
         }
         
         LifecycleHelper.setupComponent( app, getLogger(), appleContext, 

@@ -37,7 +37,7 @@
 	    This is the continuation id: #{$cocoon/continuation/id}
 	    A backslash dir reference: d:\cocoon\
       </jx:comment>
-      <form method="post" action="continue.#{$cocoon/continuation/id}">
+      <form method="post" action="continue.#{$continuation/id}">
         <para>Enter value of <strong>a</strong>: <input type="text" name="a"/></para>
         <input type="submit" name="submit" value="Enter"/>
       </form>

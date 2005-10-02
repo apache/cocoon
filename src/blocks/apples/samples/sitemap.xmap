@@ -85,6 +85,9 @@
         <map:call continuation="{1}"/>
       </map:match>
 
+      <map:match pattern="continue.*">
+        <map:call continuation="{1}"/>
+      </map:match>     
 
       <!--+
           |   Binding form sample, reuses pipelines stolen from Cocoon Forms
@@ -110,12 +113,12 @@
       </map:match>
 
       <map:match pattern="calc/*">
-        <map:generate type="serverpages" src="calc/{1}.xsp"/>
+        <map:generate type="jx" src="context://samples/flow/jxcalc/screens/{1}.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="/samples/apples/calc/{1}.xsp"/>
+          <map:parameter name="file" value="samples/flow/jxcalc/screens/{1}.xml"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
