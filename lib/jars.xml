@@ -1232,7 +1232,7 @@
       Jackrabbit JCR implementation
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-commons-1.0-dev-LCR209797.jar</lib>
+    <lib>optional/jackrabbit-commons-1.0-dev-r292737.jar</lib>
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
   </file>
 
@@ -1242,7 +1242,7 @@
       Jackrabbit JCR implementation
     </description>
     <used-by>JCR block</used-by>
-    <lib>optional/jackrabbit-core-1.0-dev-LCR209797.jar</lib>
+    <lib>optional/jackrabbit-1.0-dev-r292737.jar</lib>
     <homepage>http://incubator.apache.org/jackrabbit/</homepage>
   </file>
 
