@@ -97,7 +97,7 @@ public class CoreServiceManager
     /** LoggerManager. */
     protected LoggerManager loggerManager;
 
-    private ComponentEnvironment componentEnv;
+    protected ComponentEnvironment componentEnv;
 
     /** The settings */
     private Settings settings;

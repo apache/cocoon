@@ -28,5 +28,8 @@
          implementation="unstable"/>
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
+  <components>
+    <include src="context://WEB-INF/xconf/cocoon-core.xconf"/>
+  </components>
   <sitemap src="sitemap.xmap"/>
 </block>

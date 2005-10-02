@@ -25,7 +25,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.container.CoreServiceManager;
+import org.apache.cocoon.core.container.DefaultServiceSelector;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
+import org.apache.cocoon.core.container.handler.PoolableComponentHandler;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceFactory;
@@ -59,13 +61,29 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
      */
     public void addComponent(String role, String className, Configuration configuration, ComponentInfo info) throws ConfigurationException {
         super.addComponent(role, className, configuration, info);
+
+        Class clazz;
+        try {
+            clazz = this.componentEnv.loadClass(className);
+        } catch(ClassNotFoundException cnfe) {
+            throw new ConfigurationException("Cannot load class " + className + " for component at " +
+                                             configuration.getLocation(), cnfe);
+        }
+
+        // The DefaultServiceSelector just add its children, no need to add it as a service
+        if (DefaultServiceSelector.class.isAssignableFrom(clazz))
+            return;
         if (configuration.getAttributeAsBoolean("exported", true)) {
             ComponentHandler handler = (ComponentHandler)super.componentHandlers.get(role);
-            if (!handler.isSingleton()) {
-                throw new ConfigurationException("Only singleton services can be exported as OSGi services, at " +
-                                                 configuration.getLocation());
+            // Shouldn't PoolableComponentHandler be marked as a singleton?
+            if (handler.isSingleton() ||
+                handler instanceof PoolableComponentHandler) {
+                this.addService(role, handler);
+            } else {
+                throw new ConfigurationException("Only singleton services and thread safe pool proxies can be exported as OSGi services, at " +
+                                                 configuration.getLocation() +
+                                                 " handler=" + handler);
             }
-            this.addService(role, handler);
         }
     }
     
@@ -75,10 +93,6 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
     public void addInstance(String role, Object instance) throws ServiceException {
         super.addInstance(role, instance);
         ComponentHandler handler = (ComponentHandler)super.componentHandlers.get(role);
-        if (!handler.isSingleton()) {
-            throw new ServiceException("Only singleton services can be exported as OSGi services, at " +
-                                       instance.toString());
-        }
         this.addService(role, handler);
     }
 
