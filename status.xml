@@ -573,6 +573,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+      Updated quartz to 1.5.0.
+    </action>
     <action dev="CZ" type="update" fixes-bug="32994" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
       Portal Block: Provide sample for caching uri coplet adapter (Gallery coplet).
     </action>
