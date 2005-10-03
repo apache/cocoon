@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Iterator;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -49,9 +50,9 @@ import org.apache.cocoon.environment.SourceResolver;
  * "name_1" must also exist and vice versa.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterExistsAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class RequestParameterExistsAction extends AbstractConfigurableAction
+public class RequestParameterExistsAction extends AbstractConfigurableAction implements ThreadSafe
 {
 
     protected class StringParts {

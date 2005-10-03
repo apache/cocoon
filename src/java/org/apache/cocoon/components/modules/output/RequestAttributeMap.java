@@ -19,6 +19,7 @@ package org.apache.cocoon.components.modules.output;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 
@@ -30,9 +31,9 @@ import org.apache.cocoon.environment.Request;
  * "org.apache.cocoon.components.modules.output.OutputModule"
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeMap.java,v 1.3 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class RequestAttributeMap extends AbstractOutputModule implements OutputModule {
+public class RequestAttributeMap extends AbstractOutputModule implements OutputModule, ThreadSafe {
     
     public final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
     public final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.RequestAttributeMap.transient";

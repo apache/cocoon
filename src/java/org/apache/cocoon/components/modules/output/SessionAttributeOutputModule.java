@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
@@ -36,9 +37,9 @@ import org.apache.cocoon.environment.Session;
  * copied to the final destination.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionAttributeOutputModule.java,v 1.3 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class SessionAttributeOutputModule extends AbstractOutputModule implements OutputModule {
+public class SessionAttributeOutputModule extends AbstractOutputModule implements OutputModule, ThreadSafe {
     
     public final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
     public final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.transient";
