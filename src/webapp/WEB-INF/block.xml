@@ -30,6 +30,8 @@
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
   <components>
     <include src="context://WEB-INF/xconf/cocoon-core.xconf"/>
+    <include src="context://WEB-INF/xconf/cocoon-core-sitemap.xconf"/>
+    <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap-additions.xconf"/>
   </components>
   <sitemap src="sitemap.xmap"/>
 </block>
