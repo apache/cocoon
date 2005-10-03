@@ -70,6 +70,7 @@ Export-Package:
  org.apache.cocoon.components.modules.input,
  org.apache.cocoon.components.modules.output,
  org.apache.cocoon.components.notification,
+ org.apache.cocoon.components.pipeline,
  org.apache.cocoon.components.pipeline.impl,
  org.apache.cocoon.components.resolver,
  org.apache.cocoon.components.sax,

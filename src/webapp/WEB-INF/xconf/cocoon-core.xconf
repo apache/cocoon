@@ -244,9 +244,9 @@
       | and transformers.
       +-->
   <output-modules>
-    <component-instance exported="false" logger="core.modules.output" name="request-attr" class="org.apache.cocoon.components.modules.output.RequestAttributeOutputModule"/>
-    <component-instance exported="false" logger="core.modules.output" name="request-attr-map" class="org.apache.cocoon.components.modules.output.RequestAttributeMap"/>
-    <component-instance exported="false" logger="core.modules.output" name="session-attr" class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
+    <component-instance logger="core.modules.output" name="request-attr" class="org.apache.cocoon.components.modules.output.RequestAttributeOutputModule"/>
+    <component-instance logger="core.modules.output" name="request-attr-map" class="org.apache.cocoon.components.modules.output.RequestAttributeMap"/>
+    <component-instance logger="core.modules.output" name="session-attr" class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
   </output-modules>
 
 <!-- ================================= XML ================================ -->
@@ -536,7 +536,7 @@
         | traversable (directory structures can be crawled).
         +-->
     <component-instance name="file" class="org.apache.excalibur.source.impl.FileSourceFactory"/>
-    <component-instance exported="false" name="upload" class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
+    <component-instance name="upload" class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
     <component-instance name="module" class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
     <component-instance name="xmodule" class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
     <component-instance name="empty" class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
