@@ -616,7 +616,7 @@
     <title>JavaScript engine</title>
     <description>Rhino is an implementation of JavaScript in Java.</description>
     <used-by>Control flow</used-by>
-    <lib>core/rhino-1.6R1.jar</lib>
+    <lib>core/rhino-1.6R2.jar</lib>
     <homepage>http://www.mozilla.org/rhino</homepage>
   </file>
   
