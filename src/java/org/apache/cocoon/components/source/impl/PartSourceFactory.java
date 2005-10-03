@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.components.source.impl;
 
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
@@ -29,10 +31,11 @@ import java.util.Map;
  * A factory for {@link org.apache.cocoon.servlet.multipart.Part} based sources (see {@link PartSource}).
  *
  * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
+ * @version $Id$
  */
-public class PartSourceFactory implements SourceFactory, Contextualizable
+public class PartSourceFactory implements SourceFactory, Contextualizable, ThreadSafe
 {
-    Map objectModel;
+    Context context;
     
     /*
      * Returns a new {@link PartSource} based on the uri.
@@ -41,7 +44,8 @@ public class PartSourceFactory implements SourceFactory, Contextualizable
      */
     public Source getSource(String uri, Map parameters) throws IOException, MalformedURLException
     {
-        return new PartSource(uri, this.objectModel);
+        Map objectModel = ContextHelper.getObjectModel(context);
+        return new PartSource(uri, objectModel);
     }
 
     /**
@@ -59,6 +63,6 @@ public class PartSourceFactory implements SourceFactory, Contextualizable
      */
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException {
-         this.objectModel = ContextHelper.getObjectModel(context);
+         this.context = context;
     }
 }
