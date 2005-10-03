@@ -24,7 +24,7 @@
                 This implementation of the Java interface 
                 <link href="/api/java/org/apache/cocoon/components/cron/JobScheduler.html">
                 <code>JobScheduler</code></link> 
-                is based on the <link href="http://sourceforge.net/projects/quartz/">Quartz</link>
+                is based on the <link href="http://www.opensymphony.com/quartz/">Quartz</link>
                 job scheduling project and the 
                 <code>RunnableManager</code> as a ThreadPool implementation for the Quartz Scheduler.
             </p>
@@ -38,7 +38,7 @@
             <p>
                 This <link href="/api/java/org/apache/cocoon/components/cron/QuartzJobScheduler.html">
                 <code>QuartzJobScheduler</code></link> implementation is written as a standard 
-                <link href="http://avalon.apache.org/">Avalon</link> component. So, its definition you'll find in the
+                <link href="http://excalibur.apache.org/framework/index.html">Avalon</link> component. So, its definition you'll find in the
                 <code>cocoon.xconf</code> file of Cocoon if you've included the cron-block in your build (see 
                 block.properties or local.block.properties file respectively).
             </p>
@@ -169,7 +169,7 @@
                     <code>&lt;cron&gt;</code> element will be preferred by the implementation if you use both forms 
                     together in one <code>&lt;trigger&gt;</code> element. A description of the 
                     expressions used inside the <code>&lt;trigger&gt;</code> elements is described in the 
-                    <link href="http://quartz.sourceforge.net/javadoc/org/quartz/CronTrigger.html">
+                    <link href="http://www.opensymphony.com/quartz/api/org/quartz/CronTrigger.html">
                     <code>CronTrigger</code></link> class.
                 </p>
             </section>
