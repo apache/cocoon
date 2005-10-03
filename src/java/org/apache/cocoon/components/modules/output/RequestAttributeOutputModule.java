@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.modules.output;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version CVS $Id$
  */
-public class RequestAttributeOutputModule extends AbstractOutputModule implements OutputModule {
+public class RequestAttributeOutputModule extends AbstractOutputModule implements OutputModule, ThreadSafe {
 
     public static final String PREFIX = OutputModule.ROLE;
     public static final String TRANS_PREFIX = PREFIX + ".RequestAttributeOutputModule.transient";
