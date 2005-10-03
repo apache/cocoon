@@ -137,7 +137,7 @@ public class QuartzDriverDelegate implements DriverDelegate {
     }
 
     public Trigger[] selectTriggersForRecoveringJobs(Connection conn)
-            throws SQLException {
+            throws SQLException, IOException, ClassNotFoundException {
         return delegate.selectTriggersForRecoveringJobs(conn);
     }
 
@@ -518,5 +518,9 @@ public class QuartzDriverDelegate implements DriverDelegate {
     public List selectSchedulerStateRecords(Connection conn, String instanceId)
             throws SQLException {
         return delegate.selectSchedulerStateRecords(conn, instanceId);
+    }
+
+    public JobDataMap selectTriggerJobDataMap(Connection conn, String triggerName, String groupName) throws SQLException, ClassNotFoundException, IOException {
+        return delegate.selectTriggerJobDataMap(conn, triggerName, groupName);
     }
 }
