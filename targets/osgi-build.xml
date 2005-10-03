@@ -84,7 +84,6 @@
     <copy file="${webapp}/not-found.xml" tofile="${build.osgi.webapp}/not-found.xml" filtering="on"/>
     <copy file="${webapp}/welcome.xslt" tofile="${build.osgi.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.osgi.webapp}/sitemap.xmap"/>
-    <copy file="${webapp}/WEB-INF/sitemap-additions/cocoon-core.xconf" tofile="${build.osgi.webapp}/WEB-INF/sitemap-additions/cocoon-core.xconf"/>
     <copy file="${webapp}/wiring.xml" tofile="${build.osgi.webapp}/wiring.xml" filtering="on"/>
       
     <copy todir="${build.osgi.webapp}/stylesheets" filtering="on">
@@ -120,7 +119,6 @@
       <replacetoken><![CDATA[<map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>]]></replacetoken>
       <replacevalue><![CDATA[<!-- excluded by the OSGi Ant task!!!!
         map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/-->
-        <map:include src="context://WEB-INF/sitemap-additions/cocoon-core.xconf"/>
         ]]></replacevalue>
     </replace>  
     
@@ -129,6 +127,8 @@
       <replacevalue><![CDATA[<!-- replaced by the OSGi Ant task
         include dir="context://WEB-INF/xconf" pattern="*.xconf"/-->
         
+        <include src="context://WEB-INF/xconf/cocoon-core-sitemap.xconf"/>
+        <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap-additions.xconf"/>
         <include src="context://WEB-INF/xconf/cocoon-blocks.xconf"/>]]>
       </replacevalue>
     </replace> 
