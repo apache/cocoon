@@ -36,6 +36,8 @@
         <exclude name="**/*.jpg"/>
         <exclude name="**/*.gif"/>
         <exclude name="**/*.png"/>
+        <exclude name="**/*.zip"/>
+        <exclude name="**/*.sxw"/>
         <!-- filtering breaks UTF-8 files -->
         <exclude name="i18n/**"/>
       </fileset>
@@ -46,6 +48,8 @@
         <include name="**/*.jpg"/>
         <include name="**/*.gif"/>
         <include name="**/*.png"/>
+        <include name="**/*.zip"/>
+        <include name="**/*.sxw"/>
         <include name="i18n/**"/>
         <include name="hello-world/style/**"/>
       </fileset>
