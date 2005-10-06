@@ -198,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="BD" type="update">
+      Core samples moved to new blocks: core-samples-main and core-samples-additional.
+    </action>
     <action dev="JH" type="update" fixes-bug="28056">
       Midi Block: Marked as stable.
     </action>
