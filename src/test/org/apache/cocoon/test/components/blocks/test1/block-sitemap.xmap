@@ -20,9 +20,9 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
-    <map:classpath>
+    <!--map:classpath>
       <class-dir src="COB-INF/classes"/>
-    </map:classpath>
+    </map:classpath-->
 
     <source-factories>
       <component-instance class="org.apache.cocoon.components.source.impl.BlockSourceFactory" name="block"/>

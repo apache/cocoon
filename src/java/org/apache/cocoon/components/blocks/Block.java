@@ -21,12 +21,17 @@ import java.net.URISyntaxException;
 import org.apache.cocoon.Processor;
 
 /**
- * @version SVN $Id:$
+ * @version SVN $Id$
  */
 public interface Block extends Processor { 
 
     public static String NAME = Block.class.getName() + "-name";
     public static String SUPER = "super";
+
+    /**
+     * Get the mount path of the block
+     */
+    public String getMountPath();
 
     /**
      * Get a block property

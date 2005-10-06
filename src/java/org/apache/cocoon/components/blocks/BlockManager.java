@@ -259,6 +259,13 @@ public class BlockManager
     }
 
     /**
+     * Get the mount path of the block
+     */
+    public String getMountPath() {
+	return this.mountPath;
+    }
+
+    /**
      * Get a block property
      */
     public String getProperty(String name) {
@@ -267,9 +274,18 @@ public class BlockManager
         if (value == null) {
             // Ask the super block for the property
             getLogger().debug("Try super property=" + name + " block=" + this.superId);
-            value = this.blocksManager.getProperty(this.superId, name);
+            value = this.getProperty(this.superId, name);
         }
         return value;
+    }
+
+    private String getProperty(String blockId, String name) {
+        Block block = this.blocksManager.getBlock(blockId);
+        if (block != null) {
+            return block.getProperty(name);
+        } else {
+            return null;
+        }
     }
 
     // TODO: We should have a reflection friendly Map getProperties() also
@@ -293,7 +309,18 @@ public class BlockManager
             throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
         // The block id for identificaition
         uri = new URI(blockId, uri.getSchemeSpecificPart(), null);
-        return this.blocksManager.absolutizeURI(uri);
+        return this.absolutizeURI(uri);
+    }
+
+    private URI absolutizeURI(URI uri) throws URISyntaxException {
+        String mountPath = this.blocksManager.getBlock(uri.getScheme()).getMountPath();
+        if (mountPath == null)
+            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
+        if (mountPath.endsWith("/"))
+            mountPath = mountPath.substring(0, mountPath.length() - 1);
+        String absoluteURI = mountPath + uri.getSchemeSpecificPart();
+        getLogger().debug("Resolving " + uri.toString() + " to " + absoluteURI);
+        return new URI(absoluteURI);
     }
 
     /**
@@ -336,7 +363,7 @@ public class BlockManager
                 // The block name should not be used in the recieving block.
                 environment.removeAttribute(Block.NAME);
                 getLogger().debug("Resolving super block to " + this.superId);
-                return this.blocksManager.process(this.superId, environment, true);
+                return this.process(this.superId, environment, true);
             } else {
                 // Call to named block
                 String blockId = (String)this.connections.get(blockName);
@@ -344,11 +371,11 @@ public class BlockManager
                     getLogger().debug("Resolving block: " + blockName + " to " + blockId);
                     // The block name should not be used in the recieving block.
                     environment.removeAttribute(Block.NAME);
-                    return this.blocksManager.process(blockId, environment);
+                    return this.process(blockId, environment);
                 } else if (this.superId != null) {
                     // If there is a super block, the connection might
                     // be defined there instead.
-                    return this.blocksManager.process(this.superId, environment, true);
+                    return this.process(this.superId, environment, true);
                 } else {
                     throw new ProcessingException("Unknown block name " + blockName);
                 }
@@ -369,10 +396,45 @@ public class BlockManager
 //                 return true;
 //             } else if (this.superId != null) {
 //                 // Wasn't defined in the current block try super block
-//                 return this.blocksManager.process(this.superId, environment, true);
+//                 return this.process(this.superId, environment, true);
 //             } else {
 //                 return false;
 //             }
+        }
+    }
+
+    private boolean process(String blockId, Environment environment) throws Exception {
+        return this.process(blockId, environment, false);
+    }
+
+    private boolean process(String blockId, Environment environment, boolean superCall)
+        throws Exception {
+        Block block = this.blocksManager.getBlock(blockId);
+        if (block == null) {
+            return false;
+        } else if (superCall) {
+            getLogger().debug("Enter processing in super block " + blockId);
+            try {
+                // A super block should be called in the context of
+                // the called block to get polymorphic calls resolved
+                // in the right way. Therefore no new current block is
+                // set.
+                return block.process(environment);
+            } finally {
+                getLogger().debug("Leaving processing in super block " + blockId);
+            }
+        } else {
+            getLogger().debug("Enter processing in block " + blockId);
+            try {
+                // It is important to set the current block each time
+                // a new block is entered, this is used for the block
+                // protocol
+                EnvironmentHelper.enterProcessor(block, null, environment);
+                return block.process(environment);
+            } finally {
+                EnvironmentHelper.leaveProcessor();
+                getLogger().debug("Leaving processing in block " + blockId);
+            }
         }
     }
 
