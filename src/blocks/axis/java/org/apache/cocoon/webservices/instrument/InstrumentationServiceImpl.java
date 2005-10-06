@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,26 @@
  */
 package org.apache.cocoon.webservices.instrument;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
-import org.apache.excalibur.instrument.manager.interfaces.InstrumentableDescriptor;
-import org.apache.excalibur.instrument.manager.interfaces.InstrumentDescriptor;
-import org.apache.excalibur.instrument.manager.interfaces.InstrumentSampleDescriptor;
+import org.apache.excalibur.instrument.manager.InstrumentDescriptor;
+import org.apache.excalibur.instrument.manager.InstrumentSampleDescriptor;
+import org.apache.excalibur.instrument.manager.InstrumentableDescriptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of {@link InstrumentationService} component. This component
  * allows you to access sample information from the InstrumentManager.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class InstrumentationServiceImpl extends AbstractLogEnabled
-    implements InstrumentationService {
+                                              implements InstrumentationService {
 
     private static final int[] EMPTY_INT_ARRAY = {};
     private static final String[] EMPTY_STRING_ARRAY = {};
@@ -135,7 +136,6 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
         final List names = new ArrayList();
 
         for (int i = 0; i < descriptors.length; ++i) {
-
             // list all instruments
             InstrumentDescriptor[] insts =
                 descriptors[i].getInstrumentDescriptors();

@@ -27,14 +27,10 @@ to the version of the altrmi client libraries in ${lib.instrumentation}.
       <classpath>
         <fileset dir="${lib.core}">
           <include name="avalon-framework-*.jar"/>
-          <include name="excalibur-instrument-manager-interfaces-*.jar"/>
-        </fileset>
-        <fileset dir="${lib.optional}">
-          <include name="altrmi-common-*.jar"/>
+          <include name="excalibur-instrument-*.jar"/>
         </fileset>
         <fileset dir="${lib.instrumentation}">
-          <include name="excalibur-instrument-client-*.jar"/>
-          <include name="altrmi-*.jar"/>
+          <include name="*.jar"/>
         </fileset>
       </classpath>
     </java>
