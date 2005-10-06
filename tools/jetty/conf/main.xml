@@ -44,7 +44,7 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
   <Call name="addWebApplication">
-    <Arg>/</Arg>
+    <Arg><SystemProperty name="context" default="/"/></Arg>
     <Arg><SystemProperty name="webapp" default="."/></Arg>
     <Set name="defaultsDescriptor"><SystemProperty name="home" default="."/>/tools/jetty/conf/webdefaults.xml</Set>
   </Call>
