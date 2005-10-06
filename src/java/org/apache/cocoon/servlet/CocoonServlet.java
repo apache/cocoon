@@ -54,7 +54,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.excalibur.instrument.InstrumentManager;
-import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
+import org.apache.excalibur.instrument.manager.impl.DefaultInstrumentManagerImpl;
 import org.apache.log.ContextMap;
 import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
@@ -218,7 +218,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * The <code>InstrumentManager</code> instance
      */
-    private DefaultInstrumentManager instrumentManager;
+    private InstrumentManager instrumentManager;
 
     /**
      * This is the path to the servlet context (or the result
@@ -518,8 +518,8 @@ public class CocoonServlet extends HttpServlet {
             disposeCocoon();
         }
 
-        if (this.enableInstrumentation) {
-            this.instrumentManager.dispose();
+        if (this.instrumentManager instanceof Disposable) {
+            ((Disposable) this.instrumentManager).dispose();
         }
 
         if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
@@ -1482,7 +1482,7 @@ public class CocoonServlet extends HttpServlet {
         Logger imLogger = this.loggerManager.getLoggerForCategory(imLoggerCategory);
 
         // Set up the Instrument Manager
-        DefaultInstrumentManager instrumentManager = new DefaultInstrumentManager();
+        DefaultInstrumentManagerImpl instrumentManager = new DefaultInstrumentManagerImpl();
         instrumentManager.enableLogging(imLogger);
         instrumentManager.configure(conf);
         instrumentManager.initialize();

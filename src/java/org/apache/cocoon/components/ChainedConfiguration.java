@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,20 +19,19 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
- * This configuration object is used for {@link SitemapConfigurable} 
+ * This configuration object is used for {@link SitemapConfigurable}
  * components. It 'extends' {@link Configuration} by a parent.
- * 
+ *
  * @since 2.1
- * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ChainedConfiguration.java,v 1.3 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version $Id$
  */
 public final class ChainedConfiguration implements Configuration {
 
     private Configuration wrappedConfiguration;
-    
+
     private ChainedConfiguration parentConfiguration;
-    
+
     /**
      * Constructor
      */
@@ -41,8 +40,8 @@ public final class ChainedConfiguration implements Configuration {
         this.wrappedConfiguration = wrapped;
         this.parentConfiguration = parent;
     }
-    
-    /** 
+
+    /**
      * Get the parent configuration
      * @return the parent configuration or null.
      */
@@ -249,4 +248,19 @@ public final class ChainedConfiguration implements Configuration {
         return this.wrappedConfiguration.getValueAsLong(arg0);
     }
 
+    public double getAttributeAsDouble(String name) throws ConfigurationException {
+        return this.wrappedConfiguration.getAttributeAsDouble(name);
+    }
+
+    public double getValueAsDouble() throws ConfigurationException {
+        return this.wrappedConfiguration.getValueAsDouble();
+    }
+
+    public double getValueAsDouble(double value) {
+        return this.wrappedConfiguration.getValueAsDouble(value);
+    }
+
+    public double getAttributeAsDouble(String name, double value) {
+        return this.wrappedConfiguration.getAttributeAsDouble(name, value);
+    }
 }
