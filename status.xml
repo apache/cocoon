@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+      <action dev="JHS" type="fix" fixes-bug="30796" due-to="Max Pfingsthorn" due-to-email="m.pfingsthorn@hippo.nl">
+      Fix OutofBoundsException when form element does not have an action attribute
+    </action>
     <action dev="RG" type="fix" fixes-bug="34802" due-to="Roy Huang" due-to-email="roy_huang@nbmgroup.com">
       PageLabelLinkService generated the wrong url when using 3 layer tabs with showallnav.
     </action>
