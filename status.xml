@@ -695,6 +695,11 @@
       Updated xercesImpl to 2.7.1, xml-apis to 1.3.02, log4j to 1.2.11, nekohtml to 0.9.5,
       geromino-spec-jms and geronimo-spec-jta to M3.
     </action>
+    <action dev="BD" type="update">
+      Webapp context is now configurable when starting with the included Jetty webserver. Setting
+      JAVA_OPTIONS=-Dcontext=blah/, for example will make the Cocoon webapp available at
+      /blah/ instead of / which stays the default.
+    </action>
     <action dev="SW" type="add">
       Added Cocoon stacktraces. This is based on location classes in the new org.apache.cocoon.util.location package
       and a refactoring of the exception management to attach locations to exceptions.
