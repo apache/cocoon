@@ -1157,7 +1157,7 @@
       API java continuations
     </description>
     <used-by>javaflow</used-by>
-    <lib>core/commons-javaflow-r291286.jar</lib>
+    <lib>core/commons-javaflow-r306555.jar</lib>
     <homepage></homepage>
   </file>
 
