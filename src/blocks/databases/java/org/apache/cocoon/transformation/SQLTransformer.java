@@ -789,7 +789,7 @@ public class SQLTransformer extends AbstractSAXTransformer
                     try {
                         result = datasource.getConnection();
                     } catch (SQLException e) {
-                        if (i < this.connectAttempts) {
+                        if (i + 1 < this.connectAttempts) {
                             final long waittime = this.connectWaittime;
                             // Log exception if debug enabled.
                             if (getLogger().isDebugEnabled()) {
