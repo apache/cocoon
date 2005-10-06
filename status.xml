@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="JHS" type="add" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
+      CForms: The repeater widget now supports min and max-size attributes.
+    </action>
     <action dev="VG" type="add">
       Moved support for zip: sources from scratchpad into the core.
     </action>
