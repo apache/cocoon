@@ -49,7 +49,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.xml.sax.SAXException;
 
 /**
- * @version $Id:$
+ * @version $Id$
  */
 public class BlocksManager
     extends AbstractLogEnabled
@@ -231,60 +231,8 @@ public class BlocksManager
         }
     }
 
-    public String getProperty(String blockId, String name) {
-        BlockManager block = (BlockManager)this.blocks.get(blockId);
-        if (block != null) {
-            return block.getProperty(name);
-        } else {
-            return null;
-        }
-    }
-
-    public URI absolutizeURI(URI uri) throws URISyntaxException {
-        String mountPath =
-            ((Configuration)this.blockConfs.get(uri.getScheme())).getChild("mount").getAttribute("path", null);
-        if (mountPath == null)
-            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
-        if (mountPath.endsWith("/"))
-            mountPath = mountPath.substring(0, mountPath.length() - 1);
-        String absoluteURI = mountPath + uri.getSchemeSpecificPart();
-        getLogger().debug("Resolving " + uri.toString() + " to " + absoluteURI);
-        return new URI(absoluteURI);
-    }
-
-    public boolean process(String blockId, Environment environment) throws Exception {
-        return process(blockId, environment, false);
-    }
-
-    public boolean process(String blockId, Environment environment, boolean superCall)
-        throws Exception {
-        BlockManager block = (BlockManager)this.blocks.get(blockId);
-        if (block == null) {
-            return false;
-        } else if (superCall) {
-            getLogger().debug("Enter processing in super block " + blockId);
-            try {
-                // A super block should be called in the context of
-                // the called block to get polymorphic calls resolved
-                // in the right way. Therefore no new current block is
-                // set.
-                return block.process(environment);
-            } finally {
-                getLogger().debug("Leaving processing in super block " + blockId);
-            }
-        } else {
-            getLogger().debug("Enter processing in block " + blockId);
-            try {
-                // It is important to set the current block each time
-                // a new block is entered, this is used for the block
-                // protocol
-                EnvironmentHelper.enterProcessor(block, null, environment);
-                return block.process(environment);
-            } finally {
-                EnvironmentHelper.leaveProcessor();
-                getLogger().debug("Leaving processing in block " + blockId);
-            }
-        }
+    public Block getBlock(String blockId) {
+	return (Block)this.blocks.get(blockId);
     }
 
     private static class InverseLexicographicalOrder implements Comparator {
