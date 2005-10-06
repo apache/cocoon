@@ -20,27 +20,26 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
+
 import java.util.LinkedList;
 
 /**
  * Filter attributes and text and expand {#expr} to xsp:attribute and xsp:expr
  * elements.
  *
- * @version SVN $Id$
+ * @version $Id$
  */
-public class XSPExpressionFilter
-    extends LogicsheetFilter
-    implements XSPExpressionParser.Handler {
+public class XSPExpressionFilter extends LogicsheetFilter
+                                 implements XSPExpressionParser.Handler {
 
     public static class XMLPipeAdapter extends AbstractXMLPipe {
         private XSPExpressionFilter expressionFilter;
-
         private AbstractXMLPipe additionalFilter;
 
         public XMLPipeAdapter(XSPExpressionFilter expressionFilter, AbstractXMLPipe additionalFilter) {
@@ -80,7 +79,7 @@ public class XSPExpressionFilter
     /** The parser for XSP value templates */
     private XSPExpressionParser expressionParser = new XSPExpressionParser(this);
 
-    private ContentHandler contentHandler;
+
 
     public XSPExpressionFilter(XSPMarkupLanguage markup) {
         this.markupURI = markup.getURI();
@@ -92,32 +91,24 @@ public class XSPExpressionFilter
                                         markup.hasTextInterpolation());
     }
 
-    public void setContentHandler(ContentHandler contentHandler) {
-        this.contentHandler = contentHandler;
-    }
-
     /**
      * Create a new <code>{@link XSPExpressionFilter}</code>.
-     * 
-     * @param filter
-     * @param filename
-     * @param language
      */
     public void startDocument() throws SAXException {
         interpolationStack.clear();
         interpolationStack.addLast(defaultInterpolationSettings);
-        contentHandler.startDocument();
+        super.startDocument();
     }
 
     /**
      * Start a new element. If attribute value templates are enabled and the element has attributes
      * with templates, these are replaced by xsp:attribute tags.
-     * 
-     * @see org.xml.sax.contentHandler.#startElement(java.lang.String, java.lang.String,
+     *
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String,
      *      java.lang.String, org.xml.sax.Attributes)
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes attribs)
-            throws SAXException {
+    throws SAXException {
         expressionParser.flush();
 
         // Check template for interpolation flags
@@ -145,7 +136,7 @@ public class XSPExpressionFilter
             }
 
             // Start the element with template-free attributes
-            contentHandler.startElement(namespaceURI, localName, qName, staticAttribs);
+            super.startElement(namespaceURI, localName, qName, staticAttribs);
 
             // Generate xsp:attribute elements for the attributes containing templates
             for (int i = 0; i < dynamicAttribs.getLength(); ++i) {
@@ -160,17 +151,14 @@ public class XSPExpressionFilter
 
                 addAttribute(elemAttribs, "name", dynamicAttribs.getLocalName(i));
 
-                contentHandler.startElement(markupURI, "attribute", markupPrefix + ":attribute", elemAttribs);
-
+                super.startElement(markupURI, "attribute", markupPrefix + ":attribute", elemAttribs);
                 expressionParser.consume(dynamicAttribs.getValue(i));
                 expressionParser.flush();
-
-                contentHandler.endElement(markupURI, "attribute", markupPrefix + ":attribute");
+                super.endElement(markupURI, "attribute", markupPrefix + ":attribute");
             }
-        }
-        else {
+        } else {
             // Attribute value templates disabled => pass through element
-            contentHandler.startElement(namespaceURI, localName, qName, attribs);
+            super.startElement(namespaceURI, localName, qName, attribs);
         }
     }
 
@@ -218,7 +206,7 @@ public class XSPExpressionFilter
      */
     public void endElement(String uri, String loc, String raw) throws SAXException {
         expressionParser.flush();
-        contentHandler.endElement(uri, loc, raw);
+        super.endElement(uri, loc, raw);
 
         // Pop stack of interpolation settings.
         interpolationStack.removeLast();
@@ -227,8 +215,8 @@ public class XSPExpressionFilter
     /**
      * Handle characters. If text templates are enabled, the text is parsed and expressions are
      * replaced.
-     * 
-     * @see org.xml.sax.contentHandler.#characters(char[], int, int)
+     *
+     * @see org.xml.sax.ContentHandler#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (getInterpolationSettings().textInterpolation) {
@@ -237,35 +225,35 @@ public class XSPExpressionFilter
         }
         else {
             // Text templates disabled => pass through text
-            contentHandler.characters(ch, start, length);
+            super.characters(ch, start, length);
         }
     }
 
     /**
      * Forward text to parent class.
-     * 
+     *
      * @see org.apache.cocoon.components.language.markup.xsp.XSPExpressionParser.Handler#handleText(char[],
      *      int, int)
      */
     public void handleText(char[] chars, int start, int length) throws SAXException {
-        contentHandler.characters(chars, start, length);
+        super.characters(chars, start, length);
     }
 
     /**
      * Wrap expressions in xsp:expr tags.
-     * 
+     *
      * @see org.apache.cocoon.components.language.markup.xsp.XSPExpressionParser.Handler#handleExpression(char[],
      *      int, int)
      */
     public void handleExpression(char[] chars, int start, int length) throws SAXException {
-        contentHandler.startElement(markupURI, "expr", markupPrefix + ":expr", XMLUtils.EMPTY_ATTRIBUTES);
-        contentHandler.characters(chars, start, length);
-        contentHandler.endElement(markupURI, "expr", markupPrefix + ":expr");
+        super.startElement(markupURI, "expr", markupPrefix + ":expr", XMLUtils.EMPTY_ATTRIBUTES);
+        super.characters(chars, start, length);
+        super.endElement(markupURI, "expr", markupPrefix + ":expr");
     }
 
     /**
      * Add an attribute if it is neither <code>null</code> nor empty (length 0).
-     * 
+     *
      * @param attribs The attributes
      * @param name The attribute name
      * @param value The attribute value
@@ -274,34 +262,6 @@ public class XSPExpressionFilter
         if (value != null && value.length() > 0) {
             attribs.addCDATAAttribute(name, value);
         }
-    }
-
-    public void setDocumentLocator(Locator locator) {
-        contentHandler.setDocumentLocator(locator);
-    }
-
-    public void endDocument() throws SAXException {
-        contentHandler.endDocument();
-    }
-
-    public void endPrefixMapping(String prefix) throws SAXException {
-        contentHandler.endPrefixMapping(prefix);
-    }
-
-    public void ignorableWhitespace(char[] chars, int start, int length) throws SAXException {
-        contentHandler.ignorableWhitespace(chars, start, length);
-    }
-
-    public void processingInstruction(String target, String data) throws SAXException {
-        contentHandler.processingInstruction(target, data);
-    }
-
-    public void skippedEntity(String name) throws SAXException {
-        contentHandler.skippedEntity(name);
-    }
-
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        contentHandler.startPrefixMapping(prefix, uri);
     }
 
     /**
@@ -314,8 +274,7 @@ public class XSPExpressionFilter
     /**
      * Structure to hold settings for attribute and text interpolation.
      */
-    private static class InterpolationSettings
-    {
+    private static class InterpolationSettings {
         boolean attrInterpolation;
         boolean textInterpolation;
 
