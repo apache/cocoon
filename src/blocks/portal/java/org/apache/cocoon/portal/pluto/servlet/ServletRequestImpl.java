@@ -131,7 +131,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                 }
 
                 // get request params if the wrapped request is not the Cocoon request
-                if ( currentRequest != this.originalRequest ) {
+                if ( currentRequest == this.originalRequest ) {
                     Enumeration parameters = currentRequest.getParameterNames();
                     while (parameters.hasMoreElements()) {
                         String paramName = (String) parameters.nextElement();
