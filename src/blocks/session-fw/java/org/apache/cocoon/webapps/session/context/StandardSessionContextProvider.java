@@ -39,7 +39,7 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
@@ -72,7 +72,7 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
                 context = new SimpleSessionContext(this.xpathProcessor, this.resolver);
                 context.setup(name, null, null);
             } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
-                context = new RequestSessionContext();
+                context = new RequestSessionContext(this.getLogger());
                 context.setup(name, null, null);
                 ((RequestSessionContext)context).setup( objectModel, this.manager, this.xpathProcessor );
             }

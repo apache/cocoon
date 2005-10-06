@@ -20,6 +20,7 @@ import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.Map;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
@@ -123,6 +124,9 @@ implements SessionContext {
     private static final String NAME_ELEMENT       = "cinclude:" + CIncludeTransformer.CINCLUDE_NAME_ELEMENT;
     private static final String VALUE_ELEMENT      = "cinclude:" + CIncludeTransformer.CINCLUDE_VALUE_ELEMENT;
 
+    /** The logger. */
+    protected Logger logger;
+
     /** Name of this context */
     private String    name;
 
@@ -134,6 +138,10 @@ implements SessionContext {
 
     /** The XPath Processor */
     private XPathProcessor xpathProcessor;
+
+    public RequestSessionContext(Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Setup this context
@@ -287,10 +295,10 @@ implements SessionContext {
                 attr = doc.createElementNS(null, attrName);
                 attrElement.appendChild(attr);
                 DOMUtil.valueOf(attr, this.request.getAttribute(attrName));
-            } catch(DOMException de) {
+            } catch (DOMException de) {
                 // Some request attributes have names that are invalid as element names.
                 // Example : "FOM JavaScript GLOBAL SCOPE/file://my/path/to/flow/script.js"
-                System.err.println("Cannot create XML element with name '" + attrName + "' : " + de.getMessage());
+                this.logger.info("RequestSessionContext: Cannot create XML element from request attribute '" + attrName + "' : " + de.getMessage());
             }
         }
     }
