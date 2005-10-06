@@ -57,7 +57,6 @@ import org.apache.cocoon.transformation.ServiceableTransformer;
 import org.apache.cocoon.util.jxpath.NamespacesTablePointer;
 import org.apache.cocoon.util.location.LocatedRuntimeException;
 import org.apache.cocoon.util.location.Location;
-import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
@@ -1115,10 +1114,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                      String raw, Attributes attrs)
         throws SAXException {
             super(location);
+
             this.namespaceURI = namespaceURI;
             this.localName = localName;
             this.raw = raw;
             this.qname = "{" + namespaceURI + "}" + localName;
+
             StringBuffer buf = new StringBuffer();
             int len = attrs.getLength();
             for (int i = 0; i < len; i++) {
@@ -1128,6 +1129,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 String type = attrs.getType(i);
                 String value = attrs.getValue(i);
                 StringReader in = new StringReader(value);
+
                 int ch;
                 buf.setLength(0);
                 boolean inExpr = false;
@@ -1180,6 +1182,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 } catch (IOException ignored) {
                     ignored.printStackTrace();
                 }
+
                 if (inExpr) {
                     // unclosed #{} or ${}
                     String msg = "Unterminated " + (xpath ? "#" : "$") + "{";
@@ -1188,7 +1191,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
                 if (buf.length() > 0) {
                     if (substEvents.size() == 0) {
-                        attributeEvents.add(new CopyAttribute(uri, local, qname, type, value));
+                        attributeEvents.add(new CopyAttribute(uri, local, qname, type, buf.toString()));
                     } else {
                         substEvents.add(new Literal(buf.toString()));
                         attributeEvents.add(new SubstituteAttribute(uri, local, qname, type, substEvents));
