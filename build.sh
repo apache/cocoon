@@ -25,11 +25,10 @@ chmod u+x $COCOON_TOOLS/bin/ant
 
 # ----- Verify and Set Required Environment Variables -------------------------
 
-if [ "$TERM" = "cygwin" ] ; then
-  S=';'
-else
-  S=':'
-fi
+S=":";
+case "`uname`" in
+   CYGWIN*) S=";" ;;
+esac
 
 # ----- Ignore system CLASSPATH variable
 OLD_CLASSPATH="$CLASSPATH"
