@@ -163,7 +163,15 @@ public class PageLabelLinkService extends DefaultLinkService {
                     value.append('.');
                 }
                 if (item instanceof NamedItem) {
-                    value.append(((NamedItem)item).getName());
+                    if(value.length()>0) {
+                    	value.append(((NamedItem)item).getName());
+                    }
+                    else {
+                        StringBuffer key = new StringBuffer("");
+                        getKey(item, key);
+                	    value.append(key.toString());
+                    }
+
                 }
                 else {
                     value.append(Integer.toString(i));

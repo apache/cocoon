@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="RG" type="fix" fixes-bug="34802" due-to="Roy Huang" due-to-email="roy_huang@nbmgroup.com">
+      PageLabelLinkService generated the wrong url when using 3 layer tabs with showallnav.
+    </action>
     <action dev="JHS" type="add" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
       CForms: The repeater widget now supports min and max-size attributes.
     </action>
