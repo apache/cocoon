@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -112,18 +112,17 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.documentation
  * Provides a generic page template with embedded JSTL and XPath
  * expression substitution to access data sent by Cocoon Flowscripts.
- *  
+ *
  * @cocoon.sitemap.component.name   jx
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.jx
- * 
- * @cocoon.sitemap.component.pooling.max  16
- * 
  *
- * @version CVS $Id$
+ * @cocoon.sitemap.component.pooling.max  16
+ *
+ * @version $Id$
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
-    
+
     // Quick'n dirty hack to replace all SAXParseException by a located runtime exception
     private static final class JXTException extends LocatedRuntimeException {
         JXTException(String message, Location loc, Throwable thr) {
@@ -133,8 +132,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
     private static final JXPathContextFactory jxpathContextFactory = JXPathContextFactory.newInstance();
 
-    private static final Attributes EMPTY_ATTRS = new AttributesImpl();
-    
+    private static final Attributes EMPTY_ATTRS = XMLUtils.EMPTY_ATTRIBUTES;
+
     private final NamespacesTable namespaces = new NamespacesTable();
 
     private static final Iterator EMPTY_ITER = new Iterator() {
@@ -884,7 +883,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             result.toArray(arr);
                             return arr;
                         }
-                        return first.getNode();                    
+                        return first.getNode();
                     }
                     return null;
                 } finally {
@@ -1113,7 +1112,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
     static class StartElement extends Event {
         StartElement(Location location, String namespaceURI, String localName,
-                            String raw, Attributes attrs) throws SAXException {
+                     String raw, Attributes attrs)
+        throws SAXException {
             super(location);
             this.namespaceURI = namespaceURI;
             this.localName = localName;
@@ -1185,6 +1185,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     String msg = "Unterminated " + (xpath ? "#" : "$") + "{";
                     throw new JXTException(msg, location, null);
                 }
+
                 if (buf.length() > 0) {
                     if (substEvents.size() == 0) {
                         attributeEvents.add(new CopyAttribute(uri, local, qname, type, value));
@@ -1457,7 +1458,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         final JXTExpression value;
     }
 
-    
+
      static class StartComment extends StartInstruction {
         StartComment(StartElement raw) {
             super(raw);
@@ -1480,9 +1481,9 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             throw new IllegalArgumentException("No language in locale");
         }
         if (country == null) {
-            ret = variant != null ? new Locale(language, "", variant) : new Locale(language, ""); 
+            ret = variant != null ? new Locale(language, "", variant) : new Locale(language, "");
         } else if (country.length() > 0) {
-            ret = variant != null ? new Locale(language, country, variant) : new Locale(language, country); 
+            ret = variant != null ? new Locale(language, country, variant) : new Locale(language, country);
         } else {
             throw new IllegalArgumentException("Empty country in locale");
         }
@@ -1513,7 +1514,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
         }
     }
-    
+
     static class StartFormatNumber extends LocaleAwareInstruction {
 
         JXTExpression value;
@@ -1794,7 +1795,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             }
             // Set time zone
             TimeZone tz = null;
-            if ((timeZone instanceof String) && ((String) timeZone).equals("")) {
+            if ((timeZone instanceof String) && timeZone.equals("")) {
                 timeZone = null;
             }
             if (timeZone != null) {
@@ -1896,7 +1897,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     flushChars();
                 }
                 lastEvent.next = ev;
-                lastEvent = ev;    
+                lastEvent = ev;
             } else {
                 throw new NullPointerException("null event");
             }
@@ -2002,7 +2003,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             for (int i = 0; i < attributeCount; i++) {
                 String attributeURI = elementAttributes.getURI(i);
                 if (StringUtils.equals(attributeURI, NS)) {
-                    getStartEvent().templateProperties.put(elementAttributes.getLocalName(i), 
+                    getStartEvent().templateProperties.put(elementAttributes.getLocalName(i),
                                 compileExpr(elementAttributes.getValue(i), null, locator));
                     elementAttributes.removeAttribute(i--);
                 }
@@ -2252,12 +2253,12 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 this.gen = new JXTemplateGenerator();
             }
 
-            public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
+            public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
                 throws ProcessingException, SAXException, IOException {
                 this.gen.setup(resolver, objectModel, null, parameters);
             }
 
-            public void service(ServiceManager manager) 
+            public void service(ServiceManager manager)
                 throws ServiceException {
                 this.gen.service(manager);
             }
@@ -2292,7 +2293,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             templateConsumer.setup(resolver, objectModel, src, parameters);
         }
 
-        public void service(ServiceManager manager) 
+        public void service(ServiceManager manager)
             throws ServiceException {
             super.service(manager);
             templateConsumer.service(manager);
@@ -2987,7 +2988,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 Properties omit = XMLUtils.createPropertiesForXML(true);
                 for (int i = 0; i < len; i++) {
                     try {
-                        String str = XMLUtils.serializeNode(nodeList.item(i), omit);  
+                        String str = XMLUtils.serializeNode(nodeList.item(i), omit);
                         buf.append(StringUtils.substringAfter(str, ">")); // cut the XML header
                     } catch (Exception e) {
                         throw new JXTException(e.getMessage(), startJXComment.location, e);
@@ -3035,7 +3036,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                     } else if (val instanceof XMLizable) {
                         ((XMLizable)val).toSAX(new IncludeXMLConsumer(consumer));
                     } else {
-                        char[] ch = val == null ? ArrayUtils.EMPTY_CHAR_ARRAY : val.toString().toCharArray(); 
+                        char[] ch = val == null ? ArrayUtils.EMPTY_CHAR_ARRAY : val.toString().toCharArray();
                         consumer.characters(ch, 0, ch.length);
                     }
                 } catch (Exception e) {
@@ -3210,11 +3211,11 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }
         } catch (Exception e) {
-            getLogger().error( "error evaluating cache validity", e );
+            getLogger().error("error evaluating cache validity", e);
         }
         return null;
     }
-    
+
     private Object getCurrentTemplateProperty(String propertyName) {
         final String uri = this.inputSource.getURI();
         StartDocument startEvent;
@@ -3223,7 +3224,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
         return (startEvent != null) ? startEvent.templateProperties.get(propertyName) : null;
     }
-    
+
     private NodeList toDOMNodeList(String elementName, StartInstruction si,
             MyJexlContext jexlContext, StartElement macroCall) throws SAXException{
         DOMBuilder builder = new DOMBuilder();
@@ -3235,7 +3236,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         Node node = builder.getDocument().getDocumentElement();
         return node.getChildNodes();
     }
-    
+
     static final class JXCacheKey implements Serializable {
         private final String templateUri;
         private final Serializable templateKey;
@@ -3262,6 +3263,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
     static final class JXSourceValidity implements SourceValidity, Serializable {
         private final SourceValidity sourceValidity;
         private final SourceValidity templateValidity;
+
         private JXSourceValidity(SourceValidity sourceValidity, SourceValidity templateValidity) {
             this.sourceValidity = sourceValidity;
             this.templateValidity = templateValidity;
@@ -3269,17 +3271,19 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 
         public int isValid() {
             switch (sourceValidity.isValid()) {
-                case SourceValidity.INVALID: return SourceValidity.INVALID;
-                case SourceValidity.UNKNOWN: {
+                case SourceValidity.INVALID:
+                    return SourceValidity.INVALID;
+
+                case SourceValidity.UNKNOWN:
                     if (templateValidity.isValid() == SourceValidity.INVALID) {
                         return SourceValidity.INVALID;
                     }
-                    else {
-                        return SourceValidity.UNKNOWN;
-                    }
-                }
-                case SourceValidity.VALID: return templateValidity.isValid();
+                    return SourceValidity.UNKNOWN;
+
+                case SourceValidity.VALID:
+                    return templateValidity.isValid();
             }
+
             return SourceValidity.UNKNOWN;
         }
 
@@ -3287,20 +3291,20 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             if (otherValidity instanceof JXSourceValidity) {
                 JXSourceValidity otherJXValidity = (JXSourceValidity) otherValidity;
                 switch (sourceValidity.isValid(otherJXValidity.sourceValidity)) {
-                	case SourceValidity.INVALID: return SourceValidity.INVALID;
-                	case SourceValidity.UNKNOWN: {
-                	    if (templateValidity.isValid(otherJXValidity.templateValidity) == SourceValidity.INVALID) {
-                	        return SourceValidity.INVALID;
-                	    }
-                	    else {
-                	        return SourceValidity.UNKNOWN;
-                	    }
-                	}
-                	case SourceValidity.VALID: return templateValidity.isValid(otherJXValidity.templateValidity);
+                    case SourceValidity.INVALID:
+                        return SourceValidity.INVALID;
+
+                    case SourceValidity.UNKNOWN:
+                        if (templateValidity.isValid(otherJXValidity.templateValidity) == SourceValidity.INVALID) {
+                            return SourceValidity.INVALID;
+                        }
+                        return SourceValidity.UNKNOWN;
+
+                    case SourceValidity.VALID:
+                        return templateValidity.isValid(otherJXValidity.templateValidity);
                 }
             }
-            return 0;
+            return SourceValidity.UNKNOWN;
         }
-
     }
 }
