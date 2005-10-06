@@ -67,7 +67,7 @@ public class TestPortlet implements Portlet  {
         if (key != null && value != null) {
             prefs.setValue(key, value);
             try {
-              prefs.store();
+                prefs.store();
             } catch (Exception e) {
                 e.printStackTrace();
             }
