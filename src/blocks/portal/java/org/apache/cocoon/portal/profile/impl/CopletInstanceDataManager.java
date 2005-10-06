@@ -25,15 +25,23 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataManager.java,v 1.5 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CopletInstanceDataManager {
 	
 	/**
 	 * The coplet instance data instances.
 	 */
-	private Map copletInstanceData = new HashMap();
-	
+	private final Map copletInstanceData;
+
+    public CopletInstanceDataManager() {
+        this.copletInstanceData = new HashMap();
+    }
+
+    public CopletInstanceDataManager(Map instances) {
+        this.copletInstanceData = instances;
+    }
+
 	/**
 	 * Gets all coplet instance data.
 	 */

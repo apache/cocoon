@@ -46,7 +46,7 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
 /**
- * This is a component that converts the profiles (= object tree) to XML and vice-versa
+ * This is a component converting the profiles (= object tree) to XML and vice-versa
  * using Castor. It could be used to persist objects as a XML representation.
  * 
  * In order to work properly the methods provided by this interface require some 
@@ -71,16 +71,15 @@ public class CastorSourceConverter
     private ServiceManager manager;
     private Map mappings = new HashMap();
     private boolean defaultSuppressXSIType;
-    
+    private boolean defaultValidateUnmarshalling;
+
     public Object getObject(InputStream stream, Map parameters) throws ConverterException {
         try {
             ReferenceFieldHandler.setObjectMap((Map)parameters.get(ProfileLS.PARAMETER_OBJECTMAP));
-            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)));
+            Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)))[1];
             Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
-        } catch (MappingException e) {
-            throw new ConverterException("Can't create Unmarshaller", e);
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         }
@@ -90,7 +89,7 @@ public class CastorSourceConverter
         Writer writer = new OutputStreamWriter(stream);
 		try {
 			Marshaller marshaller = new Marshaller( writer );
-			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)));
+			marshaller.setMapping((Mapping)((Object[])this.mappings.get(parameters.get(ProfileLS.PARAMETER_PROFILETYPE)))[0]);
             boolean suppressXSIType = this.defaultSuppressXSIType;
             Boolean value = (Boolean)parameters.get("suppressXSIType");
             if (value != null) {
@@ -106,14 +105,14 @@ public class CastorSourceConverter
 		}
 	}
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
@@ -123,9 +122,10 @@ public class CastorSourceConverter
     		this.mappingSources.put(mappingSource.getAttribute("source"), mappingSource.getValue());
     	}
         this.defaultSuppressXSIType = config.getChild("suppressXSIType").getValueAsBoolean(false);
+        this.defaultValidateUnmarshalling = config.getChild("validate-on-unmarshalling").getValueAsBoolean(false);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
@@ -145,7 +145,11 @@ public class CastorSourceConverter
 				source = resolver.resolveURI(mappingSource);
 				mapping = new Mapping();
 				mapping.loadMapping(SourceUtil.getInputSource(source));
-				this.mappings.put(name, mapping);
+
+                // create unmarshaller
+                final Unmarshaller unmarshaller = new Unmarshaller(mapping);
+                unmarshaller.setValidation(this.defaultValidateUnmarshalling);
+                this.mappings.put(name, new Object[] {mapping, unmarshaller});
         	}
         } finally {
             if (source != null) {

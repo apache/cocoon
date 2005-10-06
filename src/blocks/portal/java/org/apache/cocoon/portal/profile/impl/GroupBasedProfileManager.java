@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -639,5 +639,73 @@ public class GroupBasedProfileManager
         } finally {
             this.manager.release(service);
         }            
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserCopletInstanceDatas(java.lang.String)
+     */
+    public void saveUserCopletInstanceDatas(String layoutKey) {
+        ProfileLS adapter = null;
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+            if (layoutKey == null) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
+            final UserProfile profile = this.getUserProfile(layoutKey);
+
+            final Map parameters = new HashMap();
+            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                           ProfileLS.PROFILETYPE_COPLETINSTANCEDATA);        
+
+            final UserInfo info = this.provider.getUserInfo(service.getPortalName(), layoutKey);
+            final Map key = this.buildKey(CATEGORY_USER,
+                                          ProfileLS.PROFILETYPE_COPLETINSTANCEDATA, 
+                                          info, 
+                                          false);
+            // FIXME - we should be able to save without creating a CopletInstanceDataManager
+            CopletInstanceDataManager cidm = new CopletInstanceDataManager(profile.getCopletInstanceDatas());
+            adapter.saveProfile(key, parameters, cidm);
+        } catch (Exception e) {
+            // TODO
+            throw new CascadingRuntimeException("Exception during save profile", e);
+        } finally {
+            this.manager.release(service);
+            this.manager.release(adapter);
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserLayout(java.lang.String)
+     */
+    public void saveUserLayout(String layoutKey) {
+        ProfileLS adapter = null;
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+            if (layoutKey == null) {
+                layoutKey = service.getDefaultLayoutKey();
+            }
+            final UserProfile profile = this.getUserProfile(layoutKey);
+
+            final Map parameters = new HashMap();
+            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                           ProfileLS.PROFILETYPE_LAYOUT);        
+
+            final UserInfo info = this.provider.getUserInfo(service.getPortalName(), layoutKey);
+            final Map key = this.buildKey(CATEGORY_USER,
+                                          ProfileLS.PROFILETYPE_LAYOUT, 
+                                          info, 
+                                          false);
+            adapter.saveProfile(key, parameters, profile.getRootLayout());
+        } catch (Exception e) {
+            // TODO
+            throw new CascadingRuntimeException("Exception during save profile", e);
+        } finally {
+            this.manager.release(service);
+            this.manager.release(adapter);
+        }
     }
 }
