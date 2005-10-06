@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.classloader.ClassLoaderFactory;
@@ -63,6 +65,7 @@ import org.apache.commons.jci.stores.TransactionalResourceStore;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
+import org.xml.sax.SAXException;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
@@ -561,6 +564,69 @@ public class TreeProcessor extends AbstractLogEnabled
     }
 
     
+    private Configuration createSitemapProgram(Source source) throws ProcessingException, SAXException, IOException {
+        NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
+        AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
+        SourceUtil.toSAX(source, annotationsFilter);
+        return handler.getConfiguration();        
+    }
+    
+    private void subscribeListeners(Map listerens, ConcreteTreeProcessor processor) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("setting up listeners " + listerens);
+        }
+        for (final Iterator it = listerens.values().iterator(); it.hasNext();) {
+            final NotifyingListener newListener = (NotifyingListener) it.next();
+            
+            newListener.setNotificationListener(processor);
+            
+            fam.subscribe(newListener);
+        }        
+    }
+
+    private void unsubscribeListeners(Map listerens) {
+        if (listerens != null && listerens.size() > 0) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("unsubscribing " + listerens + " from fam");
+            }
+            for (final Iterator it = listerens.values().iterator(); it.hasNext();) {
+                final FilesystemAlterationListener oldListener = (FilesystemAlterationListener) it.next();
+                fam.unsubscribe(oldListener);
+            }
+        }        
+    }
+    
+    private void waitForInitialCompilation(Map listeners) throws Exception {
+        if (listeners.size() > 0) {
+            // wait for the new ones to complete for the first time                
+            for (final Iterator it = listeners.values().iterator(); it.hasNext();) {
+                final NotifyingListener newListener = (NotifyingListener) it.next();
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("waiting for initial compilation");
+                }
+                newListener.waitForFirstCheck();
+            }
+        }        
+    }
+    
+    private void provideClasses(Map listeners, ClassLoader classloader) {
+        for (final Iterator it = listeners.values().iterator(); it.hasNext();) {
+            final NotifyingListener newListener = (NotifyingListener) it.next();
+
+            if (newListener instanceof ResourceStoringListener) {
+                ResourceStoringListener l = (ResourceStoringListener)newListener;
+                if (classloader instanceof ReloadingClassLoaderFactory.DefaultClassLoader) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("adding store " + l.getStore() + " to classloader");
+                    }
+                    ReloadingClassLoaderFactory.DefaultClassLoader cl = (ReloadingClassLoaderFactory.DefaultClassLoader) classloader;
+                    cl.addResourceStore(l.getStore());
+                }
+            }                
+        }        
+    }
+
+    
     /**
      * Build the concrete processor (i.e. loads the sitemap). Should be called
      * only by setupProcessor();
@@ -603,11 +669,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         try {
 
-            // Build a namespace-aware configuration object
-            NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
-            AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
-            SourceUtil.toSAX(this.source, annotationsFilter);
-            Configuration sitemapProgram = handler.getConfiguration();
+            Configuration sitemapProgram = createSitemapProgram(this.source);
             newLastModified = this.source.getLastModified();
 
             newProcessor = createConcreteTreeProcessor();
@@ -622,52 +684,18 @@ public class TreeProcessor extends AbstractLogEnabled
                 Thread.currentThread().setContextClassLoader(classloader);
                 
                 newListeners = createClasspathListeners(oldListeners, classpathConfig);
+                
                 newProcessor.setClasspathListeners(newListeners);
                 
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("setting up listeners " + newListeners);
-                }
-                for (final Iterator it = newListeners.values().iterator(); it.hasNext();) {
-                    final NotifyingListener newListener = (NotifyingListener) it.next();
-                    
-                    newListener.setNotificationListener(newProcessor);
-                    
-                    fam.subscribe(newListener);
-
-                    if (newListener instanceof ResourceStoringListener) {
-                        ResourceStoringListener l = (ResourceStoringListener)newListener;
-                        if (classloader instanceof ReloadingClassLoaderFactory.DefaultClassLoader) {
-                            if (getLogger().isDebugEnabled()) {
-                                getLogger().debug("adding store " + l.getStore() + " to classloader");
-                            }
-                            ReloadingClassLoaderFactory.DefaultClassLoader cl = (ReloadingClassLoaderFactory.DefaultClassLoader) classloader;
-                            cl.addResourceStore(l.getStore());
-                        }
-                    }                
-                }
+                subscribeListeners(newListeners, newProcessor);
+                
+                provideClasses(newListeners, classloader);
             }
 
-            if (oldListeners != null && oldListeners.size() > 0) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("unsubscribing " + oldListeners + " from fam");
-                }
-                for (final Iterator it = oldListeners.values().iterator(); it.hasNext();) {
-                    final FilesystemAlterationListener oldListener = (FilesystemAlterationListener) it.next();
-                    fam.unsubscribe(oldListener);
-                }
-            }
+            unsubscribeListeners(oldListeners);
 
-            
-            if (newListeners.size() > 0) {
-                // wait for the new ones to complete for the first time                
-                for (final Iterator it = newListeners.values().iterator(); it.hasNext();) {
-                    final NotifyingListener newListener = (NotifyingListener) it.next();
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("waiting for initial compilation");
-                    }
-                    newListener.waitForFirstCheck();
-                }
-            }
+            waitForInitialCompilation(newListeners);
+
 
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
