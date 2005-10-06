@@ -788,13 +788,22 @@ public class SQLTransformer extends AbstractSAXTransformer
                 for (int i = 0; i < this.connectAttempts && result == null; i++) {
                     try {
                         result = datasource.getConnection();
-                    } catch (Exception e) {
-                        final long waittime = this.connectWaittime;
-                        getLogger().debug("Unable to get connection; waiting " +
-                                          waittime + "ms to try again.");
-                        try {
-                            Thread.sleep(waittime);
-                        } catch (InterruptedException ignored) {
+                    } catch (SQLException e) {
+                        if (i < this.connectAttempts) {
+                            final long waittime = this.connectWaittime;
+                            // Log exception if debug enabled.
+                            if (getLogger().isDebugEnabled()) {
+                                getLogger().info("Unable to get connection; waiting " +
+                                                  waittime + "ms to try again.", e);
+                            } else {
+                                getLogger().info("Unable to get connection; waiting " +
+                                                  waittime + "ms to try again.");
+                            }
+                            try {
+                                Thread.sleep(waittime);
+                            } catch (InterruptedException ex) {
+                                /* ignored */
+                            }
                         }
                     }
                 }
@@ -1464,7 +1473,9 @@ public class SQLTransformer extends AbstractSAXTransformer
                         } finally {
                             try {
                                 rs.close();
-                            } catch (SQLException ignored) { }
+                            } catch (SQLException e) {
+                                /* ignored */
+                            }
                         }
                         end((String) outParametersNames.get(counter));
                     }
