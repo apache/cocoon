@@ -1147,7 +1147,7 @@
       API for compiling java
     </description>
     <used-by>javaflow</used-by>
-    <lib>core/commons-jci-r291284.jar</lib>
+    <lib>core/commons-jci-r306555.jar</lib>
     <homepage></homepage>
   </file>
 
