@@ -64,7 +64,7 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-component-1.2.jar</lib>
+    <lib>core/excalibur-component-2.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
