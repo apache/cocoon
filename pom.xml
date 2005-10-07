@@ -124,12 +124,12 @@
     <dependency>
       <groupId>commons-javaflow</groupId>
       <artifactId>commons-javaflow</artifactId>
-      <version>r291286</version>
+      <version>r306555</version>
     </dependency>
     <dependency>
       <groupId>commons-jci</groupId>
       <artifactId>commons-jci</artifactId>
-      <version>r291284</version>
+      <version>r306555</version>
     </dependency>
     <dependency>
       <groupId>commons-jexl</groupId>
@@ -326,7 +326,7 @@
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      <version>[1.3.02]</version>
+      <version>1.3.02</version>
     </dependency>
     <dependency>
       <groupId>easymock</groupId>
