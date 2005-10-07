@@ -18,6 +18,9 @@ package org.apache.cocoon.generation;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -27,6 +30,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.SystemUtils;
@@ -36,10 +40,9 @@ import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -51,6 +54,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -73,7 +77,7 @@ import java.util.TreeSet;
  * &lt;!ATTLIST statusinfo
  *     date CDATA #IMPLIED
  *     host CDATA #IMPLIED
-       cocoon-version CDATA #IMPLIED
+ *     cocoon-version CDATA #IMPLIED
  * &gt;
  *
  * &lt;!ELEMENT group (group|value)*&gt;
@@ -96,7 +100,7 @@ import java.util.TreeSet;
  * @version $Id$
  */
 public class StatusGenerator extends ServiceableGenerator
-                             implements Configurable {
+                             implements Contextualizable, Configurable {
 
     /**
      * The XML namespace for the output document.
@@ -112,6 +116,11 @@ public class StatusGenerator extends ServiceableGenerator
      * The namespace prefix for xlink namespace
      */
     protected static final String XLINK_PREFIX = "xlink";
+
+    /**
+     * The component context.
+     */
+    protected Context context;
 
     /**
      * The StoreJanitor used to get cache statistics
@@ -134,6 +143,10 @@ public class StatusGenerator extends ServiceableGenerator
     private Source libDirectory;
 
 
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
     public void configure(Configuration configuration) throws ConfigurationException {
         this.showLibrary = configuration.getChild("show-libraries").getValueAsBoolean(true);
     }
@@ -151,6 +164,7 @@ public class StatusGenerator extends ServiceableGenerator
         } else {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
+
         if (this.manager.hasService(Store.PERSISTENT_STORE)) {
             this.storePersistent = (Store) this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
@@ -171,6 +185,9 @@ public class StatusGenerator extends ServiceableGenerator
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.manager != null) {
             this.manager.release(this.storePersistent);
@@ -187,29 +204,30 @@ public class StatusGenerator extends ServiceableGenerator
         super.dispose();
     }
 
-    /** Generate the status information in XML format.
+    /**
+     * Generate the status information in XML format.
      * @throws SAXException
      *         when there is a problem creating the output SAX events.
      */
     public void generate() throws SAXException, ProcessingException {
 
         // Start the document and set the namespace.
-        this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("", NAMESPACE);
-        this.contentHandler.startPrefixMapping(XLINK_PREFIX, XLINK_NS);
+        super.contentHandler.startDocument();
+        super.contentHandler.startPrefixMapping("", NAMESPACE);
+        super.contentHandler.startPrefixMapping(XLINK_PREFIX, XLINK_NS);
 
-        genStatus(this.contentHandler);
+        genStatus();
 
         // End the document.
-        this.contentHandler.endPrefixMapping(XLINK_PREFIX);
-        this.contentHandler.endPrefixMapping("");
-        this.contentHandler.endDocument();
+        super.contentHandler.endPrefixMapping(XLINK_PREFIX);
+        super.contentHandler.endPrefixMapping("");
+        super.contentHandler.endDocument();
     }
 
     /**
      * Generate the main status document.
      */
-    private void genStatus(ContentHandler ch) throws SAXException, ProcessingException {
+    private void genStatus() throws SAXException, ProcessingException {
         // Root element.
 
         // The current date and time.
@@ -228,23 +246,24 @@ public class StatusGenerator extends ServiceableGenerator
         }
 
         AttributesImpl atts = new AttributesImpl();
-        atts.addAttribute(NAMESPACE, "date", "date", "CDATA", dateTime);
-        atts.addAttribute(NAMESPACE, "host", "host", "CDATA", localHost);
-        atts.addAttribute(NAMESPACE, "cocoon-version", "cocoon-version", "CDATA", Constants.VERSION);
-        ch.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
+        atts.addCDATAAttribute(NAMESPACE, "date", dateTime);
+        atts.addCDATAAttribute(NAMESPACE, "host", localHost);
+        atts.addCDATAAttribute(NAMESPACE, "cocoon-version", Constants.VERSION);
+        super.contentHandler.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
 
-        genVMStatus(ch);
+        genVMStatus();
+        genProperties();
         if (this.showLibrary) {
-            this.genLibrarylist(ch);
+            genLibrarylist();
         }
 
         // End root element.
-        ch.endElement(NAMESPACE, "statusinfo", "statusinfo");
+        super.contentHandler.endElement(NAMESPACE, "statusinfo", "statusinfo");
     }
 
-    private void genVMStatus(ContentHandler ch) throws SAXException {
+    private void genVMStatus() throws SAXException {
         AttributesImpl atts = new AttributesImpl();
-        startGroup(ch, "VM");
+        startGroup("VM");
 
         // BEGIN ClassPath
         String classpath = SystemUtils.JAVA_CLASS_PATH;
@@ -254,50 +273,70 @@ public class StatusGenerator extends ServiceableGenerator
             while (tokenizer.hasMoreTokens()) {
                 paths.add(tokenizer.nextToken());
             }
-            addMultilineValue(ch, "classpath", paths);
+            addMultilineValue("classpath", paths);
         }
         // END ClassPath
 
+        // BEGIN CONTEXT CLASSPATH
+        String contextClassPath = null;
+        try {
+            contextClassPath = (String) this.context.get(Constants.CONTEXT_CLASSPATH);
+        } catch (ContextException e) {
+            // we ignore this
+        }
+        if (contextClassPath != null) {
+            List paths = new ArrayList();
+            StringTokenizer tokenizer = new StringTokenizer(contextClassPath, File.pathSeparator);
+            while (tokenizer.hasMoreTokens()) {
+                paths.add(tokenizer.nextToken());
+            }
+            addMultilineValue("context-classpath", paths);
+        }
+        // END CONTEXT CLASSPATH
+
         // BEGIN Memory status
-        startGroup(ch, "Memory");
-        addValue(ch, "total", String.valueOf(Runtime.getRuntime().totalMemory()));
-        addValue(ch, "free", String.valueOf(Runtime.getRuntime().freeMemory()));
-        endGroup(ch);
+        startGroup("Memory");
+        final long totalMemory = Runtime.getRuntime().totalMemory();
+        final long freeMemory = Runtime.getRuntime().freeMemory();
+        addValue("total", String.valueOf(totalMemory));
+        addValue("used", String.valueOf(totalMemory - freeMemory));
+        addValue("free", String.valueOf(freeMemory));
+        endGroup();
         // END Memory status
 
         // BEGIN JRE
-        startGroup(ch, "JRE");
-        addValue(ch, "version", SystemUtils.JAVA_VERSION);
+        startGroup("JRE");
+        addValue("version", SystemUtils.JAVA_VERSION);
         atts.clear();
         // qName = prefix + ':' + localName
         atts.addAttribute(XLINK_NS, "type", XLINK_PREFIX + ":type", "CDATA", "simple");
         atts.addAttribute(XLINK_NS, "href", XLINK_PREFIX + ":href", "CDATA", SystemUtils.JAVA_VENDOR_URL);
-        addValue(ch, "java-vendor", SystemUtils.JAVA_VENDOR, atts);
-        endGroup(ch);
+        addValue("java-vendor", SystemUtils.JAVA_VENDOR, atts);
+        endGroup();
         // END JRE
 
         // BEGIN Operating system
-        startGroup(ch, "Operating System");
-        addValue(ch, "name", SystemUtils.OS_NAME);
-        addValue(ch, "architecture", SystemUtils.OS_ARCH);
-        addValue(ch, "version", SystemUtils.OS_VERSION);
-        endGroup(ch);
+        startGroup("Operating System");
+        addValue("name", SystemUtils.OS_NAME);
+        addValue("architecture", SystemUtils.OS_ARCH);
+        addValue("version", SystemUtils.OS_VERSION);
+        endGroup();
         // END operating system
 
         // BEGIN Cache
         if (this.storeJanitor != null) {
-            startGroup(ch, "Store Janitor");
+            startGroup("Store Janitor");
 
             // For each element in StoreJanitor
             Iterator i = this.storeJanitor.iterator();
             while (i.hasNext()) {
                 Store store = (Store) i.next();
-                startGroup(ch, store.getClass().getName() + " (hash = 0x" + Integer.toHexString(store.hashCode()) + ")");
+                startGroup(store.getClass().getName() + " (hash = 0x" + Integer.toHexString(store.hashCode()) + ")");
                 int size = 0;
                 int empty = 0;
                 atts.clear();
                 atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
-                ch.startElement(NAMESPACE, "value", "value", atts);
+                super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
 
                 atts.clear();
                 Enumeration e = store.keys();
@@ -310,32 +349,32 @@ public class StatusGenerator extends ServiceableGenerator
                         empty++;
                     } else {
                         line = key + " (class: " + val.getClass().getName() + ")";
-                        ch.startElement(NAMESPACE, "line", "line", atts);
-                        ch.characters(line.toCharArray(), 0, line.length());
-                        ch.endElement(NAMESPACE, "line", "line");
+                        super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+                        super.contentHandler.characters(line.toCharArray(), 0, line.length());
+                        super.contentHandler.endElement(NAMESPACE, "line", "line");
                     }
                 }
                 if (size == 0) {
-                    ch.startElement(NAMESPACE, "line", "line", atts);
+                    super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
                     String value = "[empty]";
-                    ch.characters(value.toCharArray(), 0, value.length());
-                    ch.endElement(NAMESPACE, "line", "line");
+                    super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                    super.contentHandler.endElement(NAMESPACE, "line", "line");
                 }
-                ch.endElement(NAMESPACE, "value", "value");
+                super.contentHandler.endElement(NAMESPACE, "value", "value");
 
-                addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
-                endGroup(ch);
+                addValue("size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
+                endGroup();
             }
-            endGroup(ch);
+            endGroup();
         }
 
         if (this.storePersistent != null) {
-            startGroup(ch, storePersistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(storePersistent.hashCode()) + ")");
+            startGroup(storePersistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(storePersistent.hashCode()) + ")");
             int size = 0;
             int empty = 0;
             atts.clear();
             atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
-            ch.startElement(NAMESPACE, "value", "value", atts);
+            super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
 
             atts.clear();
             Enumeration e = this.storePersistent.keys();
@@ -348,31 +387,43 @@ public class StatusGenerator extends ServiceableGenerator
                     empty++;
                 } else {
                     line = key + " (class: " + val.getClass().getName() + ")";
-                    ch.startElement(NAMESPACE, "line", "line", atts);
-                    ch.characters(line.toCharArray(), 0, line.length());
-                    ch.endElement(NAMESPACE, "line", "line");
+                    super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+                    super.contentHandler.characters(line.toCharArray(), 0, line.length());
+                    super.contentHandler.endElement(NAMESPACE, "line", "line");
                 }
             }
             if (size == 0) {
-                ch.startElement(NAMESPACE, "line", "line", atts);
+                super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
                 String value = "[empty]";
-                ch.characters(value.toCharArray(), 0, value.length());
-                ch.endElement(NAMESPACE, "line", "line");
+                super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                super.contentHandler.endElement(NAMESPACE, "line", "line");
             }
-            ch.endElement(NAMESPACE, "value", "value");
+            super.contentHandler.endElement(NAMESPACE, "value", "value");
 
-            addValue(ch, "size", size + " items in cache (" + empty + " are empty)");
-            endGroup(ch);
+            addValue("size", size + " items in cache (" + empty + " are empty)");
+            endGroup();
         }
         // END Cache
 
-        endGroup(ch);
+        endGroup();
     }
 
-    private void genLibrarylist(ContentHandler ch) throws SAXException,ProcessingException {
+    private void genProperties() throws SAXException {
+        this.startGroup("System-Properties");
+        final Properties p = System.getProperties();
+        final Enumeration e = p.keys();
+        while ( e.hasMoreElements() ) {
+            final String key = (String)e.nextElement();
+            final String value = p.getProperty(key);
+            this.addValue(key, value);
+        }
+        this.endGroup();
+    }
+
+    private void genLibrarylist() throws SAXException,ProcessingException {
         try {
             if (this.libDirectory instanceof TraversableSource) {
-                startGroup(ch, "WEB-INF/lib");
+                startGroup("WEB-INF/lib");
 
                 Set files = new TreeSet();
                 Collection kids = ((TraversableSource) this.libDirectory).getChildren();
@@ -390,10 +441,10 @@ public class StatusGenerator extends ServiceableGenerator
                 }
 
                 for (Iterator i = files.iterator(); i.hasNext(); ) {
-                    addValue(ch, "file", (String) i.next());
+                    addValue("file", (String) i.next());
                 }
 
-                endGroup(ch);
+                endGroup();
             }
         } catch (SourceException e) {
             throw new ResourceNotFoundException("Could not read directory", e);
@@ -401,66 +452,66 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     /** Utility function to begin a <code>group</code> tag pair. */
-    private void startGroup(ContentHandler ch, String name) throws SAXException {
-        startGroup(ch, name, null);
+    private void startGroup(String name) throws SAXException {
+        startGroup(name, null);
     }
 
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
-    private void startGroup(ContentHandler ch, String name, Attributes atts)
+    private void startGroup(String name, Attributes atts)
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        ch.startElement(NAMESPACE, "group", "group", ai);
+        super.contentHandler.startElement(NAMESPACE, "group", "group", ai);
     }
 
     /** Utility function to end a <code>group</code> tag pair. */
-    private void endGroup(ContentHandler ch) throws SAXException {
-        ch.endElement(NAMESPACE, "group", "group");
+    private void endGroup() throws SAXException {
+        super.contentHandler.endElement(NAMESPACE, "group", "group");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(ContentHandler ch, String name, String value)
+    private void addValue(String name, String value)
     throws SAXException {
-        addValue(ch, name, value, null);
+        addValue(name, value, null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addValue(ContentHandler ch, String name, String value, Attributes atts)
+    private void addValue(String name, String value, Attributes atts)
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        ch.startElement(NAMESPACE, "value", "value", ai);
-        ch.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+        super.contentHandler.startElement(NAMESPACE, "value", "value", ai);
+        super.contentHandler.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
 
         if (value != null) {
-            ch.characters(value.toCharArray(), 0, value.length());
+            super.contentHandler.characters(value.toCharArray(), 0, value.length());
         }
 
-        ch.endElement(NAMESPACE, "line", "line");
-        ch.endElement(NAMESPACE, "value", "value");
+        super.contentHandler.endElement(NAMESPACE, "line", "line");
+        super.contentHandler.endElement(NAMESPACE, "value", "value");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addMultilineValue(ContentHandler ch, String name, List values)
+    private void addMultilineValue(String name, List values)
     throws SAXException {
-        addMultilineValue(ch, name, values, null);
+        addMultilineValue(name, values, null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
-    private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts)
+    private void addMultilineValue(String name, List values, Attributes atts)
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        ch.startElement(NAMESPACE, "value", "value", ai);
+        super.contentHandler.startElement(NAMESPACE, "value", "value", ai);
 
         for (int i = 0; i < values.size(); i++) {
             String value = (String) values.get(i);
             if (value != null) {
-                ch.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
-                ch.characters(value.toCharArray(), 0, value.length());
-                ch.endElement(NAMESPACE, "line", "line");
+                super.contentHandler.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+                super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                super.contentHandler.endElement(NAMESPACE, "line", "line");
             }
         }
-        ch.endElement(NAMESPACE, "value", "value");
+        super.contentHandler.endElement(NAMESPACE, "value", "value");
     }
 }
