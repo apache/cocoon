@@ -19,49 +19,61 @@
 <!-- CVS $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
-  <!-- =========================== Views =================================== -->
-
+  
   <map:views>
-    <map:view from-label="content" name="content">
+    <map:view name="debug1" from-label="debug1">
       <map:serialize type="xml"/>
     </map:view>
-
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-      <map:serialize type="html"/>
-    </map:view>
-
-    <map:view from-position="last" name="links">
-      <map:serialize type="links"/>
+    <map:view name="debug2" from-label="debug2">
+      <map:serialize type="xml"/>
     </map:view>
   </map:views>
-
-  <!-- =========================== Pipelines ================================ -->
-
+  
   <map:pipelines>
     <map:pipeline>
+    
       <map:match pattern="">
-        <map:aggregate element="root">
-          <map:part src="module.xml" element="gump"/>
-          <map:part src="cocoon:/xsamples"/>
+        <map:redirect-to uri="main-samples"/>
+      </map:match>
+      
+      <!-- generate the samples pages by filtering the aggregation of .xsamples files -->
+      <map:match pattern="*-samples">
+        <map:aggregate label="debug1" element="root">
+          <map:part element="gump" src="module.xml"/>
+          <map:part element="xsamples" src="cocoon:/xsamples"/>
+          <map:part element="pages" src="samples-pages.xml"/>
         </map:aggregate>
-        <map:transform src="gump2samples.xsl"/>
+        
+        <!-- 
+        		keep only blocks defined in samples-pages.xml for the current page,
+        		and mix with gump info
+        -->
+        <map:transform label="debug2" src="filter-blocks.xsl">
+          <map:parameter name="currentPage" value="{1}"/>
+        </map:transform>
+        
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
+        
         <map:serialize/>
       </map:match>
-
+      
+      <!-- 
+      	aggregate all the xsamples files
+       --> 
       <map:match pattern="xsamples">
-      	<map:generate type="directory" src=".">
+      	<map:generate type="xpathdirectory" src="./">
       	  <map:parameter name="depth" value="2"/>
+      	  <map:parameter name="xpath" value="/xsamples"/>
+      	  <map:parameter name="xmlFiles" value="\.xsamples$"/>
+      	  <map:parameter name="include" value="^[a-z0-9\-]+$|\.xsamples"/>
       	</map:generate>
       	<map:transform src="directory2xsamples.xsl"/>
       	<map:serialize type="xml"/>
       </map:match>
-
-      <!-- ======================== Automount =============================== -->
+      
+      <!-- mount everything else -->
       <map:match pattern="*/**">
         <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
       </map:match>

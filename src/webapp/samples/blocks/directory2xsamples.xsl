@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: directory2xsamples.xsl,v 1.1 2004/04/02 20:40:57 joerg Exp $ -->
+<!-- CVS $Id$ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -33,8 +33,11 @@
   </xsl:template>
 
   <xsl:template match="dir:file">
+    <xsl:variable name="blockName" select="parent::dir:directory/@name"/>
     <xsl:if test="substring-before(@name, '.xsamples')">
-      <sample name="cocoon-block-{substring-before(@name, '.xsamples')}"/>
+      <sample name="cocoon-block-{$blockName}" block-name="{$blockName}">
+        <xsl:copy-of select=".//xsamples"/>
+      </sample>
     </xsl:if>
   </xsl:template>
 
