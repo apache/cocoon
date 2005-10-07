@@ -68,6 +68,14 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
     font-style: italic;
 }
 
+.samplesStatusNote {
+	font-style: italic;
+	font-size: 80%;
+	text-align: right;
+	margin: 2px;
+	padding: 0;
+}
+
 .samplesText {
     margin-top: 0.2em;
 }
