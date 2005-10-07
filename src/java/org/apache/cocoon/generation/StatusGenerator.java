@@ -282,7 +282,7 @@ public class StatusGenerator extends ServiceableGenerator
         dateTime = DateFormat.getDateTimeInstance().format(new Date(this.core.getSettings().getCreationTime()));
         atts.addCDATAAttribute(NAMESPACE, "creation-time", dateTime);
         atts.addCDATAAttribute(NAMESPACE, "build-info", Constants.BUILD_INFO);
-        this.xmlConsumer.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
+        super.contentHandler.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
 
         if (this.showContinuations) {
             genContinuationsTree();
@@ -295,7 +295,7 @@ public class StatusGenerator extends ServiceableGenerator
         }
 
         // End root element.
-        this.xmlConsumer.endElement(NAMESPACE, "statusinfo", "statusinfo");
+        super.contentHandler.endElement(NAMESPACE, "statusinfo", "statusinfo");
     }
 
     private void genContinuationsTree() throws SAXException {
@@ -315,12 +315,12 @@ public class StatusGenerator extends ServiceableGenerator
         ai.addAttribute(NAMESPACE, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive());
         ai.addAttribute(NAMESPACE, "last-access-time", "last-access-time", "CDATA", wc.getLastAccessTime());
 
-        this.xmlConsumer.startElement(NAMESPACE, "cont", "cont", ai);
+        super.contentHandler.startElement(NAMESPACE, "cont", "cont", ai);
         List children = wc.get_children();
         for (int i = 0; i < children.size(); i++) {
             displayContinuation((WebContinuationDataBean) children.get(i));
         }
-        this.xmlConsumer.endElement(NAMESPACE, "cont", "cont");
+        super.contentHandler.endElement(NAMESPACE, "cont", "cont");
     }
 
     private void genVMStatus() throws SAXException {
@@ -398,7 +398,7 @@ public class StatusGenerator extends ServiceableGenerator
                 int empty = 0;
                 atts.clear();
                 atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
-                this.xmlConsumer.startElement(NAMESPACE, "value", "value", atts);
+                super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
 
                 atts.clear();
                 Enumeration e = store.keys();
@@ -411,18 +411,18 @@ public class StatusGenerator extends ServiceableGenerator
                         empty++;
                     } else {
                         line = key + " (class: " + val.getClass().getName() + ")";
-                        this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
-                        this.xmlConsumer.characters(line.toCharArray(), 0, line.length());
-                        this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+                        super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+                        super.contentHandler.characters(line.toCharArray(), 0, line.length());
+                        super.contentHandler.endElement(NAMESPACE, "line", "line");
                     }
                 }
                 if (size == 0) {
-                    this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
+                    super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
                     String value = "[empty]";
-                    this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                    this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+                    super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                    super.contentHandler.endElement(NAMESPACE, "line", "line");
                 }
-                this.xmlConsumer.endElement(NAMESPACE, "value", "value");
+                super.contentHandler.endElement(NAMESPACE, "value", "value");
 
                 addValue("size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
                 endGroup();
@@ -436,7 +436,7 @@ public class StatusGenerator extends ServiceableGenerator
             int empty = 0;
             atts.clear();
             atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
-            this.xmlConsumer.startElement(NAMESPACE, "value", "value", atts);
+            super.contentHandler.startElement(NAMESPACE, "value", "value", atts);
 
             atts.clear();
             Enumeration e = this.storePersistent.keys();
@@ -449,18 +449,18 @@ public class StatusGenerator extends ServiceableGenerator
                     empty++;
                 } else {
                     line = key + " (class: " + val.getClass().getName() + ")";
-                    this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
-                    this.xmlConsumer.characters(line.toCharArray(), 0, line.length());
-                    this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+                    super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
+                    super.contentHandler.characters(line.toCharArray(), 0, line.length());
+                    super.contentHandler.endElement(NAMESPACE, "line", "line");
                 }
             }
             if (size == 0) {
-                this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
+                super.contentHandler.startElement(NAMESPACE, "line", "line", atts);
                 String value = "[empty]";
-                this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+                super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                super.contentHandler.endElement(NAMESPACE, "line", "line");
             }
-            this.xmlConsumer.endElement(NAMESPACE, "value", "value");
+            super.contentHandler.endElement(NAMESPACE, "value", "value");
 
             addValue("size", size + " items in cache (" + empty + " are empty)");
             endGroup();
@@ -564,12 +564,12 @@ public class StatusGenerator extends ServiceableGenerator
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(NAMESPACE, "group", "group", ai);
+        super.contentHandler.startElement(NAMESPACE, "group", "group", ai);
     }
 
     /** Utility function to end a <code>group</code> tag pair. */
     private void endGroup() throws SAXException {
-        this.xmlConsumer.endElement(NAMESPACE, "group", "group");
+        super.contentHandler.endElement(NAMESPACE, "group", "group");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
@@ -635,15 +635,15 @@ public class StatusGenerator extends ServiceableGenerator
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(NAMESPACE, "value", "value", ai);
-        this.xmlConsumer.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+        super.contentHandler.startElement(NAMESPACE, "value", "value", ai);
+        super.contentHandler.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
 
         if (value != null) {
-            this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
+            super.contentHandler.characters(value.toCharArray(), 0, value.length());
         }
 
-        this.xmlConsumer.endElement(NAMESPACE, "line", "line");
-        this.xmlConsumer.endElement(NAMESPACE, "value", "value");
+        super.contentHandler.endElement(NAMESPACE, "line", "line");
+        super.contentHandler.endElement(NAMESPACE, "value", "value");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
@@ -657,16 +657,16 @@ public class StatusGenerator extends ServiceableGenerator
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(NAMESPACE, "value", "value", ai);
+        super.contentHandler.startElement(NAMESPACE, "value", "value", ai);
 
         for (int i = 0; i < values.size(); i++) {
             String value = (String) values.get(i);
             if (value != null) {
-                this.xmlConsumer.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
-                this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+                super.contentHandler.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+                super.contentHandler.characters(value.toCharArray(), 0, value.length());
+                super.contentHandler.endElement(NAMESPACE, "line", "line");
             }
         }
-        this.xmlConsumer.endElement(NAMESPACE, "value", "value");
+        super.contentHandler.endElement(NAMESPACE, "value", "value");
     }
 }
