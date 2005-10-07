@@ -370,7 +370,7 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     private void genLibrarylist(ContentHandler ch) throws SAXException,ProcessingException {
-		try {
+        try {
             if (this.libDirectory instanceof TraversableSource) {
                 startGroup(ch, "WEB-INF/lib");
 
@@ -395,9 +395,9 @@ public class StatusGenerator extends ServiceableGenerator
 
                 endGroup(ch);
             }
-		} catch (SourceException e) {
-			throw new ResourceNotFoundException("Could not read directory", e);
-		}
+        } catch (SourceException e) {
+            throw new ResourceNotFoundException("Could not read directory", e);
+        }
     }
 
     /** Utility function to begin a <code>group</code> tag pair. */
