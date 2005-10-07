@@ -15,30 +15,22 @@
  */
 package org.apache.cocoon.generation;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuationDataBean;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.SourceResolver;
@@ -46,10 +38,30 @@ import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 
 import org.apache.commons.lang.SystemUtils;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -91,54 +103,72 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @version $Id$
  */
-public class StatusGenerator 
-    extends ServiceableGenerator
-    implements Contextualizable {
-
-    
-    private static final String SHOW_CONTINUATIONS_INFO = "show-cont";    
-    
-    /**
-     * The ContinuationManager
-     */
-    protected ContinuationsManager continuationsManager;
-    
-    /**
-     * add infos about continuations?
-     */
-    protected boolean showContinuationsInformation = false;
-    
-    /**
-     * The StoreJanitor used to get cache statistics
-     */
-    protected StoreJanitor storejanitor;
-    protected Store store_persistent;
-
-    /** The Cocoon core. */
-    protected Core core;
-
-    /** The component context. */
-    protected Context context;
+public class StatusGenerator extends ServiceableGenerator
+                             implements Contextualizable, Configurable {
 
     /**
      * The XML namespace for the output document.
      */
-    protected static final String namespace =
-        "http://apache.org/cocoon/status/2.0";
+    public static final String NAMESPACE = "http://apache.org/cocoon/status/2.0";
 
     /**
      * The XML namespace for xlink
      */
-    protected static final String xlinkNamespace =
-        "http://www.w3.org/1999/xlink";
+    protected static final String XLINK_NS = "http://www.w3.org/1999/xlink";
 
     /**
      * The namespace prefix for xlink namespace
      */
-    protected static final String xlinkPrefix = "xlink";
+    protected static final String XLINK_PREFIX = "xlink";
+
+    /**
+     * The component context.
+     */
+    protected Context context;
+
+    /**
+     * The Cocoon core.
+     */
+    protected Core core;
+
+    /**
+     * The StoreJanitor used to get cache statistics
+     */
+    protected StoreJanitor storeJanitor;
+
+    /**
+     * The persistent store
+     */
+    protected Store storePersistent;
+
+    /**
+     * Show continuations information
+     */
+    private boolean showContinuations;
+
+    /**
+     * The ContinuationManager
+     */
+    private ContinuationsManager continuationsManager;
+
+    /**
+     * List & show the contents of WEB/lib
+     */
+    private boolean showLibrary;
+
+    /**
+     * WEB-INF/lib directory
+     */
+    private Source libDirectory;
+
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
+    }
+
+    public void configure(Configuration configuration) throws ConfigurationException {
+        this.showContinuations = configuration.getChild("show-continuations").getValueAsBoolean(true);
+        this.showLibrary = configuration.getChild("show-libraries").getValueAsBoolean(true);
     }
 
     /**
@@ -148,45 +178,60 @@ public class StatusGenerator
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
+        this.core = (Core) this.manager.lookup(Core.ROLE);
+
         if (this.manager.hasService(StoreJanitor.ROLE)) {
-            this.storejanitor = (StoreJanitor)manager.lookup(StoreJanitor.ROLE);
+            this.storeJanitor = (StoreJanitor) manager.lookup(StoreJanitor.ROLE);
         } else {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
+
         if (this.manager.hasService(Store.PERSISTENT_STORE)) {
-            this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
+            this.storePersistent = (Store) this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
             getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
         }
+
         if(this.manager.hasService(ContinuationsManager.ROLE)) {
             continuationsManager = (ContinuationsManager) this.manager.lookup(ContinuationsManager.ROLE);
         } else {
             getLogger().info("ContinuationsManager is not available. Sorry no overview of created continuations");
         }
-        this.core = (Core)this.manager.lookup(Core.ROLE);
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) 
-        throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, parameters);
-        this.showContinuationsInformation = parameters.getParameterAsBoolean(SHOW_CONTINUATIONS_INFO, false);
-    }   
-    
-    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+
+        if (this.showLibrary) {
+            try {
+                this.libDirectory = super.resolver.resolveURI("context://WEB-INF/lib");
+            } catch (SourceException e) {
+                throw SourceUtil.handle(e);
+            }
+        }
+    }
+
     public void dispose() {
         if (this.manager != null) {
-            this.manager.release(this.store_persistent);
-            this.manager.release(this.storejanitor);
-            this.store_persistent = null;
-            this.storejanitor = null;
             this.manager.release(this.core);
+            this.manager.release(this.storePersistent);
+            this.manager.release(this.storeJanitor);
+            this.manager.release(this.continuationsManager);
             this.core = null;
+            this.storePersistent = null;
+            this.storeJanitor = null;
+            this.continuationsManager = null;
         }
+
+        if (this.libDirectory != null) {
+            super.resolver.release(this.libDirectory);
+            this.libDirectory = null;
+        }
+
         super.dispose();
     }
 
@@ -194,24 +239,25 @@ public class StatusGenerator
      * @throws SAXException
      *         when there is a problem creating the output SAX events.
      */
-    public void generate() throws SAXException {
+    public void generate() throws SAXException, ProcessingException {
 
         // Start the document and set the namespace.
         this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("", namespace);
-        this.contentHandler.startPrefixMapping(xlinkPrefix, xlinkNamespace);
+        this.contentHandler.startPrefixMapping("", NAMESPACE);
+        this.contentHandler.startPrefixMapping(XLINK_PREFIX, XLINK_NS);
 
         genStatus();
 
         // End the document.
-        this.contentHandler.endPrefixMapping(xlinkPrefix);
+        this.contentHandler.endPrefixMapping(XLINK_PREFIX);
         this.contentHandler.endPrefixMapping("");
         this.contentHandler.endDocument();
     }
 
-    /** Generate the main status document.
+    /**
+     * Generate the main status document.
      */
-    private void genStatus() throws SAXException {
+    private void genStatus() throws SAXException, ProcessingException {
         // Root element.
 
         // The current date and time.
@@ -230,83 +276,56 @@ public class StatusGenerator
         }
 
         AttributesImpl atts = new AttributesImpl();
-        atts.addCDATAAttribute(namespace, "date", dateTime);
-        atts.addCDATAAttribute(namespace, "host", localHost);
-        atts.addCDATAAttribute(namespace, "cocoon-version", Constants.VERSION);
+        atts.addCDATAAttribute(NAMESPACE, "date", dateTime);
+        atts.addCDATAAttribute(NAMESPACE, "host", localHost);
+        atts.addCDATAAttribute(NAMESPACE, "cocoon-version", Constants.VERSION);
         dateTime = DateFormat.getDateTimeInstance().format(new Date(this.core.getSettings().getCreationTime()));
-        atts.addCDATAAttribute(namespace, "creation-time", dateTime);
-        atts.addCDATAAttribute(namespace, "build-info", Constants.BUILD_INFO);
-        this.xmlConsumer.startElement(namespace, "statusinfo", "statusinfo", atts);
+        atts.addCDATAAttribute(NAMESPACE, "creation-time", dateTime);
+        atts.addCDATAAttribute(NAMESPACE, "build-info", Constants.BUILD_INFO);
+        this.xmlConsumer.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
 
-        if(this.showContinuationsInformation) {
-            genContinuationsTree();        
-        }          
+        if (this.showContinuations) {
+            genContinuationsTree();
+        }
         genSettings();
         genVMStatus();
         genProperties();
+        if (this.showLibrary) {
+            genLibrarylist();
+        }
 
         // End root element.
-        this.xmlConsumer.endElement(namespace, "statusinfo", "statusinfo");
+        this.xmlConsumer.endElement(NAMESPACE, "statusinfo", "statusinfo");
     }
-    
+
     private void genContinuationsTree() throws SAXException {
         startGroup("Continuations");
         List continuationsAsDataBeansList = this.continuationsManager.getWebContinuationsDataBeanList();
-        for(Iterator it = continuationsAsDataBeansList.iterator(); it.hasNext();) {
-            displayContinuation((WebContinuationDataBean) it.next());
+        for (Iterator i = continuationsAsDataBeansList.iterator(); i.hasNext();) {
+            displayContinuation((WebContinuationDataBean) i.next());
         }
         endGroup();
     }
-    
 
     private void displayContinuation(WebContinuationDataBean wc) throws SAXException {
-        AttributesImpl ai = new AttributesImpl(); 
-        ai.addAttribute(namespace, "id", "id", "CDATA", wc.getId());
-        ai.addAttribute(namespace, "interpreter", "interpreter", "CDATA", wc.getInterpreterId());
-        ai.addAttribute(namespace, "expire-time", "expire-time", "CDATA", wc.getExpireTime());
-        ai.addAttribute(namespace, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive());
-        ai.addAttribute(namespace, "last-access-time", "last-access-time", "CDATA", wc.getLastAccessTime());   
+        AttributesImpl ai = new AttributesImpl();
+        ai.addAttribute(NAMESPACE, "id", "id", "CDATA", wc.getId());
+        ai.addAttribute(NAMESPACE, "interpreter", "interpreter", "CDATA", wc.getInterpreterId());
+        ai.addAttribute(NAMESPACE, "expire-time", "expire-time", "CDATA", wc.getExpireTime());
+        ai.addAttribute(NAMESPACE, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive());
+        ai.addAttribute(NAMESPACE, "last-access-time", "last-access-time", "CDATA", wc.getLastAccessTime());
 
-        this.xmlConsumer.startElement(namespace, "cont", "cont", ai);
+        this.xmlConsumer.startElement(NAMESPACE, "cont", "cont", ai);
         List children = wc.get_children();
         for (int i = 0; i < children.size(); i++) {
             displayContinuation((WebContinuationDataBean) children.get(i));
-        }        
-        this.xmlConsumer.endElement(namespace, "cont", "cont");
-    }       
+        }
+        this.xmlConsumer.endElement(NAMESPACE, "cont", "cont");
+    }
 
     private void genVMStatus() throws SAXException {
         AttributesImpl atts = new AttributesImpl();
-
-        startGroup("vm");
-        // BEGIN Memory status
-        startGroup("memory");
-        final long totalMemory = Runtime.getRuntime().totalMemory();
-        final long freeMemory = Runtime.getRuntime().freeMemory();
-        addValue("total", String.valueOf(totalMemory));
-        addValue("used", String.valueOf(totalMemory - freeMemory));
-        addValue("free", String.valueOf(freeMemory));
-        endGroup();
-        // END Memory status
-
-        // BEGIN JRE
-        startGroup("jre");
-        addValue("version", SystemUtils.JAVA_VERSION);
-        atts.clear();
-        // qName = prefix + ':' + localName
-        atts.addAttribute(xlinkNamespace, "type", xlinkPrefix + ":type", "CDATA", "simple");
-        atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA", SystemUtils.JAVA_VENDOR_URL);
-        addValue("java-vendor", SystemUtils.JAVA_VENDOR, atts);
-        endGroup();
-        // END JRE
-
-        // BEGIN Operating system
-        startGroup("operating-system");
-        addValue("name", SystemUtils.OS_NAME);
-        addValue("architecture", SystemUtils.OS_ARCH);
-        addValue("version", SystemUtils.OS_VERSION);
-        endGroup();
-        // END operating system
+        startGroup("VM");
 
         // BEGIN ClassPath
         String classpath = SystemUtils.JAVA_CLASS_PATH;
@@ -333,24 +352,53 @@ public class StatusGenerator
             while (tokenizer.hasMoreTokens()) {
                 paths.add(tokenizer.nextToken());
             }
-            addMultilineValue("context-classpath", paths);            
+            addMultilineValue("context-classpath", paths);
         }
         // END CONTEXT CLASSPATH
 
+        // BEGIN Memory status
+        startGroup("Memory");
+        final long totalMemory = Runtime.getRuntime().totalMemory();
+        final long freeMemory = Runtime.getRuntime().freeMemory();
+        addValue("total", String.valueOf(totalMemory));
+        addValue("used", String.valueOf(totalMemory - freeMemory));
+        addValue("free", String.valueOf(freeMemory));
+        endGroup();
+        // END Memory status
+
+        // BEGIN JRE
+        startGroup("JRE");
+        addValue("version", SystemUtils.JAVA_VERSION);
+        atts.clear();
+        // qName = prefix + ':' + localName
+        atts.addAttribute(XLINK_NS, "type", XLINK_PREFIX + ":type", "CDATA", "simple");
+        atts.addAttribute(XLINK_NS, "href", XLINK_PREFIX + ":href", "CDATA", SystemUtils.JAVA_VENDOR_URL);
+        addValue("java-vendor", SystemUtils.JAVA_VENDOR, atts);
+        endGroup();
+        // END JRE
+
+        // BEGIN Operating system
+        startGroup("Operating System");
+        addValue("name", SystemUtils.OS_NAME);
+        addValue("architecture", SystemUtils.OS_ARCH);
+        addValue("version", SystemUtils.OS_VERSION);
+        endGroup();
+        // END operating system
+
         // BEGIN Cache
-        if (this.storejanitor != null) {
-            startGroup("Store-Janitor");
+        if (this.storeJanitor != null) {
+            startGroup("Store Janitor");
 
             // For each element in StoreJanitor
-            Iterator i = this.storejanitor.iterator();
+            Iterator i = this.storeJanitor.iterator();
             while (i.hasNext()) {
                 Store store = (Store) i.next();
                 startGroup(store.getClass().getName() + " (hash = 0x" + Integer.toHexString(store.hashCode()) + ")" );
                 int size = 0;
                 int empty = 0;
                 atts.clear();
-                atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
-                this.xmlConsumer.startElement(namespace, "value", "value", atts);
+                atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
+                this.xmlConsumer.startElement(NAMESPACE, "value", "value", atts);
 
                 atts.clear();
                 Enumeration e = store.keys();
@@ -358,75 +406,74 @@ public class StatusGenerator
                     size++;
                     Object key = e.nextElement();
                     Object val = store.get(key);
-                    String line = null;
+                    String line;
                     if (val == null) {
                         empty++;
                     } else {
                         line = key + " (class: " + val.getClass().getName() + ")";
-                        this.xmlConsumer.startElement(namespace, "line", "line", atts);
+                        this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
                         this.xmlConsumer.characters(line.toCharArray(), 0, line.length());
-                        this.xmlConsumer.endElement(namespace, "line", "line");
+                        this.xmlConsumer.endElement(NAMESPACE, "line", "line");
                     }
                 }
                 if (size == 0) {
-                    this.xmlConsumer.startElement(namespace, "line", "line", atts);
+                    this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
                     String value = "[empty]";
                     this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                    this.xmlConsumer.endElement(namespace, "line", "line");
+                    this.xmlConsumer.endElement(NAMESPACE, "line", "line");
                 }
-                this.xmlConsumer.endElement(namespace, "value", "value");
+                this.xmlConsumer.endElement(NAMESPACE, "value", "value");
 
                 addValue("size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
                 endGroup();
             }
-            endGroup();        
+            endGroup();
         }
 
-        if (this.store_persistent != null) {
-            startGroup(store_persistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(store_persistent.hashCode()) + ")");
+        if (this.storePersistent != null) {
+            startGroup(storePersistent.getClass().getName() + " (hash = 0x" + Integer.toHexString(storePersistent.hashCode()) + ")");
             int size = 0;
             int empty = 0;
             atts.clear();
-            atts.addAttribute(namespace, "name", "name", "CDATA", "cached");
-            this.xmlConsumer.startElement(namespace, "value", "value", atts);
+            atts.addAttribute(NAMESPACE, "name", "name", "CDATA", "cached");
+            this.xmlConsumer.startElement(NAMESPACE, "value", "value", atts);
 
             atts.clear();
-            Enumeration e = this.store_persistent.keys();
+            Enumeration e = this.storePersistent.keys();
             while (e.hasMoreElements()) {
                 size++;
                 Object key = e.nextElement();
-                Object val = store_persistent.get(key);
-                String line = null;
+                Object val = storePersistent.get(key);
+                String line;
                 if (val == null) {
                     empty++;
                 } else {
                     line = key + " (class: " + val.getClass().getName() + ")";
-                    this.xmlConsumer.startElement(namespace, "line", "line", atts);
+                    this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
                     this.xmlConsumer.characters(line.toCharArray(), 0, line.length());
-                    this.xmlConsumer.endElement(namespace, "line", "line");
+                    this.xmlConsumer.endElement(NAMESPACE, "line", "line");
                 }
             }
             if (size == 0) {
-                this.xmlConsumer.startElement(namespace, "line", "line", atts);
+                this.xmlConsumer.startElement(NAMESPACE, "line", "line", atts);
                 String value = "[empty]";
                 this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                this.xmlConsumer.endElement(namespace, "line", "line");
+                this.xmlConsumer.endElement(NAMESPACE, "line", "line");
             }
-            this.xmlConsumer.endElement(namespace, "value", "value");
+            this.xmlConsumer.endElement(NAMESPACE, "value", "value");
 
             addValue("size", size + " items in cache (" + empty + " are empty)");
             endGroup();
         }
         // END Cache
 
-        // BEGIN OS info
         endGroup();
     }
 
     private void genSettings() throws SAXException {
         final Settings s = core.getSettings();
         this.startGroup("Base Settings");
-        
+
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
         this.addMultilineValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
@@ -445,7 +492,7 @@ public class StatusGenerator
         this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
         this.addValue(Settings.KEY_WORK_DIRECTORY, s.getWorkDirectory());
         this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
-        
+
         this.endGroup();
 
         this.startGroup("Dynamic Settings");
@@ -476,6 +523,37 @@ public class StatusGenerator
         this.endGroup();
     }
 
+    private void genLibrarylist() throws SAXException,ProcessingException {
+		try {
+            if (this.libDirectory instanceof TraversableSource) {
+                startGroup("WEB-INF/lib");
+
+                Set files = new TreeSet();
+                Collection kids = ((TraversableSource) this.libDirectory).getChildren();
+                try {
+                    for (Iterator i = kids.iterator(); i.hasNext(); ) {
+                        final Source lib = (Source) i.next();
+                        final String name = lib.getURI().substring(lib.getURI().lastIndexOf('/'));
+                        files.add(name);
+                    }
+                } finally {
+                    for (Iterator i = kids.iterator(); i.hasNext(); ) {
+                        final Source lib = (Source) i.next();
+                        super.resolver.release(lib);
+                    }
+                }
+
+                for (Iterator i = files.iterator(); i.hasNext(); ) {
+                    addValue("file", (String) i.next());
+                }
+
+                endGroup();
+            }
+		} catch (SourceException e) {
+			throw new ResourceNotFoundException("Could not read directory", e);
+		}
+    }
+
     /** Utility function to begin a <code>group</code> tag pair. */
     private void startGroup(String name) throws SAXException {
         startGroup(name, null);
@@ -484,14 +562,14 @@ public class StatusGenerator
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
     private void startGroup(String name, Attributes atts)
     throws SAXException {
-        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts); 
-        ai.addAttribute(namespace, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(namespace, "group", "group", ai);
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
+        ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
+        this.xmlConsumer.startElement(NAMESPACE, "group", "group", ai);
     }
 
     /** Utility function to end a <code>group</code> tag pair. */
     private void endGroup() throws SAXException {
-        this.xmlConsumer.endElement(namespace, "group", "group");
+        this.xmlConsumer.endElement(NAMESPACE, "group", "group");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
@@ -556,16 +634,16 @@ public class StatusGenerator
     private void addValue(String name, String value, Attributes atts)
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
-        ai.addAttribute(namespace, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(namespace, "value", "value", ai);
-        this.xmlConsumer.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+        ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
+        this.xmlConsumer.startElement(NAMESPACE, "value", "value", ai);
+        this.xmlConsumer.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
 
         if (value != null) {
             this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
         }
 
-        this.xmlConsumer.endElement(namespace, "line", "line");
-        this.xmlConsumer.endElement(namespace, "value", "value");
+        this.xmlConsumer.endElement(NAMESPACE, "line", "line");
+        this.xmlConsumer.endElement(NAMESPACE, "value", "value");
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair. */
@@ -578,17 +656,17 @@ public class StatusGenerator
     private void addMultilineValue(String name, List values, Attributes atts)
     throws SAXException {
         AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
-        ai.addAttribute(namespace, "name", "name", "CDATA", name);
-        this.xmlConsumer.startElement(namespace, "value", "value", ai);
+        ai.addAttribute(NAMESPACE, "name", "name", "CDATA", name);
+        this.xmlConsumer.startElement(NAMESPACE, "value", "value", ai);
 
         for (int i = 0; i < values.size(); i++) {
             String value = (String) values.get(i);
             if (value != null) {
-                this.xmlConsumer.startElement(namespace, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
+                this.xmlConsumer.startElement(NAMESPACE, "line", "line", XMLUtils.EMPTY_ATTRIBUTES);
                 this.xmlConsumer.characters(value.toCharArray(), 0, value.length());
-                this.xmlConsumer.endElement(namespace, "line", "line");
+                this.xmlConsumer.endElement(NAMESPACE, "line", "line");
             }
         }
-        this.xmlConsumer.endElement(namespace, "value", "value");
+        this.xmlConsumer.endElement(NAMESPACE, "value", "value");
     }
 }
