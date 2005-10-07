@@ -21,7 +21,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.11 2004/04/01 19:05:42 vgritsenko Exp $
+    | CVS $Id$
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -50,18 +50,24 @@
              <h2><xsl:value-of select="samples/@name"/></h2>
            </td>
            <td nowrap="nowrap" align="right">
-             Orthogonal views:
-             <a href="?cocoon-view=content">Content</a>
-             &#160;
-             <a href="?cocoon-view=pretty-content">Pretty content</a>
-             &#160;
-             <a href="?cocoon-view=links">Links</a>
+	           <xsl:if test="samples/links/*">
+	             <xsl:apply-templates select="samples/links"/>
+	           </xsl:if>
+	           <xsl:if test="not(samples/@add-view-links='false')">
+		             Orthogonal views:
+		             <a href="?cocoon-view=content">Content</a>
+		             &#160;
+		             <a href="?cocoon-view=pretty-content">Pretty content</a>
+		             &#160;
+		             <a href="?cocoon-view=links">Links</a>
+	           </xsl:if>
            </td>
          </tr>
        </table>
 
        <xsl:apply-templates select="samples"/>
-
+       <xsl:apply-templates select="samples/additional-info"/>
+       
        <p class="copyright">
          Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
          All rights reserved.
@@ -201,4 +207,16 @@
   <xsl:template match="text()" priority="-1">
     <xsl:value-of select="."/>
   </xsl:template>
+  
+  <xsl:template match="links/link">
+    <a href="{@href}">
+      <xsl:value-of select="."/>
+    </a>
+  </xsl:template>
+  
+  <xsl:template match="additional-info">
+    <h4><xsl:value-of select="@title"/></h4>
+    <xsl:copy-of select="node()"/>
+  </xsl:template>
+  
 </xsl:stylesheet>
