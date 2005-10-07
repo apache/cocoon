@@ -20,7 +20,7 @@
     <description>Cocoon Sample Application</description>
     
     <connectors>
-        <connector class="altrmi" port="15555"/>
+        <connector class="http" port="15555"/>
     </connectors>
     
     <state-file interval="60000" use-compact-samples="true">cocoon.sampledata</state-file>
