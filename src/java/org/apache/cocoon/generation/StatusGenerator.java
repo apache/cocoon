@@ -376,10 +376,17 @@ public class StatusGenerator extends ServiceableGenerator
 
                 Set files = new TreeSet();
                 Collection kids = ((TraversableSource) this.libDirectory).getChildren();
-                for (Iterator i = kids.iterator(); i.hasNext(); ) {
-                    final Source lib = (Source) i.next();
-                    final String name = lib.getURI().substring(lib.getURI().lastIndexOf('/'));
-                    files.add(name);
+                try {
+                    for (Iterator i = kids.iterator(); i.hasNext(); ) {
+                        final Source lib = (Source) i.next();
+                        final String name = lib.getURI().substring(lib.getURI().lastIndexOf('/'));
+                        files.add(name);
+                    }
+                } finally {
+                    for (Iterator i = kids.iterator(); i.hasNext(); ) {
+                        final Source lib = (Source) i.next();
+                        super.resolver.release(lib);
+                    }
                 }
 
                 for (Iterator i = files.iterator(); i.hasNext(); ) {
