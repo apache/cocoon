@@ -199,9 +199,6 @@ public class StatusGenerator extends ServiceableGenerator
         }
     }
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
@@ -215,6 +212,9 @@ public class StatusGenerator extends ServiceableGenerator
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.manager != null) {
             this.manager.release(this.core);
@@ -235,23 +235,24 @@ public class StatusGenerator extends ServiceableGenerator
         super.dispose();
     }
 
-    /** Generate the status information in XML format.
+    /**
+     * Generate the status information in XML format.
      * @throws SAXException
      *         when there is a problem creating the output SAX events.
      */
     public void generate() throws SAXException, ProcessingException {
 
         // Start the document and set the namespace.
-        this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("", NAMESPACE);
-        this.contentHandler.startPrefixMapping(XLINK_PREFIX, XLINK_NS);
+        super.contentHandler.startDocument();
+        super.contentHandler.startPrefixMapping("", NAMESPACE);
+        super.contentHandler.startPrefixMapping(XLINK_PREFIX, XLINK_NS);
 
         genStatus();
 
         // End the document.
-        this.contentHandler.endPrefixMapping(XLINK_PREFIX);
-        this.contentHandler.endPrefixMapping("");
-        this.contentHandler.endDocument();
+        super.contentHandler.endPrefixMapping(XLINK_PREFIX);
+        super.contentHandler.endPrefixMapping("");
+        super.contentHandler.endDocument();
     }
 
     /**
@@ -342,11 +343,11 @@ public class StatusGenerator extends ServiceableGenerator
         // BEGIN CONTEXT CLASSPATH
         String contextClassPath = null;
         try {
-            contextClassPath = (String)this.context.get(Constants.CONTEXT_CLASSPATH);
-        } catch (ContextException ce) {
+            contextClassPath = (String) this.context.get(Constants.CONTEXT_CLASSPATH);
+        } catch (ContextException e) {
             // we ignore this
         }
-        if ( contextClassPath != null ) {
+        if (contextClassPath != null) {
             List paths = new ArrayList();
             StringTokenizer tokenizer = new StringTokenizer(contextClassPath, File.pathSeparator);
             while (tokenizer.hasMoreTokens()) {
@@ -524,7 +525,7 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     private void genLibrarylist() throws SAXException,ProcessingException {
-		try {
+        try {
             if (this.libDirectory instanceof TraversableSource) {
                 startGroup("WEB-INF/lib");
 
@@ -549,9 +550,9 @@ public class StatusGenerator extends ServiceableGenerator
 
                 endGroup();
             }
-		} catch (SourceException e) {
-			throw new ResourceNotFoundException("Could not read directory", e);
-		}
+        } catch (SourceException e) {
+            throw new ResourceNotFoundException("Could not read directory", e);
+        }
     }
 
     /** Utility function to begin a <code>group</code> tag pair. */
