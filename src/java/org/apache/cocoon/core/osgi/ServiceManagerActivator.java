@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.components.container.ComponentContext;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.log.LogService;

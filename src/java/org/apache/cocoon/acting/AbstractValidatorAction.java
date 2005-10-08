@@ -266,7 +266,7 @@ public abstract class AbstractValidatorAction
         if (params == null) {
             throw new ProcessingException("Neither a constraint-set nor parameters in the sitemap "
                                           + "were specified for validating at "
-                                          + SitemapParameters.getStatementLocation(parameters));
+                                          + SitemapParameters.getLocation(parameters));
         }
         HashMap values = this.createMapOfParameters(objectModel, params);
         allOK = this.validateSetOfParameters(desc, actionMap, resultMap, params, values, this.isStringEncoded());
