@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.util.log;
 
-import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.LogKitLogger;
 
 import org.apache.cocoon.environment.ObjectModelHelper;

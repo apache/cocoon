@@ -16,9 +16,7 @@
  */
 package org.apache.cocoon.core.osgi;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Cocoon;
@@ -31,7 +29,7 @@ import org.osgi.framework.BundleContext;
 
 public class CoreBlockActivator extends ServiceManagerActivator {
 
-    private ClassLoader classLoader = getClass().getClassLoader();;
+    private ClassLoader classLoader = getClass().getClassLoader();
     private Core core;
     private Processor processor;
 

@@ -16,8 +16,6 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,14 +36,14 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**

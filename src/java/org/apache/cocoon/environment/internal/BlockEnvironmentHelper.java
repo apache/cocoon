@@ -17,8 +17,6 @@ package org.apache.cocoon.environment.internal;
 
 import java.net.URL;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.blocks.Block;
 
 /**

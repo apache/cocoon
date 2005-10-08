@@ -15,17 +15,13 @@
  */
 package org.apache.cocoon.core;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
+public final class CoreResourceNotFoundException extends CoreException {
 
-public final class CoreResourceNotFoundException extends CoreException
-{
-    public CoreResourceNotFoundException(String message)
-    {
+    public CoreResourceNotFoundException(String message) {
         super(message, null);
     }
 
-    public CoreResourceNotFoundException(String message, Throwable cause)
-    {
+    public CoreResourceNotFoundException(String message, Throwable cause){
         super(message, cause);
     }
 }

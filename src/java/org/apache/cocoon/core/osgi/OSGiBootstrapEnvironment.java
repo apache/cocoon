@@ -17,8 +17,8 @@ package org.apache.cocoon.core.osgi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -34,7 +34,6 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.impl.AbstractContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.service.log.LogService;
 
 /**
