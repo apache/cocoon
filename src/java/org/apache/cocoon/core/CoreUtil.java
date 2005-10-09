@@ -867,7 +867,9 @@ public class CoreUtil {
 //            }
 //            buffer.append(classPath);
 //        }
-//        this.appContext.put(Constants.CONTEXT_CLASSPATH, buffer.toString());
+        // FIXME - for now we just set an empty string as this information is looked up
+        //         by other components
+        this.appContext.put(Constants.CONTEXT_CLASSPATH, "");
     }
 
     /**

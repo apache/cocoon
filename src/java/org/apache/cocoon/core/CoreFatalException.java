@@ -15,15 +15,13 @@
  */
 package org.apache.cocoon.core;
 
-public final class CoreFatalException extends CoreException
-{
-    public CoreFatalException(String message)
-    {
+public final class CoreFatalException extends CoreException {
+
+    public CoreFatalException(String message) {
         super(message, null);
     }
 
-    public CoreFatalException(String message, Throwable cause)
-    {
+    public CoreFatalException(String message, Throwable cause) {
         super(message, cause);
     }
 }
