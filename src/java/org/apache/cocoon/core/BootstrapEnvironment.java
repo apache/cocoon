@@ -127,8 +127,6 @@ public interface BootstrapEnvironment {
      */
     void configure(DefaultContext context);
 
-    ClassLoader getInitClassLoader();
-
     org.apache.cocoon.environment.Context getEnvironmentContext();
     
     /**
@@ -152,6 +150,5 @@ public interface BootstrapEnvironment {
      */
     URL getConfigFile(String configFileName)
     throws Exception;
-
-    String getClassPath(Settings settings);        
+       
 }

@@ -31,18 +31,15 @@ public class TestBootstrapEnvironment
     implements BootstrapEnvironment {
     
     private final String configuration;
-    private final ClassLoader classLoader;
     private final String contextPath;
     public Logger logger;
     private final Context environmentContext;
 
     public TestBootstrapEnvironment(String configuration,
-                                    ClassLoader classLoader,
                                     String contextPath,
                                     Context environmentContext,
 				                    Logger logger) {
         this.configuration = configuration;
-        this.classLoader = classLoader;
         this.contextPath = contextPath;
         this.environmentContext = environmentContext;
 
@@ -98,10 +95,6 @@ public class TestBootstrapEnvironment
     public void configure(DefaultContext context) {
     }
 
-    public ClassLoader getInitClassLoader() {
-        return this.classLoader;
-    }
-
     public Context getEnvironmentContext() {
         return this.environmentContext;
     }
@@ -133,7 +126,4 @@ public class TestBootstrapEnvironment
         return new URL(this.contextPath + configFileName);
     }
 
-    public String getClassPath(Settings settings) {
-        return null;
-    }
 }

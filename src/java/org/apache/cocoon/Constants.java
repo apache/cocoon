@@ -211,6 +211,11 @@ public final class Constants {
     /** Application <code>Context</code> key prefix for the current sitemap virtual components */
     public static final String CONTEXT_VPC_PREFIX = "vpc-";
 
+    /** Path to the wiring.xml relative to the context root directory */
+    public static final String WIRING = "wiring.xml";    
+    
+    public static final String BLOCK_META_DIR = "COB-INF";
+    
     /**
      * Application <code>Context</code> Key for the URL to the configuration file
      * (usually named cocoon.xconf)
@@ -222,16 +227,5 @@ public final class Constants {
      * @deprecated Use {@link org.apache.cocoon.core.Settings#getFormEncoding()}. */
     public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
 
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-

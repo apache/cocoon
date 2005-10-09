@@ -23,6 +23,7 @@ import org.apache.cocoon.core.CoreUtil;
 public class TestCoreUtil extends CoreUtil {
     public TestCoreUtil(BootstrapEnvironment env) throws Exception {
         super(env);
+        this.classloader = TestCoreUtil.class.getClassLoader();
     }
 
     // Simplified logging

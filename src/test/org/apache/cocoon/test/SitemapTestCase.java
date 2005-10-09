@@ -72,7 +72,6 @@ public class SitemapTestCase extends TestCase {
         this.classDir = this.getClassDirURL().toExternalForm();
         BootstrapEnvironment env = 
             new TestBootstrapEnvironment(className.substring(className.lastIndexOf('.') + 1) + ".xconf",
-                                         this.getClass().getClassLoader(),
                                          this.classDir,
                                          environmentContext,
                                          this.logger);
@@ -91,8 +90,7 @@ public class SitemapTestCase extends TestCase {
         return this.logger;
     }
     
-    protected final Object lookup( final String key )
-    throws ServiceException {
+    protected final Object lookup( final String key ) throws ServiceException {
         return this.cocoon.getServiceManager().lookup( key );
     }
 
