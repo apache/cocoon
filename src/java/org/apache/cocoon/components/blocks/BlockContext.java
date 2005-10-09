@@ -16,6 +16,9 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,11 +26,16 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
@@ -37,9 +45,10 @@ import org.xml.sax.SAXException;
  */
 public class BlockContext
     extends AbstractLogEnabled
-    implements Configurable, Disposable, Serviceable { 
+    implements Configurable, Contextualizable, Disposable, Serviceable { 
 
     private ServiceManager serviceManager;
+    private Context context;
     private BlocksManager blocksManager;
 
     private String id;
@@ -59,13 +68,17 @@ public class BlockContext
         this.serviceManager = manager;
     }
 
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
     public void configure(Configuration config)
         throws ConfigurationException {
         this.id = config.getAttribute("id");
         this.location = config.getAttribute("location");
         this.mountPath = config.getChild("mount").getAttribute("path", null);
 
-        getLogger().debug("BlockManager configure: " +
+        getLogger().debug("BlockContext configure: " +
                           " id=" + this.id +
                           " location=" + this.location +
                           " mountPath=" + this.mountPath);
@@ -76,13 +89,8 @@ public class BlockContext
             Configuration connection = connections[i];
             String name = connection.getAttribute("name");
             String block = connection.getAttribute("block");
-            if (BlockManager.SUPER.equals(name)) {
-                this.superId = block;
-                getLogger().debug("super: " + " block=" + block);
-            } else {
-                this.connections.put(name, block);
-                getLogger().debug("connection: " + " name=" + name + " block=" + block);
-            }
+	    this.connections.put(name, block);
+	    getLogger().debug("connection: " + " name=" + name + " block=" + block);
         }
 
         Configuration[] properties =
@@ -170,8 +178,13 @@ public class BlockContext
     /**
      * Get the URL of the root of the block
      */
-    public String getContextURL() {
-        return this.location;
+    public String getContextURL() throws URISyntaxException, ContextException {
+        String contextRootURL = ((URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL)).toExternalForm();
+        getLogger().debug("Root URL " + contextRootURL);
+        String contextURL = ((new URI(contextRootURL)).resolve(this.location)).toString();
+        getLogger().debug("Block Root URL " + contextURL);
+
+        return contextURL;
     }
 
     /**
@@ -179,6 +192,7 @@ public class BlockContext
      */
     public Block getBlock(String blockName) {
         String blockId = (String)this.connections.get(blockName);
+        getLogger().debug("Resolving block: " + blockName + " to " + blockId);
         return blockId != null ? (Block)this.blocksManager.getBlock(blockId) : null;
     }
 

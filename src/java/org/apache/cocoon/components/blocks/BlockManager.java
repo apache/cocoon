@@ -61,18 +61,13 @@ public class BlockManager
     private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
     private SourceResolver sourceResolver;
-    private DefaultContext context;
+    private Context context;
     private Processor processor;
     private BlocksManager blocksManager;
     private EnvironmentHelper environmentHelper;
 
-    private String id;
-    private String location;
-    private String mountPath;
-    private String sitemapPath;
-    private String superId;
-    private Map connections = new HashMap();
-    private Map properties = new HashMap();
+    private Configuration config;
+    private BlockContext blockContext;
 
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
@@ -84,126 +79,50 @@ public class BlockManager
     }
 
     public void contextualize(Context context) throws ContextException {
-        this.context = new ComponentContext(context);
+        this.context = context;
     }
 
     public void configure(Configuration config)
         throws ConfigurationException {
-        this.id = config.getAttribute("id");
-        this.location = config.getAttribute("location");
-        this.mountPath = config.getChild("mount").getAttribute("path", null);
-
-        getLogger().debug("BlockManager configure: " +
-                          " id=" + this.id +
-                          " location=" + this.location +
-                          " mountPath=" + this.mountPath);
-
-        Configuration[] connections =
-            config.getChild("connections").getChildren("connection");
-        for (int i = 0; i < connections.length; i++) {
-            Configuration connection = connections[i];
-            String name = connection.getAttribute("name");
-            String block = connection.getAttribute("block");
-            if (BlockManager.SUPER.equals(name)) {
-                this.superId = block;
-                getLogger().debug("super: " + " block=" + block);
-            } else {
-                this.connections.put(name, block);
-                getLogger().debug("connection: " + " name=" + name + " block=" + block);
-            }
-        }
-
-        Configuration[] properties =
-            config.getChild("properties").getChildren("property");
-        for (int i = 0; i < properties.length; i++) {
-            Configuration property = properties[i];
-            String name = property.getAttribute("name");
-            String value = property.getAttribute("value");
-            this.properties.put(name, value);
-            getLogger().debug("property: " + " name=" + name + " value=" + value);
-        }
-
-        // Read the block.xml file
-        String blockPath = this.location + "COB-INF/block.xml";
-        SourceResolver resolver = null;
-        Source source = null;
-        Configuration block = null;
-
-        try {
-            resolver = 
-                (SourceResolver) this.parentServiceManager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(blockPath);
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            block = builder.build( source.getInputStream() );
-        } catch (ServiceException e) {
-            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
-        } catch (IOException e) {
-            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
-        } catch (SAXException e) {
-            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
-        } finally {
-            if (resolver != null) {
-                resolver.release(source);
-                this.parentServiceManager.release(resolver);
-            }
-        }
-        this.sitemapPath = block.getChild("sitemap").getAttribute("src");
-        getLogger().debug("sitemapPath=" + this.sitemapPath);
-
-        properties =
-            block.getChild("properties").getChildren("property");
-        for (int i = 0; i < properties.length; i++) {
-            Configuration property = properties[i];
-            String name = property.getAttribute("name");
-            String defaultVal = property.getChild("default").getValue(null);
-            getLogger().debug("listing property: " + " name=" + name + " default=" + defaultVal);
-            if (this.properties.get(name) == null && defaultVal != null) {
-                // add default properties for those not set. This will
-                // override values from the extended class, question
-                // is if that is what we intend.
-                this.properties.put(name, defaultVal);
-                getLogger().debug("property: " + " name=" + name + " default=" + defaultVal);
-            }
-        }
-
+        this.config = config;
     }
 
     public void initialize() throws Exception {
-        getLogger().debug("Initializing new Block Manager: " + this.id);
+        this.blockContext = new BlockContext();
+        LifecycleHelper.setupComponent(this.blockContext,
+                                       this.getLogger(),
+                                       this.context,
+                                       this.parentServiceManager,
+                                       this.config);    
 
+        getLogger().debug("Initializing new Block Manager: " + this.blockContext.getId());
+
+        ComponentContext newContext = new ComponentContext(context);
         // A block is supposed to be an isolated unit so it should not have
         // any direct access to the global root context
-        getLogger().debug("Root URL " +
-                          ((URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL)).toExternalForm());
-        String blockRoot =
-            ((URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL)).toExternalForm() +
-            this.location;
-        this.context.put(ContextHelper.CONTEXT_ROOT_URL, new URL(blockRoot));
-        getLogger().debug("Block Root URL " +
-                          ((URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL)).toExternalForm());
-        this.context.makeReadOnly();
+        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL()));
+        newContext.makeReadOnly();
+        this.context = newContext;
+	
 
         // Create an own service manager
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
 
         // Hack to put a sitemap configuration for the main sitemap of
         // the block into the service manager
-        getLogger().debug("Block Manager: create sitemap " + this.sitemapPath);
+        getLogger().debug("Block Manager: create sitemap " + this.blockContext.getSitemapPath());
         DefaultConfiguration sitemapConf =
-            new DefaultConfiguration("sitemap", "BlockManager sitemap: " + this.id +
-                                     " for " + this.sitemapPath);
-        sitemapConf.setAttribute("file", this.sitemapPath);
+            new DefaultConfiguration("sitemap", "BlockManager sitemap: " + this.blockContext.getId() +
+                                     " for " + this.blockContext.getSitemapPath());
+        sitemapConf.setAttribute("file", this.blockContext.getSitemapPath());
         sitemapConf.setAttribute("check-reload", "yes");
         // The source resolver must be defined in this service
         // manager, otherwise the root path will be the one from the
         // parent manager
         DefaultConfiguration resolverConf =
-            new DefaultConfiguration("source-resolver", "BlockManager source resolver: " + this.id);
+            new DefaultConfiguration("source-resolver", "BlockManager source resolver: " + this.blockContext.getId());
         DefaultConfiguration conf =
-            new DefaultConfiguration("components", "BlockManager components: " + this.id);
+            new DefaultConfiguration("components", "BlockManager components: " + this.blockContext.getId());
         conf.addChild(sitemapConf);
         conf.addChild(resolverConf);
 
@@ -218,7 +137,7 @@ public class BlockManager
         if ( processor != null ) {
             getLogger().debug("processor context" + processor.getContext());
         }
-        Source sitemapSrc = this.sourceResolver.resolveURI(this.sitemapPath);
+        Source sitemapSrc = this.sourceResolver.resolveURI(this.blockContext.getSitemapPath());
         getLogger().debug("Sitemap Source " + sitemapSrc.getURI());
         this.sourceResolver.release(sitemapSrc);
 
@@ -256,36 +175,21 @@ public class BlockManager
     // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
         this.blocksManager = blocksManager;
+        this.blockContext.setBlocksManager(blocksManager);
     }
 
     /**
      * Get the mount path of the block
      */
     public String getMountPath() {
-	return this.mountPath;
+        return this.blockContext.getMountPath();
     }
 
     /**
      * Get a block property
      */
     public String getProperty(String name) {
-        String value = (String)this.properties.get(name);
-        getLogger().debug("Accessing property=" + name + " value=" + value + " block=" + this.id);
-        if (value == null) {
-            // Ask the super block for the property
-            getLogger().debug("Try super property=" + name + " block=" + this.superId);
-            value = this.getProperty(this.superId, name);
-        }
-        return value;
-    }
-
-    private String getProperty(String blockId, String name) {
-        Block block = this.blocksManager.getBlock(blockId);
-        if (block != null) {
-            return block.getProperty(name);
-        } else {
-            return null;
-        }
+        return this.blockContext.getProperty(name);
     }
 
     // TODO: We should have a reflection friendly Map getProperties() also
@@ -298,22 +202,17 @@ public class BlockManager
     public URI absolutizeURI(URI uriToResolve, URI base) throws URISyntaxException {
         URI uri = resolveURI(uriToResolve, base);
         String blockName = uri.getScheme();
-        String blockId = null;
+        Block block = null;
         if (blockName == null)
             // this block
-            blockId = this.id;
+            block = this;
         else
             // another block
-            blockId = (String)this.connections.get(blockName);
-        if (blockId == null)
+            block = this.blockContext.getBlock(blockName);
+        if (block == null)
             throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
-        // The block id for identificaition
-        uri = new URI(blockId, uri.getSchemeSpecificPart(), null);
-        return this.absolutizeURI(uri);
-    }
 
-    private URI absolutizeURI(URI uri) throws URISyntaxException {
-        String mountPath = this.blocksManager.getBlock(uri.getScheme()).getMountPath();
+        String mountPath = block.getMountPath();
         if (mountPath == null)
             throw new URISyntaxException(uri.toString(), "No mount point for this URI");
         if (mountPath.endsWith("/"))
@@ -357,27 +256,20 @@ public class BlockManager
             // Request to other block.
             if (BlockManager.SUPER.equals(blockName)) {
                 // Explicit call to super block
-                if (this.superId == null) {
-                    throw new ProcessingException("block:super: with no super block");
-                }
                 // The block name should not be used in the recieving block.
                 environment.removeAttribute(Block.NAME);
-                getLogger().debug("Resolving super block to " + this.superId);
-                return this.process(this.superId, environment, true);
+                return this.process(Block.SUPER, environment, true);
             } else {
                 // Call to named block
-                String blockId = (String)this.connections.get(blockName);
-                if (blockId != null) {
-                    getLogger().debug("Resolving block: " + blockName + " to " + blockId);
+                Block block = this.blockContext.getBlock(blockName);
+                if (block != null) {
                     // The block name should not be used in the recieving block.
                     environment.removeAttribute(Block.NAME);
-                    return this.process(blockId, environment);
-                } else if (this.superId != null) {
+                    return this.process(blockName, environment);
+                } else {
                     // If there is a super block, the connection might
                     // be defined there instead.
-                    return this.process(this.superId, environment, true);
-                } else {
-                    throw new ProcessingException("Unknown block name " + blockName);
+                    return this.process(Block.SUPER, environment, true);
                 }
             }
         } else {
@@ -403,17 +295,17 @@ public class BlockManager
         }
     }
 
-    private boolean process(String blockId, Environment environment) throws Exception {
-        return this.process(blockId, environment, false);
+    private boolean process(String blockName, Environment environment) throws Exception {
+        return this.process(blockName, environment, false);
     }
 
-    private boolean process(String blockId, Environment environment, boolean superCall)
+    private boolean process(String blockName, Environment environment, boolean superCall)
         throws Exception {
-        Block block = this.blocksManager.getBlock(blockId);
+        Block block = this.blockContext.getBlock(blockName);
         if (block == null) {
             return false;
         } else if (superCall) {
-            getLogger().debug("Enter processing in super block " + blockId);
+            getLogger().debug("Enter processing in super block ");
             try {
                 // A super block should be called in the context of
                 // the called block to get polymorphic calls resolved
@@ -421,10 +313,10 @@ public class BlockManager
                 // set.
                 return block.process(environment);
             } finally {
-                getLogger().debug("Leaving processing in super block " + blockId);
+                getLogger().debug("Leaving processing in super block ");
             }
         } else {
-            getLogger().debug("Enter processing in block " + blockId);
+            getLogger().debug("Enter processing in block " + blockName);
             try {
                 // It is important to set the current block each time
                 // a new block is entered, this is used for the block
@@ -433,7 +325,7 @@ public class BlockManager
                 return block.process(environment);
             } finally {
                 EnvironmentHelper.leaveProcessor();
-                getLogger().debug("Leaving processing in block " + blockId);
+                getLogger().debug("Leaving processing in block " + blockName);
             }
         }
     }
