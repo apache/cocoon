@@ -149,12 +149,10 @@ public class BlocksServlet extends HttpServlet {
     throws ServletException, IOException {
 
         /* Needed in OSGi environment */
-        if (this.core.getSettings().isInitClassloader()) {
-            try {
-                Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e) {
-                // ignore
-            }
+        try {
+            Thread.currentThread().setContextClassLoader(this.classLoader);
+        } catch (Exception e) {
+            // ignore
         }
 
         // used for timing the processing
