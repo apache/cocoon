@@ -23,8 +23,11 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,6 +37,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
@@ -94,6 +98,8 @@ public class CoreUtil {
 
     /** Is this a per request logger manager */
     protected boolean isPerRequestLoggerManager = false;
+    
+    protected ClassLoader classloader;
 
     /**
      * Setup a new instance.
@@ -104,6 +110,7 @@ public class CoreUtil {
     throws Exception {
         this.env = environment;
         this.init();
+        this.createClassloader();        
     }
 
     protected void init()
@@ -128,16 +135,6 @@ public class CoreUtil {
 
         // create settings
         this.settings = this.createSettings();
-
-        if (this.settings.isInitClassloader()) {
-            // Force context classloader so that JAXP can work correctly
-            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
-            try {
-                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
-            } catch (Exception e) {
-                // ignore this
-            }
-        }
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
@@ -251,7 +248,7 @@ public class CoreUtil {
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
         // set class loader
-        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.env.getInitClassLoader());
+        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
 
         // create the Core object
         final Core core = this.createCore();
@@ -649,16 +646,6 @@ public class CoreUtil {
     public synchronized Cocoon createCocoon()
     throws Exception {
 
-        /* HACK for reducing class loader problems.                                     */
-        /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
-        if (this.settings.isInitClassloader()) {
-            try {
-                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
         this.updateEnvironment();
         this.forceLoad();
         this.forceProperty();
@@ -689,11 +676,66 @@ public class CoreUtil {
     }
 
     /**
+     * Create the classloader that inlcudes all the [block]/BLOCK-INF/classes directories. 
+     * @throws Exception
+     */
+    protected void createClassloader() throws Exception {
+        // get the wiring
+        final SourceResolver resolver = this.createSourceResolver(this.log);    
+        Source wiringSource = null;
+        final Configuration wiring;
+        try {
+            wiringSource = resolver.resolveURI(Constants.WIRING);
+            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            wiring = builder.build( wiringSource.getInputStream() );            
+        } catch(org.apache.excalibur.source.SourceNotFoundException snfe) {
+            throw new WiringNotFoundException("wiring.xml not found in the root directory of your Cocoon application.");
+        } finally {
+            resolver.release(wiringSource);
+        }
+        
+        // get all wired blocks and add their classed directory to the classloader
+        List urlList = new ArrayList();        
+        Configuration[] blocks = wiring.getChildren("block");
+        for(int i = 0; i < blocks.length; i++) {
+            String location = blocks[i].getAttribute("location");
+            if(this.log.isDebugEnabled()) {
+                this.log.debug("Found block " + blocks[i].getAttribute("id") + " at " + location);
+            }
+            Source classesDir = null;
+            try {
+               classesDir = resolver.resolveURI(location + "/" + Constants.BLOCK_META_DIR + "/classes");
+               if(classesDir.exists()) {
+                   String classesDirURI = classesDir.getURI();
+                   urlList.add(new URL(classesDirURI));
+                   if(this.log.isDebugEnabled()) {
+                       this.log.debug("added " + classesDir.getURI());
+                   }
+               }               
+            } finally {
+                resolver.release(classesDir);
+            }
+        }
+
+        // setup the classloader using the current classloader as parent
+        ClassLoader parentClassloader = Thread.currentThread().getContextClassLoader();
+        URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);        
+        URLClassLoader classloader = new URLClassLoader(urls, parentClassloader);
+        Thread.currentThread().setContextClassLoader(classloader);
+        this.classloader = Thread.currentThread().getContextClassLoader();
+    }
+
+    /**
      * Gets the current cocoon object.
      * Reload cocoon if configuration changed or we are reloading.
+     * Ensure that the correct classloader is set.
      */
     public Cocoon getCocoon(final String pathInfo, final String reloadParam)
     throws Exception {
+        
+        // set the blocks classloader for this thread
+        Thread.currentThread().setContextClassLoader(this.classloader);        
+        
         if (this.settings.isAllowReload()) {
             boolean reload = false;
 
@@ -812,33 +854,26 @@ public class CoreUtil {
      * of this class (eg. Cocoon Context).
      */
     protected void updateEnvironment() throws Exception {
-        // concatenate the class path and the extra class path
-        String classPath = this.env.getClassPath(this.settings);
-        StringBuffer buffer = new StringBuffer();
-        if ( classPath != null && classPath.length() > 0 ) {
-            buffer.append(classPath);
-        }
-        classPath = this.getExtraClassPath();
-        if ( classPath != null && classPath.length() > 0 ) {
-            if ( buffer.length() > 0 ) {
-                buffer.append(File.pathSeparatorChar);
-            }
-            buffer.append(classPath);
-        }
-        this.appContext.put(Constants.CONTEXT_CLASSPATH, buffer.toString());
+//        // concatenate the class path and the extra class path
+//        String classPath = this.env.getClassPath(this.settings);
+//        StringBuffer buffer = new StringBuffer();
+//        if ( classPath != null && classPath.length() > 0 ) {
+//            buffer.append(classPath);
+//        }
+//        classPath = this.getExtraClassPath();
+//        if ( classPath != null && classPath.length() > 0 ) {
+//            if ( buffer.length() > 0 ) {
+//                buffer.append(File.pathSeparatorChar);
+//            }
+//            buffer.append(classPath);
+//        }
+//        this.appContext.put(Constants.CONTEXT_CLASSPATH, buffer.toString());
     }
 
     /**
      * Dispose Cocoon when environment is destroyed
      */
     public void destroy() {
-        if (this.settings.isInitClassloader()) {
-            try {
-                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
-            } catch (Exception e) {
-                // ignore this
-            }
-        }
         this.disposeCocoon();
     }
 

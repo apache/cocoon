@@ -417,7 +417,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        thrScope.setupPackages(Thread.currentThread().getContextClassLoader());
+        ClassLoader contextClassloader = Thread.currentThread().getContextClassLoader();
+        thrScope.setupPackages(contextClassloader);
         cocoon.pushCallContext(this, redirector, manager,
                                avalonContext, getLogger(), null);
 

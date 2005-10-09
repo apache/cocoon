@@ -176,10 +176,6 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
         return new URL(this.contextPath + configFileName);
     }
 
-    public String getClassPath(Settings settings) {
-        return null;
-    }
-
     public class OSGiContext extends AbstractContext {
 
         private Bundle bundle;

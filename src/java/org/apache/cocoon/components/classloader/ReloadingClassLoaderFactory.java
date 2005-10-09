@@ -157,11 +157,11 @@ public class ReloadingClassLoaderFactory extends AbstractLogEnabled implements C
         
         
         public void addResourceStore(final ResourceStore pStore) {
-            final int n = stores.length;
+            final int n = this.stores.length;
             final ResourceStore[] newStores = new ResourceStore[n + 1];
-            System.arraycopy(stores, 0, newStores, 0, n);
+            System.arraycopy(this.stores, 0, newStores, 0, n);
             newStores[n] = pStore;
-            stores = newStores;
+            this.stores = newStores;
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("added store " + stores);
             }

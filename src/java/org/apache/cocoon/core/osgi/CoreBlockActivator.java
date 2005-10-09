@@ -34,10 +34,10 @@ public class CoreBlockActivator extends ServiceManagerActivator {
     private Processor processor;
 
     public void start(final BundleContext ctx) throws Exception {
-        
+        Thread.currentThread().setContextClassLoader(CoreBlockActivator.class.getClassLoader());
         BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, ctx);
         env.log("OSGiBootstrapEnvironment created");
-        CoreUtil coreUtil = new CoreUtil(env);
+        OSGICoreUtil coreUtil = new OSGICoreUtil(env);
         env.log("CoreUtil created");
         this.core = coreUtil.getCore();
         this.processor = coreUtil.createCocoon();

@@ -41,7 +41,6 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
@@ -671,13 +670,6 @@ public class CocoonWrapper {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getClassPath(org.apache.cocoon.core.Settings)
-         */
-        public String getClassPath(Settings settings) {
-            return null;
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
          */
         public URL getConfigFile(String configFileName) throws Exception {
@@ -707,13 +699,6 @@ public class CocoonWrapper {
          */
         public Context getEnvironmentContext() {
             return this.environmentContext;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getInitClassLoader()
-         */
-        public ClassLoader getInitClassLoader() {
-            return CocoonWrapper.class.getClassLoader();
         }
 
         /**
