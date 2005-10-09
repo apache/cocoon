@@ -176,7 +176,6 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
 
         public OSGiContext(Bundle bundle) {
             this.bundle = bundle;
-            this.initparameters.put("init-classloader", "true");
             this.initparameters.put("work-directory", "work");
         }
 
