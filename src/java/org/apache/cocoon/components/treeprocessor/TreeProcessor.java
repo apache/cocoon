@@ -425,9 +425,9 @@ public class TreeProcessor extends AbstractLogEnabled
         }
     }
 
-    private FilesystemAlterationListener createReloadingListener(
-            final Configuration dirConfig
-            ) throws Exception {
+    private FilesystemAlterationListener createReloadingListener(final Configuration dirConfig) 
+        throws Exception {
+        
         Source src = null;
         
         try {
@@ -497,7 +497,7 @@ public class TreeProcessor extends AbstractLogEnabled
         for (int i = 0; i < classDirConfigs.length; i++) {
             final Configuration dirConfig = classDirConfigs[i];
             final String src = dirConfig.getAttribute("src");
-            if (containsListener(oldListeners,src, ReloadingListener.class)) {
+            if (containsListener(oldListeners, src, ReloadingListener.class)) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("keeping ReloadingListener for " + src);
                 }
@@ -674,28 +674,36 @@ public class TreeProcessor extends AbstractLogEnabled
 
             newProcessor = createConcreteTreeProcessor();
 
+            // setup sitemap specific classloader
+            // (RP) Should we really support sitemap specific classloader when the global 
+            //      BlocksClassloader is in place?
             Configuration classpathConfig = sitemapProgram.getChild("components").getChild("classpath", false);
             if (classpathConfig != null) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("ConcreteTreeProcessor has a special classpath");
                 }
-
+                
+                // create a reloading classloader and make it the context classloader
                 ClassLoader classloader = createClassLoader(classpathConfig);
                 Thread.currentThread().setContextClassLoader(classloader);
                 
+                // create the listeners for all classpath entries (lib, classes, src)
                 newListeners = createClasspathListeners(oldListeners, classpathConfig);
                 
+                // store the listeners in the the concreteTreeProcessor instance
                 newProcessor.setClasspathListeners(newListeners);
                 
+                // subscribe all listeners to filesystem altering monitor (FAM)
                 subscribeListeners(newListeners, newProcessor);
                 
+                // use the information about the listeners to create the classpath
                 provideClasses(newListeners, classloader);
             }
 
             unsubscribeListeners(oldListeners);
-
+            
             waitForInitialCompilation(newListeners);
-
+            
 
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
