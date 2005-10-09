@@ -28,7 +28,7 @@ import org.apache.commons.lang.SystemUtils;
  * This helper class initializes the {@link MutableSettings} object from the servlet
  * configuration.
  * 
- * @version SVN $Id: Settings.java 125448 2005-01-17 22:28:43Z cziegeler $
+ * @version SVN $Id$
  */
 public class SettingsHelper {
 
@@ -38,8 +38,6 @@ public class SettingsHelper {
     
     public static void fill(MutableSettings s, ServletConfig config) {
         String value;
-
-        s.setInitClassloader(getInitParameterAsBoolean(config, "init-classloader", s.isInitClassloader()));
 
         handleForceProperty(getInitParameter(config, "force-property"), s);
 

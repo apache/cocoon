@@ -16,21 +16,12 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -53,15 +44,12 @@ import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.StopWatch;
 
 /**

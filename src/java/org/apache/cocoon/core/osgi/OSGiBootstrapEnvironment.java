@@ -29,7 +29,6 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.impl.AbstractContext;
 import org.osgi.framework.Bundle;
@@ -43,15 +42,13 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
 
     private final String configuration = "/WEB-INF/block.xml";
 
-    private final ClassLoader classLoader;
     public Logger logger = null;
     private final String contextPath;
     private final Context environmentContext;
 
 
-    public OSGiBootstrapEnvironment(ClassLoader classLoader, BundleContext bc)
+    public OSGiBootstrapEnvironment(BundleContext bc)
         throws Exception {
-        this.classLoader = classLoader;
 
         // Create a logger manager that delegates to OSGi
         // FIXME: have the maximum level as a property of the bundle
@@ -128,7 +125,6 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
         // FIXME: Should be found from block.xml
         settings.setConfiguration("/WEB-INF/cocoon.xconf");
         settings.setWorkDirectory("work");
-        settings.setInitClassloader(true);
         settings.setLoggingConfiguration("/WEB-INF/logkit.xconf");
     }
 
@@ -137,10 +133,6 @@ public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
     }
 
     public void configure(DefaultContext context) {
-    }
-
-    public ClassLoader getInitClassLoader() {
-        return this.classLoader;
     }
 
     public Context getEnvironmentContext() {
