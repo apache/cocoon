@@ -15,15 +15,13 @@
  */
 package org.apache.cocoon.core;
 
-public final class CoreInitializationException extends CoreException
-{
-    public CoreInitializationException(String message)
-    {
+public final class CoreInitializationException extends CoreException {
+
+    public CoreInitializationException(String message) {
         super(message, null);
     }
 
-    public CoreInitializationException(String message, Throwable cause)
-    {
+    public CoreInitializationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

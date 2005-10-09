@@ -17,15 +17,13 @@ package org.apache.cocoon.core.osgi;
 
 import org.apache.cocoon.core.CoreException;
 
-public final class CoreOSGIServiceException extends CoreException
-{
-    public CoreOSGIServiceException(String message)
-    {
+public final class CoreOSGIServiceException extends CoreException {
+
+    public CoreOSGIServiceException(String message) {
         super(message, null);
     }
 
-    public CoreOSGIServiceException(String message, Throwable cause)
-    {
+    public CoreOSGIServiceException(String message, Throwable cause) {
         super(message, cause);
     }
 }
