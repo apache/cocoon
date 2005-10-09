@@ -16,15 +16,12 @@
 package org.apache.cocoon.test.core;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
 import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 
 public class TestBootstrapEnvironment
@@ -85,7 +82,6 @@ public class TestBootstrapEnvironment
     public void configure(MutableSettings settings) {
         settings.setConfiguration(this.configuration);
         settings.setWorkDirectory("work");
-        settings.setInitClassloader(true);
     }
 
     public void configureLoggingContext(DefaultContext context) {

@@ -44,13 +44,6 @@ public class MutableSettings implements Settings {
     protected List properties = new ArrayList();
 
     /**
-     * This parameter tells Cocoon to set the thread's context classloader to
-     * its own classloader. If you experience strange classloader issues,
-     * try setting this parameter to "true".
-     */
-    protected boolean initClassloader = INIT_CLASSLOADER;
-
-    /**
      * This parameter allows to set system properties
      */
     protected Map forceProperties = new HashMap();
@@ -249,9 +242,7 @@ public class MutableSettings implements Settings {
                     key = key.substring(KEYPREFIX.length());
                     final String value = current.getValue().toString();
 
-                    if ( key.equals(KEY_INIT_CLASSLOADER) ) {
-                        this.initClassloader = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals(KEY_CONFIGURATION) ) {
+                    if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
                     } else if ( key.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
                         this.configurationReloadDelay = NumberUtils.toLong(value);
@@ -381,13 +372,6 @@ public class MutableSettings implements Settings {
      */
     public String getFormEncoding() {
         return this.formEncoding;
-    }
-
-    /**
-     * @return Returns the initClassloader.
-     */
-    public boolean isInitClassloader() {
-        return this.initClassloader;
     }
 
     /**
@@ -535,9 +519,7 @@ public class MutableSettings implements Settings {
         String value = null;
         if ( key.startsWith(KEYPREFIX) ) {
             final String sKey = key.substring(KEYPREFIX.length());
-            if ( sKey.equals(KEY_INIT_CLASSLOADER) ) {
-                value = String.valueOf(this.initClassloader);
-            } else if ( sKey.equals(KEY_CONFIGURATION) ) {
+            if ( sKey.equals(KEY_CONFIGURATION) ) {
                 value = this.configuration;
             } else if ( sKey.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
                 value = String.valueOf(this.configurationReloadDelay);
@@ -612,7 +594,6 @@ public class MutableSettings implements Settings {
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_CONFIGURATION_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_ALLOW_RELOAD + " : " + this.allowReload + '\n' +
-          KEY_INIT_CLASSLOADER + " : " + this.initClassloader + '\n' +
           KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
           KEY_FORCE_PROPERTIES + " : " + this.toString(this.forceProperties) + '\n' +
@@ -757,14 +738,6 @@ public class MutableSettings implements Settings {
     public void setFormEncoding(String formEncoding) {
         this.checkWriteable();
         this.formEncoding = formEncoding;
-    }
-
-    /**
-     * @param initClassloader The initClassloader to set.
-     */
-    public void setInitClassloader(boolean initClassloader) {
-        this.checkWriteable();
-        this.initClassloader = initClassloader;
     }
 
     /**

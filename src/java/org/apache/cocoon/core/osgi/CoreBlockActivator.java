@@ -23,19 +23,17 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.osgi.framework.BundleContext;
 
 public class CoreBlockActivator extends ServiceManagerActivator {
 
-    private ClassLoader classLoader = getClass().getClassLoader();
     private Core core;
     private Processor processor;
 
     public void start(final BundleContext ctx) throws Exception {
         Thread.currentThread().setContextClassLoader(CoreBlockActivator.class.getClassLoader());
-        BootstrapEnvironment env = new OSGiBootstrapEnvironment(this.classLoader, ctx);
+        BootstrapEnvironment env = new OSGiBootstrapEnvironment(ctx);
         env.log("OSGiBootstrapEnvironment created");
         OSGICoreUtil coreUtil = new OSGICoreUtil(env);
         env.log("CoreUtil created");

@@ -32,11 +32,6 @@ public interface BaseSettings {
     /** Default value for {@link #isManageExceptions()}. */
     boolean MANAGE_EXCEPTIONS = true;
 
-    /**
-     * Default value for {@link #isInitClassloader()} setting (false)
-     */
-    boolean INIT_CLASSLOADER = false;
-    
     /** Name of the property specifying a user properties file */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
 
@@ -96,13 +91,6 @@ public interface BaseSettings {
      * this class, if it implements them.
      */
     String KEY_PARENT_SERVICE_MANAGER = "parentservicemanager";
-
-    /**
-     * This parameter tells Cocoon to set the thread's context classloader to
-     * its own classloader. If you experience strange classloader issues,
-     * try setting this parameter to "true".
-     */
-    String KEY_INIT_CLASSLOADER = "classloader.init";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -244,12 +232,6 @@ public interface BaseSettings {
      * @see #KEY_FORM_ENCODING
      */
     String getFormEncoding();
-
-    /**
-     * @return Returns the initClassloader.
-     * @see #KEY_INIT_CLASSLOADER
-     */
-    boolean isInitClassloader();
 
     /**
      * @return Returns the manageExceptions.
