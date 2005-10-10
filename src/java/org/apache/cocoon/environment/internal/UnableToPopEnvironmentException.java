@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2005 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
  */
 package org.apache.cocoon.environment.internal;
 
-public final class UnableToPopEnvironmentException extends EnvironmentHelperException
-{
-    public UnableToPopEnvironmentException(String message)
-    {
+/**
+ * @version $Id$
+ * @since 2.2
+ */
+public final class UnableToPopEnvironmentException extends EnvironmentHelperException {
+
+    public UnableToPopEnvironmentException(String message) {
         super(message, null);
     }
 
-    public UnableToPopEnvironmentException(String message, Throwable cause)
-    {
+    public UnableToPopEnvironmentException(String message, Throwable cause) {
         super(message, cause);
     }
 }

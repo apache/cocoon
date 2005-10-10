@@ -35,13 +35,14 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 
 /**
- * Experimental code for cleaning up the environment handling
+ * Helper class for maintaining the environment stack.
+ *
  * This is an internal class, and it might change in an incompatible way over time.
  * For developing your own components/applications based on Cocoon, you shouldn't
  * really need it.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -86,7 +87,7 @@ implements SourceResolver, Serviceable, Disposable {
         this.prefix = parent.prefix;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -105,7 +106,7 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -116,14 +117,14 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
      */
     public void release(Source source) {
         this.resolver.release(source);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
      */
     public Source resolveURI(final String location,
@@ -135,7 +136,7 @@ implements SourceResolver, Serviceable, Disposable {
                                         parameters);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
      */
     public Source resolveURI(final String location)
@@ -417,7 +418,7 @@ implements SourceResolver, Serviceable, Disposable {
     public static XMLConsumer createPopEnvironmentConsumer(XMLConsumer consumer) {
         return new PopEnvironmentChanger(consumer);
     }
-    
+
     /**
      * A runnable wrapper that inherits the environment stack of the thread it is
      * created in.
@@ -454,7 +455,7 @@ implements SourceResolver, Serviceable, Disposable {
             // A CocoonThread is meant to start and die within the execution period of the parent request,
             // and it is an error if it lives longer as the parent environment is no more valid.
         }
-        
+
         abstract protected void doRun();
     }
 }

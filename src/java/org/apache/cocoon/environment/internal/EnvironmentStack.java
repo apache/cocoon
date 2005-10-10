@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 /**
  * The stack for the processing environment.
+ *
  * This is an internal class, and it might change in an incompatible way over time.
  * For developing your own components/applications based on Cocoon, you shouldn't 
  * really need it.
@@ -30,45 +31,45 @@ import org.xml.sax.SAXException;
  * cocoon protocol and the sitemap source resolving.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.1 2004/05/25 07:28:25 cziegeler Exp $
+ * @version $Id$
  * @since 2.2
  */
 final class EnvironmentStack 
     extends ArrayStack 
     implements Cloneable {
-    
+
     int offset;
-    
+
     EnvironmentInfo getCurrentInfo() {
         return (EnvironmentInfo)this.get(offset);
     }
-    
+
     void pushInfo(EnvironmentInfo info) {
         this.push(info);
     }
-    
+
     EnvironmentInfo popInfo() {
         return (EnvironmentInfo)this.pop();
     }
-    
+
     EnvironmentInfo peekInfo() {
         return (EnvironmentInfo)this.peek();
     }
-    
+
     int getOffset() {
         return this.offset;
     }
-  
+
     void setOffset(int value) {
         this.offset = value;  
     }
-    
+
     public Object clone() {
         EnvironmentStack old = (EnvironmentStack) super.clone();
         old.offset = offset;
         return old;
     }
-    
+
     XMLConsumer getEnvironmentAwareConsumerWrapper(XMLConsumer consumer, 
                                                    int oldOffset) {
         return new EnvironmentChanger(consumer, this, oldOffset, this.offset);
@@ -90,7 +91,7 @@ implements XMLConsumer {
     final EnvironmentStack stack;
     final int oldOffset;
     final int newOffset;
-    
+
     EnvironmentChanger(XMLConsumer consumer, EnvironmentStack es,
                        int oldOffset, int newOffset) {
         this.consumer = consumer;
@@ -98,7 +99,7 @@ implements XMLConsumer {
         this.oldOffset = oldOffset;
         this.newOffset = newOffset;
     }
-    
+
     public void setDocumentLocator(Locator locator) {
         this.stack.setOffset(this.oldOffset);
         this.consumer.setDocumentLocator(locator);
@@ -140,14 +141,13 @@ implements XMLConsumer {
         this.stack.setOffset(this.newOffset);
     }
 
-
     public void endElement(String uri, String loc, String raw)
     throws SAXException {
         this.stack.setOffset(this.oldOffset);
         this.consumer.endElement(uri, loc, raw);
         this.stack.setOffset(this.newOffset);
     }
-    
+
     public void characters(char c[], int start, int len)
     throws SAXException {
         this.stack.setOffset(this.oldOffset);

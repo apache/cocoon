@@ -23,7 +23,9 @@ import org.apache.cocoon.components.blocks.Block;
  * Hack used for geting hold on the current block manager without
  * making core code dependent of the experimental blocks code.
  *
- * @version $Id$ */
+ * @version $Id$
+ * @since 2.2 
+ */
 public class BlockEnvironmentHelper
     extends EnvironmentHelper {
 

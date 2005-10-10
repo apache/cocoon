@@ -60,7 +60,7 @@ public class Core {
     private final Context context;
 
     private final Settings settings;
-    
+
     /**
      * Constructor
      * The core object is created by the {@link CoreUtil} class. Never construct
@@ -100,6 +100,7 @@ public class Core {
                 t.invoke();
             }
             l.clear();
+            cleanup.set(null);
         }
     }
 
@@ -142,7 +143,7 @@ public class Core {
             throw new CoreResourceNotFoundException("Unable to get the environment object from the context.", ce);
         }
     }
-    
+
     /**
      * Return the Avalon context.
      * @return The Avalon context.
@@ -150,7 +151,7 @@ public class Core {
     public Context getContext() {
         return this.context;
     }
-    
+
     /**
      * Return the current object model
      * @return The object model.
@@ -191,7 +192,7 @@ public class Core {
             throw new CoreResourceNotFoundException("Unable to get the cache directory from the context.", ce);
         }        
     }
-    
+
     /**
      * Return the current sitemap.
      * @return The current sitemap or null if no request is currently processed
@@ -238,6 +239,5 @@ public class Core {
             // TODO We ignore the language for now
             return (Interpreter)this.getProcessor().getAttribute(Interpreter.ROLE);
         }
-
     }
 }
