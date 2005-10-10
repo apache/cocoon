@@ -17,15 +17,17 @@ package org.apache.cocoon.environment.internal;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 
-public class EnvironmentHelperException extends CascadingRuntimeException
-{
-    public EnvironmentHelperException(String message)
-    {
+/**
+ * @version $Id$
+ * @since 2.2
+ */
+public class EnvironmentHelperException extends CascadingRuntimeException {
+
+    public EnvironmentHelperException(String message) {
         super(message, null);
     }
 
-    public EnvironmentHelperException(String message, Throwable cause)
-    {
+    public EnvironmentHelperException(String message, Throwable cause) {
         super(message, cause);
     }
 }

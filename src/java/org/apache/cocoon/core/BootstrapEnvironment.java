@@ -35,6 +35,10 @@ import org.apache.avalon.framework.logger.Logger;
  */
 public interface BootstrapEnvironment {
 
+    /**
+     * Convenience class to define some constants for log levels.
+     * @see BootstrapEnvironment#getBootstrapLogger(LogLevel)
+     */
     public static final class LogLevel {
 
         public static final LogLevel DEBUG = new LogLevel( "DEBUG", 0 );
@@ -127,8 +131,12 @@ public interface BootstrapEnvironment {
      */
     void configure(DefaultContext context);
 
+    /**
+     * Create the context object of the environment.
+     * @return The context object.
+     */
     org.apache.cocoon.environment.Context getEnvironmentContext();
-    
+
     /**
      * Returns the URL to the application context.
      */
@@ -150,5 +158,4 @@ public interface BootstrapEnvironment {
      */
     URL getConfigFile(String configFileName)
     throws Exception;
-       
 }
