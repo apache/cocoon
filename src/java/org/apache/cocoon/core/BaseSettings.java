@@ -32,8 +32,14 @@ public interface BaseSettings {
     /** Default value for {@link #isManageExceptions()}. */
     boolean MANAGE_EXCEPTIONS = true;
 
-    /** Name of the property specifying a user properties file */
+    /** Name of the property specifying a custom user properties file. */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
+
+    /** Name of the property specifying the running mode. */
+    String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
+
+    /** The default running mode. */
+    String DEFAULT_RUNNING_MODE = "dev";
 
     /**
      * This parameter allows to set system properties

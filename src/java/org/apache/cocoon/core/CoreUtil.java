@@ -330,16 +330,32 @@ public class CoreUtil {
 
     /**
      * Get the settings for Cocoon.
+     * This method reads several property files and merges the result. If there
+     * is more than one definition for a property, the last one wins.
+     * The property files are read in the following order:
+     * 1) context://WEB-INF/cocoon-settings.properties
+     *    These are the default values.
+     * 2) context://WEB-INF/properties/*.properties
+     *    Default values for each block - the order in which the files are read is not guaranteed.
+     * 3) context://WEB-INF/properties/[RUNNING_MODE]/*.properties
+     *    Default values for the running mode - the order in which the files are read is not guaranteed.
+     * 4) Property providers (ToBeDocumented)
+     * 5) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
+     * 6) Additional property file specified by the "org.apache.cocoon.settings" system property.
+     * 7) System properties
+     *
      * @return A new Settings object
      */
     protected MutableSettings createSettings() {
+        // get the running mode
+        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
+        this.env.log("Running in mode: " + mode);
+
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
         // we need our own resolver
         final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.env));
-
-        String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
 
         // read cocoon-settings.properties - if available
         Source source = null;
@@ -347,12 +363,11 @@ public class CoreUtil {
             source = resolver.resolveURI("context://WEB-INF/cocoon-settings.properties");
             if ( source.exists() ) {
                 final InputStream propsIS = source.getInputStream();
-                env.log("Reading settings from '" + source.getURI() + "'");
+                this.env.log("Reading settings from '" + source.getURI() + "'");
                 final Properties p = new Properties();
                 p.load(propsIS);
                 propsIS.close();
                 s.fill(p);
-                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);                
             }
         } catch (IOException ignore) {
             env.log("Unable to read 'WEB-INF/cocoon-settings.properties'.", ignore);
@@ -362,30 +377,9 @@ public class CoreUtil {
         }
 
         // now read all properties from the properties directory
-        Source directory = null;
-        try {
-            directory = resolver.resolveURI("context://WEB-INF/properties", null, CONTEXT_PARAMETERS);
-            if (directory.exists() && directory instanceof TraversableSource) {
-                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
-                while (c.hasNext()) {
-                    final Source src = (Source) c.next();
-                    if ( src.getURI().endsWith(".properties") ) {
-                        final InputStream propsIS = src.getInputStream();
-                        env.log("Reading settings from '" + src.getURI() + "'.");
-                        final Properties p = new Properties();
-                        p.load(propsIS);
-                        propsIS.close();
-                        s.fill(p);
-                        additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);                
-                    }
-                }
-            }
-        } catch (IOException ignore) {
-            env.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
-            env.log("Continuing initialization.");            
-        } finally {
-            resolver.release(directory);
-        }
+        this.readProperties("context://WEB-INF/properties", s, resolver);
+        // read all properties from the mode dependent directory
+        this.readProperties("context://WEB-INF/properties/" + mode, s, resolver);
 
         // Next look for custom property providers
         Iterator i = s.getPropertyProviders().iterator();
@@ -403,6 +397,8 @@ public class CoreUtil {
         env.configure(s);
 
         // read additional properties file
+        final String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
+                                                            System.getProperty(Settings.PROPERTY_USER_SETTINGS));
         if ( additionalPropertyFile != null ) {
             env.log("Reading user settings from '" + additionalPropertyFile + "'");
             final Properties p = new Properties();
@@ -419,6 +415,37 @@ public class CoreUtil {
         s.fill(System.getProperties());
 
         return s;
+    }
+
+    /**
+     * Read all property files from the given directory and apply them to the settings.
+     */
+    protected void readProperties(String directoryName,
+                                  MutableSettings s,
+                                  SourceResolver resolver) {
+        Source directory = null;
+        try {
+            directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
+            if (directory.exists() && directory instanceof TraversableSource) {
+                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
+                while (c.hasNext()) {
+                    final Source src = (Source) c.next();
+                    if ( src.getURI().endsWith(".properties") ) {
+                        final InputStream propsIS = src.getInputStream();
+                        env.log("Reading settings from '" + src.getURI() + "'.");
+                        final Properties p = new Properties();
+                        p.load(propsIS);
+                        propsIS.close();
+                        s.fill(p);
+                    }
+                }
+            }
+        } catch (IOException ignore) {
+            env.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
+            env.log("Continuing initialization.");            
+        } finally {
+            resolver.release(directory);
+        }
     }
 
     /**
