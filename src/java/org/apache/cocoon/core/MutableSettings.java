@@ -28,7 +28,8 @@ import org.apache.commons.lang.math.NumberUtils;
 /**
  * This object holds the global configuration of Cocoon.
  *
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class MutableSettings implements Settings {
 
@@ -590,7 +591,8 @@ public class MutableSettings implements Settings {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "Settings:\n"+
+        return "Settings:\n" +
+          "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_CONFIGURATION_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_ALLOW_RELOAD + " : " + this.allowReload + '\n' +
