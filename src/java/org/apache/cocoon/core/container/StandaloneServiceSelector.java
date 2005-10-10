@@ -34,7 +34,8 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
 /**
  * Default component selector for Cocoon's components.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class StandaloneServiceSelector
 extends AbstractServiceManager

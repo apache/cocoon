@@ -29,7 +29,8 @@ import org.apache.cocoon.components.ComponentInfo;
  * Default RoleManager implementation.  It populates the RoleManager
  * from a configuration file.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class RoleManager
 extends AbstractLogEnabled

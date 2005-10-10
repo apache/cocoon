@@ -17,6 +17,10 @@ package org.apache.cocoon.core.osgi;
 
 import org.apache.cocoon.core.CoreException;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public final class CoreOSGIServiceException extends CoreException {
 
     public CoreOSGIServiceException(String message) {

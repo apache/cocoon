@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.core;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public final class CoreInitializationException extends CoreException {
 
     public CoreInitializationException(String message) {

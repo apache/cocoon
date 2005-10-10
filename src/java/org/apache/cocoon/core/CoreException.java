@@ -17,15 +17,17 @@ package org.apache.cocoon.core;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 
-public class CoreException extends CascadingRuntimeException
-{
-    public CoreException(String message)
-    {
+/**
+ * @version $Id$
+ * @since 2.2
+ */
+public class CoreException extends CascadingRuntimeException {
+
+    public CoreException(String message) {
         super(message, null);
     }
 
-    public CoreException(String message, Throwable cause)
-    {
+    public CoreException(String message, Throwable cause) {
         super(message, cause);
     }
 }

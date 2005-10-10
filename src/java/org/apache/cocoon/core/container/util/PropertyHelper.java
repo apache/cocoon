@@ -22,7 +22,8 @@ import org.apache.cocoon.core.Settings;
  * Helper class for replacing property references with the value of the
  * property
  *
- * @version CVS $Id: AbstractComponentHandler.java 123887 2005-01-02 15:12:01Z sylvain $
+ * @version $Id$
+ * @since 2.2
  */
 public class PropertyHelper {
 

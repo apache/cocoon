@@ -18,6 +18,10 @@ package org.apache.cocoon.core.osgi;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public class OSGICoreUtil extends CoreUtil {
 
     public OSGICoreUtil(BootstrapEnvironment environment) throws Exception {

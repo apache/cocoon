@@ -33,7 +33,8 @@ import org.apache.cocoon.core.Settings;
  * The component enviromnent contains all objects necessary to create
  * a new component; it's just a "container" of objects.
  *
- * @version SVN $Id:  123716 2004-12-30 14:16:00Z vgritsenko $
+ * @version $Id$
+ * @since 2.2
  */
 public class ComponentEnvironment {
 

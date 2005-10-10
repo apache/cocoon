@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.core;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public final class CoreResourceNotFoundException extends CoreException {
 
     public CoreResourceNotFoundException(String message) {

@@ -34,7 +34,8 @@ import org.osgi.framework.ServiceReference;
  * cases the interface name is extracted, and the hint is expected to be found in the
  * "<code>component.hint</code>" service property.
  *
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class OSGiServiceManager implements ServiceManager {
     

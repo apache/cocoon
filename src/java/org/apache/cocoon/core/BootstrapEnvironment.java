@@ -30,7 +30,7 @@ import org.apache.avalon.framework.logger.Logger;
  * A BootstrapEnvironment can be used to create a new Cocoon system using
  * the {@link CoreUtil}.
  * 
- * @version SVN $Id$
+ * @version $Id$
  * @since 2.2
  */
 public interface BootstrapEnvironment {

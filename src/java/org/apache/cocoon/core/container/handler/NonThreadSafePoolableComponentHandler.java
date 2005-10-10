@@ -51,7 +51,8 @@ import org.apache.cocoon.core.container.ComponentFactory;
  *  but not pooled.</li>
  * </ul>
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class NonThreadSafePoolableComponentHandler
 extends AbstractFactoryHandler {

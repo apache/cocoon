@@ -24,7 +24,8 @@ import org.apache.cocoon.core.container.ComponentFactory;
  * The DefaultComponentHandler to make sure components are initialized
  * and destroyed correctly.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class SingleThreadedComponentHandler
 extends AbstractFactoryHandler {

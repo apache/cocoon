@@ -24,7 +24,8 @@ import org.apache.cocoon.core.container.ComponentFactory;
  * The ThreadSafeComponentHandler to make sure components are initialized
  * and destroyed correctly.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class ThreadSafeComponentHandler
 extends AbstractFactoryHandler {

@@ -26,6 +26,10 @@ import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.osgi.framework.BundleContext;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public class CoreBlockActivator extends ServiceManagerActivator {
 
     private Core core;

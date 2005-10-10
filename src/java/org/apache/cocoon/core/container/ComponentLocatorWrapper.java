@@ -24,7 +24,8 @@ import org.apache.cocoon.sitemap.ComponentLocator;
 /**
  * Wrapper for a service manager.
  *
- * @version CVS $Id$
+ * @version Id: ComponentLocatorWrapper.java 179038 2005-05-30 08:19:24Z cziegeler $
+ * @since 2.2
  */
 final public class ComponentLocatorWrapper
 implements ComponentLocator {

@@ -34,6 +34,7 @@ import org.apache.cocoon.core.container.ComponentFactory;
  * that uses proxies to make the poolable components thread safe.
  *
  * @version $Id$
+ * @since 2.2
  */
 public class PoolableComponentHandler
 extends NonThreadSafePoolableComponentHandler {

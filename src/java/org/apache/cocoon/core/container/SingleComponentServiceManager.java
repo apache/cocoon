@@ -25,7 +25,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  * This is a simple service manager implementation that just serves one
  * single component.
  * @since 2.2
- * @version SVN $Id:$
+ * @version $Id$
  */
 public final class SingleComponentServiceManager
 implements ServiceManager, Disposable {

@@ -23,7 +23,8 @@ import org.apache.cocoon.core.container.ComponentEnvironment;
 
 /**
  * 
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class LazyHandler implements ComponentHandler {
     
