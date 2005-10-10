@@ -145,12 +145,17 @@ public class ContinuationsManagerImpl
         continuationsInvalidated = new CounterInstrument("invalidates");
     }
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(final ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) {
-        System.err.println("configure ContinuationsManagerImpl");
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
@@ -179,14 +184,23 @@ public class ContinuationsManagerImpl
         }
     }
 
+    /**
+     * @see org.apache.excalibur.instrument.Instrumentable#setInstrumentableName(java.lang.String)
+     */
     public void setInstrumentableName(String instrumentableName) {
         this.instrumentableName = instrumentableName;
     }
 
+    /**
+     * @see org.apache.excalibur.instrument.Instrumentable#getInstrumentableName()
+     */
     public String getInstrumentableName() {
         return instrumentableName;
     }
 
+    /**
+     * @see org.apache.excalibur.instrument.Instrumentable#getInstruments()
+     */
     public Instrument[] getInstruments() {
         return new Instrument[]{
             continuationsCount,
@@ -196,10 +210,16 @@ public class ContinuationsManagerImpl
         };
     }
 
+    /**
+     * @see org.apache.excalibur.instrument.Instrumentable#getChildInstrumentables()
+     */
     public Instrumentable[] getChildInstrumentables() {
         return Instrumentable.EMPTY_INSTRUMENTABLE_ARRAY;
     }
 
+    /**
+     * @see org.apache.cocoon.components.flow.ContinuationsManager#createWebContinuation(java.lang.Object, org.apache.cocoon.components.flow.WebContinuation, int, java.lang.String, org.apache.cocoon.components.flow.ContinuationsDisposer)
+     */
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
@@ -247,6 +267,9 @@ public class ContinuationsManagerImpl
     }
     
 
+    /**
+     * @see org.apache.cocoon.components.flow.ContinuationsManager#lookupWebContinuation(java.lang.String, java.lang.String)
+     */
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
         // REVISIT: Is the following check needed to avoid threading issues:
         // return wk only if !(wk.hasExpired) ?
@@ -326,6 +349,9 @@ public class ContinuationsManagerImpl
         return wk;
     }
 
+    /**
+     * @see org.apache.cocoon.components.flow.ContinuationsManager#invalidateWebContinuation(org.apache.cocoon.components.flow.WebContinuation)
+     */
     public void invalidateWebContinuation(WebContinuation wk) {
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(false);
         if (!continuationsHolder.contains(wk)) {
@@ -356,7 +382,6 @@ public class ContinuationsManagerImpl
      * Detach this continuation from parent. This method removes
      * continuation from {@link #forest} set, or, if it has parent,
      * from parent's children collection.
-     * @param continuationsHolder
      * @param wk Continuation to detach from parent.
      */
     private void _detach(WebContinuation wk) {
@@ -618,6 +643,9 @@ public class ContinuationsManagerImpl
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;        
     }
