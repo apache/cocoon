@@ -102,7 +102,7 @@ attrib +s %COCOON_HOME%
 set CP=%COCOON_HOME%\tools\loader
 
 :: ----- Check action ----------------------------------------------------------
-
+if ""%1"" == """" goto doServlet
 if ""%1"" == ""cli"" goto doCli
 if ""%1"" == ""servlet"" goto doServlet
 if ""%1"" == ""servlet-admin"" goto doAdmin
@@ -115,7 +115,7 @@ IF ""%1"" == ""osgi-debug"" goto doOsgiKnopflerfishDebug
 echo Usage: cocoon (action)
 echo actions:
 echo   cli             Run Cocoon from command line
-echo   servlet         Run Cocoon in a servlet container
+echo   servlet         Run Cocoon in a servlet container (default)
 echo   servlet-admin   Run Cocoon in a servlet container and turn container web administration on
 echo   servlet-debug   Run Cocoon in a servlet container and turn on remote JVM debug
 echo   servlet-profile Run Cocoon in a servlet container and turn on JVM profiling
