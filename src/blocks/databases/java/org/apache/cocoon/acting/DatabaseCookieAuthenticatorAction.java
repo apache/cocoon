@@ -20,6 +20,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -264,7 +265,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                  *  but not the value, we exit immediately do
                  *  that authorization fails authomatically
                  */
-                cookie_value = ObjectModelHelper.getCookie(objectModel, cookie_name, -1).getValue();
+                cookie_value = getCookie(objectModel, cookie_name).getValue();
 
                 if (cookie_value == null || cookie_value.trim().equals("")) {
                     // value is null
@@ -293,6 +294,23 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
             getLogger().error("Exception: ",e);
             return null;
         }
+    }
+
+    public static Cookie getCookie(Map objectModel, String cookieName) {
+        
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for(int count = 0; count < cookies.length; count++) {
+                Cookie currentCookie = cookies[count];
+                if (currentCookie.getName().equals(cookieName)) {
+                    return currentCookie;
+                }
+            }
+        }
+        
+        return null;
     }
 
     /**
