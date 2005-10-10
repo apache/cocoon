@@ -583,6 +583,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="BD" type="update">
+      cocoon.sh and cocoon.bat (done by CZ): "servlet" is now the default action.
+    </action>
     <action dev="VG" type="add">
       Moved support for zip: sources from scratchpad into the core.
     </action>
