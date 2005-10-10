@@ -20,11 +20,10 @@ package org.apache.cocoon.components.thread;
  * creating Thread for {@link ThreadPool}s of the {@link RunnableManager}
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface ThreadFactory
-    extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory
-{
+    extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory {
     //~ Methods ----------------------------------------------------------------
 
     /**
@@ -39,7 +38,7 @@ public interface ThreadFactory
      *
      * @return Whether new {@link Thread}s should run as daemons.
      */
-    boolean isDaemon(  );
+    boolean isDaemon();
 
     /**
      * Set the priority newly created <code>Thread</code>s should have
@@ -55,7 +54,7 @@ public interface ThreadFactory
      * @return One of {@link Thread#MIN_PRIORITY}, {@link
      *         Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
      */
-    int getPriority(  );
+    int getPriority();
 
     /**
      * Create a new Thread for a {@link Runnable} command

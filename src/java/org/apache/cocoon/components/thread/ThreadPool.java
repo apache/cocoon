@@ -20,10 +20,10 @@ package org.apache.cocoon.components.thread;
  * of  a pool of threads
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public interface ThreadPool
-{
+public interface ThreadPool {
+
     //~ Instance fields --------------------------------------------------------
 
     /** ThreadPool block policy ABORT */
@@ -42,7 +42,7 @@ public interface ThreadPool
     String POLICY_WAIT = "WAIT";
 
     /** The Role name */
-    String ROLE = ThreadPool.class.getName(  );
+    String ROLE = ThreadPool.class.getName();
 
     //~ Methods ----------------------------------------------------------------
 
@@ -51,7 +51,7 @@ public interface ThreadPool
      *
      * @return DOCUMENT ME!
      */
-    String getBlockPolicy(  );
+    String getBlockPolicy();
 
     /**
      * How long will a thread in this pool be idle before it is allowed to be
@@ -59,49 +59,49 @@ public interface ThreadPool
      *
      * @return maximum idle time
      */
-    long getKeepAliveTime(  );
+    long getKeepAliveTime();
 
     /**
      * How many threads are in this pool at maximum
      *
      * @return maximum size of pool
      */
-    int getMaximumPoolSize(  );
+    int getMaximumPoolSize();
 
     /**
      * Maximum size of the queue
      *
      * @return current size of queue
      */
-    int getMaximumQueueSize(  );
+    int getMaximumQueueSize();
 
     /**
      * How many threads are in this pool at minimum
      *
      * @return minimum size of pool
      */
-    int getMinimumPoolSize(  );
+    int getMinimumPoolSize();
 
     /**
      * The Name of this thread pool
      *
      * @return The name
      */
-    String getName(  );
+    String getName();
 
     /**
      * How many threads are currently in this pool
      *
      * @return current size of pool
      */
-    int getPoolSize(  );
+    int getPoolSize();
 
     /**
      * Get the thread priority used by this pool
      *
      * @return current size of queue
      */
-    int getPriority(  );
+    int getPriority();
 
     /**
      * Current size of the queue.
@@ -109,14 +109,14 @@ public interface ThreadPool
      * @return current size of queue. If the size of the queue is not
      *         maintained by an implementation -1 should be returned.
      */
-    int getQueueSize(  );
+    int getQueueSize();
 
     /**
      * Whether this ThreadPool has a queue
      *
      * @return Returns true if this ThreadPool has a queue
      */
-    boolean isQueued(  );
+    boolean isQueued();
 
     /**
      * Returns true if a shutDown method has succeeded in terminating all
@@ -125,7 +125,7 @@ public interface ThreadPool
      * @return Whether a shutDown method has succeeded in terminating all
      *         threads
      */
-    boolean isTerminatedAfterShutdown(  );
+    boolean isTerminatedAfterShutdown());
 
     /**
      * Execute a command using this pool
@@ -135,11 +135,11 @@ public interface ThreadPool
      * @throws InterruptedException In case of interruption
      */
     void execute( Runnable command )
-        throws InterruptedException;
+    throws InterruptedException;
 
     /**
      * Terminates all threads possibly awaiting processing all elements
      * currently in queue.
      */
-    void shutdown(  );
+    void shutdown();
 }
