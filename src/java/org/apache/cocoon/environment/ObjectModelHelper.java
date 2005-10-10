@@ -17,6 +17,8 @@ package org.apache.cocoon.environment;
 
 import java.util.Map;
 
+import org.apache.cocoon.util.Deprecation;
+
 /**
  * A set of constants and methods to access the content of the object model.
  * <p>
@@ -83,21 +85,13 @@ public final class ObjectModelHelper {
     }
     
     /**
-     * Method used to return a cookie object based on the name or the index that was passed
-     *
-     * If both name and index of cookie to be extracted is passed in, name will take
-     * precedence. Basic thing followed is that, when name is passed, index should be -1 and
-     * when index is passed name should null
-     *
-     * @param objectModel
-     * @param cookieName Name of the cookie which is to be found and returned back
-     * @param cookieIndex Index of the cookie which is to be found and returned
-     * @return cookie object is returned
+     * @deprecated Don't use this method which should never have been there
      * @since 2.1.7
      */
     public static Cookie getCookie(Map objectModel,
                                    String cookieName,
                                    int cookieIndex) {
+        Deprecation.logger.error("ObjectModelHelper.getCookie() should not be used, and will be removed in the next release");
         boolean retrieveByName = false;
         boolean retrieveByIndex = false;
         boolean matchFound = false;
