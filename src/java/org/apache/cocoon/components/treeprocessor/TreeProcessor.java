@@ -312,6 +312,11 @@ public class TreeProcessor
 
         long startTime = System.currentTimeMillis();
 
+        // Dispose the old processor, if any
+        if (this.concreteProcessor != null) {
+            this.concreteProcessor.markForDisposal();
+        }
+
         // Get a builder
         TreeBuilder builder = (TreeBuilder)this.builderSelector.select("sitemap");
         ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
@@ -341,15 +346,8 @@ public class TreeProcessor
         }
 
         // Switch to the new processor (ensure it's never temporarily null)
-        ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
-
         this.concreteProcessor = newProcessor;
         this.lastModified = newLastModified;
-
-        // Dispose the old processor, if any
-        if (oldProcessor != null) {
-            oldProcessor.markForDisposal();
-        }
     }
 
     /* (non-Javadoc)
