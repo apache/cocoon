@@ -55,17 +55,23 @@ usage()
     echo "Usage: $0 (action)"
     echo "actions:"
     echo "  cli               Run Cocoon from the command line"
-    echo "  servlet           Run Cocoon in a servlet container"
+    echo "  servlet           Run Cocoon in a servlet container (default)"
     echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
     echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
     exit 1
 }
 
-[ $# -gt 0 ] || usage
-
-ACTION=$1
-shift
+# ----- Handle action parameter ------------------------------------------------
+DEFAULT_ACTION="servlet"
+ACTION="$1"
+if [ -n "$ACTION" ]
+then
+  shift
+else
+  ACTION=$DEFAULT_ACTION
+  echo "$0: executing default action '$ACTION', use -h to see other actions"
+fi
 ARGS="$*"
 
 # ----- Verify and Set Required Environment Variables -------------------------

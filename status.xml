@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="BD" type="update">
+      cocoon.sh and cocoon.bat (done by CZ): "servlet" is now the default action.
+    </action>
     <action dev="VG" type="update">
       Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
       Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
