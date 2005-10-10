@@ -95,13 +95,13 @@ public class DefaultTreeBuilder
 
     /**
      * The service manager for the processor that we are building.
-     * It is created by {@link #createServiceManager(Context, Configuration)}.
+     * It is created by {@link #createServiceManager(ClassLoader, Context, Configuration)}.
      */
     private ServiceManager itsManager;
     
     /**
      * The classloader for the processor that we are building.
-     * It is created by {@link #createServiceManager(Context, Configuration)}.
+     * It is created by {@link #createServiceManager(ClassLoader, Context, Configuration)}.
      */
     protected ClassLoader itsClassLoader;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -492,7 +492,6 @@ public class TreeProcessor extends AbstractLogEnabled
         final Configuration[] libDirConfigs = classpathConfig.getChildren("lib-dir");    
 
         Map newListeners = new HashMap();
-        int r = 0;
         
         for (int i = 0; i < classDirConfigs.length; i++) {
             final Configuration dirConfig = classDirConfigs[i];
@@ -658,6 +657,11 @@ public class TreeProcessor extends AbstractLogEnabled
             }            
         }
         
+        // Dispose the old processor, if any
+        if (oldProcessor != null) {
+            oldProcessor.markForDisposal();
+        }
+
 
         // We have to do a call to enterProcessor() here as during building
         // of the tree, components (e.g. actions) are already instantiated
@@ -747,12 +751,6 @@ public class TreeProcessor extends AbstractLogEnabled
         // Switch to the new processor (ensure it's never temporarily null)
         this.concreteProcessor = newProcessor;
         this.lastModified = newLastModified;
-
-        
-        // Dispose the old processor, if any
-        if (oldProcessor != null) {
-            oldProcessor.markForDisposal();
-        }
     }
 
     private ConcreteTreeProcessor createConcreteTreeProcessor() {
