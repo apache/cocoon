@@ -61,7 +61,8 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * Default service manager for Cocoon's components.
  *
- * @version SVN $Revision: 1.6 $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class CoreServiceManager
         extends AbstractLogEnabled

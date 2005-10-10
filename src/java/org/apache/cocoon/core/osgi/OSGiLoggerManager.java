@@ -35,6 +35,7 @@ import org.osgi.service.log.LogService;
  * log level is given at manager creation time, and is uses by all log categories within the bundle.
  * 
  * @version $Id$
+ * @since 2.2
  */
 public class OSGiLoggerManager implements LoggerManager {
     

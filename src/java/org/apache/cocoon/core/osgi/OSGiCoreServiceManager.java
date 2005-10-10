@@ -46,6 +46,7 @@ import org.osgi.framework.ServiceRegistration;
  * to non-singleton components).
  * 
  * @version $Id$
+ * @since 2.2
  */
 public class OSGiCoreServiceManager extends CoreServiceManager {
     

@@ -24,7 +24,8 @@ import org.apache.cocoon.core.container.ComponentFactory;
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public abstract class AbstractFactoryHandler extends AbstractComponentHandler {
     

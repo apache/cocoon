@@ -37,6 +37,7 @@ import org.osgi.service.log.LogService;
 
 /**
  * @version $Id$
+ * @since 2.2
  */
 public class OSGiBootstrapEnvironment implements BootstrapEnvironment {
 

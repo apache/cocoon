@@ -42,7 +42,7 @@ import org.apache.commons.lang.NotImplementedException;
  *
  * The core of Cocoon is a singleton object that is created on startup.
  *
- * @version SVN $Id$
+ * @version $Id$
  * @since 2.2
  */
 public class Core {

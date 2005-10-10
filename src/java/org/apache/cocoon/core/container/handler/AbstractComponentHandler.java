@@ -34,7 +34,8 @@ import org.apache.cocoon.core.container.StandaloneServiceSelector;
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public abstract class AbstractComponentHandler 
 implements ComponentHandler {

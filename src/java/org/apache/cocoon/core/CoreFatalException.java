@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.core;
 
+/**
+ * @version $Id$
+ * @since 2.2
+ */
 public final class CoreFatalException extends CoreException {
 
     public CoreFatalException(String message) {

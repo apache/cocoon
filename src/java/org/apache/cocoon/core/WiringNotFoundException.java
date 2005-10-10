@@ -19,7 +19,8 @@ package org.apache.cocoon.core;
 /**
  * Throw this exception in the case that the wiring.xml is not found.
  * 
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class WiringNotFoundException extends RuntimeException {
 

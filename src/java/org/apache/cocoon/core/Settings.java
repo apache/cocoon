@@ -15,11 +15,11 @@
  */
 package org.apache.cocoon.core;
 
-
 /**
  * This object holds the global configuration of Cocoon.
  *
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public interface Settings extends BaseSettings, DynamicSettings {
 

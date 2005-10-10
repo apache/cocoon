@@ -23,6 +23,7 @@ import java.util.Properties;
  * configure Cocoon.
  *
  * @version $Id$
+ * @since 2.2
  */
 public interface PropertyProvider {
 

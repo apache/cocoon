@@ -38,7 +38,8 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public abstract class AbstractServiceManager
 extends AbstractLogEnabled

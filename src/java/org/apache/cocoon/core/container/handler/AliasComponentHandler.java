@@ -24,7 +24,8 @@ import org.apache.cocoon.core.container.CoreServiceManager;
  * A component handler used to alias roles: it delegates all its calls to another
  * handler.
  * 
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class AliasComponentHandler extends AbstractComponentHandler {
 

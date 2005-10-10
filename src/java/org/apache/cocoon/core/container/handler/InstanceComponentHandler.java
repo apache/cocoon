@@ -24,7 +24,8 @@ import org.apache.cocoon.core.container.CoreServiceManager;
 /**
  * A component handler for instances created outside the container.
  * 
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class InstanceComponentHandler extends AbstractComponentHandler {
 

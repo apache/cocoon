@@ -34,7 +34,8 @@ import org.apache.cocoon.components.ComponentInfo;
  * a fully flat configuration by allowing the use of selectors in legacy components and also
  * declaration of hinted components (i.e. with a role of type "rolename/hint") in the service manager.
  *
- * @version SVN $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class DefaultServiceSelector extends AbstractLogEnabled implements ThreadSafe, Serviceable, Configurable, ServiceSelector {
 

@@ -30,7 +30,8 @@ import org.apache.cocoon.core.Core;
 /**
  * Factory for Avalon based components.
  *
- * @version CVS $Id$
+ * @version $Id$
+ * @since 2.2
  */
 public class ComponentFactory {
     
