@@ -30,6 +30,7 @@
     		<block name="tour"/>
     		<block name="forms"/>
     		<block name="ajax"/>
+            <block name="portal-sample"/>
     </blocks>
     <links>
     		<link href="all-samples">All samples</link>
