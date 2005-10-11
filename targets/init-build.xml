@@ -59,15 +59,6 @@
 
     <!-- Use internal.exclude.XXX shadow props used in the
       unless target attributes -->
-    <condition property="internal.exclude.webapp.documentation">
-      <istrue value="${exclude.webapp.documentation}"/>
-    </condition>
-    <condition property="internal.exclude.webapp.javadocs">
-      <or>
-        <istrue value="${exclude.javadocs}"/>
-        <istrue value="${exclude.webapp.javadocs}"/>
-      </or>
-    </condition>
     <condition property="internal.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
