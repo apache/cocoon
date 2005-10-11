@@ -308,11 +308,11 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                 this.contentHandler.endElement(URI, DAY_NODE_NAME,
                         PREFIX + ':' + DAY_NODE_NAME);
                 end.add(Calendar.DAY_OF_MONTH, 1); 		
+				if (firstDay == end.get(Calendar.DAY_OF_WEEK)) { 
+					this.contentHandler.endElement(URI, WEEK_NODE_NAME,
+	                        PREFIX + ':' + WEEK_NODE_NAME);
+				}
             }
-			if (firstDay == end.get(Calendar.DAY_OF_WEEK)) { 
-				this.contentHandler.endElement(URI, WEEK_NODE_NAME,
-                        PREFIX + ':' + WEEK_NODE_NAME);
-			}
         }
         this.contentHandler.endElement(URI, CALENDAR_NODE_NAME,
                 PREFIX + ':' + CALENDAR_NODE_NAME);
