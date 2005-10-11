@@ -72,19 +72,16 @@
       <macrodef name="test-include-block">
         <attribute name="name"/>
         <sequential>
+          <echo message="         exclude.block.@{{name}}: ${{exclude.block.@{{name}}}}"/>
+          <!-- this happens only if user did not explicitly set the property in blocks.properties -->
           <condition property="include.block.@{{name}}">
-            <not>
-              <istrue value="${{exclude.block.@{{name}}}}"/>
-            </not>
+            <and>
+              <equals arg1="${{default.block.mode}}" arg2="include"/>
+              <not><istrue value="${{exclude.block.@{{name}}}}"/></not>
+            </and>
           </condition>
           <condition property="internal.exclude.block.@{{name}}">
-            <and>
-              <isfalse value="${{include.all.blocks}}"/>
-              <or>
-                <istrue value="${{exclude.all.blocks}}"/>
-                <isfalse value="${{include.block.@{{name}}}}"/>
-              </or>
-            </and>
+            <not><istrue value="${{include.block.@{{name}}}}"/></not>
           </condition>
         </sequential>
       </macrodef>
@@ -456,6 +453,14 @@
     <xsl:variable name="cocoon-blocks" select="project[starts-with(@name, 'cocoon-block-')]"/>
 
     <target name="init">
+      <condition property="default.block.mode" value="include">
+        <istrue value="${{include.all.blocks}}"/>
+      </condition>
+      <condition property="default.block.mode" value="exclude">
+        <istrue value="${{exclude.all.blocks}}"/>
+      </condition>
+      <property name="default.block.mode" value="include"/>
+      <echo message="default mode: ${{default.block.mode}}"/>
       <xsl:for-each select="$cocoon-blocks">
         <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
         <test-include-block name="{$block-name}"/>
