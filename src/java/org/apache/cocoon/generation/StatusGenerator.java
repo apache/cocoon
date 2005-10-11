@@ -499,15 +499,15 @@ public class StatusGenerator extends ServiceableGenerator
 
         this.startGroup("Dynamic Settings");
 
-        this.addValue(Settings.KEY_CONFIGURATION_RELOAD_DELAY, s.getConfigurationReloadDelay());
-        this.addValue(Settings.KEY_ALLOW_RELOAD, s.isAllowReload());
+        this.addValue(Settings.KEY_RELOAD_DELAY, s.getConfigurationReloadDelay());
+        this.addValue(Settings.KEY_RELOADING, s.isAllowReload());
         this.addValue(Settings.KEY_UPLOADS_AUTOSAVE, s.isAutosaveUploads());
         this.addValue(Settings.KEY_UPLOADS_ENABLE, s.isEnableUploads());
         this.addValue(Settings.KEY_UPLOADS_MAXSIZE, s.getMaxUploadSize());
         this.addValue(Settings.KEY_UPLOADS_OVERWRITE, s.isAllowOverwrite());
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
-        this.addValue(Settings.KEY_SHOW_COCOON_VERSION, s.isShowCocoonVersion());
+        this.addValue(Settings.KEY_SHOW_VERSION, s.isShowCocoonVersion());
         this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
 
         this.endGroup();
