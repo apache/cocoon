@@ -67,7 +67,7 @@ public class FullScreenCopletAspect extends AbstractAspect {
             final Layout fullScreenLayout = service.getEntryLayout(null);
             if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
                 FullScreenCopletEvent event = new FullScreenCopletEvent( cid, null );
-                XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
+                XMLUtils.createElement(handler, "maximize-uri", service.getComponentManager().getLinkService().getLinkURI(event));
             } else {
                 FullScreenCopletEvent event = new FullScreenCopletEvent( cid, layout );
                 XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
