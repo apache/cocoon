@@ -234,7 +234,7 @@ public class Cocoon
             URLSource urlSource = new URLSource();
             urlSource.init(new URL(settings.getConfiguration()), null);
             this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                                                                     settings.getConfigurationReloadDelay());
+                                                                     settings.getReloadDelay("config"));
 
         } catch (IOException e) {
             throw new ConfigurationException(

@@ -763,7 +763,7 @@ public class CoreUtil {
         // set the blocks classloader for this thread
         Thread.currentThread().setContextClassLoader(this.classloader);        
         
-        if (this.settings.isAllowReload()) {
+        if (this.settings.isReloadingEnabled("config")) {
             boolean reload = false;
 
             if (this.cocoon != null) {

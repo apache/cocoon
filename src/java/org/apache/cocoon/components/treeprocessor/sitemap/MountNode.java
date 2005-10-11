@@ -33,7 +33,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MountNode extends AbstractProcessingNode
                        implements Disposable {
