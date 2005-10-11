@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update">
+      JavaDocs and documentation are no longer copied to the webapp.
+    </action>
     <action dev="BD" type="update" due-to="Sandor Spruit" due-to-email="sandor@cs.uu.nl">
       build.sh: use --noconfig option to avoid problems with local ant settings.
       Does not apply to build.bat, windows ant scripts do not have this option.
