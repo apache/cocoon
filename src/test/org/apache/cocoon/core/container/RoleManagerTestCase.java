@@ -62,8 +62,6 @@ public class RoleManagerTestCase extends MockObjectTestCase {
         .will(returnValue(null));
         child0.expects(once()).method("getAttribute").with(eq("logger"), eq(null))
                 .will(returnValue(null));
-        child0.expects(once()).method("getAttribute").with(eq("logging"), eq(ComponentInfo.LOGGING_LOGKIT))
-                .will(returnValue(ComponentInfo.LOGGING_LOGKIT));
         child0.expects(once()).method("getChildren").with(eq("hint"))
                 .will(returnValue(hints));
         Mock logger = new Mock(Logger.class);
