@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -63,15 +63,6 @@
 
     <!-- Use internal.exclude.XXX shadow props used in the
       unless target attributes -->
-    <condition property="internal.exclude.webapp.documentation">
-      <istrue value="${exclude.webapp.documentation}"/>
-    </condition>
-    <condition property="internal.exclude.webapp.javadocs">
-      <or>
-        <istrue value="${exclude.javadocs}"/>
-        <istrue value="${exclude.webapp.javadocs}"/>
-      </or>
-    </condition>
     <condition property="internal.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
