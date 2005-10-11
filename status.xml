@@ -197,6 +197,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="update">
+      I18n: Refactored XMLResourceBundle to use transient store instead of
+      private cache. Added reload check interval parameter. Support dynamic
+      additions and removals of resource bundles, without need to restart
+      Cocoon.
+    </action>
     <action dev="CZ" type="update">
       JavaDocs and documentation are no longer copied to the webapp.
     </action>

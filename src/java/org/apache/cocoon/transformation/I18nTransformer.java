@@ -818,11 +818,6 @@ public class I18nTransformer extends AbstractTransformer
      */
     private String defaultUntranslated;
 
-    /**
-     * Cache at startup configuration parameter value
-     */
-    private boolean cacheAtStartup;
-
     //
     // Local configuration variables
     //
@@ -989,7 +984,7 @@ public class I18nTransformer extends AbstractTransformer
             String id = catalogueConfs[i].getAttribute("id");
             String name = catalogueConfs[i].getAttribute("name");
 
-            String[] locations = null;
+            String[] locations;
             String location = catalogueConfs[i].getAttribute("location", null);
             Configuration[] locationConf =
                 catalogueConfs[i].getChildren("location");
@@ -1044,13 +1039,8 @@ public class I18nTransformer extends AbstractTransformer
 
         // Obtain default text to use for untranslated messages
         defaultUntranslated = conf.getChild(I18N_UNTRANSLATED).getValue(null);
-
-        // Obtain config option, whether to cache messages at startup time
-        cacheAtStartup = conf.getChild(I18N_CACHE_STARTUP).getValueAsBoolean(false);
-
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Default untranslated text is '" + defaultUntranslated + "'");
-            getLogger().debug((cacheAtStartup ? "will" : "won't") + " cache messages during startup");
         }
     }
 
@@ -1847,8 +1837,8 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // Formatters
-        SimpleDateFormat to_fmt = null;
-        SimpleDateFormat from_fmt = null;
+        SimpleDateFormat to_fmt;
+        SimpleDateFormat from_fmt;
 
         // Date formatting styles
         int srcStyle = DateFormat.DEFAULT;
@@ -1925,7 +1915,7 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // parsed date object
-        Date dateValue = null;
+        Date dateValue;
 
         // pattern overwrites locale format
         if (realSrcPattern) {
@@ -2004,7 +1994,7 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // parsed number
-        Number numberValue = null;
+        Number numberValue;
 
         // locale, may be switched locale
         Locale loc = getLocale(params, I18N_LOCALE_ATTRIBUTE);
@@ -2031,7 +2021,7 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // to format
-        DecimalFormat to_fmt = null;
+        DecimalFormat to_fmt;
         char dec = from_fmt.getDecimalFormatSymbols().getDecimalSeparator();
         int decAt = 0;
         boolean appendDec = false;
