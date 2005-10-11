@@ -58,5 +58,6 @@
 -Dorg.knopflerfish.consoletelnet.pwd=admin
 -Dorg.knopflerfish.consoletelnet.port=23
 
-
-
+# cocoon properties
+# Lazy mode doesn't work yet
+-Dorg.apache.cocoon.core.LazyMode=false
