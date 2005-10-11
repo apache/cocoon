@@ -80,7 +80,7 @@ public class SettingsHelper {
             s.setLoggerManagerClassName(value);
         }
 
-        s.setAllowReload(getInitParameterAsBoolean(config, "allow-reload", s.isAllowReload()));
+        s.setReloadingEnabled(getInitParameterAsBoolean(config, "allow-reload", s.isReloadingEnabled(null)));
 
         handleLoadClass(getInitParameter(config, "load-class"), s);
 
@@ -126,7 +126,7 @@ public class SettingsHelper {
             s.setHideShowTime(false);
         }
 
-        s.setShowCocoonVersion(getInitParameterAsBoolean(config, "show-cocoon-version", s.isShowCocoonVersion()));
+        s.setShowCocoonVersion(getInitParameterAsBoolean(config, "show-cocoon-version", s.isShowVersion()));
 
         s.setManageExceptions(getInitParameterAsBoolean(config, "manage-exceptions", s.isManageExceptions()));
 

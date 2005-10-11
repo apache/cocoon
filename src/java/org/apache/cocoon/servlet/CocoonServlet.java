@@ -263,7 +263,7 @@ public class CocoonServlet extends HttpServlet {
         stopWatch.start();
 
         // add the cocoon header timestamp
-        if (this.coreUtil.getSettings().isShowCocoonVersion()) {
+        if (this.coreUtil.getSettings().isShowVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
         }
 

@@ -48,6 +48,7 @@ import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -92,6 +93,9 @@ public class TreeProcessor extends AbstractLogEnabled
      * (root manager or parent concrete processor)
      */
     protected ServiceManager manager;
+
+    /** The core object. */
+    protected Core core;
 
     /** Last modification time */
     protected long lastModified = 0;
@@ -155,6 +159,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
+        this.core = (Core) this.manager.lookup(Core.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
@@ -191,6 +196,7 @@ public class TreeProcessor extends AbstractLogEnabled
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
+        this.core = (Core) this.manager.lookup(Core.ROLE);
     }
 
     /**
@@ -233,14 +239,15 @@ public class TreeProcessor extends AbstractLogEnabled
     public void configure(Configuration config)
     throws ConfigurationException {
 
-        this.checkReload = config.getAttributeAsBoolean("check-reload", true);
+        this.checkReload = config.getAttributeAsBoolean("check-reload",
+                             this.core.getSettings().isReloadingEnabled("sitemap"));
 
         // Obtain the configuration file, or use the XCONF_URL if none
         // is defined
         String xconfURL = config.getAttribute("config", XCONF_URL);
 
         // Reload check delay. Default is 1 second.
-        this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
+        this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", this.core.getSettings().getReloadDelay("sitemap"));
 
         String fileName = config.getAttribute("file", "sitemap.xmap");
         
@@ -780,8 +787,10 @@ public class TreeProcessor extends AbstractLogEnabled
             }
             this.manager.release(this.fam);
             this.manager.release(this.resolver);
+            this.manager.release(this.core);
             this.resolver = null;
             this.manager = null;
+            this.core = null;
         }
     }
 

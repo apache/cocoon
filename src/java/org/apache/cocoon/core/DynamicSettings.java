@@ -28,12 +28,12 @@ package org.apache.cocoon.core;
 public interface DynamicSettings {
 
     /**
-     * Default value for {@link #isAllowReload()} parameter (false)
+     * Default value for {@link #isReloadingEnabled(String)} parameter (false).
      */
-    boolean ALLOW_RELOAD = false;
+    boolean RELOADING_ENABLED_DEFAULT = false;
 
     /**
-     * Default value for {@link #isEnableUploads()} parameter (false)
+     * Default value for {@link #isEnableUploads()} parameter (false).
      */
     boolean ENABLE_UPLOADS = false;
     boolean SAVE_UPLOADS_TO_DISK = true;
@@ -43,7 +43,7 @@ public interface DynamicSettings {
     boolean HIDE_SHOW_TIME = false;
 
     /**
-     * Default value for {@link #isShowCocoonVersion()} parameter (true)
+     * Default value for {@link #isShowVersion()} parameter (true).
      */
     boolean SHOW_COCOON_VERSION = true;
 
@@ -115,13 +115,25 @@ public interface DynamicSettings {
      * @return Returns the showCocoonVersion.
      * @see #KEY_SHOW_VERSION
      */
-    boolean isShowCocoonVersion();
+    boolean isShowVersion();
 
     /**
-     * @return Returns the allowReload.
+     * This method can be used by components to query if they are
+     * configured to check for reloading.
+     * @param type The type of the component that wants to check for reload.
+     * @return Returns if reloading is enabled for this component.
      * @see #KEY_RELOADING
      */
-    boolean isAllowReload();
+    boolean isReloadingEnabled(String type);
+
+    /**
+     * This method can be used by components to get the configured
+     * delay period inbetween checks.
+     * @param type The type of the component that wants to check for reload.
+     * @return Returns the delay inbetween checks in milliseconds.
+     * @see #KEY_RELOAD_DELAY
+     */
+    long getReloadDelay(String type);
 
     /**
      * @return Returns the autosaveUploads.
@@ -152,12 +164,6 @@ public interface DynamicSettings {
      * @see #KEY_SHOWTIME
      */
     boolean isShowTime();
-
-    /**
-     * @return Returns the configurationReloadDelay.
-     * @see #KEY_RELOAD_DELAY
-     */
-    long getConfigurationReloadDelay();
 
     /**
      * @return Returns the lazyMode.

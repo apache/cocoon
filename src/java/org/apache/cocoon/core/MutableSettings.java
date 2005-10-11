@@ -95,7 +95,7 @@ public class MutableSettings implements Settings {
      * the request parameter "cocoon-reload". It also enables that Cocoon is
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
-    protected boolean allowReload = ALLOW_RELOAD;
+    protected boolean reloadingEnabled = RELOADING_ENABLED_DEFAULT;
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -258,7 +258,7 @@ public class MutableSettings implements Settings {
                     } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                         this.loggerManagerClassName = value;
                     } else if ( key.equals(KEY_RELOADING) ) {
-                        this.allowReload = BooleanUtils.toBoolean(value);
+                        this.reloadingEnabled = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
                         this.enableUploads = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
@@ -315,8 +315,15 @@ public class MutableSettings implements Settings {
     /**
      * @return Returns the allowReload.
      */
-    public boolean isAllowReload() {
-        return this.allowReload;
+    public boolean isReloadingEnabled(String type) {
+        boolean result = this.reloadingEnabled;
+        if ( type != null ) {
+            String o = this.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
+            if ( o != null ) {
+                result = BooleanUtils.toBoolean(o);
+            }
+        }
+        return result;
     }
 
     /**
@@ -441,7 +448,7 @@ public class MutableSettings implements Settings {
     /**
      * @return Returns the showCocoonVersion flag.
      */
-    public boolean isShowCocoonVersion() {
+    public boolean isShowVersion() {
         return this.showCocoonVersion;
     }
 
@@ -498,8 +505,15 @@ public class MutableSettings implements Settings {
     /**
      * @return Returns the configurationReloadDelay.
      */
-    public long getConfigurationReloadDelay() {
-        return configurationReloadDelay;
+    public long getReloadDelay(String type) {
+        long value = this.configurationReloadDelay;
+        if ( type != null ) {
+            String o = this.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
+            if ( o != null ) {
+                value = NumberUtils.toLong(o);
+            }
+        }
+        return value;
     }
 
     /**
@@ -535,7 +549,7 @@ public class MutableSettings implements Settings {
             } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                 value = this.loggerManagerClassName;
             } else if ( sKey.equals(KEY_RELOADING) ) {
-                value = String.valueOf(this.allowReload);
+                value = String.valueOf(this.reloadingEnabled);
             } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
                 value = String.valueOf(this.enableUploads);
             } else if ( sKey.equals(KEY_UPLOADS_DIRECTORY) ) {
@@ -595,7 +609,7 @@ public class MutableSettings implements Settings {
           "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
-          KEY_RELOADING + " : " + this.allowReload + '\n' +
+          KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
           KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
           KEY_FORCE_PROPERTIES + " : " + this.toString(this.forceProperties) + '\n' +
@@ -672,9 +686,9 @@ public class MutableSettings implements Settings {
     /**
      * @param allowReload The allowReload to set.
      */
-    public void setAllowReload(boolean allowReload) {
+    public void setReloadingEnabled(boolean allowReload) {
         this.checkWriteable();
-        this.allowReload = allowReload;
+        this.reloadingEnabled = allowReload;
     }
 
     /**
@@ -920,5 +934,23 @@ public class MutableSettings implements Settings {
     public void addToPropertyProviders(String className) {
         this.checkWriteable();
         this.propertyProviders.add(className);
+    }
+
+    /**
+     * @see org.apache.cocoon.core.Settings#getProperties(java.lang.String)
+     */
+    public List getProperties(String keyPrefix) {
+        final List props = new ArrayList();
+        for(int i=0; i<this.properties.size(); i++) {
+            final Properties p = (Properties)this.properties.get(i);
+            final Iterator kI = p.keySet().iterator();
+            while ( kI.hasNext() ) {
+                final String name = (String)kI.next();
+                if ( name.startsWith(keyPrefix) && !props.contains(name) ) {
+                    props.add(name);
+                }
+            }
+        }
+        return props;
     }
 }

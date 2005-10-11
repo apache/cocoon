@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,18 +16,22 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.core.Core;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
-public class MountNodeBuilder extends AbstractProcessingNodeBuilder implements ThreadSafe {
+public class MountNodeBuilder
+    extends AbstractProcessingNodeBuilder
+    implements ThreadSafe {
 
     /** This builder has no parameters -- return <code>false</code> */
     protected boolean hasParameters() {
@@ -35,12 +39,12 @@ public class MountNodeBuilder extends AbstractProcessingNodeBuilder implements T
     }
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
-
+        final Core core = (Core)manager.lookup(Core.ROLE);
         MountNode node = new MountNode(
             VariableResolverFactory.getResolver(config.getAttribute("uri-prefix"), manager),
             VariableResolverFactory.getResolver(config.getAttribute("src"), manager),
             this.treeBuilder.getProcessor().getWrappingProcessor(),
-            config.getAttributeAsBoolean("check-reload", true),
+            config.getAttributeAsBoolean("check-reload", core.getSettings().isReloadingEnabled("sitemap")),
             config.getAttributeAsBoolean("pass-through", false)
         );
   
