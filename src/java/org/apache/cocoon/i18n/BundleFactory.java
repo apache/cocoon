@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.apache.cocoon.i18n;
 
-import java.util.Locale;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+
+import java.util.Locale;
 
 /**
  * Bundle Factory implementations are responsible for loading and providing
@@ -26,7 +26,7 @@ import org.apache.avalon.framework.component.ComponentException;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface BundleFactory extends Component {
 
@@ -36,11 +36,31 @@ public interface BundleFactory extends Component {
     String ROLE = BundleFactory.class.getName();
 
     /**
-     * Constants for configuration keys
+     * Constants for bundle factory configuration keys
      */
     static class ConfigurationKeys {
-        public static final String CACHE_AT_STARTUP = "cache-at-startup";
+        /**
+         * Configuration element specifying default location of the
+         * resource bundles.
+         *
+         * @see BundleFactory#select(String, String)
+         * @see BundleFactory#select(String, java.util.Locale)
+         */
         public static final String ROOT_DIRECTORY = "catalogue-location";
+
+        /**
+         * Configuration element specifying role of the Store instance to use
+         * for storing cached bundles
+         * @since 2.1.8
+         */
+        public static final String STORE_ROLE = "store-role";
+
+        /**
+         * Configuration element specifying delay (in ms) between
+         * reload checks.
+         * @since 2.1.8
+         */
+        public static final String RELOAD_INTERVAL = "reload-interval";
     }
 
     /**
@@ -101,5 +121,10 @@ public interface BundleFactory extends Component {
      */
     Bundle select(String bundleName, Locale locale) throws ComponentException;
 
+    /**
+     * Releases a bundle back to the bundle factory when it's not needed
+     * anymore.
+     * @param bundle the bundle
+     */
     void release(Bundle bundle);
 }
