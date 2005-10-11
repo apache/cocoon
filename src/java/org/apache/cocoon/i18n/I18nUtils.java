@@ -33,7 +33,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class I18nUtils {
 

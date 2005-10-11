@@ -555,14 +555,22 @@
       | I18n Bundle Factory
       |
       | BundleFactory loads Bundles with i18n resources for the given locale.
-      | Bundles are loaded from the 'catalogue_location'. Bundle base name is
-      | 'catalogue_name' value.
-      | If 'cache-at-startup' is true then BundleFactory preloads bundles.
+      | Default location for bundles specified with the 'catalogue-location'.
       +-->
   <i18n-bundles logger="core.i18n">
-    <catalogue-name>messages</catalogue-name>
+    <!--+
+        | Role of the store component to be used for caching loaded bundles.
+        +-->
+    <store-role>org.apache.excalibur.store.Store/TransientStore</store-role>
+    <!--+
+        | Reload check delay. Default 60000 (1 minute), 0 means no delay
+        | (check always), -1 means no reload.
+        +-->
+    <reload-interval>60000</reload-interval>
+    <!--+
+        | Location of the default message catalogue. Optional.
+        +-->
     <catalogue-location>context://samples/i18n/translations</catalogue-location>
-    <cache-at-startup>true</cache-at-startup>
   </i18n-bundles>
 
 <!-- ====================== System Components =========================== -->

@@ -15,34 +15,34 @@
  */
 package org.apache.cocoon.i18n;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.xml.ParamSaxBuffer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.ExpiresValidity;
+
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.validity.DelayedValidity;
+import org.apache.cocoon.xml.ParamSaxBuffer;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
+import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * Implementation of <code>Bundle</code> interface for XML resources. Represents a
  * single XML message bundle.
  *
+ * <p>
  * XML format for this resource bundle implementation is the following:
  * <pre>
  * &lt;catalogue xml:lang="en"&gt;
@@ -52,15 +52,19 @@ import org.xml.sax.SAXException;
  * &lt;/catalogue&gt;
  * </pre>
  *
+ * <p>
  * Value can be any well formed XML snippet and it will be cached by the key specified
  * in the attribute <code>key</code>. Objects returned by this {@link Bundle} implementation
  * are instances of the {@link ParamSaxBuffer} class.
+ *
+ * <p>
+ * If value for a key is not present in this bundle, parent bundle will be queried.
  *
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
  * @version $Id$
  */
 public class XMLResourceBundle extends AbstractLogEnabled
-                               implements Bundle, Serviceable {
+                               implements Bundle {
 
     /**
      * Namespace for the Bundle markup
@@ -105,12 +109,8 @@ public class XMLResourceBundle extends AbstractLogEnabled
     /**
      * Objects stored in the bundle
      */
-    protected HashMap values;
+    protected Map values;
 
-    /**
-     * Service Manager
-     */
-    protected ServiceManager manager;
 
     /**
      * Processes XML bundle file and creates map of values
@@ -159,6 +159,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
                     this.namespace = ns;
                     this.state++;
                     break;
+
                 case 1:
                     // <i18n:message>
                     if (!EL_MESSAGE.equals(localName)) {
@@ -178,9 +179,11 @@ public class XMLResourceBundle extends AbstractLogEnabled
                     this.values.put(key, this.buffer);
                     this.state++;
                     break;
+
                 case 2:
                     this.buffer.startElement(ns, localName, qName, atts);
                     break;
+
                 default:
                     throw new SAXException("Internal error: Invalid state");
             }
@@ -190,10 +193,12 @@ public class XMLResourceBundle extends AbstractLogEnabled
             switch (this.state) {
                 case 0:
                     break;
+
                 case 1:
                     // </i18n:catalogue>
                     this.state--;
                     break;
+
                 case 2:
                     if (this.namespace.equals(ns) && EL_MESSAGE.equals(localName)) {
                         // </i18n:message>
@@ -203,6 +208,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
                         this.buffer.endElement(ns, localName, qName);
                     }
                     break;
+
                 default:
                     throw new SAXException("Internal error: Invalid state");
             }
@@ -233,89 +239,101 @@ public class XMLResourceBundle extends AbstractLogEnabled
         }
     }
 
-    /**
-     * Compose this instance
-     *
-     * @param manager The <code>ServiceManager</code> instance
-     * @throws ServiceException
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
 
     /**
-     * Implements Disposable interface for this class.
-     */
-    public void dispose() {
-        this.manager = null;
-    }
-
-    /**
-     * Initalize the bundle
-     *
+     * Construct a bundle.
      * @param sourceURI source URI of the XML bundle
      * @param locale locale
      * @param parent parent bundle of this bundle
-     *
-     * @throws IOException if an IO error occurs while reading the file
-     * @throws ProcessingException if an error occurs while loading the bundle
-     * @throws SAXException if an error occurs while loading the bundle
      */
-    public void init(String sourceURI, Locale locale, Bundle parent)
-    throws IOException, ProcessingException, SAXException {
+    public XMLResourceBundle(String sourceURI, Locale locale, Bundle parent) {
         this.sourceURI = sourceURI;
         this.locale = locale;
         this.parent = parent;
-        this.values = new HashMap();
-        load();
+        this.values = Collections.EMPTY_MAP;
     }
 
     /**
-     * Load the XML bundle, based on the source URI.
-     *
-     * @exception IOException if an IO error occurs while reading the file
-     * @exception ProcessingException if no parser is configured
-     * @exception SAXException if an error occurs while parsing the file
+     * (Re)Loads the XML bundle if necessary, based on the source URI.
+     * @return true if reloaded successfully
      */
-    protected void load() throws IOException, ProcessingException, SAXException {
-        Source source = null;
-        SourceResolver resolver = null;
+    protected boolean reload(SourceResolver resolver, long interval) {
+        Source newSource = null;
+        Map newValues;
+
         try {
             int valid = this.validity == null ? SourceValidity.INVALID : this.validity.isValid();
             if (valid != SourceValidity.VALID) {
                 // Saved validity is not valid, get new source and validity
-                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-                source = resolver.resolveURI(this.sourceURI);
-                SourceValidity sourceValidity = source.getValidity();
-                if (valid == SourceValidity.INVALID || this.validity.isValid(sourceValidity) != SourceValidity.VALID) {
-                    HashMap values = new HashMap();
-                    SourceUtil.toSAX(source, new SAXContentHandler(values));
-                    this.validity = sourceValidity;
-                    this.values = values;
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Loaded XML bundle: " + this.sourceURI + ", locale: " + this.locale);
+                newSource = resolver.resolveURI(this.sourceURI);
+                SourceValidity newValidity = newSource.getValidity();
+
+                if (valid == SourceValidity.INVALID || this.validity.isValid(newValidity) != SourceValidity.VALID) {
+                    newValues = new HashMap();
+                    SourceUtil.toSAX(newSource, new SAXContentHandler(newValues));
+                    synchronized (this) {
+                        // Update source validity and values
+                        if (interval > 0 && newValidity != null) {
+                            this.validity = new DelayedValidity(interval, newValidity);
+                        } else {
+                            this.validity = newValidity;
+                        }
+                        this.values = newValues;
                     }
                 }
             }
-        } catch (ServiceException e) {
-            throw new ProcessingException("Can't lookup source resolver", e);
-        } catch (MalformedURLException e) {
-            throw new SourceNotFoundException("Invalid resource URL: " + this.sourceURI, e);
-        } finally {
-            if (source != null) {
-                resolver.release(source);
-            }
-            this.manager.release(resolver);
-        }
-    }
 
-    /**
-     * Gets the validity of the bundle.
-     *
-     * @return the validity
-     */
-    public SourceValidity getValidity() {
-        return this.validity;
+            // Success
+            return true;
+
+        } catch (MalformedURLException e) {
+            getLogger().error("Bundle <" + this.sourceURI + "> not loaded: Invalid URI", e);
+            newValues = Collections.EMPTY_MAP;
+
+        } catch (ResourceNotFoundException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
+            } else if (getLogger().isInfoEnabled()) {
+                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+            }
+            newValues = Collections.EMPTY_MAP;
+
+        } catch (SourceNotFoundException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
+            } else if (getLogger().isInfoEnabled()) {
+                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+            }
+            newValues = Collections.EMPTY_MAP;
+
+        } catch (SAXException e) {
+            getLogger().error("Bundle <" + sourceURI + "> not loaded: Invalid XML", e);
+            // Keep existing loaded values
+            newValues = this.values;
+
+        } catch (Exception e) {
+            getLogger().error("Bundle <" + sourceURI + "> not loaded: Exception", e);
+            // Keep existing loaded values
+            newValues = this.values;
+
+        } finally {
+            if (newSource != null) {
+                resolver.release(newSource);
+            }
+        }
+
+        synchronized (this) {
+            // Use expires validity to delay next reloading.
+            if (interval > 0) {
+                this.validity = new ExpiresValidity(interval);
+            } else {
+                this.validity = null;
+            }
+            this.values = newValues;
+        }
+
+        // Failure
+        return false;
     }
 
     /**
@@ -328,10 +346,28 @@ public class XMLResourceBundle extends AbstractLogEnabled
     }
 
     /**
-     * Get Object value by key.
+     * Gets the source URI of the bundle.
+     *
+     * @return the source URI
+     */
+    public String getSourceURI() {
+        return this.sourceURI;
+    }
+
+    /**
+     * Gets the validity of the bundle.
+     *
+     * @return the validity
+     */
+    public SourceValidity getValidity() {
+        return this.validity;
+    }
+
+    /**
+     * Get an instance of the {@link ParamSaxBuffer} associated with the key.
      *
      * @param key the key
-     * @return the value
+     * @return the value, or null if no value associated with the key.
      */
     public Object getObject(String key) {
         if (key == null) {
@@ -339,18 +375,22 @@ public class XMLResourceBundle extends AbstractLogEnabled
         }
 
         Object value = this.values.get(key);
-        if (value == null && this.parent != null) {
-            value = this.parent.getObject(key);
+        if (value != null) {
+            return value;
         }
 
-        return value;
+        if (this.parent != null) {
+            return this.parent.getObject(key);
+        }
+
+        return null;
     }
 
     /**
-     * Get String value by key.
+     * Get a string representation of the value object by key.
      *
      * @param key the key
-     * @return the value
+     * @return the string value, or null if no value associated with the key.
      */
     public String getString(String key) {
         if (key == null) {
@@ -362,31 +402,10 @@ public class XMLResourceBundle extends AbstractLogEnabled
             return value.toString();
         }
 
-        if(this.parent != null) {
+        if (this.parent != null) {
             return this.parent.getString(key);
         }
 
         return null;
-    }
-
-    /**
-     * Return a set of keys.
-     *
-     * @return the enumeration of keys
-     */
-    public Set keySet() {
-        return Collections.unmodifiableSet(this.values.keySet());
-    }
-
-    /**
-     * Reload this bundle if URI's timestamp is newer than ours.
-     */
-    public void update() {
-        try {
-            load();
-        } catch (Exception e) {
-            getLogger().info("Resource update failed. " + this.sourceURI + ", locale: " + this.locale
-                             + " Exception: " + e);
-        }
     }
 }
