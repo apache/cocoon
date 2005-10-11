@@ -81,16 +81,9 @@ public class ComponentFactory {
         Logger actualLogger = this.environment.logger;
         final String category = this.serviceInfo.getLoggerCategory();
         if ( category != null ) {
-            if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_LOGKIT ) {
-                // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
-                if( this.environment.loggerManager != null ) {
-                    actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
-                }
-            } else if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_LOG4J ) {
-                // FIXME - activate me
-                // actualLogger = new Log4JLogger(org.apache.log4j.Logger.getLogger(category));
-            } else if ( info.getLoggingSystem() == ComponentInfo.LOGGING_SYSTEM_COMMONSLOGGING ) {
-                // FIXME - we don't have a wrapper for this
+            // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
+            if( this.environment.loggerManager != null ) {
+                actualLogger = this.environment.loggerManager.getLoggerForCategory(category);
             }
         }
         this.componentLogger = actualLogger;

@@ -34,16 +34,7 @@ public final class ComponentInfo {
     public static final String TYPE_POOLED = "pooled";
     public static final String TYPE_NON_THREAD_SAFE_POOLED = "non-thread-safe-pooled";
 
-    public static final int LOGGING_SYSTEM_LOGKIT = 0;
-    public static final int LOGGING_SYSTEM_LOG4J  = 1;
-    public static final int LOGGING_SYSTEM_COMMONSLOGGING = 2;
-
-    public static final String LOGGING_LOGKIT = "logkit";
-    public static final String LOGGING_LOG4J = "log4j";
-    public static final String LOGGING_COMMONSLOGGING = "commons";
-
     private int model;
-    private int loggingSystem;
     private String initMethodName;
     private String destroyMethodName;
     private String poolInMethodName;
@@ -54,7 +45,6 @@ public final class ComponentInfo {
 
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
-        this.loggingSystem = LOGGING_SYSTEM_LOGKIT;
     }
 
     /**
@@ -185,14 +175,6 @@ public final class ComponentInfo {
         this.setDestroyMethodName(attr.getAttribute("destroy", null));
         // logging
         this.setLoggerCategory(attr.getAttribute("logger", null));
-        final String logSystem = attr.getAttribute("logging", LOGGING_LOGKIT);
-        if ( LOGGING_LOG4J.equals(logSystem) ) {
-            this.setLoggingSystem(LOGGING_SYSTEM_LOG4J);
-        } else if (LOGGING_COMMONSLOGGING.equals(logSystem)) {
-            this.setLoggingSystem(LOGGING_SYSTEM_COMMONSLOGGING);
-        } else if ( LOGGING_LOGKIT.equals(logSystem) ) {
-            this.setLoggingSystem(LOGGING_SYSTEM_LOGKIT);
-        }
     }
 
     public ComponentInfo duplicate() {
@@ -205,7 +187,6 @@ public final class ComponentInfo {
         info.serviceClassName = this.serviceClassName;
         info.configuration = this.configuration;
         info.loggerCategory = this.loggerCategory;
-        info.loggingSystem = this.loggingSystem;
 
         return info;
     }
@@ -222,19 +203,5 @@ public final class ComponentInfo {
      */
     public void setLoggerCategory(String loggerCategory) {
         this.loggerCategory = loggerCategory;
-    }
-
-    /**
-     * @return Returns the loggingSystem.
-     */
-    public int getLoggingSystem() {
-        return this.loggingSystem;
-    }
-
-    /**
-     * @param loggingSystem The loggingSystem to set.
-     */
-    public void setLoggingSystem(int loggingSystem) {
-        this.loggingSystem = loggingSystem;
     }
 }
