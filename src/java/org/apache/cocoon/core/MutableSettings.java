@@ -207,7 +207,7 @@ public class MutableSettings implements Settings {
     protected String overrideLogLevel;
 
     /**
-     * Delay between reload checks for the configuration
+     * Delay between reload checks for the configuration.
      */
     protected long configurationReloadDelay = 1000;
 
@@ -245,7 +245,7 @@ public class MutableSettings implements Settings {
 
                     if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
-                    } else if ( key.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
+                    } else if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.configurationReloadDelay = NumberUtils.toLong(value);
                     } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
                         this.loggingConfiguration = value;
@@ -257,7 +257,7 @@ public class MutableSettings implements Settings {
                         this.bootstrapLogLevel = value;
                     } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                         this.loggerManagerClassName = value;
-                    } else if ( key.equals(KEY_ALLOW_RELOAD) ) {
+                    } else if ( key.equals(KEY_RELOADING) ) {
                         this.allowReload = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
                         this.enableUploads = BooleanUtils.toBoolean(value);
@@ -279,7 +279,7 @@ public class MutableSettings implements Settings {
                         this.showTime = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
                         this.hideShowTime = BooleanUtils.toBoolean(value);
-                    } else if ( key.equals(KEY_SHOW_COCOON_VERSION) ) {
+                    } else if ( key.equals(KEY_SHOW_VERSION) ) {
                         this.showCocoonVersion = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
                         this.manageExceptions = BooleanUtils.toBoolean(value);
@@ -522,7 +522,7 @@ public class MutableSettings implements Settings {
             final String sKey = key.substring(KEYPREFIX.length());
             if ( sKey.equals(KEY_CONFIGURATION) ) {
                 value = this.configuration;
-            } else if ( sKey.equals(KEY_CONFIGURATION_RELOAD_DELAY) ) {
+            } else if ( sKey.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.configurationReloadDelay);
             } else if ( sKey.equals(KEY_LOGGING_CONFIGURATION) ) {
                 value = this.loggingConfiguration;
@@ -534,7 +534,7 @@ public class MutableSettings implements Settings {
                 value = this.bootstrapLogLevel;
             } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
                 value = this.loggerManagerClassName;
-            } else if ( sKey.equals(KEY_ALLOW_RELOAD) ) {
+            } else if ( sKey.equals(KEY_RELOADING) ) {
                 value = String.valueOf(this.allowReload);
             } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
                 value = String.valueOf(this.enableUploads);
@@ -594,8 +594,8 @@ public class MutableSettings implements Settings {
         return "Settings:\n" +
           "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
-          KEY_CONFIGURATION_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
-          KEY_ALLOW_RELOAD + " : " + this.allowReload + '\n' +
+          KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
+          KEY_RELOADING + " : " + this.allowReload + '\n' +
           KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
           KEY_FORCE_PROPERTIES + " : " + this.toString(this.forceProperties) + '\n' +
@@ -617,7 +617,7 @@ public class MutableSettings implements Settings {
           KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
           KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
-          KEY_SHOW_COCOON_VERSION + " : " + this.showCocoonVersion + '\n' +
+          KEY_SHOW_VERSION + " : " + this.showCocoonVersion + '\n' +
           KEY_LAZY_MODE + " : " + this.lazyMode + '\n';
     }
 

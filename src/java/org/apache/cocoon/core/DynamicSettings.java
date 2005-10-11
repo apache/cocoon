@@ -53,7 +53,7 @@ public interface DynamicSettings {
      * the request parameter "cocoon-reload". It also enables that Cocoon is
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
-    String KEY_ALLOW_RELOAD = "allow.reload";
+    String KEY_RELOADING = "reloading";
 
     /**
      * Causes all files in multipart requests to be processed.
@@ -93,12 +93,12 @@ public interface DynamicSettings {
     /**
      * If true, the X-Cocoon-Version response header will be included.
      */
-    String KEY_SHOW_COCOON_VERSION = "showcocoonversion";
+    String KEY_SHOW_VERSION = "show-version";
 
     /**
      * Delay between reload checks for the configuration
      */
-    String KEY_CONFIGURATION_RELOAD_DELAY = "configuration.reloaddelay";
+    String KEY_RELOAD_DELAY = "reload-delay";
 
     /**
      * Lazy mode for component loading
@@ -113,13 +113,13 @@ public interface DynamicSettings {
 
     /**
      * @return Returns the showCocoonVersion.
-     * @see #KEY_SHOW_COCOON_VERSION
+     * @see #KEY_SHOW_VERSION
      */
     boolean isShowCocoonVersion();
 
     /**
      * @return Returns the allowReload.
-     * @see #KEY_ALLOW_RELOAD
+     * @see #KEY_RELOADING
      */
     boolean isAllowReload();
 
@@ -155,7 +155,7 @@ public interface DynamicSettings {
 
     /**
      * @return Returns the configurationReloadDelay.
-     * @see #KEY_CONFIGURATION_RELOAD_DELAY
+     * @see #KEY_RELOAD_DELAY
      */
     long getConfigurationReloadDelay();
 
