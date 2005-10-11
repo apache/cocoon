@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.log.ContextMap;
+import org.apache.log.Hierarchy;
 
 /**
  * This is an extension of the {@link LoggerManager}. It can be used to
@@ -26,12 +27,17 @@ import org.apache.log.ContextMap;
  * logging implementation to access and log information about the current
  * request.
  * 
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
 public class CocoonLogKitLoggerManager 
     extends LogKitLoggerManager
     implements PerRequestLoggerManager {
+    
+    public CocoonLogKitLoggerManager() {
+        // Use the default hierarchy, which is also used by commons-logging
+        super(Hierarchy.getDefaultHierarchy());
+    }
 
     /**
      * @see org.apache.cocoon.core.logging.PerRequestLoggerManager#initializePerRequestLoggingContext(org.apache.cocoon.environment.Environment)
