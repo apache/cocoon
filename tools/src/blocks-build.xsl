@@ -72,8 +72,6 @@
       <macrodef name="test-include-block">
         <attribute name="name"/>
         <sequential>
-          <echo message="         exclude.block.@{{name}}: ${{exclude.block.@{{name}}}}"/>
-          <!-- this happens only if user did not explicitly set the property in blocks.properties -->
           <condition property="include.block.@{{name}}">
             <and>
               <equals arg1="${{default.block.mode}}" arg2="include"/>
@@ -460,7 +458,6 @@
         <istrue value="${{exclude.all.blocks}}"/>
       </condition>
       <property name="default.block.mode" value="include"/>
-      <echo message="default mode: ${{default.block.mode}}"/>
       <xsl:for-each select="$cocoon-blocks">
         <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
         <test-include-block name="{$block-name}"/>
