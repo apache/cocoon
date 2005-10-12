@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.components.variables;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -65,9 +65,7 @@ public class DefaultVariableResolverFactory
     }
 
     public void release(VariableResolver resolver) {
-        if ( resolver != null ) {
-            ((Disposable)resolver).dispose();
-        }
+        ContainerUtil.dispose(resolver);
     }
     
     /**
