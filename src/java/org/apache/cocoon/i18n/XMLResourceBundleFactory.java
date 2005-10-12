@@ -26,6 +26,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.store.Store;
 
@@ -223,7 +225,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      */
     private XMLResourceBundle _select(String[] directories, int index, String name,
                                       Locale locale)
-    throws ComponentException {
+    throws Exception {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Selecting from: " + name + ", locale: " + locale +
                               ", directory: " + directories[index]);
@@ -310,7 +312,8 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * Creates a cache key for the bundle.
      * @return the cache key
      */
-    protected String getCacheKey(String[] directories, int index, String name, Locale locale) {
+    protected String getCacheKey(String[] directories, int index, String name, Locale locale)
+    throws SourceException {
         StringBuffer cacheKey = new StringBuffer("XRB");
         for (; index < directories.length; index++) {
             cacheKey.append(":");
@@ -328,7 +331,8 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * @param locale  the locale of the bundle
      * @return        the source URI for the bundle
      */
-    protected String getSourceURI(String base, String name, Locale locale) {
+    protected String getSourceURI(String base, String name, Locale locale)
+    throws SourceException {
         // If base is null default to the current location
         if (base == null) {
             base = "";
@@ -344,7 +348,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
             }
             this.resolver.release(src);
         } catch (IOException e) {
-            throw new CascadingRuntimeException("Cannot resolve " + base, e);
+            throw new SourceNotFoundException("Cannot resolve catalogue base URI <" + base + ">", e);
         }
 
         sb.append(name);
