@@ -27,6 +27,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <xsl:param name="contextPath"/>
+  <xsl:variable name="stdLinks" select="samples/links/link[not(@role)]"/>
+  <xsl:variable name="seeAlsoLinks" select="samples/links/link[@role='see-also']"/>
 
   <xsl:template match="/">
     <html>
@@ -48,11 +50,14 @@
          <tr>
            <td width="75%">
              <h2><xsl:value-of select="samples/@name"/></h2>
+             <xsl:if test="$seeAlsoLinks">
+               <div class="seeAlsoLinks">
+                 <b>See also:</b>&#160;<xsl:apply-templates select="$seeAlsoLinks"/>
+               </div>
+             </xsl:if>
            </td>
            <td nowrap="nowrap" align="right">
-	           <xsl:if test="samples/links/*">
-	             <xsl:apply-templates select="samples/links"/>
-	           </xsl:if>
+	           <xsl:apply-templates select="$stdLinks"/>
 	           <xsl:if test="not(samples/@add-view-links='false')">
 		             Orthogonal views:
 		             <a href="?cocoon-view=content">Content</a>
