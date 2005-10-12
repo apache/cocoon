@@ -74,14 +74,7 @@ import org.apache.commons.jexl.util.introspection.UberspectImpl;
 import org.apache.commons.jexl.util.introspection.VelMethod;
 import org.apache.commons.jexl.util.introspection.VelPropertyGet;
 import org.apache.commons.jexl.util.introspection.VelPropertySet;
-import org.apache.commons.jxpath.CompiledExpression;
-import org.apache.commons.jxpath.DynamicPropertyHandler;
-import org.apache.commons.jxpath.JXPathBeanInfo;
-import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.JXPathContextFactory;
-import org.apache.commons.jxpath.JXPathIntrospector;
-import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.jxpath.Variables;
+import org.apache.commons.jxpath.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
@@ -2434,7 +2427,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         final Object session = request.getSession(false);
         final Object app =  ObjectModelHelper.getContext(objectModel);
         cocoon = new HashMap();
-        cocoon.put("request", FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
+        Object fomRequest = FOM_JavaScriptFlowHelper.getFOM_Request(objectModel);
+        cocoon.put("request", fomRequest != null ? fomRequest : request);
         if (session != null) {
             cocoon.put("session", FOM_JavaScriptFlowHelper.getFOM_Session(objectModel));
         }
