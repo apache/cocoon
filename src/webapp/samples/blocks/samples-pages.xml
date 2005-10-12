@@ -33,7 +33,7 @@
             <block name="portal-sample"/>
     </blocks>
     <links>
-    		<link href="all-samples">All samples</link>
+    		<link role="see-also" href="all-samples">All samples</link>
     		<link href="/">Home</link>
     </links>
   </page>
@@ -44,7 +44,7 @@
     </title>
     <blocks/>
     <links>
-    		<link href="main-samples">Main samples</link>
+    		<link role="see-also" href="main-samples">Main samples</link>
     		<link href="../test/">Test pages</link>
     </links>
   </page>
