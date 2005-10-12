@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.i18n;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -31,8 +30,13 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.store.Store;
 
+import org.apache.cocoon.util.NetUtils;
+
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * This is the XMLResourceBundleFactory, the method for getting and creating
@@ -312,7 +316,8 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * Creates a cache key for the bundle.
      * @return the cache key
      */
-    protected String getCacheKey(String[] directories, int index, String name, Locale locale) {
+    protected String getCacheKey(String[] directories, int index, String name, Locale locale)
+    throws ComponentException {
         StringBuffer cacheKey = new StringBuffer("XRB");
         for (; index < directories.length; index++) {
             cacheKey.append(":");
@@ -330,27 +335,40 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * @param locale  the locale of the bundle
      * @return        the source URI for the bundle
      */
-    protected String getSourceURI(String base, String name, Locale locale) {
+    protected String getSourceURI(String base, String name, Locale locale)
+    throws ComponentException {
         // If base is null default to the current location
         if (base == null) {
             base = "";
         }
 
+        // Resolve base URI
+        Source src = null;
+        Map parameters = Collections.EMPTY_MAP;
         StringBuffer sb = new StringBuffer();
         try {
-            Source src = this.resolver.resolveURI(base);
-            String uri = src.getURI();
+            src = this.resolver.resolveURI(base);
+
+            // Deparameterize base URL before adding catalogue name
+            String uri = NetUtils.deparameterize(src.getURI(),
+                                                 parameters = new HashMap(7));
+
+            // Append trailing slash
             sb.append(uri);
             if (!uri.endsWith("/")) {
                 sb.append('/');
             }
-            this.resolver.release(src);
+
         } catch (IOException e) {
-            throw new CascadingRuntimeException("Cannot resolve " + base, e);
+            throw new ComponentException("Cannot resolve catalogue base URI <" + base + ">", name, e);
+        } finally {
+            this.resolver.release(src);
         }
 
+        // Append catalogue name
         sb.append(name);
 
+        // Append catalogue locale
         if (locale != null) {
             if (!locale.getLanguage().equals("")) {
                 sb.append("_");
@@ -367,12 +385,14 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
         }
         sb.append(".xml");
 
-        String result = sb.toString();
+        // Reconstruct complete bundle URI with parameters
+        String uri = NetUtils.parameterize(sb.toString(), parameters);
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Resolved name: " + name +
-                              ", locale: " + locale + " --> " + result);
+                              ", locale: " + locale + " --> " + uri);
         }
-        return result;
+        return uri;
     }
 
     /**
