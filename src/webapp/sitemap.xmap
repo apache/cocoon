@@ -223,11 +223,11 @@
         +-->
     <map:match pattern="~*/**">
       <!-- unix -->
-      <map:mount check-reload="yes" src="/home/{1}/public_html/" uri-prefix="~{1}"/>
+      <map:mount src="/home/{1}/public_html/" uri-prefix="~{1}"/>
       <!-- macosx -->
-      <!--map:mount check-reload="yes" src="/Users/{1}/Sites/" uri-prefix="~{1}"/-->
+      <!--map:mount src="/Users/{1}/Sites/" uri-prefix="~{1}"/-->
       <!-- win32 -->
-      <!--map:mount check-reload="yes" src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/-->
+      <!--map:mount src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/-->
     </map:match>
 
     <!--+
@@ -281,7 +281,7 @@
         | in the requested folder.
         +-->
     <map:match pattern="*/**">
-      <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+      <map:mount src="{1}/" uri-prefix="{1}"/>
     </map:match>
 
     <!--+

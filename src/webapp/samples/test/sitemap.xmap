@@ -81,7 +81,7 @@
 
             <!-- mount subdirectories to contain tests -->
             <map:match pattern="*/**">
-              <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+              <map:mount src="{1}/" uri-prefix="{1}"/>
             </map:match>
 
         </map:pipeline>

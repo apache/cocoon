@@ -19,7 +19,7 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>    	
     <map:pipeline>
-      <map:mount check-reload="true" uri-prefix=""
+      <map:mount uri-prefix=""
                  src="elsewhere/sitemap.xmap" pass-through="true"/>
     
       <map:match pattern="sub/**">
@@ -68,7 +68,7 @@
     	  
     	  <!-- a test that produces an NPE in SitemapSource when there's a pass-through mount in the same directory -->
     	  
-    	  <map:mount check-reload="true" uri-prefix=""
+    	  <map:mount uri-prefix=""
     	             src="another-sitemap.xmap" pass-through="true"/>
 
     </map:pipeline>

@@ -33,7 +33,7 @@
       
 	  <!-- mount everything else -->
       <map:match pattern="*/**">
-        <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
+        <map:mount uri-prefix="{1}" src="{1}/"/>
       </map:match>
     </map:pipeline>
 
