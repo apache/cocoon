@@ -930,8 +930,8 @@
       However, these APIs can be quite complex to understand and utilize. 
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
-    <used-by>Faces block, BetwixtTransformer</used-by>
-    <lib>optional/commons-beanutils-core-1.7.jar</lib>
+    <used-by>JXPath, Faces block, BetwixtTransformer</used-by>
+    <lib>core/commons-beanutils-core-1.7.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
