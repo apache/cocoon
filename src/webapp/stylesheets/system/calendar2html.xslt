@@ -21,7 +21,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
                 xmlns:calendar="http://apache.org/cocoon/calendar/1.0">
-
+        
   <xsl:template match="/">
     <html>
       <head>
@@ -102,12 +102,11 @@ td {
         </p>
         <p>
         <a href="cal?lang=en&amp;country=US">US English</a><br/>
-        <a href="cal?lang=en&amp;country=UK">UK English</a><br/>
+        <a href="cal?lang=en&amp;country=GB">UK English</a><br/>
         <a href="cal?lang=nl">Dutch</a><br/>
         <a href="cal?lang=fr">French</a><br/>
-        <a href="cal?lang=el">Greek</a>
         </p>
-        <p>Note: the column headers and date format are not localized, you can do that by simply inserting the appropriate
+        <p>Note: the column headers are not localized, you can do that by simply inserting the appropriate
           i18n tags and transformer. Check the sample sources (sitemap and XSLT style sheet) and uncomment
           the lines.
         </p>
@@ -127,17 +126,12 @@ td {
           <tr>
             <xsl:for-each select="calendar:week[2]/calendar:day">
               <th>
-                <xsl:if test="@weekday = 'Saturday' or @weekday='Sunday'">
+                <xsl:if test="@weekday = 'SATURDAY' or @weekday='SUNDAY'">
                     <xsl:attribute name="class">weekend</xsl:attribute>
                 </xsl:if>
-                <!-- uncomment the lines below for i18n localization -->
-                <!-- Note that you also need to provide the appropriate message files
-                <i18n:text>
-                -->
-                <xsl:value-of select="@weekday"/>
-                <!--
-                </i18n:text>
-                -->
+                <!-- The lines below provide i18n localization for headers -->
+                <!-- Note that you also need to provide the appropriate message files -->
+                <i18n:text><xsl:value-of select="@weekday"/></i18n:text>
               </th>
             </xsl:for-each>
           </tr>
@@ -175,7 +169,7 @@ td {
       </xsl:if>
       <xsl:for-each select="calendar:day">
         <td>
-          <xsl:if test="@weekday = 'Saturday' or @weekday = 'Sunday'">
+          <xsl:if test="@weekday = 'SATURDAY' or @weekday = 'SUNDAY'">
             <xsl:attribute name="class">weekend</xsl:attribute>
           </xsl:if>
           <div class="daytitle"><xsl:value-of select="@number"/></div>

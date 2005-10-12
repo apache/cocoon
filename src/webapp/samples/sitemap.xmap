@@ -26,7 +26,18 @@
    <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
    <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
   </map:generators>
- </map:components>
+ 
+  <map:transformers default="xslt">
+   <!-- Configure i18n transformer -->
+   <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+    <catalogues default="messages">
+     <catalogue id="messages" name="messages" location="common/i18n"/>
+    </catalogues>
+    <cache-at-startup>true</cache-at-startup>
+    </map:transformer>
+   </map:transformers>
+  </map:components>
+ 
 
 <!-- =========================== Views =================================== -->
 
@@ -179,12 +190,13 @@
       <map:parameter name="country" value="{request-param:country}"/>
     </map:generate>
     <map:transform src="context://stylesheets/system/calendar2html.xslt"/>
-	<!-- to localize the column headers, remove the comments below -->
-	<!--
+    <!-- to localize the column headers, remove the comments below -->
+    <!--
     <map:transform type="i18n">
-       <map:parameter name="locale" value="{request-param:lang}-{request-param:country}"/>
-    </map:transform>
-  	-->
+       <map:parameter name="default-catalogue-id" value="messages"/>
+       <map:parameter name="locale" value="{request-param:lang}"/>
+    </map:transform> 
+    -->
     <map:serialize/>
    </map:match>
 
