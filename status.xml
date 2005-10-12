@@ -198,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="LG" type="update">
+      Improved blocks build exclusion/inclusion. See blocks.properties for more info.
+    </action>
     <action dev="BD" type="update">
       Samples pages reorganized: the first page shows only the most important samples, selected
       in src/webapp/samples/blocks/samples-pages.xml, and another page shows all samples.
