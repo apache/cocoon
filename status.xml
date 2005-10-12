@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="LG" type="update">
+      Improved blocks build exclusion/inclusion. See blocks.properties for more info.
+    </action>
     <action dev="VG" type="update">
       I18n: Refactored XMLResourceBundle to use transient store instead of
       private cache. Added reload check interval parameter. Support dynamic
