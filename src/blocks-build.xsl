@@ -495,7 +495,7 @@
         <or>
           <xsl:for-each select="$cocoon-blocks">
             <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-            <istrue value="${{internal.exclude.block.{$block-name}}}"/>
+              <istrue value="${{internal.exclude.block.{$block-name}}}"/>
           </xsl:for-each>
         </or>
       </condition>
@@ -796,13 +796,13 @@
 
       <!-- Copy the library depencies -->
       <xsl:if test="library[not(@bundle='false')]">
-          <copy filtering="off" todir="${{build.webapp.lib}}">
+        <copy filtering="off" todir="${{build.webapp.lib}}">
           <fileset dir="${{lib.optional}}">
             <xsl:for-each select="library[not(@bundle='false')]">
               <include name="{@name}*.jar"/>
             </xsl:for-each>
-            </fileset>
-          </copy>
+          </fileset>
+        </copy>
       </xsl:if>
       <block-lib name="{$block-name}" dir="{@dir}"/>
     </target>
