@@ -21,8 +21,15 @@
   <!-- for those who like long names.. -->
   <target name="eclipse-customized-project" depends="eclipse-project"/>
   
+  <target name="init-full-eclipse-project">
+    <property name="unconditional.include.all.blocks" value="true"/>
+  </target>
+  
+  <target name="full-eclipse-project" depends="init-full-eclipse-project, eclipse-project"/>
+  
   <!-- Build the Eclipse customized project's files -->
-  <target name="eclipse-project" depends="prepare" description="Generate the Eclipse customized project files (using local.block.properties)">
+  <target name="eclipse-project" depends="prepare"
+    description="Generate the Eclipse customized project files (using local.block.properties). Use -Dunconditional.include.all.blocks=true to override local.build.properties">
     <echo message="Building Eclipse Customized Project Files"/>
     <xslt in="${gump.descriptor}"
           out="${build.temp}/blocks-eclipse.xml"
