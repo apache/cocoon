@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- @version $Id: make-classpath.xsl 106334 2004-11-23 19:52:40Z antonio $ -->
+<!-- @version $Id$ -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="xml" indent="yes"/>
 
