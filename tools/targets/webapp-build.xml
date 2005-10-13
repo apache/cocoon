@@ -24,10 +24,10 @@
   <target name="prepare-webapp" depends="blocks, package">
     <mkdir dir="${build.webapp}"/>
 
-    <copy file="${webapp}/welcome.xml" todir="${build.webapp}" filtering="on"/>
-    <copy file="${webapp}/not-found.xml" todir="${build.webapp}" filtering="on"/>
-    <copy file="${webapp}/welcome.xslt" todir="${build.webapp}" filtering="on"/>
-    <copy file="${webapp}/sitemap.xmap" todir="${build.webapp}"/>
+    <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
+    <copy file="${webapp}/not-found.xml" tofile="${build.webapp}/not-found.xml" filtering="on"/>
+    <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
+    <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
     <!-- generate sitemap entries
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
