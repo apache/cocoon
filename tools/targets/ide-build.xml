@@ -25,11 +25,11 @@
     <property name="unconditional.include.all.blocks" value="true"/>
   </target>
   
-  <target name="full-eclipse-project" depends="init-full-eclipse-project, eclipse-project"/>
+  <target name="full-eclipse-project" depends="init-full-eclipse-project, eclipse-project" description="Generate the Eclipse project with all cocoon blocks included."/>
   
   <!-- Build the Eclipse customized project's files -->
   <target name="eclipse-project" 
-    description="Generate the Eclipse customized project files (using local.block.properties). Use -Dunconditional.include.all.blocks=true to override local.build.properties">
+    description="Generate the Eclipse customized project files (using local.block.properties).">
     <echo message="Building Eclipse Customized Project Files"/>
     <xslt in="${gump.descriptor}"
           out="${build.temp}/blocks-eclipse.xml"
