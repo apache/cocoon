@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
   <!-- compilation parts used by all targets -->
   <presetdef name="cocoon.javac">
-     <javac 
+    <javac 
            debug="${compiler.debug}"
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
@@ -159,15 +159,12 @@
   <!-- package deprecated code -->
   <target name="package-deprecated" depends="compile-deprecated"
       unless="internal.exclude.deprecated">
-      
-      
     <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
     
-     <cocoon.package-sources name="${name}-deprecated"
-                             dir="${deprecated.src}"/>
- 
+    <cocoon.package-sources name="${name}-deprecated"
+                            dir="${deprecated.src}"/>
   </target>
 
   <!-- package testcase code -->
@@ -176,10 +173,8 @@
       <fileset dir="${build.test}"/>
     </jar>
  
-      <cocoon.package-sources name="${name}-testcase"
-                              dir="${test}"/>
-                             
-
+    <cocoon.package-sources name="${name}-testcase"
+                            dir="${test}"/>
   </target>
 
 <!-- === Block Targets =================================================== -->
