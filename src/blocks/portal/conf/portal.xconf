@@ -106,6 +106,7 @@
       <!-- wsrp support: -->
       <aspect adapter="wsrp"/>
     </aspects>
+    <fullScreenNav>true</fullScreenNav>
   </component>
 
   <!-- This is the portal service -->

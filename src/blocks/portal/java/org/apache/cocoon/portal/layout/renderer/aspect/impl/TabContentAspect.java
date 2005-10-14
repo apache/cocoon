@@ -160,7 +160,7 @@ public class TabContentAspect
                 
                 XMLUtils.startElement(handler, "named-item", attributes);
                 if (j == selected) {
-                    this.processLayout(tab.getLayout(), service, handler);
+                    this.processLayout(getNextLayout(service, tab), service, handler);
                     if (config.includeSelected) {
                         List events = new ArrayList();
                         events.add(event);
@@ -198,6 +198,31 @@ public class TabContentAspect
         desc.setAutoCreate(true);
         
         return Collections.singletonList(desc).iterator();
+    }
+
+    /**
+     *
+     * @param service
+     * @param tab
+     * @return
+     */
+    private Layout getNextLayout(PortalService service, Item tab) {
+        Layout tabLayout = tab.getLayout();
+        if (tabLayout instanceof CompositeLayout) {
+            CompositeLayout layout = (CompositeLayout)tabLayout;
+            List list = layout.getItems();
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                if (list.get(i) instanceof NamedItem) {
+                    return tabLayout;
+                }
+            }
+        }
+        Layout nextLayout = service.getEntryLayout(null);
+        if (nextLayout == null) {
+            nextLayout = tab.getLayout();
+        }
+        return nextLayout;
     }
 
     /*

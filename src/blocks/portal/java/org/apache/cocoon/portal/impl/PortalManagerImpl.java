@@ -68,6 +68,10 @@ public class PortalManagerImpl
     /** The component context. */
     protected Context context;
 
+    /** Indicates whether navigation appears on full screen portlets */
+    private boolean fullScreenNav;
+    public static final String FULLSCREEN = "fullScreenNav";
+
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
@@ -134,6 +138,7 @@ public class PortalManagerImpl
                              conf.getChild("aspects"), 
                              this, 
                              new Parameters());
+        this.fullScreenNav = conf.getChild(FULLSCREEN, true).getValueAsBoolean(false);
     }
 
     /**
@@ -156,7 +161,12 @@ public class PortalManagerImpl
      */
     public void render(PortalManagerAspectRenderContext context, PortalService service, ContentHandler ch, Parameters parameters) throws SAXException {
         // first check for a full screen layout
-        Layout portalLayout = this.portalService.getEntryLayout(null);
+
+        Layout portalLayout = null;
+        if (!this.fullScreenNav) {
+            // If fullscreen mode - otherwise TabContentAspect will deal with the layout
+            portalLayout = this.portalService.getEntryLayout(null);
+        }
         if ( portalLayout == null ) {
             portalLayout = this.portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
         }

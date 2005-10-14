@@ -174,6 +174,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="RG" type="fix" fixes-bug="32784">
+      Portal Block: Allow Full screen mode to show navigation.
+    </action>
     <action dev="VG" type="fix" fixes-bug="30894">
       Databases block: Support stored procedures returning result set in SQLTransformer.
     </action>
