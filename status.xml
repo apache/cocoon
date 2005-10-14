@@ -586,6 +586,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="30894">
+      Databases block: Support stored procedures returning result set in SQLTransformer.
+    </action>
     <action dev="BD" type="add">
       Bricks-cms example application created (distributed separately), see http://wiki.apache.org/cocoon/BricksCms
     </action>
