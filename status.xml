@@ -198,6 +198,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="RG" type="fix" fixes-bug="32784">
+      Portal Block: Allow Full screen mode to show navigation.
+    </action>
     <action dev="LG" type="update">
       Improved blocks build exclusion/inclusion. See blocks.properties for more info.
     </action>
@@ -206,7 +209,7 @@
       in src/webapp/samples/blocks/samples-pages.xml, and another page shows all samples.
     </action>
     <action dev="RG" type="fix" fixes-bug="34802" due-to="Roy Huang" due-to-email="roy_huang@nbmgroup.com">
-      PageLabelLinkService generated the wrong url when using 3 layer tabs with showallnav.
+      Portal Block: PageLabelLinkService generated the wrong url when using 3 layer tabs with showallnav.
     </action>
     <action dev="BD" type="update">
       Core samples moved to new blocks: core-samples-main and core-samples-additional.
