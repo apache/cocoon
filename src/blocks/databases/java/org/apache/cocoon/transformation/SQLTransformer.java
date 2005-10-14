@@ -1182,17 +1182,19 @@ public class SQLTransformer extends AbstractSAXTransformer
                     }
                     start(this.rowsetElement, attr);
 
+                    // Serialize stored procedure output parameters
                     if (isStoredProcedure) {
                         serializeStoredProcedure();
-                    } else {
-                        while (next()) {
-                            start(this.rowElement, EMPTY_ATTRIBUTES);
-                            serializeRow();
-                            for (Iterator i = this.nested.iterator(); i.hasNext();) {
-                                ((Query) i.next()).executeQuery();
-                            }
-                            end(this.rowElement);
+                    }
+
+                    // Serialize result set
+                    while (next()) {
+                        start(this.rowElement, EMPTY_ATTRIBUTES);
+                        serializeRow();
+                        for (Iterator i = this.nested.iterator(); i.hasNext();) {
+                            ((Query) i.next()).executeQuery();
                         }
+                        end(this.rowElement);
                     }
 
                     end(this.rowsetElement);
@@ -1444,17 +1446,17 @@ public class SQLTransformer extends AbstractSAXTransformer
             // make sure output follows order as parameter order in stored procedure
             Iterator itOutKeys = new TreeMap(outParameters).keySet().iterator();
             while (itOutKeys.hasNext()) {
-                Integer counter = (Integer) itOutKeys.next();
+                final Integer counter = (Integer) itOutKeys.next();
                 try {
-                    Object obj = cst.getObject(counter.intValue());
+                    final Object obj = cst.getObject(counter.intValue());
+                    final String name = (String) outParametersNames.get(counter);
+                    start(name, EMPTY_ATTRIBUTES);
+
                     if (!(obj instanceof ResultSet)) {
-                        start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
                         serializeData(getStringValue(obj));
-                        end((String) outParametersNames.get(counter));
                     } else {
-                        ResultSet rs = (ResultSet) obj;
+                        final ResultSet rs = (ResultSet) obj;
                         try {
-                            start((String) outParametersNames.get(counter), EMPTY_ATTRIBUTES);
                             ResultSetMetaData md = rs.getMetaData();
                             while (rs.next()) {
                                 start(this.rowElement, EMPTY_ATTRIBUTES);
@@ -1477,8 +1479,9 @@ public class SQLTransformer extends AbstractSAXTransformer
                                 /* ignored */
                             }
                         }
-                        end((String) outParametersNames.get(counter));
                     }
+
+                    end(name);
                 } catch (SQLException e) {
                     getLogger().error("Caught a SQLException", e);
                     throw e;
