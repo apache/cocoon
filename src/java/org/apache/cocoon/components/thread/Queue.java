@@ -24,8 +24,8 @@ package org.apache.cocoon.components.thread;
  * @see EDU.oswego.cs.dl.util.concurrent.Channel
  */
 public interface Queue
-    extends EDU.oswego.cs.dl.util.concurrent.Channel
-{
+    extends EDU.oswego.cs.dl.util.concurrent.Channel {
+
     //~ Methods ----------------------------------------------------------------
 
     /**
@@ -34,5 +34,5 @@ public interface Queue
      * @return current size of queue. If the size of the queue is not
      *         maintained by an implementation -1 should be returned.
      */
-    int getQueueSize(  );
+    int getQueueSize();
 }

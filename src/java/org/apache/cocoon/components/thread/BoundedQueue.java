@@ -29,16 +29,15 @@ package org.apache.cocoon.components.thread;
  */
 public class BoundedQueue
     extends EDU.oswego.cs.dl.util.concurrent.BoundedBuffer
-    implements Queue
-{
+    implements Queue {
+
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Create a buffer with the current default capacity
+     * Create a buffer with the current default capacity.
      */
-    public BoundedQueue(  )
-    {
-        super(  );
+    public BoundedQueue() {
+        super();
     }
 
     /**
@@ -49,8 +48,7 @@ public class BoundedQueue
      * @exception IllegalArgumentException if capacity less or equal to zero
      */
     public BoundedQueue( int capacity )
-        throws IllegalArgumentException
-    {
+    throws IllegalArgumentException {
         super( capacity );
     }
 
@@ -61,8 +59,7 @@ public class BoundedQueue
      *
      * @return current size of queue.
      */
-    public int getQueueSize(  )
-    {
+    public int getQueueSize() {
         return usedSlots_;
     }
 }

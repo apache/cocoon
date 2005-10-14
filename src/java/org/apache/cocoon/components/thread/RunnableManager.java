@@ -22,12 +22,12 @@ package org.apache.cocoon.components.thread;
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version CVS $Id$
  */
-public interface RunnableManager
-{
+public interface RunnableManager {
+
     //~ Instance fields --------------------------------------------------------
 
     /** The role name */
-    String ROLE = RunnableManager.class.getName(  );
+    String ROLE = RunnableManager.class.getName();
 
     //~ Methods ----------------------------------------------------------------
 

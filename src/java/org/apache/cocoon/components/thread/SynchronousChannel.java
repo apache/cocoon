@@ -42,6 +42,7 @@ package org.apache.cocoon.components.thread;
 public class SynchronousChannel
     extends EDU.oswego.cs.dl.util.concurrent.SynchronousChannel
     implements Queue {
+
     //~ Methods ----------------------------------------------------------------
 
     /**
