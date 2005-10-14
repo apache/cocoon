@@ -1,6 +1,0 @@
-#----------------------------------------------------------------
-# LinkAlarm last run on 2002-10-19
-#
-#status problem_link referring_page response_code meaning comment
-#----------------------------------------------------------------
-1	http://www.belfoot.tv/	http://xml.apache.org/cocoon/link/livesites.html	408	Request timeout (5 attempts)	-
