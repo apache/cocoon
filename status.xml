@@ -197,6 +197,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="BD" type="add">
+      Bricks-cms example application created (distributed separately), see http://wiki.apache.org/cocoon/BricksCms
+    </action>
     <action dev="LG" type="update">
       Improved blocks build exclusion/inclusion. See blocks.properties for more info.
     </action>
