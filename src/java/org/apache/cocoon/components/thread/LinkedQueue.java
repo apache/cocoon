@@ -30,15 +30,14 @@ package org.apache.cocoon.components.thread;
  */
 public class LinkedQueue
     extends EDU.oswego.cs.dl.util.concurrent.LinkedQueue
-    implements Queue
-{
+    implements Queue {
+
     //~ Methods ----------------------------------------------------------------
 
     /**
      * @see org.apache.cocoon.components.thread.Queue#getQueueSize()
      */
-    public int getQueueSize(  )
-    {
+    public int getQueueSize() {
         return -1;
     }
 }

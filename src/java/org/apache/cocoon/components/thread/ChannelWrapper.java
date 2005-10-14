@@ -17,7 +17,6 @@ package org.apache.cocoon.components.thread;
 
 import EDU.oswego.cs.dl.util.concurrent.Channel;
 
-
 /**
  * Wrapper around a Channel implementation for constructor convenience
  *
@@ -25,12 +24,12 @@ import EDU.oswego.cs.dl.util.concurrent.Channel;
  * @version $Id$
  */
 public class ChannelWrapper
-    implements Channel
-{
+    implements Channel {
+
     //~ Instance fields --------------------------------------------------------
 
     /** The wrapped Channel */
-    private Channel m_channel;
+    private Channel channel;
 
     //~ Methods ----------------------------------------------------------------
 
@@ -39,9 +38,8 @@ public class ChannelWrapper
      *
      * @param channel DOCUMENT ME!
      */
-    public void setChannel( final Channel channel )
-    {
-        m_channel = channel;
+    public void setChannel( final Channel channel ) {
+        this.channel = channel;
     }
 
     /**
@@ -50,43 +48,37 @@ public class ChannelWrapper
      */
     public boolean offer( final Object obj,
                           final long timeout )
-        throws InterruptedException
-    {
-        return m_channel.offer( obj, timeout );
+    throws InterruptedException {
+        return channel.offer( obj, timeout );
     }
 
     /**
      * @see EDU.oswego.cs.dl.util.concurrent.Channel#peek()
      */
-    public Object peek(  )
-    {
-        return m_channel.peek(  );
+    public Object peek() {
+        return channel.peek();
     }
 
     /**
      * @see EDU.oswego.cs.dl.util.concurrent.Takable#poll(long)
      */
     public Object poll( final long timeout )
-        throws InterruptedException
-    {
-        return m_channel.poll( timeout );
+    throws InterruptedException {
+        return channel.poll( timeout );
     }
 
     /**
      * @see EDU.oswego.cs.dl.util.concurrent.Puttable#put(java.lang.Object)
      */
     public void put( final Object obj )
-        throws InterruptedException
-    {
-        m_channel.put( obj );
+    throws InterruptedException {
+        channel.put( obj );
     }
 
     /**
      * @see EDU.oswego.cs.dl.util.concurrent.Takable#take()
      */
-    public Object take(  )
-        throws InterruptedException
-    {
-        return m_channel.take(  );
+    public Object take()  throws InterruptedException {
+        return channel.take();
     }
 }

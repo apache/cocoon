@@ -22,8 +22,7 @@ package org.apache.cocoon.components.thread;
  * @version $Id$
  */
 public class DefaultThreadFactory
-    implements ThreadFactory, EDU.oswego.cs.dl.util.concurrent.ThreadFactory
-{
+    implements ThreadFactory, EDU.oswego.cs.dl.util.concurrent.ThreadFactory {
     //~ Instance fields --------------------------------------------------------
 
     /** The daemon mode */
@@ -40,8 +39,7 @@ public class DefaultThreadFactory
      * @param isDaemon Whether or not new <code>Thread</code> should run as
      *        daemons.
      */
-    public void setDaemon( boolean isDaemon )
-    {
+    public void setDaemon( boolean isDaemon ) {
         m_isDaemon = isDaemon;
     }
 
@@ -50,8 +48,7 @@ public class DefaultThreadFactory
      *
      * @return Whether or not new <code>Thread</code> will run as daemons.
      */
-    public boolean isDaemon(  )
-    {
+    public boolean isDaemon() {
         return m_isDaemon;
     }
 
@@ -61,12 +58,10 @@ public class DefaultThreadFactory
      * @param priority One of {@link Thread#MIN_PRIORITY}, {@link
      *        Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
      */
-    public void setPriority( final int priority )
-    {
+    public void setPriority( final int priority ) {
         if( ( Thread.MAX_PRIORITY == priority ) ||
             ( Thread.MIN_PRIORITY == priority ) ||
-            ( Thread.NORM_PRIORITY == priority ) )
-        {
+            ( Thread.NORM_PRIORITY == priority ) ) {
             m_priority = priority;
         }
     }
@@ -77,8 +72,7 @@ public class DefaultThreadFactory
      * @return One of {@link Thread#MIN_PRIORITY}, {@link
      *         Thread#NORM_PRIORITY}, {@link Thread#MAX_PRIORITY}
      */
-    public int getPriority(  )
-    {
+    public int getPriority() {
         return m_priority;
     }
 
@@ -89,8 +83,7 @@ public class DefaultThreadFactory
      *
      * @return A new Thread instance
      */
-    public Thread newThread( final Runnable command )
-    {
+    public Thread newThread( final Runnable command ) {
         final Thread thread = new Thread( command );
         thread.setPriority( m_priority );
         thread.setDaemon( m_isDaemon );

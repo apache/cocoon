@@ -79,7 +79,7 @@ public class DefaultRunnableManager
 
     /** The default {@link ThreadFactory} */
     public static final String DEFAULT_THREAD_FACTORY =
-        DefaultThreadFactory.class.getName(  );
+        DefaultThreadFactory.class.getName();
 
     /** The default queue size */
     public static final int DEFAULT_QUEUE_SIZE = -1;

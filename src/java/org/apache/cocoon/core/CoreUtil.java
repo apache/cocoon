@@ -333,16 +333,16 @@ public class CoreUtil {
      * This method reads several property files and merges the result. If there
      * is more than one definition for a property, the last one wins.
      * The property files are read in the following order:
-     * 1) context://WEB-INF/cocoon-settings.properties
-     *    These are the default values.
-     * 2) context://WEB-INF/properties/*.properties
-     *    Default values for each block - the order in which the files are read is not guaranteed.
-     * 3) context://WEB-INF/properties/[RUNNING_MODE]/*.properties
+     * 1) context://WEB-INF/properties/*.properties
+     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
+     * 2) context://WEB-INF/properties/[RUNNING_MODE]/*.properties
      *    Default values for the running mode - the order in which the files are read is not guaranteed.
-     * 4) Property providers (ToBeDocumented)
-     * 5) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
-     * 6) Additional property file specified by the "org.apache.cocoon.settings" system property.
-     * 7) System properties
+     * 3) Property providers (ToBeDocumented)
+     * 4) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
+     * 5) Additional property file specified by the "org.apache.cocoon.settings" system property or
+     *    if the property is not found, the file ".cocoon/settings.properties" is tried to be read from
+     *    the user directory.
+     * 6) System properties
      *
      * @return A new Settings object
      */
@@ -356,25 +356,6 @@ public class CoreUtil {
 
         // we need our own resolver
         final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.env));
-
-        // read cocoon-settings.properties - if available
-        Source source = null;
-        try {
-            source = resolver.resolveURI("context://WEB-INF/cocoon-settings.properties");
-            if ( source.exists() ) {
-                final InputStream propsIS = source.getInputStream();
-                this.env.log("Reading settings from '" + source.getURI() + "'");
-                final Properties p = new Properties();
-                p.load(propsIS);
-                propsIS.close();
-                s.fill(p);
-            }
-        } catch (IOException ignore) {
-            env.log("Unable to read 'WEB-INF/cocoon-settings.properties'.", ignore);
-            env.log("Continuing initialization.");            
-        } finally {
-            resolver.release(source);
-        }
 
         // now read all properties from the properties directory
         this.readProperties("context://WEB-INF/properties", s, resolver);
@@ -397,8 +378,16 @@ public class CoreUtil {
         env.configure(s);
 
         // read additional properties file
-        final String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
-                                                            System.getProperty(Settings.PROPERTY_USER_SETTINGS));
+        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
+                                                      System.getProperty(Settings.PROPERTY_USER_SETTINGS));
+        // if there is no property defining the addition file, we try it in the home directory
+        if ( additionalPropertyFile == null ) {
+            additionalPropertyFile = System.getProperty("user.home") + File.separator + ".cocoon/settings.properties";
+            final File testFile = new File(additionalPropertyFile);
+            if ( !testFile.exists() ) {
+                additionalPropertyFile = null;
+            }
+        }
         if ( additionalPropertyFile != null ) {
             env.log("Reading user settings from '" + additionalPropertyFile + "'");
             final Properties p = new Properties();

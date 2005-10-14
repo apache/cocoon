@@ -24,6 +24,7 @@ package org.apache.cocoon.components.thread;
  */
 public interface ThreadFactory
     extends EDU.oswego.cs.dl.util.concurrent.ThreadFactory {
+
     //~ Methods ----------------------------------------------------------------
 
     /**
