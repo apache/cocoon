@@ -123,16 +123,6 @@
       Test, test, test :-)
     </action>
 
-    <action context="docs" assigned-to="open">
-      Attend to any high+ issues in the
-      <link href="plan/todo-doc.html">Documentation To Do List</link>
-    </action>
-
-    <action context="code" assigned-to="open">
-      Attend to the general issues in the
-      <link href="plan/release.html">release plan</link>
-    </action>
-
     <action context="build" assigned-to="open">
       Complete (means put all allowed constructs and combinations)
       the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
@@ -141,12 +131,6 @@
     <action context="code" assigned-to="SW">
       For 2.2: Views must start not from the first encountered label, but from the last one
       (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172)
-    </action>
-
-    <action context="code" assigned-to="NKB">
-      Make comprehensive samples with the handle-errors sitemap and real world
-      use cases. Add also specific Selector and a FaqBuilder to be used by the
-      NotifyingBuilder.
     </action>
 
     <action context="code" assigned-to="open">
@@ -169,13 +153,6 @@
       Ensure that recyclable components always release their references, even when
       they are not pooled. The easiest way is to make them disposable and clean up
       in dispose.
-    </action>
-
-    <action context="code">
-      XMLize exception handling so that error pages can become more
-      semantically meaningful. Currently all XSP compilation errors are
-      stored in a single string. With XMLized exceptions we could display
-      especially XSP errors much nicer.
     </action>
 
     <action context="code">

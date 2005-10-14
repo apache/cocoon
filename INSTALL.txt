@@ -10,6 +10,7 @@
   Great, this file is for you.
   
  1) Unpack the distribution
+
   Obviously you've done this already, but if you got errors when unpacking
   the archive with tar, you might need to use gnutar instead. Our archives
   contain long paths and filenames which cause problems with some versions
