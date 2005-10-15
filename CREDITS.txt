@@ -31,7 +31,10 @@ Cocoon by the Hewlett Packard Company (http://www.hp.com/).
 
 The initial code of the new portal framework is a donation by a joined development
 effort of BASF IT-Services (http://www.basf-it-services.com) 
-and s&n AG (http://www.s-und-n.de).
+and s&n AG (http://www.s-und-n.de). This initial version has been developed by
+Volker Schmitt (volker.schmitt@basf-it-services.com), 
+Juergen Seitz (juergen.seitz@basf-it-services.com),
+Bjoern Luetkemeier (bluetkemeier@s-und-n.de) and Carsten Ziegeler (cziegeler@s-und-n.de).
 
 The initial code of the new ojb block and other contributions from Antonio Gallardo
 and Carlos Chávez are made posible by the time donated by AG Software, S. A.
