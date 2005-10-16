@@ -88,41 +88,6 @@
     </jing>
   </target>
 
-  <!-- Validation of xdocs  -->
-  <target name="cocoon-validate-xdocs" depends="prepare-docs" unless="internal.exclude.validate.xdocs">
-<!--
-    <echo message="Conducting validation of core XML documentation."/>
--->
-    <echo message="Not conducting validation of core XML documentation."/>
-    <echo message="Use 'forrest validate-xdocs' instead."/>
-
-<!-- FIXME:
-    <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
-    <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
-      <fileset dir="${build.context}" includes="**/book.xml"/>
-    </jing>
--->
-
-<!--
-    <echo message="Validating all xdocs/**/*.xml instances using DTDs ..."/>
-    <xmlvalidate failonerror="true" lenient="no" warn="yes">
--->
-      <!-- FIXME: we can use xmlcatalog/catalogpath with Ant-1.6 -->
-<!--
-      <xmlcatalog>
-        <catalogpath>
-          <pathelement location="${webapp}/WEB-INF/entities/catalog.xcat"/>
-        </catalogpath>
-      </xmlcatalog>
--->
-<!--
-      <fileset dir="${build.context}/xdocs" includes="**/*.xml"
-               excludes="status.xml,drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml,dtd/**"/>
-    </xmlvalidate>
--->
-
-  </target>
-
   <target name="validate-sitemaps"
           description="Standalone target to validate all sitemaps">
     <echo message="Validating all sitemap.xmap using RELAX NG ..."/>

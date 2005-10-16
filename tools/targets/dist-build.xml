@@ -21,7 +21,7 @@
     Distribution targets
   </description>
 
-  <target name="dist" description="[admin] Builds the distribution">
+  <target name="dist" depends="init" description="[admin] Builds the distribution">
 
     <mkdir dir="${dist.root}"/>
     <mkdir dir="${dist}"/>
@@ -39,6 +39,10 @@
 
     <copy todir="${dist}/lib">
       <fileset dir="${lib}"/>
+    </copy>
+
+    <copy todir="${dist}/docs">
+      <fileset dir="docs"/>
     </copy>
 
     <copy todir="${dist}/src">

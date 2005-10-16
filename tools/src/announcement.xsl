@@ -14,22 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id$ -->
-<project name="docs">
 
-  <description>
-    Documentation Targets
-  </description>
+<xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <!-- Creates Javadocs -->
-  <target name="javadocs"
-          depends="prepare-blocks"
-          description="Builds the API documentation (javadocs)"
-          unless="internal.exclude.javadocs">
-    <ant antfile="${build.temp}/blocks-build.xml"
-         inheritAll="true"
-         inheritRefs="false"
-         target="javadocs"/>
-  </target>
-
-</project>
+  <xsl:template match="changes">
+    <xsl:variable name="file" select="@file"/>
+    <xsl:variable name="version" select="@version"/>
+    <xsl:apply-templates select="document($file)/status/changes/release[@version=string($version)]"/>
+  </xsl:template>
+</xsl:stylesheet>
