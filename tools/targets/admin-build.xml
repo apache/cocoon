@@ -21,22 +21,13 @@
     Admin targets
   </description>
 
-  <!-- Creates the web site  -->
-<!--
-  <target name="site" depends="forrest" description="[admin] Builds the site">
-    <mkdir dir="${site}"/>
-    <copy todir="${site}" filtering="off">
-      <fileset dir="${build.site}"/>
-    </copy>
-  </target>
--->
-
   <!-- Create the announcements -->
-  <target name="announcement" depends="prepare-docs">
-    <copy file="announcement.xml" tofile="${build.context}/xdocs/announcement.xml" filtering="on"/>
-    <xslt in="${build.context}/xdocs/announcement.xml"
-          out="${build}/announcement.txt"
-          style="${build.context}/stylesheets/announcement2txt.xsl"
+  <target name="announcement" depends="init">
+    <copy file="status.xml" tofile="${build.context}/status.xml" filtering="on"/>
+    <copy file="announcement.xml" tofile="${build.context}/announcement.xml" filtering="on"/>
+    <xslt in="${build.context}/announcement.xml"
+          out="${build.context}/announcement.txt"
+          style="${tools.src}/announcement2txt.xsl"
           force="true"/>
   </target>
 
