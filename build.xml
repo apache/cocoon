@@ -68,9 +68,6 @@
   <!-- Tools targets -->
   <import file="tools/targets/tools-build.xml" />
   <!-- =================================================================== -->
-  <!-- Apache Forrest targets -->
-  <import file="tools/targets/forrest-build.xml" />
-  <!-- =================================================================== -->
   <!-- OSGi targets -->
   <import file="tools/targets/osgi-build.xml" />
   <!-- =================================================================== -->   
