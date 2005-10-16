@@ -22,7 +22,7 @@
   </description>
 
   <!-- Create the announcements -->
-  <target name="announcement" depends="init">
+  <target name="announcement">
     <copy file="status.xml" tofile="${build.context}/status.xml" filtering="on"/>
     <copy file="announcement.xml" tofile="${build.context}/announcement.xml" filtering="on"/>
     <xslt in="${build.context}/announcement.xml"
@@ -31,7 +31,7 @@
           force="true"/>
   </target>
 
-  <target name="generate-blocks.properties" depends="init">
+  <target name="generate-blocks.properties">
     <xslt in="${gump.descriptor}"
           out="blocks.properties"
           style="${tools.src}/gump2blocks.properties.xsl"
