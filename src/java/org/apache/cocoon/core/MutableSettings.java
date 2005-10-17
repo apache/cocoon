@@ -214,7 +214,7 @@ public class MutableSettings implements Settings {
     /**
      * Lazy mode for component loading
      */
-    protected boolean lazyMode = true;
+    protected boolean lazyMode = false;
 
     /** The time the cocoon instance was created. */
     protected long creationTime;
