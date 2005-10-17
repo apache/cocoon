@@ -1249,24 +1249,23 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().error("Cocoon got an Exception while trying to cleanup the uploaded files.", e);
             }
 
-            try {
-                OutputStream out = res.getOutputStream();
-                out.flush();
-                out.close();
-            } catch (SocketException se) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("SocketException while trying to close stream.", se);
-                } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("SocketException while trying to close stream.");
-                }
-            } catch (IOException e) {
-                // See: http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107489037219505
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("IOException while trying to close stream.", e);
-                }
-            } catch (Exception e) {
-                getLogger().error("Exception while trying to close stream.", e);
-            }
+            /*
+             * Servlet Specification 2.2, 6.5 Closure of Response Object:
+             *
+             *   A number of events can indicate that the servlet has provided all of the
+             *   content to satisfy the request and that the response object can be
+             *   considered to be closed. The events are:
+             *     o The termination of the service method of the servlet.
+             *     o When the amount of content specified in the setContentLength method
+             *       of the response has been written to the response.
+             *     o The sendError method is called.
+             *     o The sendRedirect method is called.
+             *   When a response is closed, all content in the response buffer, if any remains,
+             *   must be immediately flushed to the client.
+             *
+             * Due to the above, out.flush() and out.close() are not necessary, and sometimes
+             * (if sendError or sendRedirect were used) request may be already closed.
+             */
         }
     }
 
