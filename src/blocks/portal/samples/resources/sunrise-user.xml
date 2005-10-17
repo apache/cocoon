@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
   limitations under the License.
 -->
 
-<!-- $Id: sunrise-user.xml,v 1.4 2004/04/05 12:25:36 antonio Exp $ 
+<!-- $Id$ 
  Description: All portal users
-
+    Note: This file is not used by default! The portal samples store the users
+          in the database, so changing this file will have no effect! You can either
+          change the authentication configuration to use this file, or add/change
+          users in the hsqldb instance.
 -->
 
 <authentication>
