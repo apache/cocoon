@@ -36,6 +36,22 @@ import java.sql.SQLException;
  * OJB ConnectionFactory implemenation to bridge into the Avalon DataSource
  * connection pooling component defined in the Cocoon configuration.
  *
+ * <p>This class has two faces to it:
+ * <dl>
+ * <dt>Avalon Component</dt>
+ * <dd>Instance of the class created and managed by Avalon container.
+ * When instance is initialized, it looks up datasource components
+ * service selector.</dd>
+ * <dt>OJB Managed Class</dt>
+ * <dd>Instances of the class are created and managed by OJB, as defined
+ * in the OJB <code>repository.xml</code> file. Each OJB managed instance
+ * of the class will have access to the datasource components service
+ * selector initialized by Avalon managed instance of the class.</dd>
+ * </dl>
+ *
+ * It is important that Avalon component is initialized before any access
+ * to OJB API is made.</p>
+ *
  * @author giacomo at apache.org
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
