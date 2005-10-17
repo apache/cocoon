@@ -667,20 +667,14 @@ public class ManagedCocoonPortlet extends GenericPortlet {
                 ctxMap.clear();
             }
 
-            try {
-                OutputStream out = res.getPortletOutputStream();
-                out.flush();
-                out.close();
-            } catch (SocketException se) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("SocketException while trying to close stream.", se);
-                } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("SocketException while trying to close stream.");
-                }
-
-            } catch (Exception e) {
-                getLogger().error("Cocoon got an Exception while trying to close stream.", e);
-            }
+            /*
+             * Portlet Specification 1.0, PLT.12.3.2 Output Stream and Writer Objects:
+             *   The termination of the render method of the portlet indicates
+             *   that the portlet has satisfied the request and that the output
+             *   object is to be closed.
+             *
+             * Portlet container will close the stream, no need to close it here.
+             */
         }
     }
 
