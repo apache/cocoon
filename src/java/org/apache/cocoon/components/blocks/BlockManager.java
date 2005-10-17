@@ -15,39 +15,29 @@
  */
 package org.apache.cocoon.components.blocks;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.SAXException;
 
 /**
  * @version SVN $Id$
@@ -58,19 +48,12 @@ public class BlockManager
 
     public static String ROLE = BlockManager.class.getName();
 
-    private ServiceManager parentServiceManager;
-    private ServiceManager serviceManager;
-    private SourceResolver sourceResolver;
     private Context context;
-    private Processor processor;
-    private BlocksManager blocksManager;
-    private EnvironmentHelper environmentHelper;
-
     private Configuration config;
-    private BlockContext blockContext;
+    private ServiceManager parentServiceManager;
 
-    /** Processor attributes */
-    protected Map processorAttributes = new HashMap();
+    private Processor blockProcessor;
+    private BlockContext blockContext;
 
     // Life cycle
 
@@ -102,68 +85,17 @@ public class BlockManager
         // any direct access to the global root context
         newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL()));
         newContext.makeReadOnly();
-        this.context = newContext;
 	
-
-        // Create an own service manager
-        this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
-
-        // Hack to put a sitemap configuration for the main sitemap of
-        // the block into the service manager
-        getLogger().debug("Block Manager: create sitemap " + this.blockContext.getSitemapPath());
-        DefaultConfiguration sitemapConf =
-            new DefaultConfiguration("sitemap", "BlockManager sitemap: " + this.blockContext.getId() +
-                                     " for " + this.blockContext.getSitemapPath());
-        sitemapConf.setAttribute("file", this.blockContext.getSitemapPath());
-        sitemapConf.setAttribute("check-reload", "yes");
-        // The source resolver must be defined in this service
-        // manager, otherwise the root path will be the one from the
-        // parent manager
-        DefaultConfiguration resolverConf =
-            new DefaultConfiguration("source-resolver", "BlockManager source resolver: " + this.blockContext.getId());
-        DefaultConfiguration conf =
-            new DefaultConfiguration("components", "BlockManager components: " + this.blockContext.getId());
-        conf.addChild(sitemapConf);
-        conf.addChild(resolverConf);
-
-        LifecycleHelper.setupComponent(this.serviceManager,
+	this.blockProcessor = new BlockProcessor();
+        LifecycleHelper.setupComponent(this.blockProcessor,
                                        this.getLogger(),
-                                       this.context,
-                                       null,
-                                       conf);
+                                       newContext,
+                                       this.parentServiceManager,
+                                       this.blockContext.getProcessorConfiguration());    
 
-        this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
-        final Processor processor = EnvironmentHelper.getCurrentProcessor();
-        if ( processor != null ) {
-            getLogger().debug("processor context" + processor.getContext());
-        }
-        Source sitemapSrc = this.sourceResolver.resolveURI(this.blockContext.getSitemapPath());
-        getLogger().debug("Sitemap Source " + sitemapSrc.getURI());
-        this.sourceResolver.release(sitemapSrc);
-
-        // Get the Processor and keep it
-        this.processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-
-        this.environmentHelper = new EnvironmentHelper(
-                (URL)this.context.get(ContextHelper.CONTEXT_ROOT_URL));
-        LifecycleHelper.setupComponent(this.environmentHelper,
-                                       this.getLogger(),
-                                       null,
-                                       this.serviceManager,
-                                       null);
     }
 
     public void dispose() {
-        if (this.environmentHelper != null) {
-            LifecycleHelper.dispose(this.environmentHelper);
-            this.environmentHelper = null;
-        }
-        if (this.serviceManager != null) {
-            this.serviceManager.release(this.sourceResolver);
-            this.sourceResolver = null;
-            LifecycleHelper.dispose(this.serviceManager);
-            this.serviceManager = null;
-        }
         this.parentServiceManager = null;
     }
 
@@ -174,7 +106,6 @@ public class BlockManager
     // a little bit clumsy. Question is what components, if any, the
     // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
-        this.blocksManager = blocksManager;
         this.blockContext.setBlocksManager(blocksManager);
     }
 
@@ -274,7 +205,7 @@ public class BlockManager
             }
         } else {
             // Request to the own block
-            boolean result = this.processor.process(environment);
+            boolean result = this.blockProcessor.process(environment);
 
             return result;
 
@@ -334,45 +265,45 @@ public class BlockManager
     // code just use process.
     public InternalPipelineDescription buildPipeline(Environment environment)
         throws Exception {
-        return this.processor.buildPipeline(environment);
+        return this.blockProcessor.buildPipeline(environment);
     }
 
     public Configuration[] getComponentConfigurations() {
-        return null;
+        return this.blockProcessor.getComponentConfigurations();
     }
 
     // A block is supposed to be an isolated unit so it should not have
     // any direct access to the global root sitemap
     public Processor getRootProcessor() {
-        return this;
+        return this.blockProcessor;
     }
     
-    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
-        return this.environmentHelper;
+    public SourceResolver getSourceResolver() {
+        return this.blockProcessor.getSourceResolver();
     }
     
     public String getContext() {
-        return this.environmentHelper.getContext();
+        return this.blockProcessor.getContext();
     }
 
     /**
      * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return this.processorAttributes.get(name);
+        return this.blockProcessor.getAttribute(name);
     }
 
     /**
      * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
      */
     public Object removeAttribute(String name) {
-        return this.processorAttributes.remove(name);
+        return this.blockProcessor.removeAttribute(name);
     }
 
     /**
      * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        this.processorAttributes.put(name, value);
+        this.blockProcessor.setAttribute(name, value);
     }
 }
