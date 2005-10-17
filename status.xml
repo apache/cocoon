@@ -560,6 +560,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="CZ" type="add">
+      Portal Block: Include coplet instance id in window renderer; ignore javascript: urls during
+                    url rewriting.
+    </action>
     <action dev="RG" type="fix" fixes-bug="32784">
       Portal Block: Allow Full screen mode to show navigation.
     </action>
