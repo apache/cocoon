@@ -61,6 +61,7 @@ public class BlockContext
     private String sitemapPath;
 
     private Configuration componentConfiguration;
+    private Configuration processorConfiguration;
 
     // Life cycle
 
@@ -89,8 +90,8 @@ public class BlockContext
             Configuration connection = connections[i];
             String name = connection.getAttribute("name");
             String block = connection.getAttribute("block");
-	    this.connections.put(name, block);
-	    getLogger().debug("connection: " + " name=" + name + " block=" + block);
+            this.connections.put(name, block);
+            getLogger().debug("connection: " + " name=" + name + " block=" + block);
         }
 
         Configuration[] properties =
@@ -149,6 +150,7 @@ public class BlockContext
 
         this.sitemapPath = block.getChild("sitemap").getAttribute("src");
         getLogger().debug("sitemapPath=" + this.sitemapPath);
+        this.processorConfiguration = block.getChild("sitemap");
 
         this.componentConfiguration = block.getChild("components");
     }
@@ -222,17 +224,16 @@ public class BlockContext
     }
 
     /**
-     * Get the path of the main sitemap of the block
-     */
-
-    String getSitemapPath() {
-        return this.sitemapPath;
-    }
-
-    /**
      * Get the component configuration of the block
      */
     Configuration getComponentConfiguration() {
         return this.componentConfiguration;
+    }
+
+    /**
+     * Get the processor configuration of the block
+     */
+    Configuration getProcessorConfiguration() {
+        return this.processorConfiguration;
     }
 }
