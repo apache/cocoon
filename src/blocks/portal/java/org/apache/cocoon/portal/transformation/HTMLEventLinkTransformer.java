@@ -202,7 +202,8 @@ extends AbstractCopletTransformer {
             return true;
         }
         final String link = attributes.getValue("href");
-        if ( link != null && link.startsWith("mailto:") ) {
+        if ( link != null 
+             && (link.startsWith("mailto:") || link.startsWith("javascript:") ) ) {
             return true;
         }
         return false;
