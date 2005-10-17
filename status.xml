@@ -560,9 +560,13 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="35905">
+      Do not flush and close output stream, servlet container
+      will take care of it.
+    </action>
     <action dev="CZ" type="add">
-      Portal Block: Include coplet instance id in window renderer; ignore javascript: urls during
-                    url rewriting.
+      Portal Block: Include coplet instance id in window renderer; ignore
+      javascript: urls during url rewriting.
     </action>
     <action dev="RG" type="fix" fixes-bug="32784">
       Portal Block: Allow Full screen mode to show navigation.
