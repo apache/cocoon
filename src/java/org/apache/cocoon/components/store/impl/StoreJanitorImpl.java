@@ -19,7 +19,8 @@ package org.apache.cocoon.components.store.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -53,11 +54,15 @@ import org.apache.excalibur.store.StoreJanitor;
  * @x-avalon.lifestyle type=singleton
  *
  * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version CVS $Id: StoreJanitorImpl.java,v 1.4 2004/02/28 11:47:31 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class StoreJanitorImpl extends AbstractLogEnabled
                               implements StoreJanitor, Parameterizable, ThreadSafe,
-                                         Runnable, Startable {
+                                         Initializable, Disposable, 
+                                         Runnable {
+
+    // Note: this class doesn't need to be Startable. This allows the janitor thread to be
+    // lazily created the first time a store registers itsefl
 
     // Configuration parameters
     private int minFreeMemory = -1;
@@ -136,7 +141,11 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         }
     }
 
-    public void start() throws Exception {
+    public void initialize() throws Exception {
+        doStart();
+    }
+
+    private void doStart() throws Exception {
         this.doRun = true;
         Thread checker = new Thread(this);
         if (getLogger().isDebugEnabled()) {
@@ -148,8 +157,12 @@ public class StoreJanitorImpl extends AbstractLogEnabled
         checker.start();
     }
 
-    public void stop() {
+    private void doStop() {
         this.doRun = false;
+    }
+
+    public void dispose() {
+        doStop();
     }
 
     /**
