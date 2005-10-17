@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -181,7 +182,6 @@ public class CoreServiceManager
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
-
         this.componentEnv = new ComponentEnvironment(this.classloader, getLogger(), this.roleManager, this.loggerManager, this.context, this);
 
         // Setup location
@@ -591,7 +591,7 @@ public class CoreServiceManager
     //=============================================================================================
     // Private methods
     //=============================================================================================
-
+    
     /**
      * Obtain a new ComponentHandler for the specified component. 
      * 
@@ -608,6 +608,31 @@ public class CoreServiceManager
                                                   final Configuration configuration,
                                                   final ComponentInfo baseInfo)
     throws Exception {
+
+        boolean lazyLoad = this.settings.isLazyMode();
+        if (lazyLoad) {
+            // handle restrictions to lazy loading
+            if (role.endsWith("Selector") || configuration.getAttributeAsBoolean("preload", false)) {
+                lazyLoad = false;
+            } else {
+                // Check if the class implements Startable
+                Class componentClass;
+                try {
+                    componentClass = componentEnv.loadClass(className);
+                } catch (ClassNotFoundException cnfe) {
+                    throw new Exception("Cannot find class " + className + " for component at " +
+                            configuration.getLocation(), cnfe);
+                }
+                if (Startable.class.isAssignableFrom(componentClass)) {
+                    lazyLoad = false;
+                }
+            }
+        }
+
+        if (lazyLoad) {
+            return new LazyHandler(role, className, configuration, componentEnv);
+        }
+        
         // FIXME - we should ensure that we always get an info
         ComponentInfo info;
         if ( baseInfo != null ) {
@@ -619,11 +644,7 @@ public class CoreServiceManager
         info.setConfiguration(configuration);
         info.setServiceClassName(className);
 
-        if (!this.settings.isLazyMode() || configuration.getAttributeAsBoolean("preload", false) || role.endsWith("Selector")) {
-            return AbstractComponentHandler.getComponentHandler(
-                    role, this.componentEnv, info);
-        }
-        return new LazyHandler(role, className, configuration, this.componentEnv);
+        return AbstractComponentHandler.getComponentHandler(role, this.componentEnv, info);
     }
 
     private void parseConfiguration(final Configuration configuration, String contextURI, Set loadedURIs) 

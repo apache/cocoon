@@ -15,20 +15,20 @@
  */
 package org.apache.cocoon.components.thread;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * The DefaultRunnableManager implements the {@link RunnableManager} interface
@@ -72,8 +72,11 @@ public class DefaultRunnableManager
                Configurable,
                Disposable,
                Runnable,
-               Startable,
+               Initializable,
                ThreadSafe {
+    
+    // Note: this class doesn't need to be Startable. This allows the thread pool to be
+    // lazily created the first time a Runnable is executed.
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -248,6 +251,8 @@ public class DefaultRunnableManager
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
+        doStop();
+
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Disposing all thread pools" );
         }
@@ -450,13 +455,22 @@ public class DefaultRunnableManager
             getLogger().debug( "Exiting loop" );
         }
     }
+    
+    /**
+     * Start the managing thread
+     * 
+     * @throws Exception
+     */
+    public void initialize() throws Exception {
+        doStart();
+    }
 
     /**
      * Start the managing thread
      *
      * @throws Exception DOCUMENT ME!
      */
-    public void start() throws Exception {
+    private void doStart() throws Exception {
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Starting the heart" );
         }
@@ -467,10 +481,8 @@ public class DefaultRunnableManager
 
     /**
      * Stop the managing thread
-     *
-     * @throws Exception DOCUMENT ME!
      */
-    public void stop( ) throws Exception {
+    private void doStop( ) {
         keepRunning = false;
 
         synchronized( commandStack ) {
