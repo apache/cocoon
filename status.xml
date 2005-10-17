@@ -2462,6 +2462,12 @@
      for the component marker interfaces RequestLifeCycleComponent and
      GlobalRequestLifeCycleComponent obsolete.
    </action>
+   <action dev="CZ" type="add">
+     Adding contributions to the portal from Friedrich Klenner (friedrich.klenner@rzb.at),
+     Gerald Kahrer (gerald.kahrer@rizit.at) and Gernot Koller (gernot.koller@rizit.at):
+     caching uri coplet, application coplet, proxy transformer, proxy reader and link
+     transformer.
+   </action>
    <action dev="UV" type="fix">
      Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir,
      rather than CLI invocation dir.
