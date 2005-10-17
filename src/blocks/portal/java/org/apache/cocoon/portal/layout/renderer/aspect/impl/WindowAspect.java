@@ -72,6 +72,7 @@ public final class WindowAspect extends AbstractAspect {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
         XMLUtils.createElement(contenthandler, "title", copletInstanceData.getTitle());
+        XMLUtils.createElement(contenthandler , "instance-id", copletInstanceData.getId());
 
         context.invokeNext( layout, service, contenthandler );
 

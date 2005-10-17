@@ -204,7 +204,6 @@ public class TabContentAspect
      *
      * @param service
      * @param tab
-     * @return
      */
     private Layout getNextLayout(PortalService service, Item tab) {
         Layout tabLayout = tab.getLayout();
