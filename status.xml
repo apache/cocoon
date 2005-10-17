@@ -124,16 +124,6 @@
       Test, test, test :-)
     </action>
 
-    <action context="docs" assigned-to="open">
-      Attend to any high+ issues in the
-      <link href="plan/todo-doc.html">Documentation To Do List</link>
-    </action>
-
-    <action context="code" assigned-to="open">
-      Attend to the general issues in the
-      <link href="plan/release.html">release plan</link>
-    </action>
-
     <action context="build" assigned-to="open">
       Complete (means put all allowed constructs and combinations)
       the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
@@ -142,12 +132,6 @@
     <action context="code" assigned-to="SW">
       For 2.2: Views must start not from the first encountered label, but from the last one
       (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172)
-    </action>
-
-    <action context="code" assigned-to="NKB">
-      Make comprehensive samples with the handle-errors sitemap and real world
-      use cases. Add also specific Selector and a FaqBuilder to be used by the
-      NotifyingBuilder.
     </action>
 
     <action context="code" assigned-to="open">
@@ -170,13 +154,6 @@
       Ensure that recyclable components always release their references, even when
       they are not pooled. The easiest way is to make them disposable and clean up
       in dispose.
-    </action>
-
-    <action context="code">
-      XMLize exception handling so that error pages can become more
-      semantically meaningful. Currently all XSP compilation errors are
-      stored in a single string. With XMLized exceptions we could display
-      especially XSP errors much nicer.
     </action>
 
     <action context="code">
@@ -595,6 +572,9 @@
     <action dev="BD" type="add">
       Bricks-cms example application created (distributed separately), see http://wiki.apache.org/cocoon/BricksCms
     </action>
+    <action dev="LG" type="update">
+      Improved blocks build exclusion/inclusion. See blocks.properties for more info.
+    </action>
     <action dev="VG" type="update">
       I18n: Refactored XMLResourceBundle to use transient store instead of
       private cache. Added reload check interval parameter. Support dynamic
@@ -611,6 +591,21 @@
     <action dev="BD" type="update">
       cocoon.sh and cocoon.bat (done by CZ): "servlet" is now the default action.
     </action>
+    <action dev="VG" type="update">
+      Update Avalon framework to 4.3, Avalon LogKit to 2.1, Excalibur Instrument to 2.1,
+      Excalibur Logger to 2.1, Excalibur Pool to 2.1, Excalibur SourceResolve to 2.1,
+      Excalibur Store to 2.1, Excalibur XMLUtils to 2.1 and Excalibur Database to 2.1.
+    </action>
+    <action dev="JHS" type="fix" fixes-bug="30796" due-to="Max Pfingsthorn" due-to-email="m.pfingsthorn@hippo.nl">
+      Fix OutofBoundsException when form element does not have an action attribute
+    </action>
+    <action dev="RG" type="fix" fixes-bug="34802" due-to="Roy Huang" due-to-email="roy_huang@nbmgroup.com">
+      Portal Block: PageLabelLinkService generated the wrong url when using 3
+      layer tabs with showallnav.
+    </action>
+    <action dev="JHS" type="add" fixes-bug="36781" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
+      CForms: The repeater widget now supports min and max-size attributes.
+    </action>
     <action dev="VG" type="add">
       Moved support for zip: sources from scratchpad into the core.
     </action>
@@ -621,11 +616,23 @@
     <action dev="AG" type="update">
       Updated quartz to 1.5.0.
     </action>
+    <action dev="JH" type="update" fixes-bug="28056">
+      Midi Block: Marked as stable.
+    </action>
     <action dev="CZ" type="update" fixes-bug="32994" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
       Portal Block: Provide sample for caching uri coplet adapter (Gallery coplet).
     </action>
     <action dev="CZ" type="fix">
       Portal Block: Add missing interface CopletInstanceEvent to FullScreenCopletEvent.
+    </action>
+    <action dev="JH" type="update" fixes-bug="35475" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
+      CForms: Improved error message for wrong content type on upload.
+    </action>
+    <action dev="JH" type="fix" fixes-bug="35162" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      XSP: EclipseJavaCompiler chokes on warnings. Changed to errors.
+    </action>
+    <action dev="JH" type="fix" fixes-bug="33318" due-to="Dan Durkin" due-to-email="ddurkin@scilearn.com">
+      CForms: Fixed JavaScript error in forms-lib.js when using keyword <code>undefined</code> and Mac IE 5.0.
     </action>
     <action dev="AG" type="add" fixes-bug="31600" due-to="Jason Johnston" due-to-email="apache.bugs@lojjic.net">
       Caching support for XInclude Transformer
@@ -637,7 +644,7 @@
       This is the result of the Max Pfingsthorn's Google Summer of Code (GSoC) project.
     </action>
     <action dev="SW" type="update">
-      When the upload size exceeds the configured limit, an RejectedPart is associated to the request
+      When the upload size exceeds the configured limit, a RejectedPart is associated to the request
       rather than throwing a exception at the servlet level. This allows the application to handle
       oversized uploads and provide meaningful messages. The upload widget in CForms has been updated
       to use this new feature.
@@ -664,6 +671,11 @@
     </action>
     <action dev="LG" type="fix" fixes-bug="35845" due-to="Henric Mueller" due-to-email="henric@trillian.se">
       JXTG: jx:formatDate and jx:formatNumber allows for specifying locale string instead of a Locale object
+    </action>
+    <action dev="PF" type="add">
+      Added a new "validation" block abstracting the concept of XML validation and providing access to schemas
+      and validation tools from within Cocoon pipelines and/or Cocoon components. As of right now, the
+      "validation" block supports the RELAX-NG grammar using JING and the XML-Schema grammar using Xerces.
     </action>
     <action dev="SW" type="add">
       Add a "cocoon.exit()" method to flowscript, which allows to exit the current flowscript invocation without
@@ -704,10 +716,22 @@
     <action dev="CZ" type="add">
       Portal block: Allow portlet adapter to stream html content through the pipeline using the NekoHTML parser.
     </action>
-   <action dev="CZ" type="add" fixes-bug="36240" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
+    <action dev="CZ" type="add" fixes-bug="36240" due-to="Jens Maukisch" due-to-email="jmaukisch@s-und-n.de">
       Portal block: Use OJB and the HSQLDB for authentication of the portal sample.
     </action>
-     <action dev="VG" type="update">
+    <action dev="AN" type="fix">
+      XSP block: Move AttributeImpl in xsp.xsl to class scope.
+      That allows top-level xsp:logic to define markup generating methods.
+      Variable xspAttr renamed to _xspAttr to be avoid breaking existing
+      XSPs which already use that trick.
+    </action>
+    <action dev="AN" type="fix">
+      XSP block: Add xsp:expr and various other contexts where text must be
+      passed through XSLTExtension:escape in order to preserve non-ASCII
+      characters in Java string constants independently of the XSP source file
+      and compiler expected encodings.
+    </action>
+    <action dev="VG" type="update">
       Faces block: Updated MyFaces libraries to the SVN r233484, get rid of patched
       version.
     </action>
@@ -738,6 +762,21 @@
       JAVA_OPTIONS=-Dcontext=blah/, for example will make the Cocoon webapp available at
       /blah/ instead of / which stays the default.
     </action>
+    <action dev="SW" type="update">
+      Update Rhino+continuations so that JavaScriptException has the same API as the official 1.6 version. This
+      is allows to access location and nested exceptions for Cocoon stacktraces.
+    </action>
+    <action dev="SW" type="fix">
+      Add a specific ErrorListener in TraxTransformer to track exceptions raised during XSLT transformations.
+      This allows this transformer to throw the exception that actually occured, rather than a useless RuntimeException
+      as reported by Xalan.
+    </action>
+    <action dev="AN" type="add">
+      XSP block: Extend {#expr} interpolation parser to understand {}, "}", '}'
+      as not being the closing brace.
+      The previously implemented mechanism #} to escape braces within the
+      statement is no longer supported.
+    </action>
     <action dev="SW" type="add">
       Added Cocoon stacktraces. This is based on location classes in the new org.apache.cocoon.util.location package
       and a refactoring of the exception management to attach locations to exceptions.
@@ -745,11 +784,14 @@
     <action dev="AG" type="update">
       Updated hsqldb to 1.8.0.
     </action>
+    <action dev="AN" type="add">
+      XSP block: Implement {#expr} interpolation also for logicsheets.
+    </action>
     <action dev="SW" type="add">
       New org.apache.cocoon.util.location package, providing utilities to track locations in XML documents and
       the objects built from these documents.
     </action>
-    <action dev="SW" type="fix" fixes-bug="35618" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
+    <action dev="SW" type="fix" fixes-bug="35618" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
       Mail block: Allow any of the Cocoon-provided protocols to be used for attachments in SendMailTransformer.
       This means that "cocoon:" URLs are no more rewritten as external http requests.
     </action>
@@ -766,6 +808,35 @@
     <action dev="CZ" type="add">
       Portal block: Add easier to use event handling mechanism by introducing the new Receiver interface.
                     Deprecated Publisher, Subscriber, Filter and Register.
+    </action>
+    <action dev="JH" type="update">
+      Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
+      block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
+      (both from batik block).
+    </action>
+    <action dev="BD" type="add" due-to="Christian Stocker" due-to-email="chregu@bitflux.ch">
+      XSLTAL block added, presentation templating transformer based on the Zope TAL syntax.
+    </action>
+    <action dev="BD" type="update">
+      TraxTransformer: new default-src configuration parameter, used if src is not specified.
+    </action>
+    <action dev="AN" type="add" fixes-bug="28045" due-to="Jon Evans" due-to-email="jon.evans@misgl.com">
+      Added CookieModule as a more convinient way to access cookie values as {cookie:query}
+      in alternative to {request:cookies[name='query']/value}.
+    </action>
+    <action dev="AN" type="add" fixes-bug="33388" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
+      Added parameter "show-cocoon-version" to web.xml for configuring whether X-Cocoon-Version
+      response header should be sent.  Default is true.
+      In a security paranoid environment you may want to set it to false in order to hide from
+      the outside world which Cocoon version you are running.
+    </action>
+    <action dev="AN" type="add" fixes-bug="35228" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      XSP block: Added short-cut notation {#expr} for interpolation of
+      XSP expressions in attribute values and text nodes.
+      Removed wrapping of all text nodes from XSP source into &lt;xsp:text&gt;
+      elements before passing them to logicsheets.
+      (This feature was not used by the standard logicsheets but check your
+      custom logicsheets whether they depend on it.)
     </action>
     <action dev="CZ" type="add">
       Portal block: Convert PortletPortalManager into portal manager aspect.
@@ -789,8 +860,19 @@
     <action dev="AG" type="update">
       Updated commons-digester to 1.7, commons-lang to 2.1, xercesImpl to 2.7.0.
     </action>
+    <action dev="UH" type="add" due-to="Johan Stuyts">
+      Mail block: The SendMailTransformer can now configure the smtp port.
+    </action>
     <action dev="VG" type="fix" fixes-bug="33097">
       Fixed reloading of the i18n catalogues (regression introduced in 2.1.7).
+    </action>
+    <action dev="UH" type="add" due-to="Johan Stuyts">
+      JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
+      detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
+      in order to re-establish the connection. As soon as reconnection was successful it notifies its listeners
+      so that they may recover as well and refresh their JMS sessions. The provided abstract MessageListener
+      and JMS publisher that users are recommended to use as base classes for their concrete JMS needs have been
+      updated to use this mechanism.
     </action>
     <action dev="BD" type="add" fixes-bug="35364" due-to="Askild Aaberg Olsen" due-to-email="askild@xangeli.com">
       Forms block: sqldatabase sample added, demonstrates "zero java code" editing of SQL data
@@ -808,7 +890,7 @@
       CForms block: The form and container widgets can take up <code>ValidationError</code>s. As those widgets
       don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
       has to be used. Currently this tag is only supported by the jxtemplate macro library.
-    </action>     
+    </action>
     <action dev="SW" type="fix">
       Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
       caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
@@ -828,15 +910,19 @@
     </action>
     <action dev="AG" type="update">
       Updated ant to 1.6.5.
-     </action>
+    </action>
     <action dev="SW" type="add">
-      CForms block: add a new <code>&lt;fd:true-param-value&gt;</code>code> configuration to
+      CForms block: add a new <code>&lt;fd:true-param-value&gt;</code> configuration to
       booleanfield definitions, to allow specifying a value different from "<code>true</code>"
       for the checkbox.
     </action>
     <action dev="CZ" type="update">
       Set the content-length of a response when the pipeline buffers the content
       (which is the default).
+    </action>
+    <action dev="AN" type="fix" fixes-bug="32935">
+      XSP Block: Double check and attempt again to load program object from cache.
+      This avoids that simultaneous requests recompile the same XSP over and over again.
     </action>
     <action dev="SW" type="fix">
       When receiving a multipart request, also add parameters given on the URL to the
@@ -845,6 +931,16 @@
     <action dev="BD" type="fix">
       EHDefaultStore.store throws more descriptive exception if key or value
       are not Serializable.
+    </action>
+    <action dev="AG" type="update">
+      Cforms block: Caching selection list for best performance inside repeaters.
+      Deprecate <code>@dynamic</code> in <code>&lt;fd:selection-list&gt;</code>
+      in favor of <code>@cache</code>. Posible <code>@cache</code> values are:
+      <ul>
+        <li><code>static</code> => equivalent to old <code>@dynamic="false"</code></li>
+        <li><code>none</code> => equivalent to old <code>@dynamic="true"</code></li>
+        <li><code>request</code> => is new, similar to <code>cache="none"</code>, but caching the selection list per request. Useful to improve performance inside repeaters.</li>
+      </ul>
     </action>
     <action dev="AG" type="update">
       Updated ant to 1.6.4, batik to 1.6, db-ojb to 1.0.3.
@@ -866,6 +962,9 @@
       XSP Block: Race condition could lead to duplicate application of same logicsheet
       with spurious compilation errors or undefined runtime behaviour.
     </action>
+    <action dev="UC" type="add">
+      CForms block: added CAPTCHA validator.
+    </action>
     <action dev="VG" type="add">
       IncludeTransformer moved from the scratchpad into the core. It has following
       features:
@@ -877,6 +976,10 @@
         <li>Supports fallback element processing.</li>
         <li>Supports inclusion of files as text.</li>
       </ul>
+    </action>
+    <action dev="JH" type="fix">
+      Enabled the synchronization on Cocoon's session wrapper by assuring that only
+      one wrapper exists per servlet session.
     </action>
     <action dev="VG" type="fix" fixes-bug="25098">
       Databases: SQLTransformer: Support queries nested into insert/delete/update
@@ -930,8 +1033,14 @@
     <action dev="VG" type="update">
       XMLFileModule gets <code>cache-expressions</code> configuration parameter.
     </action>
+    <action dev="AG" type="fix" fixes-bug="33100" due-to="Juan Jose Pablos" due-to-email="cheche@apache.org">
+      form(NOT_FOUND is not a function) error caused by wrong documentation.
+    </action>
     <action dev="AG" type="fix" fixes-bug="34591" due-to="Jorg Heymans" due-to-email="jh@domek.be">
       Fix ContextPathModule name in javadocs.
+    </action>
+    <action dev="SW" type="add">
+       New JCR block that adds a "jcr:" protocol to access and modify repository contents.
     </action>
     <action dev="BD" type="add">
       New HTMLTransformer sample in html block.
@@ -959,6 +1068,9 @@
     </action>
     <action dev="AG" type="update">
       Updated groovy to 1.0-jsr-01, jdtcore to 3.0.2.
+    </action>
+    <action dev="BD" type="add" fixes-bug="34294" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+      New set of automated tests based on HtmlUnit 
     </action>
     <action dev="VG" type="update">
       Add support for namespaced XML elements to the JXPath based input
@@ -1016,10 +1128,20 @@
    <action dev="AG" type="update">
      Updated quartz to 1.4.5, jcs to 1.2.5-dev-20050313.
    </action>
+   <action dev="SW" type="update">
+     Refactored the Deprecation class: the "forbidden-deprecation-level" parameter in web.xml
+     allows to raise deprecation exceptions depending on the log level. For example, DEBUG
+     allows no deprecations (strict mode), and FATAL_ERROR allows all (tolerant mode).
+     Default is ERROR, allowing messages up to WARN.
+   </action>
    <action dev="SW" type="add">
      A flowscript's file encoding can now be specified by a comment on the script's
      very first line, in the form "<code>// encoding = xxxx</code>". Otherwise, the
      default platform encoding is used.
+   </action>
+   <action dev="JQ" type="add">
+     Added QueryBean as a standalone block, copied over from 2.2.0. Removed
+     the original from the Lucene Block. Stores Favourites using OJB in HSQLDB.
    </action>
    <action dev="SW" type="update">
      CForms: separate <code>FormattingDateConvertor</code> that uses
@@ -1057,6 +1179,12 @@
    </action>
    <action dev="CZ" type="fix" fixes-bug="10277">
      Change the mime-type setting of a reader. See also bug #25121.
+   </action>
+   <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
+     Fix thread safety problem in JXTemplateGenerator.setup() concerning template script reparsing.
+   </action>
+   <action dev="LG" type="add">
+     Polish i18n for CForms.
    </action>
    <action dev="VG" type="update">
      OJB Block: Renamed JdoPMF component to JDO, OdmgImplementation to ODMG, and
@@ -1099,6 +1227,11 @@
        <li><code>Form.showForm()</code> now uses a single continuation, which saves memory and speeds
            up processing by shortening the continuation chain when the user has a long interaction
            with the form.</li>
+       <li>"ttl" parameter added to <code>Form.showForm()</code>, which has the same meaning as for cocoon.sendPageAndWait().</li>
+       <li>new "cleanupHook" property on Form: this is a function that is called each time the form is displayed.
+           This is similar to the "fun" parameter of cocoon.sendPageAndWait().</li>
+       <li>new "restoreHook" property on Form: this is a function that is called each time the continuation is called back,
+           to restore if needed the execution environment before processing the request.</li>
      </ul>
      <br/>
      Actions:
@@ -1165,7 +1298,7 @@
    </action>
    <action dev="AG" type="add">
      Add &lt;compiler-compliance-level&gt; parameter for java XSP compiler.
-     This new parameter allow to specify the java code source version used to compile the XSP code. 
+     This new parameter allow to specify the java code source version used to compile the XSP code.
      It is useful to run cocoon using java 1.5 while using source code for 1.4.
      Posible values:
            1.3 = Java version 1.3
@@ -1216,8 +1349,11 @@
    <action dev="AG" type="update">
      Updated hsqldb to 1.7.3, lucene to 1.4.3, ehcache to 1.1, log4j to 1.2.9.
    </action>
+   <action dev="TC" type="add">
+     Paranoid: make the classloader implementation configurable
+   </action>
    <action dev="AG" type="fix" fixes-bug="32408" due-to="Juan Jose Pablos" due-to-email="cheche@che-che.com">
-     typo on the date-selector doc.
+     Typo on the date-selector doc.
    </action>
    <action dev="AG" type="fix" fixes-bug="30043" due-to="Micah Dubinko" due-to-email="mdubinko@snapbridge.com">
      xml2html.xslt does not work on IE.
@@ -1284,6 +1420,10 @@
    </action>
    <action dev="GP" type="add">
      Allow attribute values to be matches as well for EncodeURLTransformer.
+   </action>
+   <action dev="BRD" type="fix">
+     Multipart requests: use container encoding for decoding requests, in order to have consistent
+     handling between normal requests and multipart requests.
    </action>
    <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
      I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
@@ -3215,7 +3355,7 @@
    Integrated the validation targets into the build ("validate-config" and
    "validate-xdocs") also still available at the command-line. Validation
    happens automatically unless you switch it off. See document
-   XML Validation Facilities.
+   <link href="userdocs/concepts/validation.html">XML Validation Facilities</link>.
   </action>
   <action dev="CH" type="fix" due-to-email="michael.enke@wincor-nixdorf.com"
    due-to="Michael Enke" fixes-bug="15064">
@@ -3638,7 +3778,7 @@
   <action dev="DC" type="add">
    Encourage people to help with the refactoring of Cocoon samples.
    Provide a
-   refactoring guidelines document.
+   <link href="plan/samples.html">refactoring guidelines</link> document.
   </action>
   <action dev="DC" type="update">
    Moved the old sample for Catalog Entity Resolver in to the new
