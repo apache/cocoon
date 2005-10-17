@@ -26,7 +26,23 @@ import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggingConfiguration;
 
 /**
- * OJB logger implementation delegating to the Avalon logger
+ * OJB logger implementation delegating to the Avalon logger.
+ *
+ * <p>This class has two faces to it:
+ * <dl>
+ * <dt>Avalon Component</dt>
+ * <dd>Instance of the class created and managed by Avalon container.
+ * When instance is initialized, it obtains logger instance to be used
+ * by OJB.</dd>
+ * <dt>OJB Managed Class</dt>
+ * <dd>Instances of the class are created and managed by OJB, as defined
+ * in the OJB <code>OJB.properties</code> file. Each OJB managed instance
+ * of the class will have access to the logger object initialized
+ * by Avalon managed instance of the class.</dd>
+ * </dl>
+ *
+ * It is important that Avalon component is initialized before any access
+ * to OJB API is made.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
