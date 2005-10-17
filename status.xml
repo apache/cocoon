@@ -75,6 +75,7 @@
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
   <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
+  <person name="Daniel Fagerstrom" email="danielf@apache.org" id="DF"/>
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Antonio Gallardo" email="antonio@apache.org" id="AG"/>
@@ -177,6 +178,9 @@
     <action dev="RG" type="fix" fixes-bug="32784">
       Portal Block: Allow Full screen mode to show navigation.
     </action>
+     <action dev="RG" type="fix" fixes-bug="34802" due-to="Roy Huang" due-to-email="roy_huang@nbmgroup.com">
+      Portal Block: PageLabelLinkService generated the wrong url when using 3 layer tabs with showallnav.
+    </action>
     <action dev="VG" type="fix" fixes-bug="30894">
       Databases block: Support stored procedures returning result set in SQLTransformer.
     </action>
@@ -247,6 +251,12 @@
     </action>
     <action dev="AG" type="add" fixes-bug="31600" due-to="Jason Johnston" due-to-email="apache.bugs@lojjic.net">
       Caching support for XInclude Transformer
+    </action>
+    <action dev="SW" type="add" due-to="Max Pfingsthorn" due-to-email="max.pfingsthorn@gmail.com">
+      CForms block: new form libraries features. You can now define form definition and binding
+      library files and import them for reuse and/or extension in regular definition and binding files.
+      <br/>
+      This is the result of the Max Pfingsthorn's Google Summer of Code (GSoC) project.
     </action>
     <action dev="SW" type="update">
       When the upload size exceeds the configured limit, a RejectedPart is associated to the request
@@ -359,7 +369,8 @@
      Updated Axis to 1.2.1 and wsdl4j to 1.5.1.
     </action>
     <action dev="AG" type="update">
-      Updated xercesImpl to 2.7.1, xml-apis to 1.3.02, log4j to 1.2.11, nekohtml to 0.9.5, geromino-spec-jms and geronimo-spec-jta to M3.
+      Updated xercesImpl to 2.7.1, xml-apis to 1.3.02, log4j to 1.2.11, nekohtml to 0.9.5,
+      geromino-spec-jms and geronimo-spec-jta to M3.
     </action>
     <action dev="BD" type="update">
       Webapp context is now configurable when starting with the included Jetty webserver. Setting
@@ -409,6 +420,10 @@
     <action dev="CZ" type="fix" fixes-bug="29506" due-to-email="tobias@lentus.se">
       Fix wrong caching behaviour in DirectoryGenerator.
     </action>
+    <action dev="CZ" type="add">
+      Portal block: Add easier to use event handling mechanism by introducing the new Receiver interface.
+                    Deprecated Publisher, Subscriber, Filter and Register.
+    </action>
     <action dev="JH" type="update">
       Moved following components into core: TraversableGenerator, XPathTraversableGenerator (both from repository
       block), CSVGenerator (from scratchpad block), FragmentExtractorTransformer and FragmentExtractorGenerator
@@ -447,7 +462,7 @@
     </action>     
     <action dev="CZ" type="add">
       Portal block: Add portal manager aspects for more flexible portal processing.
-    </action>     
+    </action>
     <action dev="CZ" type="add">
       CForms block: Add isValid() method to a Widget.
     </action>     
@@ -490,7 +505,7 @@
       CForms block: The form and container widgets can take up <code>ValidationError</code>s. As those widgets
       don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
       has to be used. Currently this tag is only supported by the jxtemplate macro library.
-    </action>       
+    </action>
     <action dev="SW" type="fix">
       Fix some multithreading issues when a background thread or cron job uses the "cocoon:" protocol, that
       caused the background request pipeline to be recycled by the parent thread during its execution.<br/>
@@ -512,9 +527,9 @@
       Updated ant to 1.6.5.
     </action>
     <action dev="SW" type="add">
-       CForms block: add a new <code>&lt;fd:true-param-value&gt;</code> configuration to
-       booleanfield definitions, to allow specifying a value different from "<code>true</code>"
-       for the checkbox.
+      CForms block: add a new <code>&lt;fd:true-param-value&gt;</code> configuration to
+      booleanfield definitions, to allow specifying a value different from "<code>true</code>"
+      for the checkbox.
     </action>
     <action dev="CZ" type="update">
       Set the content-length of a response when the pipeline buffers the content
@@ -819,6 +834,8 @@
      <br/>
      Form.js :
      <ul>
+       <li>added "fun" and "ttl" parameters to <code>Form.showForm()</code>, which now has the exact
+           same parameters as cocoon.sendPageAndWait().</li>
        <li>the argument of <code>new Form(...)</code> can now be either a String or a DOM Element.
            Accepting an Element allows the use of any kind of dynamic process to build the form
            definition.</li>
@@ -898,7 +915,6 @@
      Add &lt;compiler-compliance-level&gt; parameter for java XSP compiler.
      This new parameter allow to specify the java code source version used to compile the XSP code.
      It is useful to run cocoon using java 1.5 while using source code for 1.4.
-          
      Posible values:
            1.3 = Java version 1.3
            1.4 = Java version 1.4
@@ -2200,6 +2216,12 @@
      Adding new RequestDataStore component that can be used as a replacement
      for the component marker interfaces RequestLifeCycleComponent and
      GlobalRequestLifeCycleComponent obsolete.
+   </action>
+   <action dev="CZ" type="add">
+     Adding contributions to the portal from Friedrich Klenner (friedrich.klenner@rzb.at),
+     Gerald Kahrer (gerald.kahrer@rizit.at) and Gernot Koller (gernot.koller@rizit.at):
+     caching uri coplet, application coplet, proxy transformer, proxy reader and link
+     transformer.
    </action>
    <action dev="UV" type="fix">
      Changed logkit attribute of &lt;logging in cli.xconf to be relative to context dir,
