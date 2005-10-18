@@ -82,6 +82,8 @@ public class CastorSourceConverter
             return result;
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
+        } finally {
+            ReferenceFieldHandler.clearObjectMap();
         }
     }
 

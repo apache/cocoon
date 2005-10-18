@@ -31,8 +31,6 @@ public class PortletPortalManager
 	extends PortalManagerImpl
 	implements Initializable {
 
-    public static ThreadLocal copletInstanceData;
-
     /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
@@ -40,7 +38,6 @@ public class PortletPortalManager
         Deprecation.logger.info("The PortletPortalManager is deprecated. Please use the PortletPortalManagerAspect instead.");
         PortletAdapter aspect = (PortletAdapter)this.adapterSelector.select("portlet");
         this.chain.addAsFirst(aspect, new Parameters());
-        copletInstanceData = aspect.copletInstanceData;
     }
 }
 

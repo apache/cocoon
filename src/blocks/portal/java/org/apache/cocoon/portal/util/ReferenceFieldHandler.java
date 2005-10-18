@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.util;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -23,25 +23,22 @@ import java.util.Map;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: ReferenceFieldHandler.java,v 1.5 2004/03/05 13:02:17 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class ReferenceFieldHandler extends AbstractFieldHandler {
     /**
      * Used to pass resolvable objects to the field handler.
      */
-    private static ThreadLocal threadLocalMap = new InheritableThreadLocal();
+    private static ThreadLocal threadLocalMap = new ThreadLocal();
 
     /**
      * Gets the map used to pass resolvable objects to the field handler.
      */
     public static Map getObjectMap() {
         Map map = (Map) threadLocalMap.get();
-
         if (map == null) {
-            map = new HashMap();
-            threadLocalMap.set(map);
+            map = Collections.EMPTY_MAP;
         }
-
         return map;
     }
 
@@ -49,10 +46,10 @@ public abstract class ReferenceFieldHandler extends AbstractFieldHandler {
      * Sets the map used to pass resolvable objects to the field handler.
      */
     public static void setObjectMap(Map objectMap) {
-        if (objectMap == null) {
-            threadLocalMap.set(new HashMap());
-        } else {
-            threadLocalMap.set(objectMap);
-        }
+        threadLocalMap.set(objectMap);
+    }
+
+    public static void clearObjectMap() {
+        threadLocalMap.set(null);
     }
 }
