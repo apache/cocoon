@@ -1794,8 +1794,10 @@
    <action dev="CZ" type="update">
      Make the current sitemap service manager available through the component context.
    </action>
-   <action dev="CZ" type="update">
-     Moving portlet environment to portal block.
+   <action dev="VG" type="add">
+     Portal block: Add portlet environment to build JSR 168 portlets with Cocoon.
+                   This is a contribution by Alex Rudnev (alex.rudnev@dc.gov)
+                   and Vadim Gritsenko (vadim.gritsenko@dc.gov).
    </action>
    <action dev="CZ" type="update">
      Adding basket coplet to the portal.
