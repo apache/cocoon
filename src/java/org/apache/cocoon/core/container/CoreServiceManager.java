@@ -43,6 +43,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreResourceNotFoundException;
@@ -609,13 +610,17 @@ public class CoreServiceManager
                                                   final ComponentInfo baseInfo)
     throws Exception {
 
-        boolean lazyLoad = this.settings.isLazyMode();
-        if (lazyLoad) {
-            // handle restrictions to lazy loading
-            if (role.endsWith("Selector") || configuration.getAttributeAsBoolean("preload", false)) {
-                lazyLoad = false;
-            } else {
-                // Check if the class implements Startable
+        boolean lazyLoad;
+
+        if (configuration.getAttribute("preload", null) != null) {
+            // This one has precedence
+            lazyLoad = configuration.getAttributeAsBoolean("preload");
+
+        } else {
+            lazyLoad = this.settings.isLazyMode();
+
+            if (lazyLoad) {
+                // Check if the class implements Startable or Preloadable
                 Class componentClass;
                 try {
                     componentClass = componentEnv.loadClass(className);
@@ -623,7 +628,8 @@ public class CoreServiceManager
                     throw new Exception("Cannot find class " + className + " for component at " +
                             configuration.getLocation(), cnfe);
                 }
-                if (Startable.class.isAssignableFrom(componentClass)) {
+                if (Startable.class.isAssignableFrom(componentClass) ||
+                    Preloadable.class.isAssignableFrom(componentClass)) {
                     lazyLoad = false;
                 }
             }
