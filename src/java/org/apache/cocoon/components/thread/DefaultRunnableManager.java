@@ -22,7 +22,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -71,13 +71,10 @@ public class DefaultRunnableManager
     implements RunnableManager,
                Configurable,
                Disposable,
+               Startable,
                Runnable,
-               Initializable,
                ThreadSafe {
     
-    // Note: this class doesn't need to be Startable. This allows the thread pool to be
-    // lazily created the first time a Runnable is executed.
-
     //~ Static fields/initializers ---------------------------------------------
 
     /** The default {@link ThreadFactory} */
@@ -251,8 +248,6 @@ public class DefaultRunnableManager
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        doStop();
-
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Disposing all thread pools" );
         }
@@ -458,19 +453,10 @@ public class DefaultRunnableManager
     
     /**
      * Start the managing thread
-     * 
-     * @throws Exception
-     */
-    public void initialize() throws Exception {
-        doStart();
-    }
-
-    /**
-     * Start the managing thread
      *
      * @throws Exception DOCUMENT ME!
      */
-    private void doStart() throws Exception {
+    public void start() throws Exception {
         if( getLogger().isDebugEnabled() ) {
             getLogger().debug( "Starting the heart" );
         }
@@ -482,7 +468,7 @@ public class DefaultRunnableManager
     /**
      * Stop the managing thread
      */
-    private void doStop( ) {
+    public void stop( ) {
         keepRunning = false;
 
         synchronized( commandStack ) {

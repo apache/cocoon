@@ -29,6 +29,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ComponentInfo;
+import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
 
 /**
@@ -39,7 +40,7 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
  */
 public class StandaloneServiceSelector
 extends AbstractServiceManager
-implements ServiceSelector, Serviceable, Configurable {
+implements Preloadable, ServiceSelector, Serviceable, Configurable {
     
     /** The application context for components
      */
