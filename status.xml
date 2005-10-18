@@ -197,9 +197,6 @@
     <action dev="JH" type="fix" fixes-bug="33318" due-to="Dan Durkin" due-to-email="ddurkin@scilearn.com">
       CForms: Fixed JavaScript error in forms-lib.js when using keyword <code>undefined</code> and Mac IE 5.0.
     </action>
-    <action dev="CZ" type="add">
-      Portal block: Remove aspect datas from coplet datas. Attributes are now used instead.
-    </action>
     <action dev="JHS" type="fix" fixes-bug="35537" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
       Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration 
       files that should ensure DELI works on different apps servers or deployed as a WAR.
@@ -270,12 +267,6 @@
       elements before passing them to logicsheets.
       (This feature was not used by the standard logicsheets but check your
       custom logicsheets whether they depend on it.)
-    </action>
-    <action dev="CZ" type="add">
-      Portal block: Remove deprecated Publisher, Subscriber, Filter and Register.
-    </action>
-    <action dev="CZ" type="add">
-      Portal block: Remove deprecated PortletPortalManager.
     </action>
     <action dev="UH" type="add" due-to="Johan Stuyts">
       Mail block: The SendMailTransformer can now configure the smtp port.
