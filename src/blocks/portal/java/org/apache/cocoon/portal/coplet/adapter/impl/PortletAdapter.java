@@ -83,8 +83,6 @@ public class PortletAdapter
     extends AbstractCopletAdapter
     implements Contextualizable, Initializable, PortalManagerAspect, Receiver, Disposable {
 	
-    public final ThreadLocal copletInstanceData = new InheritableThreadLocal();
-
     /** The avalon context */
     protected Context context;
     
@@ -152,7 +150,6 @@ public class PortletAdapter
                 objectModel.put("portlet-request",  req);                
             }
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-            this.copletInstanceData.set(coplet);
             try {
                 this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
                                                   res);
@@ -161,8 +158,6 @@ public class PortletAdapter
                 // remove portlet entity
                 coplet.removeTemporaryAttribute("window");
                 ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
-            } finally {
-                this.copletInstanceData.set(null);
             }
         }
     }
@@ -189,7 +184,6 @@ public class PortletAdapter
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-            this.copletInstanceData.set(coplet);
             
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
@@ -214,8 +208,6 @@ public class PortletAdapter
             throw se;
         } catch (Exception e) {
             throw new SAXException(e);
-        } finally {
-            this.copletInstanceData.set(null);            
         }
     }
 

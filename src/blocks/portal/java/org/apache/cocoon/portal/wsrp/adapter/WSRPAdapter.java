@@ -166,7 +166,7 @@ public class WSRPAdapter
     protected ConsumerEnvironmentImpl consumerEnvironment;
     
     /** Stores the current coplet instance data per thread. */
-    protected final ThreadLocal copletInstanceData = new InheritableThreadLocal();
+    protected final ThreadLocal copletInstanceData = new ThreadLocal();
 
     /** The servlet configuration. */
     protected ServletConfig servletConfig;
