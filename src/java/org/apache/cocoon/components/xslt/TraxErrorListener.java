@@ -29,7 +29,7 @@ import org.apache.cocoon.util.location.LocationUtils;
  * @version $Id$
  * @since 2.1.8
  */
-public class XSLTErrorListener implements ErrorListener{
+public class TraxErrorListener implements ErrorListener{
 
     private Logger logger;
     private String uri;
@@ -40,7 +40,7 @@ public class XSLTErrorListener implements ErrorListener{
     /** The exception we had from error() or fatalError() */
     private TransformerException exception;
 
-    public XSLTErrorListener(Logger logger, String uri) {
+    public TraxErrorListener(Logger logger, String uri) {
         this.logger = logger;
         this.uri = uri;
     }

@@ -377,7 +377,7 @@
       +-->
   <component logger="core.xslt"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
-             class="org.apache.cocoon.components.xslt.XSLTProcessorImpl">
+             class="org.apache.cocoon.components.xslt.TraxProcessor">
      <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </component>
@@ -387,7 +387,7 @@
       +-->
   <component logger="core.xslt"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
-             class="org.apache.cocoon.components.xslt.XSLTProcessorImpl">
+             class="org.apache.cocoon.components.xslt.TraxProcessor">
      <parameter name="use-store" value="true"/>
      <parameter name="incremental-processing" value="false"/>
      <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
@@ -401,7 +401,7 @@
       |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
   <component logger="core.xslt"
              role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
-             class="org.apache.cocoon.components.xslt.XSLTProcessorImpl">
+             class="org.apache.cocoon.components.xslt.TraxProcessor">
      <parameter name="use-store" value="true"/>
      <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
   </component>

@@ -41,7 +41,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.xslt.XSLTErrorListener;
+import org.apache.cocoon.components.xslt.TraxErrorListener;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -202,7 +202,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
     private SAXException exceptionDuringSetConsumer;
 
     /** The error listener used by the stylesheet */
-    private XSLTErrorListener errorListener;
+    private TraxErrorListener errorListener;
 
     /**
      * Configure this transformer.
@@ -416,7 +416,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
 
-        this.errorListener = new XSLTErrorListener(getLogger(), this.inputSource.getURI());
+        this.errorListener = new TraxErrorListener(getLogger(), this.inputSource.getURI());
         this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 

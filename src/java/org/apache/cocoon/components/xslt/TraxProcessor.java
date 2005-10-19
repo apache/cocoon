@@ -68,7 +68,7 @@ import org.xml.sax.XMLFilter;
  * @since 2.1.8
  */
 
-public class XSLTProcessorImpl extends AbstractLogEnabled implements XSLTProcessor, Serviceable, Initializable, Disposable, Parameterizable,
+public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, Serviceable, Initializable, Disposable, Parameterizable,
         Recyclable, URIResolver {
     /** The store service instance */
     protected Store m_store;
@@ -204,7 +204,7 @@ public class XSLTProcessorImpl extends AbstractLogEnabled implements XSLTProcess
             throw new XSLTProcessorException("Error retrieving template", e);
         }
         
-        XSLTErrorListener errorListener = new XSLTErrorListener(getLogger(), stylesheet.getURI());
+        TraxErrorListener errorListener = new TraxErrorListener(getLogger(), stylesheet.getURI());
         try{
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Creating new Templates for " + id);
@@ -250,7 +250,7 @@ public class XSLTProcessorImpl extends AbstractLogEnabled implements XSLTProcess
 
                 // Create transformer handler
                 final TransformerHandler handler = m_factory.newTransformerHandler(template);
-                handler.getTransformer().setErrorListener(new XSLTErrorListener(getLogger(), stylesheet.getURI()));
+                handler.getTransformer().setErrorListener(new TraxErrorListener(getLogger(), stylesheet.getURI()));
                 handler.getTransformer().setURIResolver(this);
 
                 // Create aggregated validity
@@ -381,7 +381,7 @@ public class XSLTProcessorImpl extends AbstractLogEnabled implements XSLTProcess
             }
         }
 
-        _factory.setErrorListener(new XSLTErrorListener(getLogger(), null));
+        _factory.setErrorListener(new TraxErrorListener(getLogger(), null));
         _factory.setURIResolver(this);
 
         // FIXME (SM): implementation-specific parameter passing should be
@@ -480,7 +480,7 @@ public class XSLTProcessorImpl extends AbstractLogEnabled implements XSLTProcess
         }
 
         TransformerHandler handler = m_factory.newTransformerHandler((Templates) templateAndValidityAndIncludes[0]);
-        handler.getTransformer().setErrorListener(new XSLTErrorListener(getLogger(), stylesheet.getURI()));
+        handler.getTransformer().setErrorListener(new TraxErrorListener(getLogger(), stylesheet.getURI()));
         handler.getTransformer().setURIResolver(this);
         return new MyTransformerHandlerAndValidity(handler, storedValidity);
     }
