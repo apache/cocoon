@@ -15,21 +15,18 @@
  */
 package org.apache.cocoon.util.log;
 
-import org.apache.avalon.framework.ExceptionUtil;
-import org.apache.avalon.framework.logger.LogKitLogger;
+import java.util.Map;
 
+import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.location.LocatedException;
-
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.log.ContextMap;
 import org.apache.log.LogEvent;
 import org.apache.log.Logger;
-
-import java.util.Map;
 
 /**
  * An extended pattern formatter. New patterns defined by this class are:
@@ -171,7 +168,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
             case TYPE_QUERY:
                 return getQueryString(event.getContextMap());
             case TYPE_ROOTTHROWABLE:
-                return getStackTrace(ExceptionUtils.getRootCause(event.getThrowable()), run.m_format);
+                Throwable thr = event.getThrowable();
+                Throwable root = ExceptionUtils.getRootCause(thr); // Can be null if no cause
+                return getStackTrace(root == null ? thr : root, run.m_format);
         }
         return super.formatPatternRun(event, run);
     }

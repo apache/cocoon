@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -43,13 +41,12 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.xslt.TraxErrorListener;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.location.Location;
-import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -204,31 +201,8 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
     /** Exception that might occur during setConsumer */
     private SAXException exceptionDuringSetConsumer;
 
-    private TransformerException transformerException;
-
-    private ErrorListener errorListener = new ErrorListener() {
-
-        public void warning(TransformerException ex) throws TransformerException {
-            if (getLogger().isWarnEnabled()) {
-                Location loc = LocationUtils.getLocation(ex);
-                getLogger().warn("Warning at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
-            }
-        }
-
-        public void error(TransformerException ex) throws TransformerException {
-            if (getLogger().isWarnEnabled()) {
-                Location loc = LocationUtils.getLocation(ex);
-                getLogger().error("Error at " + loc == null ? inputSource.getURI() : loc.toString(), ex);
-            }
-        }
-
-        public void fatalError(TransformerException ex) throws TransformerException {
-            // Keep it for later use
-            transformerException = ex;
-            // and rethrow it
-            throw ex;
-        }
-    };
+    /** The error listener used by the stylesheet */
+    private TraxErrorListener errorListener;
 
     /**
      * Configure this transformer.
@@ -442,6 +416,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
 
+        this.errorListener = new TraxErrorListener(getLogger(), this.inputSource.getURI());
         this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 
@@ -597,7 +572,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         this.transformerHandler = null;
         this.transformerValidity = null;
         this.exceptionDuringSetConsumer = null;
-        this.transformerException = null;
+        this.errorListener = null;
         super.recycle();
     }
 
@@ -609,21 +584,9 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         try {
             super.endDocument();
         } catch(Exception e) {
-            Throwable realEx = e;
             
-            // Did we had an exception reported to the error listener?
-            if (transformerException != null) {
-                // this is the real exception
-                Location loc = LocationUtils.getLocation(transformerException);
-                if (LocationUtils.isUnknown(loc)) {
-                    // No location: if it's just a wrapper, consider only the wrapped exception
-                    realEx = transformerException.getCause();
-                    if (realEx == null) {
-                        // no cause: keep the transformer exception
-                        realEx = transformerException;
-                    }
-                }
-            }
+            Throwable realEx = this.errorListener.getThrowable();
+            if (realEx == null) realEx = e;
             
             if (realEx instanceof RuntimeException) {
                 throw (RuntimeException)realEx;
@@ -633,10 +596,6 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
                 throw (SAXException)realEx;
             }
             
-            if (realEx instanceof Exception) {
-                throw new SAXException((Exception)realEx);
-            }
-        
             if (realEx instanceof Error) {
                 throw (Error)realEx;
             }
