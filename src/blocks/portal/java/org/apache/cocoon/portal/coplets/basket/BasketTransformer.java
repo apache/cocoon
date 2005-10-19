@@ -109,8 +109,14 @@ public class BasketTransformer
                     final String copletId = attr.getValue("coplet");
                     final CopletInstanceData cid = service.getComponentManager().getProfileManager().getCopletInstanceData(copletId);                    
                     ci = new ContentItem(cid, addContent);
-            }
+                }
 
+                // if a title is present set the title
+                final String title = attr.getValue("title");
+                if(title!=null) {
+                    ci.setTitle(title);
+                }
+                
                 // do we want to add the content to the basket or to the briefcase
                 final ContentStore store;
                 final String storeName = (attr.getValue("store") == null ? this.defaultStoreName : attr.getValue("store"));

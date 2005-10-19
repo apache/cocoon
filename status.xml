@@ -175,6 +175,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix" fixes-bug="33152" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
+      Portal block: Add title to basket item in the portal sample.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="37115,29405" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
       Portal block: Fix history aspect when coplets are used.
     </action>
