@@ -170,7 +170,9 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
             case TYPE_QUERY:
                 return getQueryString(event.getContextMap());
             case TYPE_ROOTTHROWABLE:
-                return getStackTrace(ExceptionUtils.getRootCause(event.getThrowable()), run.m_format);
+                Throwable thr = event.getThrowable();
+                Throwable root = ExceptionUtils.getRootCause(thr); // Can be null if no cause
+                return getStackTrace(root == null ? thr : root, run.m_format);
         }
         return super.formatPatternRun(event, run);
     }
