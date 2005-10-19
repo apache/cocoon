@@ -24,6 +24,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.acting.helpers.CopletEventDescription;
 import org.apache.cocoon.portal.acting.helpers.LayoutEventDescription;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
@@ -51,7 +52,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: HistoryAspect.java,v 1.4 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class HistoryAspect 
     extends AbstractAspect {
@@ -61,17 +62,26 @@ public class HistoryAspect
      * @param id
      * @param state
      * @param values
+     * @param isCopletEvent tells if the event has to be a coplet event 
      */
-    protected void addValues(String id, List state, Map values, String prefix) {
+    protected void addValues(String id, List state, Map values, String prefix,boolean isCopletEvent) {
         final Iterator iter = values.entrySet().iterator();
         while ( iter.hasNext() ) {
             final Map.Entry entry = (Map.Entry)iter.next();
             final String path = prefix + entry.getKey();
-            LayoutEventDescription led = new LayoutEventDescription();
-            led.path = path;
-            led.layoutId = id;
-            led.data = entry.getValue();
-            state.add(led);
+            if(!isCopletEvent){
+            	LayoutEventDescription led = new LayoutEventDescription();
+            	led.path = path;
+            	led.layoutId = id;
+            	led.data = entry.getValue();
+            	state.add(led);
+            }else{
+            	CopletEventDescription ced = new CopletEventDescription();
+            	ced.path = path;
+            	ced.copletId = id;
+            	ced.data = entry.getValue();
+            	state.add(ced);
+            }
         }
     }
 
@@ -99,14 +109,14 @@ public class HistoryAspect
                     history.add(state);
                 }
                 
-                this.addValues(layout.getId(), state, layout.getAspectDatas(), "aspectDatas/");
-                this.addValues(layout.getId(), state, layout.getParameters(), "parameters/");
+                this.addValues(layout.getId(), state, layout.getAspectDatas(), "aspectDatas/",false);
+                this.addValues(layout.getId(), state, layout.getParameters(), "parameters/",false);
                 
                 // are we a coplet layout
                 if ( layout instanceof CopletLayout ) {
                     CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
-                    this.addValues(cid.getId(), state, cid.getAspectDatas(), "aspectDatas/");
-                    this.addValues(cid.getId(), state, cid.getAttributes(), "attributes/");
+                    this.addValues(cid.getId(), state, cid.getAspectDatas(), "aspectDatas/",true);
+                    this.addValues(cid.getId(), state, cid.getAttributes(), "attributes/",true);
                 }
                 session.setAttribute("portal-history", history);
             }
