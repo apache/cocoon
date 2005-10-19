@@ -41,7 +41,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * 
+ * @deprecated Use the {@link org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager}
  * @version CVS $Id$
  */
 public abstract class AbstractUserProfileManager 
