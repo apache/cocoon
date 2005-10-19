@@ -75,7 +75,7 @@
   <!-- XSLT: -->
   <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
         shorthand="xslt-processor"
-        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
+        default-class="org.apache.cocoon.components.xslt.XSLTProcessorImpl"/>
 
   <role name="org.apache.excalibur.xml.xpath.XPathProcessor"
         shorthand="xpath-processor"

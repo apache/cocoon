@@ -775,9 +775,12 @@
       is allows to access location and nested exceptions for Cocoon stacktraces.
     </action>
     <action dev="SW" type="fix">
-      Add a specific ErrorListener in TraxTransformer to track exceptions raised during XSLT transformations.
-      This allows this transformer to throw the exception that actually occured, rather than a useless RuntimeException
-      as reported by Xalan.
+	   Complete refactoring of error handling in TraxTransformer and XSLTProcessor so that actual error messages
+	   are displayed rather than the useless RuntimeException usually reported by Xalan. These messages include
+	   both stylesheet compilation errors and warnings, and outputs of <code>&lt;xsl:message terminate="yes"&gt;</code>.
+	   <br/>
+	   Using this feature requires to change the XSTLProcessor class in <code>cocoon.xconf</code> to
+	   <code>org.apache.cocoon.components.xslt.XSLTProcessorImpl</code>.
     </action>
     <action dev="AN" type="add">
       XSP block: Extend {#expr} interpolation parser to understand {}, "}", '}'
