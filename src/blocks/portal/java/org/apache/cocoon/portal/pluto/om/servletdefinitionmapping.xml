@@ -40,6 +40,30 @@
 
   </class>
 
+  <class name="org.apache.cocoon.portal.pluto.om.common.ResourceRef">
+
+    <field name="description" type="java.lang.String" required="false">
+      <bind-xml name="description" node="element"/>
+    </field>
+
+    <field name="name" type="java.lang.String" required="false">
+      <bind-xml name="res-ref-name" node="element"/>
+    </field>
+
+    <field name="type" type="java.lang.String" required="false">
+      <bind-xml name="res-type" node="element"/>
+    </field>
+
+    <field name="auth" type="java.lang.String" required="false">
+      <bind-xml name="res-auth" node="element"/>
+    </field>
+
+    <field name="sharing" type="java.lang.String" required="false">
+      <bind-xml name="res-sharing-scope" node="element"/>
+    </field>
+
+  </class>
+
   <class name="org.apache.cocoon.portal.pluto.om.common.MimeType">
 
     <field name="extension" type="java.lang.String" required="true">
@@ -49,6 +73,10 @@
     <field name="mimeType" type="java.lang.String" required="true">
       <bind-xml name="mime-type" node="element"/>
     </field>
+
+  </class>
+
+  <class name="org.apache.cocoon.portal.pluto.om.common.SecurityConstraintImpl">
 
   </class>
 
@@ -173,6 +201,7 @@
     <field name="castorId" type="java.lang.String">
       <bind-xml name="id" node="attribute"/>
     </field>
+
     <field name="castorDisplayNames" 
          type="org.apache.cocoon.portal.pluto.om.common.DisplayNameImpl"
          collection="collection">
@@ -207,6 +236,12 @@
        <bind-xml name="taglib" node="element" />
     </field>
 
+    <field name="castorResourceRefSet"
+           type="org.apache.cocoon.portal.pluto.om.common.ResourceRef"
+           collection="collection">
+        <bind-xml name="resource-ref" node="element"/>
+    </field>
+
     <!-- only for completion, not used in class file -->
     <field name="icon" transient="true" direct="true">
         <bind-xml name="icon" node="element"/>
@@ -217,7 +252,7 @@
     <field name="sessionConfig" transient="true" direct="true">
         <bind-xml name="session-config" node="element"/>
     </field>
-    <field name="mimeMappings"
+    <field name="castorMimeMappings"
     	transient="true"
     	required="false"
     	type="org.apache.cocoon.portal.pluto.om.common.MimeType"
@@ -231,12 +266,14 @@
         <bind-xml name="error-page" node="element"/>
     </field>
     
-    <field name="resourceRef" transient="true" direct="true">
-        <bind-xml name="resource-ref" node="element"/>
-    </field>
-    <field name="securityConstraint" transient="true" direct="true">
+      <field name="securityConstraints"
+          transient="true"
+          required="false"
+          type="org.apache.cocoon.portal.pluto.om.common.SecurityConstraintImpl"
+          collection="collection">
         <bind-xml name="security-constraint" node="element"/>
     </field>
+
     <field name="loginConfig" transient="true" direct="true">
         <bind-xml name="login-config" node="element"/>
     </field>

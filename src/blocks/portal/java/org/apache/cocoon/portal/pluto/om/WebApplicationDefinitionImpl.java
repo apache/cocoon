@@ -35,10 +35,12 @@ import org.apache.pluto.om.servlet.ServletDefinitionList;
 import org.apache.pluto.om.servlet.WebApplicationDefinition;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.cocoon.portal.pluto.om.common.ParameterSetImpl;
+import org.apache.cocoon.portal.pluto.om.common.ResourceRefSet;
 import org.apache.cocoon.portal.pluto.om.common.SecurityRoleSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.Support;
 import org.apache.cocoon.portal.pluto.om.common.DescriptionSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
+import org.apache.cocoon.portal.pluto.om.common.TagDefinitionSet;
 
 /**
  *
@@ -55,16 +57,18 @@ implements WebApplicationDefinition, Support {
     public String icon;
     public String distributable;
     public String sessionConfig;
-    private Collection mimeMappings = new ArrayList();
+    public String mimeMapping;
     public String welcomeFileList;
     public String errorPage;
+    public String taglib;
     public String resourceRef;
-    public String securityConstraint;
     public String loginConfig;
     public String securityRole;
     public String envEntry;
     public String ejbRef;
+    private Collection castorMimeMappings = new ArrayList();
     // </not used variables - only for castor>
+    private Collection securityConstraints = new ArrayList();
 
     private String contextPath;
     private DescriptionSet descriptions = new DescriptionSetImpl();
@@ -76,11 +80,15 @@ implements WebApplicationDefinition, Support {
     private Collection servletMappings = new ArrayList();
     private ServletDefinitionList servlets = new ServletDefinitionListImpl();
     private SecurityRoleSet securityRoles = new SecurityRoleSetImpl();
-    private Collection castorTagDefinitions = new ArrayList();
 
-    /* (non-Javadoc)
-     * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getId()
-     */
+    // modified by YCLI: START :: to handle multiple taglib tags and resource-ref tag
+    // private TagDefinition castorTagDefinition = new TagDefinition();
+    private TagDefinitionSet taglibs = new TagDefinitionSet();
+    private ResourceRefSet castorResourceRef = new ResourceRefSet();
+    // modified by YCLI: END
+
+    // WebApplicationDefinition implementation.
+    
     public ObjectID getId() {
         if (this.objectId == null) {
             this.objectId = ObjectIDImpl.createFromString(id);
@@ -199,11 +207,6 @@ implements WebApplicationDefinition, Support {
 
     // additional methods.
 
-    public void setCastorId(String id) {
-        this.id = id;
-        objectId = null;
-    }
-
     public String getCastorId() {
         if (id.length() > 0) {
             return getId().toString();
@@ -234,15 +237,19 @@ implements WebApplicationDefinition, Support {
     public Collection getServletMappings() {
         return servletMappings;
     }
-
-    protected void setContextRoot(String contextRoot) {
-        // PATCH for IBM WebSphere
-        if (contextRoot != null && contextRoot.endsWith(".war") ) {
-            this.contextPath = contextRoot.substring(0, contextRoot.length()-4);
-        } else {
-            this.contextPath = contextRoot;
-        }
+    public void setCastorId(String id) {        
+        setId(id);
     }
+    
+    protected void setContextRoot(String contextPath)
+    {
+        // Test for IBM WebSphere 
+        if (contextPath != null && contextPath.endsWith(".war"))
+        {
+            contextPath = contextPath.substring(0, contextPath.length()-4);
+        }
+        this.contextPath = contextPath;
+    }    
 
     public void setDescriptions(DescriptionSet descriptions) {
         this.descriptions = descriptions;
@@ -260,29 +267,56 @@ implements WebApplicationDefinition, Support {
         this.displayNames = castorDisplayNames;
     }
 
+    public void setId(String id) {
+        this.id = id;
+        objectId = null;
+    }
+
+     // modified by YCLI: START :: handling multiple taglib tags and resource-ref tag
+
     /**
-     *
+     * @return Custom tag definitions configured in the webapp.
      */
+    public TagDefinitionSet getTagDefinitionSet() {
+        return taglibs;
+    }
+
     public Collection getCastorTagDefinitions() {
-        return castorTagDefinitions;
+        return taglibs;
+    }
+
+    public void setCastorTagDefinitions(TagDefinitionSet taglibs) {
+        this.taglibs = taglibs;
+    }
+
+    public ResourceRefSet getCastorResourceRefSet() {
+        return castorResourceRef;
+    }
+
+    public void setCastorResourceRefSet(ResourceRefSet resourceRefs) {
+        castorResourceRef = resourceRefs;
+    }
+    // modified by YCLI: END
+
+    /**
+     * @return Returns the castorMimeMappings.
+     */
+    public Collection getCastorMimeMappings() {
+        return castorMimeMappings;
+    }
+
+    public Collection getSecurityConstraints() {
+        return securityConstraints;
     }
 
     /**
-     * @param definition
+     * @param castorMimeMappings The castorMimeMappings to set.
      */
-    public void setCastorTagDefinitions(Collection definition) {
-        castorTagDefinitions = definition;
+    public void setCastorMimeMappings(Collection castorMimeMappings) {
+        this.castorMimeMappings = castorMimeMappings;
     }
-    /**
-     * @return Returns the mimeMappings.
-     */
-    public Collection getMimeMappings() {
-        return mimeMappings;
-    }
-    /**
-     * @param mimeMappings The mimeMappings to set.
-     */
-    public void setMimeMappings(Collection mimeMappings) {
-        this.mimeMappings = mimeMappings;
+
+    public void setSecurityConstraints(Collection securityConstraints) {
+        this.securityConstraints = securityConstraints;
     }
 }
