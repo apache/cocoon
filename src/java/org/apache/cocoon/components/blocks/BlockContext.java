@@ -29,7 +29,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
@@ -115,7 +114,7 @@ public class BlockContext
                 (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
             source = resolver.resolveURI(blockPath);
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            block = builder.build( source.getInputStream() );
+            block = builder.build(source.getInputStream(), source.getURI());
         } catch (ServiceException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);

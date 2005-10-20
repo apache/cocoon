@@ -24,6 +24,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -35,6 +36,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -51,6 +53,7 @@ public class BlockManager
     private Context context;
     private Configuration config;
     private ServiceManager parentServiceManager;
+    private ServiceManager serviceManager;
 
     private Processor blockProcessor;
     private BlockContext blockContext;
@@ -85,14 +88,53 @@ public class BlockManager
         // any direct access to the global root context
         newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL()));
         newContext.makeReadOnly();
-	
-	this.blockProcessor = new BlockProcessor();
-        LifecycleHelper.setupComponent(this.blockProcessor,
-                                       this.getLogger(),
-                                       newContext,
-                                       this.parentServiceManager,
-                                       this.blockContext.getProcessorConfiguration());    
 
+        // Create block a service manager with the exposed components of the block
+        if (this.blockContext.getComponentConfiguration() != null) {
+            // The source resolver must be defined in this service
+            // manager, otherwise the root path will be the one from the
+            // parent manager, we add a resolver to get it right. If the
+            // components section contain includes the CoreComponentManager
+            // use the location of the configuration an the parent SourceResolver
+            // for resolving the include.
+            String confLocation = this.blockContext.getContextURL() + "::";
+            DefaultConfiguration sourceManagerConf =
+                new DefaultConfiguration("components", confLocation);
+            DefaultConfiguration resolverConf =
+                new DefaultConfiguration("source-resolver");
+            sourceManagerConf.addChild(resolverConf);
+            ServiceManager sourceResolverSM =
+                new CoreServiceManager(this.parentServiceManager);
+            LifecycleHelper.setupComponent(
+                    sourceResolverSM,
+                    this.getLogger(),
+                    newContext,
+                    null,
+                    sourceManagerConf);
+            
+            DefaultConfiguration componentConf =
+                new DefaultConfiguration("components", confLocation);
+            componentConf.addAll(this.blockContext.getComponentConfiguration());
+            this.serviceManager = new CoreServiceManager(sourceResolverSM);
+            LifecycleHelper.setupComponent(this.serviceManager,
+                    this.getLogger(),
+                    newContext,
+                    null,
+                    componentConf);
+        } else {
+            this.serviceManager = this.parentServiceManager;
+        }
+
+        // Create a processor for the block
+        if (this.blockContext.getProcessorConfiguration() != null) {
+            this.blockProcessor = new BlockProcessor();
+            LifecycleHelper.setupComponent(this.blockProcessor,
+                    this.getLogger(),
+                    newContext,
+                    this.serviceManager,
+                    this.blockContext.getProcessorConfiguration());    
+            
+        }
     }
 
     public void dispose() {
