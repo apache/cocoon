@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<http-headers-action-test>
+	The contents of this file are not interesting, what you want to
+	test is the presence and value of the X-HttpHeaderActionTest header.
+</http-headers-action-test>
