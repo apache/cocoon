@@ -98,17 +98,22 @@ public class IncludeXMLConsumer implements XMLConsumer {
                                    LexicalHandler lexicalHandler)
     throws SAXException {
         if (node != null) {
-            try {
-                IncludeXMLConsumer filter = new IncludeXMLConsumer(contentHandler, lexicalHandler);
-                Transformer transformer = FACTORY.newTransformer();
-                DOMSource source = new DOMSource(node);
-                SAXResult result = new SAXResult(filter);
-                result.setLexicalHandler(filter);
-                transformer.transform(source, result);
-            } catch (TransformerConfigurationException e) {
-                throw new SAXException("TransformerConfigurationException", e);
-            } catch (TransformerException e) {
-                throw new SAXException("TransformerException", e);
+            if (node.getNodeType() == Node.TEXT_NODE){
+                String value = node.getNodeValue();
+                contentHandler.characters(value.toCharArray(), 0, value.length());
+            } else {
+                try {
+                    IncludeXMLConsumer filter = new IncludeXMLConsumer(contentHandler, lexicalHandler);
+                    Transformer transformer = FACTORY.newTransformer();
+                    DOMSource source = new DOMSource(node);
+                    SAXResult result = new SAXResult(filter);
+                    result.setLexicalHandler(filter);
+                    transformer.transform(source, result);
+                } catch (TransformerConfigurationException e) {
+                    throw new SAXException("TransformerConfigurationException", e);
+                } catch (TransformerException e) {
+                    throw new SAXException("TransformerException", e);
+                }
             }
         }
     }
