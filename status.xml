@@ -175,6 +175,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix" fixes-bug="36471" due-to="Armaz Mellati" due-to-email="armaz@uninett.no">
+      Fix bug with session:getxml when path is a text-element and IncludeXMLConsumer
+      when including text nodes.
+    </action>
     <action dev="CZ" type="update">
       Update Pluto to final release 1.0.1.
     </action>
