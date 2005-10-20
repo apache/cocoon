@@ -17,6 +17,7 @@
 package org.apache.cocoon;
 
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.SubmitMethod;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -24,6 +25,7 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Wrap the result of an httpclient Method execution into an HtmlUnit
@@ -84,6 +86,16 @@ class HttpClientResponse
         return url;
     }
 
+    public SubmitMethod getRequestMethod() {
+    		// we'll implement this if/when we need it
+		throw new Error("HttpClientResponse.getRequestMethod() is not implemented yet");
+    }
+    
+    public List getResponseHeaders() {
+		// we'll implement this if/when we need it
+    		throw new Error("HttpClientResponse.getResponseHeaders() is not implemented yet");
+    }
+    
     public String getResponseHeaderValue(String headerName) {
         return method.getResponseHeader(headerName).getValue();
     }
