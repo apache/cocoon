@@ -136,7 +136,7 @@
       <doc label="Javaflow"/>         
     </doc>         
     <doc label="Supported blocks">
-      <doc label="Cocoon Portal" href="http://brutus.apache.org/docs/build/cocoon-doco-portal/"/>
+      <doc label="Cocoon Portal" href="http://forrest.zones.apache.org/fr/build/cocoon-doco-portal/"/>
         <!-- later to be removed by http://cocoon.apache.org/blocks/portal/1.0/index.html" -->        
       <doc label="OJB"/>        
       <doc label="..."/>

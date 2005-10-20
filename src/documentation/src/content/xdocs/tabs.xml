@@ -32,9 +32,9 @@
     be displayed when their parent tab is selected.    
   -->
 
-  <tab id="project" label="Project" href="http://brutus.apache.org/docs/build/cocoon-doco-global/index.html"/>
+  <tab id="project" label="Project" href="http://forrest.zones.apache.org/fr/build/cocoon-doco-global/index.html"/>
     <!-- later to be replaced by: http://cocoon.apache.org -->
-  <tab id="community" label="Community" href="http://brutus.apache.org/docs/build/cocoon-doco-global/community.html"/>
+  <tab id="community" label="Community" href="http://forrest.zones.apache.org/fr/build/cocoon-doco-global/community.html"/>
     <!-- later to be replaced by: http://cocoon.apache.org/community.html -->
   <tab id="tutorials" label="Tutorials" dir="" indexfile="getting-started.html"/>
   <tab id="docs" label="Documentation" dir="" indexfile="index.html">
