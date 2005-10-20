@@ -33,21 +33,27 @@
           description="Runs JUnit tests"/>
 
   <target name="htmlunit-tests"
-          depends="core-htmlunit-tests, block-htmlunit-tests, htmlunit-tests-report, check-htmlunit-present"
+          depends="core-htmlunit-tests, block-htmlunit-tests, htmlunit-notes, htmlunit-tests-report, check-htmlunit-present"
           description="Runs HtmlUnit tests"/>
 
   <target name="check-htmlunit-present" unless="htmlunit.present">
-    <echo>To use htmlunit, please install it (see http://htmlunit.sourceforge.net/) and set htmlunit.home (currently ${htmlunit.home}) in your local.build.properties</echo>
-    <echo>----------------------</echo>
-    <echo>*** Htmlunit notes ***</echo>
-    <echo>a) To run these tests, an instance of Cocoon must be</echo>
-    <echo>   running at ${htmlunit.test.baseurl}</echo>
-    <echo>b) JDK 1.4.x is required to run these tests, but running them</echo>
-    <echo>   under 1.4.x to test Cocoon running under 1.3.x should be ok.</echo>
-    <echo>c) htmlunit options can be set in local.build.properties, and some</echo>
-    <echo>   tests only run if enabled there.</echo>
+    <echo>**** HTMLUNIT NOT FOUND!!! ****************************************************************************************</echo>
+    <echo>To use htmlunit, please install it (see http://htmlunit.sourceforge.net/), </echo>
+    <echo>and set htmlunit.home (currently ${htmlunit.home}) in your local.build.properties</echo>
+    <echo>*******************************************************************************************************************</echo>
+    <fail>htmlunit not present, cannot run tests</fail>
   </target>
 
+  <target name="htmlunit-notes">
+    <echo>*** Htmlunit tests notes ***</echo>
+    <echo>a) To run these tests, an instance of Cocoon must be</echo>
+    <echo>   running at ${htmlunit.test.baseurl} (start it as usual, from another window)</echo>
+    <echo>b) JDK 1.4.x is required to run these tests, but running them</echo>
+    <echo>   under 1.4.x to test Cocoon running under 1.3.x should be ok.</echo>
+    <echo>c) Settings in build.properties can allow a subset of tests to run,</echo>
+    <echo>   see the htmlunit section there.</echo>
+  </target>
+  
   <target name="junit-tests-prepare">
     <delete dir="${build.test.output}"/>
     <delete dir="${build.test.report}"/>
