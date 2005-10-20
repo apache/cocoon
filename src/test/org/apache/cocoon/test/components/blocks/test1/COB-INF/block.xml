@@ -28,6 +28,9 @@
          implementation="stable"/>
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
+  <components>
+    <include src="COB-INF/xconf/test1.xconf"/>
+  </components>
   <sitemap src="block-sitemap.xmap"/>
   <properties>
     <property name="foo">

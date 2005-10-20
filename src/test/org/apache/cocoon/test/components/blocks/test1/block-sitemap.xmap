@@ -23,35 +23,13 @@
     <!--map:classpath>
       <class-dir src="COB-INF/classes"/>
     </map:classpath-->
-
-    <source-factories>
-      <component-instance class="org.apache.cocoon.components.source.impl.BlockSourceFactory" name="block"/>
-    </source-factories>
-
-    <input-modules>
-      <component-instance name="block-path"  class="org.apache.cocoon.components.modules.input.BlockPathModule"/>
-    </input-modules>
-
-    <map:generators default="file">
-      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
-    </map:generators>
-
-    <map:transformers default="xslt">
-      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
-    </map:transformers>
-
+    <map:generators default="file"/>
+    <map:transformers default="xslt"/>
     <map:serializers default="xml">
       <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
     </map:serializers>
-
-    <map:matchers default="wildcard">
-      <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
-    </map:matchers>
-
-    <map:pipes default="noncaching">
-      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
-      </map:pipe>
-    </map:pipes>
+    <map:matchers default="wildcard"/>
+    <map:pipes default="noncaching"/>
   </map:components>
 
   <map:pipelines>

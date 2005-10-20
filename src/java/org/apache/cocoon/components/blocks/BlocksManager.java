@@ -84,7 +84,7 @@ public class BlocksManager
         try {
             source = this.resolver.resolveURI(file);
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            wiring = builder.build( source.getInputStream() );
+            wiring = builder.build(source.getInputStream(), source.getURI());
         } catch (SAXException se) {
             String msg = "SAXException while reading " + file + ": " + se.getMessage();
             throw new ConfigurationException(msg, se);
@@ -123,7 +123,7 @@ public class BlocksManager
             this.resolver.resolveURI(CORE_COMPONENTS_XCONF);
         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
         Configuration coreComponentsConf =
-            builder.build(coreComponentsSource.getInputStream());
+            builder.build(coreComponentsSource.getInputStream(), coreComponentsSource.getURI());
 
         LifecycleHelper.setupComponent(blockServiceManager,
                                        this.getLogger(),
