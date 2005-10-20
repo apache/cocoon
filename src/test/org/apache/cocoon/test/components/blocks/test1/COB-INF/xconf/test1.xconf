@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 
 <map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <source-factories>
