@@ -176,6 +176,9 @@
   <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="update">
+      Update Pluto to final release 1.0.1.
+    </action>
+    <action dev="CZ" type="update">
       Portal block: Deprecate AbstractUserProfileManager and AuthenticationProfileManager.
     </action>
     <action dev="CZ" type="fix" fixes-bug="33152" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
