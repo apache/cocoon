@@ -1308,6 +1308,16 @@
     <lib>optional/wsrp4j-consumer-0.3-dev.jar</lib>
     <homepage>http://ws.apache.org/wsrp4j/</homepage>
   </file>
+  
+  <file>
+    <title>JDBI</title>
+    <description>
+      Convenient access to JDBC using Maps and List.
+    </description>
+    <used-by>Forms block</used-by>
+    <lib>optional/jdbi-1.3.1.jar</lib>
+    <homepage>http://jdbi.codehaus.org/</homepage>
+  </file>
 
 </jars>
 
