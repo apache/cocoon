@@ -299,10 +299,9 @@ public class XMLResourceBundle extends AbstractLogEnabled
             newValues = Collections.EMPTY_MAP;
 
         } catch (SourceNotFoundException e) {
+            // Nominal case where a bundle doesn't exist
             if (getLogger().isDebugEnabled()) {
-                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
-            } else if (getLogger().isInfoEnabled()) {
-                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+                getLogger().debug("Bundle <" + sourceURI + "> not loaded: Source URI not found");
             }
             newValues = Collections.EMPTY_MAP;
 
