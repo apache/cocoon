@@ -175,6 +175,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix" fixes-bug="37005" due-to="Philipp Schmidt" due-to-email="philipp.schmidt@gmail.com">
+      Forms block: Fix ArrayIndexOutOfBoundException in the library subsystem.
+    </action>
     <action dev="CZ" type="fix">
       Portal Block: Only remove layout if a layout remove event is fired (and not with each layout event).
     </action>
