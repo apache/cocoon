@@ -48,6 +48,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
+import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -391,10 +392,12 @@ public class DefaultLayoutFactory
      */
     public void inform(LayoutEvent event, PortalService service) {
         Layout layout = (Layout)event.getTarget();
-        try {
-            this.remove( layout );
-        } catch (ProcessingException pe) {
-            throw new CascadingRuntimeException("Exception during removal.", pe);
+        if ( event instanceof LayoutRemoveEvent ) {
+            try {
+                this.remove( layout );
+            } catch (ProcessingException pe) {
+                throw new CascadingRuntimeException("Exception during removal.", pe);
+            }
         }
     }
 
