@@ -175,6 +175,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix">
+      Portal Block: Only remove layout if a layout remove event is fired (and not with each layout event).
+    </action>
     <action dev="CZ" type="fix" fixes-bug="36471" due-to="Armaz Mellati" due-to-email="armaz@uninett.no">
       Fix bug with session:getxml when path is a text-element and IncludeXMLConsumer
       when including text nodes.
