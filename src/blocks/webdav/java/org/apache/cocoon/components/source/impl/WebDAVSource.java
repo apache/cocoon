@@ -225,8 +225,8 @@ public class WebDAVSource extends AbstractLogEnabled
             if (e.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
                 throw new SourceNotFoundException("Not found: " + getSecureURI(), e);
             }
-            final String msg = "Could not initialize webdav resource. Server responded "
-                + e.getReasonCode() + " (" + e.getReason() + ") - " + e.getMessage();
+            final String msg = "Could not initialize webdav resource at " + getSecureURI()
+                + ". Server responded " + e.getReasonCode() + " (" + e.getReason() + ") - " + e.getMessage();
             throw new SourceException(msg, e);
        } catch (IOException e) {
             throw new SourceException("Could not initialize webdav resource", e);
