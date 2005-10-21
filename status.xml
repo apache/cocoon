@@ -175,6 +175,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix" fixes-bug="36381" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
+      Forms block: Fix HTML rendering of booleanfields in output state.
+    </action>
     <action dev="SW" type="fix" fixes-bug="37005" due-to="Philipp Schmidt" due-to-email="philipp.schmidt@gmail.com">
       Forms block: Fix ArrayIndexOutOfBoundException in the library subsystem.
     </action>
