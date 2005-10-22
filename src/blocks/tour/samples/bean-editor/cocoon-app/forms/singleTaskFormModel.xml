@@ -47,7 +47,7 @@
             <fd:widgets>
                 <!-- Forms requires a unique ID in repeaters -->
                 <fd:output id="id">
-                    <fd:datatype base="string"/>
+                    <fd:datatype base="integer"/>
                 </fd:output>
 
                 <!-- Make comments selectable for deletion -->

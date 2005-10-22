@@ -21,6 +21,7 @@
 <fb:context
     id="form"
     xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+    xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
     path="/" >
 
     <!-- map Form widgets to the corresponding fields in the java beans -->
@@ -33,8 +34,11 @@
     <fb:repeater id="comments"
       parent-path="."
       row-path="comments"
-      unique-row-id="id"
-      unique-path="@id">
+    >
+      
+      <fb:identity>
+         <fb:value id="id" path="@id" direction="load"/>
+      </fb:identity>
 
       <fb:on-bind>
         <!-- executed on updates AND right after the insert -->
