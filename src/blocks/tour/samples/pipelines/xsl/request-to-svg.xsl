@@ -26,7 +26,7 @@
 
     <xsl:param name="fillColor" select="'#330000'"/>
 
-    <xsl:template id="main" match="/">
+    <xsl:template name="main" match="/">
         <svg width="600" height="500">
             <defs>
                 <filter id="blur1">

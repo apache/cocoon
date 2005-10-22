@@ -25,7 +25,7 @@
     xmlns:rss="http://purl.org/rss/1.0/"
 >
 
-    <xsl:template id="main" match="/">
+    <xsl:template name="main" match="/">
         <html>
             <body>
                 <h1>
@@ -38,7 +38,7 @@
         </html>
     </xsl:template>
 
-    <xsl:template id="rssItem" match="rss:item">
+    <xsl:template name="rssItem" match="rss:item">
         <li>
             <a href="{@rdf:about}"><xsl:value-of select="rss:title"/></a>
         </li>

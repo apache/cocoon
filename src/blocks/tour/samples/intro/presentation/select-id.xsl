@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- copy an xpath-specified excerpt or our input -->
+<!-- copy an excerpt having specified id or name attribute, tor our output -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -30,9 +30,9 @@
         </xsl:copy>
     </xsl:template>
 
-    <!-- apply given xpath on root -->
+    <!-- on root, select elements having specific id or name -->
     <xsl:template match="/">
-        <xsl:apply-templates select="//*[@id=$idToSelect]"/>
+        <xsl:apply-templates select="//*[@id=$idToSelect or @name=$idToSelect]"/>
     </xsl:template>
 
 </xsl:stylesheet>
