@@ -27,14 +27,14 @@
         <page>
             <title>Supersonic Tour of Apache Cocoon</title>
             <content>
-                <xsl:apply-templates match="toc-section"/>
+                <xsl:apply-templates select="toc/toc-section"/>
             </content>
         </page>
     </xsl:template>
 
     <xsl:template match="toc-section">
         <h1><xsl:value-of select="@name"/></h1>
-        <xsl:apply-templates match="toc-item"/>
+        <xsl:apply-templates select="toc-item"/>
     </xsl:template>
 
     <xsl:template match="toc-item">
