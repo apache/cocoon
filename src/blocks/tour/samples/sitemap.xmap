@@ -53,7 +53,6 @@
             </map:match>
 
             <!-- aggreate everything in a single document for printing -->
-            <!-- TODO: double cinclude seems to cause problems? -->
             <map:match pattern="print/supersonic-tour.html">
                 <map:generate src="intro/docs/toc.xml"/>
                 <map:transform src="intro/presentation/toc-to-cinclude.xsl"/>
