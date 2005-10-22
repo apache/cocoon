@@ -24,15 +24,19 @@
     xmlns:h="http://apache.org/cocoon/request/2.0"
 >
 
-    <xsl:template id="main" match="/">
+    <xsl:template name="main" match="/">
         <html>
             <body>
                 <h1>
                     Request to host <xsl:value-of select="//h:header[@name='Host']"/>
                 </h1>
-                <p>
-                    Contains <xsl:value-of select="count(//h:header)"/> headers.
-                </p>
+                <h2>
+                    Request headers
+                </h2>
+                <xsl:for-each select="//h:header">
+                  <b><xsl:value-of select="@name"/></b> : <xsl:value-of select="."/>
+                  <br/>
+                </xsl:for-each>
             </body>
         </html>
     </xsl:template>

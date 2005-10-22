@@ -23,15 +23,15 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
 
-    <xsl:template id="main" match="/">
+    <xsl:template name="main" match="/">
         <html>
             <head>
                 <link rel="stylesheet" href="css/tour.css" type="text/css"/>
-                <xsl:copy-of select="//head/*"/>
+                <xsl:copy-of select="//head/node()"/>
             </head>
 
             <body>
-                <xsl:copy-of select="//body/*"/>
+                <xsl:copy-of select="//body/node()"/>
                 <p class="footer">
                     This footer has been added by html-styling.xsl
                 </p>
