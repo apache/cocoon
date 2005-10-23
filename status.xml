@@ -175,6 +175,26 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="update">
+      Forms block:
+      <ul>
+         <li>Automatic submit-on-change. Fields which have value-changed listeners are now by default submitted
+             automatically, meaning adding <code>&lt;fi:styling submit-on-change="true"/&gt;</code> is no
+             more necessary. For those cases where a field with event listeners should not be automatically
+             submitted, set <code>submit-on-change</code> to <code>false</code>.
+         </li>
+         <li>Along with field, aggregatefield and booleanfield, you can now add value-changed listeners on output
+             and upload widgets.
+         </li>
+         <li>Widget validators can now return not only a boolean value, but also a String or an XMLizable (such as
+             I18nMessage) which are used to set a validation error on the widget.
+         </li>
+         <li>The <code>&lt;fi:styling submit-on-change="output"/&gt;</code> is no more available, as it was
+             intrinsically broken as a field whose value is not submitted is reset. Use the "output" widget state to
+             achieve the same effect.
+         </li>
+      </ul>
+    </action>
     <action dev="SW" type="fix" fixes-bug="36381" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
       Forms block: Fix HTML rendering of booleanfields in output state.
     </action>
