@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.blocks;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -48,6 +49,7 @@ public class BlockWiring
 
     private ServiceManager serviceManager;
     private Context context;
+    private URL contextRootURL;
     private BlocksManager blocksManager;
 
     private String id;
@@ -70,6 +72,7 @@ public class BlockWiring
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
+        this.contextRootURL = (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL);
     }
 
     public void configure(Configuration config)
@@ -179,12 +182,16 @@ public class BlockWiring
     /**
      * Get the URL of the root of the block
      */
-    public String getContextURL() throws URISyntaxException, ContextException {
-        String contextRootURL = ((URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL)).toExternalForm();
-        getLogger().debug("Root URL " + contextRootURL);
-        String contextURL = ((new URI(contextRootURL)).resolve(this.location)).toString();
-        getLogger().debug("Block Root URL " + contextURL);
-
+    public URL getContextURL() throws MalformedURLException {
+        URL contextURL = null;
+        try {
+            contextURL = ((new URI(this.contextRootURL.toExternalForm())).resolve(this.location)).toURL();
+            getLogger().debug("Root URL " + contextRootURL);
+            getLogger().debug("Block Root URL " + contextURL.toString());
+        } catch (URISyntaxException e) {
+            throw new MalformedURLException("Couldn't create context URL from " + this.contextRootURL.toExternalForm()) +
+                " and " + this.location + " error: " + e.getMessage());
+        }
         return contextURL;
     }
 
