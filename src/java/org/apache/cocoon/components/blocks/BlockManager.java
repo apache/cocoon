@@ -56,7 +56,7 @@ public class BlockManager
     private ServiceManager serviceManager;
 
     private Processor blockProcessor;
-    private BlockContext blockContext;
+    private BlockWiring blockContext;
 
     // Life cycle
 
@@ -74,7 +74,7 @@ public class BlockManager
     }
 
     public void initialize() throws Exception {
-        this.blockContext = new BlockContext();
+        this.blockContext = new BlockWiring();
         LifecycleHelper.setupComponent(this.blockContext,
                                        this.getLogger(),
                                        this.context,
