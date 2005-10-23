@@ -53,19 +53,6 @@ to use the cocoon build system for your needs.
 Still here? good. You won't regret it.
 
 
-Reading the documentation
---------------------------
-
-This directory contains the full Cocoon documentation (as xml documents).
-You can either browse the documentation when you start Cocoon as described
-above and go to the documentation section: http://localhost:8888/docs/index.html.
-Or you can build the docs your self by running "build.bat docs" or
-"./build.sh docs". If you want to build the docs yourself, you need
-an installed version of Forrest (http://xml.apache.org/forrest).
-
-Of course you can also read the documentation at the website
-http://cocoon.apache.org/
-
 Updating
 --------
 
