@@ -41,10 +41,6 @@
       <fileset dir="${lib}"/>
     </copy>
 
-    <copy todir="${dist}/docs">
-      <fileset dir="docs"/>
-    </copy>
-
     <copy todir="${dist}/src">
       <fileset dir="${src}"/>
     </copy>
