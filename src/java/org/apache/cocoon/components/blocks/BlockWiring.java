@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 /**
  * @version SVN $Id$
  */
-public class BlockContext
+public class BlockWiring
     extends AbstractLogEnabled
     implements Configurable, Contextualizable, Disposable, Serviceable { 
 
