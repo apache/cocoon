@@ -86,7 +86,7 @@ public class BlockManager
         ComponentContext newContext = new ComponentContext(context);
         // A block is supposed to be an isolated unit so it should not have
         // any direct access to the global root context
-        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL()));
+        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL().toExternalForm()));
         newContext.makeReadOnly();
 
         // Create block a service manager with the exposed components of the block
