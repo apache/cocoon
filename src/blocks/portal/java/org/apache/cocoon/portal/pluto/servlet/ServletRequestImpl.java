@@ -130,23 +130,22 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                     }
                 }
 
-                // get request params if the wrapped request is not the Cocoon request
-                if ( currentRequest == this.originalRequest ) {
-                    Enumeration parameters = currentRequest.getParameterNames();
-                    while (parameters.hasMoreElements()) {
-                        String paramName = (String) parameters.nextElement();
-                        String[] paramValues = this.getRequest().getParameterValues(paramName);
-                        String[] values = (String[]) this.portletParameterMap.get(paramName);
-    
-                        if ( !paramName.startsWith("cocoon-") ) {
-                            if (values != null) {
-                                String[] temp = new String[paramValues.length + values.length];
-                                System.arraycopy(paramValues, 0, temp, 0, paramValues.length);
-                                System.arraycopy(values, 0, temp, paramValues.length, values.length);
-                                paramValues = temp;
-                            }
-                            this.portletParameterMap.put(paramName, paramValues);
+                // get request params from the original Cocoon request
+                // but filter all cocoon portal request parameters.
+                Enumeration parameters = currentRequest.getParameterNames();
+                while (parameters.hasMoreElements()) {
+                    String paramName = (String) parameters.nextElement();
+                    String[] paramValues = this.getRequest().getParameterValues(paramName);
+                    String[] values = (String[]) this.portletParameterMap.get(paramName);
+
+                    if ( !paramName.startsWith("cocoon-") ) {
+                        if (values != null) {
+                            String[] temp = new String[paramValues.length + values.length];
+                            System.arraycopy(paramValues, 0, temp, 0, paramValues.length);
+                            System.arraycopy(values, 0, temp, paramValues.length, values.length);
+                            paramValues = temp;
                         }
+                        this.portletParameterMap.put(paramName, paramValues);
                     }
                 }
             }
