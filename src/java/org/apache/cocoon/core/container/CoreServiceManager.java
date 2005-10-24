@@ -363,15 +363,25 @@ public class CoreServiceManager
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
 
                         handler = this.getComponentHandler(role,
-                                                       info.getServiceClassName(),
-                                                       configuration.getChild(role),
-                                                       info);
+                                                           info.getServiceClassName(),
+                                                           configuration.getChild(role),
+                                                           info);
 
-                        handler.initialize();
                     } catch (ServiceException se) {
                         throw se;
                     } catch( final Exception e ) {
                         final String message = "Could not find component for role [" + role + "]";
+                        if( this.getLogger().isDebugEnabled() ) {
+                            this.getLogger().debug( message, e );
+                        }
+                        throw new ServiceException( role, message, e );
+                    }
+                    try {
+                        handler.initialize();
+                    } catch (ServiceException se) {
+                        throw se;
+                    } catch( final Exception e ) {
+                        final String message = "Could not create component for role [" + role + "]: " + handler.getClass();
                         if( this.getLogger().isDebugEnabled() ) {
                             this.getLogger().debug( message, e );
                         }
