@@ -646,7 +646,7 @@
       binding, Java-to-SQL persistence.
     </description>
     <used-by>CastorTransformer and precept</used-by>
-    <lib>optional/castor-0.9.6-xml.jar</lib>
+    <lib>optional/castor-0.9.9-xml.jar</lib>
     <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
