@@ -24,75 +24,14 @@
   <artifactId>cocoon</artifactId>
   <packaging>pom</packaging>
   <version>2.2-SNAPSHOT</version>
-  <name>Apache Cocoon Core</name>
+  <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <modules>
     <module>core</module>
     <module>core/test-core</module>
     <module>webapp</module>
-    <module>src/blocks/ajax/trunk</module>
-    <module>src/blocks/apples/trunk</module>
-    <module>src/blocks/asciiart/trunk</module>
-    <module>src/blocks/authentication-fw/trunk</module>
-    <module>src/blocks/axis/trunk</module>
-    <module>src/blocks/batik/trunk</module>
-    <module>src/blocks/bsf/trunk</module>
-    <module>src/blocks/chaperon/trunk</module>
-    <module>src/blocks/cron/trunk</module>
-    <module>src/blocks/databases/trunk</module>
-    <module>src/blocks/databases/trunk/mocks</module>
-    <module>src/blocks/deli/trunk</module>
-    <module>src/blocks/eventcache/trunk</module>
-    <module>src/blocks/faces/trunk</module>
-    <module>src/blocks/fop/trunk</module>
-    <module>src/blocks/forms/trunk</module>
-    <module>src/blocks/hsqldb/trunk</module>
-    <module>src/blocks/html/trunk</module>
-    <module>src/blocks/itext/trunk</module>
-    <module>src/blocks/javaflow/trunk</module>
-    <module>src/blocks/jfor/trunk</module>
-    <module>src/blocks/jms/trunk</module>
-    <module>src/blocks/jsp/trunk</module>
-    <module>src/blocks/jsp/trunk/mocks</module>
-    <module>src/blocks/linkrewriter/trunk</module>
-    <module>src/blocks/lucene/trunk</module>
-    <module>src/blocks/mail/trunk</module>
-    <module>src/blocks/midi/trunk</module>
+    <module>src/blocks</module>
     <module>src/mocks</module>
-    <module>src/blocks/naming/trunk</module>
-    <module>src/blocks/ojb/trunk</module>
-    <module>src/blocks/ojb/trunk/mocks</module>
-    <module>src/blocks/paranoid/trunk</module>
-    <module>src/blocks/petstore/trunk</module>
-    <module>src/blocks/poi/trunk</module>
-    <module>src/blocks/portal/trunk</module>
-    <module>src/blocks/portal-sample/trunk</module>
-    <module>src/blocks/profiler/trunk</module>
-    <module>src/blocks/proxy/trunk</module>
-    <module>src/blocks/python/trunk</module>
-    <module>src/blocks/python/trunk/mocks</module>
-    <module>src/blocks/qdox/trunk</module>
-    <module>src/blocks/querybean/trunk</module>
-    <module>src/blocks/repository/trunk</module>
-    <module>src/blocks/scratchpad/trunk</module>
-    <module>src/blocks/scratchpad/trunk/garbage</module>
-    <module>src/blocks/scratchpad/trunk/mocks</module>
-    <module>src/blocks/serializers/trunk</module>
-    <module>src/blocks/session-fw/trunk</module>
-    <module>src/blocks/slide/trunk</module>
-    <module>src/blocks/slop/trunk</module>
-    <module>src/blocks/spring-app/trunk</module>
-    <module>src/blocks/stx/trunk</module>
-    <module>src/blocks/taglib/trunk</module>
-    <module>src/blocks/template/trunk</module>
-    <module>src/blocks/tour/trunk</module>
-    <module>src/blocks/velocity/trunk</module>
-    <module>src/blocks/web3/trunk</module>
-    <module>src/blocks/web3/trunk/mocks</module>
-    <module>src/blocks/webdav/trunk</module>
-    <module>src/blocks/xmldb/trunk</module>
-    <module>src/blocks/xsp/trunk</module>
-    <module>src/blocks/xsp/trunk/mocks</module>
   </modules>
   <repositories>
     <!-- Apache specific maven repositories available to all blocks -->
@@ -103,4 +42,17 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
+  <scm>
+    <connection>http://svn.apache.org/repos/asf/cocoon/trunk</connection>
+    <url>http://svn.apache.org/repos/asf/cocoon/trunk</url>
+  </scm>
+  <distributionManagement>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>apache</id>
+      <name>repository</name>
+      <url>scpexe://cvs.apache.org/x1/www/cvs.apache.org/repository</url>
+      <layout>legacy</layout>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
