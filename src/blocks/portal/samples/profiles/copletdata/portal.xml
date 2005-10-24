@@ -111,7 +111,7 @@
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.org/weblogs/rael/index.xml/value>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.org/weblogs/rael/index.xml</value>
       </attribute>
       <attribute>
          <name>buffer</name>
