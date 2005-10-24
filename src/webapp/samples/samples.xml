@@ -122,10 +122,7 @@
     </sample>
   </group>
 
-  <group name="Documentation">
-    <sample name="Core Documentation" href="../docs/">
-      Generated from the xml source.
-    </sample>
+  <group name="Navigation">
     <sample name="Back" href="..">
       To the front page.
     </sample>
