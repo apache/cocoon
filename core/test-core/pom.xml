@@ -27,6 +27,7 @@
   </parent>
   <artifactId>cocoon-test-core</artifactId>
   <packaging>jar</packaging>
+  <name>Core Tests</name>
   <build>
     <sourceDirectory>../../src/test</sourceDirectory>
     <resources>
@@ -65,12 +66,4 @@
       <version>0.8</version>
     </dependency>
   </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>
