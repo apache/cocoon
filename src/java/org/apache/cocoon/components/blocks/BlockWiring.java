@@ -189,7 +189,7 @@ public class BlockWiring
             getLogger().debug("Root URL " + contextRootURL);
             getLogger().debug("Block Root URL " + contextURL.toString());
         } catch (URISyntaxException e) {
-            throw new MalformedURLException("Couldn't create context URL from " + this.contextRootURL.toExternalForm()) +
+            throw new MalformedURLException("Couldn't create context URL from " + this.contextRootURL.toExternalForm() +
                 " and " + this.location + " error: " + e.getMessage());
         }
         return contextURL;
