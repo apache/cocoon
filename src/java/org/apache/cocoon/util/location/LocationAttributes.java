@@ -17,6 +17,8 @@ package org.apache.cocoon.util.location;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -233,6 +235,27 @@ public class LocationAttributes {
     public static int getColumn(Element elem) {
         Attr attr = elem.getAttributeNodeNS(URI, COL_ATTR);
         return attr != null ? Integer.parseInt(attr.getValue()) : -1;
+    }
+    
+    /**
+     * Remove the location attributes from a DOM element.
+     * 
+     * @param elem the element to remove the location attributes from.
+     * @param recurse if <code>true</code>, also remove location attributes on descendant elements.
+     */
+    public static void remove(Element elem, boolean recurse) {
+        elem.removeAttributeNS(URI, SRC_ATTR);
+        elem.removeAttributeNS(URI, LINE_ATTR);
+        elem.removeAttributeNS(URI, COL_ATTR);
+        if (recurse) {
+            NodeList children = elem.getChildNodes();
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.item(i);
+                if (child.getNodeType() == Node.ELEMENT_NODE) {
+                    remove((Element)child, recurse);
+                }
+            }
+        }
     }
 
     /**
