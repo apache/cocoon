@@ -121,7 +121,7 @@
             addComments="true"/>
   </target>
 
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-test-suite,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-test-suite,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf,hsqldb-port" description="Builds web application folder">
   </target>
 
   <target name="war" depends="webapp" description="Builds web application archive">
@@ -149,5 +149,15 @@
     <xpatch file="${build.webapp}/WEB-INF/web.xml" srcdir="">
        <include name="${customconf}/*.xweb" />
     </xpatch>
+  </target>
+  
+  <!-- Change the hsqldb server port if specified in the local properties -->
+  <target name="hsqldb-port" if="build.webapp.hsqldb-server-port">
+    <replace file="${build.webapp}/WEB-INF/cocoon.xconf"
+             token="jdbc:hsqldb:hsql://localhost:9002"
+             value="jdbc:hsqldb:hsql://localhost:${build.webapp.hsqldb-server-port}"/>
+    <replace file="${build.webapp}/WEB-INF/cocoon.xconf"
+             token='parameter name="port" value="9002"'
+             value='parameter name="port" value="${build.webapp.hsqldb-server-port}"'/>
   </target>
 </project>
