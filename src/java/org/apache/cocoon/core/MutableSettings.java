@@ -589,12 +589,12 @@ public class MutableSettings implements Settings {
             }
         }
 
-        int i = 0;
-        while ( i < this.properties.size() && value == null ) {
+        // Iterate in reverse order, as most specific property sources are added last
+        for (int i = this.properties.size() - 1; i >= 0 && value == null; i--) {
             final Properties p = (Properties)this.properties.get(i);
             value = p.getProperty(key);
-            i++;
         }
+
         if ( value == null ) {
             value = defaultValue;
         }
