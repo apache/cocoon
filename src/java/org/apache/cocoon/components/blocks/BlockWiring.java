@@ -50,11 +50,8 @@ public class BlockWiring
     private ServiceManager serviceManager;
     private Context context;
     private URL contextRootURL;
-    private BlocksManager blocksManager;
-
     private String id;
     private String location;
-    private String superId;
     private Map connections = new HashMap();
     private Map properties = new HashMap();
 
@@ -161,17 +158,6 @@ public class BlockWiring
         this.serviceManager = null;
     }
 
-    // Block methods
-
-    // The blocks manager should not be available within a block so I
-    // didn't want to make it part of the parent manager. But this is
-    // a little bit clumsy. Question is what components, if any, the
-    // blocks should have in common.
-    public void setBlocksManager(BlocksManager blocksManager) {
-        this.blocksManager = blocksManager;
-    }
-
-
     /**
      * Get the identifier of the block
      */
@@ -196,14 +182,13 @@ public class BlockWiring
     }
 
     /**
-     * Get a block from the blockname.
+     * Get a block id from the blockname.
      */
-    public Block getBlock(String blockName) {
+    public String getBlockId(String blockName) {
         String blockId = (String)this.connections.get(blockName);
         getLogger().debug("Resolving block: " + blockName + " to " + blockId);
-        return blockId != null ? (Block)this.blocksManager.getBlock(blockId) : null;
+        return blockId;
     }
-
 
     /**
      * Get a block property
@@ -211,14 +196,6 @@ public class BlockWiring
     public String getProperty(String name) {
         String value = (String)this.properties.get(name);
         getLogger().debug("Accessing property=" + name + " value=" + value + " block=" + this.id);
-        if (value == null) {
-            // Ask the super block for the property
-            getLogger().debug("Try super property=" + name + " block=" + this.superId);
-            Block block = this.getBlock(Block.SUPER);
-            if (block != null) {
-                value =  block.getProperty(name);
-            }
-        }
         return value;
     }
 

@@ -32,6 +32,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -56,7 +57,9 @@ public class BlockManager
     private ServiceManager serviceManager;
 
     private Processor blockProcessor;
-    private BlockWiring blockContext;
+    private BlockWiring blockWiring;
+    private BlockContext blockContext;
+    private BlocksManager blocksManager;
 
     // Life cycle
 
@@ -74,30 +77,33 @@ public class BlockManager
     }
 
     public void initialize() throws Exception {
-        this.blockContext = new BlockWiring();
-        LifecycleHelper.setupComponent(this.blockContext,
+        this.blockWiring = new BlockWiring();
+        LifecycleHelper.setupComponent(this.blockWiring,
                                        this.getLogger(),
                                        this.context,
                                        this.parentServiceManager,
                                        this.config);    
 
-        getLogger().debug("Initializing new Block Manager: " + this.blockContext.getId());
+        getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
+        this.blockContext = new BlockContext(this.blockWiring, this);
+        
         ComponentContext newContext = new ComponentContext(context);
         // A block is supposed to be an isolated unit so it should not have
         // any direct access to the global root context
-        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockContext.getContextURL().toExternalForm()));
+        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockWiring.getContextURL().toExternalForm()));
+        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.blockContext);
         newContext.makeReadOnly();
 
         // Create block a service manager with the exposed components of the block
-        if (this.blockContext.getComponentConfiguration() != null) {
+        if (this.blockWiring.getComponentConfiguration() != null) {
             // The source resolver must be defined in this service
             // manager, otherwise the root path will be the one from the
             // parent manager, we add a resolver to get it right. If the
             // components section contain includes the CoreComponentManager
             // use the location of the configuration an the parent SourceResolver
             // for resolving the include.
-            String confLocation = this.blockContext.getContextURL() + "::";
+            String confLocation = this.blockWiring.getContextURL() + "::";
             DefaultConfiguration sourceManagerConf =
                 new DefaultConfiguration("components", confLocation);
             DefaultConfiguration resolverConf =
@@ -114,7 +120,7 @@ public class BlockManager
             
             DefaultConfiguration componentConf =
                 new DefaultConfiguration("components", confLocation);
-            componentConf.addAll(this.blockContext.getComponentConfiguration());
+            componentConf.addAll(this.blockWiring.getComponentConfiguration());
             this.serviceManager = new CoreServiceManager(sourceResolverSM);
             LifecycleHelper.setupComponent(this.serviceManager,
                     this.getLogger(),
@@ -126,13 +132,13 @@ public class BlockManager
         }
 
         // Create a processor for the block
-        if (this.blockContext.getProcessorConfiguration() != null) {
+        if (this.blockWiring.getProcessorConfiguration() != null) {
             this.blockProcessor = new BlockProcessor();
             LifecycleHelper.setupComponent(this.blockProcessor,
                     this.getLogger(),
                     newContext,
                     this.serviceManager,
-                    this.blockContext.getProcessorConfiguration());    
+                    this.blockWiring.getProcessorConfiguration());    
             
         }
     }
@@ -148,21 +154,31 @@ public class BlockManager
     // a little bit clumsy. Question is what components, if any, the
     // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
-        this.blockContext.setBlocksManager(blocksManager);
+    	this.blocksManager = blocksManager;
     }
 
     /**
      * Get the mount path of the block
      */
     public String getMountPath() {
-        return this.blockContext.getMountPath();
+        return this.blockWiring.getMountPath();
     }
 
     /**
      * Get a block property
      */
     public String getProperty(String name) {
-        return this.blockContext.getProperty(name);
+		String value = this.blockWiring.getProperty(name);
+		if (value == null) {
+		    // Ask the super block for the property
+		    String superId = this.blockWiring.getBlockId(Block.SUPER);
+		    this.getLogger().debug("Try super property=" + name + " block=" + superId);
+		    Block block = this.blocksManager.getBlock(superId);
+		    if (block != null) {
+		        value =  block.getProperty(name);
+		    }
+		}
+		return value;
     }
 
     // TODO: We should have a reflection friendly Map getProperties() also
@@ -176,12 +192,14 @@ public class BlockManager
         URI uri = resolveURI(uriToResolve, base);
         String blockName = uri.getScheme();
         Block block = null;
-        if (blockName == null)
+        if (blockName == null) {
             // this block
             block = this;
-        else
+        } else {
             // another block
-            block = this.blockContext.getBlock(blockName);
+        	String blockId = this.blockWiring.getBlockId(blockName);
+            block = this.blocksManager.getBlock(blockId);
+        }
         if (block == null)
             throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
 
@@ -227,24 +245,48 @@ public class BlockManager
 
         if (blockName != null) {
             // Request to other block.
-            if (BlockManager.SUPER.equals(blockName)) {
-                // Explicit call to super block
+        	String blockId = this.blockWiring.getBlockId(blockName);
+        	boolean superCall = false;
+            // Call to named block
+            if (blockId != null && !Block.SUPER.equals(blockName)) {
                 // The block name should not be used in the recieving block.
                 environment.removeAttribute(Block.NAME);
-                return this.process(Block.SUPER, environment, true);
             } else {
-                // Call to named block
-                Block block = this.blockContext.getBlock(blockName);
-                if (block != null) {
-                    // The block name should not be used in the recieving block.
-                    environment.removeAttribute(Block.NAME);
-                    return this.process(blockName, environment);
-                } else {
-                    // If there is a super block, the connection might
-                    // be defined there instead.
-                    return this.process(Block.SUPER, environment, true);
-                }
+            	if (Block.SUPER.equals(blockName)) {
+            		// Explicit call to super block
+            		// The block name should not be used in the recieving block.
+            		environment.removeAttribute(Block.NAME);
+            	} else if (blockId == null) {
+            		// If there is a super block, the connection might
+            		// be defined there instead.
+            		blockId = this.blockWiring.getBlockId(Block.SUPER);
+            	}
+        		superCall = true;
             }
+            Block block = this.blocksManager.getBlock(blockId);
+    		if (block == null) {
+    			return false;
+    		}
+            this.getLogger().debug("Enter processing in block " + blockName);
+            try {
+				// A super block should be called in the context of
+				// the called block to get polymorphic calls resolved
+				// in the right way. Therefore no new current block is
+				// set.
+            	if (!superCall) {
+                	// It is important to set the current block each time
+                	// a new block is entered, this is used for the block
+                	// protocol
+            		EnvironmentHelper.enterProcessor(block, null, environment);
+            	}
+            	return block.process(environment);
+            } finally {
+            	if (!superCall) {
+            		EnvironmentHelper.leaveProcessor();
+            	}
+            	this.getLogger().debug("Leaving processing in block " + blockName);
+			}            	
+
         } else {
             // Request to the own block
             boolean result = this.blockProcessor.process(environment);
@@ -265,41 +307,6 @@ public class BlockManager
 //             } else {
 //                 return false;
 //             }
-        }
-    }
-
-    private boolean process(String blockName, Environment environment) throws Exception {
-        return this.process(blockName, environment, false);
-    }
-
-    private boolean process(String blockName, Environment environment, boolean superCall)
-        throws Exception {
-        Block block = this.blockContext.getBlock(blockName);
-        if (block == null) {
-            return false;
-        } else if (superCall) {
-            getLogger().debug("Enter processing in super block ");
-            try {
-                // A super block should be called in the context of
-                // the called block to get polymorphic calls resolved
-                // in the right way. Therefore no new current block is
-                // set.
-                return block.process(environment);
-            } finally {
-                getLogger().debug("Leaving processing in super block ");
-            }
-        } else {
-            getLogger().debug("Enter processing in block " + blockName);
-            try {
-                // It is important to set the current block each time
-                // a new block is entered, this is used for the block
-                // protocol
-                EnvironmentHelper.enterProcessor(block, null, environment);
-                return block.process(environment);
-            } finally {
-                EnvironmentHelper.leaveProcessor();
-                getLogger().debug("Leaving processing in block " + blockName);
-            }
         }
     }
 
