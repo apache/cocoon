@@ -34,9 +34,11 @@ public class BlockContext extends AbstractContext {
 
     private Hashtable attributes;
     private BlockWiring wiring;
+    private BlockManager blockManager;
     
-    public BlockContext(BlockWiring wiring) {
+    public BlockContext(BlockWiring wiring, BlockManager blockManager) {
         this.wiring = wiring;
+        this.blockManager = blockManager;
     }
 
     /* (non-Javadoc)
@@ -108,7 +110,7 @@ public class BlockContext extends AbstractContext {
      * @see org.apache.cocoon.environment.Context#getInitParameter(java.lang.String)
      */
     public String getInitParameter(String name) {
-        return this.wiring.getProperty(name);
+        return this.blockManager.getProperty(name);
     }
 
     /* (non-Javadoc)
