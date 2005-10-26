@@ -54,7 +54,7 @@
       <map:match pattern="*/**.html">
         <map:generate src="content/{2}.xml"/>
         <map:transform src="cocoon:/get-tal-transform/{1}.xsl"/>
-        <map:serialize type="xml"/>
+        <map:serialize type="html"/>
       </map:match>
 
     </map:pipeline>
