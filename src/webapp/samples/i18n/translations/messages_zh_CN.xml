@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,30 +14,45 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
+<catalogue>
+  <message key="validation.captcha.mismatch">校验码验证失败</message>
+  
+  <message key="general.field-required">此域是必须的</message>
 
-<!--+
-    | Chinese message catalogue file for Cocoon 2 i18n sample
-    |
-    | CVS $Id: messages_zh_CN.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
-    +-->
+  <message key="datatype.conversion-failed">不是一个有效的{0}类型.</message>
+  <message key="datatype.decimal">小数</message> 
+  <message key="datatype.integer">整数</message> 
+  <message key="datatype.long">整数</message>
+  <message key="datatype.float">小数</message> 
+  <message key="datatype.double">小数</message> 
+  <message key="datatype.date.date">日期</message>
+  <message key="datatype.date.time">时间</message>
+  <message key="datatype.date.datetime">日期时间</message>
 
-<catalogue xml:lang="zh_CN">
-    <message key="a_key">这个是键值.</message>
-    <message key="language">英语</message>
-    <message key="titletext">你好吗, 国际化!</message>
-    <message key="doclink">详细事项请参考国际化文书: {0}</message>
-    <message key="first">第一</message>
-    <message key="second">第二</message>
-    <message key="third">第三</message>
-    <message key="forth">第四</message>
-    <message key="article">论文</message>
-    <message key="article_text1">这个是国际化段落.</message>
-    <message key="article_text2">这个还是国际化段落, 并且出色.</message>
-    <message key="copyright">Copyright © 2002 Konstantin Piroumian. 翻译 李苍信.</message>
-    <message key="Hello">您好, {0}! 见到你很高兴!</message>
-    <message key="Kot">Tomcat</message>
-    <message key="none">零</message>
-    <message key="one">一</message>
-    <message key="two">二</message>
-    <message key="count_title">这页 {0} 番接续. 最近接续日时: {1}.</message>
+  <message key="validation.string.exact-length">应为{0}个字符.</message>
+  <message key="validation.string.range-length">应包含{0}到{1}个字符.</message>
+  <message key="validation.string.min-length">应包含至少{0}个字符.</message>
+  <message key="validation.string.max-length">不应超过{0}个字符.</message>
+  <message key="validation.string.regexp">不能满足如下表达式: {0}</message>
+
+  <message key="validation.string.invalidemail">域不包含有效的邮件地址</message>
+
+  <message key="validation.array.exact-valuecount">应有{0}个项目被选中.</message>
+  <message key="validation.array.range-valuecount">至少{0}个和最多{1}个项目应被选中.</message>
+  <message key="validation.array.min-valuecount">至少{0}个项目应被选中.</message>
+  <message key="validation.array.max-valuecount">至多{0}个项目应被选中.</message>
+
+  <message key="multivaluefield.conversionfailed">选中的值当中有一个类型不正确.</message>
+
+  <message key="validation.numeric.range">数字范围应在{0}到{1}之间.</message>
+  <message key="validation.numeric.min">数字应大于等于{0}.</message>
+  <message key="validation.numeric.max">数字应小于等于{0}.</message>
+
+  <message key="validation.mod10">Mod 10 检查失败.</message>
+
+
+  <message key="aggregatedfield.split-failed">域的内容不能满足如下表达式: {0}</message>
+  <message key="upload.invalid-type">内容类型不正确: {0}.</message>
+  <message key="calendar.alt">日历</message>
 </catalogue>
