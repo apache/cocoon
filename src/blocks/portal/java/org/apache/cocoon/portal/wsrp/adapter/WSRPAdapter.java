@@ -443,7 +443,7 @@ public class WSRPAdapter
                 if ( usesGet ) {
                     contentHandler = new FormRewritingHandler(contentHandler);
                 }
-                HtmlSaxParser.parseString(content, contentHandler);
+                HtmlSaxParser.parseString(content, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
                 IncludingHTMLSerializer.addPortlet(portletInstanceKey, content);

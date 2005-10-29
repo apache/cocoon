@@ -191,7 +191,7 @@ public class PortletAdapter
 
             final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
             if ( usePipeline.booleanValue() ) {
-                HtmlSaxParser.parseString(value, contentHandler);
+                HtmlSaxParser.parseString(value, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
                 IncludingHTMLSerializer.addPortlet(portlet, value);

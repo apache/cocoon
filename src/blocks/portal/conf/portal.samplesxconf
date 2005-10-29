@@ -25,14 +25,16 @@
  -->
   <component role="org.osoco.cowarp.ApplicationManager"
              class="org.osoco.cowarp.impl.StandardApplicationManager"/>
-  <!-- This security handler uses OJB and the hsqldb for the authentication: -->
+
+  
+  <!-- This security handler makes use of a pipeline for the authentication: -->
   <component role="org.osoco.cowarp.SecurityHandler/portal" 
-             class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
-  <!-- If you want to use a pipeline for the authentication use this configuration:
+             class="org.osoco.cowarp.impl.PipelineSecurityHandler">
+    <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
+  </component>
+  <!-- This security handler uses OJB and the hsqldb for the authentication (JDK 1.4 required):
     <component role="org.osoco.cowarp.SecurityHandler/portal" 
-               class="org.osoco.cowarp.impl.PipelineSecurityHandler">
-      <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
-    </component>
+               class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
   -->
   <component role="org.osoco.cowarp.Application/portal" 
              class="org.osoco.cowarp.portal.StandardPortalApplication" 

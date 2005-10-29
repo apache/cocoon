@@ -97,6 +97,7 @@ public class ProxyReader extends ServiceableReader {
     public void recycle() {
         this.response = null;
         this.request = null;
+        this.copletInstanceData = null;
         super.recycle();
     }
 

@@ -207,6 +207,7 @@ public class ProxyTransformer
         this.link = null;
         this.request = null;
         this.parameters = null;
+        this.copletInstanceData = null;
     }
 
     /**
