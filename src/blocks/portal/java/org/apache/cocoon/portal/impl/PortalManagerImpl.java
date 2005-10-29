@@ -92,7 +92,6 @@ public class PortalManagerImpl
         if ( this.manager != null ) {
             this.manager.release(this.portalService);
             this.portalService = null;
-            this.manager = null;
             if ( this.chain != null) {
                 this.chain.dispose( this.aspectSelector, this.adapterSelector );
             }

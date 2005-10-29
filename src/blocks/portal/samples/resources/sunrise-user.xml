@@ -17,12 +17,7 @@
 
 <!-- $Id$ 
  Description: All portal users
-    Note: This file is not used by default! The portal samples store the users
-          in the database, so changing this file will have no effect! You can either
-          change the authentication configuration to use this file, or add/change
-          users in the hsqldb instance.
 -->
-
 <authentication>
 	<users>
 		<user>
