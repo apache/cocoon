@@ -21,7 +21,7 @@ Bundle-Classpath:
  commons-jci-r306555.jar,
  commons-javaflow-r306555.jar,
  commons-jexl-1.0.jar,
- commons-jxpath-1.2.jar,
+ commons-jxpath-1.2-r329470.jar,
  commons-lang-2.1.jar,
  commons-logging-1.0.4.jar,
  ehcache-1.1.jar,

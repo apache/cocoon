@@ -592,7 +592,7 @@
     <title>Jakarta Commons JXPath</title>
     <description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
     <used-by>Flow, JXPath logicsheet</used-by>
-    <lib>core/commons-jxpath-1.2.jar</lib>
+    <lib>core/commons-jxpath-1.2-r329470.jar</lib>
     <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
   </file>
 
