@@ -97,14 +97,8 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         
         newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
 
-        // It's possible to define a logger on a per sitemap base.
-        // This is the default logger for all components defined with this sitemap.
-        Logger sitemapLogger = this.getLogger();
-        if ( config.getAttribute("logger", null) != null) {
-            sitemapLogger = sitemapLogger.getChildLogger(config.getAttribute("logger"));
-        }
         // Go through the component lifecycle
-        ContainerUtil.enableLogging(newManager, sitemapLogger);
+        ContainerUtil.enableLogging(newManager, this.getLogger());
         ContainerUtil.contextualize(newManager, context);
         // before we pass the configuration we have to strip the
         // additional configuration parts, like classpath etc. as these
@@ -121,6 +115,7 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         ContainerUtil.configure(newManager, c);
         ContainerUtil.initialize(newManager);
 
+        Logger sitemapLogger = ((CocoonServiceManager)newManager).getServiceManagerLogger();
         // check for an application specific container
         final Configuration appContainer = config.getChild("application-container", false);
         if ( appContainer != null ) {
