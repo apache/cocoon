@@ -183,6 +183,12 @@ public class CoreServiceManager
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
+        // It's possible to define a logger on a per sitemap/service manager base.
+        // This is the default logger for all components defined with this sitemap/manager.
+        if ( configuration.getAttribute("logger", null) != null ) {
+            this.enableLogging(this.loggerManager.getLoggerForCategory(configuration.getAttribute("logger")));
+
+        }
         this.componentEnv = new ComponentEnvironment(this.classloader, getLogger(), this.roleManager, this.loggerManager, this.context, this);
 
         // Setup location
@@ -206,6 +212,13 @@ public class CoreServiceManager
             // Release any source resolver that may have been created to load includes
             releaseCachedSourceResolver();
         }
+    }
+
+    /**
+     * Return the service manager logger.
+     */
+    public Logger getServiceManagerLogger() {
+        return this.getLogger();
     }
 
     /* (non-Javadoc)
@@ -339,6 +352,9 @@ public class CoreServiceManager
             if( this.parentManager != null ) {
                 try {
                     return this.parentManager.lookup( role );
+                } catch ( ServiceNotFoundException snfe) {
+                    // ignore.  If the exception is thrown, we try to
+                    // create the component next
                 } catch( Exception e ) {
                     if( this.getLogger().isWarnEnabled() ) {
                         final String message =
@@ -401,7 +417,7 @@ public class CoreServiceManager
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message );
             }
-            throw new ServiceException( role, message );
+            throw new ServiceNotFoundException( role, message );
         }
 
         Object component = null;
