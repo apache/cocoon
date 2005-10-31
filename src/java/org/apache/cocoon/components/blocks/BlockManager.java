@@ -88,35 +88,12 @@ public class BlockManager
 
         this.blockContext = new BlockContext(this.blockWiring, this);
         
-        ComponentContext newContext = new ComponentContext(context);
-        // A block is supposed to be an isolated unit so it should not have
-        // any direct access to the global root context
-        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockWiring.getContextURL().toExternalForm()));
-        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.blockContext);
-        newContext.makeReadOnly();
+        Context newContext = this.getAvalonContext();
 
         // Create block a service manager with the exposed components of the block
         if (this.blockWiring.getComponentConfiguration() != null) {
-            // The source resolver must be defined in this service
-            // manager, otherwise the root path will be the one from the
-            // parent manager, we add a resolver to get it right. If the
-            // components section contain includes the CoreComponentManager
-            // use the location of the configuration an the parent SourceResolver
-            // for resolving the include.
             String confLocation = this.blockWiring.getContextURL() + "::";
-            DefaultConfiguration sourceManagerConf =
-                new DefaultConfiguration("components", confLocation);
-            DefaultConfiguration resolverConf =
-                new DefaultConfiguration("source-resolver");
-            sourceManagerConf.addChild(resolverConf);
-            ServiceManager sourceResolverSM =
-                new CoreServiceManager(this.parentServiceManager);
-            LifecycleHelper.setupComponent(
-                    sourceResolverSM,
-                    this.getLogger(),
-                    newContext,
-                    null,
-                    sourceManagerConf);
+            ServiceManager sourceResolverSM = this.createLocalSourceResolverSM(newContext, confLocation);
             
             DefaultConfiguration componentConf =
                 new DefaultConfiguration("components", confLocation);
@@ -145,6 +122,50 @@ public class BlockManager
 
     public void dispose() {
         this.parentServiceManager = null;
+    }
+
+    /**
+     * @return
+     * @throws Exception
+     */
+    protected Context getAvalonContext() throws Exception {
+        ComponentContext newContext = new ComponentContext(this.context);
+        // A block is supposed to be an isolated unit so it should not have
+        // any direct access to the global root context
+        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockWiring.getContextURL().toExternalForm()));
+        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.blockContext);
+        newContext.makeReadOnly();
+        
+        return newContext;
+    }
+
+    /**
+     * @param newContext
+     * @param confLocation
+     * @return
+     * @throws Exception
+     */
+    protected ServiceManager createLocalSourceResolverSM(Context newContext, String confLocation) throws Exception {
+        // The source resolver must be defined in this service
+        // manager, otherwise the root path will be the one from the
+        // parent manager, we add a resolver to get it right. If the
+        // components section contain includes the CoreComponentManager
+        // use the location of the configuration an the parent SourceResolver
+        // for resolving the include.
+        DefaultConfiguration sourceManagerConf =
+            new DefaultConfiguration("components", confLocation);
+        DefaultConfiguration resolverConf =
+            new DefaultConfiguration("source-resolver");
+        sourceManagerConf.addChild(resolverConf);
+        ServiceManager sourceResolverSM =
+            new CoreServiceManager(this.parentServiceManager);
+        LifecycleHelper.setupComponent(
+                sourceResolverSM,
+                this.getLogger(),
+                newContext,
+                null,
+                sourceManagerConf);
+        return sourceResolverSM;
     }
 
     // Block methods
@@ -183,6 +204,20 @@ public class BlockManager
 
     // TODO: We should have a reflection friendly Map getProperties() also
 
+    /**
+     * The exported components of the block. Return null if the block doesn't export components.
+     * 
+     * @return a ServiceManager containing the blocks exported components
+     */
+    public ServiceManager getServiceManager() {
+        // Check that the block have a local service manager
+        if (this.serviceManager != this.parentServiceManager) {
+            return this.serviceManager;
+        } else {
+            return null;
+        }
+    }
+    
     /**
      * Takes the scheme specific part of a block URI (the scheme is
      * the responsibilty of the BlockSource) and resolve it with

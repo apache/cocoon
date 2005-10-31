@@ -18,6 +18,7 @@ package org.apache.cocoon.components.blocks;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 
 /**
@@ -40,6 +41,13 @@ public interface Block extends Processor {
 
     // TODO: We should have a reflection friendly Map getProperties() also
 
+    /**
+     * The exported components of the block. Return null if the block doesn't export components.
+     * 
+     * @return a ServiceManager containing the blocks exported components
+     */
+    public ServiceManager getServiceManager();
+    
     /**
      * Takes the scheme specific part of a block URI (the scheme is
      * the responsibilty of the BlockSource) and resolve it with
