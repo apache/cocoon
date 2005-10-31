@@ -45,8 +45,6 @@ public class FormInstance extends AbstractContinuable {
     private Form form;
     private Binding binding;
     private Locale locale;
-    private boolean isValid;
-    private Object validator; // Used?
   
     /**
      * Create a form, given the URI of its definition file
@@ -175,7 +173,6 @@ public class FormInstance extends AbstractContinuable {
         //var result = null;
 
         boolean finished = false;
-        this.isValid = false;
 
         do {
             sendPageAndWait(uri, bizData);
@@ -187,20 +184,6 @@ public class FormInstance extends AbstractContinuable {
             FlowHelper.setContextObject(this.getObjectModel(), bizData);
 
             finished = this.form.process(formContext);
-          
-            // Additional flow-level validation
-            if (finished) {
-                if (this.validator == null) {
-                    this.isValid = this.form.isValid();
-                } else {
-                    this.isValid = this.form.isValid() /*& this.validator(this.form, bizData)*/;
-                }
-                finished = this.isValid;
-            }
-        
-            // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
-            // value with the continuation. We don't do it since there should me not much pratical consequences
-            // except a sudden change of repeaters whose size changed from a continuation to another.
         
         } while(!finished);
     }
