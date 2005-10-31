@@ -20,8 +20,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -54,6 +56,7 @@ public class BlockWiring
     private String location;
     private Map connections = new HashMap();
     private Map properties = new HashMap();
+    private Vector connectionNames;
 
     private String mountPath;
     private String sitemapPath;
@@ -85,9 +88,11 @@ public class BlockWiring
 
         Configuration[] connections =
             config.getChild("connections").getChildren("connection");
+        this.connectionNames = new Vector(connections.length);
         for (int i = 0; i < connections.length; i++) {
             Configuration connection = connections[i];
             String name = connection.getAttribute("name");
+            this.connectionNames.add(name);
             String block = connection.getAttribute("block");
             this.connections.put(name, block);
             getLogger().debug("connection: " + " name=" + name + " block=" + block);
@@ -181,6 +186,13 @@ public class BlockWiring
         return contextURL;
     }
 
+    /**
+     * Get the names for the connections from this block. The name (super) of the super block is not included.
+     */
+    public Enumeration getConnectionNames() {
+        return this.connectionNames.elements();
+    }
+        
     /**
      * Get a block id from the blockname.
      */
