@@ -14,13 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- This catalogue file contains translations for built-in CForms messages. -->
 
 <!-- 
-	WARNING: there are two copies of this file, please keep them in sync
-	(although the src/blocks/forms one could probably refer to the other one,
-	but the dependency could be a problem then):
-	src/blocks/forms/java/org/apache/cocoon/forms/system/i18n/messages_zh_CN.xml
+        WARNING: there are two copies of this file, with the same name,
+        one in the core i18n samples, and one in the forms block, please keep 
+        them in sync.
 -->
 
 <catalogue>
