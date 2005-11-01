@@ -291,17 +291,27 @@ public class XMLResourceBundle extends AbstractLogEnabled
             newValues = Collections.EMPTY_MAP;
 
         } catch (ResourceNotFoundException e) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
-            } else if (getLogger().isInfoEnabled()) {
-                getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+            // FIXME: this damn SourceUtil converts SNFE to RNFE!!!
+            if (getLogger().isInfoEnabled()) {
+                if (newSource != null && !newSource.exists()) {
+                    // Nominal case where a bundle doesn't exist: log the message but not the exception
+                    getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+                } else {
+                    // Log the exception
+                    getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
+                }
             }
             newValues = Collections.EMPTY_MAP;
 
         } catch (SourceNotFoundException e) {
-            // Nominal case where a bundle doesn't exist
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+            if (getLogger().isInfoEnabled()) {
+                if (newSource != null && !newSource.exists()) {
+                    // Nominal case where a bundle doesn't exist: log the message but not the exception
+                    getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found");
+                } else {
+                    // Log the exception
+                    getLogger().info("Bundle <" + sourceURI + "> not loaded: Source URI not found", e);
+                }
             }
             newValues = Collections.EMPTY_MAP;
 
