@@ -18,7 +18,7 @@
 <!-- $Id$ -->
 
 <!DOCTYPE content [
-<!ENTITY included SYSTEM "entity.xml">
+<!ENTITY included SYSTEM "entity.ent">
 ]>
 <page>
     <title>Serialized entities test</title>
