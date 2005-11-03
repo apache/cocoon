@@ -44,4 +44,15 @@ public final class TextRecorder extends NOPRecorder {
     public String getText() {
         return this.buffer.toString().trim();
     }
+
+    /**
+     * @return Recorded text so far.
+     *
+     *	NB. This is a special version of the method used by SQLTransformer
+     *	Trimming the String can damage the SQL Syntax under certain circumstances
+     *
+     */
+    public String getAllText() {
+        return this.buffer.toString();
+    }
 }
