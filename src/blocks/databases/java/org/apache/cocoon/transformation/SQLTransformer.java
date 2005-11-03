@@ -50,6 +50,8 @@ import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 
+import org.apache.cocoon.transformation.helpers.TextRecorder;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -1546,4 +1548,26 @@ public class SQLTransformer extends AbstractSAXTransformer
             return "<ancestor level " + level + ", name " + name + ">";
         }
     }
+    
+    
+    /**
+     * Stop recording of text and return the recorded information.
+     * @return The String, trimmed.
+     *
+     *	NB. SQLTransformer needs to have a special version of this method
+     *	It needs the TextRecorder to not trim whitespace from the queries it is building
+     *
+     */
+    public String endTextRecording()
+    throws SAXException {
+        sendEndPrefixMapping();
+
+        TextRecorder recorder = (TextRecorder) removeRecorder();
+        String text = recorder.getAllText();
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("End text recording. Text=" + text);
+        }
+        return text;
+    }
+
 }
