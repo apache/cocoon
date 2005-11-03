@@ -183,6 +183,13 @@
              more necessary. For those cases where a field with event listeners should not be automatically
              submitted, set <code>submit-on-change</code> to <code>false</code>.
          </li>
+         <li>Introduce a naming convention for stylesheet-generated IDs: they should all start with the
+             widget's ID followed by a ":" and a name. The use of ":", which is forbidden in widget names,
+             avoids conflicts with other widgets in the form. All stylesheets have been updated to this convention.<br/>
+             This change can break applications that use document.getElementById() to access some of the generated
+             elements (notably "foo-input" that's used for the &lt;input&gt; of the "foo" widget), but this notation is now
+             a public contract that will be taken care of in the future.
+         </li>
          <li>Along with field, aggregatefield and booleanfield, you can now add value-changed listeners on output
              and upload widgets.
          </li>
