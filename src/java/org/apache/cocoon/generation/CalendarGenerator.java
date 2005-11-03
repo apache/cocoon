@@ -31,6 +31,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.SAXException;
@@ -44,8 +45,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.name   calendar
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.calendar
- *
- *
+ * 
+ * 
  * <p>
  * Here is a sample output:
  * </p>
@@ -140,7 +141,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     
     /** Do we need to pad out the first and last weeks? */
     protected boolean padWeeks;
-
+    
     /* Add the day of the week 
      * 
      * since SUNDAY=1, we start with a dummy
@@ -165,7 +166,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         
         this.cacheKeyParList = new ArrayList();
         this.cacheKeyParList.add(src);
-        
+
         // Determine the locale
         String langString = par.getParameter("lang", null);
         locale = Locale.getDefault();
@@ -193,8 +194,8 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
             this.dateFormatter = DateFormat.getDateInstance(DateFormat.LONG, locale);
         }
         this.padWeeks = par.getParameterAsBoolean("padWeeks", false);
-        this.cacheKeyParList.add(new Boolean(this.padWeeks));
-        this.monthFormatter = new SimpleDateFormat("MMMM", locale);
+        this.cacheKeyParList.add(BooleanUtils.toBooleanObject(this.padWeeks));
+        this.monthFormatter = new SimpleDateFormat("MMMM", locale);        
         this.attributes = new AttributesImpl();
     }
     
@@ -204,14 +205,14 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      * @throws  SAXException if an error occurs while outputting the document
      */
     public void generate() throws SAXException, ProcessingException {
-        Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"), locale);
+        Calendar start = Calendar.getInstance(locale);
         start.clear();
         start.set(Calendar.YEAR, this.year);
         start.set(Calendar.MONTH, this.month);
         start.set(Calendar.DAY_OF_MONTH, 1);
         Calendar end = (Calendar) start.clone();
         end.add(Calendar.MONTH, 1);
-        
+
         // Determine previous and next months
         Calendar prevMonth = (Calendar) start.clone();
         prevMonth.add(Calendar.MONTH, -1);
@@ -232,7 +233,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                 String.valueOf(end.get(Calendar.YEAR)));
         attributes.addAttribute("", NEXT_MONTH_ATTR_NAME, NEXT_MONTH_ATTR_NAME, "CDATA", 
                 monthNumberFormatter.format(end.get(Calendar.MONTH) + 1));
-        
+
         this.contentHandler.startElement(URI, CALENDAR_NODE_NAME,
                 PREFIX + ':' + CALENDAR_NODE_NAME, attributes);
         int weekNo = start.get(Calendar.WEEK_OF_MONTH);
@@ -308,8 +309,8 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                         PREFIX + ':' + DAY_NODE_NAME);
                 end.add(Calendar.DAY_OF_MONTH, 1); 		
                 if (firstDay == end.get(Calendar.DAY_OF_WEEK)) { 
-                    this.contentHandler.endElement(URI, WEEK_NODE_NAME,
-                       PREFIX + ':' + WEEK_NODE_NAME);
+                        this.contentHandler.endElement(URI, WEEK_NODE_NAME,
+	                       PREFIX + ':' + WEEK_NODE_NAME);
                 }
             }
         }
@@ -328,7 +329,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      * @throws SAXException if an error occurs while outputting the document
      */
     protected void addContent(Calendar date, Locale locale) throws SAXException {}
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
@@ -360,5 +361,5 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         this.locale = null;
         super.recycle();
     }
-    
+
 }
