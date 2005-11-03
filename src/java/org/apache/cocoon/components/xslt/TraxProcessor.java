@@ -291,7 +291,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         }
     }
 
-    private void sourceToSAX(Source source, ContentHandler handler) throws SAXException, IOException, SourceException {
+    protected void sourceToSAX(Source source, ContentHandler handler) throws SAXException, IOException, SourceException {
         if (source instanceof XMLizable) {
             ((XMLizable) source).toSAX(handler);
         } else {
