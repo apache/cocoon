@@ -205,7 +205,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      * @throws  SAXException if an error occurs while outputting the document
      */
     public void generate() throws SAXException, ProcessingException {
-        Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"), locale);
+        Calendar start = Calendar.getInstance(locale);
         start.clear();
         start.set(Calendar.YEAR, this.year);
         start.set(Calendar.MONTH, this.month);
