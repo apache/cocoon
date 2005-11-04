@@ -609,7 +609,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
      * @throws IOException
      *             if I/O error occured.
      */
-    private static InputSource getInputSource(final Source source) throws IOException, SourceException {
+    protected InputSource getInputSource(final Source source) throws IOException, SourceException {
         final InputSource newObject = new InputSource(source.getInputStream());
         newObject.setSystemId(source.getURI());
         return newObject;
