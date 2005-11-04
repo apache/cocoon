@@ -162,18 +162,23 @@ public class PortalManagerImpl
         // first check for a full screen layout
 
         Layout portalLayout = null;
+        Boolean renderable = (service.getEntryLayout(null) == null) ?
+                Boolean.TRUE : Boolean.FALSE;
         if (!this.fullScreenNav) {
-            // If fullscreen mode - otherwise TabContentAspect will deal with the layout
-            portalLayout = this.portalService.getEntryLayout(null);
+            // If fullscreen mode - otherwise the aspects will deal with the layout
+            portalLayout = service.getEntryLayout(null);
+            renderable = Boolean.TRUE;
         }
         if ( portalLayout == null ) {
-            portalLayout = this.portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
+            portalLayout = service.getComponentManager().getProfileManager().getPortalLayout(null, null);
         }
+        service.setRenderable(renderable);
 
         Renderer portalLayoutRenderer = this.portalService.getComponentManager().getRenderer( portalLayout.getRendererName());       
 
         ch.startDocument();
         portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);
         ch.endDocument();
-	}
+        service.setRenderable(null);
+    }
 }

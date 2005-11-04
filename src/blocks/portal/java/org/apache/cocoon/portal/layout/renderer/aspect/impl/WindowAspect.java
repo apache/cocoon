@@ -68,6 +68,10 @@ public final class WindowAspect extends AbstractAspect {
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
 
+        if (!(context.isRendering())) {
+            context.invokeNext( layout, service, contenthandler );
+            return;
+        }
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }

@@ -44,7 +44,7 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectChain.java,v 1.6 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public final class RendererAspectChain {
     
@@ -53,6 +53,8 @@ public final class RendererAspectChain {
     protected List configs = new ArrayList(3);
     
     protected List aspectDescriptions = new ArrayList(2);
+
+    private boolean isRequired = false;
     
     public void configure(ServiceSelector selector, Configuration conf) 
     throws ConfigurationException {
@@ -64,7 +66,10 @@ public final class RendererAspectChain {
                     final String role = current.getAttribute("type");
                     try {
                         RendererAspect rAspect = (RendererAspect) selector.select(role);
-                        this.aspects.add(rAspect);               
+                        this.aspects.add(rAspect);
+                        if (rAspect.isRequired()) {
+                            isRequired = true;
+                        }
                         Parameters aspectConfiguration = Parameters.fromConfiguration(current);
                         Object compiledConf = rAspect.prepareConfiguration(aspectConfiguration);
                         this.configs.add(compiledConf);
@@ -105,5 +110,9 @@ public final class RendererAspectChain {
             selector.release(i.next()); 
         }
         this.aspects.clear();
+    }
+
+    public boolean isRequired() {
+        return this.isRequired;
     }
 }

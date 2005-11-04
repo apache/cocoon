@@ -16,11 +16,13 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.xml.sax.ContentHandler;
@@ -30,16 +32,16 @@ import org.xml.sax.SAXException;
  * Insert a composite layout's elements into the resulting XML. Elements (items)
  * are processed in order. Concrete descendents of this class need to implement the
  * actual handling of layout elements.
- * 
+ *
  * <h2>Applicable to:</h2>
  * <ul>
  *  <li>{@link org.apache.cocoon.portal.layout.CompositeLayout}</li>
  * </ul>
- * 
+ *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
+ *
  * @version CVS $Id$
  */
 public abstract class AbstractCompositeAspect
@@ -55,10 +57,23 @@ public abstract class AbstractCompositeAspect
 	throws SAXException {
         if ( layout instanceof CompositeLayout) {
             CompositeLayout compositeLayout = (CompositeLayout)layout;
+            Layout entryLayout = service.getEntryLayout(null);
             // loop over all rows
             for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
                 Item item = (Item) iter.next();
-                this.processItem(item, handler, service);
+                if (entryLayout != null) {
+                    Layout itemLayout = item.getLayout();
+                    if (itemLayout == entryLayout) {
+                        service.setRenderable(Boolean.TRUE);
+                        this.processLayout(itemLayout, service, handler);
+                        return;
+                    }
+                    if (itemLayout instanceof CompositeLayout) {
+                        this.processLayout(itemLayout, service, handler);
+                    }
+                } else {
+                    this.processItem(item, handler, service);
+                }
             }
         } else {
             throw new SAXException("CompositeLayout expected.");
@@ -66,8 +81,8 @@ public abstract class AbstractCompositeAspect
 	}
 
     /**
-     * Process a single layout element. 
-     * 
+     * Process a single layout element.
+     *
      * @param item layout item to be processed
      * @param handler SAX handler taking events
      * @param service portal service providing component access
@@ -87,5 +102,4 @@ public abstract class AbstractCompositeAspect
             renderer.toSAX(layout, service, handler);
         }
     }
-
 }

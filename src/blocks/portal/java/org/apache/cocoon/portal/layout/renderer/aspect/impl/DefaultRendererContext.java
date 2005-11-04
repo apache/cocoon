@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultRendererContext.java,v 1.6 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public final class DefaultRendererContext implements RendererAspectContext {
 
@@ -43,10 +43,12 @@ public final class DefaultRendererContext implements RendererAspectContext {
     private Object config;
     private Map attributes;
     private Map objectModel;
+    private boolean isRendering;
     
-    public DefaultRendererContext(RendererAspectChain chain) {
+    public DefaultRendererContext(RendererAspectChain chain, boolean isRendering) {
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
+        this.isRendering = chain.isRequired() || isRendering;
     }
     
 	/* (non-Javadoc)
@@ -61,12 +63,15 @@ public final class DefaultRendererContext implements RendererAspectContext {
             final RendererAspect aspect = (RendererAspect) iterator.next();
             aspect.toSAX(this, layout, service, handler);
 		}
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
-	 */
+    public boolean isRendering() {
+        return this.isRendering;
+    }
+
+    /* (non-Javadoc)
+    * @see org.apache.cocoon.portal.layout.renderer.RendererAspectContext#getConfiguration()
+    */
 	public Object getAspectConfiguration() {
 		return this.config;
 	}

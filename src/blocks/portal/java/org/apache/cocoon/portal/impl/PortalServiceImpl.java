@@ -280,6 +280,24 @@ public class PortalServiceImpl
             this.setAttribute("default-layout-key", layoutKey);
         }
     }
+
+    public void setRenderable(Boolean renderable) {
+        String key = getDefaultLayoutKey();
+        if (renderable == null) {
+            removeTemporaryAttribute("RENDER:" + key);
+        } else {
+            setTemporaryAttribute("RENDER:" + key, renderable);
+        }
+    }
+
+    public Boolean isRenderable() {
+        String key = getDefaultLayoutKey();
+        Boolean bool = (Boolean)getTemporaryAttribute("RENDER:" + key);
+        if (bool != null) {
+            return bool;
+        }
+        return Boolean.TRUE;
+    }
     
     /**
      * @see org.apache.cocoon.portal.PortalService#getDefaultLayoutKey()

@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspectContext.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface RendererAspectContext {
     
@@ -64,4 +64,10 @@ public interface RendererAspectContext {
      * Get the object model
      */
     Map getObjectModel();
+
+    /**
+     * Return whether rendering is enabled for this chain.
+     * @return true if rendering is enabled, false otherwise.
+     */
+    boolean isRendering();
 }

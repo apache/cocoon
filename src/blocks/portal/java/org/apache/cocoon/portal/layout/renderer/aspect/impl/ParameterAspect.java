@@ -69,6 +69,10 @@ public final class ParameterAspect extends AbstractAspect {
         
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
 
+        if (!(context.isRendering())) {
+            context.invokeNext( layout, service, contenthandler );
+            return;
+        }
         Map parameter = layout.getParameters();
         if (parameter.size() > 0) {
             AttributesImpl attributes = new AttributesImpl();

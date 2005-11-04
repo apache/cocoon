@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RendererAspect.java,v 1.6 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public interface RendererAspect 
     extends Component {
@@ -68,4 +68,6 @@ public interface RendererAspect
      */
     Object prepareConfiguration(Parameters configuration)
     throws ParameterException;
+
+    boolean isRequired();
 }
