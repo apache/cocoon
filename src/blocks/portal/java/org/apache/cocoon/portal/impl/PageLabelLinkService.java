@@ -171,7 +171,6 @@ public class PageLabelLinkService extends DefaultLinkService {
                         getKey(item, key);
                 	    value.append(key.toString());
                     }
-
                 }
                 else {
                     value.append(Integer.toString(i));

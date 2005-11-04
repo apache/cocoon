@@ -80,4 +80,8 @@ public abstract class AbstractAspect
         return configuration;
     }
 
+    public boolean isRequired() {
+        return false;
+    }
+
 }

@@ -113,9 +113,17 @@ import org.xml.sax.SAXException;
 public class TabContentAspect 
     extends CompositeContentAspect {
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+    /**
+     * Chains that include this aspect must always render
+     * @return true
      */
+    public boolean isRequired() {
+        return true;
+    }
+
+    /* (non-Javadoc)
+    * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+    */
     public void toSAX(RendererAspectContext context,
                         Layout layout,
                         PortalService service,
@@ -160,7 +168,7 @@ public class TabContentAspect
                 
                 XMLUtils.startElement(handler, "named-item", attributes);
                 if (j == selected) {
-                    this.processLayout(getNextLayout(service, tab), service, handler);
+                    this.processLayout(tab.getLayout(), service, handler);
                     if (config.includeSelected) {
                         List events = new ArrayList();
                         events.add(event);
@@ -190,13 +198,13 @@ public class TabContentAspect
      */
     public Iterator getAspectDescriptions(Object configuration) {
         TabPreparedConfiguration pc = (TabPreparedConfiguration)configuration;
-        
+
         DefaultAspectDescription desc = new DefaultAspectDescription();
         desc.setName(pc.aspectName);
         desc.setClassName("java.lang.Integer");
         desc.setPersistence(pc.store);
         desc.setAutoCreate(true);
-        
+
         return Collections.singletonList(desc).iterator();
     }
 

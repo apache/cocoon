@@ -72,14 +72,16 @@ public class CIncludeCopletAspect
 	throws SAXException {
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
-
-        if ( config.rootTag ) {
+        if (!(context.isRendering())) {
+            context.invokeNext(layout, service, handler);
+        }
+        if ( config.rootTag) {
             XMLUtils.startElement(handler, config.tagName);
         }
 
         this.createCInclude("coplet://" + cid.getId(), handler);
 
-        if ( config.rootTag ) {
+        if ( config.rootTag) {
             XMLUtils.endElement(handler, config.tagName);
         }
 

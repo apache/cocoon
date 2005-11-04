@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultCopletAspect.java,v 1.5 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id$
  */
 public class DefaultCopletAspect extends AbstractAspect {
 
@@ -62,7 +62,12 @@ public class DefaultCopletAspect extends AbstractAspect {
                 		PortalService service,
                 		ContentHandler handler)
 	throws SAXException {
-        
+
+        if (!(context.isRendering())) {
+            context.invokeNext(layout, service, handler);
+            return;
+        }
+
         XMLUtils.startElement(handler, "content");
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 

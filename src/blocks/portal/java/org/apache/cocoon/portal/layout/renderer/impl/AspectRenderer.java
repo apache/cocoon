@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectRenderer.java,v 1.6 2004/04/25 20:10:29 haul Exp $
+ * @version CVS $Id$
  */
 public class AspectRenderer
     extends AbstractLogEnabled
@@ -80,7 +80,7 @@ public class AspectRenderer
      * Stream out raw layout 
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
-        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain);
+        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain, service.isRenderable().booleanValue());
         renderContext.setObjectModel(ContextHelper.getObjectModel(this.context));
         renderContext.invokeNext(layout, service, handler);
     }

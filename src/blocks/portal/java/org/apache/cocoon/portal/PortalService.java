@@ -128,4 +128,16 @@ public interface PortalService extends Component {
      * @since 2.1.8
      */
     Map getObjectModel();
+
+    /**
+     * Indicates whether aspects which are sensitive to rendering state should render
+     * @param renderable true if all aspects should render
+     */
+    void setRenderable(Boolean renderable);
+
+    /**
+     * Returns true if all aspects should render, false if only "static" aspects should
+     * render.
+     */
+    Boolean isRenderable();
 }
