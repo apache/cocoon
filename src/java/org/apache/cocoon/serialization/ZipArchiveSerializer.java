@@ -66,7 +66,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -103,6 +103,9 @@ public class ZipArchiveSerializer extends AbstractSerializer
     /** The resolver to get sources */
     protected SourceResolver resolver;
 
+    /** Temporary byte buffer to read source data */
+    protected byte[] buffer;
+
     /** Serializer used when in IN_CONTENT state */
     protected Serializer serializer;
 
@@ -123,7 +126,7 @@ public class ZipArchiveSerializer extends AbstractSerializer
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -132,7 +135,6 @@ public class ZipArchiveSerializer extends AbstractSerializer
      * @return application/zip
      */
     public String getMimeType() {
-        // See also bug #10277
         return "application/zip";
     }
 
@@ -151,7 +153,7 @@ public class ZipArchiveSerializer extends AbstractSerializer
      * @param uri The Namespace URI the prefix is mapped to.
      */
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if (state == IN_CONTENT_STATE) {
+        if (state == IN_CONTENT_STATE && this.contentDepth > 0) {
             // Pass to the serializer
             super.startPrefixMapping(prefix, uri);
 
@@ -162,6 +164,13 @@ public class ZipArchiveSerializer extends AbstractSerializer
             }
         }
     }
+    
+    public void endPrefixMapping(String prefix) throws SAXException {
+        if (state == IN_CONTENT_STATE && this.contentDepth > 0) {
+            // Pass to the serializer
+            super.endPrefixMapping(prefix);
+        }
+    }
 
     // Note : no need to implement endPrefixMapping() as we just need to pass it through if there
     // is a serializer, which is what the superclass does.
@@ -170,7 +179,7 @@ public class ZipArchiveSerializer extends AbstractSerializer
      * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
-    throws SAXException {
+        throws SAXException {
 
         // Damage control. Sometimes one exception is just not enough...
         if (this.exception != null) {
@@ -202,6 +211,15 @@ public class ZipArchiveSerializer extends AbstractSerializer
                 break;
 
             case IN_CONTENT_STATE:
+                if (this.contentDepth == 0) {
+                    // Give it any namespaces already declared
+                    Enumeration prefixes = this.nsSupport.getPrefixes();
+                    while (prefixes.hasMoreElements()) {
+                        String prefix = (String) prefixes.nextElement();
+                        super.startPrefixMapping(prefix, this.nsSupport.getURI(prefix));
+                    }
+                }
+
                 this.contentDepth++;
                 super.startElement(namespaceURI, localName, qName, atts);
                 break;
@@ -244,6 +262,7 @@ public class ZipArchiveSerializer extends AbstractSerializer
                 new SAXException("Cannot specify both 'src' and 'serializer' on a Zip entry '" + name + "'");
         }
 
+        Source source = null;
         try {
             // Create a new Zip entry
             ZipEntry entry = new ZipEntry(name);
@@ -251,26 +270,21 @@ public class ZipArchiveSerializer extends AbstractSerializer
 
             if (src != null) {
                 // Get the source and its data
-                Source source = resolver.resolveURI(src);
-                try {
-                    InputStream sourceInput = source.getInputStream();
+                source = resolver.resolveURI(src);
+                InputStream sourceInput = source.getInputStream();
+                
+                // Buffer lazily allocated
+                if (this.buffer == null)
+                    this.buffer = new byte[1024];
 
-                    // Copy the source to the zip
-                    try {
-                        int len;
-                        byte[] buffer = new byte[4096];
-                        while ((len = sourceInput.read(buffer)) > 0) {
-                            this.zipOutput.write(buffer, 0, len);
-                        }
-                    } finally {
-                        sourceInput.close();
-                    }
-
-                    // And close the entry
-                    this.zipOutput.closeEntry();
-                } finally {
-                    this.resolver.release(source);
+                // Copy the source to the zip
+                int len;
+                while ((len = sourceInput.read(this.buffer)) > 0) {
+                    this.zipOutput.write(this.buffer, 0, len);
                 }
+
+                // and close the entry
+                this.zipOutput.closeEntry();
 
             } else {
                 // Serialize content
@@ -294,23 +308,18 @@ public class ZipArchiveSerializer extends AbstractSerializer
                 // start its document
                 this.serializer.startDocument();
 
-                // and give it any namespaces already declared
-                Enumeration prefixes = this.nsSupport.getPrefixes();
-                while (prefixes.hasMoreElements()) {
-                    String prefix = (String) prefixes.nextElement();
-                    super.startPrefixMapping(prefix, this.nsSupport.getURI(prefix));
-                }
-
                 this.state = IN_CONTENT_STATE;
                 this.contentDepth = 0;
             }
 
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (SAXException e) {
-            throw this.exception = e;
+        } catch (RuntimeException re) {
+            throw re;
+        } catch (SAXException se) {
+            throw this.exception = se;
         } catch (Exception e) {
             throw this.exception = new SAXException(e);
+        } finally {
+            this.resolver.release( source );
         }
     }
 
@@ -318,7 +327,7 @@ public class ZipArchiveSerializer extends AbstractSerializer
      * @see org.xml.sax.ContentHandler#endElement(String, String, String)
      */
     public void endElement(String namespaceURI, String localName, String qName)
-    throws SAXException {
+        throws SAXException {
 
         // Damage control. Sometimes one exception is just not enough...
         if (this.exception != null) {
@@ -343,8 +352,8 @@ public class ZipArchiveSerializer extends AbstractSerializer
 
                 try {
                     this.zipOutput.closeEntry();
-                } catch (IOException e) {
-                    throw this.exception = new SAXException(e);
+                } catch (IOException ioe) {
+                    throw this.exception = new SAXException(ioe);
                 }
 
                 super.setConsumer(null);
@@ -367,8 +376,8 @@ public class ZipArchiveSerializer extends AbstractSerializer
             // Close the zip archive
             this.zipOutput.finish();
 
-        } catch (IOException e) {
-            throw new SAXException(e);
+        } catch (IOException ioe) {
+            throw new SAXException(ioe);
         }
     }
 
