@@ -61,9 +61,4 @@
     <external label="LocaleAction Javadoc" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/acting/LocaleAction.html" i18n:attr="label"/>   
   </menu>
   
-  <menu label="Credits" i18n:attr="label">
-    <menu-item label="Konstantin Piroumian" href="mailto:kpiroumian@apache.org" i18n:attr="label" />  
-    <menu-item label="Many others..." href="http://cocoon.apache.org/2.1/who.html" i18n:attr="label"/>      
-  </menu>  
-   
 </book>

@@ -18,7 +18,7 @@
 <!--+
     | Korean message catalogue file for Cocoon 2 i18n sample
     |
-    | CVS $Id: messages_ko.xml,v 1.3 2004/03/06 02:25:37 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="ko">
@@ -33,7 +33,6 @@
   <message key="article">논문</message>
   <message key="article_text1">이것은 국제화된 문단입니다.</message>
   <message key="article_text2">이것은 또하나의 국제화된 문단이며, 역시 멋지죠.</message>
-  <message key="copyright">Copyright © 2002 Konstantin Piroumian. 번역 이아스.</message>
   <message key="Hello">안녕하세요, {0}! 만나서 반갑습니다!</message>
   <message key="Kot">톰켓</message>
   <message key="none">없음</message>

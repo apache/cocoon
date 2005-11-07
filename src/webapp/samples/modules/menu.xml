@@ -53,10 +53,4 @@
     <external label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>
     <external label="API Docs" href="../../api/java/org/apache/cocoon/components/modules/input/package-summary.html"/>
   </menu>
-
-  <menu label="Credits">
-    <menu-item label="Christian Haul" href="mailto:haul@apache.org"/>
-    <menu-item label="Konstantin Piroumian" href="mailto:kpiroumian@apache.org"/>
-    <menu-item label="Many others..." href="/docs/who.html"/>
-  </menu>
 </book>

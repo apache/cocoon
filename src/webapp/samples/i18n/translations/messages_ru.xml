@@ -18,7 +18,7 @@
 <!--+
     | Russian message catalogue file for Cocoon 2 i18n sample
     |
-    | CVS $Id: messages_ru.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="ru">
@@ -34,7 +34,6 @@
     <message key="article">Статья</message>
     <message key="article_text1">Это интернационализированный абзац.</message>
     <message key="article_text2">Это тоже интернационализированный абзац и такой же классный.</message>
-    <message key="copyright">Авторские права © 2001 Константин Пирумян. Ничто не защищено.</message>
     <message key="Hello">Привет, {0}! Рад тебя видеть!</message>
     <message key="Kot">Кот</message>
     <message key="none">Незнакомец</message>
