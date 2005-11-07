@@ -18,7 +18,7 @@
 <!--+
     | Japanese message catalogue file for menu in Cocoon 2 i18n sample
     |
-    | CVS $Id: menu_ja.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="ja">
@@ -33,7 +33,4 @@
     <message key="i18n transformer docs">i18nトランスフォーマ文書</message>
     <message key="i18n transformer Javadoc">i18nトランスフォーマJavaDoc</message>
     <message key="LocaleAction Javadoc">LocaleAction JavaDoc</message>
-    <message key="Credits">謝辞</message>
-    <message key="Konstantin Piroumian">コンスタンティン・ピルミャン</message>
-    <message key="Many others...">その他大勢の方々...</message>
 </catalogue>

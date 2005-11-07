@@ -18,7 +18,7 @@
 <!--+
     | Chinese message catalogue file for Cocoon 2 i18n sample
     |
-    | CVS $Id: messages_zh_TW.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="zh_TW">
@@ -33,7 +33,6 @@
     <message key="article">論文</message>
     <message key="article_text1">這個是國際化的段落.</message>
     <message key="article_text2">這個還是國際化的段落, 并且出色.</message>
-    <message key="copyright">Copyright © 2002 Konstantin Piroumian. 翻譯 李蒼信.</message>
     <message key="Hello">您好, {0}! 見到你很高興!</message>
     <message key="Kot">Tomcat</message>
     <message key="none">零</message>

@@ -18,7 +18,7 @@
 <!--+
     | Greek message catalogue file for menu in Cocoon 2 i18n sample
     |
-    | CVS $Id: menu_el.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="gr">
@@ -33,7 +33,4 @@
 	<message key="i18n transformer docs">i18n transformer docs</message>
 	<message key="i18n transformer Javadoc">i18n transformer Javadoc</message>
 	<message key="LocaleAction Javadoc">LocaleAction Javadoc</message>
-	<message key="Credits">Πιστώσεις</message>
-	<message key="Konstantin Piroumian">Κωνσταντίνος Πιρουμιάν</message>
-	<message key="Many others...">Και πολλοί άλλοι...</message>
 </catalogue>

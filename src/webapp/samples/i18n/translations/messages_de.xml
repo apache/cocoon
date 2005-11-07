@@ -18,7 +18,7 @@
 <!--+
     | German message catalogue file for Cocoon 2 i18n sample
     |
-    | CVS $Id: messages_de.xml,v 1.4 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="de">
@@ -34,7 +34,6 @@
     <message key="article">Artikel</message>
     <message key="article_text1">Dies ist ein Absatz nach i18n.</message>
     <message key="article_text2">Dies ist ein weiterer Absatz nach i18n und auch noch ein ziemlich cooler dazu.</message>
-    <message key="copyright">Copyright © 2001 Konstantin Piroumian. Deutsche Übersetzung von Jörg Prante, Tommy Santoso.</message>
     <message key="Hello">Hallo {0}! Schön, dich zu sehen!</message>
     <message key="Kot">Tomcat</message>
     <message key="none">nichts</message>

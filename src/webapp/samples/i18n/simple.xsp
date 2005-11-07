@@ -121,9 +121,7 @@
     </content>
 
     <bottom>
-      <copyright>
-        <i18n:text>copyright</i18n:text>
-      </copyright>
+      <copyright>Copyright 1999-2005 The Apache Software Foundation</copyright>
     </bottom>
   </document>
 </xsp:page>

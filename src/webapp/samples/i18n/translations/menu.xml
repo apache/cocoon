@@ -39,7 +39,4 @@
     <message key="i18n transformer Javadoc"><![CDATA[<I18ntransformer> Javadoc]]></message>
     <message key="LocaleAction Javadoc"><![CDATA[<LocaleAction> Javadoc]]></message>
 
-    <message key="Credits">Credits</message>
-    <message key="Konstantin Piroumian">Konstantin Piroumian</message>
-    <message key="Many others...">Many others...</message>
 </catalogue>

@@ -18,7 +18,7 @@
 <!--+
     | Spanish message catalogue file for Cocoon 2 i18n sample
     |
-    | CVS $Id: messages_es.xml,v 1.3 2004/03/06 02:25:36 antonio Exp $
+    | CVS $Id$
     +-->
 
 <catalogue xml:lang="es">
@@ -34,7 +34,6 @@
     <message key="article">Artículo</message>
     <message key="article_text1">Esto es un párrafo i18n.</message>
     <message key="article_text2">Esto es otro párrafo i18n y también es 'cool'.</message>
-    <message key="copyright">Copyright © 2001 Konstantin Piroumian. Sin derechos reservados.</message>
     <message key="Hello">¡¡Hola!, {0}! ¡Encantado de verte!</message>
     <message key="Kot">Tomcat</message>
     <message key="none">Ninguno</message>
