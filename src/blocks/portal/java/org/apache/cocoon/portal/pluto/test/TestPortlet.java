@@ -84,7 +84,7 @@ public class TestPortlet implements Portlet  {
         Writer writer = res.getWriter();
         writer.write("<h1>Simple TestPortlet</h1>\n");
         writer.write("<p>This is a Cocoon test portlet.</p>\n");
-        writer.write("<p>I'm running in: " + req.getPortalContext().getPortalInfo());
+        writer.write("<p>I'm running in: " + req.getPortalContext().getPortalInfo() + "</p>");
         writer.write("<p>Current portlet mode: " + req.getPortletMode() + "</p>");
         writer.write("<p>Current window state: " + req.getWindowState() + "</p>");
         writer.write("<p>Portlet Preferences:</p>");
