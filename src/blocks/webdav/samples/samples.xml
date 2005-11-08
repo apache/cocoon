@@ -79,7 +79,8 @@
       This sample shows how to serve WebDAV clients from Cocoon
       (i.e. using Cocoon as a WebDAV server) - still some work
       in progress, but quite usable already: point your favourite
-      WebDAV client to [Cocoon URL]/samples/webdav/davmap/repo/ and
+      WebDAV client to [Cocoon URL]/samples/blocks/webdav/davmap/repo/ 
+and
       have fun browsing around!
     </sample>
   </group>
