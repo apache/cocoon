@@ -80,9 +80,11 @@ public class AspectRenderer
      * Stream out raw layout 
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
-        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain, service.isRenderable().booleanValue());
+        Boolean isRenderable = service.isRenderable();
+        DefaultRendererContext renderContext = new DefaultRendererContext(this.chain, layout, service);
         renderContext.setObjectModel(ContextHelper.getObjectModel(this.context));
         renderContext.invokeNext(layout, service, handler);
+        service.setRenderable(isRenderable);
     }
 
 	/* (non-Javadoc)

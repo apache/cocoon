@@ -76,12 +76,11 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                         ContentHandler handler)
     throws SAXException {
         PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
-        boolean renderable = context.isRendering();
-        if ( config.rootTag && renderable) {
+        if ( config.rootTag) {
             XMLUtils.startElement(handler, config.tagName);
         }
         super.toSAX(context, layout, service, handler);
-        if ( config.rootTag && renderable) {
+        if ( config.rootTag) {
             XMLUtils.endElement(handler, config.tagName);
         }
 

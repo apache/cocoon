@@ -126,10 +126,6 @@ public class XSLTAspect
                         PortalService service,
                         ContentHandler handler)
     throws SAXException {
-        if (!(context.isRendering())) {
-            context.invokeNext( layout, service, handler );
-            return;
-        }
         PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
 
         XSLTProcessor processor = null;
