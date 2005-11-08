@@ -71,7 +71,6 @@ public class JXPathHelper {
 
         // Setup context with local config
         context.setLenient(setup.isLenient());
-        context.setDefaultNamespaceIgnored(true);
         context.setFunctions(local.getLibrary());
         if (local.getNamespaces() != null) {
             for (Iterator i = local.getNamespaces().entrySet().iterator(); i.hasNext();) {
