@@ -34,6 +34,12 @@
     <module>src/mocks</module>
   </modules>
   <repositories>
+    <!-- Try first the standard maven2 repo -->
+    <repository>
+      <id>maven2-repo</id>
+      <name>Official maven2 repo</name>
+      <url>repo1.maven.org/maven2</url>
+    </repository>
     <!-- Apache specific maven repositories available to all blocks -->
     <repository>
       <id>apache-cvs</id>
