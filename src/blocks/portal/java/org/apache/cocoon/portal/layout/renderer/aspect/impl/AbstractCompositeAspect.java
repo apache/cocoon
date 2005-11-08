@@ -57,23 +57,10 @@ public abstract class AbstractCompositeAspect
 	throws SAXException {
         if ( layout instanceof CompositeLayout) {
             CompositeLayout compositeLayout = (CompositeLayout)layout;
-            Layout entryLayout = service.getEntryLayout(null);
             // loop over all rows
             for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
                 Item item = (Item) iter.next();
-                if (entryLayout != null) {
-                    Layout itemLayout = item.getLayout();
-                    if (itemLayout == entryLayout) {
-                        service.setRenderable(Boolean.TRUE);
-                        this.processLayout(itemLayout, service, handler);
-                        return;
-                    }
-                    if (itemLayout instanceof CompositeLayout) {
-                        this.processLayout(itemLayout, service, handler);
-                    }
-                } else {
-                    this.processItem(item, handler, service);
-                }
+                this.processItem(item, handler, service);
             }
         } else {
             throw new SAXException("CompositeLayout expected.");

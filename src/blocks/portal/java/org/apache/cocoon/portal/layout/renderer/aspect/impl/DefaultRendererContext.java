@@ -21,8 +21,11 @@ import java.util.Map;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.CompositeLayout;
+import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -44,11 +47,21 @@ public final class DefaultRendererContext implements RendererAspectContext {
     private Map attributes;
     private Map objectModel;
     private boolean isRendering;
+    private boolean isRequired;
     
-    public DefaultRendererContext(RendererAspectChain chain, boolean isRendering) {
+    public DefaultRendererContext(RendererAspectChain chain, Layout layout, PortalService service) {
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
-        this.isRendering = chain.isRequired() || isRendering;
+        this.isRequired = chain.isRequired();
+        Layout entryLayout = service.getEntryLayout(null);
+        if (service.isRenderable().booleanValue()) {
+            this.isRendering = true;
+            return;
+        }
+        if (entryLayout == layout) {
+            this.isRendering = true;
+            service.setRenderable(Boolean.TRUE);
+        }
     }
     
 	/* (non-Javadoc)
@@ -58,7 +71,21 @@ public final class DefaultRendererContext implements RendererAspectContext {
                     		PortalService service,
                     		ContentHandler handler)
 	throws SAXException {
-		if (iterator.hasNext()) {
+        if (!this.isRendering && !this.isRequired) {
+            if (layout instanceof CompositeLayout) {
+                CompositeLayout compositeLayout = (CompositeLayout)layout;
+                for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
+                    Layout itemLayout = ((Item) iter.next()).getLayout();
+                    if ( itemLayout != null ) {
+                        final String rendererName = itemLayout.getRendererName();
+                        final Renderer renderer = service.getComponentManager().getRenderer(rendererName);
+                        renderer.toSAX(itemLayout, service, handler);
+                    }
+                }
+            }
+            return;
+        }
+        if (iterator.hasNext()) {
             this.config = this.configIterator.next();
             final RendererAspect aspect = (RendererAspect) iterator.next();
             aspect.toSAX(this, layout, service, handler);
