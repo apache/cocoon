@@ -175,6 +175,7 @@ public class CoreServiceManager
     public void setRoleManager (RoleManager rm) {
         if (rm != null) {
             // Override the one eventually got in the parent (see constructor)
+            // FIXME - Why do we wrap the role manager?
             this.roleManager = new RoleManager(rm);
         }
     }
