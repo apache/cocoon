@@ -24,11 +24,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -46,8 +49,14 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
  * @since 2.2
  */
 public class StandaloneServiceSelector
-extends AbstractLogEnabled
-implements Preloadable, ServiceSelector, Serviceable, Configurable {
+    extends AbstractLogEnabled
+    implements Preloadable,
+               ServiceSelector,
+               Serviceable,
+               Configurable,
+               Disposable,
+               Initializable,
+               Contextualizable {
 
     /** The application context for components
      */
