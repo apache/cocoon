@@ -175,6 +175,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update">
+      Forms block: If a field is required or not can be changed during form processing.
+                   Applied patch by Philipp Schmidt (philipp.schmidt@gmail.com).
+    </action>
     <action dev="SW" type="update">
       Forms block:
       <ul>
