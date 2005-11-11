@@ -22,7 +22,7 @@
 	 <type>Overview document</type> 
   </header> 
   <body> 
-	 <s1 title="The Apache Cocoon Portal"> 
+	 <section title="The Apache Cocoon Portal"> 
 		<p>This is a demo of the Cocoon Portal Engine.</p>
         <p>The Cocoon portal page you currently view displays some so called
           <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
@@ -35,7 +35,7 @@
           feature might have an impact on the performance.
         </p>
         <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
-     </s1> 
+     </section> 
 
   </body>
 </document>

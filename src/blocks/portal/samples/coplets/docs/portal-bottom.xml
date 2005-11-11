@@ -22,10 +22,10 @@
 	 <type>Overview document</type> 
   </header> 
   <body> 
-	 <s1 title="Further Information"> 
+	 <section title="Further Information"> 
 		<p>For further information have a look at the Cocoon documentation
               and at the other portal demos available using the tab above.</p>
-   </s1> 
+   </section> 
 
   </body>
 </document>
