@@ -18,8 +18,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="isfaq"/>
   <xsl:template match="document">
-  	<!-- Allready done by portal!
-    <td colspan="2" valign="top" class="content"-->
       <xsl:if test="normalize-space(header/title)!=''">
         <h1>
           <xsl:value-of select="header/title"/>
@@ -44,31 +42,8 @@
         </p>
       </xsl:if>
       <xsl:apply-templates select="body"/>
-    <!--/td  see above!-->
   </xsl:template>
   <xsl:template match="body">
-    <xsl:if test="section and not($isfaq='true')">
-      <ul class="minitoc">
-        <xsl:for-each select="section">
-          <li>
-            <a href="#{generate-id()}">
-              <xsl:value-of select="title"/>
-            </a>
-            <xsl:if test="section">
-              <ul class="minitoc">
-                <xsl:for-each select="section">
-                  <li>
-                    <a href="#{generate-id()}">
-                      <xsl:value-of select="title"/>
-                    </a>
-                  </li>
-                </xsl:for-each>
-              </ul>
-            </xsl:if>
-          </li>
-        </xsl:for-each>
-      </ul>
-    </xsl:if>
     <xsl:apply-templates/>
   </xsl:template>
 <!--  section handling
@@ -78,13 +53,11 @@
     nesting depth
 -->
   <xsl:template match="section">
-    <a name="{generate-id()}"/>
-    <xsl:if test="normalize-space(@id)!=''">
-      <a name="{@id}"/>
+    <xsl:if test="title">
+      <h3>
+        <xsl:value-of select="title"/>
+      </h3>
     </xsl:if>
-    <h3>
-      <xsl:value-of select="title"/>
-    </h3>
     <xsl:apply-templates select="*[not(self::title)]"/>
   </xsl:template>
   <xsl:template match="section/section">
