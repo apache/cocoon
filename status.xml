@@ -140,8 +140,9 @@
     </action>
 
     <action context="code" assigned-to="open">
-      Finish the
-      <link href="plan/samples.html">refactoring of samples</link>
+      Finish the refactoring of samples
+      See info at BRANCH_2_1_X/src/documentation/xdocs/plan/samples.xml (
+   <link href="http://cocoon.apache.org/2.1/plan/samples.html">refactoring guidelines</link> document).
     </action>
 
     <action context="code" assigned-to="open">
@@ -3467,7 +3468,7 @@
   <action dev="DC" type="add">
    Encourage people to help with the refactoring of Cocoon samples.
    Provide a
-   <link href="plan/samples.html">refactoring guidelines</link> document.
+   <link href="http://cocoon.apache.org/2.1/plan/samples.html">refactoring guidelines</link> document.
   </action>
   <action dev="DC" type="update">
    Moved the old sample for Catalog Entity Resolver in to the new
