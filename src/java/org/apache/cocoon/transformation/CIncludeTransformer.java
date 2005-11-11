@@ -29,8 +29,10 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.IncludeCacheManager;
 import org.apache.cocoon.transformation.helpers.IncludeCacheManagerSession;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.xml.NamespacesTable.Declaration;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -178,7 +180,10 @@ public class CIncludeTransformer extends AbstractSAXTransformer
     /** Remember the start time of the request for profiling */
     protected long startTime;
 
-   /**
+    /** A {@link NamespacesTable} used to filter namespace declarations. */
+    protected NamespacesTable namespaces;
+
+    /**
      * Constructor
      * Set the namespace
      */
@@ -203,6 +208,7 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             getLogger().debug("Starting, session " + this.cachingSession);
             this.startTime = System.currentTimeMillis();
         }
+        this.namespaces = new NamespacesTable();
     }
 
     /**
@@ -250,10 +256,14 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.startTime = 0;
         }
         this.filter = null;
+        this.namespaces = null;
 
         super.recycle();
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startTransformingElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
     public void startTransformingElement(String uri, String name, String raw, Attributes attr)
     throws ProcessingException ,IOException, SAXException {
         // Element: include
@@ -335,6 +345,9 @@ public class CIncludeTransformer extends AbstractSAXTransformer
         }
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#endTransformingElement(java.lang.String, java.lang.String, java.lang.String)
+     */
     public void endTransformingElement(String uri, String name, String raw)
     throws ProcessingException, IOException, SAXException {
         if (name.equals(CINCLUDE_INCLUDE_ELEMENT)) {
@@ -650,6 +663,41 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             }
         }
         super.endDocument();
+    }
+
+    /**
+     * <p>Receive notification of the start of a prefix mapping.</p>
+     *
+     * <p>This transformer will remove all prefix mapping declarations for those
+     * prefixes associated with the <code>http://apache.org/cocoon/include/1.0</code>
+     * namespace.</p>
+     *
+     * @see org.xml.sax.ContentHandler#startPrefixMapping(String, String)
+     */
+    public void startPrefixMapping(String prefix, String nsuri)
+    throws SAXException {
+        // Skipping mapping for our namespace
+        this.namespaces.addDeclaration(prefix, nsuri);
+        if (!CINCLUDE_NAMESPACE_URI.equals(nsuri)) {
+            super.startPrefixMapping(prefix, nsuri);
+        }
+    }
+
+    /**
+     * <p>Receive notification of the end of a prefix mapping.</p>
+     *
+     * <p>This transformer will remove all prefix mapping declarations for those
+     * prefixes associated with the <code>http://apache.org/cocoon/include/1.0</code>
+     * namespace.</p>
+     *
+     * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        Declaration d = this.namespaces.removeDeclaration(prefix);
+        if ( d == null || !CINCLUDE_INCLUDE_ELEMENT.equals(d.getUri()) ) {
+            super.endPrefixMapping(prefix);
+        }
     }
 
     /**
