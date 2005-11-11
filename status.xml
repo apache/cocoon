@@ -3045,7 +3045,7 @@
    Integrated the validation targets into the build ("validate-config" and
    "validate-xdocs") also still available at the command-line. Validation
    happens automatically unless you switch it off. See document
-   <link href="userdocs/concepts/validation.html">XML Validation Facilities</link>.
+   <link href="http://cocoon.apache.org/2.1/userdocs/concepts/validation.html">XML Validation Facilities</link>.
   </action>
   <action dev="CH" type="fix" due-to-email="michael.enke@wincor-nixdorf.com"
    due-to="Michael Enke" fixes-bug="15064">
