@@ -33,7 +33,7 @@
           description="Runs JUnit tests"/>
 
   <target name="htmlunit-tests"
-          depends="core-htmlunit-tests, block-htmlunit-tests, htmlunit-notes, htmlunit-tests-report, check-htmlunit-present"
+          depends="run-htmlunit-tests, htmlunit-notes, htmlunit-tests-report, check-htmlunit-present"
           description="Runs HtmlUnit tests"/>
 
   <target name="check-htmlunit-present" unless="htmlunit.present">
@@ -94,8 +94,7 @@
   </target>
 
   <!-- Runs HtmlUnit tests -->
-  <target name="core-htmlunit-tests" if="htmlunit.present"
-          depends="compile-htmlunit-tests, htmlunit-tests-prepare">
+  <target name="run-htmlunit-tests" if="htmlunit.present" depends="compile-htmlunit-tests, htmlunit-tests-prepare,block-htmlunit-tests-prepare">
 
     <!-- fail if the URL under test is not available -->
     <echo>Tests tests require another instance of Cocoon to run at ${htmlunit.test.baseurl}</echo>
@@ -152,8 +151,7 @@
          target="tests"/>
   </target>
 
-  <target name="block-htmlunit-tests" if="htmlunit.present"
-          depends="compile-htmlunit-tests, prepare-blocks">
+  <target name="block-htmlunit-tests-prepare" if="htmlunit.present" depends="compile-htmlunit-tests, prepare-blocks">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
