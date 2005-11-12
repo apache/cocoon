@@ -449,7 +449,8 @@
                 <fileset dir="@{{dir}}/test/htmlunit" excludes="**/*.java"/>
               </copy>
 
-              <javac destdir="${{build.blocks}}/@{{name}}/test/htmlunit"
+              <javac 
+                     destdir="${{build.test.htmlunit}}"
                      debug="${{compiler.debug}}"
                      optimize="${{compiler.optimize}}"
                      deprecation="${{compiler.deprecation}}"
