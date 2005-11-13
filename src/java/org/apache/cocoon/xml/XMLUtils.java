@@ -18,6 +18,7 @@ package org.apache.cocoon.xml;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -133,7 +134,7 @@ public class XMLUtils {
         if (ch instanceof XMLConsumer) {
             return (XMLConsumer)ch;
         } else {
-            if ( lh == null && ch instanceof LexicalHandler ) {
+            if (lh == null && ch instanceof LexicalHandler) {
                 lh = (LexicalHandler)ch;
             }
             return new ContentHandlerWrapper(ch, lh);
@@ -214,7 +215,16 @@ public class XMLUtils {
      * </ul>
      */
     public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
-        return new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
+        /* Properties passed as parameters to the Properties constructor become "default properties".
+           But Xalan does not use the default properties, so they are lost.
+           Therefore, we must promote them to "set properties".
+        */
+        Properties propertiesForXML = new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
+        for (Enumeration e = propertiesForXML.propertyNames(); e.hasMoreElements(); ) {
+            String propertyName = (String)e.nextElement();
+            propertiesForXML.setProperty(propertyName, propertiesForXML.getProperty(propertyName, ""));
+        }
+        return propertiesForXML;
     }
 
     /**

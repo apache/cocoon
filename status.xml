@@ -179,6 +179,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.8-dev" date="not yet released">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1365" due-to="Maurice Jumelet" due-to-email="maurice@jumelet.net">
+      POST method in cinclude:includexml is broken.
+    </action>
     <action dev="CZ" type="update">
       Forms block: If a field is required or not can be changed during form processing.
                    Applied patch by Philipp Schmidt (philipp.schmidt@gmail.com).
