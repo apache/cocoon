@@ -18,10 +18,12 @@ package org.apache.cocoon.xml;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -29,6 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -97,8 +100,8 @@ public class XMLUtils {
             }
 
             for (int i = 0; i < nodesToRemoveNum; i++) {
-                org.w3c.dom.Attr nodeToDelete = (org.w3c.dom.Attr) nodesToRemove.get(i);
-                org.w3c.dom.Element nodeToDeleteParent = (org.w3c.dom.Element) node; // nodeToDelete.getParentNode();
+                Attr nodeToDelete = (Attr) nodesToRemove.get(i);
+                Element nodeToDeleteParent = (Element) node; // nodeToDelete.getParentNode();
                 nodeToDeleteParent.removeAttributeNode(nodeToDelete);
             }
 
@@ -133,7 +136,7 @@ public class XMLUtils {
         if (ch instanceof XMLConsumer) {
             return (XMLConsumer)ch;
         } else {
-            if ( lh == null && ch instanceof LexicalHandler ) {
+            if (lh == null && ch instanceof LexicalHandler) {
                 lh = (LexicalHandler)ch;
             }
             return new ContentHandlerWrapper(ch, lh);
@@ -174,7 +177,16 @@ public class XMLUtils {
      * </ul>
      */
     public static Properties createPropertiesForXML(boolean omitXMLDeclaration) {
-        return new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
+        /* Properties passed as parameters to the Properties constructor become "default properties".
+            But Xalan does not use the default properties, so they are lost.
+            Therefore, we must promote them to "set properties".
+         */
+         Properties propertiesForXML = new Properties(omitXMLDeclaration? XML_FORMAT_NODECL: XML_FORMAT);
+         for (Enumeration e = propertiesForXML.propertyNames(); e.hasMoreElements(); ) {
+             String propertyName = (String)e.nextElement();
+             propertiesForXML.setProperty(propertyName, propertiesForXML.getProperty(propertyName, ""));
+         }
+         return propertiesForXML;
     }
 
     /**
@@ -219,7 +231,7 @@ public class XMLUtils {
             }
 
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException e) {
+        } catch (TransformerException e) {
             throw new ProcessingException("TransformerException: " + e, e);
         } catch (SAXException e) {
             throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
@@ -251,7 +263,7 @@ public class XMLUtils {
             transformerHandler.endDocument();
 
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException e) {
+        } catch (TransformerException e) {
             throw new ProcessingException("TransformerException: " + e, e);
         } catch (SAXException e) {
             throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
