@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
@@ -30,6 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -98,8 +100,8 @@ public class XMLUtils {
             }
 
             for (int i = 0; i < nodesToRemoveNum; i++) {
-              org.w3c.dom.Attr nodeToDelete = (org.w3c.dom.Attr) nodesToRemove.get(i);
-              org.w3c.dom.Element nodeToDeleteParent =  (org.w3c.dom.Element)node; //nodeToDelete.getParentNode();
+              Attr nodeToDelete = (Attr) nodesToRemove.get(i);
+              Element nodeToDeleteParent =  (Element)node; //nodeToDelete.getParentNode();
               nodeToDeleteParent.removeAttributeNode(nodeToDelete);
             }
 
@@ -269,7 +271,7 @@ public class XMLUtils {
             }
 
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException e) {
+        } catch (TransformerException e) {
             throw new ProcessingException("TransformerException: " + e, e);
         } catch (SAXException e) {
             throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
@@ -301,7 +303,7 @@ public class XMLUtils {
             transformerHandler.endDocument();
 
             return writer.toString();
-        } catch (javax.xml.transform.TransformerException e) {
+        } catch (TransformerException e) {
             throw new ProcessingException("TransformerException: " + e, e);
         } catch (SAXException e) {
             throw new ProcessingException("SAXException while streaming DOM node to SAX: " + e, e);
