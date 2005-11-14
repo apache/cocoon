@@ -17,10 +17,10 @@ package org.apache.cocoon.portal.transformation;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This transformer is used to replace links (URIs) from elements
@@ -120,22 +120,11 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
                     + ".");
         }
 
-        //remove ATTRIBUTE_ATTR and ELEMENT_ATTR from attributes
-        AttributesImpl newAttributes = null;
-
-        if (attributes instanceof AttributesImpl) {
-            newAttributes = (AttributesImpl) attributes;
-        } else {
-            newAttributes = new AttributesImpl(attributes);
-        }
-
-        //always iterate backwards when removing elements!
-        for (int i = newAttributes.getLength() - 1; i >= 0; i--) {
-            if (ELEMENT_ATTR.equals(attributes.getLocalName(i))
-                || ATTRIBUTE_ATTR.equals(attributes.getLocalName(i))) {
-                newAttributes.removeAttribute(i);
-            }
-        }
+        // remove ATTRIBUTE_ATTR, "coplet" and ELEMENT_ATTR from attributes
+        AttributesImpl newAttributes = this.getMutableAttributes(attributes);
+        newAttributes.removeAttribute(ELEMENT_ATTR);
+        newAttributes.removeAttribute(ATTRIBUTE_ATTR);
+        newAttributes.removeAttribute("coplet");
 
         int index = newAttributes.getIndex(attributeName);
         String link = newAttributes.getValue(index);

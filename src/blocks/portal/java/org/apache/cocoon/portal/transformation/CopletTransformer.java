@@ -28,6 +28,7 @@ import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
@@ -126,13 +127,13 @@ extends AbstractCopletTransformer {
                 throw new ProcessingException("Attribute "+SELECT_ATTR+" must be spcified.");
             }
 
-            CopletInstanceData cid = this.getCopletInstanceData();
+            final CopletInstanceData cid = this.getCopletInstanceData();
 
-            JXPathContext jxpathContext = JXPathContext.newContext( cid );
-            Object object = jxpathContext.getValue(expression);
+            final JXPathContext jxpathContext = JXPathContext.newContext( cid );
+            final Object object = jxpathContext.getValue(expression);
 
-            if (object == null) {
-                throw new ProcessingException("Could not find value for expression "+expression);
+            if (object != null) {
+                XMLUtils.valueOf(contentHandler, object);
             }
 
         } else if (name.equals(LINK_ELEM)) {
