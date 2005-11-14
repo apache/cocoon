@@ -230,18 +230,20 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     private String ourPrefix;
 
-    //
-    // Lifecycle
-    //
+    /**
+     * Remove namespace prefixes for our namespace?
+     * @since 2.2
+     */
+    protected boolean removeOurNamespacePrefixes = false;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see Configurable#configure(Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -262,7 +264,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver,
@@ -270,7 +272,6 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
                       String         src,
                       Parameters     params)
     throws ProcessingException, SAXException, IOException {
-
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setup resolver=" + resolver +
                               ", objectModel=" + objectModel +
@@ -302,7 +303,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         this.ignoreEmptyCharacters = false;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
@@ -322,6 +323,9 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         super.recycle();
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         this.manager = null;
     }
@@ -380,14 +384,18 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
+        boolean isOurPrefix = false;
         if (prefix != null) {
             this.namespaces.add(new String[] {prefix, uri});
         }
         if (namespaceURI.equals(uri)) {
             this.ourPrefix = prefix;
+            isOurPrefix = true;
         }
         if (this.ignoreEventsCount == 0) {
-            super.startPrefixMapping(prefix, uri);
+            if ( !removeOurNamespacePrefixes || !isOurPrefix) {
+                super.startPrefixMapping(prefix, uri);
+            }
         }
     }
 
@@ -397,7 +405,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     public void endPrefixMapping(String prefix)
     throws SAXException {
-
+        boolean isOurPrefix = false;
         if (prefix != null) {
             // Find and remove the namespace prefix
             boolean found = false;
@@ -414,6 +422,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
             }
 
             if (prefix.equals(this.ourPrefix)) {
+                isOurPrefix = true;
                 // Reset our current prefix
                 this.ourPrefix = null;
 
@@ -429,7 +438,9 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         }
 
         if (this.ignoreEventsCount == 0) {
-            super.endPrefixMapping(prefix);
+            if ( !removeOurNamespacePrefixes || !isOurPrefix) {
+                super.endPrefixMapping(prefix);
+            }
         }
     }
 
@@ -1020,7 +1031,6 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     public void sendParametersEvents(SourceParameters pars)
     throws SAXException {
-
         if (pars != null) {
             Iterator names = pars.getParameterNames();
             while (names.hasNext()) {
