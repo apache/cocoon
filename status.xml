@@ -175,6 +175,12 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="update">
+      AbstractSAXTransformer supports removal of own namespace prefixes.
+    </action>
+    <action dev="CZ" type="update">
+      CInclude transformer now removes its namespace prefixes.
+    </action>
     <action dev="AN" type="add" fixes-bug="COCOON-1616">
       Source that declares namespace fails JXPath/Linkrewriter/Input Modules.
     </action>

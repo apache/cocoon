@@ -180,15 +180,13 @@ public class CIncludeTransformer extends AbstractSAXTransformer
     /** Remember the start time of the request for profiling */
     protected long startTime;
 
-    /** A {@link NamespacesTable} used to filter namespace declarations. */
-    protected NamespacesTable namespaces;
-
     /**
      * Constructor
      * Set the namespace
      */
     public CIncludeTransformer() {
         this.defaultNamespaceURI = CINCLUDE_NAMESPACE_URI;
+        this.removeOurNamespacePrefixes = true;
     }
 
     /**
@@ -208,7 +206,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             getLogger().debug("Starting, session " + this.cachingSession);
             this.startTime = System.currentTimeMillis();
         }
-        this.namespaces = new NamespacesTable();
     }
 
     /**
@@ -256,7 +253,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.startTime = 0;
         }
         this.filter = null;
-        this.namespaces = null;
 
         super.recycle();
     }
@@ -663,41 +659,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             }
         }
         super.endDocument();
-    }
-
-    /**
-     * <p>Receive notification of the start of a prefix mapping.</p>
-     *
-     * <p>This transformer will remove all prefix mapping declarations for those
-     * prefixes associated with the <code>http://apache.org/cocoon/include/1.0</code>
-     * namespace.</p>
-     *
-     * @see org.xml.sax.ContentHandler#startPrefixMapping(String, String)
-     */
-    public void startPrefixMapping(String prefix, String nsuri)
-    throws SAXException {
-        // Skipping mapping for our namespace
-        this.namespaces.addDeclaration(prefix, nsuri);
-        if (!CINCLUDE_NAMESPACE_URI.equals(nsuri)) {
-            super.startPrefixMapping(prefix, nsuri);
-        }
-    }
-
-    /**
-     * <p>Receive notification of the end of a prefix mapping.</p>
-     *
-     * <p>This transformer will remove all prefix mapping declarations for those
-     * prefixes associated with the <code>http://apache.org/cocoon/include/1.0</code>
-     * namespace.</p>
-     *
-     * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
-     */
-    public void endPrefixMapping(String prefix)
-    throws SAXException {
-        Declaration d = this.namespaces.removeDeclaration(prefix);
-        if ( d == null || !CINCLUDE_INCLUDE_ELEMENT.equals(d.getUri()) ) {
-            super.endPrefixMapping(prefix);
-        }
     }
 
     /**
