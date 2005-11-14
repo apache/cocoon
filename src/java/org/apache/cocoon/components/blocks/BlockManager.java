@@ -54,6 +54,7 @@ public class BlockManager
     private Context context;
     private Configuration config;
     private ServiceManager parentServiceManager;
+    private InterBlockServiceManager interBlockSM;
     private ServiceManager serviceManager;
 
     private Processor blockProcessor;
@@ -89,12 +90,17 @@ public class BlockManager
         this.blockContext = new BlockContext(this.blockWiring, this);
         
         Context newContext = this.getAvalonContext();
+        
+        // Create a service manager for getting components from other blocks
+        this.interBlockSM = new InterBlockServiceManager(this.blockWiring, this.parentServiceManager);
+        this.interBlockSM.enableLogging(this.getLogger());
 
-        // Create block a service manager with the exposed components of the block
+        String confLocation = this.blockWiring.getContextURL() + "::";
+        ServiceManager sourceResolverSM =
+            this.createLocalSourceResolverSM(newContext, this.interBlockSM, confLocation);
+
+        // Create a service manager with the exposed components of the block
         if (this.blockWiring.getComponentConfiguration() != null) {
-            String confLocation = this.blockWiring.getContextURL() + "::";
-            ServiceManager sourceResolverSM = this.createLocalSourceResolverSM(newContext, confLocation);
-            
             DefaultConfiguration componentConf =
                 new DefaultConfiguration("components", confLocation);
             componentConf.addAll(this.blockWiring.getComponentConfiguration());
@@ -105,7 +111,7 @@ public class BlockManager
                     null,
                     componentConf);
         } else {
-            this.serviceManager = this.parentServiceManager;
+            this.serviceManager = sourceResolverSM;
         }
 
         // Create a processor for the block
@@ -145,7 +151,7 @@ public class BlockManager
      * @return
      * @throws Exception
      */
-    protected ServiceManager createLocalSourceResolverSM(Context newContext, String confLocation) throws Exception {
+    protected ServiceManager createLocalSourceResolverSM(Context newContext, ServiceManager parentServiceManager, String confLocation) throws Exception {
         // The source resolver must be defined in this service
         // manager, otherwise the root path will be the one from the
         // parent manager, we add a resolver to get it right. If the
@@ -154,11 +160,16 @@ public class BlockManager
         // for resolving the include.
         DefaultConfiguration sourceManagerConf =
             new DefaultConfiguration("components", confLocation);
+        // FIXME: Need a local role manager as it is not inherited through the InterBlockServiceManager 
+        DefaultConfiguration roleInclude =
+            new DefaultConfiguration("include");
+        roleInclude.setAttribute("src", "resource://org/apache/cocoon/cocoon.roles");
+        sourceManagerConf.addChild(roleInclude);
         DefaultConfiguration resolverConf =
             new DefaultConfiguration("source-resolver");
         sourceManagerConf.addChild(resolverConf);
         ServiceManager sourceResolverSM =
-            new CoreServiceManager(this.parentServiceManager);
+            new CoreServiceManager(parentServiceManager);
         LifecycleHelper.setupComponent(
                 sourceResolverSM,
                 this.getLogger(),
@@ -176,6 +187,7 @@ public class BlockManager
     // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
     	this.blocksManager = blocksManager;
+        this.interBlockSM.setBlocksManager(blocksManager);
     }
 
     /**
@@ -211,7 +223,7 @@ public class BlockManager
      */
     public ServiceManager getServiceManager() {
         // Check that the block have a local service manager
-        if (this.serviceManager != this.parentServiceManager) {
+        if (this.serviceManager != this.interBlockSM) {
             return this.serviceManager;
         } else {
             return null;
