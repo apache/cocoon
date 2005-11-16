@@ -178,7 +178,7 @@
 <!-- FIXME: is this needed for anything else? Replaced with hard-coded values
   <release version="@version@" date="@date@">
 -->
-  <release version="2.1.8-dev" date="not yet released">
+  <release version="2.1.8" date="November 18 2005">
     <action dev="AG" type="fix" fixes-bug="COCOON-1365" due-to="Maurice Jumelet" due-to-email="maurice@jumelet.net">
       POST method in cinclude:includexml is broken.
     </action>
