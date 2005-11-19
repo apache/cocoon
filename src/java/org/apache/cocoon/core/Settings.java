@@ -48,4 +48,10 @@ public interface Settings extends BaseSettings, DynamicSettings {
      *         an empty list.
      */
     List getProperties(String keyPrefix);
+    
+    /**
+     * Return all available properties
+     * @return A list of all property names or an empty list.
+     */
+    List getProperties();
 }

@@ -941,12 +941,30 @@ public class MutableSettings implements Settings {
      */
     public List getProperties(String keyPrefix) {
         final List props = new ArrayList();
-        for(int i=0; i<this.properties.size(); i++) {
+        for(int i=0; i < this.properties.size(); i++) {
             final Properties p = (Properties)this.properties.get(i);
             final Iterator kI = p.keySet().iterator();
             while ( kI.hasNext() ) {
                 final String name = (String)kI.next();
                 if ( name.startsWith(keyPrefix) && !props.contains(name) ) {
+                    props.add(name);
+                }
+            }
+        }
+        return props;
+    }
+    
+    /**
+     * @see org.apache.cocoon.core.Settings#getProperties()
+     */
+    public List getProperties() {
+        final List props = new ArrayList();
+        for(int i=0; i < this.properties.size(); i++) {
+            final Properties p = (Properties)this.properties.get(i);
+            final Iterator kI = p.keySet().iterator();
+            while ( kI.hasNext() ) {
+                final String name = (String)kI.next();
+                if (!props.contains(name) ) {
                     props.add(name);
                 }
             }
