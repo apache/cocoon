@@ -1206,7 +1206,7 @@
       The Spring Framework.
     </description>
     <used-by>Spring block</used-by>
-    <lib>optional/spring-1.1.5.jar</lib>
+    <lib>optional/spring-1.2.6.jar</lib>
     <homepage>http://www.springframework.org/</homepage>
   </file>
   
