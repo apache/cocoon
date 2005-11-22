@@ -20,22 +20,9 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
-
-    <source-factories>
-      <component-instance class="org.apache.cocoon.components.source.impl.BlockSourceFactory" name="block"/>
-    </source-factories>
-
     <input-modules>
       <component-instance name="block-property"  class="org.apache.cocoon.components.modules.input.BlockPropertyModule"/>
     </input-modules>
-
-    <map:generators default="file">
-      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
-    </map:generators>
-
-    <map:transformers default="xslt">
-      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
-    </map:transformers>
 
     <map:serializers default="xml">
       <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
@@ -44,33 +31,24 @@
     <map:readers default="resource">
       <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
     </map:readers>
-
-    <map:matchers default="wildcard">
-      <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
-    </map:matchers>
-
-    <map:pipes default="noncaching">
-      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
-      </map:pipe>
-    </map:pipes>
   </map:components>
 
   <map:pipelines>
-    <map:pipeline>
+    <map:pipeline type="noncaching">
 
-      <map:match pattern="test">
-        <map:generate src="test.xml"/>
+      <map:match type="wildcard" pattern="test">
+        <map:generate type="file" src="test.xml"/>
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="test4">
-        <map:generate src="block:super:/test"/>
+      <map:match type="wildcard" pattern="test4">
+        <map:generate type="file" src="block:super:/test"/>
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="prop">
-        <map:generate src="test.xml"/>
-        <map:transform src="block-properties.xsl">
+      <map:match type="wildcard" pattern="prop">
+        <map:generate type="file" src="test.xml"/>
+        <map:transform type="xslt" src="block-properties.xsl">
           <map:parameter name="foo" value="{block-property:foo}"/>
           <map:parameter name="bar" value="{block-property:bar}"/>
           <map:parameter name="baz" value="{block-property:baz}"/>
@@ -78,7 +56,7 @@
         <map:serialize/>
       </map:match>
 
-      <map:match pattern="**">
+      <map:match type="wildcard" pattern="**">
         <map:read src="block:super:/{1}"/>
       </map:match>
 

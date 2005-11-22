@@ -36,6 +36,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.Environment;
@@ -104,7 +105,7 @@ public class BlockManager
             DefaultConfiguration componentConf =
                 new DefaultConfiguration("components", confLocation);
             componentConf.addAll(this.blockWiring.getComponentConfiguration());
-            this.serviceManager = new CoreServiceManager(sourceResolverSM);
+            this.serviceManager = new CocoonServiceManager(sourceResolverSM);
             LifecycleHelper.setupComponent(this.serviceManager,
                     this.getLogger(),
                     newContext,

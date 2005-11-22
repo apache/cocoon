@@ -23,13 +23,6 @@
     <!--map:classpath>
       <class-dir src="COB-INF/classes"/>
     </map:classpath-->
-    <map:generators default="file"/>
-    <map:transformers default="xslt"/>
-    <map:serializers default="xml">
-      <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    </map:serializers>
-    <map:matchers default="wildcard"/>
-    <map:pipes default="noncaching"/>
   </map:components>
 
   <map:pipelines>
