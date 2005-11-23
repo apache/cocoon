@@ -15,12 +15,11 @@
   limitations under the License.
 -->
 
-<!-- $Id: sel.xsl,v 1.2 2004/03/17 11:28:22 crossley Exp $-->
 <!--
  * Sel Logicsheet (?)
  *
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/17 11:28:22 $
+ * @version CVS $Id$
 -->
 
 <xsl:stylesheet version="1.0"
@@ -38,7 +37,6 @@
     <xsl:for-each select=".//sel:subpage|.//sel:default-subpage">
       <xsp:logic>
       private void _<xsl:value-of select="translate(parent::sel:subpage-set/@parameter,' -','__')"/>_<xsl:value-of select="translate(@name,' -','__')"/>_case() throws SAXException {
-        AttributesImpl xspAttr = new AttributesImpl();
         <xsl:apply-templates/>
       }
       </xsp:logic>
