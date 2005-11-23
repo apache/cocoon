@@ -33,9 +33,9 @@ import org.xml.sax.SAXException;
  * that only contain an anchor are ignored.
  * In addition if a link has the attribute "external" with the value
  * "true", the link is also ignored.
- * 
+ *
  * TODO: Support target attribute
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
@@ -48,7 +48,7 @@ extends AbstractCopletTransformer {
     /** The jxpath for the attribute */
     protected String jxPath;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public void setup(SourceResolver resolver,
@@ -61,7 +61,7 @@ extends AbstractCopletTransformer {
         this.jxPath = "temporaryAttributes/" + this.attributeName;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     public void startElement(String uri, String name, String raw, Attributes attr)
@@ -79,15 +79,19 @@ extends AbstractCopletTransformer {
                 processed = true;
             }
         } else if ("form".equals(name) ) {
-            this.createFormEvent(attr);
-            processed = true;
+            boolean convert = this.isExternalForm(attr);
+            this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
+            if ( convert ) {
+                this.createFormEvent(attr);
+                processed = true;
+            }
         }
         if ( !processed ) {
             super.startElement(uri, name, raw, attr);
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endElement(String uri, String name, String raw)
@@ -103,11 +107,14 @@ extends AbstractCopletTransformer {
                 processed = true;
             }
         } else if ( "form".equals(name) ) {
-            this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
-                    CopletTransformer.LINK_ELEM,
-                    "coplet:" + CopletTransformer.LINK_ELEM);
-            this.xmlConsumer.endPrefixMapping("coplet");
-            processed = true;
+            final Boolean converted = (Boolean)this.stack.pop();
+            if ( converted.booleanValue() ) {
+                this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
+                        CopletTransformer.LINK_ELEM,
+                        "coplet:" + CopletTransformer.LINK_ELEM);
+                this.xmlConsumer.endPrefixMapping("coplet");
+                processed = true;
+            }
         }
         if ( !processed ) {
             super.endElement(uri, name, raw);
@@ -157,7 +164,6 @@ extends AbstractCopletTransformer {
                 CopletTransformer.LINK_ELEM,
                 "coplet:" + CopletTransformer.LINK_ELEM,
                 newAttributes);
-
     }
 
     protected String getLink(String base, String link) {
@@ -187,9 +193,10 @@ extends AbstractCopletTransformer {
     }
 
     /**
-     * a link in an external application is not transformed
+     * Is this link an external link?
+     * A link in an external application is not transformed
      * if there is an attribute external="true" in the link-element
-     * or if the link starts with "mailto:".
+     * or if the link starts with "mailto:" or "javascript:".
      * 
      * @param attributes attributes of the node
      * @return true if the attribute 'external' is 'true'
@@ -208,5 +215,28 @@ extends AbstractCopletTransformer {
         }
         return false;
     }
-    
+
+    /**
+     * Does this form contain an external action?
+     * A form is not transformed if there is an attribute
+     * external="true" in the form action or if the action
+     * starts with "javascript:".
+     * 
+     * @param attributes attributes of the node
+     * @return True if the action is external.
+     */
+    private boolean isExternalForm(Attributes attributes) {        
+        final String external = attributes.getValue("external");
+        // links to external documents will be not transformed to portal links
+        if (external != null && external.trim().length() > 0 
+            && external.trim().toLowerCase().equals ("true") ) {            
+            return true;
+        }
+        final String link = attributes.getValue("action");
+        if ( link != null 
+             && link.startsWith("javascript:") ) {
+            return true;
+        }
+        return false;
+    }
 }
