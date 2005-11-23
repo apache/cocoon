@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -13,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License. 
 -->
+
 <wiring xmlns="http://apache.org/cocoon/blocks/wiring/1.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:schemaLocation="http://apache.org/cocoon/blocks/wiring/1.0 wiring-schema-1.0.xsd"
