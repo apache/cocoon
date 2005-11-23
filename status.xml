@@ -179,6 +179,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="CZ" type="fix">
+      Portal block: Fix possible encoding problems with JSR 168 portlets.
+    </action>
+    <action dev="CZ" type="add">
+      Portal block: Support external form actions in HTML transformation.
+    </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-1691" due-to="Feliciano Borrego" due-to-email="felibv@gmail.com">
       Database block: Renaming AttributeImpl xspAttr to _xspAttr was not applied to ESQL logicsheet.
       That caused compliation errors in all XSPs using it.

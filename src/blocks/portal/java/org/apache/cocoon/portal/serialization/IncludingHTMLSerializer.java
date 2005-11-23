@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.serialization.HTMLSerializer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -36,7 +38,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: IncludingHTMLSerializer.java,v 1.3 2004/03/15 10:14:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class IncludingHTMLSerializer 
     extends HTMLSerializer {
@@ -50,8 +52,20 @@ public class IncludingHTMLSerializer
     protected static final char token = '~';
     
     protected static final char[] tokens = new char[] {token, token};
-    
-    /* (non-Javadoc)
+
+    /** The encoding. */
+    protected String encoding = "utf-8";
+ 
+    /**
+     * @see org.apache.cocoon.serialization.HTMLSerializer#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration conf)
+    throws ConfigurationException {
+        super.configure(conf);
+        this.encoding = conf.getChild("encoding").getValue(this.encoding);
+    }
+
+    /**
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
@@ -75,7 +89,7 @@ public class IncludingHTMLSerializer
         map.put(name, content);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endElement(String uri, String loc, String raw)
@@ -85,7 +99,7 @@ public class IncludingHTMLSerializer
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
@@ -107,47 +121,55 @@ public class IncludingHTMLSerializer
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.sitemap.SitemapOutputComponent#setOutputStream(java.io.OutputStream)
      */
     public void setOutputStream(OutputStream stream) throws IOException {
-        super.setOutputStream(new ReplacingOutputStream(stream, this.orderedPortletList));
+        super.setOutputStream(new ReplacingOutputStream(stream,
+                                                        this.orderedPortletList,
+                                                        this.encoding));
     }
 
 }
-class ReplacingOutputStream extends OutputStream {
+final class ReplacingOutputStream extends OutputStream {
     
-    /** Stream */
+    /** Stream. */
     protected final OutputStream stream;
-    
+
     protected boolean inKey;
-    
+
     protected final LinkedList orderedValues;
-    
+
+    /** Encoding. */
+    protected final String encoding;
+
     /**
-     * Constructor
+     * Constructor.
      */
-    public ReplacingOutputStream(OutputStream stream, LinkedList values) {
+    public ReplacingOutputStream(OutputStream stream,
+                                 LinkedList   values,
+                                 String       enc) {
         this.stream = stream;    
         this.orderedValues = values;
         this.inKey = false;
+        this.encoding = enc;
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see java.io.OutputStream#close()
      */
     public void close() throws IOException {
         this.stream.close();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.io.OutputStream#flush()
      */
     public void flush() throws IOException {
         this.stream.flush();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.io.OutputStream#write(byte[], int, int)
      */
     public void write(byte[] b, int off, int len) throws IOException {
@@ -198,14 +220,14 @@ class ReplacingOutputStream extends OutputStream {
         } while (!end);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.io.OutputStream#write(byte[])
      */
     public void write(byte[] b) throws IOException {
         this.write(b, 0, b.length);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.io.OutputStream#write(int)
      */
     public void write(int b) throws IOException {
@@ -229,7 +251,7 @@ class ReplacingOutputStream extends OutputStream {
     protected void writeNextValue() throws IOException {
         final String value = (String)this.orderedValues.removeLast();
         if ( value != null ) {
-            this.stream.write(value.getBytes(), 0, value.length());
+            this.stream.write(value.getBytes(this.encoding), 0, value.length());
         }        
     }
 }
