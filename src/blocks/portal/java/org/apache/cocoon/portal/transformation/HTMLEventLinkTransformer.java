@@ -79,7 +79,7 @@ extends AbstractCopletTransformer {
                 processed = true;
             }
         } else if ("form".equals(name) ) {
-            boolean convert = this.isExternalForm(attr);
+            boolean convert = !this.isExternalForm(attr);
             this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
             if ( convert ) {
                 this.createFormEvent(attr);
