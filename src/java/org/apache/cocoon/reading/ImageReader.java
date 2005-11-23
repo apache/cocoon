@@ -31,7 +31,6 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.reading.ResourceReader;
 import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
@@ -95,7 +94,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:eric@plauditdesign.com">Eric Caron</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 final public class ImageReader extends ResourceReader {
     private static final boolean GRAYSCALE_DEFAULT = false;
@@ -165,7 +164,7 @@ final public class ImageReader extends ResourceReader {
         } else {
             height = Integer.parseInt(tmpHeight);
         }
-		
+
         if (par.getParameterAsBoolean("grayscale", GRAYSCALE_DEFAULT)) {
             this.grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         }
@@ -287,7 +286,7 @@ final public class ImageReader extends ResourceReader {
                     double ow = decodeParam.getWidth();
                     double oh = decodeParam.getHeight();
 
-                    if (usePercent == true) {
+                    if (usePercent) {
                         if (width > 0) {
                             width = Math.round((int)(ow * width) / 100);
                         }
@@ -319,7 +318,7 @@ final public class ImageReader extends ResourceReader {
                     p.setQuality(this.quality[0], true);
                     encoder.setJPEGEncodeParam(p);
                     encoder.encode(currentImage);
-                } else { 
+                } else {
                     ByteArrayOutputStream bstream = new ByteArrayOutputStream();
                     JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
                     JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
@@ -352,11 +351,11 @@ final public class ImageReader extends ResourceReader {
      * Generate the unique key.
      * This key must be unique inside the space of this component.
      *
-     * @return The generated key consists of the src and width and height, and the color transform
-     * parameters
+     * @return The generated key consists of the src and width and height,
+     *         and the color transform parameters
     */
     public Serializable getKey() {
-        return this.inputSource.getURI()
+        return super.getKey().toString()
                 + ':' + this.width
                 + ':' + this.height
                 + ":" + this.scaleColor[0]
@@ -366,10 +365,9 @@ final public class ImageReader extends ResourceReader {
                 + ":" + this.offsetColor[1]
                 + ":" + this.offsetColor[2]
                 + ":" + this.quality[0]
-                + ":" + ((null == this.grayscaleFilter) ? "color" : "grayscale")
-                + ":" + super.getKey();
+                + ":" + (this.grayscaleFilter == null ? "color" : "bw");
     }
-    
+
     public void recycle(){
         super.recycle();
         this.colorFilter = null;
