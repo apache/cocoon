@@ -23,22 +23,23 @@
   <groupId>apache-cocoon</groupId>
   <artifactId>cocoon</artifactId>
   <packaging>pom</packaging>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.2</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <modules>
     <module>core</module>
+<!--
     <module>core/test-core</module>
     <module>webapp</module>
     <module>src/blocks</module>
     <module>src/mocks</module>
+-->
   </modules>
   <repositories>
-    <!-- Try first the standard maven2 repo -->
     <repository>
-      <id>maven2-repo</id>
-      <name>Official maven2 repo</name>
-      <url>repo1.maven.org/maven2</url>
+      <id>apache-maven2</id>
+      <name>Apache Maven2 Repository</name>
+      <url>http://cvs.apache.org/maven-snapshot-repository</url>
     </repository>
     <!-- Apache specific maven repositories available to all blocks -->
     <repository>
@@ -47,18 +48,37 @@
       <url>http://cvs.apache.org/repository</url>
       <layout>legacy</layout>
     </repository>
+    <repository>
+      <id>maven-snapshot</id>
+      <name>Maven snapshot Repository</name>
+      <url>http://snapshots.maven.codehaus.org/maven2/</url>
+    </repository>
   </repositories>
+<!--
   <scm>
     <connection>http://svn.apache.org/repos/asf/cocoon/trunk</connection>
     <url>http://svn.apache.org/repos/asf/cocoon/trunk</url>
   </scm>
+-->
   <distributionManagement>
-    <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>apache</id>
+    <repository>
+      <id>apache-maven-snapshot</id>
       <name>repository</name>
-      <url>scpexe://cvs.apache.org/x1/www/cvs.apache.org/repository</url>
-      <layout>legacy</layout>
+      <url>scpexe://cvs.apache.org/x1/www/cvs.apache.org/maven-snapshot-repository</url>
+    </repository>
+    <snapshotRepository>
+      <id>apache-maven-snapshot</id>
+      <name>repository</name>
+      <url>scpexe://cvs.apache.org/x1/www/cvs.apache.org/maven-snapshot-repository</url>
     </snapshotRepository>
   </distributionManagement>
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ssh-external</artifactId>
+         <version>1.0-alpha-6-SNAPSHOT</version>
+      </extension>
+    </extensions>
+  </build>
 </project>
