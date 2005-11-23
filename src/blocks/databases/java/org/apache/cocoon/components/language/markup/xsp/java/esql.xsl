@@ -21,7 +21,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.9 $ $Date: 2004/03/17 11:28:17 $
+ * @version CVS $Id$
 -->
 
 <xsl:stylesheet version="1.0"
@@ -180,7 +180,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
             }
       </xsl:if>
 
-            protected void _esql_printObject ( Object obj, AttributesImpl xspAttr) throws SAXException
+            protected void _esql_printObject(Object obj) throws SAXException
             {
                if ( obj instanceof List) {
            ListIterator j=((List)obj).listIterator();
@@ -189,7 +189,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
                        while (j.hasNext()){
                       <xsp:element name="sql-list-item">
                         <xsp:attribute name="pos"><xsp:expr>j.nextIndex()</xsp:expr></xsp:attribute>
-                        <xsp:logic>this._esql_printObject(j.next(),xspAttr);</xsp:logic>
+                        <xsp:logic>this._esql_printObject(j.next());</xsp:logic>
                       </xsp:element>
                        };
                      </xsp:logic>
@@ -200,7 +200,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
                       <xsp:logic>
                         while (j.hasNext()){
                            <xsp:element name="sql-set-item">
-                 <xsp:logic>this._esql_printObject(j.next(),xspAttr);</xsp:logic>
+                 <xsp:logic>this._esql_printObject(j.next());</xsp:logic>
                    </xsp:element>
                         };
                       </xsp:logic>
@@ -694,7 +694,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
                       <xsp:logic>
                         Object[] _esql_struct = ((Struct) _esql_query.getResultSet().getObject(_esql_i)).getAttributes();
                         for ( int _esql_k=0; _esql_k&lt;_esql_struct.length; _esql_k++){
-                        <xsp:element name="sql-row-item"><xsp:logic>this._esql_printObject(_esql_struct[_esql_k],xspAttr);</xsp:logic></xsp:element>
+                        <xsp:element name="sql-row-item"><xsp:logic>this._esql_printObject(_esql_struct[_esql_k]);</xsp:logic></xsp:element>
                         }
                       </xsp:logic>
                     </xsp:element>
@@ -705,7 +705,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
                     // to retrieve any type (i.e. bit and bit varying)
                     // so don't handle complex types different for postgres
                     if (!_esql_connection.getURL().startsWith("jdbc:postgresql:")) {
-                       this._esql_printObject(_esql_query.getResultSet().getObject(_esql_i), xspAttr);
+                       this._esql_printObject(_esql_query.getResultSet().getObject(_esql_i));
                        break;
                     }
 

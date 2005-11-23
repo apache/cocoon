@@ -179,7 +179,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
-    <action dev="NN" type="add">PLACEHOLDER</action>
+    <action dev="AN" type="fix" fixes-bug="COCOON-1691" due-to="Feliciano Borrego" due-to-email="felibv@gmail.com">
+      Database block: Renaming AttributeImpl xspAttr to _xspAttr was not applied to ESQL logicsheet.
+      That caused compliation errors in all XSPs using it.
+    </action>
   </release>
   <release version="2.1.8" date="November 18 2005">
     <action dev="AG" type="fix" fixes-bug="COCOON-1365" due-to="Maurice Jumelet" due-to-email="maurice@jumelet.net">
