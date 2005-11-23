@@ -175,6 +175,10 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="AN" type="fix" fixes-bug="COCOON-1691" due-to="Feliciano Borrego" due-to-email="felibv@gmail.com">
+      Database block: Renaming AttributeImpl xspAttr to _xspAttr was not applied to ESQL logicsheet.
+      That caused compliation errors in all XSPs using it.
+    </action>
     <action dev="CZ" type="update">
       AbstractSAXTransformer supports removal of own namespace prefixes.
     </action>
