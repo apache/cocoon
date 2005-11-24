@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<cocoon version="2.2">
+<components>
 
   <include src="resource://org/apache/cocoon/cocoon.roles"/>
 
@@ -40,4 +40,4 @@
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
 
-</cocoon>
+</components>

@@ -39,6 +39,9 @@
     </property>
   </properties>
   <requirements>
+    <requires interface="http://cocoon.apache.org/blocks/core/1.0"
+              name="core"
+              default="http://cocoon.apache.org/blocks/core/1.0"/>
     <requires interface="http://cocoon.apache.org/blocks/another-interface/1.0"
               name="test2"
               default="http://cocoon.apache.org/blocks/another-block/1.0"/>

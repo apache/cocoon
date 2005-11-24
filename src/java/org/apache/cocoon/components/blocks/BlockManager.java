@@ -38,7 +38,9 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
+import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -50,12 +52,13 @@ public class BlockManager
     extends AbstractLogEnabled
     implements Block, Configurable, Contextualizable, Disposable, Initializable, Serviceable { 
 
+    public static String CORE_COMPONENTS_XCONF =
+        "resource://org/apache/cocoon/components/blocks/core-components.xconf";
     public static String ROLE = BlockManager.class.getName();
 
     private Context context;
     private Configuration config;
     private ServiceManager parentServiceManager;
-    private InterBlockServiceManager interBlockSM;
     private ServiceManager serviceManager;
 
     private Processor blockProcessor;
@@ -89,30 +92,33 @@ public class BlockManager
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
         this.blockContext = new BlockContext(this.blockWiring, this);
-        
         Context newContext = this.getAvalonContext();
-        
-        // Create a service manager for getting components from other blocks
-        this.interBlockSM = new InterBlockServiceManager(this.blockWiring, this.parentServiceManager);
-        this.interBlockSM.enableLogging(this.getLogger());
-
         String confLocation = this.blockWiring.getContextURL() + "::";
-        ServiceManager sourceResolverSM =
-            this.createLocalSourceResolverSM(newContext, this.interBlockSM, confLocation);
 
-        // Create a service manager with the exposed components of the block
-        if (this.blockWiring.getComponentConfiguration() != null) {
-            DefaultConfiguration componentConf =
-                new DefaultConfiguration("components", confLocation);
-            componentConf.addAll(this.blockWiring.getComponentConfiguration());
-            this.serviceManager = new CocoonServiceManager(sourceResolverSM);
-            LifecycleHelper.setupComponent(this.serviceManager,
-                    this.getLogger(),
-                    newContext,
-                    null,
-                    componentConf);
-        } else {
-            this.serviceManager = sourceResolverSM;
+        if (this.blockWiring.isCore()) {
+            this.serviceManager = this.createCoreSM(newContext, confLocation);
+       } else {
+            // Create a service manager for getting components from other blocks
+            ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocksManager);
+            ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
+
+            ServiceManager sourceResolverSM =
+                this.createLocalSourceResolverSM(newContext, topServiceManager, confLocation);
+
+            // Create a service manager with the exposed components of the block
+            if (this.blockWiring.getComponentConfiguration() != null) {
+                DefaultConfiguration componentConf =
+                    new DefaultConfiguration("components", confLocation);
+                componentConf.addAll(this.blockWiring.getComponentConfiguration());
+                this.serviceManager = new CocoonServiceManager(sourceResolverSM);
+                LifecycleHelper.setupComponent(this.serviceManager,
+                        this.getLogger(),
+                        newContext,
+                        null,
+                        componentConf);
+            } else {
+                this.serviceManager = sourceResolverSM;
+            }
         }
 
         // Create a processor for the block
@@ -144,6 +150,38 @@ public class BlockManager
         newContext.makeReadOnly();
         
         return newContext;
+    }
+
+    /**
+     * Gets the Core and creates some components that always are needed. 
+     * FIXME: Would be better to configure these components from the block.xml, but it is somewhat
+     * tricky to get the source resolving right. 
+     * 
+     * @param newContext
+     * @param confLocation
+     * @return
+     * @throws Exception
+     */
+    private ServiceManager createCoreSM(Context newContext, String confLocation) throws Exception {
+        // Create a root service manager for blocks.
+        Core core = (Core)this.parentServiceManager.lookup(Core.ROLE);
+        ServiceManager coreServiceManager =
+            new SingleComponentServiceManager(null, core, Core.ROLE);
+        DefaultConfiguration coreConf =
+            new DefaultConfiguration("components", confLocation);
+        DefaultConfiguration coreInclude =
+            new DefaultConfiguration("include");
+        coreInclude.setAttribute("src", CORE_COMPONENTS_XCONF);
+        coreConf.addChild(coreInclude);
+        ServiceManager serviceManager =
+            new CoreServiceManager(coreServiceManager);
+        LifecycleHelper.setupComponent(
+                serviceManager,
+                this.getLogger(),
+                newContext,
+                null,
+                coreConf);
+        return serviceManager;
     }
 
     /**
@@ -188,7 +226,6 @@ public class BlockManager
     // blocks should have in common.
     public void setBlocksManager(BlocksManager blocksManager) {
     	this.blocksManager = blocksManager;
-        this.interBlockSM.setBlocksManager(blocksManager);
     }
 
     /**
@@ -224,7 +261,7 @@ public class BlockManager
      */
     public ServiceManager getServiceManager() {
         // Check that the block have a local service manager
-        if (this.serviceManager != this.interBlockSM) {
+        if (this.blockWiring.getComponentConfiguration() != null) {
             return this.serviceManager;
         } else {
             return null;
