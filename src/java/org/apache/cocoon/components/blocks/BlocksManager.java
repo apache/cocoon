@@ -37,9 +37,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
@@ -54,14 +51,11 @@ public class BlocksManager
     implements Configurable, Contextualizable, Disposable, Initializable, Serviceable, ThreadSafe { 
 
     public static String ROLE = BlocksManager.class.getName();
-    public static String CORE_COMPONENTS_XCONF =
-        "resource://org/apache/cocoon/components/blocks/core-components.xconf";
     private ServiceManager serviceManager;
-    private CocoonServiceManager blockServiceManager;
     private SourceResolver resolver;
     private Context context;
 
-    private HashMap blockConfs = new HashMap();
+    private Configuration[] blockConfs;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
 
@@ -94,59 +88,32 @@ public class BlocksManager
         } finally {
             this.resolver.release(source);
         }
-        Configuration[] blocks = wiring.getChildren("block");
-        for (int i = 0; i < blocks.length; i++) {
-            Configuration block = blocks[i];
+        this.blockConfs = wiring.getChildren("block");
+        for (int i = 0; i < this.blockConfs.length; i++) {
+            Configuration block = this.blockConfs[i];
             getLogger().debug("BlocksManager configure: " + block.getName() +
                               " id=" + block.getAttribute("id") +
                               " location=" + block.getAttribute("location"));
-            this.blockConfs.put(block.getAttribute("id"), block);
         }
     }
 
     public void initialize() throws Exception {
         getLogger().debug("Initializing the Blocks Manager");
 
-        // Create a root service manager for blocks. This should be
-        // the minimal number of components that are needed for any
-        // block. Only components that not are context dependent
-        // should be defined here. Block that depends on e.g. the root
-        // context path should be defined in the BlockManager instead.
-
-        Core core = (Core)this.serviceManager.lookup(Core.ROLE);
-        ServiceManager blockParentServiceManager =
-            new SingleComponentServiceManager(null, core, Core.ROLE);
-        this.blockServiceManager =
-            new CocoonServiceManager(blockParentServiceManager);
-
-        Source coreComponentsSource =
-            this.resolver.resolveURI(CORE_COMPONENTS_XCONF);
-        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        Configuration coreComponentsConf =
-            builder.build(coreComponentsSource.getInputStream(), coreComponentsSource.getURI());
-
-        LifecycleHelper.setupComponent(blockServiceManager,
-                                       this.getLogger(),
-                                       this.context,
-                                       null,
-                                       coreComponentsConf);
-
         // Create and store all blocks
 
-        Iterator confIter = this.blockConfs.entrySet().iterator();
-        while (confIter.hasNext()) {
-            Map.Entry entry = (Map.Entry)confIter.next();
-            Configuration blockConf = (Configuration)entry.getValue();
+        for (int i = 0; i < this.blockConfs.length; i++) {
+            Configuration blockConf = this.blockConfs[i];
             getLogger().debug("Creating " + blockConf.getName() +
                               " id=" + blockConf.getAttribute("id"));
             BlockManager blockManager = new BlockManager();
+            blockManager.setBlocksManager(this);
             LifecycleHelper.setupComponent(blockManager,
                                            this.getLogger(),
                                            this.context,
-                                           blockServiceManager,
+                                           this.serviceManager,
                                            blockConf);
-            blockManager.setBlocksManager(this);
-            this.blocks.put(entry.getKey(), blockManager);
+            this.blocks.put(blockConf.getAttribute("id"), blockManager);
             String mountPath = blockConf.getChild("mount").getAttribute("path", null);
             if (mountPath != null) {
                 this.mountedBlocks.put(mountPath, blockManager);
@@ -160,10 +127,6 @@ public class BlocksManager
         Iterator blocksIter = this.blocks.entrySet().iterator();
         while (blocksIter.hasNext()) {
             LifecycleHelper.dispose(blocksIter.next());
-        }
-        if (this.blockServiceManager != null) {
-            LifecycleHelper.dispose(this.blockServiceManager);
-            this.blockServiceManager = null;
         }
         this.blocks = null;
         this.mountedBlocks = null;

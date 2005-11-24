@@ -33,10 +33,6 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
     
     private BlockWiring blockWiring;
     private BlocksManager blocksManager;
-    /* FIXME: Geting components from a parent manager is only a temporary solution, everything should be
-     * found from sibling blocks. There should be one core block that contains common components.
-     */
-    private ServiceManager parentManager;
     private Map managers = new HashMap();
     private boolean called;
 
@@ -44,15 +40,8 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
      * @param blockWiring
      * @param blocksManager
      */
-    public InterBlockServiceManager(BlockWiring blockWiring, ServiceManager parentManager) {
+    public InterBlockServiceManager(BlockWiring blockWiring, BlocksManager blocksManager) {
         this.blockWiring = blockWiring;
-        this.parentManager = parentManager;
-    }
-
-    /**
-     * @param blocksManager The blocksManager to set.
-     */
-    public void setBlocksManager(BlocksManager blocksManager) {
         this.blocksManager = blocksManager;
     }
 
@@ -111,31 +100,29 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
         }
         ServiceManager manager = null;
         try {
-            if (this.parentManager != null) {
-                if (this.parentManager.hasService(role)) {
-                    return this.parentManager;
-                }
-            }
-            // Don't try to use components from other blocks during setup
-            if (this.blocksManager == null)
-                return null;
             Enumeration connectionNames = this.blockWiring.getConnectionNames();
             while (connectionNames.hasMoreElements()) {
                 String blockName = (String)connectionNames.nextElement();
                 String blockId = this.blockWiring.getBlockId(blockName);
                 Block block = this.blocksManager.getBlock(blockId);
-                manager = block.getServiceManager();
-                if (manager.hasService(role)) {
-                    return manager;
+                // Don't access blocks that isn't setup yet
+                if (block != null) {
+                    manager = block.getServiceManager();
+                    if (manager != null && manager.hasService(role)) {
+                        return manager;
+                    }
                 }
             }
             String superId = this.blockWiring.getBlockId(Block.SUPER);
             if (superId != null) {
                 Block superBlock = this.blocksManager.getBlock(superId);
-                manager = superBlock.getServiceManager();
-                if (manager.hasService(role)) {
-                    return manager;
-                }                
+                // Don't access blocks that isn't setup yet
+                if (superBlock != null) {
+                    manager = superBlock.getServiceManager();
+                    if (manager.hasService(role)) {
+                        return manager;
+                    }
+                }
             }
         } finally {
             this.called = false;

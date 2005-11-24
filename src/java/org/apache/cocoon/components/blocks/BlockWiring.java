@@ -63,6 +63,8 @@ public class BlockWiring
 
     private Configuration componentConfiguration;
     private Configuration processorConfiguration;
+    
+    private boolean core = false;
 
     // Life cycle
 
@@ -152,11 +154,12 @@ public class BlockWiring
             }
         }
 
-        this.sitemapPath = block.getChild("sitemap").getAttribute("src");
+        this.sitemapPath = block.getChild("sitemap").getAttribute("src", null);
         getLogger().debug("sitemapPath=" + this.sitemapPath);
-        this.processorConfiguration = block.getChild("sitemap");
+        this.processorConfiguration = block.getChild("sitemap", false);
 
-        this.componentConfiguration = block.getChild("components");
+        this.componentConfiguration = block.getChild("components", false);
+        this.core = block.getChild("components").getAttributeAsBoolean("core", false);
     }
 
     public void dispose() {
@@ -230,5 +233,12 @@ public class BlockWiring
      */
     Configuration getProcessorConfiguration() {
         return this.processorConfiguration;
+    }
+
+    /**
+     * Is it the block containing the Core object.
+     */
+    public boolean isCore() {
+        return this.core;
     }
 }
