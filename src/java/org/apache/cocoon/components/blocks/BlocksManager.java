@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.blocks;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,7 +40,6 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.SAXException;
 
 /**
  * @version $Id$
@@ -52,16 +50,14 @@ public class BlocksManager
 
     public static String ROLE = BlocksManager.class.getName();
     private ServiceManager serviceManager;
-    private SourceResolver resolver;
     private Context context;
 
-    private Configuration[] blockConfs;
+    private String wiringFile;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
-        this.resolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
     }
 
     public void contextualize(Context context) throws ContextException {
@@ -70,42 +66,37 @@ public class BlocksManager
 
     public void configure(Configuration config)
     throws ConfigurationException {
-        String file = config.getAttribute("file");
-        Source source = null;
-        Configuration wiring = null;
-
-        // Read the wiring file
-        try {
-            source = this.resolver.resolveURI(file);
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            wiring = builder.build(source.getInputStream(), source.getURI());
-        } catch (SAXException se) {
-            String msg = "SAXException while reading " + file + ": " + se.getMessage();
-            throw new ConfigurationException(msg, se);
-        } catch (IOException ie) {
-              String msg = "IOException while reading " + file + ": " + ie.getMessage();
-              throw new ConfigurationException(msg, ie);
-        } finally {
-            this.resolver.release(source);
-        }
-        this.blockConfs = wiring.getChildren("block");
-        for (int i = 0; i < this.blockConfs.length; i++) {
-            Configuration block = this.blockConfs[i];
-            getLogger().debug("BlocksManager configure: " + block.getName() +
-                              " id=" + block.getAttribute("id") +
-                              " location=" + block.getAttribute("location"));
-        }
+        this.wiringFile = config.getAttribute("file");
     }
 
     public void initialize() throws Exception {
         getLogger().debug("Initializing the Blocks Manager");
 
-        // Create and store all blocks
+        SourceResolver resolver = null;
+        Source source = null;
+        Configuration wiring = null;
 
-        for (int i = 0; i < this.blockConfs.length; i++) {
-            Configuration blockConf = this.blockConfs[i];
+        // Read the wiring file
+        try {
+            resolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
+            source = resolver.resolveURI(this.wiringFile);
+            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            wiring = builder.build(source.getInputStream(), source.getURI());
+        } finally {
+            if (resolver != null) {
+                resolver.release(source);
+            }
+            this.serviceManager.release(resolver);
+        }
+
+        Configuration[] blockConfs = wiring.getChildren("block");
+
+        // Create and store all blocks
+        for (int i = 0; i < blockConfs.length; i++) {
+            Configuration blockConf = blockConfs[i];
             getLogger().debug("Creating " + blockConf.getName() +
-                              " id=" + blockConf.getAttribute("id"));
+                              " id=" + blockConf.getAttribute("id") +
+                              " location=" + blockConf.getAttribute("location"));
             BlockManager blockManager = new BlockManager();
             blockManager.setBlocksManager(this);
             LifecycleHelper.setupComponent(blockManager,
@@ -130,11 +121,7 @@ public class BlocksManager
         }
         this.blocks = null;
         this.mountedBlocks = null;
-        if (this.serviceManager != null) {
-            this.serviceManager.release(this.resolver);
-            this.resolver = null;
-            this.serviceManager = null;
-        }
+        this.serviceManager = null;
     }
 
     /* 
