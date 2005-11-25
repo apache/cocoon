@@ -20,7 +20,11 @@ import org.apache.cocoon.xml.XMLConsumer;
 
 /**
  * A serializer is the last point of a pipeline. It "serializes" XML
- * arriving as SAX events into any binary format.
+ * arriving as SAX events into any binary format. <br> Serializers can 
+ * additionally implement the {@link org.apache.cocoon.sitemap.SitemapModelComponent} 
+ * interface to gain access to the <code>resolver</code>, <code>objectModel</code>, 
+ * <code>source</code> or <code>parameters</code> objects.
+ * 
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
