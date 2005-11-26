@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.language.markup;
 
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
@@ -30,7 +31,20 @@ import java.util.Map;
  * @version $Id$
  */
 public class LogicsheetFilter extends XMLFilterImpl {
+
+    protected Locator locator;
+
     private Map namespaces;
+
+    /**
+     * Receive an object for locating the origin of SAX document events.
+     *
+     * @param locator An object that can return the location of any SAX
+     *                document event.
+     */
+    public void setDocumentLocator(Locator locator) {
+        this.locator = locator;
+    }
 
     /**
      * The filter needs an initialized <code>Map</code> object where it
