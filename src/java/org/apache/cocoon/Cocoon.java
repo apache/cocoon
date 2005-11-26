@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon;
 
+import org.apache.avalon.excalibur.logger.LoggerManageable;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -79,7 +80,8 @@ public class Cocoon
                    Modifiable,
                    Processor,
                    Contextualizable,
-                   Serviceable {
+                   Serviceable,
+                   LoggerManageable {
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.

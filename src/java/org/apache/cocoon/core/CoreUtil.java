@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
+import org.apache.avalon.excalibur.logger.LoggerManageable;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -46,6 +47,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.Modifiable;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
@@ -93,8 +96,8 @@ public class CoreUtil {
     /** The logger manager. */
     protected LoggerManager loggerManager;
 
-    /** The Cocoon instance (the root processor). */
-    protected Cocoon cocoon;
+    /** The Root processor instance */
+    protected Processor processor;
 
     /** Is this a per request logger manager */
     protected boolean isPerRequestLoggerManager = false;
@@ -657,41 +660,6 @@ public class CoreUtil {
     }
 
     /**
-     * Creates the Cocoon object and handles exception handling.
-     */
-    public synchronized Cocoon createCocoon()
-    throws Exception {
-
-        this.updateEnvironment();
-        this.forceLoad();
-        this.forceProperty();
-
-        try {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("Reloading from: " + this.settings.getConfiguration());
-            }
-            Cocoon c = (Cocoon)ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            ContainerUtil.enableLogging(c, getCocoonLogger());
-            c.setLoggerManager(this.loggerManager);
-            ContainerUtil.contextualize(c, this.appContext);
-
-            // create the Core object
-            final Core core = this.createCore();
-            this.parentManager = this.getParentServiceManager(core);
-            ContainerUtil.service(c, this.parentManager);
-
-            ContainerUtil.initialize(c);
-            this.settings.setCreationTime(System.currentTimeMillis());
-            this.cocoon = c;
-        } catch (Exception e) {
-            this.log.error("Exception reloading Cocoon.", e);
-            this.disposeCocoon();
-            throw e;
-        }
-        return this.cocoon;
-    }
-
-    /**
      * Create the classloader that inlcudes all the [block]/BLOCK-INF/classes directories. 
      * @throws Exception
      */
@@ -732,7 +700,7 @@ public class CoreUtil {
                 resolver.release(classesDir);
             }
         }
-
+    
         // setup the classloader using the current classloader as parent
         ClassLoader parentClassloader = Thread.currentThread().getContextClassLoader();
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);        
@@ -742,11 +710,68 @@ public class CoreUtil {
     }
 
     /**
+     * Creates the Cocoon object and handles exception handling.
+     */
+    public synchronized Cocoon createCocoon()
+    throws Exception {        
+        this.createProcessor();
+        return (Cocoon)this.processor;
+    }
+
+    /**
      * Gets the current cocoon object.
      * Reload cocoon if configuration changed or we are reloading.
      * Ensure that the correct classloader is set.
      */
     public Cocoon getCocoon(final String pathInfo, final String reloadParam)
+    throws Exception {
+        this.getProcessor(pathInfo, reloadParam);
+        return (Cocoon)this.processor;
+    }
+
+    /**
+     * Creates the root processor object and handles exception handling.
+     */
+    public synchronized Processor createProcessor()
+    throws Exception {
+
+        this.updateEnvironment();
+        this.forceLoad();
+        this.forceProperty();
+
+        try {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("Reloading from: " + this.settings.getConfiguration());
+            }
+            Processor p = (Processor)ClassUtils.newInstance(this.settings.getProcessorClassName());
+            ContainerUtil.enableLogging(p, getCocoonLogger());
+            if (p instanceof LoggerManageable) {
+                ((LoggerManageable)p).setLoggerManager(this.loggerManager);
+            }
+            ContainerUtil.contextualize(p, this.appContext);
+
+            // create the Core object
+            final Core core = this.createCore();
+            this.parentManager = this.getParentServiceManager(core);
+            ContainerUtil.service(p, this.parentManager);
+
+            ContainerUtil.initialize(p);
+            this.settings.setCreationTime(System.currentTimeMillis());
+            this.processor = p;
+        } catch (Exception e) {
+            this.log.error("Exception reloading root processor.", e);
+            this.disposeProcessor();
+            throw e;
+        }
+        return this.processor;
+    }
+
+    /**
+     * Gets the current root processor object.
+     * Reload the root processor if configuration changed or we are reloading.
+     * Ensure that the correct classloader is set.
+     */
+    public Processor getProcessor(final String pathInfo, final String reloadParam)
     throws Exception {
         
         // set the blocks classloader for this thread
@@ -755,8 +780,8 @@ public class CoreUtil {
         if (this.settings.isReloadingEnabled("config")) {
             boolean reload = false;
 
-            if (this.cocoon != null) {
-                if (this.cocoon.modifiedSince(this.settings.getCreationTime())) {
+            if (this.processor != null) {
+                if (this.processor instanceof Modifiable && ((Modifiable)this.processor).modifiedSince(this.settings.getCreationTime())) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Configuration changed reload attempt");
                     }
@@ -776,22 +801,22 @@ public class CoreUtil {
 
             if (reload) {
                 this.init();
-                this.createCocoon();
+                this.createProcessor();
             }
         }
-        return this.cocoon;
+        return this.processor;
     }
 
     /**
-     * Destroy Cocoon
+     * Destroy root processor
      */
-    protected final void disposeCocoon() {
-        if (this.cocoon != null) {
+    protected final void disposeProcessor() {
+        if (this.processor != null) {
             if (this.log.isDebugEnabled()) {
-                this.log.debug("Disposing Cocoon");
+                this.log.debug("Disposing root processor");
             }
-            ContainerUtil.dispose(this.cocoon);
-            this.cocoon = null;
+            ContainerUtil.dispose(this.processor);
+            this.processor = null;
         }
         ContainerUtil.dispose(this.parentManager);
         this.parentManager = null;
@@ -889,10 +914,10 @@ public class CoreUtil {
     }
 
     /**
-     * Dispose Cocoon when environment is destroyed
+     * Dispose the root processor when environment is destroyed
      */
     public void destroy() {
-        this.disposeCocoon();
+        this.disposeProcessor();
     }
 
     /**
