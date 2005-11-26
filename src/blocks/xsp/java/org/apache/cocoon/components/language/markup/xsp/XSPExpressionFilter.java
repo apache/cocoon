@@ -24,6 +24,7 @@ import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -60,6 +61,11 @@ public class XSPExpressionFilter extends LogicsheetFilter
 
         public void setLexicalHandler(LexicalHandler handler) {
             additionalFilter.setLexicalHandler(handler);
+        }
+
+        public void setDocumentLocator(Locator locator) {
+            additionalFilter.setDocumentLocator(locator);
+            expressionFilter.setDocumentLocator(locator);
         }
     }
 
@@ -109,7 +115,7 @@ public class XSPExpressionFilter extends LogicsheetFilter
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes attribs)
     throws SAXException {
-        expressionParser.flush();
+        expressionParser.flush(locator, "...<"+qName+">");
 
         // Check template for interpolation flags
         attribs = pushInterpolationStack(attribs);
@@ -149,11 +155,12 @@ public class XSPExpressionFilter extends LogicsheetFilter
                     addAttribute(elemAttribs, "prefix", StringUtils.left(qname, qname.indexOf(':')));
                 }
 
-                addAttribute(elemAttribs, "name", dynamicAttribs.getLocalName(i));
+                String attrName = dynamicAttribs.getLocalName(i);
+                addAttribute(elemAttribs, "name", attrName);
 
                 super.startElement(markupURI, "attribute", markupPrefix + ":attribute", elemAttribs);
                 expressionParser.consume(dynamicAttribs.getValue(i));
-                expressionParser.flush();
+                expressionParser.flush(locator, "<"+qName+" "+attrName+"=\"...\">");
                 super.endElement(markupURI, "attribute", markupPrefix + ":attribute");
             }
         } else {
@@ -205,7 +212,7 @@ public class XSPExpressionFilter extends LogicsheetFilter
      * Flush the current expression.
      */
     public void endElement(String uri, String loc, String raw) throws SAXException {
-        expressionParser.flush();
+        expressionParser.flush(locator, "...</"+raw+">");
         super.endElement(uri, loc, raw);
 
         // Pop stack of interpolation settings.

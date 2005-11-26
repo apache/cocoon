@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
+import org.apache.cocoon.util.location.LocatedException;
+import org.apache.cocoon.util.location.LocationUtils;
+
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
@@ -320,12 +324,21 @@ public class XSPExpressionParser {
     /**
      * Flushes the parser
      * 
+     * @param locator The SAX locator to determine the current parse position
+     * @param description The description of the current parse context
      * @throws SAXException If there is an error in the parsed text.
+     *         A wrapped LocatedException contains the location of the parse error.
      */
-    public void flush() throws SAXException {
-        state.done(this);
-        bufSize = 0;
-        state = TEXT_STATE;
+    public void flush(Locator locator, String description) throws SAXException {
+        try {
+            state.done(this);
+            bufSize = 0;
+            state = TEXT_STATE;
+        }
+        catch(SAXException ex) {
+            throw new SAXException(new LocatedException(ex.getMessage(), ex,
+                                                        LocationUtils.getLocation(locator, description)));
+        }
     }
 
     protected State getState() {

@@ -179,6 +179,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AN" type="add">
+      XSP block: Instrument {#expr} interpolation to produce Cocoon stacktrace for parse errors.
+    </action>
     <action dev="CZ" type="fix">
       Portal block: Fix possible encoding problems with JSR 168 portlets.
     </action>
