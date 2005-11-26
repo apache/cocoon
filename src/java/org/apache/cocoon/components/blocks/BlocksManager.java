@@ -62,7 +62,7 @@ public class BlocksManager
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
-        this.core = (Core)this.serviceManager.lookup(Core.ROLE);
+        //this.core = (Core)this.serviceManager.lookup(Core.ROLE);
     }
 
     public void contextualize(Context context) throws ContextException {
@@ -126,8 +126,8 @@ public class BlocksManager
             LifecycleHelper.dispose(blocksIter.next());
         }
         if (this.serviceManager != null) {
-            this.serviceManager.release(this.core);
-            this.core = null;
+            //this.serviceManager.release(this.core);
+            //this.core = null;
             this.serviceManager = null;            
         }
         this.blocks = null;
