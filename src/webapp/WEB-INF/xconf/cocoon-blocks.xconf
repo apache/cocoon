@@ -20,6 +20,7 @@
     | SVN $Id$
     +-->
 <components>
+  <!--
   <source-factories>
     <component-instance class="org.apache.cocoon.components.source.impl.BlocksSourceFactory" name="blocks"/>
   </source-factories>
@@ -27,4 +28,5 @@
   <component role="org.apache.cocoon.components.blocks.BlocksManager"
              class="org.apache.cocoon.components.blocks.BlocksManager"
              file="wiring.xml"/>
+  -->
 </components>
