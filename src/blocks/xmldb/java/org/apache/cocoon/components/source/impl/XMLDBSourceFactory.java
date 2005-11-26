@@ -23,46 +23,46 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
+import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.DatabaseManager;
 
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
  * content from an XML:DB enabled XML database.
+ * <p>
+ * The configuration of this protocol is as follows:
+ * <pre>
+ *   &lt;source-factory name="xmldb" src="org.apache.cocoon.components.source.impl.XMLDBSourceFactory&gt;
+ *     &lt;driver type="foo" class="org.foomaker.FooXMLDBDriver"
+ *             user="scott" password="tiger"
+ *             collection="//localhost:8080/foo/base-path/"/&gt;
+ *     &lt;driver...
+ *   &lt;source-factory&gt;
+ * </pre>
+ * <p>
+ * The <code>type</code> attribute indicates the database type that will be used for URLs (e.g.
+ * <code>xmldb:foo:/path/</code>). The <code>collection</code> attribute specifies a base collection
+ * for paths that do not start with "<code>//</code>".
+ * <p>
+ * The returned sources are traversable, modifiable and xml-izable.
  *
- * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.9 2004/05/17 16:15:18 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public final class XMLDBSourceFactory extends AbstractLogEnabled
-                                      implements SourceFactory, Contextualizable, Configurable, Serviceable, ThreadSafe {
-
-    /** The ServiceManager instance */
-    protected ServiceManager m_manager;
+                                      implements SourceFactory, Configurable, ThreadSafe {
 
     /** A Map containing the authentication credentials */
     protected HashMap credentialMap;
-
-    /** The avalon context */
-    protected Context context;
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
+    /** An optional base collection for each of the drivers */
+    protected HashMap baseMap;
+
     /**
      * Configure the instance and initialize XML:DB connections (load and register the drivers).
      */
@@ -70,6 +70,7 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
     throws ConfigurationException {
 
         credentialMap = new HashMap();
+        baseMap = new HashMap();
 
         Configuration[] drivers = conf.getChildren("driver");
         for (int i = 0; i < drivers.length; i++) {
@@ -80,6 +81,15 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
             credential.setPrincipal(drivers[i].getAttribute("user", null));
             credential.setPassword(drivers[i].getAttribute("password", null));
             credentialMap.put(type, credential);
+            
+            String base = drivers[i].getAttribute("collection", null);
+            if (base != null && base.length() > 0) {
+                // Ensure the base collection ends with a '/'
+                if (base.charAt(base.length() -  1) != '/') {
+                    base = base + '/';
+                }
+                baseMap.put(type, base);
+            }
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Initializing XML:DB connection, using driver " + driver);
@@ -111,14 +121,6 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
     }
 
     /**
-     * Compose this Serviceable object. We need to pass on the
-     * ServiceManager to the actual Source.
-     */
-    public void service(ServiceManager cm) {
-        this.m_manager = cm;
-    }
-
-    /**
      * Resolve the source
      */
     public Source getSource(String location, Map parameters)
@@ -134,17 +136,28 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
 
         String type = location.substring(start, end);
         SourceCredential credential = (SourceCredential)credentialMap.get(type);
+        
+        if (credential == null) {
+            throw new MalformedURLException("xmldb type '" + type + "' is unknown for URL " + location);
+        }
+        
+        String base = (String)baseMap.get(type);
 
-        return new XMLDBSource(this.getLogger(),
-                               credential, location,
-                               this.m_manager,
-                               this.context);
+        if (base != null && base.length() > 0) {
+            String path = location.substring(end+1);
+            if (!path.startsWith("//")) {
+                // URL is not absolute, add base, avoiding to double the '/'
+                if (path.charAt(0) == '/') {
+                    path = path.substring(1);
+                }
+                location = location.substring(0, end + 1) + base + path;
+            }
+        }
+
+        return new XMLDBSource(this.getLogger(), credential.getPrincipal(), credential.getPassword(), location);
     }
 
     public void release(org.apache.excalibur.source.Source source) {
         // nothing to do here
-        if (null != source ) {
-            ((XMLDBSource)source).recycle();
-        }
     }
 }

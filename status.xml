@@ -179,6 +179,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+	 <action dev="SW" type="add">
+      XMLDB: heavy refactoring. The source is now traversable (like file and jcr) and has two specific
+      methods: <code>createId</code> to create a new document ID for a collection, and and <code>getBinaryOutputStream</code>
+      to write binary data to the database.
+    </action>
     <action dev="AN" type="add">
       XSP block: Instrument {#expr} interpolation to produce Cocoon stacktrace for parse errors.
     </action>
