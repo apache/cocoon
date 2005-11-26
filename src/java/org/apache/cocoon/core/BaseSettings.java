@@ -47,6 +47,12 @@ public interface BaseSettings {
      */
     String KEY_FORCE_PROPERTIES = "system.properties";
 
+    /** This parameter specifies the class for the root processor */
+    String KEY_PROCESSOR_CLASS = "processor";
+    
+    /** The default root processor */
+    String DEFAULT_PROCESSOR_CLASS = "org.apache.cocoon.Cocoon";
+    
     /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
@@ -162,6 +168,12 @@ public interface BaseSettings {
      */
     String KEY_PROPERTY_PROVIDER = "property.provider";
 
+    /**
+     * @return Returns the class for the root processor
+     * @see #KEY_PROCESSOR_CLASS
+     */
+    String getProcessorClassName();
+    
     /**
      * @return Returns the configuration.
      * @see #KEY_CONFIGURATION

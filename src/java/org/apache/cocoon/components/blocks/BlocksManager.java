@@ -35,9 +35,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -46,18 +47,22 @@ import org.apache.excalibur.source.SourceResolver;
  */
 public class BlocksManager
     extends AbstractLogEnabled
-    implements Configurable, Contextualizable, Disposable, Initializable, Serviceable, ThreadSafe { 
+    implements Configurable, Contextualizable, Disposable, Initializable, Serviceable, ThreadSafe, Processor { 
 
     public static String ROLE = BlocksManager.class.getName();
     private ServiceManager serviceManager;
     private Context context;
 
-    private String wiringFile;
+    private String wiringFile = null;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
+    
+    private Core core;
+    private Processor processor;
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
+        this.core = (Core)this.serviceManager.lookup(Core.ROLE);
     }
 
     public void contextualize(Context context) throws ContextException {
@@ -112,6 +117,7 @@ public class BlocksManager
                                   " at " + mountPath);
             }
         }
+        this.createProcessor();
     }
 
     public void dispose() {
@@ -119,73 +125,88 @@ public class BlocksManager
         while (blocksIter.hasNext()) {
             LifecycleHelper.dispose(blocksIter.next());
         }
+        if (this.serviceManager != null) {
+            this.serviceManager.release(this.core);
+            this.core = null;
+            this.serviceManager = null;            
+        }
         this.blocks = null;
         this.mountedBlocks = null;
-        this.serviceManager = null;
     }
 
-    /* 
-       The BlocksManager could be merged with the Cocoon object and be
-       responsible for all processing. In that case it should
-       implement Processor, at the moment it is called from a protocol
-       and delagates to a BlockManager, so there is no point in
-       implementing the whole Processor interface.
-
-       The largest mount point that is a prefix of the URI is
-       chosen. The implementation could be made much more efficient.
-    */
-    public boolean process(Environment environment) throws Exception {
-        String uri = environment.getURI();
-        String oldPrefix = environment.getURIPrefix();
-        String oldURI = uri;
-        // The mount points start with '/' make sure that the URI also
-        // does, so that they are compareable.
-        if (uri.length() == 0 || uri.charAt(0) != '/') {
-            uri = "/" + uri;
-        }
+    private void createProcessor() {
+        this.processor = new BlockDispatcherProcessor(this);
+        ((BlockDispatcherProcessor)this.processor).enableLogging(this.getLogger());
+    }
+    
+    public Block getBlock(String blockId) {
+        return (Block)this.blocks.get(blockId);
+    }
+    
+    /**
+     * The block with the largest mount point that is a prefix of the URI is
+     * chosen. The implementation could be made much more efficient.
+     * @param uri
+     * @return
+     */
+    public Block getMountedBlock(String uri) {
+        Block block = null;
         // All mount points that are before or equal to the URI in
         // lexicographical order. This includes all prefixes.
-        Map possiblePrefixes = mountedBlocks.tailMap(uri);
+        Map possiblePrefixes = this.mountedBlocks.tailMap(uri);
         Iterator possiblePrefixesIt = possiblePrefixes.entrySet().iterator();
-        BlockManager block = null;
-        String mountPoint = null;
         // Find the largest prefix to the uri
         while (possiblePrefixesIt.hasNext()) {
             Map.Entry entry = (Map.Entry) possiblePrefixesIt.next();
-            mountPoint = (String)entry.getKey();
+            String mountPoint = (String)entry.getKey();
             if (uri.startsWith(mountPoint)) {
                 block = (BlockManager)entry.getValue();
                 break;
             }
         }
-        if (block == null) {
-            return false;
-        } else {
-            // Resolve the URI relative to the mount point
-            uri = uri.substring(mountPoint.length());
-            getLogger().debug("Enter processing in block at " + mountPoint);
-            try {
-                environment.setURI("", uri);
-                // It is important to set the current block each time
-                // a new block is entered, this is used for the block
-                // protocol
-                EnvironmentHelper.enterProcessor(block, null, environment);
-                return block.process(environment);
-            } finally {
-                EnvironmentHelper.leaveProcessor();
-                environment.setURI(oldPrefix, oldURI);
-                getLogger().debug("Leaving processing in block at " + mountPoint);
-            }
-        }
-    }
-
-    public Block getBlock(String blockId) {
-	return (Block)this.blocks.get(blockId);
+        return block;
     }
 
     private static class InverseLexicographicalOrder implements Comparator {
         public int compare(Object o1, Object o2) {
             return ((String)o2).compareTo((String)o1);
         }
+    }
+
+    // Processor methods
+    public boolean process(Environment environment) throws Exception {
+        return this.processor.process(environment);
+    }
+
+    public InternalPipelineDescription buildPipeline(Environment environment) throws Exception {
+        return this.processor.buildPipeline(environment);
+    }
+
+    public Configuration[] getComponentConfigurations() {
+        return this.processor.getComponentConfigurations();
+    }
+
+    public Processor getRootProcessor() {
+        return this.processor.getRootProcessor();
+    }
+
+    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+        return this.processor.getSourceResolver();
+    }
+
+    public String getContext() {
+        return this.processor.getContext();
+    }
+
+    public void setAttribute(String name, Object value) {
+        this.processor.setAttribute(name, value);
+    }
+
+    public Object getAttribute(String name) {
+        return this.processor.getAttribute(name);
+    }
+
+    public Object removeAttribute(String name) {
+        return this.processor.removeAttribute(name);
     }
 }

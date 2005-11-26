@@ -27,6 +27,7 @@ import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.test.core.TestBootstrapEnvironment;
@@ -48,7 +49,7 @@ public class SitemapTestCase extends TestCase {
 
     private Logger logger;
     private CoreUtil coreUtil;
-    private Cocoon cocoon;
+    private Processor processor;
     private String classDir;
 
     protected void setUp() throws Exception {
@@ -77,7 +78,7 @@ public class SitemapTestCase extends TestCase {
                                          this.logger);
 
         this.coreUtil = new TestCoreUtil(env);
-        this.cocoon = this.coreUtil.createCocoon();
+        this.processor = this.coreUtil.createProcessor();
     }
 
     protected void tearDown() throws Exception {
@@ -91,11 +92,17 @@ public class SitemapTestCase extends TestCase {
     }
     
     protected final Object lookup( final String key ) throws ServiceException {
-        return this.cocoon.getServiceManager().lookup( key );
+        if (this.processor instanceof Cocoon) {
+            return ((Cocoon)this.processor).getServiceManager().lookup( key );
+        } else {
+            throw new ServiceException(key, "The processor have no service manager");
+        }
     }
 
     protected final void release( final Object object ) {
-        this.cocoon.getServiceManager().release( object );
+        if (this.processor instanceof Cocoon) {
+            ((Cocoon)this.processor).getServiceManager().release( object );
+        }
     }
     
     /**
@@ -136,7 +143,7 @@ public class SitemapTestCase extends TestCase {
         byte[] assertiondocument = null;
 
         try {
-            resolver = this.cocoon.getSourceResolver();
+            resolver = this.processor.getSourceResolver();
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertionsource = resolver.resolveURI(source);
@@ -199,7 +206,7 @@ public class SitemapTestCase extends TestCase {
 
     protected byte[] process(String uri) throws Exception {
         MockEnvironment env = getEnvironment(uri);
-        this.cocoon.process(env);
+        this.processor.process(env);
         getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
 
         return env.getOutput();

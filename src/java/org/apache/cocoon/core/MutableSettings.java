@@ -50,6 +50,11 @@ public class MutableSettings implements Settings {
     protected Map forceProperties = new HashMap();
 
     /**
+     * This parameter indicates what class to use for the root processor.
+     */
+    protected String processorClassName = DEFAULT_PROCESSOR_CLASS;
+    
+    /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
      * resolved relative to the application context path.
@@ -243,7 +248,9 @@ public class MutableSettings implements Settings {
                     key = key.substring(KEYPREFIX.length());
                     final String value = current.getValue().toString();
 
-                    if ( key.equals(KEY_CONFIGURATION) ) {
+                    if ( key.equals(KEY_PROCESSOR_CLASS) ) {
+                        this.processorClassName = value;
+                    } else if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
                     } else if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.configurationReloadDelay = NumberUtils.toLong(value);
@@ -345,6 +352,13 @@ public class MutableSettings implements Settings {
      */
     public String getCocoonLogger() {
         return this.cocoonLogger;
+    }
+
+    /**
+     * @return Returns the processorClassName.
+     */
+    public String getProcessorClassName() {
+        return this.processorClassName;
     }
 
     /**
@@ -534,7 +548,9 @@ public class MutableSettings implements Settings {
         String value = null;
         if ( key.startsWith(KEYPREFIX) ) {
             final String sKey = key.substring(KEYPREFIX.length());
-            if ( sKey.equals(KEY_CONFIGURATION) ) {
+            if ( sKey.equals(KEY_PROCESSOR_CLASS) ) {
+                value = this.processorClassName;
+            } else if ( sKey.equals(KEY_CONFIGURATION) ) {
                 value = this.configuration;
             } else if ( sKey.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.configurationReloadDelay);
@@ -607,6 +623,7 @@ public class MutableSettings implements Settings {
     public String toString() {
         return "Settings:\n" +
           "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
+          KEY_PROCESSOR_CLASS + " : " + this.processorClassName + '\n' +
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
@@ -705,6 +722,14 @@ public class MutableSettings implements Settings {
     public void setCacheDirectory(String cacheDirectory) {
         this.checkWriteable();
         this.cacheDirectory = cacheDirectory;
+    }
+
+    /**
+     * @param processorClassName The processorClassName to set.
+     */
+    public void setProcessorClassName(String processorClassName) {
+        this.checkWriteable();
+        this.processorClassName = processorClassName;
     }
 
     /**
