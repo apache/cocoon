@@ -15,11 +15,9 @@
  */
 package org.apache.cocoon.test.components.blocks;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.blocks.BlocksManager;
 import org.apache.cocoon.test.SitemapTestCase;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 
 public class BlocksManagerTestCase extends SitemapTestCase {
     
@@ -35,28 +33,6 @@ public class BlocksManagerTestCase extends SitemapTestCase {
         return Constants.WIRING;
     }
 
-    /*
-    public void testCreate() throws ServiceException {
-        BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
-        this.release(blocks);
-    }
-
-    public void testMount() throws Exception {
-        BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
-        MockEnvironment env = getEnvironment("/test1/test");
-        blocks.process(env);
-        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
-        this.release(blocks);
-    }
-
-    public void testBlockId() throws Exception {
-        BlocksManager blocks = (BlocksManager)this.lookup(BlocksManager.ROLE);
-        MockEnvironment env = getEnvironment("test");
-        blocks.getBlock("test1id").process(env);
-        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
-        this.release(blocks);
-    }
-*/
     public void testBlockSource1() throws Exception {
         pipeTest("/test1/test", "test1/test.xml");
     }
