@@ -38,9 +38,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -52,8 +50,6 @@ public class BlockManager
     extends AbstractLogEnabled
     implements Block, Configurable, Contextualizable, Disposable, Initializable, Serviceable { 
 
-    public static String CORE_COMPONENTS_XCONF =
-        "resource://org/apache/cocoon/components/blocks/core-components.xconf";
     public static String ROLE = BlockManager.class.getName();
 
     private Context context;
@@ -96,29 +92,28 @@ public class BlockManager
         String confLocation = this.blockWiring.getContextURL() + "::";
 
         if (this.blockWiring.isCore()) {
-            this.serviceManager = this.createCoreSM(newContext, confLocation);
+            this.getLogger().debug("Block with core=true");
+            this.serviceManager = this.parentServiceManager;
        } else {
             // Create a service manager for getting components from other blocks
             ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocksManager);
             ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
 
-            ServiceManager sourceResolverSM =
+            this.serviceManager =
                 this.createLocalSourceResolverSM(newContext, topServiceManager, confLocation);
-
-            // Create a service manager with the exposed components of the block
-            if (this.blockWiring.getComponentConfiguration() != null) {
-                DefaultConfiguration componentConf =
-                    new DefaultConfiguration("components", confLocation);
-                componentConf.addAll(this.blockWiring.getComponentConfiguration());
-                this.serviceManager = new CocoonServiceManager(sourceResolverSM);
-                LifecycleHelper.setupComponent(this.serviceManager,
-                        this.getLogger(),
-                        newContext,
-                        null,
-                        componentConf);
-            } else {
-                this.serviceManager = sourceResolverSM;
-            }
+        }
+        
+        // Create a service manager with the exposed components of the block
+        if (this.blockWiring.getComponentConfiguration() != null) {
+            DefaultConfiguration componentConf =
+                new DefaultConfiguration("components", confLocation);
+            componentConf.addAll(this.blockWiring.getComponentConfiguration());
+            this.serviceManager = new CocoonServiceManager(this.serviceManager);
+            LifecycleHelper.setupComponent(this.serviceManager,
+                    this.getLogger(),
+                    newContext,
+                    null,
+                    componentConf);
         }
 
         // Create a processor for the block
@@ -150,38 +145,6 @@ public class BlockManager
         newContext.makeReadOnly();
         
         return newContext;
-    }
-
-    /**
-     * Gets the Core and creates some components that always are needed. 
-     * FIXME: Would be better to configure these components from the block.xml, but it is somewhat
-     * tricky to get the source resolving right. 
-     * 
-     * @param newContext
-     * @param confLocation
-     * @return
-     * @throws Exception
-     */
-    private ServiceManager createCoreSM(Context newContext, String confLocation) throws Exception {
-        // Create a root service manager for blocks.
-        Core core = (Core)this.parentServiceManager.lookup(Core.ROLE);
-        ServiceManager coreServiceManager =
-            new SingleComponentServiceManager(null, core, Core.ROLE);
-        DefaultConfiguration coreConf =
-            new DefaultConfiguration("components", confLocation);
-        DefaultConfiguration coreInclude =
-            new DefaultConfiguration("include");
-        coreInclude.setAttribute("src", CORE_COMPONENTS_XCONF);
-        coreConf.addChild(coreInclude);
-        ServiceManager serviceManager =
-            new CoreServiceManager(coreServiceManager);
-        LifecycleHelper.setupComponent(
-                serviceManager,
-                this.getLogger(),
-                newContext,
-                null,
-                coreConf);
-        return serviceManager;
     }
 
     /**

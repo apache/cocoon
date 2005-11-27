@@ -74,7 +74,7 @@ public class BlockWiring
         this.location = config.getAttribute("location");
         this.mountPath = config.getChild("mount").getAttribute("path", null);
 
-        getLogger().debug("BlockContext configure: " +
+        getLogger().debug("BlockWiring configure: " +
                           " id=" + this.id +
                           " location=" + this.location +
                           " mountPath=" + this.mountPath);
