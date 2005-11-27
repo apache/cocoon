@@ -178,6 +178,10 @@ case "$ACTION" in
         $JAVA $JAVA_OPTIONS $JAVA_PROFILE_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
         ;;
 
+  blocks)
+        $JAVA $JAVA_OPTIONS -Dorg.apache.cocoon.processor=org.apache.cocoon.components.blocks.BlocksManager -Dorg.apache.cocoon.configuration=/wiring.xml -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        ;;
+
   osgi)
         # -init prevents knopflerfish from using its persistent info about bundles, seems safer for now
         KNOP_OPTIONS="-init"
