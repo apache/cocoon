@@ -112,6 +112,11 @@ public class BlockWiring
         try {
             resolver.contextualize(this.context);
             source = resolver.resolveURI(blockPath);
+	    // FIXME: Have used different locations for block.xml in the OSGi and the block stuff.
+	    if (!source.exists()) {
+		blockPath = this.location + "WEB-INF/block.xml";
+		source = resolver.resolveURI(blockPath);
+	    }
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             block = builder.build(source.getInputStream(), source.getURI());
         } catch (IOException e) {

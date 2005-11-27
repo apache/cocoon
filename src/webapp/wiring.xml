@@ -20,15 +20,7 @@
         xsi:schemaLocation="http://apache.org/cocoon/blocks/wiring/1.0 wiring-schema-1.0.xsd"
 >
 
-  <block id="sampleid" location="WEB-INF/blocks/sample/">
-    <mount path="/blocks-test/sample/"/>
+  <block id="webapp" location="">
+    <mount path="/"/>
   </block>
-
-  <block id="mysample" location="WEB-INF/blocks/mysample/">
-    <mount path="/blocks-test/mysample/"/>
-    <connections>
-      <connection name="super" block="sampleid"/>
-    </connections>
-  </block>
-
 </wiring>
