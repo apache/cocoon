@@ -111,6 +111,8 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
                     if (manager != null && manager.hasService(role)) {
                         return manager;
                     }
+                } else {
+                    this.getLogger().debug("Serching for role=" + role + " in blockId=" + blockId + " that isn't setup.");
                 }
             }
             String superId = this.blockWiring.getBlockId(Block.SUPER);
@@ -122,6 +124,8 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
                     if (manager.hasService(role)) {
                         return manager;
                     }
+                } else {
+                    this.getLogger().debug("Serching for role=" + role + " in blockId=" + superId + " that isn't setup.");
                 }
             }
         } finally {
