@@ -34,9 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
@@ -82,9 +82,9 @@ public class CocoonServlet extends HttpServlet {
     static final float HOUR   = 60 * MINUTE;
 
     /**
-     * The <code>Cocoon</code> instance
+     * The <code>Processor</code> instance
      */
-    protected Cocoon cocoon;
+    protected Processor processor;
 
     /**
      * Holds exception happened during initialization (if any)
@@ -220,7 +220,7 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             this.exception = null;
-            this.cocoon = this.coreUtil.createCocoon();          
+            this.processor = this.coreUtil.createProcessor();          
         } catch (Exception e) {
             this.exception = e;
         }
@@ -241,7 +241,7 @@ public class CocoonServlet extends HttpServlet {
             this.coreUtil.destroy();
             this.coreUtil = null;
             // coreUtil will dispose it.
-            this.cocoon = null;
+            this.processor = null;
         }
 
         this.requestFactory = null;
@@ -289,13 +289,13 @@ public class CocoonServlet extends HttpServlet {
         // Get the cocoon engine instance
         try {
             this.exception = null;
-            this.cocoon = this.coreUtil.getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
+            this.processor = this.coreUtil.getProcessor(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
         } catch (Exception e) {
             this.exception = e;
         }
 
         // Check if cocoon was initialized
-        if (this.cocoon == null) {
+        if (this.processor == null) {
             manageException(request, res, null, null,
                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                             "Initialization Problem",
@@ -361,7 +361,7 @@ public class CocoonServlet extends HttpServlet {
             try {
                 handle = this.coreUtil.initializeRequest(env);
 
-                if (this.cocoon.process(env)) {
+                if (this.processor.process(env)) {
                     contentType = env.getContentType();
                 } else {
                     // We reach this when there is nothing in the processing change that matches
