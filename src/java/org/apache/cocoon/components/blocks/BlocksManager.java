@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.blocks;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +28,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -35,25 +36,39 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.impl.URLSource;
+import org.xml.sax.InputSource;
 
 /**
  * @version $Id$
  */
 public class BlocksManager
     extends AbstractLogEnabled
-    implements Configurable, Contextualizable, Disposable, Initializable, Serviceable, ThreadSafe, Processor { 
+    implements Configurable,
+        Contextualizable,
+        Disposable,
+        Initializable,
+        Serviceable,
+        ThreadSafe,
+        Processor,
+        Modifiable { 
 
     public static String ROLE = BlocksManager.class.getName();
     private ServiceManager serviceManager;
     private Context context;
 
-    private String wiringFile = null;
+    private String wiringFileName = null;
+    private Source wiringFile;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
     
@@ -62,7 +77,7 @@ public class BlocksManager
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
-        //this.core = (Core)this.serviceManager.lookup(Core.ROLE);
+        this.core = (Core)this.serviceManager.lookup(Core.ROLE);
     }
 
     public void contextualize(Context context) throws ContextException {
@@ -71,28 +86,29 @@ public class BlocksManager
 
     public void configure(Configuration config)
     throws ConfigurationException {
-        this.wiringFile = config.getAttribute("file");
+        this.wiringFileName = config.getAttribute("file");
     }
 
     public void initialize() throws Exception {
         getLogger().debug("Initializing the Blocks Manager");
-
-        SourceResolver resolver = null;
-        Source source = null;
-        Configuration wiring = null;
-
+        
         // Read the wiring file
-        try {
-            resolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(this.wiringFile);
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            wiring = builder.build(source.getInputStream(), source.getURI());
-        } finally {
-            if (resolver != null) {
-                resolver.release(source);
-            }
-            this.serviceManager.release(resolver);
+        final Settings settings = this.core.getSettings();
+        if (this.wiringFileName == null) {
+            this.wiringFileName = settings.getConfiguration();
         }
+        try {
+            URLSource urlSource = new URLSource();
+            urlSource.init(new URL(settings.getConfiguration()), null);
+            this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, settings.getReloadDelay("config"));
+        } catch (IOException e) {
+            throw new ConfigurationException("Could not open configuration file: " + settings.getConfiguration(), e);
+        }
+
+        InputSource is = SourceUtil.getInputSource(this.wiringFile);
+
+        ConfigurationBuilder builder = new ConfigurationBuilder(settings);
+        Configuration wiring = builder.build(is);
 
         Configuration[] blockConfs = wiring.getChildren("block");
 
@@ -126,8 +142,8 @@ public class BlocksManager
             LifecycleHelper.dispose(blocksIter.next());
         }
         if (this.serviceManager != null) {
-            //this.serviceManager.release(this.core);
-            //this.core = null;
+            this.serviceManager.release(this.core);
+            this.core = null;
             this.serviceManager = null;            
         }
         this.blocks = null;
@@ -165,6 +181,16 @@ public class BlocksManager
             }
         }
         return block;
+    }
+
+    /**
+     * Queries the class to estimate its ergodic period termination.
+     *
+     * @param date a <code>long</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean modifiedSince(long date) {
+        return date < this.wiringFile.getLastModified();
     }
 
     private static class InverseLexicographicalOrder implements Comparator {

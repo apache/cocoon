@@ -86,7 +86,7 @@ public class BlockManager
         LifecycleHelper.setupComponent(this.blockWiring,
                                        this.getLogger(),
                                        this.context,
-                                       this.parentServiceManager,
+                                       null,
                                        this.config);    
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());

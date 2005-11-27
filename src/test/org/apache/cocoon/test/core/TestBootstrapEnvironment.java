@@ -31,16 +31,18 @@ public class TestBootstrapEnvironment
     private final String contextPath;
     public Logger logger;
     private final Context environmentContext;
+    private String processorClassName;
 
     public TestBootstrapEnvironment(String configuration,
                                     String contextPath,
                                     Context environmentContext,
-				                    Logger logger) {
+				                    Logger logger,
+                                    String processorClassName) {
         this.configuration = configuration;
         this.contextPath = contextPath;
         this.environmentContext = environmentContext;
-
         this.logger = logger;
+        this.processorClassName = processorClassName;
     }
 
     /**
@@ -82,6 +84,7 @@ public class TestBootstrapEnvironment
     public void configure(MutableSettings settings) {
         settings.setConfiguration(this.configuration);
         settings.setWorkDirectory("work");
+        settings.setProcessorClassName(this.processorClassName);
     }
 
     public void configureLoggingContext(DefaultContext context) {
