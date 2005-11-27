@@ -37,8 +37,6 @@ import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 
 public class SitemapTestCase extends TestCase {
 
@@ -51,6 +49,8 @@ public class SitemapTestCase extends TestCase {
     private CoreUtil coreUtil;
     private Processor processor;
     private String classDir;
+    
+    protected String processorClassName = Cocoon.class.getName();
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -69,13 +69,13 @@ public class SitemapTestCase extends TestCase {
         environmentContext.reset();
         objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, environmentContext);
 
-        String className = this.getClass().getName();
         this.classDir = this.getClassDirURL().toExternalForm();
         BootstrapEnvironment env = 
-            new TestBootstrapEnvironment(className.substring(className.lastIndexOf('.') + 1) + ".xconf",
+            new TestBootstrapEnvironment(this.getConfiguration(),
                                          this.classDir,
                                          environmentContext,
-                                         this.logger);
+                                         this.logger,
+                                         this.processorClassName);
 
         this.coreUtil = new TestCoreUtil(env);
         this.processor = this.coreUtil.createProcessor();
@@ -103,6 +103,11 @@ public class SitemapTestCase extends TestCase {
         if (this.processor instanceof Cocoon) {
             ((Cocoon)this.processor).getServiceManager().release( object );
         }
+    }
+    
+    protected String getConfiguration() {
+        String className = this.getClass().getName();
+        return className.substring(className.lastIndexOf('.') + 1) + ".xconf";
     }
     
     /**
@@ -138,22 +143,11 @@ public class SitemapTestCase extends TestCase {
      */
     public final byte[] loadByteArray(String source) {
 
-        SourceResolver resolver = null;
-        Source assertionsource = null;
         byte[] assertiondocument = null;
 
         try {
-            resolver = this.processor.getSourceResolver();
-            assertNotNull("Test lookup of source resolver", resolver);
-
-            assertionsource = resolver.resolveURI(source);
-            assertNotNull("Test lookup of assertion source", assertionsource);
-            assertTrue("Test if source exist", assertionsource.exists());
-
-            assertNotNull("Test if inputstream of the assertion source is not null",
-                          assertionsource.getInputStream());
-
-            InputStream input = assertionsource.getInputStream();
+            URL url = new URL(source);
+            InputStream input = url.openStream();
 
             Vector document = new Vector();
             int i = 0;

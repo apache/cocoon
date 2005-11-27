@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -34,12 +33,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**
@@ -47,9 +43,8 @@ import org.xml.sax.SAXException;
  */
 public class BlockWiring
     extends AbstractLogEnabled
-    implements Configurable, Contextualizable, Disposable, Serviceable { 
+    implements Configurable, Contextualizable { 
 
-    private ServiceManager serviceManager;
     private Context context;
     private URL contextRootURL;
     private String id;
@@ -67,10 +62,6 @@ public class BlockWiring
     private boolean core = false;
 
     // Life cycle
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.serviceManager = manager;
-    }
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
@@ -112,29 +103,29 @@ public class BlockWiring
 
         // Read the block.xml file
         String blockPath = this.location + "COB-INF/block.xml";
-        SourceResolver resolver = null;
         Source source = null;
         Configuration block = null;
 
+        SimpleSourceResolver resolver = new SimpleSourceResolver();
+        resolver.enableLogging(this.getLogger());
+
         try {
-            resolver = 
-                (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
+            resolver.contextualize(this.context);
             source = resolver.resolveURI(blockPath);
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             block = builder.build(source.getInputStream(), source.getURI());
-        } catch (ServiceException e) {
-            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
         } catch (IOException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
         } catch (SAXException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
+        } catch (ContextException e) {
+            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
+            throw new ConfigurationException(msg, e);
         } finally {
             if (resolver != null) {
                 resolver.release(source);
-                this.serviceManager.release(resolver);
             }
         }
 
@@ -160,10 +151,6 @@ public class BlockWiring
 
         this.componentConfiguration = block.getChild("components", false);
         this.core = block.getChild("components").getAttributeAsBoolean("core", false);
-    }
-
-    public void dispose() {
-        this.serviceManager = null;
     }
 
     /**
