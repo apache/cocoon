@@ -267,17 +267,6 @@
     -->
 
     <!--+
-        | Call blocks deployed in wiring.xml. The blocks protocol
-        | should normally be mounted at root as it has no way to know
-        | where it is mounted. But that would not work in the current
-        | sitemap as it would shadow the samples.
-        +-->
-    <!--
-    <map:match pattern="blocks-test/**">
-      <map:read src="blocks:/blocks-test/{1}"/>
-    </map:match>
-    -->
-    <!--+
         | Mount everything else by calling the sitemap.xmap file located
         | in the requested folder.
         +-->
