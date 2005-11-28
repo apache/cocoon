@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLSerializer.java,v 1.4 2004/04/30 22:58:34 joerg Exp $
+ * @version CVS $Id$
  */
 public class XHTMLSerializer extends XMLSerializer {
 
@@ -122,6 +122,7 @@ public class XHTMLSerializer extends XMLSerializer {
 
         if (XHTML1_NAMESPACE.equals(uri)) {
             if ((local.equalsIgnoreCase("textarea")) ||
+                (local.equalsIgnoreCase("iframe")) ||
                 (local.equalsIgnoreCase("script")) ||
                 (local.equalsIgnoreCase("style"))) {
                 this.closeElement(false);
