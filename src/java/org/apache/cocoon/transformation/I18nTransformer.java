@@ -271,24 +271,6 @@ public class I18nTransformer extends AbstractTransformer
                              implements CacheableProcessingComponent,
                                         Serviceable, Configurable, Disposable {
 
-    /**
-     * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
-     */
-    public static final String I18N_NAMESPACE_URI =
-            "http://apache.org/cocoon/i18n/2.1";
-
-    /**
-     * The old namespace for i18n is "http://apache.org/cocoon/i18n/2.0".
-     */
-    public static final String I18N_OLD_NAMESPACE_URI =
-            "http://apache.org/cocoon/i18n/2.0";
-
-    /**
-     * Did we already encountered an old namespace? This is static to ensure
-     * that the associated message will be logged only once.
-     */
-    private static boolean deprecationFound = false;
-
     //
     // i18n elements
     //
@@ -1119,23 +1101,11 @@ public class I18nTransformer extends AbstractTransformer
         }
 
         // Process start element event
-        if (I18N_NAMESPACE_URI.equals(uri)) {
+        if (I18nUtils.matchesI18nNamespace(uri)) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Starting i18n element: " + name);
             }
             startI18NElement(name, attr);
-
-        } else if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
-            if (!deprecationFound) {
-                deprecationFound = true;
-                getLogger().warn("The namespace <" + I18N_OLD_NAMESPACE_URI +
-                                 "> is deprecated, use: <" + I18N_NAMESPACE_URI + ">");
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Starting deprecated i18n element: " + name);
-            }
-            startI18NElement(name, attr);
-
         } else {
             // We have a non i18n element event
             if (current_state == STATE_OUTSIDE) {
@@ -1163,7 +1133,7 @@ public class I18nTransformer extends AbstractTransformer
             strBuffer = null;
         }
 
-        if (I18N_NAMESPACE_URI.equals(uri) || I18N_OLD_NAMESPACE_URI.equals(uri)) {
+        if (I18nUtils.matchesI18nNamespace(uri)) {
             endI18NElement(name);
         } else if (current_state == STATE_INSIDE_PARAM) {
             param_recorder.endElement(uri, name, raw);
@@ -1225,17 +1195,17 @@ public class I18nTransformer extends AbstractTransformer
             currentKey = attr.getValue("", I18N_KEY_ATTRIBUTE);
             if (currentKey == null) {
                 // Try the namespaced attribute
-                currentKey = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
+                currentKey = attr.getValue(I18nUtils.I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
                 if (currentKey == null) {
                     // Try the old namespace
-                    currentKey = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
+                    currentKey = attr.getValue(I18nUtils.I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
                 }
             }
 
             currentCatalogueId = attr.getValue("", I18N_CATALOGUE_ATTRIBUTE);
             if (currentCatalogueId == null) {
                 // Try the namespaced attribute
-                currentCatalogueId = attr.getValue(I18N_NAMESPACE_URI, I18N_CATALOGUE_ATTRIBUTE);
+                currentCatalogueId = attr.getValue(I18nUtils.I18N_NAMESPACE_URI, I18N_CATALOGUE_ATTRIBUTE);
             }
 
             if (prev_state != STATE_INSIDE_PARAM) {
@@ -1549,10 +1519,10 @@ public class I18nTransformer extends AbstractTransformer
 
         // Translate all attributes from i18n:attr="name1 name2 ..."
         // using their values as keys.
-        int attrIndex = attr.getIndex(I18N_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
+        int attrIndex = attr.getIndex(I18nUtils.I18N_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
         if (attrIndex == -1) {
             // Try the old namespace
-            attrIndex = attr.getIndex(I18N_OLD_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
+            attrIndex = attr.getIndex(I18nUtils.I18N_OLD_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
         }
 
         if (attrIndex != -1) {
@@ -1586,7 +1556,7 @@ public class I18nTransformer extends AbstractTransformer
 
         // Translate all attributes from i18n:expr="name1 name2 ..."
         // using their values as keys.
-        attrIndex = attr.getIndex(I18N_NAMESPACE_URI, I18N_EXPR_ATTRIBUTE);
+        attrIndex = attr.getIndex(I18nUtils.I18N_NAMESPACE_URI, I18N_EXPR_ATTRIBUTE);
         if (attrIndex != -1) {
             StringTokenizer st = new StringTokenizer(attr.getValue(attrIndex));
 
