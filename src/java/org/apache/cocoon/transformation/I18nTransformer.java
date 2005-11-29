@@ -271,6 +271,10 @@ public class I18nTransformer extends AbstractTransformer
                              implements CacheableProcessingComponent,
                                         Serviceable, Configurable, Disposable {
 
+    //
+    // i18n elements
+    //
+
     /**
      * <code>i18n:text</code> element is used to translate any text, with
      * or without markup. Example:
