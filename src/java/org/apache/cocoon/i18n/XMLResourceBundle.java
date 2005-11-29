@@ -149,7 +149,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             switch (this.state) {
                 case 0:
                     // <i18n:catalogue>
-                    if (!"".equals(ns) && !NS.equals(ns)) {
+                    if (!"".equals(ns) && !I18nUtils.matchesI18nNamespace(ns)) {
                         throw new SAXException("Root element <" + EL_CATALOGUE +
                                                "> must be non-namespaced or in i18n namespace.");
                     }
