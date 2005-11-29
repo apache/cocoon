@@ -175,6 +175,9 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="JH" type="fix" fixes-bug="COCOON-1700">
+      I18n: XMLResourceBundle checks now for both the new and the old namespace.
+    </action>
     <action dev="AN" type="add">
       XSP block: Instrument {#expr} interpolation to produce Cocoon stacktrace for parse errors.
     </action>
