@@ -80,6 +80,11 @@ public class BlockContext extends AbstractContext {
      * @see org.apache.cocoon.environment.Context#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
+        // A path starting with '/' should be resolved relative to the context and
+        // the '/' need to be removed to work with the URI resolver.
+        while (path.length() >= 1 && path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
         String contextURL = this.wiring.getContextURL().toExternalForm();
         URL resolvedURL = null;
         try {
