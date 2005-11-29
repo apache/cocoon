@@ -40,16 +40,19 @@ public class I18nUtils {
 
     // Locale string delimiter
     private static final String LOCALE_DELIMITER = "_-@.";
+
     /**
      * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
      */
     public static final String I18N_NAMESPACE_URI =
             "http://apache.org/cocoon/i18n/2.1";
+
     /**
      * The old namespace for i18n is "http://apache.org/cocoon/i18n/2.0".
      */
     public static final String I18N_OLD_NAMESPACE_URI =
             "http://apache.org/cocoon/i18n/2.0";
+
     /**
      * Did we already encountered an old namespace? This is static to ensure
      * that the associated message will be logged only once.
