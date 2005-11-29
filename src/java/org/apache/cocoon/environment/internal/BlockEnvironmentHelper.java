@@ -17,7 +17,7 @@ package org.apache.cocoon.environment.internal;
 
 import java.net.URL;
 
-import org.apache.cocoon.components.blocks.Block;
+import org.apache.cocoon.blocks.Block;
 
 /**
  * Hack used for geting hold on the current block manager without
