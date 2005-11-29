@@ -179,7 +179,7 @@ case "$ACTION" in
         ;;
 
   blocks)
-        $JAVA $JAVA_OPTIONS -Dorg.apache.cocoon.processor=org.apache.cocoon.components.blocks.BlocksManager -Dorg.apache.cocoon.configuration=/wiring.xml -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        $JAVA $JAVA_OPTIONS -Dorg.apache.cocoon.processor=org.apache.cocoon.blocks.BlocksManager -Dorg.apache.cocoon.configuration=/wiring.xml -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
         ;;
 
   osgi)

@@ -40,8 +40,8 @@
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
 
-  <component role="org.apache.cocoon.components.blocks.BlockManager"
-             class="org.apache.cocoon.components.blocks.BlockManager"
+  <component role="org.apache.cocoon.blocks.BlockManager"
+             class="org.apache.cocoon.blocks.BlockManager"
              id="test1id" location="test1/">
     <mount path="/test1/"/>
     <connections>

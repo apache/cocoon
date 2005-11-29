@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.test.components.blocks;
+package org.apache.cocoon.test.blocks;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.blocks.BlocksManager;
+import org.apache.cocoon.blocks.BlocksManager;
 import org.apache.cocoon.test.SitemapTestCase;
 
 public class BlocksManagerTestCase extends SitemapTestCase {

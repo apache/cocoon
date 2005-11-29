@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.blocks;
+package org.apache.cocoon.blocks;
 
 import java.net.URL;
 import java.util.HashMap;

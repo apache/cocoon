@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.blocks.Block;
+import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
