@@ -67,11 +67,6 @@ public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle {
 
     /**
-     * Namespace for the Bundle markup
-     */
-    public static final String NS = "http://apache.org/cocoon/i18n/2.0";
-
-    /**
      * XML bundle root element name
      */
     public static final String EL_CATALOGUE = "catalogue";
