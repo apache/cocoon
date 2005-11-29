@@ -67,11 +67,6 @@ public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle {
 
     /**
-     * Namespace for the Bundle markup
-     */
-    public static final String NS = "http://apache.org/cocoon/i18n/2.0";
-
-    /**
      * XML bundle root element name
      */
     public static final String EL_CATALOGUE = "catalogue";
@@ -149,7 +144,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
             switch (this.state) {
                 case 0:
                     // <i18n:catalogue>
-                    if (!"".equals(ns) && !NS.equals(ns)) {
+                    if (!"".equals(ns) && !I18nUtils.matchesI18nNamespace(ns)) {
                         throw new SAXException("Root element <" + EL_CATALOGUE +
                                                "> must be non-namespaced or in i18n namespace.");
                     }
