@@ -179,6 +179,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AN" type="fix">
+      XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
+      logicsheets.  (Suggestion by Vadim Gritsenko).
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1700">
       I18n: XMLResourceBundle checks now for both the new and the old namespace.
     </action>
