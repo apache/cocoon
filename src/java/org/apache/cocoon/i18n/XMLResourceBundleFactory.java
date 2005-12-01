@@ -235,7 +235,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
                               ", directory: " + directories[index]);
         }
 
-        final String cacheKey = getCacheKey(directories, index, name, locale);
+        final String cacheKey = "XRB" + getCacheKey(directories, index, name, locale);
 
         XMLResourceBundle bundle = selectCached(cacheKey);
         if (bundle == null) {
@@ -318,10 +318,14 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      */
     protected String getCacheKey(String[] directories, int index, String name, Locale locale)
     throws ComponentException {
-        StringBuffer cacheKey = new StringBuffer("XRB");
-        for (; index < directories.length; index++) {
+        StringBuffer cacheKey = new StringBuffer();
+        if (index < directories.length) {
             cacheKey.append(":");
             cacheKey.append(getSourceURI(directories[index], name, locale));
+            index++;
+            cacheKey.append(getCacheKey(directories, index, name, locale));
+        } else if ((locale != null && !locale.getLanguage().equals(""))) {
+            cacheKey.append(getCacheKey(directories, 0, name, getParentLocale(locale)));
         }
         return cacheKey.toString();
     }
