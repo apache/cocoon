@@ -119,7 +119,7 @@
 
         // Internally used list of attributes for SAX events.  Being on
         // class scope allows xsp:logic to define markup generating methods.
-        private AttributesImpl _xspAttr = new AttributesImpl();
+        private final AttributesImpl _xspAttr = new AttributesImpl();
 
         /* Built-in parameters available for use */
         // context    - org.apache.cocoon.environment.Context
@@ -136,13 +136,17 @@
          * Generate XML data.
          */
         public void generate() throws SAXException, IOException, ProcessingException {
+
+            <!-- Locally scoped xspAttr for backwards compatibility to pre-2.1.9 logicsheets. -->
+            final AttributesImpl xspAttr = _xspAttr;
+
             <!-- Do any user-defined necessary initializations -->
             <xsl:for-each select="xsp:init-page">
               <xsl:value-of select="XSLTExtension:escape($extension,.)"/>
             </xsl:for-each>
 
             this.contentHandler.startDocument();
-            _xspAttr.clear();
+            xspAttr.clear();
 
             <!-- Generate top-level processing instructions -->
             <xsl:apply-templates select="/processing-instruction()"/>
