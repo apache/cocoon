@@ -31,16 +31,16 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  */
 public class BlockDispatcherProcessor extends AbstractLogEnabled implements Processor {
 
-    private BlocksManager blocksManager;
+    private Blocks blocks;
 
     /** Processor attributes */
     private Map processorAttributes = new HashMap();
    
     /**
-     * @param blocksManager
+     * @param blocks
      */
-    public BlockDispatcherProcessor(BlocksManager blocksManager) {
-        this.blocksManager = blocksManager;
+    public BlockDispatcherProcessor(Blocks blocks) {
+        this.blocks = blocks;
     }
 
     /* (non-Javadoc)
@@ -55,7 +55,7 @@ public class BlockDispatcherProcessor extends AbstractLogEnabled implements Proc
         if (uri.length() == 0 || uri.charAt(0) != '/') {
             uri = "/" + uri;
         }
-        Block block = this.blocksManager.getMountedBlock(uri);
+        Block block = this.blocks.getMountedBlock(uri);
         if (block == null) {
             return false;
         } else {

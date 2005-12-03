@@ -32,17 +32,17 @@ import org.apache.avalon.framework.service.ServiceManager;
 public class InterBlockServiceManager extends AbstractLogEnabled implements ServiceManager {
     
     private BlockWiring blockWiring;
-    private BlocksManager blocksManager;
+    private Blocks blocks;
     private Map managers = new HashMap();
     private boolean called;
 
     /**
      * @param blockWiring
-     * @param blocksManager
+     * @param blocks
      */
-    public InterBlockServiceManager(BlockWiring blockWiring, BlocksManager blocksManager) {
+    public InterBlockServiceManager(BlockWiring blockWiring, Blocks blocks) {
         this.blockWiring = blockWiring;
-        this.blocksManager = blocksManager;
+        this.blocks = blocks;
     }
 
     /* (non-Javadoc)
@@ -104,7 +104,7 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
             while (connectionNames.hasMoreElements()) {
                 String blockName = (String)connectionNames.nextElement();
                 String blockId = this.blockWiring.getBlockId(blockName);
-                Block block = this.blocksManager.getBlock(blockId);
+                Block block = this.blocks.getBlock(blockId);
                 // Don't access blocks that isn't setup yet
                 if (block != null) {
                     manager = block.getServiceManager();
@@ -117,7 +117,7 @@ public class InterBlockServiceManager extends AbstractLogEnabled implements Serv
             }
             String superId = this.blockWiring.getBlockId(Block.SUPER);
             if (superId != null) {
-                Block superBlock = this.blocksManager.getBlock(superId);
+                Block superBlock = this.blocks.getBlock(superId);
                 // Don't access blocks that isn't setup yet
                 if (superBlock != null) {
                     manager = superBlock.getServiceManager();
