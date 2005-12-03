@@ -128,8 +128,7 @@
         include dir="context://WEB-INF/xconf" pattern="*.xconf"/-->
         
         <include src="context://WEB-INF/xconf/cocoon-core-sitemap.xconf"/>
-        <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap-additions.xconf"/>
-        <include src="context://WEB-INF/xconf/cocoon-blocks.xconf"/>]]>
+        <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap-additions.xconf"/>]]>
       </replacevalue>
     </replace> 
     
