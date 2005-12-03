@@ -54,7 +54,9 @@ import org.xml.sax.InputSource;
  */
 public class BlocksManager
     extends AbstractLogEnabled
-    implements Configurable,
+    implements
+	Blocks,
+	Configurable,
         Contextualizable,
         Disposable,
         Initializable,
@@ -119,7 +121,7 @@ public class BlocksManager
                               " id=" + blockConf.getAttribute("id") +
                               " location=" + blockConf.getAttribute("location"));
             BlockManager blockManager = new BlockManager();
-            blockManager.setBlocksManager(this);
+            blockManager.setBlocks(this);
             LifecycleHelper.setupComponent(blockManager,
                                            this.getLogger(),
                                            this.context,

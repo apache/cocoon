@@ -60,7 +60,7 @@ public class BlockManager
     private Processor blockProcessor;
     private BlockWiring blockWiring;
     private BlockContext blockContext;
-    private BlocksManager blocksManager;
+    private Blocks blocks;
 
     // Life cycle
 
@@ -96,7 +96,7 @@ public class BlockManager
             this.serviceManager = this.parentServiceManager;
        } else {
             // Create a service manager for getting components from other blocks
-            ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocksManager);
+            ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
             ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
 
             this.serviceManager =
@@ -187,8 +187,8 @@ public class BlockManager
     // didn't want to make it part of the parent manager. But this is
     // a little bit clumsy. Question is what components, if any, the
     // blocks should have in common.
-    public void setBlocksManager(BlocksManager blocksManager) {
-    	this.blocksManager = blocksManager;
+    public void setBlocks(Blocks blocks) {
+    	this.blocks = blocks;
     }
 
     /**
@@ -207,7 +207,7 @@ public class BlockManager
 		    // Ask the super block for the property
 		    String superId = this.blockWiring.getBlockId(Block.SUPER);
 		    this.getLogger().debug("Try super property=" + name + " block=" + superId);
-		    Block block = this.blocksManager.getBlock(superId);
+		    Block block = this.blocks.getBlock(superId);
 		    if (block != null) {
 		        value =  block.getProperty(name);
 		    }
@@ -246,7 +246,7 @@ public class BlockManager
         } else {
             // another block
         	String blockId = this.blockWiring.getBlockId(blockName);
-            block = this.blocksManager.getBlock(blockId);
+            block = this.blocks.getBlock(blockId);
         }
         if (block == null)
             throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
@@ -311,7 +311,7 @@ public class BlockManager
             	}
         		superCall = true;
             }
-            Block block = this.blocksManager.getBlock(blockId);
+            Block block = this.blocks.getBlock(blockId);
     		if (block == null) {
     			return false;
     		}
