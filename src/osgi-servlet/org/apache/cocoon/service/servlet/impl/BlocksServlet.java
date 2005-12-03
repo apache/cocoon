@@ -160,7 +160,7 @@ public class BlocksServlet extends HttpServlet {
         stopWatch.start();
 
         // add the cocoon header timestamp
-        if (this.core.getSettings().isShowCocoonVersion()) {
+        if (this.core.getSettings().isShowVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
         }
 
