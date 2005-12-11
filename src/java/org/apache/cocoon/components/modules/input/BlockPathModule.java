@@ -26,7 +26,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.BlockEnvironmentHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**

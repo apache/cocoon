@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.BlockEnvironmentHelper;
 
 /**
  * BlockPropertyModule provides access to the properties of the current block.
