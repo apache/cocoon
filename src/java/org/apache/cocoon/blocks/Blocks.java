@@ -15,12 +15,6 @@
  */
 package org.apache.cocoon.blocks;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Processor;
-
 /**
  * @version SVN $Id$
  */

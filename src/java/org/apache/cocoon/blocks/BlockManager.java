@@ -41,7 +41,6 @@ import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * @version SVN $Id$
@@ -325,12 +324,12 @@ public class BlockManager
                 	// It is important to set the current block each time
                 	// a new block is entered, this is used for the block
                 	// protocol
-            		EnvironmentHelper.enterProcessor(block, null, environment);
+            		BlockEnvironmentHelper.enterBlock(block);
             	}
             	return block.process(environment);
             } finally {
             	if (!superCall) {
-            		EnvironmentHelper.leaveProcessor();
+            		BlockEnvironmentHelper.leaveBlock();
             	}
             	this.getLogger().debug("Leaving processing in block " + blockName);
 			}            	

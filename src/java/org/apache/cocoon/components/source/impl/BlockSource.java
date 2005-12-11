@@ -27,9 +27,9 @@ import java.util.Map;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.Block;
+import org.apache.cocoon.blocks.BlockEnvironmentHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.internal.BlockEnvironmentHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.SourceException;
@@ -42,9 +42,6 @@ import org.apache.excalibur.source.impl.AbstractSource;
  * @version $Id$ */
 public final class BlockSource
     extends AbstractSource {
-
-    /** The current ServiceManager */
-    private final ServiceManager manager;
 
     /** The environment */
     private final EnvironmentWrapper environment;
@@ -68,8 +65,6 @@ public final class BlockSource
         if ( env == null ) {
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
         }
-        this.manager = manager;
-
         this.block = BlockEnvironmentHelper.getCurrentBlock();
         if (this.block == null)
             throw new MalformedURLException("Must be used in a block context " + this.getURI());

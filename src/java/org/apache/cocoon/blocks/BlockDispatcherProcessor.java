@@ -24,7 +24,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * @version SVN $Id$
@@ -68,10 +67,10 @@ public class BlockDispatcherProcessor extends AbstractLogEnabled implements Proc
                 // It is important to set the current block each time
                 // a new block is entered, this is used for the block
                 // protocol
-                EnvironmentHelper.enterProcessor(block, null, environment);
+                BlockEnvironmentHelper.enterBlock(block);
                 return block.process(environment);
             } finally {
-                EnvironmentHelper.leaveProcessor();
+                BlockEnvironmentHelper.leaveBlock();
                 environment.setURI(oldPrefix, oldURI);
                 getLogger().debug("Leaving processing in block at " + mountPoint);
             }
