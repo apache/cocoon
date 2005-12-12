@@ -881,7 +881,7 @@
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
     <used-by>Faces block, BetwixtTransformer, Template</used-by>
-    <lib>optional/commons-beanutils-core-1.7.jar</lib>
+    <lib>optional/commons-beanutils-core-1.7.0.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
