@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 
-import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -44,6 +43,7 @@ import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelpe
 import org.apache.cocoon.components.webdav.WebDAVUtil;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.webdav.lib.WebdavResource;
@@ -134,7 +134,7 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
     public String getContentString(String uri) throws ProcessingException {
 
         try {
-            return IOUtil.toString(this.getContentStream(uri));
+            return IOUtils.toString(this.getContentStream(uri));
 
         } catch (IOException ioe) {
             throw new ProcessingException ("Error loading resource: " + this.repoBaseUrl + uri, ioe);
@@ -233,7 +233,7 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable, Com
     public boolean saveContent(String uri, Source source) {
 
         try {
-            return this.saveContent(uri, IOUtil.toString(source.getInputStream()));
+            return this.saveContent(uri, IOUtils.toString(source.getInputStream()));
 
         } catch (IOException ioe) {
             this.getLogger().error("Error saving source: " + source.getURI() +

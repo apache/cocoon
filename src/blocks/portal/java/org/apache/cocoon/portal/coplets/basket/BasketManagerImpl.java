@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -70,6 +69,7 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.servlet.multipart.PartOnDisk;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -234,7 +234,7 @@ implements BasketManager, Serviceable, Receiver, Contextualizable, Initializable
             if ( o != null && o instanceof Part) {
                 final Part file = (Part)o;
                 try {
-                    byte[] c = IOUtil.toByteArray(file.getInputStream());
+                    byte[] c = IOUtils.toByteArray(file.getInputStream());
                     ContentItem ci = new ContentItem(file.getFileName(), true);
                     ci.setContent(c);
                     store.addItem(ci);
@@ -276,7 +276,7 @@ implements BasketManager, Serviceable, Receiver, Contextualizable, Initializable
                             source = resolver.resolveURI(url);
                             CopletData copletData = service.getComponentManager().getProfileManager().getCopletData(event.getCopletDataId());
                             cid = service.getComponentManager().getCopletFactory().newInstance(copletData);
-                            cid.setAttribute("item-content", IOUtil.toByteArray(source.getInputStream()));
+                            cid.setAttribute("item-content", IOUtils.toByteArray(source.getInputStream()));
                         } catch (IOException se) {
                             this.getLogger().warn("Unable to get content for " + url, se);
                         } catch (ServiceException se) {
@@ -417,7 +417,7 @@ implements BasketManager, Serviceable, Receiver, Contextualizable, Initializable
                         }
                         }
                         source = resolver.resolveURI(url);
-                        ci.setContent(IOUtil.toByteArray(source.getInputStream()));
+                        ci.setContent(IOUtils.toByteArray(source.getInputStream()));
                     } catch (IOException se) {
                         this.getLogger().warn("Unable to get content for " + url, se);
                     } catch (ServiceException se) {
