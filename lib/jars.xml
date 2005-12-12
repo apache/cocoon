@@ -123,7 +123,7 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file>
+<!--  <file>
     <title>Excalibur IO</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
@@ -132,7 +132,7 @@
     <used-by>Cocoon</used-by>
     <lib>core/excalibur-io-1.1.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
-  </file>
+  </file>-->
 
   <file>
     <title>Excalibur Logger</title>
@@ -382,6 +382,16 @@
     <used-by>DELI (deli block)</used-by>
     <lib>optional/deli-x050330.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons IO</title>
+    <description>
+      Commons IO is a library of utilities to assist with developing IO functionality.
+    </description>
+    <used-by>Cocoon</used-by>
+    <lib>core/commons-io-1.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/io/</homepage>
   </file>
 
   <file>

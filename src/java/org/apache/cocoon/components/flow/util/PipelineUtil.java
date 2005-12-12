@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -32,6 +31,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
@@ -108,7 +108,7 @@ public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
         try {
             src = this.resolver.resolveURI("cocoon:/" + uri);
             input = src.getInputStream();
-            IOUtil.copy(input, output);
+            IOUtils.copy(input, output);
         } finally {
             if (input != null) {
                 try {
