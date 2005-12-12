@@ -179,6 +179,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+   <action dev="AG" type="update">
+      Updated asm to 2.1, asm-util to 2.1 and groovy to 1.0-jsr-04.
+    </action> 
     <action dev="AN" type="fix">
       XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
       logicsheets.  (Suggestion by Vadim Gritsenko).
