@@ -79,17 +79,6 @@
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
-  <file id="excalibur-io">
-    <title>Excalibur IO</title>
-    <description>
-      Part of Excalibur, it is a set of classes and patterns that
-      support high level server development.
-    </description>
-    <used-by>Cocoon</used-by>
-    <lib>core/excalibur-io-1.1.jar</lib>
-    <homepage>http://excalibur.apache.org/</homepage>
-  </file>
-
   <file id="excalibur-logger">
     <title>Excalibur Logger</title>
     <description>
@@ -206,6 +195,16 @@
     <used-by>Cocoon, OJB</used-by>
     <lib>core/commons-collections-3.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/collections/</homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons IO</title>
+    <description>
+      Commons IO is a library of utilities to assist with developing IO functionality.
+    </description>
+    <used-by>Cocoon,jci</used-by>
+    <lib>core/commons-io-1.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/io/</homepage>
   </file>
 
   <file id="jakarta-regexp">
@@ -1159,15 +1158,6 @@
     <used-by>javaflow</used-by>
     <lib>core/commons-javaflow-r306555.jar</lib>
     <homepage></homepage>
-  </file>
-
-  <file id="commons-io">
-    <title>Jakarta Commons IO</title>
-    <description>
-    </description>
-    <used-by>jci</used-by>
-    <lib>optional/commons-io-1.0.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/io/</homepage>
   </file>
 
   <file>
