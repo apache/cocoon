@@ -180,6 +180,12 @@
 -->
   <release version="2.1.9" date="TBD">
    <action dev="AG" type="update">
+     Replace deprecated library excalibur-io 1.1 with commons-io 1.1.
+     The file excalibur-io-1.1.jar is no longer part of the cocoon distribution.
+     Note: All the packages under org.apache.avalon.excalibur.io.* can be found under
+     org.apache.commons.io.*. Please update the imports in your code.
+   </action>
+   <action dev="AG" type="update">
       Updated asm to 2.1, asm-util to 2.1 and groovy to 1.0-jsr-04.
     </action> 
     <action dev="AN" type="fix">
