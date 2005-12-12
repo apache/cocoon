@@ -21,8 +21,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.ModifiableSource;
 
 
@@ -125,7 +125,7 @@ public abstract class Part implements Disposable {
     public void copyToSource(ModifiableSource source) throws IOException {
         InputStream is = getInputStream();
         OutputStream os = source.getOutputStream();
-        IOUtil.copy(is, os);
+        IOUtils.copy(is, os);
         is.close();
         os.close();
     }
@@ -140,7 +140,7 @@ public abstract class Part implements Disposable {
     public void copyToFile(String filename) throws IOException {
         InputStream is = getInputStream();
         OutputStream os = new FileOutputStream(filename);
-        IOUtil.copy(is, os);
+        IOUtils.copy(is, os);
         is.close();
         os.close();
     }
