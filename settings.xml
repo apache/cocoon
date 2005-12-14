@@ -1,4 +1,5 @@
 <settings>
+  <localRepository>tempRepo</localRepository>
   <mirrors>
     <mirror>
       <mirrorOf>central</mirrorOf>
