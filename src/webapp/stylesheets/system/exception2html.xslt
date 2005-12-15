@@ -122,8 +122,8 @@
         </p>
 
         <p>
-          If you think you found a bug, please report it to
-          <a href="http://issues.apache.org/bugzilla/">Apache's Bugzilla</a>;
+          If you think you found a bug, please report it to the 
+          <a href="http://issues.apache.org/jira/browse/COCOON">Apache Cocoon issue tracker</a>;
           a message will automatically be sent to the developer mailing list and you'll
           be kept in contact automatically with the further progress on that bug.
         </p>
