@@ -15,24 +15,10 @@
  */
 package org.apache.cocoon.test.blocks;
 
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.blocks.BlocksManager;
-import org.apache.cocoon.test.SitemapTestCase;
+import org.apache.cocoon.test.ServletTestCase;
 
-public class BlocksManagerTestCase extends SitemapTestCase {
+public class BlocksManagerTestCase extends ServletTestCase {
     
-    protected void setUp() throws Exception {
-        this.processorClassName = BlocksManager.class.getName();
-        super.setUp();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.test.SitemapTestCase#getConfiguration()
-     */
-    protected String getConfiguration() {
-        return Constants.WIRING;
-    }
-
     public void testBlockSource1() throws Exception {
         pipeTest("/test1/test", "test1/test.xml");
     }
