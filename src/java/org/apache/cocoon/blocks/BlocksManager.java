@@ -16,35 +16,34 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
 import org.xml.sax.InputSource;
@@ -53,103 +52,185 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class BlocksManager
-    extends AbstractLogEnabled
+	extends
+		HttpServlet
     implements
-	Blocks,
-	Configurable,
-        Contextualizable,
-        Disposable,
-        Initializable,
-        Serviceable,
-        ThreadSafe,
-        Processor,
-        Modifiable { 
+    	Blocks,
+        Modifiable
+	{ 
 
     public static String ROLE = BlocksManager.class.getName();
+    private ServletConfig servletConfig;
+    private ServletContext servletContext;
     private ServiceManager serviceManager;
     private Context context;
+    private org.apache.cocoon.environment.Context environmentContext;
+    private Settings settings;
+    private String contextURL;
+    private String containerEncoding;
 
-    private String wiringFileName = null;
+    private String wiringFileName = "/" + Constants.WIRING;
     private Source wiringFile;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
     
-    private Core core;
     private Processor processor;
+    private Logger logger;    
 
-    public void service(ServiceManager manager) throws ServiceException {
-        this.serviceManager = manager;
-        this.core = (Core)this.serviceManager.lookup(Core.ROLE);
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
-    public void configure(Configuration config)
-    throws ConfigurationException {
-        this.wiringFileName = config.getAttribute("file");
-    }
-
-    public void initialize() throws Exception {
-        getLogger().debug("Initializing the Blocks Manager");
-        
-        // Read the wiring file
-        final Settings settings = this.core.getSettings();
-        if (this.wiringFileName == null) {
-            this.wiringFileName = settings.getConfiguration();
+    public void init(ServletConfig servletConfig) throws ServletException {
+    	super.init(servletConfig);
+        this.containerEncoding = servletConfig.getInitParameter("container-encoding");
+        if (this.containerEncoding == null) {
+        	this.containerEncoding = "ISO-8859-1";
         }
-        try {
-            URLSource urlSource = new URLSource();
-            urlSource.init(new URL(settings.getConfiguration()), null);
-            this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, settings.getReloadDelay("config"));
-        } catch (IOException e) {
-            throw new ConfigurationException("Could not open configuration file: " + settings.getConfiguration(), e);
-        }
-
-        InputSource is = SourceUtil.getInputSource(this.wiringFile);
-
-        ConfigurationBuilder builder = new ConfigurationBuilder(settings);
-        Configuration wiring = builder.build(is);
-
-        Configuration[] blockConfs = wiring.getChildren("block");
-
-        // Create and store all blocks
-        for (int i = 0; i < blockConfs.length; i++) {
-            Configuration blockConf = blockConfs[i];
-            getLogger().debug("Creating " + blockConf.getName() +
-                              " id=" + blockConf.getAttribute("id") +
-                              " location=" + blockConf.getAttribute("location"));
-            BlockManager blockManager = new BlockManager();
-            blockManager.setBlocks(this);
-            LifecycleHelper.setupComponent(blockManager,
-                                           this.getLogger(),
-                                           this.context,
-                                           this.serviceManager,
-                                           blockConf);
-            this.blocks.put(blockConf.getAttribute("id"), blockManager);
-            String mountPath = blockConf.getChild("mount").getAttribute("path", null);
-            if (mountPath != null) {
-                this.mountedBlocks.put(mountPath, blockManager);
-                getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
-                                  " at " + mountPath);
-            }
-        }
-        this.createProcessor();
+    	this.servletConfig = servletConfig;
+    	this.servletContext = servletConfig.getServletContext();
+    	CoreUtil coreUtil = new CoreUtil(servletConfig, Constants.WIRING);
+		Core core = coreUtil.getCore();
+		this.settings = coreUtil.getSettings();
+		this.environmentContext = core.getEnvironmentContext();
+		this.context = core.getContext();
+		this.contextURL = coreUtil.getContextURL();
+		this.serviceManager = coreUtil.getServiceManager();
+		LoggerUtil loggerUtil = new LoggerUtil(servletConfig, this.context, this.settings);
+		this.logger = loggerUtil.getCocoonLogger();
+		this.getLogger().debug("Initializing the Blocks Manager");
+		
+		InputSource is = null;
+		try {
+			this.getLogger().debug("Wiring file: " + this.servletContext.getResource(this.wiringFileName));
+			URLSource urlSource = new URLSource();
+			urlSource.init(this.servletContext.getResource(this.wiringFileName), null);
+			this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, 1000);
+			is = SourceUtil.getInputSource(this.wiringFile);
+		} catch (IOException e) {
+			throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);
+		} catch (ProcessingException e) {
+			throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);			
+		}
+				
+		DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+		Configuration wiring = null;
+		try {
+			wiring = builder.build(is);
+		} catch (Exception e) {
+			throw new ServletException("Could not create configuration from file: " + this.wiringFileName, e);			
+		}
+		
+		Configuration[] blockConfs = wiring.getChildren("block");
+		
+		try {
+		// Create and store all blocks
+		for (int i = 0; i < blockConfs.length; i++) {
+			Configuration blockConf = blockConfs[i];
+			this.getLogger().debug("Creating " + blockConf.getName() +
+					" id=" + blockConf.getAttribute("id") +
+					" location=" + blockConf.getAttribute("location"));
+			BlockManager blockManager = new BlockManager();
+			blockManager.setBlocks(this);
+			LifecycleHelper.setupComponent(blockManager,
+					this.getLogger(),
+					this.context,
+					this.serviceManager,
+					blockConf);
+			this.blocks.put(blockConf.getAttribute("id"), blockManager);
+			String mountPath = blockConf.getChild("mount").getAttribute("path", null);
+			if (mountPath != null) {
+				this.mountedBlocks.put(mountPath, blockManager);
+				this.getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
+						" at " + mountPath);
+			}
+		}
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		this.createProcessor();
     }
-
-    public void dispose() {
+    
+    public void destroy() {
         Iterator blocksIter = this.blocks.entrySet().iterator();
         while (blocksIter.hasNext()) {
             LifecycleHelper.dispose(blocksIter.next());
         }
         if (this.serviceManager != null) {
-            this.serviceManager.release(this.core);
-            this.core = null;
             this.serviceManager = null;            
         }
         this.blocks = null;
         this.mountedBlocks = null;
+    }
+    
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpEnvironment env;
+
+        // We got it... Process the request
+        String uri = request.getServletPath();
+        if (uri == null) {
+            uri = "";
+        }
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null) {
+            // VG: WebLogic fix: Both uri and pathInfo starts with '/'
+            // This problem exists only in WL6.1sp2, not in WL6.0sp2 or WL7.0b.
+            if (uri.length() > 0 && uri.charAt(0) == '/') {
+                uri = uri.substring(1);
+            }
+            uri += pathInfo;
+        }
+
+        if (uri.length() == 0) {
+            /* empty relative URI
+                 -> HTTP-redirect from /cocoon to /cocoon/ to avoid
+                    StringIndexOutOfBoundsException when calling
+                    "".charAt(0)
+               else process URI normally
+            */
+            String prefix = request.getRequestURI();
+            if (prefix == null) {
+                prefix = "";
+            }
+
+            response.sendRedirect(response.encodeRedirectURL(prefix + "/"));
+            return;
+        }
+
+        if (uri.charAt(0) == '/') {
+        	uri = uri.substring(1);
+        }
+
+        String formEncoding = request.getParameter("cocoon-form-encoding");
+        if (formEncoding == null) {
+            formEncoding = this.settings.getFormEncoding();
+        }
+        env = new HttpEnvironment(uri,
+                                  this.contextURL,
+                                  request,
+                                  response,
+                                  this.servletContext,
+                                  this.environmentContext,
+                                  this.containerEncoding,
+                                  formEncoding);
+        env.enableLogging(getLogger());
+		
+        try {
+	        this.processor.process(env);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException(e);
+		}
+		env.commitResponse();
+	}
+
+	public ServletConfig getServletConfig() {
+		return this.servletConfig;
+	}
+
+	public String getServletInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Logger getLogger() {
+    	return this.logger;
     }
 
     private void createProcessor() {
@@ -199,42 +280,5 @@ public class BlocksManager
         public int compare(Object o1, Object o2) {
             return ((String)o2).compareTo((String)o1);
         }
-    }
-
-    // Processor methods
-    public boolean process(Environment environment) throws Exception {
-        return this.processor.process(environment);
-    }
-
-    public InternalPipelineDescription buildPipeline(Environment environment) throws Exception {
-        return this.processor.buildPipeline(environment);
-    }
-
-    public Configuration[] getComponentConfigurations() {
-        return this.processor.getComponentConfigurations();
-    }
-
-    public Processor getRootProcessor() {
-        return this.processor.getRootProcessor();
-    }
-
-    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
-        return this.processor.getSourceResolver();
-    }
-
-    public String getContext() {
-        return this.processor.getContext();
-    }
-
-    public void setAttribute(String name, Object value) {
-        this.processor.setAttribute(name, value);
-    }
-
-    public Object getAttribute(String name) {
-        return this.processor.getAttribute(name);
-    }
-
-    public Object removeAttribute(String name) {
-        return this.processor.removeAttribute(name);
     }
 }
