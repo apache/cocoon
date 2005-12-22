@@ -25,11 +25,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
+import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.pluto.om.window.PortletWindow;
 
 /**
- * Our request wrapper
+ * Our request wrapper.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
@@ -109,11 +111,13 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
              || currentRequest != this.cachedRequest ) {
             this.cachedRequest = currentRequest;
 
-            //get control params
-            this.portletParameterMap = new HashMap();
+            // get control params
 
             if (this.provider != null
                 && this.provider.getPortletWindow().equals(this.window)) {
+
+                this.portletParameterMap = new HashMap();
+
                 // get render parameters
                 Iterator i = this.provider.getParameters().entrySet().iterator();
                 while (i.hasNext()) {
@@ -148,6 +152,13 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                         this.portletParameterMap.put(paramName, paramValues);
                     }
                 }
+            } else {
+                // provider is null or different window, use stored render parameters
+                final CopletInstanceData cid = ((PortletWindowImpl)this.window).getLayout().getCopletInstanceData();
+                this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
+            }
+            if ( this.portletParameterMap == null ) {
+                this.portletParameterMap = Collections.EMPTY_MAP;
             }
         }
 

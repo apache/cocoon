@@ -43,6 +43,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
+import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
 import org.apache.cocoon.portal.pluto.PortletContainerEnvironmentImpl;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
@@ -359,6 +360,7 @@ public class PortletAdapter
             if ( state != null ) {
                 pap.changePortletWindowState(state);
             }
+            ((PortletActionProviderImpl)pap).changeRenderParameters(event.getParameters());
         }
     }
 
