@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.portal.pluto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
@@ -73,4 +76,12 @@ public class PortletActionProviderImpl implements PortletActionProvider {
         }
     }
 
+    public void changeRenderParameters(Map parameters) {
+        final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+        if ( parameters == null ) {
+            cid.removeTemporaryAttribute("render-parameters");
+        } else {
+            cid.setTemporaryAttribute("render-parameters", new HashMap(parameters));
+        }
+    }
 }
