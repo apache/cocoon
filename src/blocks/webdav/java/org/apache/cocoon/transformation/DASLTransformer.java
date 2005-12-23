@@ -16,12 +16,16 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.components.webdav.WebDAVEventFactory;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.httpclient.HttpConnection;
@@ -29,6 +33,8 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.webdav.lib.BaseProperty;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.OptionsMethod;
@@ -109,7 +115,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:d.madama@pro-netics.com>Daniele Madama</a>
  * @version $Id$
  */
-public class DASLTransformer extends AbstractSAXTransformer {
+public class DASLTransformer extends AbstractSAXTransformer implements CacheableProcessingComponent {
 
     /** The prefix for tag */
     static final String PREFIX = "dasl";
@@ -124,6 +130,8 @@ public class DASLTransformer extends AbstractSAXTransformer {
     static final String WEBDAV_SCHEME = "webdav://";
     /** The tag name of root_tag for result */
     static final String RESULT_ROOT_TAG = "query-result";
+    /** The tag name of root_tag for errors */
+    static final String ERROR_ROOT_TAG = "error";
     /** The tag name for substitution of query parameter */
     static final String SUBSTITUTE_TAG = "substitute-value";
     /** The tag name for substitution of query parameter */
@@ -134,7 +142,14 @@ public class DASLTransformer extends AbstractSAXTransformer {
 
     /** The target HTTP URL */
     String targetUrl;
-
+    
+    /** The validity of this dasl transformation run */
+	private AggregatedValidity m_validity = null;
+	
+	/** The WebdavEventFactory to abstract Event creation */
+	private WebDAVEventFactory m_eventfactory = null;
+	
+	
     /**
      *  Intercept the <dasl:query> start tag.
      *
@@ -201,16 +216,25 @@ public class DASLTransformer extends AbstractSAXTransformer {
     }
 
     protected void performSearchMethod(String query) throws SAXException {
+    	OptionsMethod optionsMethod = null;
+    	SearchMethod searchMethod = null;
         try {
             DOMStreamer propertyStreamer = new DOMStreamer(this.xmlConsumer);
-            OptionsMethod optionsMethod = new OptionsMethod(this.targetUrl);
-            SearchMethod searchMethod = new SearchMethod(this.targetUrl, query);
+            optionsMethod = new OptionsMethod(this.targetUrl);
+            searchMethod = new SearchMethod(this.targetUrl, query);
             HttpURL url = new HttpURL(this.targetUrl);
             HttpState state = new HttpState();
             state.setCredentials(null, new UsernamePasswordCredentials(
                     url.getUser(),
                     url.getPassword()));
             HttpConnection conn = new HttpConnection(url.getHost(), url.getPort());
+            
+            // eventcaching stuff
+            SourceValidity extraValidity = makeWebdavEventValidity(url);
+            if(extraValidity!=null && m_validity!=null)
+            	m_validity.add(extraValidity);
+            // end eventcaching stuff
+            
             WebdavResource resource = new WebdavResource(new HttpURL(this.targetUrl));
             if(!resource.exists()) {
                 throw new SAXException("The WebDAV resource don't exist");
@@ -219,33 +243,57 @@ public class DASLTransformer extends AbstractSAXTransformer {
             if(!optionsMethod.isAllowed("SEARCH")) {
                 throw new SAXException("The server don't support the SEARCH method");
             }
-            searchMethod.execute(state, conn);
-
-            Enumeration enumeration = searchMethod.getAllResponseURLs();
+            int httpstatus = searchMethod.execute(state, conn);
+            
+            
             this.contentHandler.startElement(DASL_QUERY_NS,
                                              RESULT_ROOT_TAG,
                                              PREFIX + ":" + RESULT_ROOT_TAG,
                                              XMLUtils.EMPTY_ATTRIBUTES);
-            while (enumeration.hasMoreElements()) {
-                String path = (String) enumeration.nextElement();
-                Enumeration properties = searchMethod.getResponseProperties(path);
-                AttributesImpl attr = new AttributesImpl();
-                attr.addAttribute(DASL_QUERY_NS, PATH_NODE_NAME, PREFIX + ":" + PATH_NODE_NAME, "CDATA",path);
-
-                this.contentHandler.startElement(DASL_QUERY_NS,
-                    RESOURCE_NODE_NAME,
-                    PREFIX + ":" + RESOURCE_NODE_NAME,
-                    attr);
-                while(properties.hasMoreElements()) {
-                    BaseProperty metadata = (BaseProperty) properties.nextElement();
-                    Element propertyElement = metadata.getElement();
-                    propertyStreamer.stream(propertyElement);
-                }
-
-                this.contentHandler.endElement(DASL_QUERY_NS,
-                    RESOURCE_NODE_NAME,
-                    PREFIX + ":" + RESOURCE_NODE_NAME);
+            
+            // something might have gone wrong, report it
+            // 207 = multistatus webdav response
+            if(httpstatus != 207) {
+            	
+            	this.contentHandler.startElement(DASL_QUERY_NS,
+                        ERROR_ROOT_TAG,
+                        PREFIX + ":" + ERROR_ROOT_TAG,
+                        XMLUtils.EMPTY_ATTRIBUTES);
+            	
+            	// dump whatever the server said
+            	propertyStreamer.stream(searchMethod.getResponseDocument());
+            	
+            	this.contentHandler.endElement(DASL_QUERY_NS,
+            			ERROR_ROOT_TAG,
+                        PREFIX + ":" + ERROR_ROOT_TAG);
+            	
+            } else {
+            	// show results
+            	
+            	Enumeration enumeration = searchMethod.getAllResponseURLs();
+            	
+	            while (enumeration.hasMoreElements()) {
+	                String path = (String) enumeration.nextElement();
+	                Enumeration properties = searchMethod.getResponseProperties(path);
+	                AttributesImpl attr = new AttributesImpl();
+	                attr.addAttribute(DASL_QUERY_NS, PATH_NODE_NAME, PREFIX + ":" + PATH_NODE_NAME, "CDATA",path);
+	
+	                this.contentHandler.startElement(DASL_QUERY_NS,
+	                    RESOURCE_NODE_NAME,
+	                    PREFIX + ":" + RESOURCE_NODE_NAME,
+	                    attr);
+	                while(properties.hasMoreElements()) {
+	                    BaseProperty metadata = (BaseProperty) properties.nextElement();
+	                    Element propertyElement = metadata.getElement();
+	                    propertyStreamer.stream(propertyElement);
+	                }
+	
+	                this.contentHandler.endElement(DASL_QUERY_NS,
+	                    RESOURCE_NODE_NAME,
+	                    PREFIX + ":" + RESOURCE_NODE_NAME);
+	            }
             }
+            
             this.contentHandler.endElement(DASL_QUERY_NS,
                                            RESULT_ROOT_TAG,
                                            PREFIX + ":" + RESULT_ROOT_TAG);
@@ -260,7 +308,97 @@ public class DASLTransformer extends AbstractSAXTransformer {
             throw new SAXException("Unable to fetch the query data:", e);
         } catch (Exception e) {
             throw new SAXException("Generic Error:", e);
+        } finally {
+        	// cleanup
+        	if(searchMethod!=null)
+        		searchMethod.releaseConnection();
+        	if(optionsMethod!=null)
+        		optionsMethod.releaseConnection();
         }
+    }
+    
+    /**
+     * Helper method to do event caching
+     * 
+     * @param methodurl The url to create the EventValidity for
+     * @return an EventValidity object or null
+     */
+    private SourceValidity makeWebdavEventValidity(HttpURL methodurl) {
+    	
+    	if(m_eventfactory == null) {
+    		try {
+    			m_eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
+    		} catch (Exception e) {
+    			if(getLogger().isErrorEnabled())
+    				getLogger().error("Couldn't look up WebDAVEventFactory, event caching will not work!", e);
+    			
+    			return null;
+			}
+    	}
+    	
+    	SourceValidity evalidity = null;
+    	try {
+    		
+    		evalidity = new EventValidity(m_eventfactory.createEvent(methodurl));
+    		
+    		if(getLogger().isDebugEnabled())
+    			getLogger().debug("Created eventValidity for dasl: "+evalidity);
+    	
+    	} catch (Exception e) {
+    		if(getLogger().isErrorEnabled())
+    			getLogger().error("could not create EventValidity!",e);
+    	}
+    	return evalidity;
+    }
+    
+    /**
+     * Forget about previous aggregated validity object
+     */
+    public void recycle() {
+    	super.recycle();
+    	m_validity = null;
+    }
+    
+    /**
+     * generates the cachekey, which is the classname plus any possible COCOON parameters
+     */
+	public Serializable getKey() {
+		if(this.parameters.getNames().length == 0) {
+			return getClass().getName();
+		} else {
+			StringBuffer buf = new StringBuffer();
+			buf.append(getClass().getName());
+			
+			// important for substitution
+			// we don't know yet which ones are relevant, so include all
+			String[] names = this.parameters.getNames();
+			for(int i=0; i<names.length; i++) {
+				buf.append(";");
+				buf.append(names[i]);
+				buf.append("=");
+				try {
+					buf.append(this.parameters.getParameter(names[i]));
+				} catch (Exception e) {
+					if(getLogger().isErrorEnabled())
+		    			getLogger().error("Could not read parameter '"+names[i]+"'!",e);
+				}
+			}
+			
+			return buf.toString();
+		}
+	}
+
+	/**
+	 * returns the validity which will be filled during processing of the requests
+	 */
+	public SourceValidity getValidity() {
+		if(getLogger().isDebugEnabled())
+			getLogger().debug("getValidity() called!");
+		
+        if (m_validity == null) {
+            m_validity = new AggregatedValidity();
+        }
+        return m_validity;
     }
 
 }
