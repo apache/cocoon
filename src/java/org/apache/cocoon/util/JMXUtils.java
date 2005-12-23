@@ -134,6 +134,8 @@ public class JMXUtils {
                 logger.warn( "Not compliant MBean " + mbeanClassName, ncme);
             } catch (final MBeanRegistrationException mre) {
                 logger.warn( "Cannot register MBean " + mbeanClassName, mre);
+            } catch (final SecurityException se) {
+                logger.warn( "Instantiation of MBean " + mbeanClassName + " is prevented by a SecurityManager", se);
             }
         }
         return null;
