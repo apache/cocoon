@@ -68,7 +68,7 @@ extends AbstractFactoryHandler {
     /**
      * The maximum size of the pool.
      */
-    private final int max;
+    protected final int max;
 
     /**
      * List of the Poolable instances which are available for use.
@@ -78,12 +78,12 @@ extends AbstractFactoryHandler {
     /**
      * Store the size of the ready list to optimize operations which require this value.
      */
-    private int readySize;
+    protected int readySize;
 
     /**
      * Total number of Poolable instances in the pool
      */
-    private int size;
+    protected int size;
     
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
