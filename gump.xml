@@ -1156,11 +1156,13 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-eventcache"/>
     <depend project="commons-httpclient"/>
     <depend project="jakarta-slide"/>
 
     <library name="commons-httpclient"/>
     <library name="jakarta-slide-webdavlib"/>
+    <library name="jdom"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/webdav/test"/>
