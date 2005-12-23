@@ -708,6 +708,8 @@ public class CoreServiceManager
             info.setServiceClassName(className);
 
             handler = AbstractComponentHandler.getComponentHandler(role, this.componentEnv, info);
+            // TODO we probably need to keep the ObjectInstance returnde for setupJmxFor for 
+            //      later deregistering.
             JMXUtils.setupJmxFor(handler, info, getLogger());
         }
         return handler;
