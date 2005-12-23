@@ -29,6 +29,7 @@ import org.apache.cocoon.core.container.ComponentEnvironment;
 import org.apache.cocoon.core.container.ComponentFactory;
 import org.apache.cocoon.core.container.DefaultServiceSelector;
 import org.apache.cocoon.core.container.StandaloneServiceSelector;
+import org.apache.cocoon.util.JMXUtils;
 
 /**
  * This class acts like a Factory to instantiate the correct version
@@ -286,6 +287,8 @@ implements ComponentHandler {
         ComponentInfo info = new ComponentInfo();
         info.setServiceClassName(clazz.getName());
         info.setConfiguration(config);
+        info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), manager));
+        info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), clazz.getName()));
         return getComponentHandler(null, env, info);
 
     }

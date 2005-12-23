@@ -19,6 +19,7 @@ package org.apache.cocoon.core.container.handler;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.container.ComponentFactory;
+import org.apache.cocoon.util.JMXUtils;
 
 /**
  * The ThreadSafeComponentHandler to make sure components are initialized
@@ -52,6 +53,7 @@ extends AbstractFactoryHandler {
     public void doInitialize() throws Exception {
         if( this.instance == null ) {
             this.instance = this.factory.newInstance();
+            JMXUtils.setupJmxFor(this.instance, getInfo(), logger);
         }
     }
 
