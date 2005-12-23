@@ -28,6 +28,7 @@ import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.util.JMXUtils;
 
 /**
  * The component enviromnent contains all objects necessary to create
@@ -89,6 +90,8 @@ public class ComponentEnvironment {
             final Configuration conf = cb.build(is);
             ci = new ComponentInfo();
             ci.fill(conf);
+            ci.setJmxDomain(JMXUtils.findJmxDomain(ci.getJmxDomain(), serviceManager));
+            ci.setJmxName(JMXUtils.findJmxName(ci.getJmxName(), ci.getServiceClassName()));
         }
         return ci;
     }
