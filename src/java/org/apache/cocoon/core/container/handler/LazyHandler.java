@@ -20,6 +20,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.CoreResourceNotFoundException;
 import org.apache.cocoon.core.container.ComponentEnvironment;
+import org.apache.cocoon.util.JMXUtils;
 
 /**
  * 
@@ -48,9 +49,12 @@ public class LazyHandler implements ComponentHandler {
             ComponentInfo info = new ComponentInfo();
             info.setConfiguration(config);
             info.setServiceClassName(className);
+            info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this.compEnv.serviceManager));
+            info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
 
             this.delegate = AbstractComponentHandler.getComponentHandler(role, compEnv, info);
             this.delegate.initialize();
+            JMXUtils.setupJmxFor(this.delegate, info);
         }
         
         return this.delegate;
@@ -121,6 +125,8 @@ public class LazyHandler implements ComponentHandler {
             final ComponentInfo info = new ComponentInfo();
             info.setServiceClassName(className);
             info.setConfiguration(config);
+            info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this.compEnv.serviceManager));
+            info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
             return info;
         } 
         return this.delegate.getInfo();
