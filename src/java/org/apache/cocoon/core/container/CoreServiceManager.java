@@ -56,6 +56,7 @@ import org.apache.cocoon.core.container.handler.LazyHandler;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.sitemap.impl.ComponentManager;
+import org.apache.cocoon.util.JMXUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -70,6 +71,15 @@ public class CoreServiceManager
         extends AbstractLogEnabled
         implements Contextualizable, ThreadSafe, Disposable, Initializable, ServiceManager, Configurable {
 
+    /** The attribute containing the JMX domain name */
+    public static final String JMX_DOMAIN_ATTR_NAME = "jmx-domain";
+
+    /** The attribute containing the JMX domain name */
+    public static final String JMX_NAME_ATTR_NAME = "jmx-name";
+
+    /** The attribute containing the JMX domain name */
+    public static final String JMX_DEFAULT_DOMAIN_NAME = "Cocoon";
+    
     /**
      * An empty configuration object, that can be used when no configuration is known but one
      * is needed.
@@ -117,6 +127,8 @@ public class CoreServiceManager
     /** The resolver used to resolve includes. It is lazily loaded in {@link #setupSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
+    private String jmxDefaultDomain = null;
+    
     /** Create the ServiceManager with a parent ServiceManager */
     public CoreServiceManager( final ServiceManager parent ) {
         this(parent, null);
@@ -188,7 +200,6 @@ public class CoreServiceManager
         // This is the default logger for all components defined with this sitemap/manager.
         if ( configuration.getAttribute("logger", null) != null ) {
             this.enableLogging(this.loggerManager.getLoggerForCategory(configuration.getAttribute("logger")));
-
         }
         this.componentEnv = new ComponentEnvironment(this.classloader, getLogger(), this.roleManager, this.loggerManager, this.context, this);
 
@@ -206,6 +217,9 @@ public class CoreServiceManager
             currentURI = this.location.substring(0, pos-1);
         }
 
+        // find possible JMX domain name
+        this.jmxDefaultDomain = configuration.getAttribute(JMX_DOMAIN_ATTR_NAME, null);
+
         try {
             // and load configuration with a empty list of loaded configurations
             parseConfiguration(configuration, currentURI, new HashSet());
@@ -215,6 +229,19 @@ public class CoreServiceManager
         }
     }
 
+    /**
+     * @return The default JMX domain name
+     */
+    public String getJmxDefaultDomain() {
+        if (this.jmxDefaultDomain == null) {
+            if (this.parentManager instanceof CoreServiceManager) {
+                return ((CoreServiceManager)this.parentManager).getJmxDefaultDomain();
+            }
+            return JMX_DEFAULT_DOMAIN_NAME;
+        }
+        return this.jmxDefaultDomain;
+    }
+    
     /**
      * Return the service manager logger.
      */
@@ -662,22 +689,28 @@ public class CoreServiceManager
             }
         }
 
+        ComponentHandler handler;
         if (lazyLoad) {
-            return new LazyHandler(role, className, configuration, componentEnv);
-        }
-        
-        // FIXME - we should ensure that we always get an info
-        ComponentInfo info;
-        if ( baseInfo != null ) {
-            info = baseInfo.duplicate();
+            handler = new LazyHandler(role, className, configuration, componentEnv);
         } else {
-            info = new ComponentInfo();
-            info.fill(configuration);
-        }
-        info.setConfiguration(configuration);
-        info.setServiceClassName(className);
+            
+            // FIXME - we should ensure that we always get an info
+            ComponentInfo info;
+            if ( baseInfo != null ) {
+                info = baseInfo.duplicate();
+            } else {
+                info = new ComponentInfo();
+                info.fill(configuration);
+                info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this));
+                info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
+            }
+            info.setConfiguration(configuration);
+            info.setServiceClassName(className);
 
-        return AbstractComponentHandler.getComponentHandler(role, this.componentEnv, info);
+            handler = AbstractComponentHandler.getComponentHandler(role, this.componentEnv, info);
+            JMXUtils.setupJmxFor(handler, info, getLogger());
+        }
+        return handler;
     }
 
     private void parseConfiguration(final Configuration configuration, String contextURI, Set loadedURIs) 
@@ -712,6 +745,8 @@ public class CoreServiceManager
                 if (className == null) {
                     // Get the default class name for this role
                     final ComponentInfo info = roleManager.getDefaultServiceInfoForRole(role);
+                    info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this));
+                    info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), info.getServiceClassName()));
                     if (info == null) {
                         throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
                     }

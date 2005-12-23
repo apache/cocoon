@@ -16,6 +16,7 @@
 package org.apache.cocoon.components;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.cocoon.core.container.CoreServiceManager;
 
 /**
  * Meta-information about a service
@@ -42,6 +43,8 @@ public final class ComponentInfo {
     private String serviceClassName;
     private Configuration configuration;
     private String loggerCategory;
+    private String jmxDomain;
+    private String jmxName;
 
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
@@ -175,6 +178,8 @@ public final class ComponentInfo {
         this.setDestroyMethodName(attr.getAttribute("destroy", null));
         // logging
         this.setLoggerCategory(attr.getAttribute("logger", null));
+        this.setJmxDomain(attr.getAttribute(CoreServiceManager.JMX_DOMAIN_ATTR_NAME, null));
+        this.setJmxName(attr.getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME, null));
     }
 
     public ComponentInfo duplicate() {
@@ -187,6 +192,8 @@ public final class ComponentInfo {
         info.serviceClassName = this.serviceClassName;
         info.configuration = this.configuration;
         info.loggerCategory = this.loggerCategory;
+        info.jmxDomain = this.jmxDomain;
+        info.jmxName = this.jmxName;
 
         return info;
     }
@@ -203,5 +210,39 @@ public final class ComponentInfo {
      */
     public void setLoggerCategory(String loggerCategory) {
         this.loggerCategory = loggerCategory;
+    }
+    
+    /**
+     * @return The JMX domain name
+     */
+    public String getJmxDomain() {
+        if (this.jmxDomain == null && this.configuration != null) {
+            this.setJmxDomain(getConfiguration().getAttribute(CoreServiceManager.JMX_DOMAIN_ATTR_NAME, null));
+        }
+        return this.jmxDomain;
+    }
+    
+    /**
+     * @param The JMX domain name
+     */
+    public void setJmxDomain(final String jmxDomain) {
+        this.jmxDomain = jmxDomain;
+    }
+    
+    /**
+     * @return The JMX object name (without domain prefix)
+     */
+    public String getJmxName() {
+        if (this.jmxName == null && this.configuration != null) {
+            this.setJmxName(getConfiguration().getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME, null));
+        }
+        return this.jmxName;
+    }
+    
+    /**
+     * @param The JMX object name (without domain prefix)
+     */
+    public void setJmxName(final String jmxName) {
+        this.jmxName = jmxName;
     }
 }
