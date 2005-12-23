@@ -26,7 +26,7 @@
   </map:views>
 
   <map:pipelines>
-    <map:pipeline>
+    <map:pipeline type="event-aware">
 
       <map:match pattern="">
         <map:redirect-to uri="welcome"/>
@@ -40,6 +40,11 @@
         <map:serialize/>
       </map:match>
 
+      <!-- you have to make sure a slide instance is running and reachable on the host/port below -->
+      <map:match pattern="source/**">
+        <map:generate src="webdav://localhost:8080/slide/files/{1}"/>
+        <map:serialize type="xml"/>
+      </map:match>
 
       <map:match pattern="*/**">
         <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>

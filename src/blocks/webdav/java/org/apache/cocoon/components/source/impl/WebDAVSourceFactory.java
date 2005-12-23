@@ -24,7 +24,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.webdav.WebDAVEventFactory;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
 import org.apache.excalibur.source.Source;
@@ -34,13 +38,15 @@ import org.apache.excalibur.source.SourceFactory;
 /**
  * A factory for WebDAV sources
  *
- * @version $Id: WebDAVSourceFactory.java,v 1.10 2004/04/13 17:13:29 stephan Exp $
+ * @version $Id$
 */
 public class WebDAVSourceFactory extends AbstractLogEnabled 
-implements SourceFactory, Configurable, ThreadSafe {
+implements SourceFactory, Serviceable, Configurable, ThreadSafe {
 
     private String protocol;
     private boolean secure;
+    
+    private WebDAVEventFactory eventfactory = null;
     
     /**
      * Read the scheme name.
@@ -76,10 +82,14 @@ implements SourceFactory, Configurable, ThreadSafe {
             url = new HttpURL("http://" + location);
         }
         
-        return WebDAVSource.newWebDAVSource(url, this.protocol, getLogger());
+        return WebDAVSource.newWebDAVSource(url, this.protocol, getLogger(), eventfactory);
     }
 
     public void release(Source source) {
         // do nothing
     }
+
+	public void service(ServiceManager manager) throws ServiceException {
+		eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
+	}
 }

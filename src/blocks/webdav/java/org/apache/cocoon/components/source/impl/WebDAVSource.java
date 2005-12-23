@@ -35,8 +35,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.caching.validity.NameValueEvent;
+import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.components.webdav.WebDAVEventFactory;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
@@ -53,6 +57,7 @@ import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.TraversableSource;
+import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.webdav.lib.Property;
 import org.apache.webdav.lib.PropertyName;
@@ -71,7 +76,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * A source implementation to get access to WebDAV repositories.
  *
  * <h2>Protocol syntax</h2>
- * <p><code>webdav://[usr[:password]@]host[:port][/path][?cocoon:webdav-depth][&cocoon:webdav-action]</code></p>
+ * <p><code>webdav://[user[:password]@]host[:port][/path][?cocoon:webdav-depth][&cocoon:webdav-action]</code></p>
  * <p>
  *  <ul>
  *   <li>
@@ -106,6 +111,9 @@ public class WebDAVSource extends AbstractLogEnabled
     // cached uri and secureUri values
     private String uri;
     private String secureUri;
+    
+    // the event factory to get the Event objects from for event caching
+    private WebDAVEventFactory eventfactory = null;
 
     // the SWCL resource
     private WebdavResource resource = null;
@@ -158,6 +166,10 @@ public class WebDAVSource extends AbstractLogEnabled
     throws URIException {
         this(url, protocol);
         this.resource = resource;
+    }
+    
+    private void setWebDAVEventFactory(WebDAVEventFactory factory) {
+    	eventfactory = factory;
     }
 
     /**
@@ -238,10 +250,12 @@ public class WebDAVSource extends AbstractLogEnabled
      */
     public static WebDAVSource newWebDAVSource(HttpURL url,
                                                String protocol,
-                                               Logger logger)
+                                               Logger logger,
+                                               WebDAVEventFactory eventfactory)
     throws URIException {
         final WebDAVSource source = new WebDAVSource(url, protocol);
         source.enableLogging(logger);
+        source.setWebDAVEventFactory(eventfactory);
         return source;
     }
 
@@ -251,10 +265,12 @@ public class WebDAVSource extends AbstractLogEnabled
     private static WebDAVSource newWebDAVSource(WebdavResource resource,
                                                 HttpURL url,
                                                 String protocol,
-                                                Logger logger)
+                                                Logger logger,
+                                                WebDAVEventFactory eventfactory)
     throws URIException {
         final WebDAVSource source = new WebDAVSource(resource, url, protocol);
         source.enableLogging(logger);
+        source.setWebDAVEventFactory(eventfactory);
         return source;
     }
 
@@ -311,11 +327,31 @@ public class WebDAVSource extends AbstractLogEnabled
      *  <code>null</code> is returned.
      */
     public SourceValidity getValidity() {
-        final long lm = getLastModified();
-        if (lm > 0) {
-            return new TimeStampValidity(lm);
-        }
-        return null;
+    	
+    	SourceValidity validity = null;
+    	
+    	try {
+    		validity = new EventValidity(eventfactory.createEvent(this.url));
+    		
+    		if(getLogger().isDebugEnabled())
+    			getLogger().debug("Created EventValidity for source: "+validity);
+    	
+    	} catch (Exception e) {
+    		if(getLogger().isErrorEnabled())
+    			getLogger().error("could not create EventValidity!",e);
+    	}
+    	
+    	if( validity == null ) {
+    		if(getLogger().isDebugEnabled())
+    			getLogger().debug("Falling back to TimeStampValidity!");
+    		
+    		final long lm = getLastModified();
+            if (lm > 0) {
+                validity = new TimeStampValidity(lm);
+            }
+    	}
+        
+        return validity;
     }
 
     /**
@@ -534,7 +570,7 @@ public class WebDAVSource extends AbstractLogEnabled
             } else {
                 childURL = new HttpURL(this.url, childName);
             }
-            return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger());
+            return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger(), eventfactory);
         } catch (URIException e) {
             throw new SourceException("Failed to create child", e);
         }
@@ -615,7 +651,7 @@ public class WebDAVSource extends AbstractLogEnabled
             } else {
                 parentURL = new HttpURL(this.url, path);
             }
-            return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger());
+            return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger(), eventfactory);
         } catch (URIException e) {
             throw new SourceException("Failed to create parent", e);
         }
