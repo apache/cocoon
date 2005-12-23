@@ -41,6 +41,7 @@ import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
+import org.apache.cocoon.util.JMXUtils;
 
 /**
  * Default component selector for Cocoon's components.
@@ -143,6 +144,8 @@ public class StandaloneServiceSelector
         } else {
             info = new ComponentInfo();
             info.fill(configuration);
+            info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), serviceManager));
+            info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), componentClass.getName()));
         }
         info.setConfiguration(configuration);
         info.setServiceClassName(componentClass.getName());
