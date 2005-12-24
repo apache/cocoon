@@ -47,6 +47,9 @@
 # 
 # JETTY_ADMIN_PORT
 #   The port where the jetty web administration should bind
+# 
+# JETTY_JMX_PORT
+#   The port where the jetty JMX HTTP Adapter should bind
 #
 
 
@@ -57,6 +60,8 @@ usage()
     echo "  cli               Run Cocoon from the command line"
     echo "  servlet           Run Cocoon in a servlet container (default)"
     echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
+    echo "  servlet-jmx       Run Cocoon in a servlet container and turn on container web JMX adapter"
+    echo "  servlet-admin-jmx Run Cocoon in a servlet container and turn on container web administration and JMX adapter"
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
     echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
     echo "  osgi              Run Cocoon with the experimental OSGI kernel"
@@ -117,6 +122,10 @@ if [ "$JETTY_ADMIN_PORT" = "" ] ; then
   JETTY_ADMIN_PORT='8889'
 fi
 
+if [ "$JETTY_JMX_PORT" = "" ] ; then
+  JETTY_JMX_PORT='8890'
+fi
+
 if [ "$JAVA_DEBUG_ARGS" = "" ] ; then
   JAVA_DEBUG_ARGS='-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n'
 fi
@@ -141,6 +150,7 @@ ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
 LOADER_LIB="${COCOON_HOME}/tools/loader"
+BLOCKS="-Dorg.apache.cocoon.processor=org.apache.cocoon.blocks.BlocksManager -Dorg.apache.cocoon.configuration=/wiring.xml"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
@@ -148,12 +158,16 @@ CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 JETTY=-Dloader.main.class=org.mortbay.jetty.Server
 JETTY_CONF="$COCOON_HOME/tools/jetty/conf"
 JETTY_MAIN="$JETTY_CONF/main.xml"
+JETTY_JMX_MAIN="$JETTY_CONF/main-jmx.xml"
 JETTY_ADMIN="$JETTY_CONF/admin.xml"
+JETTY_JMX_ADMIN="$JETTY_CONF/admin-jmx.xml"
 JETTY_WEBAPP="-Dwebapp=$COCOON_WEBAPP_HOME"
 JETTY_HOME="-Dhome=$COCOON_HOME"
 JETTY_PORT_ARGS="-Djetty.port=$JETTY_PORT"
 JETTY_ADMIN_ARGS="-Djetty.admin.port=$JETTY_ADMIN_PORT"
-JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP}${ENDORSED_LIBS}"
+JETTY_JMX_ARGS="-Djetty.jmx.port=$JETTY_JMX_PORT"
+JETTY_START_CONF="-DSTART=$COCOON_HOME/tools/jetty/conf/jetty-start.config"
+JETTY_START="-jar $COCOON_HOME/tools/jetty/jetty-start-5.1.8.jar"
 
 # ----- Do the action ----------------------------------------------------------
 
@@ -163,23 +177,31 @@ case "$ACTION" in
         ;;
 
   servlet)
-        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN
         ;;
 
   servlet-admin)
-        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN $JETTY_ADMIN
+        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN $JETTY_ADMIN
+        ;;
+
+  servlet-jmx)
+        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_JMX_MAIN
+        ;;
+
+  servlet-admin-jmx)
+        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN $JETTY_JMX_ADMIN
         ;;
 
   servlet-debug)
-        $JAVA $JAVA_OPTIONS $JAVA_DEBUG_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        $JAVA $JAVA_OPTIONS $JAVA_DEBUG_ARGS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN
         ;;
 
   servlet-profile)
-        $JAVA $JAVA_OPTIONS $JAVA_PROFILE_ARGS -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        $JAVA $JAVA_OPTIONS $JAVA_PROFILE_ARGS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN
         ;;
 
   blocks)
-        $JAVA $JAVA_OPTIONS -Dorg.apache.cocoon.processor=org.apache.cocoon.blocks.BlocksManager -Dorg.apache.cocoon.configuration=/wiring.xml -cp $LOADER_LIB $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_LIBRARIES $JETTY_WEBAPP $JETTY_HOME $JETTY $LOADER $JETTY_MAIN
+        $JAVA $JAVA_OPTIONS $BLOCKS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN
         ;;
 
   osgi)

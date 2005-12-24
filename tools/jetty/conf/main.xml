@@ -23,6 +23,7 @@
         <Set name="MaxThreads">100</Set>
         <Set name="MaxIdleTimeMs">30000</Set>
         <Set name="LowResourcePersistTimeMs">5000</Set>
+        <Set name="PoolName">Listener</Set>
       </New>
     </Arg>
   </Call>
