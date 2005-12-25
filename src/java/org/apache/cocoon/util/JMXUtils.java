@@ -23,6 +23,7 @@ import org.apache.cocoon.core.container.CoreServiceManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,53 +80,67 @@ public class JMXUtils {
                                              final Logger logger)
     {
         if (getMBeanServer() != null) {
-            final Class clazz = bean.getClass();
-            final String mbeanClassName = clazz.getName() + "MBean";
+            final Class beanClass = bean.getClass();
+            final String beanClassName = beanClass.getName();
+            final String mbeanClassName = beanClassName + "MBean";
             ObjectName on = null;
             Object comp = null;
             try {
-                final Class mbeanClass = clazz.getClassLoader().loadClass(mbeanClassName);
-                final Constructor ctor = mbeanClass.getConstructor(new Class[] {clazz});
+                // try to find a MBean for bean
+                final Class mbeanClass = beanClass.getClassLoader().loadClass(mbeanClassName);
+                final Constructor ctor = mbeanClass.getConstructor(new Class[] {beanClass});
                 final Object mbean = ctor.newInstance( new Object[] {bean});
-                final String jmxDomain = info.getJmxDomain();
-                String jmxGroup = info.getConfiguration().getAttribute( CoreServiceManager.JMX_NAME_ATTR_NAME, null );
-                if (jmxGroup == null ) {
-                    // otherwise construct one from the service class name
-                    final StringBuffer sb = new StringBuffer();
-                    final List groups = new ArrayList();
-                    int i = info.getServiceClassName().indexOf('.');
-                    int j = 0;
-                    while(i > 0) {
-                        groups.add(info.getServiceClassName().substring(j,i));
-                        j = i+1;
-                        i = info.getServiceClassName().indexOf('.', i+1);
-                    }
-                    groups.add(info.getServiceClassName().substring(j));
-                    for (i = 0; i < groups.size()-1; i++) {
-                        sb.append("group");
-                        if (i > 0) {
-                            sb.append(i);
-                        }
-                        sb.append('=');
-                        sb.append(groups.get(i));
-                        sb.append(',');
-                    }
-                    sb.append("item=").append(groups.get(groups.size()-1));
-                    jmxGroup = sb.toString();
+                
+                // see if MBean supplies some JMX ObjectName parts
+                final String mBeanSuppliedJmxDomain = callGetter(mbean, "getJmxDomain", logger);
+                final String mBeanSuppliedJmxName = callGetter(mbean, "getJmxName", logger);
+                final String mBeanSuppliedJmxNameAdditions = callGetter(mbean, "getJmxNameAddition", logger);
+
+                // construct a JMX ObjectName instance
+                final StringBuffer objectNameBuf = new StringBuffer();
+                if(mBeanSuppliedJmxDomain != null) {
+                    objectNameBuf.append(mBeanSuppliedJmxDomain);
+                } else {
+                    objectNameBuf.append(info.getJmxDomain());
                 }
-                on = new ObjectName( jmxDomain + ":" + jmxGroup );
+                objectNameBuf.append(':');
+                if(mBeanSuppliedJmxName != null) {
+                    objectNameBuf.append(mBeanSuppliedJmxName);
+                } else if (info.getConfiguration().getAttribute( CoreServiceManager.JMX_NAME_ATTR_NAME, null ) != null) {
+                    objectNameBuf.append(info.getConfiguration().getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME,null));
+                } else {
+                    // if we do not have the name parts we'll construct one from the bean class name           
+                    objectNameBuf.append(genDefaultJmxName(beanClass));
+                } 
+                if(mBeanSuppliedJmxNameAdditions != null) {
+                    objectNameBuf.append(',');
+                    objectNameBuf.append(mBeanSuppliedJmxNameAdditions);
+                }
+                on = new ObjectName(objectNameBuf.toString());
+                int instance = 1;
+                while(mbeanServer.isRegistered(on)) {
+                    instance++;
+                    on = new ObjectName(objectNameBuf.toString() + ",instance=" + instance);
+                }
+
+                if(logger.isDebugEnabled()) {
+                    logger.debug("Establishing JMX support for bean " + bean.getClass().getName() +
+                                 ",info.serviceClassName=" + info.getServiceClassName() );
+                }
                 return mbeanServer.registerMBean(mbean,on);
             } catch (final ClassNotFoundException cnfe) {
                 // happens if a component doesn't have a MBean to support it for management
-                logger.debug( "Class "+info.getServiceClassName()+" doesn't have a supporting MBean called " + mbeanClassName );
+                if(logger.isDebugEnabled()) {
+                    logger.debug( "Class "+beanClass.getName()+" doesn't have a supporting MBean called " + mbeanClassName );
+                }
             } catch (final NoSuchMethodException nsme) {
                 logger.warn( "MBean " + mbeanClassName + " doesn't have a constructor that accepts an instance of " + info.getServiceClassName(), nsme);
             } catch (final InvocationTargetException ite) {
-                logger.warn( "Cannot instantiate class " + mbeanClassName, ite);
+                logger.warn( "Cannot invoke constructor on class " + mbeanClassName, ite);
             } catch (final InstantiationException ie) {
                 logger.warn( "Cannot instantiate class " + mbeanClassName, ie);
             } catch (final IllegalAccessException iae) {
-                logger.warn( "Cannot instantiate class " + mbeanClassName, iae);
+                logger.warn( "Cannot access class " + mbeanClassName, iae);
             } catch (final MalformedObjectNameException mone) {
                 logger.warn( "Invalid ObjectName '" + on + "' for MBean " + mbeanClassName, mone);
             } catch (final InstanceAlreadyExistsException iaee) {
@@ -195,5 +210,51 @@ public class JMXUtils {
             return (MBeanServer)servers.get(0);
         }
         return null;
+    }
+    
+    private static String callGetter(final Object mbean, final String name, final Logger logger) {
+        final Method[] methods = mbean.getClass().getMethods();
+        for(int i = 0; i < methods.length; i++) {
+            if(methods[i].getName().equals(name)) {
+                try {
+                    return methods[i].invoke(mbean, null).toString();
+                } catch(final Exception e) {
+                    logger.warn( "Method '" + name + "' cannot be accessed on MBean " + mbean.getClass().getName());
+                    return null;
+                }
+                
+            }
+        }
+        return null;
+    }
+    
+    public static String genDefaultJmxName(final Class clazz)
+    {
+        return genDefaultJmxName(clazz.getName());
+    }
+    
+    public static String genDefaultJmxName(final String className)
+    {
+        final StringBuffer nameBuf = new StringBuffer();
+        final List groups = new ArrayList();
+        int i = className.indexOf('.');
+        int j = 0;
+        while(i > 0) {
+            groups.add(className.substring(j,i));
+            j = i+1;
+            i = className.indexOf('.', i+1);
+        }
+        groups.add(className.substring(j));
+        for (i = 0; i < groups.size()-1; i++) {
+            nameBuf.append("group");
+            if (i > 0) {
+                nameBuf.append(i);
+            }
+            nameBuf.append('=');
+            nameBuf.append(groups.get(i));
+            nameBuf.append(',');
+        }
+        nameBuf.append("item=").append(groups.get(groups.size()-1));
+        return nameBuf.toString();
     }
 }
