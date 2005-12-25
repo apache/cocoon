@@ -68,7 +68,7 @@ extends AbstractFactoryHandler {
     /**
      * The maximum size of the pool.
      */
-    protected final int max;
+    private final int max;
 
     /**
      * List of the Poolable instances which are available for use.
@@ -78,12 +78,12 @@ extends AbstractFactoryHandler {
     /**
      * Store the size of the ready list to optimize operations which require this value.
      */
-    protected int readySize;
+    private int readySize;
 
     /**
      * Total number of Poolable instances in the pool
      */
-    protected int size;
+    private int size;
     
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
@@ -243,5 +243,29 @@ extends AbstractFactoryHandler {
      */
     protected void doPut(Object component) throws Exception {
         this.putIntoPool(component);
+    }
+
+    /**
+     * @return Returns the max.
+     */
+    protected int getMax()
+    {
+        return max;
+    }
+
+    /**
+     * @return Returns the readySize.
+     */
+    protected int getReadySize()
+    {
+        return readySize;
+    }
+
+    /**
+     * @return Returns the size.
+     */
+    protected int getSize()
+    {
+        return size;
     }
 }
