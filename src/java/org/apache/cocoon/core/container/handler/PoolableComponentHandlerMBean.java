@@ -17,6 +17,7 @@
 package org.apache.cocoon.core.container.handler;
 
 
+import org.apache.cocoon.util.JMXUtils;
 import org.mortbay.util.jmx.ModelMBeanImpl;
 
 import javax.management.InstanceNotFoundException;
@@ -72,22 +73,31 @@ extends ModelMBeanImpl {
 
     public int getDefaultMaxPoolSize()
     {
-        return handler.DEFAULT_MAX_POOL_SIZE;
+        return NonThreadSafePoolableComponentHandler.DEFAULT_MAX_POOL_SIZE;
     }
 
     public int getMaxPoolSize()
     {
-        return handler.max;
+        return handler.getMax();
     }
 
     public int getReadyPoolSize()
     {
-        return handler.readySize;
+        return handler.getReadySize();
     }
 
     public int getTotalPoolSize()
     {
-        return handler.size;
+        return handler.getSize();
     }
-
+    
+    public String getJmxName() 
+    {
+        return JMXUtils.genDefaultJmxName(handler.getInfo().getServiceClassName());
+    }
+ 
+    public String getJmxNameAddition()
+    {
+        return "handler=poolable"; 
+    }
 }
