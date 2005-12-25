@@ -62,6 +62,10 @@ usage()
     echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
     echo "  servlet-jmx       Run Cocoon in a servlet container and turn on container web JMX adapter"
     echo "  servlet-admin-jmx Run Cocoon in a servlet container and turn on container web administration and JMX adapter"
+    if [ "$JAVA_VERSION" -gt 4 ];then
+      echo "  servlet-pms       Run Cocoon in a servlet container and turn on platform MBean server"
+      echo "  servlet-admin-pms Run Cocoon in a servlet container and turn on container web administration and platform MBean server"
+    fi
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
     echo "  servlet-profile   Run Cocoon in a servlet container and turn on JVM profiling"
     echo "  osgi              Run Cocoon with the experimental OSGI kernel"
@@ -145,6 +149,10 @@ esac
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
 JAVA="$JAVA_HOME/bin/java"
+JAVA_VERSION=$($JAVA -version 2>&1 | awk '/java version/ {print substr($3,4,1)}')
+if [ "$JAVA_VERSION" -gt 4 ]; then
+  JAVA_PLATFORM_SERVER="-Dcom.sun.management.jmxremote"
+fi
 ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
@@ -188,8 +196,16 @@ case "$ACTION" in
         $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_JMX_MAIN
         ;;
 
+  servlet-pms)
+        $JAVA $JAVA_OPTIONS $JAVA_PLATFORM_SERVER $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN
+        ;;
+
   servlet-admin-jmx)
-        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN $JETTY_JMX_ADMIN
+        $JAVA $JAVA_OPTIONS $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_JMX_ADMIN
+        ;;
+
+  servlet-admin-pms)
+        $JAVA $JAVA_OPTIONS $JAVA_PLATFORM_SERVER $ENDORSED $PARSER $JETTY_PORT_ARGS $JETTY_ADMIN_ARGS $JETTY_JMX_ARGS $JETTY_START_CONF $JETTY_WEBAPP $JETTY_HOME $JETTY $JETTY_START $JETTY_MAIN $JETTY_ADMIN
         ;;
 
   servlet-debug)
