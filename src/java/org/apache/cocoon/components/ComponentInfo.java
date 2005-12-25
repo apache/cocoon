@@ -219,6 +219,9 @@ public final class ComponentInfo {
         if (this.jmxDomain == null && this.configuration != null) {
             this.setJmxDomain(getConfiguration().getAttribute(CoreServiceManager.JMX_DOMAIN_ATTR_NAME, null));
         }
+        if(this.jmxDomain == null) {
+            return CoreServiceManager.JMX_DEFAULT_DOMAIN_NAME;
+        }
         return this.jmxDomain;
     }
     
