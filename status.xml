@@ -175,6 +175,9 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="GP" type="add">
+      Added JMX support to the core ECM++ 
+    </action>
     <action dev="AN" type="fix">
       XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
       logicsheets.  (Suggestion by Vadim Gritsenko).
