@@ -175,11 +175,6 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
-    <action dev="LG" type="add">
-      New syntax for jx:attribute tag: apart from &lt;jx:atttribute name="text" value="abc"/&gt; one can do:
-      &lt;jx:atttribute name="text"&gt;abc&lt;/jx:attribute&gt; This is most useful for nesting jx:* tags:
-      &lt;jx:attribute name="value"&gt;&lt;jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/&gt;&lt;/jx:attribute&gt;
-    </action>
     <action dev="AN" type="fix">
       XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
       logicsheets.  (Suggestion by Vadim Gritsenko).
