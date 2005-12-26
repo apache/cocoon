@@ -22,9 +22,7 @@ import java.util.Properties;
 /**
  * The <code>Constants</code> used throughout the core of the Cocoon engine.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class Constants {
 

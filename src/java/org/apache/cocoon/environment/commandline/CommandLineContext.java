@@ -31,10 +31,8 @@ import java.io.InputStream;
 /**
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
- * @author ?
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class CommandLineContext extends AbstractLogEnabled implements Context {
 
     /** The context directory path*/

@@ -33,8 +33,7 @@ import org.apache.cocoon.environment.impl.AbstractRequest;
  * just forwards every methods. It is the base class for all wrapper
  * implementations.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.2
  */
 public abstract class AbstractRequestWrapper extends AbstractRequest {

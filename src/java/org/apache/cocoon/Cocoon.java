@@ -67,10 +67,7 @@ import java.util.Map;
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Cocoon
         extends AbstractLogEnabled

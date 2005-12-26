@@ -21,10 +21,8 @@ import java.io.IOException;
 /**
  * Interface for an redirector abstraction
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: Redirector.java,v 1.4 2004/05/25 07:28:24 cziegeler Exp $
+ * @version $Id$
  */
-
 public interface Redirector {
 
     /**

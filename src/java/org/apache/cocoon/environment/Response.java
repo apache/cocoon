@@ -18,14 +18,10 @@ package org.apache.cocoon.environment;
 import java.util.Locale;
 
 /**
- * Defines an interface to provide client response information .
+ * Defines an interface to provide client response information.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
- *
+ * @version $Id$
  */
-
 public interface Response {
 
     /**

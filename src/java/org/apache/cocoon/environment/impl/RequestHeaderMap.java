@@ -24,7 +24,6 @@ import java.util.Set;
 /**
  * Request headers map
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class RequestHeaderMap extends BaseMap {

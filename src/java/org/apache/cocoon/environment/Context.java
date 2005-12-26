@@ -24,11 +24,9 @@ import java.io.InputStream;
 /**
  * Defines an interface to provide context information.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id$
+ * @version $Id$
  *
  */
-
 public interface Context {
 
     Object getAttribute(String name);

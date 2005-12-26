@@ -38,11 +38,7 @@ import org.w3c.dom.Document;
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
  * with file destination.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Main {
 

@@ -26,7 +26,6 @@ import org.apache.cocoon.environment.Environment;
  * For developing your own components/applications based on Cocoon, you shouldn't 
  * really need it.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  * @since 2.2
  */

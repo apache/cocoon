@@ -24,10 +24,7 @@ import org.apache.cocoon.environment.SourceResolver;
 
 /**
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface Processor {
 

@@ -31,7 +31,6 @@ import org.apache.commons.collections.IteratorUtils;
  * It has the same properties except that the url and the parameters
  * are different.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public final class RequestWrapper extends AbstractRequestWrapper {

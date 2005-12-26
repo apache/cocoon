@@ -19,12 +19,10 @@ package org.apache.cocoon;
  * This interface is implemented by those classes that change
  * their behavior/results over time (non-ergodic).
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- * @version CVS $Id: Modifiable.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version $Id$
  */
-public interface Modifiable
-{
+public interface Modifiable {
+
     /**
      * Queries the class to estimate its ergodic period termination.
      * <br>

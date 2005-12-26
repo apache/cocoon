@@ -36,9 +36,6 @@ import java.util.Map;
  * Objects stored in the request using the <code>REQUEST_SCOPE</code> are
  * only available for the current (sub) request.
  * 
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @version $Id$
  */
 public interface Request {

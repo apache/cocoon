@@ -21,8 +21,7 @@ import org.apache.cocoon.util.location.Location;
  * This Exception is thrown every time there is a problem in finding
  * a resource.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ResourceNotFoundException extends ProcessingException {
 

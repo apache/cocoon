@@ -21,10 +21,8 @@ import java.io.IOException;
 /**
  * Interface for a permanent redirector abstraction
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PermanentRedirector.java,v 1.2 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public interface PermanentRedirector {
 
     /**

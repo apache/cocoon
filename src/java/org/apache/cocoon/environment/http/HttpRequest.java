@@ -41,7 +41,6 @@ import org.apache.commons.collections.IteratorUtils;
  * Implements the {@link org.apache.cocoon.environment.Request} interface
  * to provide request information in the HTTP servlets environment.
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public final class HttpRequest extends AbstractRequest {

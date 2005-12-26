@@ -50,11 +50,8 @@ package org.apache.cocoon.environment;
  * created using Version 0 to ensure the best interoperability.
  *
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
- *
+ * @version $Id$
  */
-
 public interface Cookie {
 
     /**
