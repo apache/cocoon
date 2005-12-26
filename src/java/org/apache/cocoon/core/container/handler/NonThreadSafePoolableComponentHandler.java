@@ -84,6 +84,11 @@ extends AbstractFactoryHandler {
      * Total number of Poolable instances in the pool
      */
     private int size;
+
+    /**
+     * Total number of Poolable instances created 
+     */
+    private int highWaterMark;
     
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
@@ -164,6 +169,7 @@ extends AbstractFactoryHandler {
                 //  instantiated.
                 poolable = this.factory.newInstance();
                 this.size++;
+                this.highWaterMark = (this.highWaterMark < this.size ? this.size : this.highWaterMark);
 
                 if ( this.logger.isDebugEnabled() ) {
                     this.logger.debug( "Created a new " + poolable.getClass().getName()
@@ -267,5 +273,13 @@ extends AbstractFactoryHandler {
     protected int getSize()
     {
         return size;
+    }
+
+    /**
+     * @return Returns the highWaterMark.
+     */
+    protected int getHighWaterMark()
+    {
+        return highWaterMark;
     }
 }
