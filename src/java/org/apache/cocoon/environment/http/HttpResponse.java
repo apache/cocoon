@@ -28,10 +28,8 @@ import java.util.Locale;
  * Implements the {@link org.apache.cocoon.environment.Response} interface
  * to provide response functionality in the HTTP servlets environment.
  * 
- * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: HttpResponse.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public final class HttpResponse implements Response {
 
     /** The real HttpServletResponse object */

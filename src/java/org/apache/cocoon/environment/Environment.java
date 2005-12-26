@@ -23,10 +23,7 @@ import java.util.Map;
 /**
  * Base interface for an environment abstraction
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.9 2004/05/25 07:28:24 cziegeler Exp $
+ * @version $Id$
  */
 public interface Environment {
 

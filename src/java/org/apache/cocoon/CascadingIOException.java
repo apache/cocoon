@@ -27,10 +27,8 @@ import javax.xml.transform.SourceLocator;
 /**
  * This is a wrapping IOException.
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CascadingIOException.java,v 1.2 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class CascadingIOException 
 extends IOException 
 implements CascadingThrowable {

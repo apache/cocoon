@@ -30,10 +30,8 @@ import java.util.Map;
  * should be done in due cause since this ties the application to that particular
  * environment.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class ObjectModelHelper {
 
     /** Key for the environment {@link Request} in the object model. */

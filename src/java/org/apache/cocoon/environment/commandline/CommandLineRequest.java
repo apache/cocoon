@@ -36,11 +36,8 @@ import org.apache.commons.lang.NotImplementedException;
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
-
 /*
  * NOTE: method with a non-compliant implementation are marked with FIXME
  * and should be fixed in the future if required

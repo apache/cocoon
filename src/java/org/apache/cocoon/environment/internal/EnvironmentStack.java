@@ -30,7 +30,6 @@ import org.xml.sax.SAXException;
  * This is a special implementation of a stack for the handling of the
  * cocoon protocol and the sitemap source resolving.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  * @since 2.2
  */

@@ -38,7 +38,7 @@ import org.mozilla.javascript.ScriptableObject;
  * 
  * Work-in-progress, derived from JXTemplateGenerator
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TemplateObjectModelHelper {
     private static Scriptable rootScope = null;

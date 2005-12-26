@@ -23,10 +23,8 @@ import java.util.Locale;
 /**
  * Creates a specific servlet response simulation from command line usage.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: CommandLineResponse.java,v 1.2 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class CommandLineResponse implements Response {
 
     public String getCharacterEncoding() { return null; }

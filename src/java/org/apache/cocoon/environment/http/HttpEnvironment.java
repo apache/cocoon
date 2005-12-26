@@ -30,8 +30,7 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * HTTP Servlet environment.
  *
- * @author <a herf="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class HttpEnvironment extends AbstractEnvironment {
 

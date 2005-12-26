@@ -28,10 +28,8 @@ import org.apache.cocoon.environment.impl.AbstractContext;
 /**
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
- * @author ?
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class HttpContext extends AbstractContext {
 
     /** The ServletContext */

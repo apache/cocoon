@@ -41,8 +41,7 @@ import org.w3c.dom.Node;
 /**
  * Ant task for running Cocoon. Allows for the embedding of Cocoon into 
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CocoonTask extends Task implements DynamicConfigurator {
 

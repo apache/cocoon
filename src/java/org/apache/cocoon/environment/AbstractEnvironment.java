@@ -29,10 +29,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
 /**
  * Base class for any environment
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 

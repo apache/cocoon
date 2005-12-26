@@ -21,7 +21,6 @@ import java.util.Set;
 /**
  * Base class for context maps
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public abstract class BaseMap extends java.util.AbstractMap {

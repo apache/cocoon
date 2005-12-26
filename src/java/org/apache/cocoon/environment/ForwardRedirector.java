@@ -26,8 +26,7 @@ import org.apache.cocoon.ProcessingException;
  * <p>
  * Concrete subclasses have to define the <code>cocoonRedirect()</code> method.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.14 2004/05/25 07:28:24 cziegeler Exp $
+ * @version $Id$
  */
 public abstract class ForwardRedirector 
 extends AbstractLogEnabled 

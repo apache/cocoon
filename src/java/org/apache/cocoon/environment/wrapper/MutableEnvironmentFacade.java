@@ -35,8 +35,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @see org.apache.cocoon.components.source.impl.SitemapSource
  *
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MutableEnvironmentFacade implements Environment {
 

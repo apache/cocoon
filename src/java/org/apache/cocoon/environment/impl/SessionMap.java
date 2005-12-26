@@ -24,7 +24,6 @@ import java.util.Set;
 /**
  * Session attributes map
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class SessionMap extends BaseMap {

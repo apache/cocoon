@@ -52,11 +52,8 @@ import org.apache.cocoon.environment.Cookie;
  * created using Version 0 to ensure the best interoperability.
  *
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HttpCookie.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
- *
+ * @version $Id$
  */
-
 public final class HttpCookie
 implements Cookie {
 

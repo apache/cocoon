@@ -43,11 +43,9 @@ import java.util.Enumeration;
  * (<code>Context</code>), so information stored in one context
  * will not be directly visible in another.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  *
  */
-
 public final class HttpSession
 extends AbstractSession {
 

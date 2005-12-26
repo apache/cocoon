@@ -28,8 +28,7 @@ import java.util.StringTokenizer;
  * a query string and creates a parameter representation required
  * for the <code>Request</code> object.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestParameters.java,v 1.5 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version $Id$
  */
 public final class RequestParameters
 implements Serializable {

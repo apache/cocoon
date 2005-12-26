@@ -25,8 +25,7 @@ import java.util.Hashtable;
  *
  * Command-line version of Http Session.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class CommandLineSession
 extends AbstractSession {
