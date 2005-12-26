@@ -42,6 +42,7 @@ extends ModelMBeanImpl {
         defineAttribute("maxPoolSize", false, true);
         defineAttribute("readyPoolSize", false, true);
         defineAttribute("totalPoolSize", false, true);
+        defineAttribute("maxCreated", false, true);
     }
     /**
      * Construction of PoolableComponentHandlerMBean
@@ -86,6 +87,11 @@ extends ModelMBeanImpl {
         return handler.getReadySize();
     }
 
+    public int getHighWaterMark()
+    {
+        return handler.getHighWaterMark();
+    }
+
     public int getTotalPoolSize()
     {
         return handler.getSize();
@@ -98,6 +104,6 @@ extends ModelMBeanImpl {
  
     public String getJmxNameAddition()
     {
-        return "handler=poolable"; 
+        return "type=PoolableHandler"; 
     }
 }
