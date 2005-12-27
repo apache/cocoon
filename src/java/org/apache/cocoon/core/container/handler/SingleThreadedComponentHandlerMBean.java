@@ -24,7 +24,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
 
 /**
- * The ThreadSafeComponentHandlerMBean adds JMX managability for ThreadSafeComponentHandler.
+ * The SingleThreadedComponentHandlerMBean adds JMX managability for SingleThreadedComponentHandler.
  *
  * @version $Id: ThreadSafeComponentHandler.java 312637 2005-10-10 13:00:42Z cziegeler $
  * @since 2.2
