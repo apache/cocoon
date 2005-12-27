@@ -359,7 +359,7 @@ public class JMXUtils {
     private static MBeanServer getInitialMBeanServer() {
         final List servers = MBeanServerFactory.findMBeanServer(null);
 
-        if(servers.size() > 0) {s
+        if(servers.size() > 0) {
             return (MBeanServer)servers.get(0);
         }
 
