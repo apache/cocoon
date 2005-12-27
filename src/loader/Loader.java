@@ -25,8 +25,7 @@ import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
 /**
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Loader {
 
