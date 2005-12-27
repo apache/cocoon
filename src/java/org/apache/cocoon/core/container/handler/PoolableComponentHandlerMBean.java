@@ -42,7 +42,7 @@ extends ModelMBeanImpl {
         defineAttribute("maxPoolSize", false, true);
         defineAttribute("readyPoolSize", false, true);
         defineAttribute("totalPoolSize", false, true);
-        defineAttribute("maxCreated", false, true);
+        defineAttribute("highWaterMark", false, true);
     }
     /**
      * Construction of PoolableComponentHandlerMBean
