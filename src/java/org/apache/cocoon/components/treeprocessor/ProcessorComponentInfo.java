@@ -45,7 +45,7 @@ import org.apache.cocoon.transformation.Transformer;
  * container implementation. This is now a regular component that also "listens" to modifications
  * of the service manager when it is built.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ProcessorComponentInfo {
     

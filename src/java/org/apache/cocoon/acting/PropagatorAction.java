@@ -109,9 +109,7 @@ import java.util.Map;
  * </tr>
  * </tbody></table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PropagatorAction extends ServiceableAction
                               implements Configurable, ThreadSafe {

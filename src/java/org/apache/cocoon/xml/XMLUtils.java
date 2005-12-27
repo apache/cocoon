@@ -44,9 +44,6 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  * XML utility methods.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class XMLUtils {

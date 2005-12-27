@@ -37,9 +37,7 @@ import org.apache.cocoon.components.ContextHelper;
 /**
  * A factory for 'module:' sources (see {@link ModuleSource}). 
  *
- * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstrom</a>
  */
-
 public class ModuleSourceFactory extends AbstractLogEnabled
   implements SourceFactory, Serviceable, Contextualizable, ThreadSafe {
     

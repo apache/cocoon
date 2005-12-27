@@ -40,8 +40,7 @@ import org.apache.excalibur.source.SourceValidity;
  * The CachingPointProcessingPipeline
  *
  * @since 2.1
- * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline {

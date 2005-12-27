@@ -33,8 +33,7 @@ package org.apache.cocoon.generation;
  * the Generator instance returned by the {@link #getInstance()}.</p>
  *
  * @since 2.2
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface GeneratorFactory {
 

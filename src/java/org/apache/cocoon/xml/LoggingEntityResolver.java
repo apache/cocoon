@@ -28,8 +28,7 @@ import java.util.Set;
 /**
  * Logging entity resolver to assist in caching.
  *
- * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Id: LoggingEntityResolver.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version $Id$
  */
 public class LoggingEntityResolver extends AbstractLogEnabled implements EntityResolver {
 

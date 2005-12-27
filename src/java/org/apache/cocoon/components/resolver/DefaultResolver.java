@@ -29,8 +29,7 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  *   &lt;parameter name="catalog" value="mycatalog"/&gt;
  * &lt;/entity-resolver&gt;
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.6 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  * @since 2.1
  */
 public class DefaultResolver

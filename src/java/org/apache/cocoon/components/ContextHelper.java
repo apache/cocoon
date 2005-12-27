@@ -28,10 +28,8 @@ import org.apache.cocoon.environment.Response;
  * A set of constants and methods to access the content of the context
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class ContextHelper {
 		
     /** Application <code>Context</code> Key for the current object model */

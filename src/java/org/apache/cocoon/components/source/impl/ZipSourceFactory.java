@@ -43,8 +43,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Where, <code>archive-url</code> can be any supported Cocoon URL, and
  * <code>file-path</code> is the path to the file within archive.
  *
- * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.1.8
  */
 public class ZipSourceFactory extends AbstractLogEnabled

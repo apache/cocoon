@@ -31,9 +31,7 @@ import java.io.IOException;
  * Stores objects on the filesystem: String objects as text files,
  * all other objects are serialized.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FilesystemStore.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
 public final class FilesystemStore
 extends AbstractFilesystemStore

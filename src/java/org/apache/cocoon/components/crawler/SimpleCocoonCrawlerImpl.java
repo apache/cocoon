@@ -40,8 +40,7 @@ import java.util.List;
 /**
  * A simple cocoon crawler.
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2004/03/28 14:28:04 antonio Exp $
+ * @version $Id$
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
 implements CocoonCrawler, Configurable, Disposable, Recyclable {
@@ -568,7 +567,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2004/03/28 14:28:04 antonio Exp $
+     * @version    $Id$
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;

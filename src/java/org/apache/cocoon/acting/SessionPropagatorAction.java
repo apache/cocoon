@@ -45,8 +45,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * &lt;/map:act&gt;
  * </pre>
  *
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SessionPropagatorAction extends AbstractConfigurableAction implements ThreadSafe {
 

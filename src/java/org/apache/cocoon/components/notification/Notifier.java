@@ -31,8 +31,6 @@ import java.util.Map;
 /**
  * Generates a representations of the specified Notifying Object.
  *
- * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class Notifier {

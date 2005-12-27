@@ -71,9 +71,8 @@ import java.util.List;
  *    request.
  * </ul>
  *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface Interpreter {
 

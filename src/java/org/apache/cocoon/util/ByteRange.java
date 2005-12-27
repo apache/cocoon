@@ -17,7 +17,7 @@ package org.apache.cocoon.util;
 
 /**
  * @author <a href="mailto:stuart.roebuck@adolos.co.uk">Stuart Roebuck</a>
- * @version CVS $Id: ByteRange.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 final public class ByteRange {
 

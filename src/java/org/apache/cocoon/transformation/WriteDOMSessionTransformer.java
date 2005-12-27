@@ -52,7 +52,7 @@ import java.util.Map;
  *   dom-root-element is the trigger that will be the root element of the DOM
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public class WriteDOMSessionTransformer

@@ -60,7 +60,6 @@ import java.util.Map;
  * <p>
  * If value for a key is not present in this bundle, parent bundle will be queried.
  *
- * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
  * @version $Id$
  */
 public class XMLResourceBundle extends AbstractLogEnabled

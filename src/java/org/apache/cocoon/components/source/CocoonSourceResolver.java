@@ -50,9 +50,8 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * from the Excalibur project.
  * @since 2.2
  * 
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id$
-*/
+ * @version $Id$
+ */
 public class CocoonSourceResolver 
 extends AbstractLogEnabled
 implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe {

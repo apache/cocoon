@@ -27,10 +27,8 @@ import java.util.Map;
 /**
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActSetNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
-
 public class ActSetNode extends SimpleParentProcessingNode
   implements ParameterizableProcessingNode {
 

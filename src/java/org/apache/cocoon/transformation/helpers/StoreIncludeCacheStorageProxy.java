@@ -26,7 +26,7 @@ import org.apache.excalibur.store.Store;
  * store.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: StoreIncludeCacheStorageProxy.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ *  @version $Id$
  *  @since   2.1
  */
 public final class StoreIncludeCacheStorageProxy

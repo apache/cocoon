@@ -21,8 +21,7 @@ package org.apache.cocoon.components;
  * 
  * @since 2.1
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface SitemapConfigurationHolder {
 

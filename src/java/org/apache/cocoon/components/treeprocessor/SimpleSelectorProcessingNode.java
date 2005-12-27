@@ -25,10 +25,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Base class for processing nodes that are based on a component in a Selector (act, match, select, etc).
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode
     implements Serviceable, Disposable {
 

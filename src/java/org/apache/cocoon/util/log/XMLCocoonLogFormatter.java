@@ -62,7 +62,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLCocoonLogFormatter implements Formatter {
 

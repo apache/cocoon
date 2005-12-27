@@ -18,7 +18,6 @@ package org.apache.cocoon.components.thread;
 /**
  * This class is responsible to create new Thread instances to run a command.
  *
- * @author <a href="mailto:info@otego.com">Otego AG, Switzerland</a>
  * @version $Id$
  */
 public class DefaultThreadFactory

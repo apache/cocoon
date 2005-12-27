@@ -265,7 +265,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class I18nTransformer extends AbstractTransformer
                              implements CacheableProcessingComponent,

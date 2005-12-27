@@ -29,8 +29,7 @@ import java.util.Map;
  * This is the action used to invalidate an HTTP session. The action returns
  * empty map if everything is ok, null otherwise.
  *
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: SessionInvalidatorAction.java,v 1.2 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionInvalidatorAction extends AbstractAction implements ThreadSafe
 {

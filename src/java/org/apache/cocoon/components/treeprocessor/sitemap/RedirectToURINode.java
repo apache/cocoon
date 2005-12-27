@@ -24,10 +24,8 @@ import org.apache.cocoon.environment.PermanentRedirector;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class RedirectToURINode extends AbstractProcessingNode {
 
     // TODO: It can implement ParameterizableProcessingNode to pass redirect parameters

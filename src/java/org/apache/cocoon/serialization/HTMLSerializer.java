@@ -40,7 +40,7 @@ import java.io.OutputStream;
  *
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public class HTMLSerializer extends AbstractTextSerializer {

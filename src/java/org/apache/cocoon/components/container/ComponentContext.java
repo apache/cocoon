@@ -31,10 +31,8 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
  * getting objects from the object model and other application information.
  * 
  * @see org.apache.cocoon.components.ContextHelper
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
+ * @version $Id$
  */
-
 public class ComponentContext 
     extends DefaultContext {
 

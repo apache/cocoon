@@ -21,9 +21,7 @@ import org.w3c.dom.Document;
  * This interface identifies classes producing instances of DOM
  * <code>Document</code> objects.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id: DOMFactory.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version $Id$
  */
 public interface DOMFactory {
     /**

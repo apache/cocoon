@@ -34,9 +34,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * composed of other InputModules.  In order to get at the Logger, use
  * getLogger().
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Serviceable, Disposable {

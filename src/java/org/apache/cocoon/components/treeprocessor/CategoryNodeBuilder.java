@@ -28,10 +28,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Builds a generic container node.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
   implements Configurable, ThreadSafe {
 

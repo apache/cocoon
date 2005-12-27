@@ -30,8 +30,7 @@ import org.apache.cocoon.ProcessingException;
  * (the source URI) into the URI to which the resulting page should be 
  * written (the destination URI).
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Target {
     // Defult type is append

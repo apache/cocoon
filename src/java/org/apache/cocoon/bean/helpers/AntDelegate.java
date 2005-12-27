@@ -26,8 +26,7 @@ import org.apache.cocoon.bean.helpers.BeanConfigurator;
  * Cocoon with a single method call that can happily be started with 
  * introspection (due to classpath issues).
  *  
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class AntDelegate {
 

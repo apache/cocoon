@@ -91,9 +91,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the form:
  * lt;map:parameter name="xmlns:<i>your prefix</i>" value="nsURI"/**"&gt;
  *
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 

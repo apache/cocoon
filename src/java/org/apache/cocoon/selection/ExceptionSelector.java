@@ -52,7 +52,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {

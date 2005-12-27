@@ -28,7 +28,7 @@ import org.apache.regexp.RESyntaxException;
  * here to make it more reusable.
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ElementAttributeMatching {
     /**

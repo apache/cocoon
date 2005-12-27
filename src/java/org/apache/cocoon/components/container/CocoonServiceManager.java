@@ -32,7 +32,7 @@ import org.apache.cocoon.core.container.CoreServiceManager;
 /**
  * Default service manager for Cocoon's components.
  *
- * @version CVS $Revision: 1.6 $Id: CocoonServiceManager.java 55165 2004-10-20 16:51:50Z cziegeler $
+ * @version $Id$
  */
 public class CocoonServiceManager extends CoreServiceManager {
     

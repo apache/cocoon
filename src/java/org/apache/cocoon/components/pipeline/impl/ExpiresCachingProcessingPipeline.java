@@ -47,8 +47,7 @@ import java.util.Map;
  * </map:pipe>
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ExpiresCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {

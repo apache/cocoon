@@ -26,7 +26,7 @@ import java.io.Serializable;
  *      is unique inside the components space.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentCacheKey.java,v 1.3 2004/05/19 08:42:40 cziegeler Exp $
+ * @version $Id$
  */
 public final class ComponentCacheKey
     implements Serializable {

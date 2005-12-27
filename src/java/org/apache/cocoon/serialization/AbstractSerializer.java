@@ -23,7 +23,7 @@ import java.io.OutputStream;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractSerializer.java,v 1.2 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public abstract class AbstractSerializer

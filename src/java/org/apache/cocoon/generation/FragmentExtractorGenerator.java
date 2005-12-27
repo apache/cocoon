@@ -41,8 +41,7 @@ import org.xml.sax.SAXException;
  * This is by no means complete yet, but it should prove useful, particularly
  * for offline generation.
  *
- * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FragmentExtractorGenerator extends ServiceableGenerator
                                         implements CacheableProcessingComponent {

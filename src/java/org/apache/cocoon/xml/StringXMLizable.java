@@ -30,7 +30,6 @@ import java.io.StringReader;
  * XMLizable a String
  * 
  * @since 2.1.7
- * @author Bruno Dumon
  */
 public class StringXMLizable implements XMLizable {
     private String data;

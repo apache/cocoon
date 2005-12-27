@@ -27,10 +27,8 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class ReadNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
 
     private String readerName;

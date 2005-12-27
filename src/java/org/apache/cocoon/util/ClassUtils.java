@@ -23,7 +23,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ClassUtils {
 

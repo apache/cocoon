@@ -27,8 +27,7 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {

@@ -38,9 +38,7 @@ package org.apache.cocoon.xml;
  * do anything with.
  * </p>
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLConsumer extends org.apache.excalibur.xml.sax.XMLConsumer {
 }

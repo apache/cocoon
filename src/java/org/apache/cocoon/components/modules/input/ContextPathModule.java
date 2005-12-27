@@ -70,7 +70,6 @@ import java.util.Vector;
  *  </pre>
  *  </p>
  *
- * @author <a href="mailto:giacomo at apache dor org">Giacomo Pati</a>
  * @version $Id$
  */
 public class ContextPathModule extends AbstractInputModule implements Serviceable, ThreadSafe {

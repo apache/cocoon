@@ -38,8 +38,6 @@ import org.apache.excalibur.source.SourceValidity;
  *  </li>
  * </ul>
  *
-= * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @version $Id$
  */
 public interface ProcessingPipeline {

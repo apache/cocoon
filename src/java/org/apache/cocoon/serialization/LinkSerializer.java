@@ -26,7 +26,7 @@ import java.io.PrintStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSerializer.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public class LinkSerializer 

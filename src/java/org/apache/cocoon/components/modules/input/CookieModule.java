@@ -31,8 +31,7 @@ import org.apache.cocoon.environment.http.HttpCookie;
 /**
  * Input module for cookies. Retrieves the value of the requested cookie.
  * 
- * @author Jon Evans <jon.evans@misgl.com>
- * @version CVS $Id:$
+ * @version $Id$
  */
 public class CookieModule extends AbstractInputModule implements ThreadSafe {
     

@@ -37,9 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * this is what we have to do to live in the bleeding edge. Once there will
  * be a way to remove this, that will be a happy day for XML and for Cocoon too.</p>
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.6 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 

@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: PageRules.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 public class PageRules {
 

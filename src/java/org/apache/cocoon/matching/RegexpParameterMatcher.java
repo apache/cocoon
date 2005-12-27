@@ -32,7 +32,7 @@ import java.util.Map;
  * </table>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RegexpParameterMatcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RegexpParameterMatcher extends AbstractRegexpMatcher
     implements Configurable

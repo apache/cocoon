@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Wrap a java.util.Map for JavaScript.
  *
- * @version CVS $Id: ScriptableMap.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ScriptableMap implements Scriptable, Wrapper {
 

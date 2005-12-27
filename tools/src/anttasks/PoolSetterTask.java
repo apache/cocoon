@@ -32,8 +32,7 @@ import org.xml.sax.SAXException;
  * Set the special attributes for the pooling.
  *
  * @since 2.1.5
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class PoolSetterTask extends Task {
 

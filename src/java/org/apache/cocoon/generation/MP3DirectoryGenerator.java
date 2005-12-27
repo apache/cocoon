@@ -33,8 +33,7 @@ import java.io.RandomAccessFile;
  *               Uses the last modification date of the directory and the contained files
  * 
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {

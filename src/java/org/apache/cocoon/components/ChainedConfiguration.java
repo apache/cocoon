@@ -24,8 +24,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * 
  * @since 2.1
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class ChainedConfiguration implements Configuration {
 

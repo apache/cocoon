@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class NetUtils {
 

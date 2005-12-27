@@ -20,10 +20,8 @@ import java.util.Map;
 /**
  *  Interface for Objects that can notify something.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id: Notifying.java,v 1.2 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public interface Notifying {
 
     /*

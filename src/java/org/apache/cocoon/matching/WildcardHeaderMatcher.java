@@ -33,9 +33,7 @@ import java.util.Map;
  * match against</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WildcardHeaderMatcher.java,v 1.3 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class WildcardHeaderMatcher extends AbstractWildcardMatcher
     implements Configurable

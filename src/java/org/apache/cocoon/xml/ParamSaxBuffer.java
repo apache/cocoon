@@ -31,8 +31,7 @@ import org.xml.sax.Attributes;
  * replaced by the content of another SaxBuffer if it is present in the map
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ParamSaxBuffer extends SaxBuffer {
 

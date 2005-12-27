@@ -25,12 +25,8 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * This a simple xml compiler which takes a byte array as input.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.6 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public final class XMLByteStreamInterpreter extends AbstractXMLProducer implements XMLDeserializer, Recyclable {
 
     private static final int START_DOCUMENT         = 0;

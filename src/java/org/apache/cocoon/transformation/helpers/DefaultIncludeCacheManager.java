@@ -57,7 +57,7 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id$
+ *  @version $Id$
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager

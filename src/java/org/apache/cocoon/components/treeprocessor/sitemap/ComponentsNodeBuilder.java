@@ -23,8 +23,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 /**
  * Handles &lt;map:components&gt;. It doesn't actually create a <code>ProcessingNode</code>.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
 

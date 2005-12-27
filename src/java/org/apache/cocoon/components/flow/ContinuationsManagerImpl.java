@@ -62,11 +62,9 @@ import org.apache.cocoon.environment.Session;
  * configuration option to true to activate this mode.</li>
  * </ul>
  * 
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu </a>
- * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem </a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled

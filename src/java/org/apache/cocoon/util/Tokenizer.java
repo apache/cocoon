@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
  * Sun's implementation.
  *
  * @author <A HREF="mailto:moravek@pobox.sk">Peter Moravek</A>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Tokenizer implements Enumeration {
 

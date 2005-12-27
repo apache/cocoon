@@ -50,7 +50,6 @@ import org.xml.sax.ext.LexicalHandler;
  * Implementation of a {@link Source} that gets its content
  * by invoking a pipeline.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public final class SitemapSource

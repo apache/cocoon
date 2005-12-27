@@ -70,8 +70,6 @@ import java.util.Map;
  *
  * @see org.apache.cocoon.transformation.ReadDOMSessionTransformer
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
- * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class SessionAttributeGenerator extends AbstractGenerator {

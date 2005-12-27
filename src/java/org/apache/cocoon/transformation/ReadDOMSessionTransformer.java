@@ -62,7 +62,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ReadDOMSessionTransformer extends AbstractTransformer  {
 

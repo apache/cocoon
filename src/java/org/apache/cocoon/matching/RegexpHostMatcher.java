@@ -26,7 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RegexpHostMatcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RegexpHostMatcher extends AbstractRegexpMatcher
 {

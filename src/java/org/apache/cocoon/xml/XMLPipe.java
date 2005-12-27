@@ -49,7 +49,6 @@ package org.apache.cocoon.xml;
  * belong to the namespace you are worried about should be passed on as is.
  * </p>
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLPipe extends XMLConsumer, XMLProducer {}

@@ -30,10 +30,8 @@ import org.apache.cocoon.selection.SwitchSelector;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {

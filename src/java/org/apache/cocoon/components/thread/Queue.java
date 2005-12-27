@@ -18,8 +18,7 @@ package org.apache.cocoon.components.thread;
 /**
  * Extension to add queue size reporting
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  *
  * @see EDU.oswego.cs.dl.util.concurrent.Channel
  */

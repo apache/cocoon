@@ -46,7 +46,7 @@ import java.util.Collections;
  * <p>Both {@link ContentHandler} and {@link LexicalHandler} are supported, the only
  * exception is that the setDocumentLocator event is not recorded.</p>
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SaxBuffer extends AbstractSAXFragment
                        implements XMLConsumer, Recyclable, Serializable {

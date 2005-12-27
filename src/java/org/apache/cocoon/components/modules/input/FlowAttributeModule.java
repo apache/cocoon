@@ -26,8 +26,7 @@ import java.util.Map;
  * To get access to the properties use XPath syntax. If requested
  * object is not found then an exception will be thrown.
  *
- * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstrom</a>
- * @version CVS $Id: FlowAttributeModule.java,v 1.2 2004/06/16 20:00:07 vgritsenko Exp $
+ * @version $Id$
  */
 public class FlowAttributeModule extends AbstractJXPathModule
     implements ThreadSafe {

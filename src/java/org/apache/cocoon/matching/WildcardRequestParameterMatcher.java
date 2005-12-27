@@ -36,7 +36,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardRequestParameterMatcher.java,v 1.3 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class WildcardRequestParameterMatcher extends AbstractWildcardMatcher
     implements Configurable

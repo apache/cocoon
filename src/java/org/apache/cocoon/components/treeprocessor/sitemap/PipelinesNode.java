@@ -29,10 +29,6 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Handles &lt;map:pipelines&gt;
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public final class PipelinesNode extends SimpleParentProcessingNode

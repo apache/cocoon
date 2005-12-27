@@ -35,8 +35,7 @@ import org.apache.excalibur.source.SourceUtil;
  * It cannot be used like other source factories
  * as it needs the current <code>Sitemap</code> as input.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.4 2004/05/25 07:28:24 cziegeler Exp $
+ * @version $Id$
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled

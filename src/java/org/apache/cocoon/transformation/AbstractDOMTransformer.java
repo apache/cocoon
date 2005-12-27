@@ -44,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
         implements DOMBuilder.Listener, Serviceable, Disposable {

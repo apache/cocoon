@@ -37,7 +37,7 @@ import java.util.Map;
  * The <code>ValidatorActionResult</code> object helper
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FormValidatorHelper {
 

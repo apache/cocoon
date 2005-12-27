@@ -73,10 +73,8 @@ import org.mozilla.javascript.tools.shell.Global;
 /**
  * Interface with the JavaScript interpreter.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         implements Configurable, Initializable {

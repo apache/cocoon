@@ -26,7 +26,7 @@ import org.xml.sax.ext.LexicalHandler;
  * The base class for all recorders. Simply does nothing
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: NOPRecorder.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
 */
 public abstract class NOPRecorder
 implements ContentHandler, LexicalHandler, XMLConsumer {

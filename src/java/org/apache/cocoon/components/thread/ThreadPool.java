@@ -19,7 +19,6 @@ package org.apache.cocoon.components.thread;
  * The ThreadPool interface gives access to methods needed to inspect and use
  * of  a pool of threads
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public interface ThreadPool {

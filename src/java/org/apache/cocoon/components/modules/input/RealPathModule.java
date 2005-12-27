@@ -31,7 +31,6 @@ import java.util.Vector;
  * context-relative path.  If this mapping cannot be performed (e.g. Cocoon is
  * running in a .war file), <code>null</code> will be returned.
  *
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @version $Id$
  */
 

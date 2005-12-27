@@ -28,8 +28,7 @@ import org.apache.cocoon.selection.Selector;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SelectNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode {

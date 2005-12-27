@@ -24,8 +24,7 @@ import org.xml.sax.SAXException;
  * An XMLByteStream wrapped by an XMLFragment implementation. This allows to
  * store SAX events and insert them in an XSP result using &lt;xsp:expr&gt;.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLByteStreamFragment extends AbstractSAXFragment {
 

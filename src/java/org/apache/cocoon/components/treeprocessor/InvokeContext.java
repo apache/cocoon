@@ -45,9 +45,6 @@ import org.apache.cocoon.sitemap.SitemapErrorHandler;
  *   <li>Hold pipelines, and provide "just in time" lookup for them.</li>
  * </ul>
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @version $Id$
  */
 public class InvokeContext extends AbstractLogEnabled

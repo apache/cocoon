@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class JXPathHelper {

@@ -32,7 +32,7 @@ import java.util.Map;
  * abstract class helps in implementing a custom reader.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: AbstractReader.java,v 1.3 2004/03/12 15:14:19 cziegeler Exp $
+ * @version $Id$
  */
 public abstract class AbstractReader
   extends AbstractLogEnabled

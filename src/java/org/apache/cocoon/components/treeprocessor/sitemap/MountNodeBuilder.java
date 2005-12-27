@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -25,10 +24,8 @@ import org.apache.cocoon.core.Core;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
-
 public class MountNodeBuilder
     extends AbstractProcessingNodeBuilder
     implements ThreadSafe {

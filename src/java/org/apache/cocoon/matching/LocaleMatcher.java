@@ -146,7 +146,7 @@ import java.util.Map;
  * @since 2.1.6
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LocaleMatcher extends AbstractLogEnabled
                            implements Matcher, ThreadSafe, Serviceable, Configurable, Disposable {

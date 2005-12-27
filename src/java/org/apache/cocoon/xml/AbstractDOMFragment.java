@@ -33,8 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * {@link DOMStreamer}) the results of the {@link #toDOM} that must be
  * implemented by concrete subclasses.</p>
  *
- * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractDOMFragment implements XMLFragment {
 

@@ -28,7 +28,7 @@ import java.util.Map;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
 /**
-* @version SVN $Id$
+* @version $Id$
 */
 public class BlockContext extends AbstractContext {
 

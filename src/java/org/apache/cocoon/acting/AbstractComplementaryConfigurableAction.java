@@ -32,8 +32,7 @@ import java.util.Map;
  * Each configuration file must use the same format in order to be
  * effective.  The name of the root configuration element is irrelevant.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractComplementaryConfigurableAction extends ConfigurableServiceableAction {
 

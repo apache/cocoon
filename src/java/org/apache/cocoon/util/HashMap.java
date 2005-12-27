@@ -23,7 +23,7 @@ import java.util.Map;
  * the map does not contain a value for the provided key.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class HashMap extends java.util.HashMap {
 

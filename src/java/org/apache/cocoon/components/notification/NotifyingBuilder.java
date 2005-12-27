@@ -20,10 +20,8 @@ import java.util.Map;
 /**
  *  Generates an Notifying representation of widely used objects.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public interface NotifyingBuilder {
 
   /**

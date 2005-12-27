@@ -20,7 +20,7 @@ package org.apache.cocoon.servlet.multipart;
  * a malformed stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartException.java,v 1.2 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 public class MultipartException extends Exception {
 

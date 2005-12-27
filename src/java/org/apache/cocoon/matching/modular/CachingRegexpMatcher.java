@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CachingRegexpMatcher extends AbstractRegexpMatcher
     implements Configurable,  Initializable, Serviceable, Disposable

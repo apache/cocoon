@@ -39,8 +39,7 @@ import java.io.UnsupportedEncodingException;
  * "string" (return hash as string), "url" (returns url encoded
  * string), "hex" (returns string of hex values).
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
 

@@ -44,7 +44,6 @@ import java.util.Map;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100525751417953">here</a> or
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class AggregateNode extends AbstractProcessingNode {

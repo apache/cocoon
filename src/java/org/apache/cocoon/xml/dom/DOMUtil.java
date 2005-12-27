@@ -54,9 +54,8 @@ import java.util.Map;
  *  This class is a utility class for miscellaneous DOM functions, like
  *  getting and setting values of nodes.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
-*/
+ */
 public final class DOMUtil {
 
     /**
@@ -501,7 +500,6 @@ public final class DOMUtil {
      */
     public static void valueOf(Node parent, Map v) throws ProcessingException {
         if (v != null) {
-            Iterator iterator = v.keySet().iterator();
             Node mapNode = parent.getOwnerDocument().createElementNS(null, "java.util.map");
             parent.appendChild(mapNode);
             for (Iterator iter = v.entrySet().iterator(); iter.hasNext();) {

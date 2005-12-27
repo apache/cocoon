@@ -20,8 +20,7 @@ import org.xml.sax.Attributes;
 /**
  * A helper Class creating SAX Attributes
  * 
- * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
 

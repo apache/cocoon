@@ -43,8 +43,7 @@ import org.xml.sax.SAXException;
  * This class must be setup from the flowscript before being used. This means that instances must
  * be created with <code>cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
  *
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PipelineUtil implements Contextualizable, Serviceable, Disposable {
 

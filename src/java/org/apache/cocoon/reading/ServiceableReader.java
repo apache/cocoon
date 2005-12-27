@@ -25,7 +25,7 @@ import org.apache.avalon.framework.service.Serviceable;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ServiceableReader.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class ServiceableReader 
     extends AbstractReader 

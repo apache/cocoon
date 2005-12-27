@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @author Stefano Mazzocchi
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MultipartHttpServletRequest extends HttpServletRequestWrapper {
 

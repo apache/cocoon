@@ -22,10 +22,9 @@ import java.util.Map;
 import org.apache.cocoon.bean.Target;
 
 /**
- *   A simple Cocoon crawler
+ * A simple Cocoon crawler.
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public class Crawler {

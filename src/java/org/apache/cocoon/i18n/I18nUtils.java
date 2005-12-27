@@ -33,8 +33,6 @@ import java.util.StringTokenizer;
 /**
  * A utility class for i18n formatting and parsing routing.
  *
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class I18nUtils {

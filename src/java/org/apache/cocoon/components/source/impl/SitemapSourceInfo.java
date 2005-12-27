@@ -23,8 +23,7 @@ import org.apache.cocoon.environment.Environment;
 /**
  * This is a helper class for the cocoon protocol.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class SitemapSourceInfo {
     

@@ -30,9 +30,7 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
- * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.1.8
  */
 public class ZipSource extends AbstractLogEnabled

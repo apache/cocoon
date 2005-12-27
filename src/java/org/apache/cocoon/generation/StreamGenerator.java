@@ -60,8 +60,7 @@ import java.io.StringReader;
  * PostInputStream--and to return to the requestor '-1' when the
  * number of bytes read is equal to the getContentLength() value.
  *
- * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StreamGenerator extends ServiceableGenerator
 {

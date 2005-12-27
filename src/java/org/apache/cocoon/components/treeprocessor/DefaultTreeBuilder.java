@@ -53,8 +53,7 @@ import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultTreeBuilder
         extends AbstractLogEnabled

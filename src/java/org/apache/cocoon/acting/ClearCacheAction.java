@@ -27,8 +27,7 @@ import java.util.Map;
  * Simple action which ensures the cache is cleared of all
  * cached results
  *
- * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.4 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ClearCacheAction extends ServiceableAction implements ThreadSafe {
 

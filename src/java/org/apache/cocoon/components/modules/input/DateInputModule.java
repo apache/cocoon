@@ -33,8 +33,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * string. Format given through attribute "format" of configuration
  * root node or nested &lt;format/&gt; tag on module declaration.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  * @see java.text.SimpleDateFormat
  */
 public class DateInputModule extends AbstractInputModule implements ThreadSafe {

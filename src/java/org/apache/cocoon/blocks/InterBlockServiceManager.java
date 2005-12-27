@@ -27,7 +27,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 /**
  * Look for a component in blocks that are connected to the current block.
  * 
- * @version SVN $Id$
+ * @version $Id$
  */
 public class InterBlockServiceManager extends AbstractLogEnabled implements ServiceManager {
     

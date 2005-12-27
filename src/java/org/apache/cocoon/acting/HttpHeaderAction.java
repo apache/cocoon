@@ -31,8 +31,7 @@ import java.util.Map;
 /**
  * This action adds HTTP headers to the response.
  *
- * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: HttpHeaderAction.java,v 1.2 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class HttpHeaderAction
 extends AbstractConfigurableAction

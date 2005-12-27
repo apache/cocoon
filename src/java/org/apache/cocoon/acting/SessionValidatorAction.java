@@ -33,9 +33,7 @@ import java.util.Map;
  * 
  * @see org.apache.cocoon.acting.AbstractValidatorAction
  *
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionValidatorAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionValidatorAction extends AbstractValidatorAction implements ThreadSafe {
 

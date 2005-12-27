@@ -49,8 +49,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * matches. E.g. "id_* name_*" enforces, that if "id_1" exists,
  * "name_1" must also exist and vice versa.</p>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RequestParameterExistsAction extends AbstractConfigurableAction implements ThreadSafe
 {

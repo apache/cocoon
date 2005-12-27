@@ -22,7 +22,7 @@ import java.io.InputStream;
  * It allows to control read operation, restricting the number of bytes read to the value returned by getContentLen() method.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: PostInputStream.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public class PostInputStream extends InputStream {

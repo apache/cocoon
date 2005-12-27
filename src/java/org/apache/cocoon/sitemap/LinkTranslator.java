@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.7 2004/05/24 13:31:30 cziegeler Exp $
+ * @version $Id$
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     

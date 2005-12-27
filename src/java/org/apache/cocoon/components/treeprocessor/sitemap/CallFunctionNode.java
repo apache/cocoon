@@ -34,9 +34,8 @@ import org.apache.cocoon.environment.Redirector;
  * Node handler for calling functions and resuming continuations in
  * the control flow layer.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CallFunctionNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
 

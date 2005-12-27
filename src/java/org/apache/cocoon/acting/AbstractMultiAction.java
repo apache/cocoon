@@ -40,8 +40,7 @@ import java.lang.reflect.Method;
  * <input type="submit" name="doSave" value="Save it"/>
  * will call the method "doSave" of the MultiAction
  *
- * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: AbstractMultiAction.java,v 1.8 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class AbstractMultiAction extends ConfigurableServiceableAction {
 

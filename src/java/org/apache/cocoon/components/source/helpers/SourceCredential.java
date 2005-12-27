@@ -19,8 +19,7 @@ package org.apache.cocoon.components.source.helpers;
 /**
  * This class represents a credential for a given user
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SourceCredential.java,v 1.3 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SourceCredential {
 

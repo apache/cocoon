@@ -29,7 +29,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BrowserSelector.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public class BrowserSelector extends NamedPatternsSelector {

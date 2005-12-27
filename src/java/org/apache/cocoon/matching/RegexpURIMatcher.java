@@ -23,8 +23,7 @@ import java.util.Map;
 /**
  * Matches the request URIs against a regular expression pattern.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RegexpURIMatcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RegexpURIMatcher extends AbstractRegexpMatcher
 {

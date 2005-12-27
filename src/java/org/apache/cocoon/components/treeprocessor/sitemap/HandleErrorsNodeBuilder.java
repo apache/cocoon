@@ -24,7 +24,6 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 /**
  * Builds a &lt;map:handle-errors&gt;
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class HandleErrorsNodeBuilder extends AbstractParentProcessingNodeBuilder

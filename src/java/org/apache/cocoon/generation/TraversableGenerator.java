@@ -95,13 +95,7 @@ import java.util.TimeZone;
  *  </dl>
  * </p>
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
- *         (SMB GmbH) for Virbus AG
- * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
- * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TraversableGenerator extends ServiceableGenerator
                                   implements CacheableProcessingComponent {

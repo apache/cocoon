@@ -23,8 +23,7 @@ import java.util.Map;
 /**
  * Match the request URI against a wildcard expression.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WildcardURIMatcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class WildcardURIMatcher extends AbstractWildcardMatcher
 {

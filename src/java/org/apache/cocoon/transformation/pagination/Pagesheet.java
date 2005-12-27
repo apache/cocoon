@@ -43,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.9 2004/07/22 23:21:55 joerg Exp $
+ * @version $Id$
  */
 
 /*

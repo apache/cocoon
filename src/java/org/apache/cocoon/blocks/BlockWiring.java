@@ -39,7 +39,7 @@ import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class BlockWiring
     extends AbstractLogEnabled

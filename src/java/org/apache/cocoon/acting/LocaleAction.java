@@ -111,11 +111,7 @@ import java.util.Map;
  *   <li>{variant}: The variant of the found locale</li>
  * </ul>
  *
- * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LocaleAction extends ServiceableAction implements ThreadSafe, Configurable {
 

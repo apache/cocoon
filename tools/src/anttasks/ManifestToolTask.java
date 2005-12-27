@@ -25,8 +25,7 @@ import org.apache.tools.ant.Task;
  * Creates Manifest file with the all the JARs and modification dates
  * in the specified directory.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class ManifestToolTask extends Task {
 

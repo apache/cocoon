@@ -19,7 +19,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  *
- * @version CVS $Id: ConfigurationHelper.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ConfigurationHelper {
     public long lastModified = 0;

@@ -31,8 +31,7 @@ import java.util.Map;
  * java.text.SimpleDateFormat} format string, child element
  * "input-module" holds InputModule to obtain the string from.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DateMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 

@@ -34,7 +34,8 @@ import org.apache.excalibur.source.SourceUtil;
  * This class implements the block: protocol.
  *
  *
- * @version $Id$ */
+ * @version $Id$
+ */
 public final class BlockSourceFactory
     extends AbstractLogEnabled
     implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer

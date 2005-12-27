@@ -20,8 +20,7 @@ import org.apache.cocoon.components.pipeline.AbstractProcessingPipeline;
 /**
  * Thi is the implementation of the non caching processing pipeline
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: NonCachingProcessingPipeline.java,v 1.2 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  */
 public class NonCachingProcessingPipeline
        extends AbstractProcessingPipeline {

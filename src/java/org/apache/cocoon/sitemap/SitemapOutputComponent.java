@@ -40,7 +40,7 @@ import java.io.OutputStream;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface SitemapOutputComponent {
 

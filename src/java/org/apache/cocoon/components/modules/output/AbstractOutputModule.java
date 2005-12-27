@@ -33,8 +33,7 @@ import java.util.Map;
  *
  * <p>In order to get at the logger, use <code>getLogger()</code>.</p>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractOutputModule extends AbstractLogEnabled
     implements OutputModule, Configurable, Disposable {

@@ -55,8 +55,7 @@ import org.apache.regexp.RE;
 /**
  * The tree builder for the sitemap language.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SitemapLanguage extends DefaultTreeBuilder {
 

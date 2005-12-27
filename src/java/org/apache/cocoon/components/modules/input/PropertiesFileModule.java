@@ -38,7 +38,6 @@ import org.apache.excalibur.source.SourceResolver;
  *  is resolved via the SourceResolver system.
  * </p>
  *
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public class PropertiesFileModule extends AbstractJXPathModule
 implements InputModule, Serviceable, Configurable, ThreadSafe {

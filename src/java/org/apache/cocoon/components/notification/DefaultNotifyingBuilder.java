@@ -29,9 +29,7 @@ import java.util.Map;
 /**
  *  Generates an Notifying representation of widely used objects.
  *
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author Marc Liyanage (futureLAB AG)
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultNotifyingBuilder implements NotifyingBuilder {
 

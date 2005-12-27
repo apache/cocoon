@@ -26,8 +26,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * Instances of this class are made by the {@link RunnableManager} passing a
  * configuration into the <code>configure</code> method.
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DefaultThreadPool
     extends PooledExecutor

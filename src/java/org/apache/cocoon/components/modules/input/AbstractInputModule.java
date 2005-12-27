@@ -33,8 +33,7 @@ import org.apache.cocoon.util.HashMap;
  * deploying more InputModules.  In order to get at the Logger, use
  * getLogger().
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractInputModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class AbstractInputModule extends AbstractLogEnabled
     implements InputModule, Configurable, Disposable {

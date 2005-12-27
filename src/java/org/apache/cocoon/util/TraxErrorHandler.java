@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerException;
  * Warnings and errors are ignored.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: TraxErrorHandler.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 public class TraxErrorHandler implements ErrorListener {
 

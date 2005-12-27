@@ -36,7 +36,6 @@ import org.apache.cocoon.xml.XMLProducer;
  * The CachingProcessingPipeline
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class CachingProcessingPipeline extends AbstractCachingProcessingPipeline {

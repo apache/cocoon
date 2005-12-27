@@ -27,10 +27,8 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TransformNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
+ * @version $Id$
  */
-
 public class TransformNodeBuilder extends AbstractProcessingNodeBuilder
   implements LinkedProcessingNodeBuilder {
 

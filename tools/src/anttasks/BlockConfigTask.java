@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  * Ant task to add block dependencies to xconf configuration
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class BlockConfigTask extends Task {
 

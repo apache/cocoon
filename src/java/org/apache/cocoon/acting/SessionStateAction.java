@@ -76,8 +76,7 @@ import java.util.Map;
  * @see org.apache.cocoon.matching.WildcardSessionAttributeMatcher
  * @see org.apache.cocoon.selection.SessionAttributeSelector
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionStateAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionStateAction
     extends AbstractConfigurableAction

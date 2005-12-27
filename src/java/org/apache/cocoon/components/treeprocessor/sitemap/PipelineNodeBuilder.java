@@ -29,8 +29,6 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 /**
  * Builds a &lt;map:pipeline&gt;
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @version $Id$
  */
 public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder

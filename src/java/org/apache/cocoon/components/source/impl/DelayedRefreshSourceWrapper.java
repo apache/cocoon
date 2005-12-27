@@ -28,8 +28,7 @@ import java.util.Iterator;
  * A wrapper around a <code>Source</code> that reduces the number of calls to
  * <code>Source.getLastModified()</code> which can be a costly operation.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.5 2004/03/28 20:51:24 antonio Exp $
+ * @version $Id$
  */
 public final class DelayedRefreshSourceWrapper
     implements Source {

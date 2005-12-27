@@ -58,10 +58,6 @@ import org.xml.sax.ContentHandler;
  * The Cocoon Wrapper simplifies usage of the Cocoon object. Allows to create,
  * configure Cocoon instance and process single requests.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @version $Id$
  */
 public class CocoonWrapper {

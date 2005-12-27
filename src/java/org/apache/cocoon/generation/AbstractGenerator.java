@@ -29,9 +29,7 @@ import java.util.Map;
  * If you need other components, use the {@link ServiceableGenerator}
  * instead.
  * 
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.4 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class AbstractGenerator 
     extends AbstractXMLProducer 

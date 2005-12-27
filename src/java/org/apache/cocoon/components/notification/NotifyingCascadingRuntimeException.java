@@ -22,8 +22,7 @@ import java.util.Map;
 /**
  * A CascadingRuntimeException that is also Notifying.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id: NotifyingCascadingRuntimeException.java,v 1.2 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version $Id$
  */
 public class NotifyingCascadingRuntimeException
   extends CascadingRuntimeException

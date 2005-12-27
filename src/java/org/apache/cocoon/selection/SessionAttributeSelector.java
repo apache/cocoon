@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionAttributeSelector.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionAttributeSelector extends AbstractLogEnabled
   implements Configurable, ThreadSafe, Selector {

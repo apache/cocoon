@@ -46,9 +46,6 @@ import java.util.Map;
  *
  * @cocoon.sitemap.component.pooling.max  32
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class FileGenerator extends ServiceableGenerator

@@ -32,6 +32,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
 
@@ -39,7 +40,8 @@ import org.apache.excalibur.source.impl.AbstractSource;
  * Implementation of a {@link Source} that gets its content by
  * invoking the Block. 
  *
- * @version $Id$ */
+ * @version $Id$
+ */
 public final class BlockSource
     extends AbstractSource {
 

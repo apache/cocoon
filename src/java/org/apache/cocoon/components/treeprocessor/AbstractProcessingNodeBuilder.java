@@ -22,8 +22,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
                                                     implements ProcessingNodeBuilder {

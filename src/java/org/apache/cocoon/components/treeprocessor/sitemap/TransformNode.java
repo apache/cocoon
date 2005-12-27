@@ -29,10 +29,8 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class TransformNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 
     private String transformerName;

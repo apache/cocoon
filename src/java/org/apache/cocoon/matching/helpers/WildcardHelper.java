@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class WildcardHelper {
 

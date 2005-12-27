@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @version CVS $Id: PageLocalScopeImpl.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version $Id$
  */
 public class PageLocalScopeImpl implements PageLocalScope {
 

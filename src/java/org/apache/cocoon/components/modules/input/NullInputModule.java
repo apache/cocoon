@@ -30,8 +30,7 @@ import java.util.Map;
  * parameter but you don't want anyone to provide this parameter
  * manually.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: NullInputModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class NullInputModule extends AbstractInputModule implements ThreadSafe {
 

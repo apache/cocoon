@@ -30,8 +30,7 @@ import org.apache.cocoon.util.location.Location;
 /**
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class VariableResolver {
 

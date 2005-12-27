@@ -29,7 +29,7 @@ import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyPointer.java,v 1.5 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ScriptablePropertyPointer extends DynamicPropertyPointer {
 

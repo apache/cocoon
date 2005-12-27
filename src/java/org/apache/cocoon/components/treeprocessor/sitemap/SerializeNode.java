@@ -30,9 +30,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 

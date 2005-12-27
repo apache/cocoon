@@ -32,8 +32,7 @@ import org.apache.cocoon.bean.Target;
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
  * with file destination.
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class OutputStreamListener implements BeanListener {
 

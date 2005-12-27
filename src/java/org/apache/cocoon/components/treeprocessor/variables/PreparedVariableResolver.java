@@ -35,8 +35,7 @@ import java.util.Stack;
 /**
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
 

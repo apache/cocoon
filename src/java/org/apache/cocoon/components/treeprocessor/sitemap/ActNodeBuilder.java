@@ -27,8 +27,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
                             implements LinkedProcessingNodeBuilder {

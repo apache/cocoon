@@ -36,8 +36,7 @@ import org.apache.cocoon.environment.Session;
  * rollback or commit is called. Then values are either discarded or
  * copied to the final destination.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SessionAttributeOutputModule extends AbstractOutputModule implements OutputModule, ThreadSafe {
     

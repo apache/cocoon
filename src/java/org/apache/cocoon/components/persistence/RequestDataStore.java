@@ -29,9 +29,7 @@ package org.apache.cocoon.components.persistence;
  * This component is a replacement for the request lifecycle and
  * global request lifecycle components.
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: RequestDataStore.java,v 1.4 2004/07/11 14:04:35 cziegeler Exp $
+ * @version $Id$
  * @since 2.1.1
  * @deprecated Use the scoped attributes on the Request object instead.
  *             This component will be removed with Cocoon 2.3.

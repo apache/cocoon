@@ -64,8 +64,6 @@ import java.util.Properties;
 /**
  * This class contains some utility methods for the source resolving.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public final class SourceUtil {

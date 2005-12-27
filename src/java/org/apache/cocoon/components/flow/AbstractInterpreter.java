@@ -50,9 +50,8 @@ import org.apache.excalibur.source.SourceUtil;
  * that each sitemap will use a different instance of this class. But that instance will
  * handle all flow calls for a given sitemap, and must therefore be thread safe.
  *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractInterpreter
         extends AbstractLogEnabled

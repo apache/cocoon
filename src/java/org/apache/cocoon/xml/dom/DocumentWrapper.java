@@ -44,9 +44,8 @@ import org.xml.sax.SAXException;
  *  Wraps an org.w3c.dom.Document and offers additional interfaces
  *  like XMLizable and a toString() method.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
-*/
+ * @version $Id$
+ */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
     protected final static String DOMLEVEL3_ERR_MSG = 

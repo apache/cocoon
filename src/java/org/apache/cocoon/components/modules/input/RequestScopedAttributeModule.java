@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.Request;
  * "request"; so the name follows this form: SCOPE:KEY.
  * 
  * @since 2.2
- * @version CVS $Id: RequestScopedAttributeModule.java,v 1.1 2004/07/23 06:56:37 cziegeler Exp $
+ * @version $Id$
  */
 public class RequestScopedAttributeModule extends RequestAttributeModule {
 

@@ -34,7 +34,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.6 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     private List links;

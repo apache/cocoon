@@ -20,10 +20,8 @@ import org.apache.cocoon.environment.Environment;
 /**
  * A generic container node that just invokes its children.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
-
 public class ContainerNode extends SimpleParentProcessingNode {
 
     public ContainerNode(String type) {

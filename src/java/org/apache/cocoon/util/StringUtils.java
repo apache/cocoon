@@ -20,7 +20,7 @@ package org.apache.cocoon.util;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: StringUtils.java,v 1.5 2004/05/27 13:14:36 cziegeler Exp $
+ * @version $Id$
  */
 public class StringUtils {
 

@@ -37,8 +37,7 @@ import java.util.TreeSet;
  * considered to be part of an array of that name for
  * getAttributeValues. Only one "*" is allowed.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeModule.java,v 1.4 2004/07/23 06:56:37 cziegeler Exp $
+ * @version $Id$
  */
 public class RequestAttributeModule extends AbstractInputModule implements ThreadSafe {
 

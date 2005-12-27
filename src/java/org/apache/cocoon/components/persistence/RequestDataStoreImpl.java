@@ -29,9 +29,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 /**
  * The default implementation
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.1.1
  * @deprecated Use the scoped attributes on the Request object instead.
  *             This component will be removed with Cocoon 2.3.

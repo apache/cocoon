@@ -29,8 +29,7 @@ import java.util.List;
  * Base class for parent <code>ProcessingNodeBuilders</code>, providing services for parsing
  * children nodes.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractParentProcessingNodeBuilder extends AbstractProcessingNodeBuilder
                                                           implements Configurable {

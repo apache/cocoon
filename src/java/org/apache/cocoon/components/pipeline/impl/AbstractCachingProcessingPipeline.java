@@ -44,8 +44,6 @@ import java.util.Date;
  * that check different pipeline components.
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @version $Id$
  */
 public abstract class AbstractCachingProcessingPipeline extends BaseCachingProcessingPipeline {

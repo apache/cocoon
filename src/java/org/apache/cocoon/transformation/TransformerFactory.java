@@ -27,7 +27,7 @@ package org.apache.cocoon.transformation;
 
  * @since 2.2
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface TransformerFactory {
 

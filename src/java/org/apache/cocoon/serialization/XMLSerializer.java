@@ -28,7 +28,7 @@ import java.io.OutputStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: XMLSerializer.java,v 1.2 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public class XMLSerializer extends AbstractTextSerializer {

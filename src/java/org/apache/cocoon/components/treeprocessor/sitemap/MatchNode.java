@@ -27,10 +27,8 @@ import org.apache.cocoon.matching.Matcher;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public class MatchNode extends SimpleSelectorProcessingNode
         implements ParameterizableProcessingNode {
 

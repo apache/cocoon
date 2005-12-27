@@ -27,8 +27,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and startDTD/endDTD events, as well as all comment events within
  * the DTD.
  *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EmbeddedXMLPipe extends AbstractXMLPipe {
 

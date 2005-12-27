@@ -29,7 +29,6 @@ import org.apache.commons.lang.SystemUtils;
 /**
  * Handles &lt;map:handle-errors&gt;
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public final class HandleErrorsNode extends AbstractParentProcessingNode {
