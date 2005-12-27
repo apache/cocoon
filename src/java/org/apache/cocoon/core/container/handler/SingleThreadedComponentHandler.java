@@ -30,6 +30,9 @@ import org.apache.cocoon.core.container.ComponentFactory;
 public class SingleThreadedComponentHandler
 extends AbstractFactoryHandler {
 
+    private long maxCreated = 0;
+    private long maxDecommissioned = 0;
+    
     /**
      * Create a SingleThreadedComponentHandler which manages a pool of Components
      *  created by the specified factory object.
@@ -54,6 +57,7 @@ extends AbstractFactoryHandler {
      */
     protected Object doGet()
     throws Exception {
+        maxCreated++;
         return this.factory.newInstance();
     }
 
@@ -64,10 +68,27 @@ extends AbstractFactoryHandler {
      */
     protected void doPut( final Object component ) {
         this.decommission( component );
+        maxDecommissioned++;
     }
     
     protected void doInitialize() {
         // nothing to do here
+    }
+
+    /**
+     * @return Returns the maxCreated.
+     */
+    public long getMaxCreated()
+    {
+        return maxCreated;
+    }
+
+    /**
+     * @return Returns the maxDecommisioned.
+     */
+    public long getMaxDecommissioned()
+    {
+        return maxDecommissioned;
     }
 
 }
