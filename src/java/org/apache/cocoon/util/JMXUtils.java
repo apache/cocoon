@@ -43,14 +43,14 @@ import javax.management.ObjectName;
  * Utility methods for JMX
  *
  * @version $Id$
-  */
+ */
 public class JMXUtils {
-    //~ Static fields/initializers ---------------------------------------------
+    //~ Static fields/initializers ----------------------------------------------------------------------
 
     /** The {@link MBeanServer} first found */
     private static MBeanServer mbeanServer = getInitialMBeanServer();
 
-    //~ Constructors -----------------------------------------------------------
+    //~ Constructors ------------------------------------------------------------------------------------
 
     /**
      * Private c'tor: its a Utility class
@@ -59,7 +59,7 @@ public class JMXUtils {
         super();
     }
 
-    //~ Methods ----------------------------------------------------------------
+    //~ Methods -----------------------------------------------------------------------------------------
 
     /**
      * Find a JMX domain name at various places
@@ -76,8 +76,7 @@ public class JMXUtils {
 
         if(jmxDomain == null) {
             // next from the CoreServiceManager managing this component
-            if((serviceManager != null) &&
-               serviceManager instanceof CoreServiceManager) {
+            if((serviceManager != null) && serviceManager instanceof CoreServiceManager) {
                 // next from the CoreServiceManager managing this component
                 jmxDomain = ((CoreServiceManager)serviceManager).getJmxDefaultDomain();
             } else {
@@ -100,8 +99,7 @@ public class JMXUtils {
     public static String findJmxName(final String pJmxName,
                                      final String pClassName) {
         String jmxName = pJmxName;
-        final String className =
-            ((pClassName == null) ? "unknown" : pClassName);
+        final String className = ((pClassName == null) ? "unknown" : pClassName);
 
         if(jmxName == null) {
             // otherwise construct one from the service class name
@@ -205,8 +203,7 @@ public class JMXUtils {
      */
     public static ObjectInstance setupJmxFor(final Object bean,
                                              final ComponentInfo info) {
-        return setupJmxFor(bean, info,
-                           new ConsoleLogger(ConsoleLogger.LEVEL_INFO));
+        return setupJmxFor(bean, info, new ConsoleLogger(ConsoleLogger.LEVEL_INFO));
     }
 
     /**
@@ -230,17 +227,25 @@ public class JMXUtils {
 
             try {
                 // try to find a MBean for bean
-                final Class mbeanClass =
-                    beanClass.getClassLoader().loadClass(mbeanClassName);
-                final Constructor ctor =
-                    mbeanClass.getConstructor(new Class[] {beanClass});
-                final Object mbean = ctor.newInstance(new Object[] {bean});
+                final Class mbeanClass = beanClass.getClassLoader().loadClass(mbeanClassName);
+                Constructor ctor = null;
+                Object mbean = null;
+
+                try {
+                    ctor = mbeanClass.getConstructor(new Class[] {beanClass, ComponentInfo.class});
+                    mbean = ctor.newInstance(new Object[] {bean, info});
+                } catch(final Exception e) {
+                    // ignore this
+                }
+
+                if(ctor == null) {
+                    ctor = mbeanClass.getConstructor(new Class[] {beanClass});
+                    mbean = ctor.newInstance(new Object[] {bean});
+                }
 
                 // see if MBean supplies some JMX ObjectName parts
-                final String mBeanSuppliedJmxDomain =
-                    callGetter(mbean, "getJmxDomain", logger);
-                final String mBeanSuppliedJmxName =
-                    callGetter(mbean, "getJmxName", logger);
+                final String mBeanSuppliedJmxDomain = callGetter(mbean, "getJmxDomain", logger);
+                final String mBeanSuppliedJmxName = callGetter(mbean, "getJmxName", logger);
                 final String mBeanSuppliedJmxNameAdditions =
                     callGetter(mbean, "getJmxNameAddition", logger);
 
@@ -258,11 +263,9 @@ public class JMXUtils {
                 if(mBeanSuppliedJmxName != null) {
                     objectNameBuf.append(mBeanSuppliedJmxName);
                 } else if(info.getConfiguration()
-                              .getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME,
-                                            null) != null) {
+                              .getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME, null) != null) {
                     objectNameBuf.append(info.getConfiguration()
-                                             .getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME,
-                                                           null));
+                                             .getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME, null));
                 } else {
                     // if we do not have the name parts we'll construct one from the bean class name           
                     objectNameBuf.append(genDefaultJmxName(beanClass));
@@ -279,15 +282,7 @@ public class JMXUtils {
 
                 while(mbeanServer.isRegistered(on)) {
                     instance++;
-                    on = new ObjectName(objectNameBuf.toString() +
-                                        ",instance=" + instance);
-                }
-
-                if(logger.isDebugEnabled()) {
-                    logger.debug("Establishing JMX support for bean " +
-                                 bean.getClass().getName() +
-                                 ",info.serviceClassName=" +
-                                 info.getServiceClassName());
+                    on = new ObjectName(objectNameBuf.toString() + ",instance=" + instance);
                 }
 
                 return mbeanServer.registerMBean(mbean, on);
@@ -295,26 +290,22 @@ public class JMXUtils {
                 // happens if a component doesn't have a MBean to support it for management
                 if(logger.isDebugEnabled()) {
                     logger.debug("Class " + beanClass.getName() +
-                                 " doesn't have a supporting MBean called " +
-                                 mbeanClassName);
+                                 " doesn't have a supporting MBean called " + mbeanClassName);
                 }
             } catch(final NoSuchMethodException nsme) {
                 logger.warn("MBean " + mbeanClassName +
                             " doesn't have a constructor that accepts an instance of " +
                             info.getServiceClassName(), nsme);
             } catch(final InvocationTargetException ite) {
-                logger.warn("Cannot invoke constructor on class " +
-                            mbeanClassName, ite);
+                logger.warn("Cannot invoke constructor on class " + mbeanClassName, ite);
             } catch(final InstantiationException ie) {
                 logger.warn("Cannot instantiate class " + mbeanClassName, ie);
             } catch(final IllegalAccessException iae) {
                 logger.warn("Cannot access class " + mbeanClassName, iae);
             } catch(final MalformedObjectNameException mone) {
-                logger.warn("Invalid ObjectName '" + on + "' for MBean " +
-                            mbeanClassName, mone);
+                logger.warn("Invalid ObjectName '" + on + "' for MBean " + mbeanClassName, mone);
             } catch(final InstanceAlreadyExistsException iaee) {
-                logger.warn("Instance for MBean " + mbeanClassName +
-                            "already exists", iaee);
+                logger.warn("Instance for MBean " + mbeanClassName + "already exists", iaee);
             } catch(final NotCompliantMBeanException ncme) {
                 logger.warn("Not compliant MBean " + mbeanClassName, ncme);
             } catch(final MBeanRegistrationException mre) {
@@ -347,8 +338,7 @@ public class JMXUtils {
                 try {
                     return methods[i].invoke(mbean, null).toString();
                 } catch(final Exception e) {
-                    logger.warn("Method '" + name +
-                                "' cannot be accessed on MBean " +
+                    logger.warn("Method '" + name + "' cannot be accessed on MBean " +
                                 mbean.getClass().getName());
 
                     return null;
