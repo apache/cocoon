@@ -45,6 +45,7 @@ public final class ComponentInfo {
     private String loggerCategory;
     private String jmxDomain;
     private String jmxName;
+    private String role;
 
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
@@ -180,6 +181,7 @@ public final class ComponentInfo {
         this.setLoggerCategory(attr.getAttribute("logger", null));
         this.setJmxDomain(attr.getAttribute(CoreServiceManager.JMX_DOMAIN_ATTR_NAME, null));
         this.setJmxName(attr.getAttribute(CoreServiceManager.JMX_NAME_ATTR_NAME, null));
+        this.setRole(attr.getAttribute("role", null));
     }
 
     public ComponentInfo duplicate() {
@@ -194,6 +196,7 @@ public final class ComponentInfo {
         info.loggerCategory = this.loggerCategory;
         info.jmxDomain = this.jmxDomain;
         info.jmxName = this.jmxName;
+        info.role = this.role;
 
         return info;
     }
@@ -247,5 +250,21 @@ public final class ComponentInfo {
      */
     public void setJmxName(final String jmxName) {
         this.jmxName = jmxName;
+    }
+
+    /**
+     * @param role The role to set.
+     */
+    public void setRole( String role )
+    {
+        this.role = role;
+    }
+
+    /**
+     * @return Returns the role.
+     */
+    public String getRole()
+    {
+        return role;
     }
 }
