@@ -194,6 +194,7 @@ implements Configurable {
                     info = new ComponentInfo();
                     info.setServiceClassName(defaultClassName);
                     info.fill(role);
+                    info.setRole(roleName);
                     this.classNames.put(roleName, info);
                 } else {
                     // Check that it's consistent with the existing info

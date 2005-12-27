@@ -51,7 +51,7 @@ public class LazyHandler implements ComponentHandler {
             info.setServiceClassName(className);
             info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this.compEnv.serviceManager));
             info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
-
+            info.setRole(this.role);
             this.delegate = AbstractComponentHandler.getComponentHandler(role, compEnv, info);
             this.delegate.initialize();
             JMXUtils.setupJmxFor(this.delegate, info);
@@ -127,6 +127,7 @@ public class LazyHandler implements ComponentHandler {
             info.setConfiguration(config);
             info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this.compEnv.serviceManager));
             info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
+            info.setRole(role);
             return info;
         } 
         return this.delegate.getInfo();

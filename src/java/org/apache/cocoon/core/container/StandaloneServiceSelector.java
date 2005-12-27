@@ -144,6 +144,7 @@ public class StandaloneServiceSelector
         } else {
             info = new ComponentInfo();
             info.fill(configuration);
+            info.setRole(role);
             info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), serviceManager));
             info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), componentClass.getName()));
         }
