@@ -17,12 +17,11 @@
 package org.apache.cocoon.core.container.handler;
 
 
-import org.apache.cocoon.util.JMXUtils;
+import org.apache.cocoon.components.ComponentInfo;
 import org.mortbay.util.jmx.ModelMBeanImpl;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
-import javax.management.modelmbean.InvalidTargetObjectTypeException;
 
 /**
  * The ThreadSafeComponentHandlerMBean adds JMX managability for ThreadSafeComponentHandler.
@@ -33,7 +32,8 @@ import javax.management.modelmbean.InvalidTargetObjectTypeException;
 public class PoolableComponentHandlerMBean
 extends ModelMBeanImpl {
     
-    private PoolableComponentHandler handler;
+    private final PoolableComponentHandler handler;
+    private final ComponentInfo info;
     
     protected void defineManagedResource() {
         super.defineManagedResource();
@@ -49,18 +49,11 @@ extends ModelMBeanImpl {
      *
      * @param handler The managed PoolableComponentHandler instance
      */
-    public PoolableComponentHandlerMBean(final PoolableComponentHandler handler)
+    public PoolableComponentHandlerMBean(final PoolableComponentHandler handler, final ComponentInfo info)
         throws MBeanException, InstanceNotFoundException {
         super( handler );
         this.handler = handler;
-        try
-        {
-            super.setManagedResource( handler, "objectReference" );
-        }
-        catch( final InvalidTargetObjectTypeException e )
-        {
-            e.printStackTrace();
-        }
+        this.info = info;
     }
     
     public String[] getInterfaces()
@@ -99,11 +92,7 @@ extends ModelMBeanImpl {
     
     public String getJmxName() 
     {
-        return JMXUtils.genDefaultJmxName(handler.getInfo().getServiceClassName());
-    }
- 
-    public String getJmxNameAddition()
-    {
-        return "type=PoolableHandler"; 
+        //return JMXUtils.genDefaultJmxName(handler.getInfo().getServiceClassName());
+        return "subsys=ECM++,handler=poolable" + (info.getRole() != null ? ",role=" + info.getRole() : "");
     }
 }
