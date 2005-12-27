@@ -110,6 +110,8 @@ public class ContinuationsManagerImpl
     protected ServiceManager serviceManager;
     protected Context context;
 
+    protected long expirationCheckInterval;
+    
     public ContinuationsManagerImpl() throws Exception {
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
@@ -135,7 +137,7 @@ public class ContinuationsManagerImpl
         
         final Configuration expireConf = config.getChild("expirations-check");
         final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
-        final long interval = expireConf.getChild("period", true).getValueAsLong(180000);
+        this.expirationCheckInterval = expireConf.getChild("period", true).getValueAsLong(180000);
         try {
             final RunnableManager runnableManager = (RunnableManager)serviceManager.lookup(RunnableManager.ROLE);
             runnableManager.execute( new Runnable() {
@@ -143,7 +145,7 @@ public class ContinuationsManagerImpl
                     {
                         expireContinuations();
                     }
-                }, initialDelay, interval);
+                }, initialDelay, expirationCheckInterval);
             serviceManager.release(runnableManager);
         } catch (Exception e) {
             getLogger().warn("Could not enqueue continuations expiration task. " +
