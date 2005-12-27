@@ -27,8 +27,7 @@ import org.xml.sax.SAXException;
  * amount of time.
  * This is very usefull for caching tests.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PauseGenerator.java,v 1.3 2004/03/05 13:03:03 bdelacretaz Exp $
+ *  @version $Id$
  *  @since   2.1
  */
 public class PauseGenerator 

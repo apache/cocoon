@@ -16,7 +16,6 @@
 package org.apache.cocoon.samples.errorhandling;
 
 /**
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @version $Id$
  */
 public class ApplicationException extends Exception {

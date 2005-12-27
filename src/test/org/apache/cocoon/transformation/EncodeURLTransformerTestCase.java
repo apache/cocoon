@@ -27,8 +27,7 @@ import org.w3c.dom.Document;
 /**
  * A simple testcase for FilterTransformer.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EncodeURLTransformerTestCase extends SitemapComponentTestCase {
     

@@ -31,8 +31,6 @@ import java.util.Map;
  * Exception generator. Throws different kinds of exception depending on
  * value of src attribute.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class ExceptionGenerator extends AbstractGenerator {

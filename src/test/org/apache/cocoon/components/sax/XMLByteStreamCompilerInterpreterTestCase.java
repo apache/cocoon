@@ -27,10 +27,7 @@ import java.io.ByteArrayInputStream;
 /**
  * Testcase for XMLByteStreamCompiler and Interpreter
  *
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version
  */
-
 public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLTestCase {
     public XMLByteStreamCompilerInterpreterTestCase(String s) {
         super(s);

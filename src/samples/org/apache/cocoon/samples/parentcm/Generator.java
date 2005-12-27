@@ -34,7 +34,6 @@ import java.util.Map;
  * Where <code><i>current time</i></code> is the current time as obtained from the
  * <code>Time</code> component.
  *
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
  * @version $Id$
  */
 public class Generator extends ServiceableGenerator implements Poolable {

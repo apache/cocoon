@@ -68,9 +68,7 @@ import org.xml.sax.SAXException;
 /**
  * Testcase for actions, generators, transformers and serializer components. 
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class SitemapComponentTestCase extends CocoonTestCase {
 

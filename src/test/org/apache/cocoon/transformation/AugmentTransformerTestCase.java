@@ -24,8 +24,7 @@ import org.w3c.dom.Document;
 /**
  * A simple testcase for AugmentTransformer.
  *
- * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class AugmentTransformerTestCase extends SitemapComponentTestCase {
     

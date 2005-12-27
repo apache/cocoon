@@ -24,10 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Wrap a ContentHandler in a DefaultHandler
  *
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  */
-
-
 public final class DefaultHandlerWrapper extends DefaultHandler {
     private final ContentHandler handler;
 

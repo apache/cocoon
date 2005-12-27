@@ -29,8 +29,7 @@ import java.util.Hashtable;
  * <p>
  * The configuration is bound to <code>org/apache/cocoon/samples/parentcm/ParentCMConfiguration</code>.
  *
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Configurator  {
 

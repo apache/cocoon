@@ -33,8 +33,7 @@ import java.util.Hashtable;
  * given by the initialization parameter in JNDI, use it to configure an CocoonServiceManager
  * and delegate any requests to it.
  *
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ParentServiceManager implements ServiceManager, LogEnabled, Initializable {
 

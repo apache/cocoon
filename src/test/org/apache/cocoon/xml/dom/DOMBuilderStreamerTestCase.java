@@ -31,8 +31,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Testcase for DOMStreamer and DOMBuilder.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.7 2004/03/05 13:03:04 bdelacretaz Exp $
+ * @version $Id$
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 

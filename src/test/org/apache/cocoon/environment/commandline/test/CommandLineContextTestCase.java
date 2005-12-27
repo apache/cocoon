@@ -29,8 +29,7 @@ import java.net.URL;
 /**
  * A simple test case for CommandLineContext.
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class CommandLineContextTestCase extends TestCase {
 

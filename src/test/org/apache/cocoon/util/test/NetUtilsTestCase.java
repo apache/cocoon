@@ -26,9 +26,7 @@ import org.apache.cocoon.util.NetUtils;
  * Test Cases for the NetUtils class.
  * @see org.apache.cocoon.util.NetUtils
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: NetUtilsTestCase.java,v 1.9 2004/04/29 22:49:59 joerg Exp $
+ * @version $Id$
  */
 public class NetUtilsTestCase extends TestCase
 {

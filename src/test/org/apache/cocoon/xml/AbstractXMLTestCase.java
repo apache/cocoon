@@ -33,10 +33,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * general functions for XML related Testcases
  *
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version
  */
-
 public abstract class AbstractXMLTestCase extends XMLTestCase {
 
     public AbstractXMLTestCase(String s) {

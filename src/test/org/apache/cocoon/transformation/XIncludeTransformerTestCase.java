@@ -22,8 +22,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 /**
  * A simple testcase for FilterTransformer.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     

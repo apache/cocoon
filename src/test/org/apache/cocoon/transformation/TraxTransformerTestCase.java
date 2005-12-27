@@ -24,8 +24,7 @@ import org.w3c.dom.Document;
 /**
  *
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TraxTransformerTestCase extends SitemapComponentTestCase {
 

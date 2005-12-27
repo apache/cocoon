@@ -27,10 +27,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Testcase for SaxBuffer
  *
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version
  */
-
 public final class SaxBufferTestCase extends AbstractXMLTestCase {
     public SaxBufferTestCase(String s) {
         super(s);
