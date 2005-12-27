@@ -25,8 +25,7 @@ import org.apache.excalibur.store.impl.MRUMemoryStore;
  * <p>
  * This default setting allows the store to be an in-memory front-end to the persistent store.
  * 
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: DefaultStore.java,v 1.8 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
 public class DefaultStore extends MRUMemoryStore {
     

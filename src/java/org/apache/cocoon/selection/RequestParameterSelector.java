@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: RequestParameterSelector.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RequestParameterSelector extends AbstractSwitchSelector
   implements Configurable, ThreadSafe {

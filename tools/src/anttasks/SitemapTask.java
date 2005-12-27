@@ -48,8 +48,7 @@ import com.thoughtworks.qdox.parser.ParseException;
  * hacky but straight forward :)
  * 
  * @since 2.1.5
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class SitemapTask extends AbstractQdoxTask {
 

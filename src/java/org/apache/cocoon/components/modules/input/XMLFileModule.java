@@ -81,8 +81,6 @@ import java.util.Map;
  * a second time. This can be turned off using the <code>cache-expressions</code>
  * configuration option.</p>
  *
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class XMLFileModule extends AbstractJXPathModule

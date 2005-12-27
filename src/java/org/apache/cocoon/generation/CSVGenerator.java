@@ -90,9 +90,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * any standard body, so the interpretation of the format might be slightly
  * different in cases.</p>
  *
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @author Copyright &copy; 2000-2004 <a href="http://www.apache.org/">The Apache
- *         Software Foundation</a>. All rights reserved.
  */
 public class CSVGenerator extends FileGenerator {
 

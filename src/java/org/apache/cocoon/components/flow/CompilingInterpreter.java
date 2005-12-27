@@ -30,10 +30,7 @@ import org.mozilla.javascript.Scriptable;
 /**
  * This is a base class for all interpreters compiling the scripts
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class CompilingInterpreter
         extends AbstractInterpreter {

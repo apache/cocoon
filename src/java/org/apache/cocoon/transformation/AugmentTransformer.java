@@ -38,7 +38,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
- * @version CVS $Id: AugmentTransformer.java,v 1.6 2004/06/17 14:55:24 cziegeler Exp $
+ * @version $Id$
  */
 public class AugmentTransformer
     extends AbstractTransformer {

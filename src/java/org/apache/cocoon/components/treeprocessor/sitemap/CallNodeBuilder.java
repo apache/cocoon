@@ -31,9 +31,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez </a>
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CallNodeBuilder extends AbstractProcessingNodeBuilder
                              implements LinkedProcessingNodeBuilder {

@@ -19,8 +19,7 @@ package org.apache.cocoon.bean;
  * Interface allowing caller to install a listener so that it can be informed
  * as the bean makes progress through the links to be called.
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface BeanListener {
 

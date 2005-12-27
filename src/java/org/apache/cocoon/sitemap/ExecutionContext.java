@@ -26,7 +26,7 @@ import org.apache.cocoon.util.location.Location;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface ExecutionContext extends Locatable {
     

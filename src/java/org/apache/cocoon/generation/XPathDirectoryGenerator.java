@@ -120,10 +120,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  &lt;/dir:directory&gt;
  * </pre>
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @author <a href="mailto:joerg@apache.org">J\u00F6rg Heinicke</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XPathDirectoryGenerator
 extends DirectoryGenerator {
@@ -324,7 +321,7 @@ extends DirectoryGenerator {
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
      * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
-     * @version CVS $Id$
+     * @version $Id$
      */
     private static class MappingInfo
     implements PrefixResolver {

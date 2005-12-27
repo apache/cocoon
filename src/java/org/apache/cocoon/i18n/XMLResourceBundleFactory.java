@@ -43,11 +43,6 @@ import java.util.Map;
  * This is the XMLResourceBundleFactory, the method for getting and creating
  * XMLResourceBundles.
  *
- * @author <a href="mailto:mengelhart@earthtrip.com">Mike Engelhart</a>
- * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
- * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class XMLResourceBundleFactory extends AbstractLogEnabled

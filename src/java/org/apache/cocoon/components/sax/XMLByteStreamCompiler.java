@@ -25,12 +25,8 @@ import java.util.HashMap;
 /**
  * This a simple xml compiler which outputs a byte array.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
 
     private HashMap map;

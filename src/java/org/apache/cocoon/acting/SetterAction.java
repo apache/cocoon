@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * whereas the parameter name is the key and the value of the parameter
  * will be set as a string value for this key.
  *
- * @version SVN $Id$
+ * @version $Id$
  */
 public class SetterAction
     extends AbstractAction

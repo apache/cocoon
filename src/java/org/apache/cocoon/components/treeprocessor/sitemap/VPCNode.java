@@ -24,7 +24,6 @@ import org.apache.cocoon.components.treeprocessor.NamedContainerNode;
  *
  * @version $Id$
  */
-
 public class VPCNode extends NamedContainerNode {
 
     Set sourceSet;

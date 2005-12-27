@@ -23,8 +23,7 @@ import org.apache.excalibur.store.impl.MRUMemoryStore;
  * Default implementation of Cocoon's transient store. This is a <code>MRUMemoryStore</code>
  * that cannot be backed by a persistent store (this ensure it is really transient).
  * 
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTransientStore.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
 public class DefaultTransientStore extends MRUMemoryStore {
     

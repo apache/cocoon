@@ -24,7 +24,7 @@ import org.apache.cocoon.util.location.Location;
 /**
  * Extension to the Avalon Parameters to give location information
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SitemapParameters extends Parameters implements Locatable {
     

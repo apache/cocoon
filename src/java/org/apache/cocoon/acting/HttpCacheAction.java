@@ -79,8 +79,7 @@ import java.util.Map;
  * <code>cache-control</code> (all lowercase).
  * </p>
  *
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version CVS $Id: HttpCacheAction.java,v 1.3 2004/07/11 13:22:40 antonio Exp $
+ * @version $Id$
  */
 public class HttpCacheAction extends AbstractConfigurableAction implements ThreadSafe {
 

@@ -19,8 +19,7 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.4 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode {
 

@@ -88,8 +88,7 @@ import org.w3c.dom.Node;
  *
  * <p>Produces Objects of type {@link org.apache.cocoon.xml.dom.DocumentWrapper DocumentWrapper}</p>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
 

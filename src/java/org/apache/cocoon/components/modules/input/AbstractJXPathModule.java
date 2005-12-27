@@ -64,9 +64,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * </tr>
  * </table>
  *
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public abstract class AbstractJXPathModule extends AbstractInputModule {

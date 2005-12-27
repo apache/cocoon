@@ -22,7 +22,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * expressions. Supports escaping of braces with '\' character, and nested
  * expressions.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class VariableExpressionTokenizer {
 

@@ -27,9 +27,7 @@ import org.w3c.dom.Node;
  * <p>Cocoon 2 only objects can implement the SAX-only <code>XMLizable</code>
  * interface.</p>
  *
- * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a> for the original XObject class
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLFragment extends org.apache.excalibur.xml.sax.XMLizable {
 

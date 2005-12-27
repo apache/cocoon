@@ -24,9 +24,7 @@ import java.util.Map;
  * AbstractAction gives you the infrastructure for easily deploying more
  * Actions.  In order to get at the Logger, use getLogger().
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractAction extends AbstractLogEnabled
     implements Action {

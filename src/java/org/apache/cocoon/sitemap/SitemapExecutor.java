@@ -36,7 +36,7 @@ import org.apache.cocoon.selection.SwitchSelector;
  * TODO - we should add invocation of a Redirector as well
  * 
  * @since 2.2
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface SitemapExecutor {
     

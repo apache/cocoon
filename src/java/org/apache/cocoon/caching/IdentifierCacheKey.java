@@ -23,8 +23,7 @@ import java.io.Serializable;
  * a boolean value that defines if the key is for a complete pipeline call or
  * for an internal pipeline call.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since 2.1.1
  */
 public class IdentifierCacheKey

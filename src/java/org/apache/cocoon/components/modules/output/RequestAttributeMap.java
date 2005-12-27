@@ -30,8 +30,7 @@ import org.apache.cocoon.environment.Request;
  * set. Configuration option &lt;key-prefix&gt; defaults to
  * "org.apache.cocoon.components.modules.output.OutputModule"
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RequestAttributeMap extends AbstractOutputModule implements OutputModule, ThreadSafe {
     

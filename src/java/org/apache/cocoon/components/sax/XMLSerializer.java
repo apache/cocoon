@@ -24,8 +24,7 @@ import org.apache.cocoon.xml.XMLConsumer;
  * It's beyond the scope of this interface to specify the format for
  * the serialized data.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLSerializer extends XMLConsumer {
 

@@ -40,7 +40,7 @@ import org.apache.log.util.DefaultErrorHandler;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ExtensiblePatternFormatter
     implements Formatter

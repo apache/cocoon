@@ -29,8 +29,7 @@ import java.util.Vector;
  * RequestURIModule accesses the request URI. The {@link
  * RequestModule} provides similar functionality based on JXPath.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestURIModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RequestURIModule extends AbstractInputModule implements ThreadSafe {
 

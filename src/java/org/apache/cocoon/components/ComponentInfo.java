@@ -21,7 +21,7 @@ import org.apache.cocoon.core.container.CoreServiceManager;
 /**
  * Meta-information about a service
  *  
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class ComponentInfo {
 

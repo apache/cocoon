@@ -184,9 +184,7 @@ import java.util.Vector;
  *     <td>equals-to</td><td>string constant</td>
  * </tr>
  * </table>
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction
@@ -210,7 +208,6 @@ public abstract class AbstractValidatorAction
 
     /**
      * Are parameters encoded as strings?
-     * @return
      */
     abstract boolean isStringEncoded();
 

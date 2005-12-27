@@ -25,7 +25,7 @@ import java.io.OutputStream;
  * the output stream.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  * @since   2.1
  */
 public final class BufferedOutputStream extends FilterOutputStream {

@@ -67,9 +67,7 @@ import org.xml.sax.SAXException;
  * </ul>
  * </p>
  *
- * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstom</a>
  */
-
 public class XModuleSource
     extends AbstractSource
     implements ModifiableSource, XMLizable, DOMBuilder.Listener {

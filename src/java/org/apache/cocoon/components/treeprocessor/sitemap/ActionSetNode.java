@@ -27,10 +27,8 @@ import org.apache.cocoon.environment.Environment;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActionSetNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
+ * @version $Id$
  */
-
 public class ActionSetNode extends AbstractProcessingNode
   implements NamedProcessingNode {
       

@@ -26,8 +26,7 @@ import java.util.Map;
  * attributes and do the real communication e.g. to a bean only when
  * the transaction completes successfully.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface OutputModule {
 

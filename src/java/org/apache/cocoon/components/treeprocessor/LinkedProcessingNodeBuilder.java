@@ -20,10 +20,8 @@ package org.apache.cocoon.components.treeprocessor;
  * other nodes in the hierarchy. This allows to turn the node tree
  * into a directed graph.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LinkedProcessingNodeBuilder.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public interface LinkedProcessingNodeBuilder extends ProcessingNodeBuilder {
 
     /**

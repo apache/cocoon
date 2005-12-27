@@ -63,7 +63,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * file for more information.
  * </p>
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public class DefaultRunnableManager

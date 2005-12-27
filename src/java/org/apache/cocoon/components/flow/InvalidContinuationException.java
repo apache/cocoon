@@ -20,8 +20,7 @@ import org.apache.cocoon.ProcessingException;
 /**
  * This Exception is thrown whenever an invalid continuation is given.
  *
- * @author <a href="mailto:tcollen@neuagency.com">Tony Collen</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InvalidContinuationException extends ProcessingException {
 

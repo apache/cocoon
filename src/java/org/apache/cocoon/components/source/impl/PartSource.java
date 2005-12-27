@@ -34,8 +34,7 @@ import java.io.InputStream;
  * from a PartOnDisk or PartInMemory held in the Request when
  * a file is uploaded.
  *
- * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
- * @version CVS $Id: PartSource.java,v 1.5 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version $Id$
  */
 public class PartSource implements Source
 {

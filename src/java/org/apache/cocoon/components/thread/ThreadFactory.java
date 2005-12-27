@@ -19,7 +19,6 @@ package org.apache.cocoon.components.thread;
  * The ThreadFactory interface describes the responability of Factories
  * creating Thread for {@link ThreadPool}s of the {@link RunnableManager}
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public interface ThreadFactory

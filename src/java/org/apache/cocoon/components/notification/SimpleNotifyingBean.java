@@ -21,8 +21,7 @@ import java.util.Map;
 /**
  *  A simple bean implementation of Notifying.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SimpleNotifyingBean implements Notifying {
 

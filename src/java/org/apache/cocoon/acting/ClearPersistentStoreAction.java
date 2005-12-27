@@ -26,8 +26,7 @@ import java.util.Map;
 /**
  * Simple action which ensures the persistent store is cleared.
  *
- * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: ClearPersistentStoreAction.java,v 1.5 2004/05/19 11:32:02 cziegeler Exp $
+ * @version $Id$
  */
 public class ClearPersistentStoreAction extends ServiceableAction implements ThreadSafe {
 

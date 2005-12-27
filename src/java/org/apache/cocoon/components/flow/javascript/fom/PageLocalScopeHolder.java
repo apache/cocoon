@@ -19,7 +19,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 /**
- * @version CVS $Id: PageLocalScopeHolder.java,v 1.3 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version $Id$
  */
 public class PageLocalScopeHolder implements PageLocalScope {
 

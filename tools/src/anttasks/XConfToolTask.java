@@ -54,12 +54,7 @@ import org.xml.sax.SAXException;
  * insert-before: xpath expression, add new nodes before
  * insert-after: xpath expression, add new nodes after
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class XConfToolTask extends MatchingTask {
 

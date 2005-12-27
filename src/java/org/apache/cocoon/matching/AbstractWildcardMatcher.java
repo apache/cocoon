@@ -28,7 +28,7 @@ import java.util.Map;
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version $Id$
  */
 
 public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher implements ThreadSafe {

@@ -25,9 +25,8 @@ import org.apache.cocoon.components.flow.Interpreter;
  * Builder class for creating a {@link ScriptNode} instance
  * corresponding to a &lt;map:script&gt; element in the sitemap.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: ScriptNodeBuilder.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ScriptNodeBuilder
   extends AbstractProcessingNodeBuilder

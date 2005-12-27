@@ -26,7 +26,7 @@ import java.util.Map;
  * A <code>Selector</code> that matches a getMethod() of the HTTP request.
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @version CVS $Id: RequestMethodSelector.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RequestMethodSelector extends AbstractLogEnabled
   implements ThreadSafe, Selector {

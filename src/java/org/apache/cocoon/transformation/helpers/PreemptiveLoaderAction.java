@@ -27,7 +27,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * This action starts the preemptive loader and runs forever.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoaderAction.java,v 1.4 2004/03/05 13:03:00 bdelacretaz Exp $
+ *  @version $Id$
  *  @since   2.1
  */
 public class PreemptiveLoaderAction 

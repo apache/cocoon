@@ -30,8 +30,7 @@ import java.util.Map;
  * This action just checks if a session exists and whether the current
  * seesion is still valid.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionIsValidAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionIsValidAction extends AbstractAction implements ThreadSafe
 {

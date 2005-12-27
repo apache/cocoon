@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: ServiceableTransformer.java,v 1.2 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public abstract class ServiceableTransformer 

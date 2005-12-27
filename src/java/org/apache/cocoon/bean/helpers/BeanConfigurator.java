@@ -32,8 +32,7 @@ import org.w3c.dom.NodeList;
 /**
  * Static class for configuring a CocoonBean from a DOM Document object
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class BeanConfigurator {
 

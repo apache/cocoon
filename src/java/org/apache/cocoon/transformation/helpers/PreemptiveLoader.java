@@ -35,7 +35,7 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * and loads content into the cache.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoader.java,v 1.6 2004/03/05 13:03:00 bdelacretaz Exp $
+ *  @version $Id$
  *  @since   2.1
  */
 public final class PreemptiveLoader {

@@ -67,7 +67,6 @@ import org.xml.sax.XMLFilter;
  * @version $Id$
  * @since 2.1.8
  */
-
 public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, Serviceable, Initializable, Disposable, Parameterizable,
         Recyclable, URIResolver {
     /** The store service instance */

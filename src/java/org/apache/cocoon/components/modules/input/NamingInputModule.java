@@ -54,8 +54,7 @@ import java.util.Properties;
  *   &lt;/env-entry&gt;
  * </pre>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: NamingInputModule.java,v 1.2 2004/06/16 20:22:10 vgritsenko Exp $
+ * @version $Id$
  */
 public class NamingInputModule extends AbstractInputModule implements ThreadSafe, Initializable {
 

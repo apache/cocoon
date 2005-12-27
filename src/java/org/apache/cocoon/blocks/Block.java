@@ -22,7 +22,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public interface Block extends Processor { 
 

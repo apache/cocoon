@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AbstractExtractionTransformer.java,v 1.5 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version $Id$
  */
 abstract public class AbstractExtractionTransformer extends AbstractTransformer {
 

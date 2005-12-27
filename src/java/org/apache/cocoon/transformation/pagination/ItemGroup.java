@@ -20,7 +20,7 @@ package org.apache.cocoon.transformation.pagination;
  * Container class for the immutable pagination rules for each page.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: ItemGroup.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ItemGroup {
     

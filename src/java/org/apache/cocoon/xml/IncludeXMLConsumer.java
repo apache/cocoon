@@ -44,9 +44,7 @@ import org.w3c.dom.Node;
  * optional operations described above.</p>
  *
  * @see EmbeddedXMLPipe
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class IncludeXMLConsumer implements XMLConsumer {
 

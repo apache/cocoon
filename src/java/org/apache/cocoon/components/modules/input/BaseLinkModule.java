@@ -31,7 +31,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * instance, if called within a &lt;map:match pattern="a/b/c.xsp"> pipeline,
  * <code>{baselink:SitemapBaseLink}</code> would evaluate to <code>../../</code>.
  *
- * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
  * based on RequestURIModule
  *
  */

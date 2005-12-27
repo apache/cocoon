@@ -27,7 +27,7 @@ import org.apache.cocoon.transformation.TransformerFactory;
 /**
  * Component selector for sitemap components.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ComponentsSelector extends DefaultServiceSelector {
 

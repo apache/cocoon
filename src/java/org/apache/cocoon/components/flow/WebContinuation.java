@@ -38,9 +38,8 @@ import org.apache.commons.lang.StringUtils;
  * continuation becomes the root of a tree of
  * <code>WebContinuation</code>s.
  *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class WebContinuation extends AbstractLogEnabled
                              implements Comparable {

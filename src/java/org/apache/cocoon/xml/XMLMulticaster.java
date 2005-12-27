@@ -22,10 +22,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLMulticaster.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public final class XMLMulticaster implements XMLConsumer {
 
     /**

@@ -24,7 +24,7 @@ package org.apache.cocoon.util;
  *
  * @author <a href="mailto:buz@zis.com">Robert Uzgalis</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HashUtil.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 public final class HashUtil {
 

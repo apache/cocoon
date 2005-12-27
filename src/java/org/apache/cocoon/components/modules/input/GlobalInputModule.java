@@ -31,8 +31,7 @@ import java.util.Map;
  * values are inherited from one sitemap to its sub sitemaps and can be
  * extended there.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalInputModule.java,v 1.5 2004/07/07 02:37:01 vgritsenko Exp $
+ * @version $Id$
  */
 public final class GlobalInputModule
     extends AbstractLogEnabled

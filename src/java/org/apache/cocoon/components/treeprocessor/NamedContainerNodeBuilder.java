@@ -22,10 +22,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 /**
  * Builds a generic named container node.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NamedContainerNodeBuilder.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class NamedContainerNodeBuilder extends ContainerNodeBuilder implements Configurable {
 
     protected String nameAttr;

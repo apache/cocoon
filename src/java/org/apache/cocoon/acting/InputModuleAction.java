@@ -65,8 +65,7 @@ import java.util.Map;
  * 
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InputModuleAction extends ConfigurableServiceableAction implements ThreadSafe {
 

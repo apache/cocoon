@@ -79,9 +79,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * the attribute name and "from-parameter" to pass as attribute name
  * to the configured input module.</p>
  *
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class JXPathMetaModule extends AbstractMetaModule

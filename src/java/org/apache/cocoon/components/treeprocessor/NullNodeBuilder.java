@@ -19,10 +19,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NullNodeBuilder.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class NullNodeBuilder extends AbstractProcessingNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {

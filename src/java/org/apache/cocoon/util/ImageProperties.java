@@ -17,7 +17,7 @@ package org.apache.cocoon.util;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageProperties.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 final public class ImageProperties {
     final public int width;

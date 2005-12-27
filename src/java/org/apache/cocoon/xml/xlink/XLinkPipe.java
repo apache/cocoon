@@ -29,12 +29,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * NOTE: this is based on XLink W3C Candidate Recommendation 3 July 2000
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: XLinkPipe.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version $Id$
  */
-
-public abstract class XLinkPipe extends AbstractXMLPipe implements XLinkHandler
-{
+public abstract class XLinkPipe extends AbstractXMLPipe implements XLinkHandler {
 
     public static final String XLINK_NAMESPACE_URI = "http://www.w3.org/1999/xlink";
     public static final String XLINK_TYPE = "type";

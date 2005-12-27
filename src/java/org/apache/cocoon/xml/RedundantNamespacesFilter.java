@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * <p>
  * This is a the most simple use of {@link NamespacesTable}.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RedundantNamespacesFilter extends AbstractXMLPipe {
 

@@ -34,7 +34,7 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParameterMatcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ParameterMatcher implements Matcher, ThreadSafe
 {

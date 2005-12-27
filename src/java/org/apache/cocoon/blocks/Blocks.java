@@ -16,14 +16,13 @@
 package org.apache.cocoon.blocks;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public interface Blocks { 
 
     /**
      * Returns the block with the specified identity
      * @param blockId
-     * @return
      */
     Block getBlock(String blockId);
     
@@ -31,7 +30,6 @@ public interface Blocks {
      * The block with the largest mount point that is a prefix of the URI is
      * chosen.
      * @param uri
-     * @return
      */
     Block getMountedBlock(String uri);
 }

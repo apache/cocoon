@@ -30,10 +30,9 @@ import java.util.List;
  * here. It is only stored inside the <code>WebContinuation</code>,
  * without being interpreted in any way.
  *
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
  * @see WebContinuation
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface ContinuationsManager {
     public final String ROLE = ContinuationsManager.class.getName();

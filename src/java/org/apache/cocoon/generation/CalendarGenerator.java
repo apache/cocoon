@@ -25,7 +25,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -88,7 +87,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  *               
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     

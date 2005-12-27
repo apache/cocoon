@@ -26,7 +26,7 @@ import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyHandler.java,v 1.7 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ScriptablePropertyHandler implements DynamicPropertyHandler {
 

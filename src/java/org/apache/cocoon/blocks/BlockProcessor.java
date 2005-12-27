@@ -42,7 +42,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class BlockProcessor
     extends AbstractLogEnabled

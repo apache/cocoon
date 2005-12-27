@@ -29,8 +29,7 @@ import org.xml.sax.SAXException;
  * It is beyond the scope of this interface to specify the format of
  * the serialized data.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLDeserializer extends XMLProducer {
 

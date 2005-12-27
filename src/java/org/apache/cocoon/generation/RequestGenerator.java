@@ -59,11 +59,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * These configuration options are supported at both declaration and use time.
  * The configuration at use time takes priority over declaration time.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 

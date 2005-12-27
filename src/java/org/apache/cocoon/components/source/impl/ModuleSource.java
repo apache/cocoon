@@ -51,9 +51,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ul>
  * </p>
  *
- * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstom</a>
  */
-
 public class ModuleSource
     extends AbstractSource {
 

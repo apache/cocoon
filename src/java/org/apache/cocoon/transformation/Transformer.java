@@ -25,7 +25,7 @@ import org.apache.cocoon.xml.XMLPipe;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface Transformer extends XMLPipe, SitemapModelComponent {
 

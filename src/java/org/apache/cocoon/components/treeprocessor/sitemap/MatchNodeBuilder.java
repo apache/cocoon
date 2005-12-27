@@ -28,10 +28,8 @@ import org.apache.cocoon.matching.PreparableMatcher;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
+ * @version $Id$
  */
-
 public class MatchNodeBuilder extends AbstractParentProcessingNodeBuilder
   implements ThreadSafe {
 

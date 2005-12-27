@@ -32,9 +32,7 @@ import java.util.Map;
  * file (its format is defined in AbstractValidatorAction).
  * @see org.apache.cocoon.acting.AbstractValidatorAction
  *
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FormValidatorAction.java,v 1.5 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class FormValidatorAction extends AbstractValidatorAction implements ThreadSafe {
 

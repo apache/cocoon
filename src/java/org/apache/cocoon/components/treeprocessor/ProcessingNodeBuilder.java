@@ -25,10 +25,8 @@ import org.apache.avalon.framework.configuration.Configuration;
  * a different <code>ServiceManager</code>.
  * <p>
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public interface ProcessingNodeBuilder {
 
     /**

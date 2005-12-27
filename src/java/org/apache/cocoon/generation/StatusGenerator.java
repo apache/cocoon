@@ -97,10 +97,6 @@ import java.util.TreeSet;
  * &gt;
  * </code>
  *
- * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
- * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @version $Id$
  */
 public class StatusGenerator extends ServiceableGenerator

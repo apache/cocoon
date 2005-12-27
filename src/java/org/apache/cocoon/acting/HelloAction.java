@@ -29,8 +29,7 @@ import java.util.Map;
  * A simple Action that tracks if a <code>Session</code> object
  * has been created or not.
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: HelloAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class HelloAction extends ServiceableAction implements ThreadSafe {
 

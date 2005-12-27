@@ -20,7 +20,6 @@ import EDU.oswego.cs.dl.util.concurrent.Channel;
 /**
  * Wrapper around a Channel implementation for constructor convenience
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public class ChannelWrapper

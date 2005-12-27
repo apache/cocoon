@@ -48,13 +48,7 @@ import org.apache.excalibur.store.StoreJanitor;
  *  <LI><B>invokegc</B>: Invoke the gc on low memory first (true|false; default: false)</LI>
  * </UL></p>
  *
- * @avalon.component
- * @avalon.service type=StoreJanitor
- * @x-avalon.info name=store-janitor
- * @x-avalon.lifestyle type=singleton
- *
- * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class StoreJanitorImpl extends AbstractLogEnabled
                               implements StoreJanitor, Parameterizable, ThreadSafe,

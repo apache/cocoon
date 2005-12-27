@@ -32,9 +32,7 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the session attribute</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WildcardSessionAttributeMatcher.java,v 1.3 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class WildcardSessionAttributeMatcher extends AbstractWildcardMatcher
     implements Configurable

@@ -27,8 +27,7 @@ import org.apache.excalibur.source.SourceValidity;
  * <code>CachedStreamObject</code>.
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CachedResponse
         implements Serializable {

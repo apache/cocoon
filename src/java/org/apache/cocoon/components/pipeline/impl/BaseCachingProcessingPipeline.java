@@ -30,7 +30,6 @@ import org.apache.cocoon.components.sax.XMLSerializer;
  * by specifying the <code>cache-role</code> parameter.
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public abstract class BaseCachingProcessingPipeline extends AbstractProcessingPipeline

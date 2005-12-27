@@ -27,7 +27,6 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 /**
  * <p>An aggregated {@link SourceValidity} for multiple sources.</p>
  *
- * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
  * @version $Id$
  */
 public class MultiSourceValidity extends AbstractAggregatedValidity

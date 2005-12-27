@@ -89,7 +89,7 @@ import org.apache.log.format.Formatter;
  * </dl>
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CocoonTargetFactory
     extends FileTargetFactory

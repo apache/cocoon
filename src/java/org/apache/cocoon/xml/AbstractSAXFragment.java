@@ -26,8 +26,7 @@ import org.w3c.dom.Node;
  * the results of {@link #toSAX} that must be implemented by concrete
  * subclasses.</p>
  *
- * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractSAXFragment implements XMLFragment {
 

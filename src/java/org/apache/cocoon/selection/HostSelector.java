@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:cbritton@centervilletech.com">Colin Britton</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: HostSelector.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public class HostSelector extends NamedPatternsSelector {

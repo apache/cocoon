@@ -21,7 +21,7 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractTransformer.java,v 1.2 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version $Id$
  */
 
 public abstract class AbstractTransformer extends AbstractXMLPipe implements Transformer {}

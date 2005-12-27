@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: ImageUtils.java,v 1.4 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  */
 final public class ImageUtils {
 

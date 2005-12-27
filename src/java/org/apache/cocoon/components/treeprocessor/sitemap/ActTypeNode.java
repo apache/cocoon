@@ -32,10 +32,8 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 /**
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.11 2004/07/16 12:36:45 sylvain Exp $
+ * @version $Id$
  */
-
 public class ActTypeNode extends SimpleSelectorProcessingNode
   implements ParameterizableProcessingNode {
 

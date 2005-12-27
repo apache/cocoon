@@ -28,8 +28,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
 

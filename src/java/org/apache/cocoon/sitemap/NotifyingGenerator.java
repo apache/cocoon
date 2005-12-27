@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: NotifyingGenerator.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version $Id$
  */
 public class NotifyingGenerator extends AbstractGenerator {
     

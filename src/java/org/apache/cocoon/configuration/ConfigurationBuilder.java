@@ -69,7 +69,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * in that case the whitespace is left intact.
  * </p>
  *
- * @version SVN $Id$
+ * @version $Id$
  */
 public class ConfigurationBuilder
     extends DefaultHandler

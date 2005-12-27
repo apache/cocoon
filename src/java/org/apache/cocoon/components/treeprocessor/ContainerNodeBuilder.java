@@ -22,10 +22,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Builds a generic container node.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNodeBuilder.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
-
 public class ContainerNodeBuilder extends AbstractParentProcessingNodeBuilder implements ThreadSafe {
 
     /** This builder has no parameters -- return <code>false</code> */

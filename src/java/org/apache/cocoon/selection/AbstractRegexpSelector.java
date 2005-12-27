@@ -68,7 +68,7 @@ import org.apache.regexp.RESyntaxException;
  * </pre>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractRegexpSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {

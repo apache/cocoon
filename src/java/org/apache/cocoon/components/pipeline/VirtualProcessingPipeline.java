@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 /**
  * Pipeline used by virtual pipeline components
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class VirtualProcessingPipeline extends AbstractLogEnabled
                                        implements ProcessingPipeline, Recyclable, Serviceable {

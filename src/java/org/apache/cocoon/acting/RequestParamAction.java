@@ -78,9 +78,7 @@ import org.apache.cocoon.environment.SourceResolver;
  *
  * etc, etc.
  *
- * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: RequestParamAction.java,v 1.4 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class RequestParamAction extends ServiceableAction implements ThreadSafe {
 

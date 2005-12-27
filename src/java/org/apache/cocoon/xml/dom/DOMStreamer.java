@@ -59,9 +59,6 @@ import java.util.Map;
  * <li>if false, the standard JAXP identity transformer is used.
  * </ul>
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 public class DOMStreamer implements XMLProducer, Recyclable {

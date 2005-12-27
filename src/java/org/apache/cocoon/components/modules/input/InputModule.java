@@ -27,8 +27,7 @@ import java.util.Map;
  * access to individual attributes e.g. request parameters, request
  * attributes, session attributes &c.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface InputModule {
 

@@ -52,9 +52,6 @@ import java.util.ArrayList;
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.linkstatus
  *
- * @author Michael Homeijer
- * @author Nicola Ken Barozzi (nicolaken@apache.org)
- * @author Bernhard Huber (huber@apache.org)
  * @version $Id$
  */
 public class LinkStatusGenerator extends ServiceableGenerator

@@ -35,8 +35,7 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class ServletGenerator extends AbstractGenerator
 implements Serviceable, Disposable {

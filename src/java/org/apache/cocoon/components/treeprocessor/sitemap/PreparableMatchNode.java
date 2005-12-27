@@ -31,8 +31,7 @@ import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode, Initializable {

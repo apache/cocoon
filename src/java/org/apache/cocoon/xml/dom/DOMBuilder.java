@@ -32,7 +32,6 @@ import javax.xml.transform.sax.TransformerHandler;
  * The <code>DOMBuilder</code> is a utility class that will generate a W3C
  * DOM Document from SAX events.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class DOMBuilder extends AbstractXMLPipe {

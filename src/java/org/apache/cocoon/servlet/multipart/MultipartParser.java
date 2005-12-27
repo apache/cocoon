@@ -42,7 +42,7 @@ import org.apache.cocoon.util.NullOutputStream;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MultipartParser {
 

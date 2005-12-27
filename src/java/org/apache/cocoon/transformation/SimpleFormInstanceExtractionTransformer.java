@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.logger sitemap.transformer.simple-form-instance
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormInstanceExtractionTransformer.java,v 1.4 2004/06/17 14:55:24 cziegeler Exp $
+ * @version $Id$
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
     implements Configurable, Serviceable, Recyclable {

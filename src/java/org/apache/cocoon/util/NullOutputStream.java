@@ -19,7 +19,7 @@ import java.io.OutputStream;
 
 /**
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: NullOutputStream.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
  *
  * @since 2.1.4
  */

@@ -39,8 +39,7 @@ import org.apache.excalibur.store.Store;
  * This component will grow!
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CacheImpl
 extends AbstractLogEnabled

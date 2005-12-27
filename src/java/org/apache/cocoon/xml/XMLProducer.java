@@ -38,9 +38,7 @@ package org.apache.cocoon.xml;
  * through the <code>setConsumer()</code> method.
  * </p>
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface XMLProducer {
 

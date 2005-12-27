@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class VariableResolverFactory {
 

@@ -21,7 +21,6 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {

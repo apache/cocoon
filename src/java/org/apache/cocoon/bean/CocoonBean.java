@@ -56,11 +56,7 @@ import java.util.Map;
  * <p><b>WARNING:</b> This interface is not stable and could be changed in
  * backward incompatible way without prior notice.</p>
 
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CocoonBean extends CocoonWrapper {
 

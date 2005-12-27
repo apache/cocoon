@@ -36,8 +36,7 @@ import java.util.Map;
  * should be preferred to this component, as the semantics of a Selector better
  * matches the supplied functionality.
  *
- * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.6 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ResourceExistsAction extends ServiceableAction implements ThreadSafe {
 

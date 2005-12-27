@@ -24,8 +24,7 @@ import org.xml.sax.ContentHandler;
 /**
  * Logging content handler logs all events going through to the logger.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: LoggingContentHandler.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version $Id$
  */
 public class LoggingContentHandler extends AbstractLogEnabled implements ContentHandler {
 

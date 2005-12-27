@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class BlockDispatcherProcessor extends AbstractLogEnabled implements Processor {
 

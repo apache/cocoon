@@ -34,8 +34,7 @@ import org.apache.avalon.framework.service.Serviceable;
  * <code>DefaultComponentFactory</code>, but on existing objects.
  * <p>
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LifecycleHelper {
 

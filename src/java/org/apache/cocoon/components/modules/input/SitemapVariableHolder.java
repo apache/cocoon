@@ -32,8 +32,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * This "component" is a trick to get global variables on a per
  * sitemap base
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled

@@ -32,7 +32,6 @@ import java.util.Map;
  * method is called with no arguments. This may result in a security exception
  * which is wrapped into a configuration exception and re-thrown.</p>
  *
- * @author Konstantin Piroumian
  * @version $Id$
  */
 public class SystemPropertyModule extends AbstractJXPathModule

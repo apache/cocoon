@@ -24,9 +24,8 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  * Builder of a {@link FlowNode} instance, corresponding to a
  * <code>&lt;map:flow&gt;</code> element in the sitemap.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FlowNodeBuilder extends AbstractParentProcessingNodeBuilder {
 

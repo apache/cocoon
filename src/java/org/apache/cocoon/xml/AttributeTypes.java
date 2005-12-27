@@ -18,11 +18,10 @@ package org.apache.cocoon.xml;
 /**
  * Insert the type's description here.
  * 
- * @author <a href="mailto:volker.schmitt@basf-ag.de">Volker Schmitt</a>
- * @version CVS $Id: AttributeTypes.java,v 1.3 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version $Id$
  */
-public interface AttributeTypes
-{
+public interface AttributeTypes {
+
     String CDATA = "CDATA";
     String ENTITY = "ENTITY";
     String ENTITIES = "ENTITIES";

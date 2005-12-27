@@ -37,8 +37,6 @@ import java.util.Map;
 /**
  * Helps to call error handlers from PipelineNode and PipelinesNode.
  *
- * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @version $Id$
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled

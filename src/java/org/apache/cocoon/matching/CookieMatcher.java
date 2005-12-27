@@ -31,7 +31,7 @@ import java.util.Map;
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @version CVS $Id: CookieMatcher.java,v 1.4 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version $Id$
  */
 public class CookieMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe {
 

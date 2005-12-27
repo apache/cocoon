@@ -32,7 +32,7 @@ import org.mozilla.javascript.continuations.Continuation;
 
 /**
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FOM_WebContinuation extends ScriptableObject {
 

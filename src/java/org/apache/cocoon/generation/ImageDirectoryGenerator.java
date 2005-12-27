@@ -40,9 +40,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.pooling.max  16
  *
  *
- * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 final public class ImageDirectoryGenerator extends DirectoryGenerator {
 

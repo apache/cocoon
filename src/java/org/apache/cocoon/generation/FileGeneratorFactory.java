@@ -49,10 +49,6 @@ import java.util.Map;
  * @cocoon.sitemap.component.documentation.caching
  *     Uses the last modification date of the xml document for validation
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class FileGeneratorFactory extends AbstractLogEnabled

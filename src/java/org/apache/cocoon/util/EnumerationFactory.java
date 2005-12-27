@@ -104,7 +104,7 @@ import java.util.Vector;
  * the derived class.
  *
  * @author Christoph Grein
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumerationFactory {
 

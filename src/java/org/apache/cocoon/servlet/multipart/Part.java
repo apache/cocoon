@@ -36,7 +36,7 @@ import org.apache.excalibur.source.ModifiableSource;
  * information on the rejected uploads.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class Part implements Disposable {
 

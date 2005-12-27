@@ -19,24 +19,15 @@ package org.apache.cocoon.components.fam;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 import org.apache.commons.jci.monitor.FilesystemAlterationMonitor;
-import org.apache.excalibur.source.SourceResolver;
 
-public final class SitemapMonitorImpl extends AbstractLogEnabled implements SitemapMonitor, Serviceable, ThreadSafe, Initializable, Disposable {
+public final class SitemapMonitorImpl 
+    extends AbstractLogEnabled 
+    implements SitemapMonitor, ThreadSafe, Initializable, Disposable {
 
-    private ServiceManager manager;
-    private SourceResolver resolver;
     private FilesystemAlterationMonitor monitor;
-
-    public void service( ServiceManager manager ) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-    }
 
     public void initialize() throws Exception {
         monitor = new FilesystemAlterationMonitor();

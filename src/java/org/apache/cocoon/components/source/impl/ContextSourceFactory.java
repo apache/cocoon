@@ -49,9 +49,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * (see {@link org.apache.cocoon.environment.Context#getResource(String)}) 
  * and then resolving this real URL.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ContextSourceFactory
 extends AbstractLogEnabled

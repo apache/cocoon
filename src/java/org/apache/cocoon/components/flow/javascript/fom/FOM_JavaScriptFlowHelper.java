@@ -27,7 +27,7 @@ import java.util.Map;
  * allow access to Java constructors) through this interface, as well as
  * the FOM objects.
  *
- * @version CVS $Id: FOM_JavaScriptFlowHelper.java,v 1.5 2004/04/25 12:12:08 sylvain Exp $
+ * @version $Id$
  */
 public class FOM_JavaScriptFlowHelper extends FlowHelper {
 

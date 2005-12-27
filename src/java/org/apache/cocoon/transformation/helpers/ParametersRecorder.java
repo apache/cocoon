@@ -30,7 +30,7 @@ import java.util.Iterator;
  * <partwo>value_two<partwo>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ParametersRecorder.java,v 1.2 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version $Id$
 */
 public final class ParametersRecorder
 extends NOPRecorder {

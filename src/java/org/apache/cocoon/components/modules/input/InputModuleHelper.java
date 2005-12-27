@@ -24,8 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class InputModuleHelper {
     

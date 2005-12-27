@@ -36,9 +36,7 @@ import java.util.Vector;
  * calls into appropriate <code>xmlns</code> and <code>xmlns:...</code> element
  * attributes.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @version CVS $Id: DocumentHandlerWrapper.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version $Id$
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer implements LogEnabled /*, Recyclable*/ {
 

@@ -24,9 +24,8 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Handler for &lt;map:script&gt; elements in the sitemap. It registers the 
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: ScriptNode.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ScriptNode extends AbstractProcessingNode
 {

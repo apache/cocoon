@@ -43,8 +43,7 @@ import java.io.Serializable;
  * </p>
  *
  * @since 2.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface CacheableProcessingComponent {
 
@@ -93,10 +92,7 @@ public interface CacheableProcessingComponent {
      * values, etc. As long as the sitemap can determine whether the cached
      * resource is valid or not. More information is available on the 
      * <a href="http://excalibur.apache.org/sourceresolve/index.html">Apache
-     * Excalibur site</a>. Alternatively you can use the built in 
-     * <code>CacheValidity</code> objects in the
-     * <code>org.apache.cocoon.caching</code> package and then use the
-     * {@link CacheValidityToSourceValidity} adaptor object.
+     * Excalibur site</a>. 
      * </p>
      *
      * @return The generated validity object or <code>null</code> if the

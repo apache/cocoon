@@ -29,9 +29,8 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Handler for &lt;map:flow&gt; element in the sitemap.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since September 13, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FlowNode extends AbstractProcessingNode
                       implements Serviceable, Disposable {

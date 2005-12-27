@@ -67,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
