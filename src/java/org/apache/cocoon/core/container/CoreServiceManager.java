@@ -703,6 +703,7 @@ public class CoreServiceManager
                 info.fill(configuration);
                 info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), this));
                 info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), className));
+                info.setRole(role);
             }
             info.setConfiguration(configuration);
             info.setServiceClassName(className);

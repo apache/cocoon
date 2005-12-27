@@ -117,6 +117,7 @@ implements ComponentHandler {
             // this component does not use avalon interfaces, so get the info from the configuration
             info.fill(info.getConfiguration());
         }
+        info.setRole(role);
         
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory;
@@ -289,6 +290,7 @@ implements ComponentHandler {
         info.setConfiguration(config);
         info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), manager));
         info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), clazz.getName()));
+        info.setRole("XSP");
         return getComponentHandler(null, env, info);
 
     }
