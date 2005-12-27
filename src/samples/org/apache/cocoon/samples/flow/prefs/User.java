@@ -18,7 +18,7 @@ package org.apache.cocoon.samples.flow.prefs;
 /**
  * Representation of a user.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class User
 {

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Mock logger for test cases. Delegates to a Commons Logging logger.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MockLogger implements Logger {
     protected Log logger;

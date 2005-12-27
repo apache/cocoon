@@ -30,7 +30,7 @@ import org.xml.sax.Attributes;
 /**
  * A simple testcase for AbstractDOMTransformer.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XAbstractDOMTransformerTestCase extends TestCase {
 

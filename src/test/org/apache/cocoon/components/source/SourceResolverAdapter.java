@@ -28,7 +28,7 @@ import org.apache.excalibur.source.SourceException;
 /**
  * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SourceResolverAdapter implements SourceResolver
 {

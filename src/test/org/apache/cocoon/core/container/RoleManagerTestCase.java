@@ -27,7 +27,7 @@ import org.jmock.MockObjectTestCase;
 /**
  * Test cases for {@link RoleManager}.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RoleManagerTestCase extends MockObjectTestCase {
     

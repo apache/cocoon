@@ -21,7 +21,7 @@ import java.io.PrintWriter;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: Main.java 30932 2004-07-29 17:35:38Z vgritsenko $
+ * @version $Id: Main.java 30932 2004-07-29 17:35:38Z vgritsenko $
  */
 public class Main {
 

@@ -24,7 +24,7 @@ import java.util.Map;
  * to add.
  *
  * @since August 28, 2002
- * @version CVS $Id$
+ * @version $Id$
  */
 public class UserRegistry
 {

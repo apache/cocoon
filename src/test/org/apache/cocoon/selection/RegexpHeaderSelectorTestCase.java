@@ -24,7 +24,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 /**
  * Test case for RegexpHeaderSelector.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RegexpHeaderSelectorTestCase extends SitemapComponentTestCase {
 

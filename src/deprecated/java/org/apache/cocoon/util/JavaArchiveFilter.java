@@ -21,7 +21,7 @@ import java.io.FileFilter;
 /**
  * Implements a filter for java archives.
  *
- * @version CVS $Id$
+ * @version $Id$
  * @deprecated To be removed in Cocoon 2.3
  */
 public class JavaArchiveFilter implements FileFilter {
