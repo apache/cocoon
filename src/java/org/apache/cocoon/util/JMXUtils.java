@@ -43,6 +43,8 @@ import javax.management.ObjectName;
  * Utility methods for JMX
  *
  * @version $Id$
+ * 
+ * @since 2.2
  */
 public class JMXUtils {
     //~ Static fields/initializers ----------------------------------------------------------------------
@@ -357,7 +359,7 @@ public class JMXUtils {
     private static MBeanServer getInitialMBeanServer() {
         final List servers = MBeanServerFactory.findMBeanServer(null);
 
-        if(servers.size() > 0) {
+        if(servers.size() > 0) {s
             return (MBeanServer)servers.get(0);
         }
 
