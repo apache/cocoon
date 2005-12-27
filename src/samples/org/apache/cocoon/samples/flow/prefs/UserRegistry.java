@@ -13,16 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-/*
-    UserRegistry.java
-
-    Maintains a list of registered users.
-
-    Author: Ovidiu Predescu <ovidiu@apache.org>
-    Date: August 28, 2002
-
- */
-
 package org.apache.cocoon.samples.flow.prefs;
 
 import java.util.HashMap;
@@ -33,9 +23,8 @@ import java.util.Map;
  * there is no persistence of the users, but such thing should be easy
  * to add.
  *
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since August 28, 2002
- * @version CVS $Id: UserRegistry.java,v 1.3 2004/03/06 02:26:16 antonio Exp $
+ * @version CVS $Id$
  */
 public class UserRegistry
 {

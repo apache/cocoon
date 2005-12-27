@@ -28,8 +28,7 @@ import org.apache.commons.lang.SystemUtils;
  * @see org.apache.cocoon.util.MIMEUtils
  * Specifically, code for testing the parsing of mime.types files.
  *
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MIMEUtilsTestCase extends TestCase
 {

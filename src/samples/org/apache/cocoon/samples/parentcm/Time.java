@@ -19,8 +19,7 @@ import java.util.Date;
 
 /**
  * Interface for a simple time-keeping component.
- * @author ?
- * @version CVS $Id$
+ * @version $Id$
  */
 public interface Time {
 

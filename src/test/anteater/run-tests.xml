@@ -20,7 +20,6 @@
   Automatically detects all the Anteater tests in the current
   directory and runs them.
 
-  Author: Ovidiu Predescu "ovidiu@apache.org"
   Date: April 4, 2002
 
   Description:

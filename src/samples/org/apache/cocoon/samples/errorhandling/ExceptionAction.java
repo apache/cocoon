@@ -32,7 +32,6 @@ import java.util.Map;
  * Exception action. Throws different kinds of exception depending on
  * value of src attribute.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class ExceptionAction extends AbstractAction {

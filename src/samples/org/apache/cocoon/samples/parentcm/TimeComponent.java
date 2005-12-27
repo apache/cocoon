@@ -22,8 +22,7 @@ import java.util.Date;
 /**
  * Implementing class for the parent component manager sample's
  * <code>org.apache.cocoon.samples.parentcm.Time</code> component.
- * @author ?
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TimeComponent implements Time, ThreadSafe {
     

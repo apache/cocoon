@@ -29,8 +29,7 @@ import java.util.Iterator;
  * MRUBucketMap is based on the Avalon's BucketMap.
  *
  * @deprecated Use a corresponding map from commons-collections
- * @author  <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MRUBucketMap.java,v 1.1 2004/05/27 13:52:20 cziegeler Exp $
+ * @version $Id$
  */
 public final class MRUBucketMap implements Map {
     

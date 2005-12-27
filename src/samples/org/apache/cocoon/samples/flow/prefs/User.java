@@ -13,20 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-/*
-    User.java
-
-    Representation of a user.
-
-    Author: Ovidiu Predescu <ovidiu@apache.org>
-    Date: August 28, 2002
-
- */
 package org.apache.cocoon.samples.flow.prefs;
 
 /**
+ * Representation of a user.
  *
- * @version CVS $Id: User.java,v 1.3 2004/03/06 02:26:16 antonio Exp $
+ * @version CVS $Id$
  */
 public class User
 {

@@ -27,8 +27,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  * Test case for the nested variant of the PreparedVariableResolver
  *
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 

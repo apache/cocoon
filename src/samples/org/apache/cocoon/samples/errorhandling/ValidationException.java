@@ -16,7 +16,6 @@
 package org.apache.cocoon.samples.errorhandling;
 
 /**
- * @author Bj&ouml;rn L&uuml;tkemeier <bluetkemeier@s-und-n.de>
  * @since April 23, 2003
  * @version $Id$
  */

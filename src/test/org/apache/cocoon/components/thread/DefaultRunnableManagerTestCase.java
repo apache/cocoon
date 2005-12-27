@@ -23,7 +23,6 @@ import org.easymock.MockControl;
 /**
  * The $classType$ class ...
  *
- * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati </a>
  * @version $Id$
  */
 public class DefaultRunnableManagerTestCase extends AbstractTestCase

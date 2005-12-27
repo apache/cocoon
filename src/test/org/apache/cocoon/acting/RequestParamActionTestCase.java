@@ -28,8 +28,7 @@ import org.apache.cocoon.environment.mock.MockRequest;
 /**
  *
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RequestParamActionTestCase extends TestCase {
     private Map objectModel = new HashMap();

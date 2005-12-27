@@ -25,8 +25,7 @@ import org.xml.sax.SAXException;
  * A SAX filter to remove whitespace character, which disturb the
  * XML matching process.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: WhitespaceFilter.java,v 1.5 2004/03/05 13:03:04 bdelacretaz Exp $
+ * @version $Id$
  */
 public class WhitespaceFilter extends AbstractXMLPipe {
     private StringBuffer buffer = null;

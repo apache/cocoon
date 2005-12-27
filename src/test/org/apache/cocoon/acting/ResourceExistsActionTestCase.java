@@ -30,8 +30,7 @@ import org.jmock.MockObjectTestCase;
 /**
  *
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class ResourceExistsActionTestCase extends MockObjectTestCase {
     private Map objectModel = new HashMap();
