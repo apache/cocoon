@@ -22,7 +22,7 @@ import org.apache.cocoon.environment.SourceResolver;
 /**
  * Mock processor
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MockProcessor implements Processor {
     

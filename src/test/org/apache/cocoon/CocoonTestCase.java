@@ -30,7 +30,7 @@ import org.apache.excalibur.source.impl.URLSourceFactory;
 /**
  * Testcase for Cocoon. 
  *
- * @version CVS $Id: SitemapComponentTestCase.java 55427 2004-10-24 11:38:37Z cziegeler $
+ * @version $Id: SitemapComponentTestCase.java 55427 2004-10-24 11:38:37Z cziegeler $
  */
 public abstract class CocoonTestCase extends ContainerTestCase {
 

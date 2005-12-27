@@ -43,7 +43,7 @@ import java.util.Map;
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 public class TestAction extends ServiceableAction 
     implements Configurable, ThreadSafe {

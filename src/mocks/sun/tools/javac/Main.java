@@ -22,7 +22,7 @@ import java.io.OutputStream;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: Main.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version $Id$
  */
 public class Main {
 
