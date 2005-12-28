@@ -114,23 +114,12 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
      */
     private CallStack callStack;
 
-    /**
-     * The depth to which stacktraces are printed out
-     */
-    private final int m_stackDepth;
-
-
     public CocoonLogFormatter() {
-        this(DEFAULT_STACK_DEPTH);
-    }
-
-    public CocoonLogFormatter(int stackDepth) {
         try {
             this.callStack = new CallStack();
         } catch (SecurityException e) {
             // Ignore security exception
         }
-        this.m_stackDepth = stackDepth;
     }
 
     protected int getTypeIdFor(String type) {
