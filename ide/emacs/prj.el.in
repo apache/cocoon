@@ -3,8 +3,6 @@
 ;; Emacs JDE customization file for Cocoon. It is automatically used
 ;; if you have a decently recent version of GNU Emacs or Xemacs with JDE.
 ;;
-;; Author: Ovidiu Predescu <ovidiu@apache.org>
-;; Date: April 2002
 
 
 ;; JDE customization

@@ -18,7 +18,6 @@
   Build the Eclipse .classpath file from a list of path items
   (see "eclipse-project" target in build.xml)
 
-  @author Sylvain Wallez
   @version $Id$
 -->
 
