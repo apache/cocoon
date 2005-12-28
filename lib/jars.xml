@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id$
+    | $Id$
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -1073,7 +1073,7 @@
       using common web frameworks like Struts, JSF, PHP, Perl and Velocity. 
     </description>
     <used-by>Portal</used-by>
-    <lib>optional/portals-bridges-common-0.4-20050815.jar</lib>
+    <lib>optional/portals-bridges-common-1.0.jar</lib>
     <homepage>http://portals.apache.org/bridges/</homepage>
   </file>
   <file id="cowarp">
