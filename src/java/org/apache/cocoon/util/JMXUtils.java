@@ -214,8 +214,6 @@ public class JMXUtils {
      * @param bean The bean to estabilsh JMX for
      * @param info The component info
      * @param logger The Logger
-     *
-     * @return
      */
     public static ObjectInstance setupJmxFor(final Object bean,
                                              final ComponentInfo info,
@@ -225,7 +223,6 @@ public class JMXUtils {
             final String beanClassName = beanClass.getName();
             final String mbeanClassName = beanClassName + "MBean";
             ObjectName on = null;
-            Object comp = null;
 
             try {
                 // try to find a MBean for bean

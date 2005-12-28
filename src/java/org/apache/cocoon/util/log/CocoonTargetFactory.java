@@ -105,8 +105,7 @@ public class CocoonTargetFactory
         final String type = conf.getAttribute("type", "unknown");
 
         if ("cocoon".equals(type)) {
-            int depth = conf.getAttributeAsInteger( "depth", 0 );
-            final CocoonLogFormatter formatter = new CocoonLogFormatter( depth );
+            final CocoonLogFormatter formatter = new CocoonLogFormatter();
             final String format = conf.getValue(CFORMAT);
             formatter.setFormat(format);
             return formatter;
