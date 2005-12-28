@@ -83,7 +83,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *       ...
  * </pre></tt>
  *
- * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
  * @version $Id$
  */
 public class EncodeURLTransformer

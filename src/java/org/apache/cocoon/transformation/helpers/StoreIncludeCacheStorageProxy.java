@@ -25,7 +25,6 @@ import org.apache.excalibur.store.Store;
  * This is the interface between the {@link IncludeCacheManager} and the usual
  * store.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

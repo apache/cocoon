@@ -53,7 +53,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </ul>
  * </p>
  *
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @version $Id$
  */
 public class JPathTransformer extends AbstractSAXTransformer

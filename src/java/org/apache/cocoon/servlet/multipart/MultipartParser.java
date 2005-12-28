@@ -41,7 +41,6 @@ import org.apache.cocoon.util.NullOutputStream;
  * Vector: inline part values
  * FilePart: file part
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @version $Id$
  */
 public class MultipartParser {

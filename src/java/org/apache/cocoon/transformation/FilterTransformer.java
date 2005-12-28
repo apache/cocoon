@@ -53,8 +53,6 @@ import java.util.Map;
  * <p><b>Known limitation: behaviour of transformer when trigger elements are nested
  * is not predictable.</b>
  *
- * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class FilterTransformer

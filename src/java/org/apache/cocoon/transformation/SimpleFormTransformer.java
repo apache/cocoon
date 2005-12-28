@@ -144,7 +144,6 @@ import java.util.Map;
  *     &lt;error name="user.name" when-ge="error"&gt;required&lt;/error&gt;
  * </pre></p>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {

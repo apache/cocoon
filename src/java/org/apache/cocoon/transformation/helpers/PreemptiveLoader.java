@@ -34,7 +34,6 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * The preemptive loader is a singleton that runs in the background
  * and loads content into the cache.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

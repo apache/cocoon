@@ -103,9 +103,8 @@ import java.util.Stack;
  * Before the document is processed the <code>setupTransforming</code> hook
  * is invoked.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
-*/
+ */
 public abstract class AbstractSAXTransformer extends AbstractTransformer
                                              implements Serviceable, Configurable, Recyclable, Disposable {
 

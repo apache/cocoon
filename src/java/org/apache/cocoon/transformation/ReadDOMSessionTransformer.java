@@ -60,8 +60,6 @@ import java.util.Map;
  *  the trigger-element
  * </ul>
  *
- * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class ReadDOMSessionTransformer extends AbstractTransformer  {

@@ -39,7 +39,6 @@ import java.io.OutputStream;
  * <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
  *
  * 
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 

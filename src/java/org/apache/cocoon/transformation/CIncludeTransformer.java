@@ -123,8 +123,6 @@ import java.util.Map;
  * is updated by a background task. This task has to be started
  * beforehand.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
  * @version $Id$
  */
 public class CIncludeTransformer extends AbstractSAXTransformer

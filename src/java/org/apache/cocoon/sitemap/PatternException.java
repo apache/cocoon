@@ -22,9 +22,6 @@ import org.apache.avalon.framework.CascadingException;
  * <code>URITranslator</code> when there's something wrong with the matching or
  * translation patterns.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class PatternException extends CascadingException {

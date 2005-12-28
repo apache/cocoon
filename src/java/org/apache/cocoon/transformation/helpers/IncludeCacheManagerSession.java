@@ -39,7 +39,6 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
  * - parallel (boolean/false) : Turn on/off parallel processing
  * - expires (long/0) : The lifetime of the cached content
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

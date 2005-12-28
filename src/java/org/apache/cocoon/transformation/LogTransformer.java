@@ -61,9 +61,6 @@ import java.util.Map;
  * <br>
  * This transformations main purpose is debugging.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
- *         (PWR Organisation &amp; Entwicklung)
  * @version $Id$
  *
  */

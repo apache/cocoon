@@ -21,8 +21,6 @@ import java.util.Map;
 
 /**
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:leo.sutic">Leo Sutic</a>
  * @version $Id$
  */
 public interface Selector {

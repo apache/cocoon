@@ -27,7 +27,6 @@ import org.w3c.dom.Node;
  * A <a href="http://jakarta.apache.org/commons/jxpath">JXPath</a> <code>AbstractFactory</code>
  * that creates DOM elements.
  *
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
 

@@ -67,8 +67,7 @@ import org.xml.sax.ext.LexicalHandler;
  * supported), fallback elements, and does xinclude processing on the included content
  * and on the content of fallback elements (with loop inclusion detection).
  *
- * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version SVN $Id$
+ * @version $Id$
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable, CacheableProcessingComponent { 
     protected SourceResolver resolver;

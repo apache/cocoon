@@ -18,7 +18,6 @@ package org.apache.cocoon.util;
 import org.apache.avalon.framework.CascadingException;
 
 /**
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @version $Id$
  */
 public class FileFormatException extends CascadingException {

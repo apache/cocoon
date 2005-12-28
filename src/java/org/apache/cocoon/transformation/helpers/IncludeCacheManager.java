@@ -27,7 +27,6 @@ import org.xml.sax.SAXException;
  * It can eiter load them in parallel or pre-emptive and cache the content
  * for a given period of time.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

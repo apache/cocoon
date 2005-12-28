@@ -22,8 +22,6 @@ import java.util.List;
 /**
  * Container class for the immutable pagination rules for each page.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
  * @version $Id$
  */
 public class PageRules {

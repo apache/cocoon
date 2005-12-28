@@ -35,7 +35,6 @@ import org.apache.excalibur.source.ModifiableSource;
  * then an {@link RejectedPart} is used, from which no data can be obtained, but which gives some
  * information on the rejected uploads.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @version $Id$
  */
 public abstract class Part implements Disposable {

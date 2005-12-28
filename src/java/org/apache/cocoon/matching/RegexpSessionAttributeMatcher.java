@@ -32,7 +32,6 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the session attribute</td></tr>
  * </table>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class RegexpSessionAttributeMatcher extends AbstractRegexpMatcher

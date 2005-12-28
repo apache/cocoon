@@ -23,8 +23,6 @@ import org.apache.avalon.framework.service.Serviceable;
  * The serviceable reader will allow any {@link Reader} implementation that
  * extends this to access other Avalon components.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
  * @version $Id$
  */
 public abstract class ServiceableReader 

@@ -31,7 +31,6 @@ import java.util.Map;
  * A reader can be used to generate binary output for a request. This
  * abstract class helps in implementing a custom reader.
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @version $Id$
  */
 public abstract class AbstractReader

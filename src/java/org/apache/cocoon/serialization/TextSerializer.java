@@ -38,7 +38,6 @@ import java.io.OutputStream;
  * <p>Input document must have at least one element - root element - which
  * should wrap all the text inside it.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class TextSerializer extends AbstractTextSerializer {

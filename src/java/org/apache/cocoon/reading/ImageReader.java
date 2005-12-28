@@ -88,10 +88,6 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     </dd>
  *   </dl>
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:eric@plauditdesign.com">Eric Caron</a>
  * @version $Id$
  */
 final public class ImageReader extends ResourceReader {

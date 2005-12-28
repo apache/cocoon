@@ -52,10 +52,6 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
  * @version $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer

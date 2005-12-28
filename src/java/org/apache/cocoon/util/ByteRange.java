@@ -16,7 +16,6 @@
 package org.apache.cocoon.util;
 
 /**
- * @author <a href="mailto:stuart.roebuck@adolos.co.uk">Stuart Roebuck</a>
  * @version $Id$
  */
 final public class ByteRange {

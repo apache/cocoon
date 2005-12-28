@@ -33,7 +33,6 @@ import java.util.Map;
  * match against</td></tr>
  * </table>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class RegexpRequestParameterMatcher extends AbstractRegexpMatcher

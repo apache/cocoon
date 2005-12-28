@@ -566,7 +566,6 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      *   before returning in the next() method.
      * </p>
      *
-     * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
      * @version    $Id$
      */
     public static class CocoonCrawlerIterator implements Iterator {

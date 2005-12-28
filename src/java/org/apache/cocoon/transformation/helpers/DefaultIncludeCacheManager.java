@@ -56,7 +56,6 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  * If this loader cannot be started, only an error is logged into the
  * log, so actually cached content is never updated!
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

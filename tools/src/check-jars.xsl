@@ -23,8 +23,6 @@
     | that appear in the lib/ directory have an entry with a
     | description in the lib/jars.xml file.
     |
-    | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
-    | Date: May 22, 2002
     |
     +-->
 

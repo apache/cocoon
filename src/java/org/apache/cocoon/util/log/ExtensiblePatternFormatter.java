@@ -38,8 +38,6 @@ import org.apache.log.util.DefaultErrorHandler;
  *  properties of LogEvent
  * 'subformat' indicates a particular subformat and is currently unused.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class ExtensiblePatternFormatter

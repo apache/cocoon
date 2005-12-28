@@ -26,7 +26,6 @@ import org.apache.cocoon.environment.SourceResolver;
 /**
  * This action starts the preemptive loader and runs forever.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

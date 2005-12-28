@@ -30,7 +30,6 @@ import java.util.Map;
 /**
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
- * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
  * @version $Id$
  */
 public class CookieMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe {

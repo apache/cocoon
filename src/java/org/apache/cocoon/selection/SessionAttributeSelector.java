@@ -34,8 +34,6 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the session attribute.</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class SessionAttributeSelector extends AbstractLogEnabled

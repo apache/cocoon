@@ -23,8 +23,6 @@ import org.apache.cocoon.xml.XMLPipe;
  * It "transforms" incoming XML arriving as SAX events from the pipeline
  * and sends modified XML as SAX events down the pipeline.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 public interface Transformer extends XMLPipe, SitemapModelComponent {

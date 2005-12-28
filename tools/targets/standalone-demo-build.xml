@@ -18,7 +18,6 @@
 <project name="standalone">
 <!--
     ant include file for "standalone-demo" build
-    @author bdelacretaz@codeconsult.ch
  -->
 
 <target name="standalone-demo" depends="webapp" description="build webapp and copy files for standalone demo">

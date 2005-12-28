@@ -663,7 +663,6 @@ public class DefaultRunnableManager
     /**
      * The $classType$ class ...
      *
-     * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
      * @version $Id$
      */
     private class ExecutionInfo implements Comparable {

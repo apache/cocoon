@@ -38,7 +38,6 @@ import java.util.Map;
  *	</tr>
  * </table>
  *
- * @author <a href="mailto:matteodg@infinito.it">Matteo Di Giovinazzo</a>
  * @version $Id$
  */
 public class CookieSelector extends AbstractLogEnabled

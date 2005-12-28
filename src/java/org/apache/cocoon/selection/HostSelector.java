@@ -44,8 +44,6 @@ import java.util.Map;
  * &lt;/map:select&gt;
  * </pre>
  *
- * @author <a href="mailto:cbritton@centervilletech.com">Colin Britton</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 

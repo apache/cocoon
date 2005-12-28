@@ -31,9 +31,6 @@ import org.xml.sax.SAXException;
 /**
  * Generates an XML representation of the current notification.
  *
- * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
  * @version $Id$
  */
 public class NotifyingGenerator extends AbstractGenerator {

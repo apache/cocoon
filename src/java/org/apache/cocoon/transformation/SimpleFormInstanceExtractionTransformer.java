@@ -54,7 +54,6 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.name   simple-form-instance
  * @cocoon.sitemap.component.logger sitemap.transformer.simple-form-instance
  * 
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 

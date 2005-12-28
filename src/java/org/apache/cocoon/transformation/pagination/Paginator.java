@@ -45,10 +45,7 @@ import java.util.Map;
 /**
  * A paginating transformer.
  *
- * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.6 2004/05/17 16:17:11 vgritsenko Exp $
+ * @version $Id$
  */
 public class Paginator extends AbstractTransformer
   implements Serviceable, Disposable, CacheableProcessingComponent {

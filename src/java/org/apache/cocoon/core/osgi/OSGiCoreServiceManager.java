@@ -115,7 +115,6 @@ public class OSGiCoreServiceManager extends CoreServiceManager {
     
     /**
      * An OSGi service factory implemented on top of a {@link ComponentHandler}.
-     * @author sylvain
      *
      */
     public static class ComponentHandlerFactory implements ServiceFactory {

@@ -78,8 +78,6 @@ import java.util.Map;
  *  </pre>
  * </p>
  *
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public interface SwitchSelector extends Selector, ThreadSafe {

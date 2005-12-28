@@ -25,7 +25,6 @@ import java.util.Map;
 /**
  * A <code>Selector</code> that matches a getMethod() of the HTTP request.
  *
- * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
  * @version $Id$
  */
 public class RequestMethodSelector extends AbstractLogEnabled

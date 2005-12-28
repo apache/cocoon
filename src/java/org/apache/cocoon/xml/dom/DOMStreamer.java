@@ -171,8 +171,6 @@ public class DOMStreamer implements XMLProducer, Recyclable {
      * <p>This class will NOT check the correctness of namespaces, e.g. it will not
      * check that the "xml" prefix is not misused etc.
      *
-     * @author Bruno Dumon (bruno at outerthought dot org)
-     * @author Xalan team
      */
     public static class NamespaceNormalizingDOMStreamer extends AbstractXMLProducer {
         /**
@@ -676,10 +674,6 @@ public class DOMStreamer implements XMLProducer, Recyclable {
     /**
      * The <code>DefaultDOMStreamer</code> is a utility class that will generate SAX
      * events from a W3C DOM Document.
-     *
-     * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
-     * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
-     *         (Apache Software Foundation)
      */
     public static class DefaultDOMStreamer extends AbstractXMLProducer {
 

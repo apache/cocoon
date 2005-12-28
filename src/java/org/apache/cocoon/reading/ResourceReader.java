@@ -80,9 +80,6 @@ import java.util.Map;
  * <p>In addition to reader configuration, above parameters can be passed
  * to the reader at the time when it is used.
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class ResourceReader extends AbstractReader

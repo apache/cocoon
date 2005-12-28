@@ -25,7 +25,6 @@ import java.io.IOException;
 /**
  * A reader can be used to generate binary output for a request.
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @version $Id$
  */
 public interface Reader extends SitemapModelComponent, SitemapOutputComponent {

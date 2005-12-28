@@ -36,7 +36,6 @@ import java.util.Map;
  * @cocoon.sitemap.component.name   augment
  * @cocoon.sitemap.component.logger sitemap.transformer.augment
  * 
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since October 10, 2001
  * @version $Id$
  */

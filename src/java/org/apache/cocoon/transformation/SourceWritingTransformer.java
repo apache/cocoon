@@ -227,9 +227,6 @@ import org.xml.sax.SAXException;
  * TODO: Add a &lt;source:before/&gt; tag.
  * </b>
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @version $Id$
  */
 public class SourceWritingTransformer extends AbstractSAXTransformer

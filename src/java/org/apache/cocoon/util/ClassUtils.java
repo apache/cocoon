@@ -21,8 +21,6 @@ import java.net.URL;
 /**
  * A collection of class management utility methods.
  *
- * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class ClassUtils {

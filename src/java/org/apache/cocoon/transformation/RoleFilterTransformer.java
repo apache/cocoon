@@ -60,7 +60,6 @@ import java.util.StringTokenizer;
  * That means you can reassign the namespace to another prefix and all
  * will work as expected.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @version $Id$
  */
 public class RoleFilterTransformer extends FilterTransformer {

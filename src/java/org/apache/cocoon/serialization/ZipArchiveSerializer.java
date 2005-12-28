@@ -65,7 +65,6 @@ import org.xml.sax.helpers.NamespaceSupport;
  *   &lt;/zip:archive:zip&gt;
  * </pre>
  *
- * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
  * @version $Id$
  */
 

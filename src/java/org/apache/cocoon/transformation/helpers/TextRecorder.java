@@ -19,9 +19,8 @@ package org.apache.cocoon.transformation.helpers;
  * This class records all character SAX events and creates a string
  * from them.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
-*/
+ */
 public final class TextRecorder extends NOPRecorder {
 
     /**

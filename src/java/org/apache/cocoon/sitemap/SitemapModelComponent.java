@@ -39,8 +39,6 @@ import java.util.Map;
  * keep them synchronized because the order of SAX events affects the validity
  * of your XML document.
  * 
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 public interface SitemapModelComponent {
