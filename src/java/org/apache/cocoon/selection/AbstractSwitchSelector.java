@@ -23,8 +23,6 @@ import java.util.Map;
 /**
  * Abstract SwitchSelector class.
  *
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public abstract class AbstractSwitchSelector extends AbstractLogEnabled

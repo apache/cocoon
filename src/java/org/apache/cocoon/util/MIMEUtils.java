@@ -32,9 +32,6 @@ import java.util.StringTokenizer;
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @version $Id$
  */
 public class MIMEUtils {

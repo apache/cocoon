@@ -22,7 +22,6 @@ import java.util.Map;
  * get method accpeting a default value. The default value is returned if
  * the map does not contain a value for the provided key.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class HashMap extends java.util.HashMap {

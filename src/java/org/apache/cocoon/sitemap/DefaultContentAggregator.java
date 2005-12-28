@@ -47,8 +47,6 @@ import java.util.Map;
  * It combines several parts into one big XML document which is streamed
  * into the pipeline.
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class DefaultContentAggregator extends ContentHandlerWrapper

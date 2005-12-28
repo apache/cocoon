@@ -39,8 +39,6 @@ import org.apache.log.Hierarchy;
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
- * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class IOUtils {

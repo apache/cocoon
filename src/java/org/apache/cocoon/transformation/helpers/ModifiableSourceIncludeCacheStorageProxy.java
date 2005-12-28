@@ -34,7 +34,6 @@ import org.apache.excalibur.source.SourceResolver;
  * {@link Source} object that stores the cached content in a directory
  * manner.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

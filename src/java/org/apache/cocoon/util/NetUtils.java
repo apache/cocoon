@@ -36,7 +36,6 @@ import java.util.StringTokenizer;
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class NetUtils {

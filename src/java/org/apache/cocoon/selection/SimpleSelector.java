@@ -43,7 +43,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *    &lt;/map:select&gt;
  * </pre>
  * 
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  * @since 2.1
  */

@@ -33,7 +33,6 @@ import java.util.Map;
  * &lt;/map:match&gt;
  * </pre>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class ParameterMatcher implements Matcher, ThreadSafe

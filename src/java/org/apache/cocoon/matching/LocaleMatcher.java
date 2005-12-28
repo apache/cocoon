@@ -144,8 +144,6 @@ import java.util.Map;
  * </ul>
  *
  * @since 2.1.6
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class LocaleMatcher extends AbstractLogEnabled

@@ -320,7 +320,6 @@ extends DirectoryGenerator {
     /**
      * The MappingInfo class to reolve namespace prefixes to their namespace URI
      *
-     * @author <a href="mailto:giacomo(at)apache.org">Giacomo Pati</a>
      * @version $Id$
      */
     private static class MappingInfo

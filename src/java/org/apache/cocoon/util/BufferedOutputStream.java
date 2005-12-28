@@ -24,7 +24,6 @@ import java.io.OutputStream;
  * extends it with a logic to count the number of bytes written to
  * the output stream.
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  * @since   2.1
  */

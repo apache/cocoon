@@ -41,8 +41,6 @@ import org.xml.sax.helpers.DefaultHandler;
  *             to blast the code and rewrite it better, you'll make me happy :)
  * </pre>
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
  * @version $Id$
  */
 

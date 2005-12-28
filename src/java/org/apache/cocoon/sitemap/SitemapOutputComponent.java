@@ -38,8 +38,6 @@ import java.io.OutputStream;
  * rendered object (page/image/etc.).
  * </p>
  * 
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public interface SitemapOutputComponent {

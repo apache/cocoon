@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 

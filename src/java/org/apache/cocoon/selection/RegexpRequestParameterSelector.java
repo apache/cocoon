@@ -50,7 +50,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * pipeline itself.</p>
  * 
  * @version $Id$
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
  */
 public class RegexpRequestParameterSelector extends AbstractRegexpSelector {
 

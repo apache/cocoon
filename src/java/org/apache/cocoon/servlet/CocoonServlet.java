@@ -55,13 +55,6 @@ import org.apache.commons.lang.time.StopWatch;
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
  * @version $Id$
  */
 public class CocoonServlet extends HttpServlet {

@@ -51,7 +51,6 @@ import java.util.Map;
  *   dom-name is the name for the DOM object in the session
  *   dom-root-element is the trigger that will be the root element of the DOM
  *
- * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @version $Id$
  */
 

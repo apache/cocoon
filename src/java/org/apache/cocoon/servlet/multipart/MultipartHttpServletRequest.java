@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 /**
  * Servlet request wrapper for multipart parser.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @author Stefano Mazzocchi
  * @version $Id$
  */
 public class MultipartHttpServletRequest extends HttpServletRequestWrapper {

@@ -41,9 +41,6 @@ import java.util.Map;
  * If you need a ServiceManager there is an instance variable
  * <code>manager</code> for use.
  *
- * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer

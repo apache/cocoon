@@ -47,8 +47,6 @@ import java.util.Map;
  *     stacktrace.<li>
  * </ul>
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class CocoonLogFormatter extends ExtensiblePatternFormatter

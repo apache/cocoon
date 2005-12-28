@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This is the interface of Request Wrapper in Cocoon.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @version $Id$
  */
 public class RequestFactory {

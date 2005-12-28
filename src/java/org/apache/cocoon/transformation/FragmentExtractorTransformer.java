@@ -66,7 +66,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *   &lt;fe:fragment xmlns:fe="http://apache.org/cocoon/fragmentextractor/2.0" fragment-id="..."/&gt;
  * </pre>
  *
- * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
  * @version $Id$
  */
 public class FragmentExtractorTransformer extends AbstractTransformer

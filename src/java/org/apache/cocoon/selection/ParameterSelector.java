@@ -43,8 +43,6 @@ import java.util.Map;
  * and to be able to select between different pipeline configurations
  * depending on those parameters.
  *
- * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class ParameterSelector implements ThreadSafe, Selector {

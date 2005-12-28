@@ -136,14 +136,6 @@ import org.xml.sax.SAXException;
  * All &lt;parameter&gt; declarations will be made available in the XSLT stylesheet as
  * xsl:variables.
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- *
  * @version SVN $Id$
  */
 public class TraxTransformer extends AbstractTransformer

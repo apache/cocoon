@@ -20,9 +20,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 

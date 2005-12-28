@@ -33,7 +33,6 @@ import java.util.Map;
  *
  * @see BrowserSelector
  * @see HostSelector
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 

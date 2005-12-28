@@ -25,7 +25,6 @@ import java.io.Serializable;
  * usual store or the {@link ModifiableSourceIncludeCacheStorageProxy} that
  * uses a configured source.
  * 
- *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *  @version $Id$
  *  @since   2.1
  */

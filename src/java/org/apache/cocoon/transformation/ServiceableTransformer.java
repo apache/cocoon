@@ -31,8 +31,6 @@ import org.xml.sax.SAXException;
  * This class can be used as a base class for own transformer implementations
  * that need to lookup other components.
  * 
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 

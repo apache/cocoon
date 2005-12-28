@@ -59,9 +59,6 @@ import java.util.StringTokenizer;
  * <li><code>host</code> : outputs the request host header (&lt;priority&gt;).<li>
  * </ul>
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class XMLCocoonLogFormatter implements Formatter {

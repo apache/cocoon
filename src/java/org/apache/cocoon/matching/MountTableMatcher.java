@@ -73,7 +73,6 @@ import java.util.Map;
  * This configuration is used in the main sitemap of Cocoon samples, to allow users to define their own mount
  * table, but not fail if it does not exist.
  *
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
 public class MountTableMatcher extends AbstractLogEnabled

@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * This class represents a file part parsed from a http post stream.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @version $Id$
  */
 public class PartInMemory extends Part {

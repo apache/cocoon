@@ -88,7 +88,6 @@ import org.apache.log.format.Formatter;
  *  </dd>
  * </dl>
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public class CocoonTargetFactory

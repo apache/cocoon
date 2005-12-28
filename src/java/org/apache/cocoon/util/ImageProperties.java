@@ -16,7 +16,6 @@
 package org.apache.cocoon.util;
 
 /**
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @version $Id$
  */
 final public class ImageProperties {

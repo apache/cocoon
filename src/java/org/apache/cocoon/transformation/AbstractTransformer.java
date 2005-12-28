@@ -19,8 +19,6 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 
 /**
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 

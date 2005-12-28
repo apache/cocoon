@@ -29,9 +29,8 @@ import java.util.Iterator;
  * <parone>value_one<parone>
  * <partwo>value_two<partwo>
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
-*/
+ */
 public final class ParametersRecorder
 extends NOPRecorder {
 

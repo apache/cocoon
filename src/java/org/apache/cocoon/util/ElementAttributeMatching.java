@@ -27,7 +27,6 @@ import org.apache.regexp.RESyntaxException;
  * This was originally part of the EncodeURLTransformer, moved
  * here to make it more reusable.
  *
- * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
  * @version $Id$
  */
 public class ElementAttributeMatching {

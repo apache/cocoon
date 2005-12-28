@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @version $Id$
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {

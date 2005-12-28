@@ -73,8 +73,6 @@ import org.apache.excalibur.source.SourceResolver;
  *    &lt;map:serialize type="fo2pdf" /&lt;
  * </pre>
  *
- * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class ResourceExistsSelector extends AbstractLogEnabled

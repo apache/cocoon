@@ -25,7 +25,6 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  * The base class for all recorders. Simply does nothing
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
 */
 public abstract class NOPRecorder

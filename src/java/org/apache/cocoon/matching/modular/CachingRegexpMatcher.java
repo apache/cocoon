@@ -43,9 +43,6 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the parameter to match * against</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class CachingRegexpMatcher extends AbstractRegexpMatcher

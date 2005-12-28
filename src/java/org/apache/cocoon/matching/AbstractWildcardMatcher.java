@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * Base class for wildcard matchers
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 

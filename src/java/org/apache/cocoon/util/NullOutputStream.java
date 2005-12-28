@@ -18,7 +18,6 @@ package org.apache.cocoon.util;
 import java.io.OutputStream;
 
 /**
- * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
  * @version $Id$
  *
  * @since 2.1.4

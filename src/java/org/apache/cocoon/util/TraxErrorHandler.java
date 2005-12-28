@@ -26,7 +26,6 @@ import javax.xml.transform.TransformerException;
  * case of an fatal-error the exception is rethrown.
  * Warnings and errors are ignored.
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class TraxErrorHandler implements ErrorListener {

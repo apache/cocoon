@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @author tcurdt
  *
  */
 public final class ReflectionUtils {

@@ -23,7 +23,6 @@ import java.io.PushbackInputStream;
  * separated by a given boundary.
  *
  * A newline is espected after each boundary and is parsed away.
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @version $Id$
  */
 class TokenStream extends PushbackInputStream {

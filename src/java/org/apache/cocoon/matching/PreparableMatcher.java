@@ -25,7 +25,6 @@ import java.util.Map;
  * This is also a regular matcher, meaning the sitemap can decide either to prepare the pattern
  * or to match with a request-time evaluated pattern (for {..} substitution).
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public interface PreparableMatcher extends Matcher {

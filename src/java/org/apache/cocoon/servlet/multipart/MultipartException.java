@@ -19,7 +19,6 @@ package org.apache.cocoon.servlet.multipart;
  * Exception thrown when on a parse error such as
  * a malformed stream.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
  * @version $Id$
  */
 public class MultipartException extends Exception {

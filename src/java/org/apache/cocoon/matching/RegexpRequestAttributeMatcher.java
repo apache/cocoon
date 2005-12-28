@@ -32,7 +32,6 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the request attribute</td></tr>
  * </table>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class RegexpRequestAttributeMatcher extends AbstractRegexpMatcher

@@ -26,7 +26,6 @@ package org.apache.cocoon.transformation;
  * the Transformer instance returned by the {@link #getInstance()}.</p>
 
  * @since 2.2
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public interface TransformerFactory {

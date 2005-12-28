@@ -26,8 +26,6 @@ import org.apache.cocoon.xml.XMLConsumer;
  * <code>source</code> or <code>parameters</code> objects.
  * 
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
  * @version $Id$
  */
 public interface Serializer extends XMLConsumer, SitemapOutputComponent {

@@ -22,8 +22,6 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 /**
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
  * @version $Id$
  */
 final public class ImageUtils {

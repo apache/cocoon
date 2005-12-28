@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {

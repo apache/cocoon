@@ -22,10 +22,6 @@ import java.util.Map;
 /**
  * Matches the target host ("Host" request header) against a regular expression.
  *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
 public class RegexpHostMatcher extends AbstractRegexpMatcher

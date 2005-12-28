@@ -261,10 +261,6 @@ import java.util.StringTokenizer;
  *  <li>Move all formatting routines to I18nUtils
  * </ul>
  *
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
  * @version $Id$
  */
 public class I18nTransformer extends AbstractTransformer
