@@ -71,7 +71,7 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher im
     public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
 
         if(preparedPattern == null) {
-            throw new PatternException("A pattern is needed at " + SitemapParameters.getStatementLocation(parameters));
+            throw new PatternException("A pattern is needed at " + SitemapParameters.getLocation(parameters));
         }
 
         RE re = new RE((REProgram)preparedPattern);

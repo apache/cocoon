@@ -92,7 +92,7 @@ public interface SitemapExecutor {
      * @param selector
      * @param expression
      * @param parameters
-     * @return
+     * @return True if the selector did match.
      */
     boolean invokeSelector(ExecutionContext context,
             Map               objectModel,
@@ -108,7 +108,7 @@ public interface SitemapExecutor {
      * @param expression
      * @param parameters
      * @param selectorContext The context object for the switch selector
-     * @return
+     * @return True if the selector did match.
      */
     boolean invokeSwitchSelector(ExecutionContext context,
                                  Map             objectModel,
@@ -205,7 +205,7 @@ public interface SitemapExecutor {
      * @param context
      * @param objectModel
      * @param desc
-     * @return
+     * @return A (new) description for the pipeline component to use.
      */
     PipelineComponentDescription enteringPipeline(ExecutionContext context,
                                                   Map              objectModel,

@@ -229,7 +229,7 @@ public final class ComponentInfo {
     }
     
     /**
-     * @param The JMX domain name
+     * @param jmxDomain JMX domain name
      */
     public void setJmxDomain(final String jmxDomain) {
         this.jmxDomain = jmxDomain;
@@ -246,7 +246,7 @@ public final class ComponentInfo {
     }
     
     /**
-     * @param The JMX object name (without domain prefix)
+     * @param jmxName JMX object name (without domain prefix)
      */
     public void setJmxName(final String jmxName) {
         this.jmxName = jmxName;

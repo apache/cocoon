@@ -107,7 +107,7 @@ public class CoreUtil {
 	/**
      * Setup a new instance.
      * @param config
-     * @throws Exception
+     * @throws ServletException
      */
     public CoreUtil(ServletConfig config, String knownFile) throws ServletException {
 		this.config = config;

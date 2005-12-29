@@ -117,7 +117,7 @@ public class TemplateObjectModelHelper {
         final Map cocoon = new HashMap();
 
         // Needed for the FOM wrappers
-        Context cx = Context.enter();
+        Context.enter();
         try {
             // cocoon.request
             final Request request = ObjectModelHelper.getRequest( objectModel );
@@ -176,7 +176,7 @@ public class TemplateObjectModelHelper {
             objectModel.put( "Packages", javaPkg );
             objectModel.put( "java", pkgs );
         } else { 
-            Context cx = Context.enter();
+            Context.enter();
             try {
                 final String JAVA_PACKAGE = "JavaPackage";
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();

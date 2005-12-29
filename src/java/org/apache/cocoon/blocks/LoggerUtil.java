@@ -76,10 +76,10 @@ public class LoggerUtil {
     private LoggerManager loggerManager;
 
     private File contextForWriting;
-	/**
+
+    /**
      * Setup a new instance.
      * @param config
-     * @throws Exception
      */
     public LoggerUtil(ServletConfig config, Context appContext, Settings settings) {
     	this.config = config;

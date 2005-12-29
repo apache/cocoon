@@ -17,9 +17,7 @@ package org.apache.cocoon.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.SocketException;
 import java.net.URL;
 import java.util.HashMap;
 

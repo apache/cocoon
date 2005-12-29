@@ -212,7 +212,7 @@ public class XPointerFrameworkParserTokenManager
                 ReInitRounds();
             if (curChar < 64) {
                 long l = 1L << curChar;
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if ((0x100002600L & l) != 0L)
@@ -246,7 +246,7 @@ public class XPointerFrameworkParserTokenManager
                 } while (i != startsAt);
             } else if (curChar < 128) {
                 long l = 1L << (curChar & 077);
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if ((0x7fffffe87fffffeL & l) == 0L)
@@ -284,7 +284,7 @@ public class XPointerFrameworkParserTokenManager
                 long l1 = 1L << (hiByte & 077);
                 int i2 = (curChar & 0xff) >> 6;
                 long l2 = 1L << (curChar & 077);
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if (!jjCanMove_0(hiByte, i1, i2, l1, l2))
@@ -405,7 +405,7 @@ public class XPointerFrameworkParserTokenManager
                 ReInitRounds();
             if (curChar < 64) {
                 long l = 1L << curChar;
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if ((0xfffffcffffffffffL & l) != 0L)
@@ -417,7 +417,7 @@ public class XPointerFrameworkParserTokenManager
                 } while (i != startsAt);
             } else if (curChar < 128) {
                 long l = 1L << (curChar & 077);
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if ((0xffffffffbfffffffL & l) != 0L)
@@ -433,7 +433,7 @@ public class XPointerFrameworkParserTokenManager
                 long l1 = 1L << (hiByte & 077);
                 int i2 = (curChar & 0xff) >> 6;
                 long l2 = 1L << (curChar & 077);
-                MatchLoop : do {
+                do {
                     switch (jjstateSet[--i]) {
                         case 0 :
                             if (jjCanMove_2(hiByte, i1, i2, l1, l2)
@@ -684,7 +684,7 @@ public class XPointerFrameworkParserTokenManager
         Token matchedToken;
         int curPos = 0;
 
-        EOFLoop : for (;;) {
+        for (;;) {
             try {
                 curChar = input_stream.BeginToken();
             } catch (java.io.IOException e) {

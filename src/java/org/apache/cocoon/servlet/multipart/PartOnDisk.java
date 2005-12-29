@@ -72,7 +72,7 @@ public class PartOnDisk extends Part {
     /**
      * Returns a (ByteArray)InputStream containing the file data
      *
-     * @throws Exception
+     * @throws IOException
      */
     public InputStream getInputStream() throws IOException {
         if (this.file != null) {

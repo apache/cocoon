@@ -1048,7 +1048,6 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      * next value. If no more values exist, returns null.
      *
      * @param name
-     * @return
      */
     private Object getNextValue(String name) {
         Object result = null;

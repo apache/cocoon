@@ -46,7 +46,7 @@ extends ModelMBeanImpl {
     /**
      * Construction of PoolableComponentHandlerMBean
      *
-     * @param handler The managed PoolableComponentHandler instance
+     * @param manager The managed ContinuationsManager instance
      */
     public ContinuationsManagerImplMBean(final ContinuationsManagerImpl manager)
         throws MBeanException, InstanceNotFoundException {

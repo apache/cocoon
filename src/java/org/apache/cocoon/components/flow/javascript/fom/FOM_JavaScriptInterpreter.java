@@ -64,7 +64,6 @@ import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
-import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.debugger.Main;
 import org.mozilla.javascript.tools.shell.Global;
@@ -693,17 +692,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 Thread.currentThread().setContextClassLoader(savedClassLoader);
             }
         }
-    }
-
-    private Throwable unwrap(JavaScriptException e) {
-        Object value = e.getValue();
-        while (value instanceof Wrapper) {
-            value = ((Wrapper)value).unwrap();
-        }
-        if (value instanceof Throwable) {
-            return (Throwable)value;
-        }
-        return e;
     }
 
     public void forwardTo(Scriptable scope, FOM_Cocoon cocoon, String uri,

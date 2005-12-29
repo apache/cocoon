@@ -111,7 +111,6 @@ class TokenStream extends PushbackInputStream {
     /**
      * Return the stream state
      *
-     * @return
      */
     public int getState() {
         return state;
@@ -125,8 +124,6 @@ class TokenStream extends PushbackInputStream {
      * The stream state is updated after each call.
      *
      * @param out The output buffer
-     *
-     * @return
      *
      * @throws IOException
      */
@@ -198,8 +195,6 @@ class TokenStream extends PushbackInputStream {
      *
      * @param out
      *
-     * @return
-     *
      * @throws IOException
      */
     public int read(byte[] out) throws IOException {
@@ -215,8 +210,6 @@ class TokenStream extends PushbackInputStream {
      * @param out
      * @param off
      * @param len
-     *
-     * @return
      *
      * @throws IOException
      */
@@ -240,8 +233,6 @@ class TokenStream extends PushbackInputStream {
 
     /**
      * @see java.io.InputStream#read()
-     *
-     * @return
      *
      * @throws IOException
      */

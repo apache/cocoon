@@ -50,7 +50,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -106,13 +105,13 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
      * Release all resources.
      */
     public void recycle() {
-        Iterator sources = this.sourceMap.values().iterator();
-        while (sources.hasNext()) {
-            Source source = (Source)sources.next();
-            // FIXME
-            // These are allready disposed, why?
-            //this.resolver.release(source);
-        }
+        // FIXME
+        // These are allready disposed, why?
+        //Iterator sources = this.sourceMap.values().iterator();
+        //while (sources.hasNext()) {
+        //    Source source = (Source)sources.next();
+        //    this.resolver.release(source);
+        //}
         this.sourceMap.clear();
         super.recycle();
     }
