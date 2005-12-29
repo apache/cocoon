@@ -246,7 +246,6 @@ public class BlocksManager
      * The block with the largest mount point that is a prefix of the URI is
      * chosen. The implementation could be made much more efficient.
      * @param uri
-     * @return
      */
     public Block getMountedBlock(String uri) {
         Block block = null;

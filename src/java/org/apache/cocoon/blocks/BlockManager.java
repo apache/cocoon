@@ -132,7 +132,6 @@ public class BlockManager
     }
 
     /**
-     * @return
      * @throws Exception
      */
     protected Context getAvalonContext() throws Exception {
@@ -149,7 +148,6 @@ public class BlockManager
     /**
      * @param newContext
      * @param confLocation
-     * @return
      * @throws Exception
      */
     protected ServiceManager createLocalSourceResolverSM(Context newContext, ServiceManager parentServiceManager, String confLocation) throws Exception {

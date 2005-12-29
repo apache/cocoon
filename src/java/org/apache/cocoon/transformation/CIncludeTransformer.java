@@ -29,10 +29,8 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.IncludeCacheManager;
 import org.apache.cocoon.transformation.helpers.IncludeCacheManagerSession;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.NamespacesTable;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.cocoon.xml.NamespacesTable.Declaration;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;

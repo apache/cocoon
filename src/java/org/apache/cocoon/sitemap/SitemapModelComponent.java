@@ -54,7 +54,6 @@ public interface SitemapModelComponent {
      *
      * @throws SAXException if there is a problem reading a SAX stream.
      * @throws IOException  if there is a problem reading files.
-     * @throws ResourceNotFoundException if the resource to be rendered cannot be found.
      * @throws ProcessingException if there is any other unexpected problem.
      */
     void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 

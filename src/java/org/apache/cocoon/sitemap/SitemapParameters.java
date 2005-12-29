@@ -34,7 +34,7 @@ public class SitemapParameters extends Parameters implements Locatable {
         this.location = location;
     }
     
-    /*
+    /**
      * Get the location of the statement defining these parameters.
      * 
      * @since 2.1.8

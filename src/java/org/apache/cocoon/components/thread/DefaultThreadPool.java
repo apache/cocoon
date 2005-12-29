@@ -182,7 +182,7 @@ public class DefaultThreadPool
     }
 
     /**
-     * @see org.apache.cocoon.components.thread.ThreadPool#shutdownGraceful()
+     * @see org.apache.cocoon.components.thread.ThreadPool#shutdown()
      */
     public void shutdown() {
         if( m_shutdownGraceful ) {

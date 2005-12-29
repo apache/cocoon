@@ -47,7 +47,7 @@ public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher 
 
         if(preparedPattern == null) {
             throw new PatternException("A pattern is needed at " +
-                    SitemapParameters.getStatementLocation(parameters));
+                    SitemapParameters.getLocation(parameters));
         }
 
         String match = getMatchString(objectModel, parameters);

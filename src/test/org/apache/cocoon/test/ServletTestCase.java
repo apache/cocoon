@@ -31,7 +31,6 @@ import org.apache.cocoon.Cocoon;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
-import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
 
@@ -95,7 +94,7 @@ public class ServletTestCase extends TestCase {
     /**
      * Load a binary document.
      *
-     * @param source Source location.
+     * @param input Stream containing the document.
      *
      * @return Binary data.
      */
