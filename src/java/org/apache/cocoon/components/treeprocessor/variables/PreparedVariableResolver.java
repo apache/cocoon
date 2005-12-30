@@ -19,7 +19,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.modules.input.InputModule;
@@ -40,7 +39,6 @@ import java.util.Stack;
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
 
     private ServiceManager manager;
-    private ServiceSelector selector;
     protected List tokens;
     protected boolean needsMapStack;
 
@@ -123,19 +121,10 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
 
     protected Token getNewModuleToken(String moduleName) throws PatternException {
-        if (this.selector == null) {
-            try {
-                // First access to a module : lookup selector
-                this.selector = (ServiceSelector) this.manager.lookup(InputModule.ROLE + "Selector");
-            } catch(ServiceException ce) {
-                throw new PatternException("Cannot access input modules selector", ce);
-            }
-        }
-
         // Get the module
         InputModule module;
         try {
-            module = (InputModule) this.selector.select(moduleName);
+            module = (InputModule) this.manager.lookup(InputModule.ROLE + '/' + moduleName);
         } catch (ServiceException e) {
             throw new PatternException("Cannot get module named '" + moduleName +
                                        "' in expression '" + this.originalExpr + "'", e);
@@ -147,7 +136,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             token = new Token(THREADSAFE_MODULE, module);
         } else {
             // Stateful module : release it and get a new one each time
-            this.selector.release(module);
+            this.manager.release(module);
             token = new Token(STATEFUL_MODULE, moduleName);
         }
         return token;
@@ -254,7 +243,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             InputModule im = null;
             String moduleName = module.getStringValue();
             try {
-                im = (InputModule) this.selector.select(moduleName);
+                im = (InputModule) this.manager.lookup(InputModule.ROLE + '/' + moduleName);
 
                 Object result = im.getAttribute(expr.getStringValue(), null, objectModel);
                 return new Token(EXPR, result==null ? "" : result.toString());
@@ -268,7 +257,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                     "' in expression '" + this.originalExpr + "'", confEx);
 
             } finally {
-                this.selector.release(im);
+                this.manager.release(im);
             }
         } else if (type == SITEMAP_VAR) {
             // Prefixed sitemap variable must be parsed at runtime
@@ -309,22 +298,24 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         return new Token(EXPR, result==null ? "" : result.toString());
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public final void dispose() {
-        if (this.selector != null) {
+        if (this.manager != null) {
             for (Iterator i = tokens.iterator(); i.hasNext();) {
                 Token token = (Token)i.next();
                 if (token.hasType(THREADSAFE_MODULE)) {
                     InputModule im = token.getModule();
-                    this.selector.release(im);
+                    this.manager.release(im);
                 }
             }
-            this.manager.release(this.selector);
-            this.selector = null;
+            this.tokens.clear();
             this.manager = null;
         }
     }
 
-    private static class Token {
+    private static final class Token {
 
         private Object value;
         private int type;
