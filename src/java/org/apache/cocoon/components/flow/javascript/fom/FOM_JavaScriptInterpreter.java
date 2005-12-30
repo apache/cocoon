@@ -499,7 +499,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             String encoding = findEncoding(is);
             Reader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
             reader = new BufferedReader(reader);
-            Script compiledScript = cx.compileReader(scope, reader,
+            Script compiledScript = cx.compileReader(reader,
                     src.getURI(), 1, null);
             return compiledScript;
         } finally {
