@@ -33,6 +33,8 @@ import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.SourceUtil;
@@ -72,6 +74,9 @@ public abstract class AbstractInterpreter
     protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
 
+    /** The settings of Cocoon. */
+    protected Settings settings;
+
     /**
      * Whether reloading of scripts should be done. Specified through
      * the "reload-scripts" attribute in <code>flow.xmap</code>.
@@ -102,26 +107,35 @@ public abstract class AbstractInterpreter
         return this.instanceID;
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-        reloadScripts = config.getChild("reload-scripts").getValueAsBoolean(false);
-        checkTime = config.getChild("check-time").getValueAsLong(1000L);
+        this.reloadScripts = config.getChild("reload-scripts").getValueAsBoolean(this.settings.isReloadingEnabled("flow"));
+        this.checkTime = config.getChild("check-time").getValueAsLong(this.settings.getReloadDelay("flow"));
     }
 
     /**
-     * Serviceable
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager sm) throws ServiceException {
         this.manager = sm;
         this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
+        final Core core = (Core)this.manager.lookup(Core.ROLE);
+        this.settings = core.getSettings();
+        this.manager.release(core);
     }
 
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException{
         this.avalonContext = context;
         this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -129,6 +143,7 @@ public abstract class AbstractInterpreter
             this.manager.release( this.continuationsMgr );
             this.continuationsMgr = null;
             this.manager = null;
+            this.settings = null;
         }
     }
 
@@ -174,7 +189,7 @@ public abstract class AbstractInterpreter
      * @param out An OutputStream where the output should be written to.
      * @exception Exception If an error occurs.
      */
-    public void process(String uri, Object biz, OutputStream out)
+    protected void process(String uri, Object biz, OutputStream out)
     throws Exception {
         // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
         PipelineUtil pipeUtil = new PipelineUtil();
@@ -187,6 +202,9 @@ public abstract class AbstractInterpreter
         }
     }
 
+    /**
+     * @see org.apache.cocoon.components.flow.Interpreter#forwardTo(java.lang.String, java.lang.Object, org.apache.cocoon.components.flow.WebContinuation, org.apache.cocoon.environment.Redirector)
+     */
     public void forwardTo(String uri, Object bizData,
                           WebContinuation continuation,
                           Redirector redirector)
