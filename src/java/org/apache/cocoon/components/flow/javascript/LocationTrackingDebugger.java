@@ -50,8 +50,8 @@ public class LocationTrackingDebugger implements Debugger {
         public Location getLocation(Object obj, String description) {
             if (obj instanceof EcmaError) {
                 EcmaError ex = (EcmaError)obj;
-                if (ex.getSourceName() != null) {
-                    return new LocationImpl(ex.getName(), ex.getSourceName(), ex.getLineNumber(), ex.getColumnNumber());
+                if (ex.sourceName() != null) {
+                    return new LocationImpl(ex.getName(), ex.sourceName(), ex.lineNumber(), ex.columnNumber());
                 } else {
                     return Location.UNKNOWN;
                 }
