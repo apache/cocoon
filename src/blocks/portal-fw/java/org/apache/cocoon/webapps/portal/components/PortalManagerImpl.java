@@ -2101,7 +2101,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     currentCoplet = list[index];
 
                     String numberValue = currentCoplet.getAttributeNS(null, "number");
-                    if (numberValue == null || numberValue.equals("")) {
+                    if (numberValue == null || numberValue.length() == 0) {
                         // create unique number attribute
                         currentCoplet.setAttributeNS(null, "number", ""+number);
                         miscNodes[PortalConstants.PROFILE_MISC_LAST_COPLET_NODE] = currentCoplet;

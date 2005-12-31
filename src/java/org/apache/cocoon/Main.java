@@ -42,7 +42,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.26 2004/04/30 12:55:55 upayavira Exp $
+ * @version CVS $Id$
  */
 public class Main {
 
@@ -253,7 +253,7 @@ public class Main {
 
         if (line.hasOption(WORK_DIR_OPT)) {
             String workDir = line.getOptionValue(WORK_DIR_OPT);
-            if (workDir.equals("")) {
+            if (workDir.length() == 0) {
                 listener.messageGenerated(
                     "Careful, you must specify a work dir when using the -w/--workDir argument");
                 System.exit(1);
@@ -263,7 +263,7 @@ public class Main {
         }
         if (line.hasOption(CONTEXT_DIR_OPT)) {
             String contextDir = line.getOptionValue(CONTEXT_DIR_OPT);
-            if (contextDir.equals("")) {
+            if (contextDir.length() == 0) {
                 listener.messageGenerated(
                     "Careful, you must specify a configuration file when using the -c/--contextDir argument");
                 System.exit(1);

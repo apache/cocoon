@@ -678,7 +678,7 @@ public class SourceWritingTransformer extends AbstractSAXTransformer
                 // Import the fragment
                 Node importNode = resource.importNode(fragment, true);
 
-                if (path.equals("")) {
+                if (path.length() == 0) {
                     // Parent node is document itself
                     NodeList nodes = importNode.getChildNodes();
                     for (int i = 0; i < nodes.getLength();) {

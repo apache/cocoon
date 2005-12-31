@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.13 2004/03/09 13:53:53 reinhard Exp $
+ * @version $Id$
  */
 public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable {
     protected ServiceManager serviceManager;
@@ -78,7 +78,7 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
         // convertor configuration is allowed to be null, so check that it is not null
         if (convertorEl != null)
             type = convertorEl.getAttribute("type");
-        if (type == null || type.equals(""))
+        if (type == null || type.length() == 0)
             type = defaultConvertorHint;
         ConvertorBuilder convertorBuilder = (ConvertorBuilder)convertorBuilders.select(type);
         return convertorBuilder.build(convertorEl);

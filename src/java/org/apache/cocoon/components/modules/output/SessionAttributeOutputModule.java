@@ -178,7 +178,7 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
     
     protected String getName( String name ) {
         String prefix = (String) this.settings.get("key-prefix", PREFIX );
-        return (prefix.equals("") ? name : prefix+":"+name);
+        return (prefix.length() == 0 ? name : prefix+":"+name);
     }
 
 }

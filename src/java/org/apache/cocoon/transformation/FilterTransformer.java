@@ -92,7 +92,7 @@ implements CacheableProcessingComponent {
         this.elementName = parameters.getParameter(ELEMENT, "");
         this.count = parameters.getParameterAsInteger(COUNT, DEFAULT_COUNT);
         this.blocknr = parameters.getParameterAsInteger(BLOCKNR, DEFAULT_BLOCK);
-        if (this.elementName == null || this.elementName.equals("") || this.count == 0)  {
+        if (this.elementName == null || this.elementName.length() == 0 || this.count == 0)  {
             throw new ProcessingException("FilterTransformer: both "+ ELEMENT + " and " +
             COUNT + " parameters need to be specified");
         }

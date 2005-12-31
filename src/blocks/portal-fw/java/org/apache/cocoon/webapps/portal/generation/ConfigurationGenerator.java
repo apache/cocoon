@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.4 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id$
 */
 public final class ConfigurationGenerator
 extends ServiceableGenerator {
@@ -46,7 +46,7 @@ extends ServiceableGenerator {
             Request request = ObjectModelHelper.getRequest(this.objectModel);
             if (request.getSession(false) != null) {
                 if (this.source == null
-                    || this.source.equals("")
+                    || this.source.length() == 0
                     || this.source.equals("user")) {
                     portal.showPortal(this.xmlConsumer, true, false);
                 } else {

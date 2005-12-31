@@ -359,7 +359,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
         this.useFormName = this.useFormName || this.useFormNameTwice;
         if (this.useFormName) {
             this.separator =
-                (this.separator == null || this.separator.equals("") ? "/" : this.separator);
+                (this.separator == null || this.separator.length() == 0 ? "/" : this.separator);
             this.defaultPrefix = this.separator;
         }
         this.ignoreValidation =

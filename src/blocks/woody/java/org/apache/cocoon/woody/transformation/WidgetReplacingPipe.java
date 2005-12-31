@@ -41,7 +41,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.25 2004/03/09 13:54:12 reinhard Exp $
+ * @version CVS $Id$
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -144,7 +144,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" can only be used for repeater widgets.");
                 }
                 String widgetId = attributes.getValue("widget-id");
-                if (widgetId == null || widgetId.equals("")) {
+                if (widgetId == null || widgetId.length() == 0) {
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
                 }
                 ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
@@ -244,7 +244,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     protected Widget getWidget(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
-        if (widgetId == null || widgetId.equals("")) {
+        if (widgetId == null || widgetId.length() == 0) {
             throw new SAXException("WoodyTemplateTransformer: missing id attribute on a woody element.");
         }
         Widget widget = contextWidget.getWidget(widgetId);

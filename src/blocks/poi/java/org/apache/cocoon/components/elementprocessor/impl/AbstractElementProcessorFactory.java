@@ -32,7 +32,7 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
  * handle specific XML elements and their content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: AbstractElementProcessorFactory.java,v 1.4 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractElementProcessorFactory
      extends AbstractLogEnabled implements ElementProcessorFactory, Component
@@ -105,7 +105,7 @@ public abstract class AbstractElementProcessorFactory
     protected void addElementProcessorProgenitor(final String name,
             final Object progenitor)
     {
-        if ((name == null) || (name.equals(""))) {
+        if (name == null || name.length() == 0) {
             throw new IllegalArgumentException(
                 "Cannot use null or empty name as a key");
         }

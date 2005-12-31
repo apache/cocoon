@@ -382,7 +382,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                 }
 
                 // an empty href is a reference to the current document -- this can be different than the current base
-                if (href.equals("")) {
+                if (href.length() == 0) {
                     if (this.href == null)
                         throw new SAXException("XIncludeTransformer: encountered empty href (= href pointing to the current document) but the location of the current document is unknown.");
                     int fragmentIdentifierPos2 = this.href.indexOf('#');

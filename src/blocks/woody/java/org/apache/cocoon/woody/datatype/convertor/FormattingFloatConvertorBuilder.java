@@ -25,7 +25,7 @@ import java.util.Locale;
 /**
  * Builds {@link FormattingDecimalConvertor}s.
  *
- * @version CVS $Id: FormattingFloatConvertorBuilder.java,v 1.4 2004/03/09 13:54:15 reinhard Exp $
+ * @version CVS $Id$
  */
 public class FormattingFloatConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
@@ -54,9 +54,9 @@ public class FormattingFloatConvertorBuilder implements ConvertorBuilder {
             for (int i = 0; i < patternEl.length; i++) {
                 String locale = patternEl[i].getAttribute("locale");
                 String pattern = DomHelper.getElementText(patternEl[i]);
-                if (pattern.equals(""))
+                if (pattern.length() == 0)
                     throw new Exception("pattern element does not contain any content at " + DomHelper.getLocation(patternEl[i]));
-                if (locale.equals(""))
+                if (locale.length() == 0)
                     convertor.setNonLocalizedPattern(pattern);
                 else {
                     Locale loc = I18nUtils.parseLocale(locale);

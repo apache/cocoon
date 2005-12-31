@@ -267,7 +267,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                  */
                 cookie_value = getCookie(objectModel, cookie_name).getValue();
 
-                if (cookie_value == null || cookie_value.trim().equals("")) {
+                if (cookie_value == null || cookie_value.trim().length() == 0) {
                     // value is null
                     if (!nullable) {
                         if (getLogger().isDebugEnabled()) {

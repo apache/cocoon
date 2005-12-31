@@ -95,7 +95,7 @@ public class ProjectPathModule
                 getLogger().warn("No configuration supplied, using default: " + PROJECT_PARAM_DEFAULT);
             }
         }
-        if (this.projectBase.equals("")) {
+        if (this.projectBase.length() == 0) {
             this.projectBase = PROJECT_PARAM_DEFAULT;
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Empty configuration supplied, using default: " + PROJECT_PARAM_DEFAULT);

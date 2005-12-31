@@ -39,7 +39,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * @version CVS $Id: ExtendedXLinkPipe.java,v 1.6 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
@@ -111,7 +111,7 @@ public abstract class ExtendedXLinkPipe extends XLinkPipe {
 
         if (attrList != null) {
             for (int i = attrIndex + 1; i < attr.getLength(); i++)
-                if (attr.getURI(i).equals("")
+                if (attr.getURI(i).length() == 0
                     && attrList.contains(attr.getLocalName(i))) {
 
                     final String att = attr.getValue(i);
