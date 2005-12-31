@@ -508,7 +508,7 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                 namespace = "http://www.w3.org/2000/xmlns/";
             } else {
                 // Attribute name for this prefix's declaration
-                String declname = (prefix == "") ? "xmlns" : "xmlns:" + prefix;
+                String declname = (prefix.equals("")) ? "xmlns" : "xmlns:" + prefix;
 
                 // Scan until we run out of Elements or have resolved the namespace
                 while ((null != parent) && (null == namespace)
