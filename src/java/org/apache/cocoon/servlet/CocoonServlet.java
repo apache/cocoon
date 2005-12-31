@@ -689,22 +689,23 @@ public class CocoonServlet extends HttpServlet {
                     lib.delete();
                 }
 
-                InputStream is = this.servletContext.getResourceAsStream("/WEB-INF/lib/" + libName);
-                if (is == null) {
-                    this.getLogger().warn("Skipping " + libName);
-                } else {
-                    this.getLogger().debug("Extracting " + libName);
-                    OutputStream os = null;
-                    try {
+                InputStream is = null;
+                OutputStream os = null;
+                try {
+                    is = this.servletContext.getResourceAsStream("/WEB-INF/lib/" + libName);
+                    if (is != null) {
+                        this.getLogger().debug("Extracting " + libName);
                         os = new FileOutputStream(lib);
                         int count;
                         while ((count = is.read(buffer)) > 0) {
                             os.write(buffer, 0, count);
                         }
-                    } finally {
-                        if (is != null) is.close();
-                        if (os != null) os.close();
+                    } else {
+                        this.getLogger().warn("Skipping " + libName);
                     }
+                } finally {
+                    if (os != null) os.close();
+                    if (is != null) is.close();
                 }
 
                 if (lastModified != -1) {
@@ -718,7 +719,6 @@ public class CocoonServlet extends HttpServlet {
             return null;
         }
     }
-
 
     /**
      * Retreives the "extra-classpath" attribute, that needs to be
