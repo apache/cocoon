@@ -44,6 +44,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -386,7 +387,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         // FIXME (SM): implementation-specific parameter passing should be
         // made more extensible.
         if (_factory.getClass().getName().equals("org.apache.xalan.processor.TransformerFactoryImpl")) {
-            _factory.setAttribute("http://xml.apache.org/xalan/features/incremental", new Boolean(m_incrementalProcessing));
+            _factory.setAttribute("http://xml.apache.org/xalan/features/incremental", BooleanUtils.toBooleanObject(m_incrementalProcessing));
         }
 
         return _factory;
