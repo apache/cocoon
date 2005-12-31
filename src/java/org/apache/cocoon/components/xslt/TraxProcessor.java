@@ -386,7 +386,7 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         // FIXME (SM): implementation-specific parameter passing should be
         // made more extensible.
         if (_factory.getClass().getName().equals("org.apache.xalan.processor.TransformerFactoryImpl")) {
-            _factory.setAttribute("http://xml.apache.org/xalan/features/incremental", new Boolean(m_incrementalProcessing));
+            _factory.setAttribute("http://xml.apache.org/xalan/features/incremental", Boolean.valueOf(m_incrementalProcessing));
         }
 
         return _factory;
