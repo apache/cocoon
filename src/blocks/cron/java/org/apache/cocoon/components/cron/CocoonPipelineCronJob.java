@@ -24,6 +24,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -58,12 +59,14 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
 
         SourceResolver resolver = null;
         Source src = null;
+        InputStream is = null;
+        InputStreamReader reader = null;
         try {
             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
             src = resolver.resolveURI("cocoon://" + pipeline);
 
-            InputStream is = src.getInputStream();
-            InputStreamReader reader = new InputStreamReader(is);
+            is = src.getInputStream();
+            reader = new InputStreamReader(is);
             StringBuffer sb = new StringBuffer();
             char[] b = new char[8192];
             int n;
@@ -78,6 +81,12 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
         } catch (Exception e) {
             throw new CascadingRuntimeException("CocoonPipelineCronJob: " + name + ", raised an exception: ", e);
         } finally {
+            try {
+                if (reader != null) reader.close();
+                if (is != null) is.close();
+            } catch (IOException e) {
+                throw new CascadingRuntimeException("CocoonPipelineCronJob: " + name + ", raised an exception: ", e);
+            }
             if (resolver != null) {
                 resolver.release(src);
                 this.manager.release(resolver);
