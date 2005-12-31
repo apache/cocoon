@@ -38,7 +38,7 @@ import java.util.Map;
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
  * @author <a href="http://apache.org/~jeremy/">Jeremy Quinn</a>
- * @version CVS $Id$
+ * @version $Id$
  *
  * @since 2.1.5
  */
@@ -50,55 +50,55 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
     private String configuredPipeline;
     private String pipeline;
 
-	public void execute(String name) {
+    public void execute(String name) {
 
-		if (getLogger ().isDebugEnabled ()) {
-			getLogger().debug ("CocoonPipelineCronJob: " + name + ", calling pipeline: " + pipeline);
-		}
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("CocoonPipelineCronJob: " + name + ", calling pipeline: " + pipeline);
+        }
 
         SourceResolver resolver = null;
         Source src = null;
-		try {
-			resolver = (SourceResolver)this.manager.lookup (SourceResolver.ROLE);
-			src = resolver.resolveURI ("cocoon://" + pipeline);
+        try {
+            resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+            src = resolver.resolveURI("cocoon://" + pipeline);
 
-			InputStream is = src.getInputStream();
-			InputStreamReader reader = new InputStreamReader (is);
-			StringBuffer sb = new StringBuffer ();
-			char[] b = new char[8192];
-			int n;
-			while((n = reader.read (b)) > 0) {
-				sb.append (b, 0, n);
-			}
-			reader.close ();
-			if (getLogger ().isInfoEnabled ()) {
-				getLogger ().info ("CocoonPipelineCronJob: " + name + ", called pipeline: " +
-                                   pipeline + ", and received following content:\n" + sb.toString() );
-			}
-		} catch(Exception e) {
-			throw new CascadingRuntimeException ("CocoonPipelineCronJob: " + name + ", raised an exception: ", e);
-		} finally {
-			if (resolver != null) {
-				resolver.release (src);
-				this.manager.release (resolver);
-				resolver = null;
-				src = null;
-			}
-		}
-	}
-
-	public void configure(final Configuration config) throws ConfigurationException {
-		this.configuredPipeline = config.getChild(PIPELINE_PARAM).getValue(null);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.components.cron.ConfigurableCronJob#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
-	 */
-	public void setup(Parameters params, Map objects) {
-		if (null != params) {
-			pipeline = params.getParameter(PIPELINE_PARAM, configuredPipeline);
-		} else {
-             pipeline = configuredPipeline;      
+            InputStream is = src.getInputStream();
+            InputStreamReader reader = new InputStreamReader(is);
+            StringBuffer sb = new StringBuffer();
+            char[] b = new char[8192];
+            int n;
+            while ((n = reader.read (b)) > 0) {
+                sb.append(b, 0, n);
+            }
+            reader.close();
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("CocoonPipelineCronJob: " + name + ", called pipeline: " +
+                                   pipeline + ", and received following content:\n" + sb.toString());
+            }
+        } catch (Exception e) {
+            throw new CascadingRuntimeException("CocoonPipelineCronJob: " + name + ", raised an exception: ", e);
+        } finally {
+            if (resolver != null) {
+                resolver.release(src);
+                this.manager.release(resolver);
+                resolver = null;
+                src = null;
+            }
         }
 	}
+
+    public void configure(final Configuration config) throws ConfigurationException {
+        this.configuredPipeline = config.getChild(PIPELINE_PARAM).getValue(null);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.cron.ConfigurableCronJob#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
+     */
+    public void setup(Parameters params, Map objects) {
+        if (params != null) {
+            pipeline = params.getParameter(PIPELINE_PARAM, configuredPipeline);
+        } else {
+            pipeline = configuredPipeline;      
+        }
+    }
 }
