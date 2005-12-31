@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  &lt;map:match pattern="documents/**"&gt; 
  *   &lt;map:generate type="xpathdirectory" src="docs/{1}"&gt; 
  *    &lt;map:parameter name="xpath" value="/article/title|/article/abstract"/&gt; 
- *    &lt;map:parameter name="nsmapping" value="mapping.proeprties"/&gt; 
+ *    &lt;map:parameter name="nsmapping" value="mapping.properties"/&gt; 
  *    &lt;map:parameter name="nsmapping-reload" value="false"/&gt; 
  *    &lt;map:parameter name="xmlFiles" value="\.xml$"/&gt; 
  *   &lt;/map:generate&gt; 
