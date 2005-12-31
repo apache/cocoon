@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <mapping>
 	<description>Coplet base data mapping file</description>
 
@@ -22,7 +22,7 @@
 		<map-to xml="coplets" />
 
 		<field name="copletBaseData" type="org.apache.cocoon.portal.coplet.CopletBaseData" collection="vector" handler="org.apache.cocoon.portal.util.CopletBaseDataFieldHandler">
-			<bind-xml auto-naming="deriveByClass" />
+			<bind-xml matches="coplet-base-data" />
 		</field>
 	</class>
 
