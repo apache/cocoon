@@ -596,7 +596,8 @@ public class WebDAVSource extends AbstractLogEnabled
                 WebDAVSource src = WebDAVSource.newWebDAVSource(resources[i],
                                                                 childURL,
                                                                 this.protocol,
-                                                                getLogger());
+                                                                getLogger(),
+                                                                this.eventfactory);
                 src.enableLogging(getLogger());
                 children.add(src);
             }
