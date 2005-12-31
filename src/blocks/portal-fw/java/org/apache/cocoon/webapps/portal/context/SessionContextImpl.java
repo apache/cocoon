@@ -60,7 +60,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -224,7 +224,7 @@ implements SessionContext {
         if (path.startsWith("/")) path = path.substring(1);
         NodeList list = null;
 
-        if (path == null || path.equals("")) {
+        if (path == null || path.length() == 0) {
             Document doc = DOMUtil.createDocument();
             result = doc.createDocumentFragment();
             this.getLayoutDOM();

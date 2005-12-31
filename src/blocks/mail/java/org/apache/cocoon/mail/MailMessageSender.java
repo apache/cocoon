@@ -226,13 +226,13 @@ public class MailMessageSender
 
     private void initSession() {
         Properties properties = new Properties();
-        if (smtpHost == null || smtpHost.equals("") || smtpHost.equals("null")) {
+        if (smtpHost == null || smtpHost.length() == 0 || smtpHost.equals("null")) {
             properties.put("mail.smtp.host", "127.0.0.1");
         } else {
             properties.put("mail.smtp.host", smtpHost);
         }
 
-        if (smtpUser == null || smtpUser.equals("") || smtpUser.equals("null")) {
+        if (smtpUser == null || smtpUser.length() == 0 || smtpUser.equals("null")) {
             this.session = Session.getInstance(properties);
         } else {
             properties.put("mail.smtp.auth", "true");

@@ -76,7 +76,7 @@ public class RequestFactory {
         if ((contentType != null) && (contentType.toLowerCase().indexOf("multipart/form-data") > -1)) {
  
             String charEncoding = request.getCharacterEncoding();
-            if (charEncoding == null || charEncoding.equals("")) {
+            if (charEncoding == null || charEncoding.length() == 0) {
                 charEncoding = this.defaultCharEncoding;
             }
             

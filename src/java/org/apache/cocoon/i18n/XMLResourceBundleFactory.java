@@ -300,8 +300,8 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      */
     protected Locale getParentLocale(Locale locale) {
         Locale newloc;
-        if (locale.getVariant().equals("")) {
-            if (locale.getCountry().equals("")) {
+        if (locale.getVariant().length() == 0) {
+            if (locale.getCountry().length() == 0) {
                 newloc = new Locale("", "", "");
             } else {
                 newloc = new Locale(locale.getLanguage(), "", "");

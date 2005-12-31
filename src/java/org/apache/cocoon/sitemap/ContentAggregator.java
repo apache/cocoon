@@ -226,7 +226,7 @@ public class ContentAggregator extends ContentHandlerWrapper
                         String prefix) {
         Element elem = null;
         if (!element.equals("")) {
-            if (namespace.equals("")) {
+            if (namespace.length() == 0) {
                 elem = new Element(element,
                                    this.rootElement.namespace,
                                    this.rootElement.prefix);
@@ -303,7 +303,7 @@ public class ContentAggregator extends ContentHandlerWrapper
      */
     private void startElem(Element element)
     throws SAXException {
-        final String qname = (element.prefix.equals("")) ? element.name : element.prefix + ':' + element.name;
+        final String qname = (element.prefix.length() == 0) ? element.name : element.prefix + ':' + element.name;
         if (!element.namespace.equals("")) {
             this.contentHandler.startPrefixMapping(element.prefix, element.namespace);
         }
@@ -315,7 +315,7 @@ public class ContentAggregator extends ContentHandlerWrapper
      * and the root element
      */
     private void endElem(Element element) throws SAXException {
-        final String qname = (element.prefix.equals("")) ? element.name : element.prefix + ':' + element.name;
+        final String qname = (element.prefix.length() == 0) ? element.name : element.prefix + ':' + element.name;
         this.contentHandler.endElement(element.namespace, element.name, qname);
         if (!element.namespace.equals("")) {
             this.contentHandler.endPrefixMapping(element.prefix);
@@ -344,8 +344,8 @@ public class ContentAggregator extends ContentHandlerWrapper
             getLogger().debug("Skipping root element start event.");
             return;
         }
-        if (namespaceURI == null || namespaceURI.equals("")) {
-            final String qname = this.currentElement.prefix.equals("") ? localName : this.currentElement.prefix + ':' + localName;
+        if (namespaceURI == null || namespaceURI.length() == 0) {
+            final String qname = this.currentElement.prefix.length() == 0 ? localName : this.currentElement.prefix + ':' + localName;
             this.contentHandler.startElement(this.currentElement.namespace, localName, qname, atts);
         } else {
             this.contentHandler.startElement(namespaceURI, localName, raw, atts);
@@ -361,8 +361,8 @@ public class ContentAggregator extends ContentHandlerWrapper
             getLogger().debug("Skipping root element end event.");
             return;
         }
-        if (namespaceURI == null || namespaceURI.equals("")) {
-            final String qname = this.currentElement.prefix.equals("") ? localName : this.currentElement.prefix + ':' + localName;
+        if (namespaceURI == null || namespaceURI.length() == 0) {
+            final String qname = this.currentElement.prefix.length() == 0 ? localName : this.currentElement.prefix + ':' + localName;
             this.contentHandler.endElement(this.currentElement.namespace, localName, qname);
         } else {
             this.contentHandler.endElement(namespaceURI, localName, raw);

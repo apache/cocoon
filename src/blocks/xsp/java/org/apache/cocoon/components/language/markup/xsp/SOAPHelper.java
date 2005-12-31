@@ -38,7 +38,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: SOAPHelper.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id$
  * @since July 16, 2001
  */
 public class SOAPHelper {
@@ -65,7 +65,7 @@ public class SOAPHelper {
         HttpConnection conn = null;
 
         try {
-            if (action == null || action.equals("")) {
+            if (action == null || action.length() == 0) {
                 action = "\"\"";
             }
 

@@ -29,7 +29,7 @@ import java.io.IOException;
  * element
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPRows.java,v 1.5 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class EPRows extends BaseElementProcessor {
     private NumericResult _default_size_pts;
@@ -55,7 +55,7 @@ public class EPRows extends BaseElementProcessor {
         if (_default_size_pts == null) {
             String value = getValue(_default_size_pts_attribute);
 
-            if (value == null || value.trim().equals("")) {
+            if (value == null || value.trim().length() == 0) {
                 value = DEFAULT_SIZE_PTS;
             }
             _default_size_pts = NumericConverter.extractDouble(value);

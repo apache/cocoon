@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtils.java,v 1.7 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MIMEUtils {
 
@@ -150,7 +150,7 @@ public class MIMEUtils {
             if (line.startsWith("#")) {
                 continue;
             }
-            if (line.trim().equals("")) {
+            if (line.trim().length() == 0) {
                 continue;
             }
             StringTokenizer tok = new StringTokenizer(line, " \t");

@@ -160,7 +160,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     protected String getWidgetId(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
-        if (widgetId == null || widgetId.equals("")) {
+        if (widgetId == null || widgetId.length() == 0) {
             throwSAXException("Missing required widget \"id\" attribute.");
         }
         return widgetId;
@@ -414,7 +414,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 getRepeaterWidget("RepeaterWidgetLabelHandler");
                 String widgetId = input.attrs.getValue("widget-id");
-                if (widgetId == null || widgetId.equals(""))
+                if (widgetId == null || widgetId.length() == 0)
                     throwSAXException("Element repeater-widget-label missing required widget-id attribute.");
                 ((Repeater)widget).generateWidgetLabel(widgetId, getContentHandler());
                 widget = null;

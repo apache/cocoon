@@ -32,7 +32,7 @@ import javax.mail.internet.MimePart;
  *
  * @author Bernhard Huber
  * @since 26. Oktober 2002
- * @version CVS $Id: MimeMessageUtil.java,v 1.5 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MimeMessageUtil {
     /**
@@ -69,7 +69,7 @@ public class MimeMessageUtil {
         } catch (MessagingException e) {
             sender = SENDER_NOT_AVAILABLE;
         }
-        if (sender == null || sender.trim().equals("")) {
+        if (sender == null || sender.trim().length() == 0) {
             sender = SENDER_NOT_AVAILABLE;
         }
         return sender;
@@ -94,7 +94,7 @@ public class MimeMessageUtil {
         } catch (MessagingException e) {
             senderEmail = SENDER_NOT_AVAILABLE;
         }
-        if (senderEmail == null || senderEmail.trim().equals("")) {
+        if (senderEmail == null || senderEmail.trim().length() == 0) {
             senderEmail = SENDER_NOT_AVAILABLE;
         }
         return senderEmail;
@@ -114,7 +114,7 @@ public class MimeMessageUtil {
         } catch (MessagingException e) {
             subject = NO_SUBJECT;
         }
-        if (subject == null || subject.trim().equals("")) {
+        if (subject == null || subject.trim().length() == 0) {
             subject = NO_SUBJECT;
         }
         return subject;

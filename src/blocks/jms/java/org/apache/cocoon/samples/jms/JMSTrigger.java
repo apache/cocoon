@@ -80,7 +80,7 @@ public class JMSTrigger implements Trigger {
 
         properties.put(Context.INITIAL_CONTEXT_FACTORY, this.contextFactoryName);
 
-        if (this.port.equals("")) {
+        if (this.port.length() == 0) {
             if (scheme.equals("tcp") || scheme.equals("tcps")) {
                 port = "3035";
             } else if (scheme.equals("http")) {

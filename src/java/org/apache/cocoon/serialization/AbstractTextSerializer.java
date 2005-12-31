@@ -441,7 +441,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
                     // Build infos for this namespace
                     String uri = (String) this.uriList.get(mapping);
                     String prefix = (String) this.prefixList.get(mapping);
-                    String qName = prefix.equals("") ? "xmlns" : ("xmlns:" + prefix);
+                    String qName = prefix.length() == 0 ? "xmlns" : ("xmlns:" + prefix);
 
                     // Search for the corresponding xmlns* attribute
                     boolean found = false;
@@ -470,7 +470,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
                             }
                         }
 
-                        if (prefix.equals("")) {
+                        if (prefix.length() == 0) {
                             newAttrs.addAttribute(Constants.XML_NAMESPACE_URI, "xmlns", "xmlns", "CDATA", uri);
                         } else {
                             newAttrs.addAttribute(Constants.XML_NAMESPACE_URI, prefix, qName, "CDATA", uri);

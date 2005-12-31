@@ -118,7 +118,7 @@ public class RequestAttributeOutputModule extends AbstractOutputModule implement
         }
 
         String prefix = (String) this.settings.get("key-prefix", PREFIX);
-        if (prefix.equals("")) {
+        if (prefix.length() == 0) {
             request.setAttribute("errorMessage", e.getMessage());
         } else {
             request.setAttribute(prefix + ':' + "errorMessage", e.getMessage());
@@ -162,6 +162,6 @@ public class RequestAttributeOutputModule extends AbstractOutputModule implement
 
     protected String getName(String name) {
         String prefix = (String) this.settings.get("key-prefix", PREFIX);
-        return prefix.equals("") ? name : prefix + ':' + name;
+        return prefix.length() == 0 ? name : prefix + ':' + name;
     }
 }

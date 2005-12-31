@@ -451,7 +451,7 @@ public class SearchGenerator extends ServiceableGenerator
         queryString = par.getParameter(QUERY_PARAM, "");
 
         // try getting the queryString from the request params
-        if (queryString.equals("")) {
+        if (queryString.length() == 0) {
             param_name = par.getParameter(QUERY_STRING_PARAM, QUERY_STRING_PARAM_DEFAULT);
             if (request.getParameter(param_name) != null) {
                 queryString = request.getParameter(param_name);

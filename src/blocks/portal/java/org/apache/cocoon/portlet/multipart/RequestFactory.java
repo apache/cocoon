@@ -28,7 +28,7 @@ import java.util.Hashtable;
  * This is the interface of Request Wrapper in Cocoon for JSR-168 Portlet environment.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RequestFactory.java,v 1.2 2004/03/05 13:02:17 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestFactory {
 
@@ -69,7 +69,7 @@ public class RequestFactory {
             }
 
             String charEncoding = request.getCharacterEncoding();
-            if (charEncoding == null || charEncoding.equals("")) {
+            if (charEncoding == null || charEncoding.length() == 0) {
                 charEncoding = this.defaultCharEncoding;
             }
 
