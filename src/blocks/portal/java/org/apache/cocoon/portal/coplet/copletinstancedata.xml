@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <mapping>
 	<description>Coplet instance data mapping file</description>
 
@@ -57,7 +57,7 @@
 		<map-to xml="coplets" />
 
 		<field name="copletInstanceData" type="org.apache.cocoon.portal.coplet.CopletInstanceData" collection="vector" handler="org.apache.cocoon.portal.util.CopletInstanceDataFieldHandler">
-			<bind-xml auto-naming="deriveByClass"/>
+			<bind-xml matches="coplet-instance-data"/>
 		</field>
 	</class>
 

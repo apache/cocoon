@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id:$ -->
+<!-- SVN $Id$ -->
 <mapping>
   <description>Portalprofile mapping file</description>
 
@@ -70,7 +70,7 @@
       collection="collection"
       set-method="addItem"
       get-method="getItems">
-      <bind-xml auto-naming="deriveByClass"/>
+      <bind-xml matches="named-item item"/>
     </field>
   </class>
 
@@ -83,7 +83,7 @@
   <class name="org.apache.cocoon.portal.layout.Item"
     extends="org.apache.cocoon.portal.layout.AbstractParameters">
     <field name="layout" type="org.apache.cocoon.portal.layout.Layout">
-      <bind-xml auto-naming="deriveByClass"/>
+      <bind-xml matches="frame-layout link-layout composite-layout coplet-layout"/>
     </field>
   </class>
 
