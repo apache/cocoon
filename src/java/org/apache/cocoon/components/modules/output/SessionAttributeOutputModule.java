@@ -123,8 +123,8 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("done rolling back");
         }
-        String prefix = (String) this.settings.get("key-prefix", PREFIX );
-        if (prefix!="") {
+        String prefix = (String) this.settings.get("key-prefix", PREFIX);
+        if (!(prefix.equals(""))) {
             ObjectModelHelper.getRequest(objectModel).getSession().setAttribute(prefix+":",e.getMessage());
         } else {
             ObjectModelHelper.getRequest(objectModel).getSession().setAttribute("errorMessage",e.getMessage());
