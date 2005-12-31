@@ -881,23 +881,23 @@ public class CocoonServlet extends HttpServlet {
 //                        this.logger.debug("Removing modified library " + lib);
 //                        lib.delete();
 //                    }
-//
-//                    InputStream is = this.config.getServletContext().getResourceAsStream("/WEB-INF/lib/" + libName);
-//                    if (is == null) {
-//                        this.logger.warn("Skipping " + libName);
-//                    } else {
-//                        this.logger.debug("Extracting " + libName);
-//                        OutputStream os = null;
-//                        try {
+//                    InputStream is = null;
+//                    OutputStream os = null;
+//                    try {
+//                        is = this.servletContext.getResourceAsStream("/WEB-INF/lib/" + libName);
+//                        if (is != null) {
+//                            this.getLogger().debug("Extracting " + libName);
 //                            os = new FileOutputStream(lib);
 //                            int count;
 //                            while ((count = is.read(buffer)) > 0) {
 //                                os.write(buffer, 0, count);
 //                            }
-//                        } finally {
-//                            if (is != null) is.close();
-//                            if (os != null) os.close();
+//                        } else {
+//                            this.getLogger().warn("Skipping " + libName);
 //                        }
+//                    } finally {
+//                        if (os != null) os.close();
+//                        if (is != null) is.close();
 //                    }
 //
 //                    if (lastModified != -1) {
