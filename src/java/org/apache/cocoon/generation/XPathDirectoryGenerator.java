@@ -318,7 +318,7 @@ extends DirectoryGenerator {
     }
 
     /**
-     * The MappingInfo class to reolve namespace prefixes to their namespace URI
+     * The MappingInfo class to resolve namespace prefixes to their namespace URI
      *
      * @version $Id$
      */
@@ -352,17 +352,29 @@ extends DirectoryGenerator {
             this.mappingSource = mappingSource;
             this.reload = reload;
             prefixMap = new HashMap();
+            InputStreamReader input = null;
+            BufferedReader br = null;
 
-            final BufferedReader br = new BufferedReader(new InputStreamReader(mappingSource.getInputStream()));
-
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                final int i = line.indexOf('=');
-
-                if (i > 0) {
-                    final String prefix = line.substring(0, i);
-                    final String namespace = line.substring(i + 1);
-                    prefixMap.put(prefix, namespace);
-                    logger.debug("added mapping: '" + prefix + "'='" + namespace + "'");
+            try {
+                input = new InputStreamReader(mappingSource.getInputStream());
+                br = new BufferedReader(input);
+    
+                for (String line = br.readLine(); line != null; line = br.readLine()) {
+                    final int i = line.indexOf('=');
+    
+                    if (i > 0) {
+                        final String prefix = line.substring(0, i);
+                        final String namespace = line.substring(i + 1);
+                        prefixMap.put(prefix, namespace);
+                        logger.debug("added mapping: '" + prefix + "'='" + namespace + "'");
+                    }
+                }
+            } finally {
+                if (br != null) {
+                    br.close();
+                }
+                if (input != null) {
+                    input.close();
                 }
             }
         }
