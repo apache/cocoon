@@ -149,7 +149,7 @@ esac
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
 JAVA="$JAVA_HOME/bin/java"
-JAVA_VERSION=$($JAVA -version 2>&1 | awk '/java version/ {print substr($3,4,1)}')
+JAVA_VERSION=`$JAVA -version 2>&1 | awk '/java version/ {print substr($3,4,1)}'`
 if [ "$JAVA_VERSION" -gt 4 ]; then
   JAVA_PLATFORM_SERVER="-Dcom.sun.management.jmxremote"
 fi
