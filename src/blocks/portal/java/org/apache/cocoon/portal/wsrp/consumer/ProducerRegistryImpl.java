@@ -197,7 +197,18 @@ public class ProducerRegistryImpl
      * @see org.apache.wsrp4j.consumer.ProducerRegistry#removeAllProducers()
      */
     public void removeAllProducers() {
-        this.checkInitialized();
+        // we only remove all producers if we are initialized
+        if ( this.initialized ) {
+            Iterator iter = this.descriptions.values().iterator();
+            while (iter.hasNext()) {
+                final Producer producer = (Producer) iter.next();
+                try {
+                    producer.deregister();    
+                } catch (WSRPException e) {
+                    this.logger.error("deregister() producer: " + producer.getName());
+                }
+            }
+        }
         this.descriptions.clear();
         super.removeAllProducers();
     }

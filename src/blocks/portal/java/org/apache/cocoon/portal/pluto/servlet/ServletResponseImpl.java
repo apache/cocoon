@@ -101,7 +101,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletResponse#redirect(java.lang.String)
+     * @see javax.servlet.http.HttpServletResponse#sendRedirect(java.lang.String)
      */
     public void sendRedirect(String arg0) throws IOException {
         this.redirectURL = arg0;

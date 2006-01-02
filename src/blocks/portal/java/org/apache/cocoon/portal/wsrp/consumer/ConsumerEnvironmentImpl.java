@@ -17,6 +17,8 @@ package org.apache.cocoon.portal.wsrp.consumer;
 
 import oasis.names.tc.wsrp.v1.types.StateChange;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -45,7 +47,8 @@ import org.apache.wsrp4j.util.WindowStates;
  * @version $Id$
  **/
 public class ConsumerEnvironmentImpl
-    extends GenericConsumerEnvironment {
+    extends GenericConsumerEnvironment
+    implements Disposable {
 
     /** The generator used to rewrite the urls. */
     protected URLGenerator urlGenerator;
@@ -141,5 +144,20 @@ public class ConsumerEnvironmentImpl
         User user = (User)coplet.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
         
         return ((UserContextExtension)user.getUserContext()).getUserAuthentication();
-    }    
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        // dispose in reverse order
+        ContainerUtil.dispose(this.urlGenerator);
+        ContainerUtil.dispose(this.getPortletDriverRegistry());
+        ContainerUtil.dispose(this.getURLRewriter());
+        ContainerUtil.dispose(this.getTemplateComposer());
+        ContainerUtil.dispose(this.getPortletRegistry());
+        ContainerUtil.dispose(this.getProducerRegistry());
+        ContainerUtil.dispose(this.getSessionHandler());
+        ContainerUtil.dispose(this.getUserRegistry());
+    }
 }

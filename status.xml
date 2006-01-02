@@ -179,6 +179,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+   <action dev="CZ" type="fix">
+      Portal Block: Make wsrp event adapter thread safe, fix error in disposing wsrp
+                    producer and update portals bridges to 1.0.
+    </action> 
    <action dev="AG" type="update">
      Replace deprecated library excalibur-io 1.1 with commons-io 1.1.
      The file excalibur-io-1.1.jar is no longer part of the cocoon distribution.

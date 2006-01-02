@@ -208,30 +208,6 @@ public class TabContentAspect
         return Collections.singletonList(desc).iterator();
     }
 
-    /**
-     *
-     * @param service
-     * @param tab
-     */
-    private Layout getNextLayout(PortalService service, Item tab) {
-        Layout tabLayout = tab.getLayout();
-        if (tabLayout instanceof CompositeLayout) {
-            CompositeLayout layout = (CompositeLayout)tabLayout;
-            List list = layout.getItems();
-            int size = list.size();
-            for (int i = 0; i < size; i++) {
-                if (list.get(i) instanceof NamedItem) {
-                    return tabLayout;
-                }
-            }
-        }
-        Layout nextLayout = service.getEntryLayout(null);
-        if (nextLayout == null) {
-            nextLayout = tab.getLayout();
-        }
-        return nextLayout;
-    }
-
     /*
      * Generate the sub navigation for non-selected tabs
      * @param context
