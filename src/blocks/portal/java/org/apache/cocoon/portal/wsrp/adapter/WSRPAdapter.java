@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.wsrp.adapter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -254,23 +253,13 @@ public class WSRPAdapter
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        
-        consumerEnvironment.getPortletRegistry().removeAllPortlets();
-        
-        Iterator producers = consumerEnvironment.getProducerRegistry().getAllProducers();
-        Producer producer;
-        while (producers.hasNext()) {
-            producer = (Producer) producers.next();
-            try {
-                producer.deregister();    
-            } catch (WSRPException e) {
-                this.getLogger().error("deregister() producer: " + producer.getName());
-            }
+        if ( this.consumerEnvironment != null ) {
+            this.consumerEnvironment.getPortletRegistry().removeAllPortlets();
+
+            this.consumerEnvironment.getProducerRegistry().removeAllProducers();
+
+            this.consumerEnvironment.getUserRegistry().removeAllUsers();
         }
-        consumerEnvironment.getProducerRegistry().removeAllProducers();
-        
-        consumerEnvironment.getUserRegistry().removeAllUsers();
-        
         if ( this.manager != null ) {
             EventManager eventManager = null;
             try {

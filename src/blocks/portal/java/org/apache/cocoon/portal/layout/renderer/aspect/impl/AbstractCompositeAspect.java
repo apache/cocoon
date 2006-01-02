@@ -16,13 +16,11 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.xml.sax.ContentHandler;

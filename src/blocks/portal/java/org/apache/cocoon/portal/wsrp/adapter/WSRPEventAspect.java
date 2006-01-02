@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
@@ -35,7 +36,7 @@ import org.apache.cocoon.portal.event.aspect.EventAspectContext;
  * 
  * @version $Id$
  */
-public class WSRPEventAspect implements EventAspect {
+public class WSRPEventAspect implements EventAspect, ThreadSafe {
 
     public static final String REQUEST_PARAMETER_NAME = "cocoon-wsrpevent";
 
