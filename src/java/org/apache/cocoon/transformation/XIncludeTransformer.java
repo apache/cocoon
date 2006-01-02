@@ -407,15 +407,24 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
 
                 if (parse.equals("text")) {
                     getLogger().debug("Parse type is text");
-                    InputStream input = url.getInputStream();
-                    Reader reader = new BufferedReader(new InputStreamReader(input));
-                    int read;
-                    char ary[] = new char[1024];
-                    if (reader != null) {
-                        while ((read = reader.read(ary)) != -1) {
-                            super.characters(ary,0,read);
+                    InputStream is = null;
+                    InputStreamReader isr = null;
+                    Reader reader = null;
+                    try {
+                        is = url.getInputStream();
+                        isr = new InputStreamReader(is);
+                        reader = new BufferedReader(isr);
+                        int read;
+                        char ary[] = new char[1024 * 4];
+                        if (reader != null) {
+                            while ((read = reader.read(ary)) != -1) {
+                                super.characters(ary,0,read);
+                            }
                         }
-                        reader.close();
+                    } finally {
+                        if (reader != null) reader.close();
+                        if (isr != null) reader.close();
+                        if (is != null) is.close();
                     }
                 } else if (parse.equals("xml")) {
                     XIncludePipe subPipe = new XIncludePipe();
