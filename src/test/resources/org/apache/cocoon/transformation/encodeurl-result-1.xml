@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+
+<root>
+  <x>X</x>
+  <a>A</a>
+  <a b="c">d</a>
+  <a href="x">x</a>
+</root>
