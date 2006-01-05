@@ -18,14 +18,17 @@ package org.apache.cocoon.transformation;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.transform.OutputKeys;
 
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.cocoon.components.webdav.WebDAVEventFactory;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.httpclient.HttpConnection;
@@ -326,14 +329,7 @@ public class DASLTransformer extends AbstractSAXTransformer implements Cacheable
     private SourceValidity makeWebdavEventValidity(HttpURL methodurl) {
     	
     	if(m_eventfactory == null) {
-    		try {
-    			m_eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
-    		} catch (Exception e) {
-    			if(getLogger().isErrorEnabled())
-    				getLogger().error("Couldn't look up WebDAVEventFactory, event caching will not work!", e);
-    			
-    			return null;
-			}
+    		return null;
     	}
     	
     	SourceValidity evalidity = null;
@@ -349,6 +345,20 @@ public class DASLTransformer extends AbstractSAXTransformer implements Cacheable
     			getLogger().error("could not create EventValidity!",e);
     	}
     	return evalidity;
+    }
+    
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 
+    throws ProcessingException, SAXException, IOException {
+    	super.setup(resolver, objectModel, src, par);
+    	
+    	if(m_eventfactory == null) {
+    		try {
+    			m_eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
+    		} catch (Exception e) {
+    			if(getLogger().isErrorEnabled())
+    				getLogger().error("Couldn't look up WebDAVEventFactory, event caching will not work!", e);
+			}
+    	}
     }
     
     /**
@@ -394,6 +404,11 @@ public class DASLTransformer extends AbstractSAXTransformer implements Cacheable
 	public SourceValidity getValidity() {
 		if(getLogger().isDebugEnabled())
 			getLogger().debug("getValidity() called!");
+		
+		// dont do any caching when no event caching is set up
+		if (m_eventfactory == null) {
+			return null;
+		}
 		
         if (m_validity == null) {
             m_validity = new AggregatedValidity();

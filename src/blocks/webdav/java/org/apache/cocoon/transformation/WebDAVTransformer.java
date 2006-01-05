@@ -127,7 +127,8 @@ implements Disposable, CacheableProcessingComponent {
         	try {
         		m_eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
         	} catch (ServiceException e) {
-				throw new ProcessingException("Couldn't look up event factory!", e);
+				// ignore, no eventcaching configured
+        		m_eventfactory = null;
 			}
         }
     }
@@ -139,6 +140,10 @@ implements Disposable, CacheableProcessingComponent {
      * @return an EventValidity object or null
      */
     private SourceValidity makeWebdavEventValidity(HttpURL methodurl) {
+    	
+    	if (m_eventfactory == null) {
+    		return null;
+    	}
     	
     	SourceValidity evalidity = null;
     	try {
@@ -369,6 +374,12 @@ implements Disposable, CacheableProcessingComponent {
     }
 
     public SourceValidity getValidity() {
+    	
+        // dont do any caching when no event caching is set up
+    	if (m_eventfactory == null) {
+    		return null;
+    	}
+    	
         if (m_validity == null) {
             m_validity = new AggregatedValidity();
         }

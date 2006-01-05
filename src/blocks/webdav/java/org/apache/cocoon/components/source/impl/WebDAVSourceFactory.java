@@ -90,6 +90,9 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
     }
 
 	public void service(ServiceManager manager) throws ServiceException {
-		eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
+		if(manager.hasService(WebDAVEventFactory.ROLE))
+			eventfactory = (WebDAVEventFactory)manager.lookup(WebDAVEventFactory.ROLE);
+		else
+			eventfactory = null;
 	}
 }
