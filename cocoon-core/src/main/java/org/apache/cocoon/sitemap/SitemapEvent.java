@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Base interface for all sitemap events.
  *
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
 public abstract class SitemapEvent extends EventObject {
