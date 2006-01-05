@@ -333,15 +333,17 @@ public class WebDAVSource extends AbstractLogEnabled
     	
     	SourceValidity validity = null;
     	
-    	try {
-    		validity = new EventValidity(eventfactory.createEvent(this.url));
-    		
-    		if(getLogger().isDebugEnabled())
-    			getLogger().debug("Created EventValidity for source: "+validity);
-    	
-    	} catch (Exception e) {
-    		if(getLogger().isErrorEnabled())
-    			getLogger().error("could not create EventValidity!",e);
+    	if(eventfactory!=null) {
+	    	try {
+	    		validity = new EventValidity(eventfactory.createEvent(this.url));
+	    		
+	    		if(getLogger().isDebugEnabled())
+	    			getLogger().debug("Created EventValidity for source: "+validity);
+	    	
+	    	} catch (Exception e) {
+	    		if(getLogger().isErrorEnabled())
+	    			getLogger().error("could not create EventValidity!",e);
+	    	}
     	}
     	
     	if( validity == null ) {
