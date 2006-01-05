@@ -40,9 +40,9 @@
         <map:serialize/>
       </map:match>
 
-      <!-- you have to make sure a slide instance is running and reachable on the host/port below -->
+      <!-- you have to make sure a webdav instance is running and reachable on the host/port below -->
       <map:match pattern="source/**">
-        <map:generate src="webdav://localhost:8080/slide/files/{1}"/>
+        <map:generate src="webdav://localhost/repos/{1}"/>
         <map:serialize type="xml"/>
       </map:match>
 

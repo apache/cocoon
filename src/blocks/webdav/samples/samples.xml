@@ -97,6 +97,50 @@ and
       View the actual query source.
     </sample>
   </group>
+  
+  <group name="Protocol Level WebDAV Requests">
+    <note>
+      This sample shows how to run a query against a WebDAV server 
+      (such as Catacomb or Slide). It assumes that
+      on localhost a server is running with a resource 
+      path of /repos (the default place for Catacomb installs). If
+      that's not the case, please change low-level/test-search.xml and other test-*.xml accordingly.
+      Also, adjust your username/password there.
+    </note>
+    <sample name="SEARCH Request" href="low-level/test-search.xml">
+      Searches a WebDAV server for everthing that is of content type "text/xml" and return the first 4 hits ordered by content type.
+    </sample>
+    <sample name="SEARCH Request source" href="low-level/src/test-search.xml">
+      View the actual query source.
+    </sample>
+    <sample name="PUT Request" href="low-level/test-put.xml">
+      PUT will add a new resource to the WebDAV server.
+    </sample>
+    <sample name="PUT Request source" href="low-level/src/test-put.xml">
+      View the actual query source.
+    </sample>
+    <sample name="PROPPATCH Request" href="low-level/test-proppatch.xml">
+      PROPPATCH will set/remove WebDAV properties. Here, we set a sample property "http://cocoon.apache.org/samplenamespace/1.0:caption".
+    </sample>
+    <sample name="PROPPATCH Request source" href="low-level/src/test-proppatch.xml">
+      View the actual query source.
+    </sample>
+    <sample name="PROPFIND Request" href="low-level/test-propfind.xml">
+      PROPFIND will select all properties given from the target itself and all immediate decendants (because "Depth" is 1).
+    </sample>
+    <sample name="PROPFIND Request source" href="low-level/src/test-propfind.xml">
+      View the actual query source.
+    </sample>
+  </group>
+  
+  <group name="WebDAV Source">
+    <note>
+      Just as with the examples above, make sure a webdav server is running. You can use the sample below after using the PUT request above.
+    </note>
+    <sample name="GETting a WebDAV resource" href="source/test.xml">
+      with the webdav:// protocol.
+    </sample>
+  </group>
 
   <group name="Resources">
     <sample name="webdav.org" href="http://www.webdav.org/">

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2005 The Apache Software Foundation.
+ * Copyright 1999-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,7 +241,7 @@ public class DASLTransformer extends AbstractSAXTransformer implements Cacheable
             }
             optionsMethod.execute(state, conn);
             if(!optionsMethod.isAllowed("SEARCH")) {
-                throw new SAXException("The server don't support the SEARCH method");
+                throw new SAXException("The server doesn't support the SEARCH method");
             }
             int httpstatus = searchMethod.execute(state, conn);
             

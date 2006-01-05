@@ -21,4 +21,7 @@
 
     <!-- =================== DASL Transformer ========================= -->
     <map:transformer name="dasl" src="org.apache.cocoon.transformation.DASLTransformer"/>
+    
+    <!-- =================== WebDAV Transformer ========================= -->
+    <map:transformer name="webdav" src="org.apache.cocoon.transformation.WebDAVTransformer"/>
 </xmap>
