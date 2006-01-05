@@ -46,7 +46,7 @@ public class PreemptiveLoaderAction
     throws Exception {
         PreemptiveLoader loader = PreemptiveLoader.getInstance();
         if (!loader.alive) {
-            loader.process(this.manager, resolver, this.getLogger());
+            loader.process(resolver, this.getLogger());
             return EMPTY_MAP;
         }
         return null;

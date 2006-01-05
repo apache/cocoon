@@ -21,7 +21,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.sax.XMLDeserializer;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
@@ -73,7 +73,6 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
         }
 
         Store store = null;
-        XMLDeserializer deserializer = null;
         Object fragment = null;
         try {
             store = (Store) this.manager.lookup(Store.TRANSIENT_STORE);
@@ -82,7 +81,7 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
                 throw new ResourceNotFoundException("Could not find fragment " + source + " in store");
             }
 
-            deserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
+            XMLByteStreamInterpreter deserializer = new XMLByteStreamInterpreter();
             deserializer.setConsumer(this.xmlConsumer);
             deserializer.deserialize(fragment);
 
@@ -93,7 +92,6 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
             throw new SAXException("Could not lookup for component.", ce);
         } finally {
             this.manager.release(store);
-            this.manager.release(deserializer);
         }
     }
 }

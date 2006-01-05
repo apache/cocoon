@@ -17,14 +17,13 @@ package org.apache.cocoon.components.pipeline.impl;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.IdentifierCacheKey;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -172,27 +171,19 @@ public class ExpiresCachingProcessingPipeline
             if ( this.cachedResponse == null) {
                 // if we cache, we need an xml serializer
                 if ( this.cacheExpires > 0) {
-                    try {
-                        final XMLConsumer old = this.lastConsumer;
-                        this.xmlSerializer = (XMLSerializer)this.manager.lookup( XMLSerializer.ROLE );
-                        this.lastConsumer = new XMLTeePipe(this.lastConsumer, this.xmlSerializer);
+                    final XMLConsumer old = this.lastConsumer;
+                    this.xmlSerializer = new XMLByteStreamCompiler();
+                    this.lastConsumer = new XMLTeePipe(this.lastConsumer, this.xmlSerializer);
 
-                        super.connectPipeline( environment );
+                    super.connectPipeline( environment );
 
-                        this.lastConsumer = old;
-                    } catch ( ServiceException e ) {
-                        throw new ProcessingException("Could not connect pipeline.", e);
-                    }
+                    this.lastConsumer = old;
                 } else {
                     super.connectPipeline( environment );
                 }
             } else {
                 // we use the cache, so we need an xml deserializer
-                try {
-                    this.xmlDeserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-                } catch ( ServiceException e ) {
-                    throw new ProcessingException("Could not connect pipeline.", e);
-                }
+                this.xmlDeserializer = new XMLByteStreamInterpreter();
             }
         } else {
             // external: we only need to connect if we don't use a cached response

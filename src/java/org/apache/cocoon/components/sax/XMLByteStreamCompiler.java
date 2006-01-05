@@ -15,19 +15,21 @@
  */
 package org.apache.cocoon.components.sax;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
+import java.util.HashMap;
+
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.util.HashMap;
-
 /**
  * This a simple xml compiler which outputs a byte array.
+ * If you want to reuse this instance, make sure to call {@link #recycle()}
+ * inbetween two compilation tasks.
  *
  * @version $Id$
  */
-public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
+public final class XMLByteStreamCompiler implements XMLConsumer {
 
     private HashMap map;
     private int mapCount;

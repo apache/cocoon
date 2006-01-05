@@ -193,14 +193,6 @@
         shorthand="xmlizer"
         default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
 
-  <role name="org.apache.cocoon.components.sax.XMLSerializer"
-        shorthand="xml-serializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"/>
-
-  <role name="org.apache.cocoon.components.sax.XMLDeserializer"
-        shorthand="xml-deserializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"/>
-
   <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
         shorthand="notifying-builder"
         default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>

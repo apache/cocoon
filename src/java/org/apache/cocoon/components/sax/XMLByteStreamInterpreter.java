@@ -17,17 +17,23 @@ package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.xml.DefaultLexicalHandler;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLProducer;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This a simple xml compiler which takes a byte array as input.
+ * If you want to reuse this interpreter make sure to call first {@link #recycle()}
+ * and then set the new consumer for the sax events.
  *
  * @version $Id$
  */
-public final class XMLByteStreamInterpreter extends AbstractXMLProducer implements XMLDeserializer, Recyclable {
+public final class XMLByteStreamInterpreter implements XMLProducer {
 
     private static final int START_DOCUMENT         = 0;
     private static final int END_DOCUMENT           = 1;
@@ -52,8 +58,48 @@ public final class XMLByteStreamInterpreter extends AbstractXMLProducer implemen
     private byte[] input;
     private int currentPos;
 
+    protected static final ContentHandler EMPTY_CONTENT_HANDLER = new DefaultHandler();
+
+    /** The <code>ContentHandler</code> receiving SAX events. */
+    protected ContentHandler contentHandler = EMPTY_CONTENT_HANDLER;
+
+    /** The <code>LexicalHandler</code> receiving SAX events. */
+    protected LexicalHandler lexicalHandler = DefaultLexicalHandler.NULL_HANDLER;
+
+    /**
+     * Set the <code>XMLConsumer</code> that will receive XML data.
+     * <br>
+     * This method will simply call <code>setContentHandler(consumer)</code>
+     * and <code>setLexicalHandler(consumer)</code>.
+     */
+    public void setConsumer(XMLConsumer consumer) {
+        setContentHandler(consumer);
+        setLexicalHandler(consumer);
+    }
+
+    /**
+     * Set the <code>ContentHandler</code> that will receive XML data.
+     * <br>
+     * Subclasses may retrieve this <code>ContentHandler</code> instance
+     * accessing the protected <code>super.contentHandler</code> field.
+     */
+    public void setContentHandler(ContentHandler handler) {
+        this.contentHandler = handler;
+    }
+
+    /**
+     * Set the <code>LexicalHandler</code> that will receive XML data.
+     * <br>
+     * Subclasses may retrieve this <code>LexicalHandler</code> instance
+     * accessing the protected <code>super.lexicalHandler</code> field.
+     */
+    public void setLexicalHandler(LexicalHandler handler) {
+        this.lexicalHandler = handler;
+    }
+
     public void recycle() {
-        super.recycle();
+        this.contentHandler = EMPTY_CONTENT_HANDLER;
+        this.lexicalHandler = DefaultLexicalHandler.NULL_HANDLER;
         this.list.clear();
         this.input = null;
     }
@@ -112,11 +158,9 @@ public final class XMLByteStreamInterpreter extends AbstractXMLProducer implemen
                     break;
                 case COMMENT:
                     chars = this.readChars();
-                    if (this.lexicalHandler != null) {
-                        len = chars.length;
-                        while (len > 0 && chars[len-1]==0) len--;
-                        if (len > 0) lexicalHandler.comment(chars, 0, len);
-                    }
+                    len = chars.length;
+                    while (len > 0 && chars[len-1]==0) len--;
+                    if (len > 0) lexicalHandler.comment(chars, 0, len);
                     break;
                 case LOCATOR:
                     {

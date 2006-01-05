@@ -21,9 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -92,9 +91,8 @@ public final class PreemptiveLoader {
      * @param resolver  A source resolver
      * @param logger    A logger
      */
-    public void process(ServiceManager manager,
-                         SourceResolver  resolver,
-                         Logger          logger) {
+    public void process(SourceResolver  resolver,
+                        Logger          logger) {
         this.alive = true;
         if (logger.isDebugEnabled()) {
             logger.debug("PreemptiveLoader: Starting preemptive loading");
@@ -110,7 +108,7 @@ public final class PreemptiveLoader {
                 }
                 
                 Source source = null;
-                XMLSerializer serializer = null;
+                XMLByteStreamCompiler serializer = null;
 
                 try {
                     if (logger.isDebugEnabled()) {
@@ -118,7 +116,7 @@ public final class PreemptiveLoader {
                     }
 
                     source = resolver.resolveURI(uri);
-                    serializer = (XMLSerializer)manager.lookup(XMLSerializer.ROLE);
+                    serializer = new XMLByteStreamCompiler();
                 
                     SourceUtil.toSAX(source, serializer);
                 
@@ -132,7 +130,6 @@ public final class PreemptiveLoader {
                     // all exceptions are ignored!
                 } finally {
                     resolver.release( source );
-                    manager.release( serializer );
                 }
                 if (logger.isDebugEnabled()) {
                     logger.debug("PreemptiveLoader: Finished loading " + uri);

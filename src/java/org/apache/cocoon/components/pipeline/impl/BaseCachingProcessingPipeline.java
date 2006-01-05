@@ -21,8 +21,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.components.pipeline.AbstractProcessingPipeline;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 
 /**
  * This is the base class for all caching pipeline implementations.
@@ -39,10 +39,10 @@ public abstract class BaseCachingProcessingPipeline extends AbstractProcessingPi
     protected Cache  cache;
 
     /** The deserializer */
-    protected XMLDeserializer xmlDeserializer;
+    protected XMLByteStreamInterpreter xmlDeserializer;
 
     /** The serializer */
-    protected XMLSerializer xmlSerializer;
+    protected XMLByteStreamCompiler xmlSerializer;
 
     /**
      * Parameterizable Interface - Configuration
@@ -67,10 +67,7 @@ public abstract class BaseCachingProcessingPipeline extends AbstractProcessingPi
      * Recyclable Interface
      */
     public void recycle() {
-        this.manager.release(this.xmlDeserializer);
         this.xmlDeserializer = null;
-
-        this.manager.release(this.xmlSerializer);
         this.xmlSerializer = null;
 
         super.recycle();
