@@ -32,7 +32,9 @@
   <name>Cocoon Core</name>
   <build>
     <sourceDirectory>../src/java</sourceDirectory>
+    <!-- 
     <testSourceDirectory>../src/test</testSourceDirectory>
+     -->
     <resources>
       <resource>
         <directory>../src/java</directory>
@@ -50,6 +52,7 @@
       </testResource>
     </testResources>
     <plugins>
+    <!-- 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -60,7 +63,7 @@
           <excludes>
             <exclude implementation="java.lang.String">**/AllTest.class</exclude>
             <exclude implementation="java.lang.String">**/CocoonBeanTestCase.class</exclude>
-            <!--<exclude implementation="java.lang.String">**/*$$*Test.class</exclude> -->
+            <exclude implementation="java.lang.String">**/*$$*Test.class</exclude>
             <exclude implementation="java.lang.String">**/Abstract*.class</exclude>
             <exclude implementation="java.lang.String">**/SitemapComponentTestCase*</exclude>
             <exclude implementation="java.lang.String">**/SitemapTestCase*</exclude>
@@ -76,6 +79,7 @@
           </systemProperties>
         </configuration>
       </plugin>
+       -->
     </plugins>
   </build>
   <dependencies>
