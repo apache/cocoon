@@ -34,7 +34,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashUtil;
@@ -85,7 +85,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     /** The ServiceManager instance */
     protected ServiceManager manager;
 
-    private XMLSerializer serializer;
+    private XMLByteStreamCompiler serializer;
 
     private Map prefixMap;
 
@@ -119,10 +119,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      * Recycle this component
      */
     public void recycle() {
-        if (this.manager != null) {
-            this.manager.release(serializer);
-            this.serializer = null;
-        }
+        this.serializer = null;
         super.recycle();        
     }
 
@@ -220,11 +217,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
                 getLogger().debug("extractLevel now " + extractLevel + ".");
             }
 
-            try {
-                this.serializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
-            } catch (ServiceException se) {
-                throw new SAXException("Could not lookup for XMLSerializer.", se);
-            }
+            this.serializer = new XMLByteStreamCompiler();
 
             // Start the DOM document
             this.serializer.startDocument();

@@ -19,13 +19,12 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -76,72 +75,67 @@ public class CachingProcessingPipeline extends AbstractCachingProcessingPipeline
      */
     protected void connectCachingPipeline(Environment   environment)
     throws ProcessingException {
-        try {
-            XMLSerializer localXMLSerializer = null;
-            if (!this.cacheCompleteResponse) {
-                this.xmlSerializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
-                localXMLSerializer = this.xmlSerializer;
+        XMLByteStreamCompiler localXMLSerializer = null;
+        if (!this.cacheCompleteResponse) {
+            this.xmlSerializer = new XMLByteStreamCompiler();
+            localXMLSerializer = this.xmlSerializer;
+        }
+
+        if (this.cachedResponse == null) {
+            XMLProducer prev = super.generator;
+            XMLConsumer next;
+
+            int cacheableTransformerCount = this.firstNotCacheableTransformerIndex;
+
+            Iterator itt = this.transformers.iterator();
+            while (itt.hasNext()) {
+                next = (XMLConsumer) itt.next();
+                if (localXMLSerializer != null) {
+                    if (cacheableTransformerCount == 0) {
+                        next = new XMLTeePipe(next, localXMLSerializer);
+                        localXMLSerializer = null;
+                    } else {
+                        cacheableTransformerCount--;
+                    }
+                }
+                connect(environment, prev, next);
+                prev = (XMLProducer) next;
             }
 
-            if (this.cachedResponse == null) {
-                XMLProducer prev = super.generator;
-                XMLConsumer next;
+            next = super.lastConsumer;
+            if (localXMLSerializer != null) {
+                next = new XMLTeePipe(next, localXMLSerializer);
+                localXMLSerializer = null;
+            }
+            connect(environment, prev, next);
+        } else {
+            this.xmlDeserializer = new XMLByteStreamInterpreter();
 
-                int cacheableTransformerCount = this.firstNotCacheableTransformerIndex;
-
-                Iterator itt = this.transformers.iterator();
-                while (itt.hasNext()) {
-                    next = (XMLConsumer) itt.next();
-                    if (localXMLSerializer != null) {
-                        if (cacheableTransformerCount == 0) {
-                            next = new XMLTeePipe(next, localXMLSerializer);
-                            localXMLSerializer = null;
-                        } else {
-                            cacheableTransformerCount--;
-                        }
+            // connect the pipeline:
+            XMLProducer prev = xmlDeserializer;
+            XMLConsumer next;
+            int cacheableTransformerCount = 0;
+            Iterator itt = this.transformers.iterator();
+            while (itt.hasNext()) {
+                next = (XMLConsumer) itt.next();
+                if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
+                    if (localXMLSerializer != null
+                            && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
+                        next = new XMLTeePipe(next, localXMLSerializer);
+                        localXMLSerializer = null;
                     }
                     connect(environment, prev, next);
                     prev = (XMLProducer) next;
                 }
-
-                next = super.lastConsumer;
-                if (localXMLSerializer != null) {
-                    next = new XMLTeePipe(next, localXMLSerializer);
-                    localXMLSerializer = null;
-                }
-                connect(environment, prev, next);
-            } else {
-                this.xmlDeserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
-
-                // connect the pipeline:
-                XMLProducer prev = xmlDeserializer;
-                XMLConsumer next;
-                int cacheableTransformerCount = 0;
-                Iterator itt = this.transformers.iterator();
-                while (itt.hasNext()) {
-                    next = (XMLConsumer) itt.next();
-                    if (cacheableTransformerCount >= this.firstProcessedTransformerIndex) {
-                        if (localXMLSerializer != null
-                                && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
-                            next = new XMLTeePipe(next, localXMLSerializer);
-                            localXMLSerializer = null;
-                        }
-                        connect(environment, prev, next);
-                        prev = (XMLProducer) next;
-                    }
-                    cacheableTransformerCount++;
-                }
-
-                next = super.lastConsumer;
-                if (localXMLSerializer != null) {
-                    next = new XMLTeePipe(next, localXMLSerializer);
-                    localXMLSerializer = null;
-                }
-                connect(environment, prev, next);
+                cacheableTransformerCount++;
             }
 
-        } catch (ServiceException e) {
-            throw new ProcessingException("Could not connect pipeline.", e);
+            next = super.lastConsumer;
+            if (localXMLSerializer != null) {
+                next = new XMLTeePipe(next, localXMLSerializer);
+                localXMLSerializer = null;
+            }
+            connect(environment, prev, next);
         }
     }
 }

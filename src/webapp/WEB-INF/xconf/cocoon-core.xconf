@@ -580,18 +580,6 @@
 <!-- ====================== System Components =========================== -->
 
   <!--+
-      | XML compiler/decompiler
-      |
-      | These components are used to process SAX events and produce a binary
-      | representation that is much more compact and efficient for
-      | subsequent parsing. These are used by the cache system to save
-      | the intermediate results of the pipeline stages reducing the overhead
-      | of xml parsing/serialization.
-      +-->
-  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml.serializer" pool-max="32"/>
-  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml.deserializer" pool-max="32"/>
-
-  <!--+
       | The Cache Manager is a component that can be used to cache content.
       | It is currently used by the cinclude transformer
       +-->

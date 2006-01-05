@@ -15,15 +15,18 @@
  */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.IncludeCacheManager;
@@ -31,7 +34,6 @@ import org.apache.cocoon.transformation.helpers.IncludeCacheManagerSession;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
@@ -46,10 +48,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -167,8 +165,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
 
     protected IncludeXMLConsumer filter;
 
-    protected XMLSerializer recorder;
-
     protected AttributesImpl srcAttributes = new AttributesImpl();
 
     protected boolean supportCaching;
@@ -236,10 +232,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.cacheManager.terminateSession( this.cachingSession );
         }
         this.cachingSession = null;
-        if ( null != this.recorder) {
-            this.manager.release( this.recorder );
-            this.recorder = null;
-        }
 
         this.configurationParameters = null;
         this.resourceParameters = null;
@@ -370,12 +362,12 @@ public class CIncludeTransformer extends AbstractSAXTransformer
                                               this.resourceParameters,
                                               this.resolver);
 
-                XMLSerializer serializer = null;
-                XMLDeserializer deserializer = null;
+                XMLByteStreamCompiler serializer = null;
+                XMLByteStreamInterpreter deserializer = null;
                 try {
                     if ( ignoreErrors ) {
-                        serializer = (XMLSerializer) this.manager.lookup(XMLSerializer.ROLE);
-                        deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+                        serializer = new XMLByteStreamCompiler();
+                        deserializer = new XMLByteStreamInterpreter();
                         SourceUtil.toSAX(source, serializer, this.configurationParameters, true);
                         deserializer.setConsumer( this.xmlConsumer );
                         deserializer.deserialize( serializer.getSAXFragment() );
@@ -384,10 +376,6 @@ public class CIncludeTransformer extends AbstractSAXTransformer
                     }
                 } catch (ProcessingException pe) {
                     if (!ignoreErrors) throw pe;
-                } catch (ServiceException ignore) {
-                } finally {
-                    this.manager.release( serializer );
-                    this.manager.release( deserializer );
                 }
             } catch (SourceException se) {
                 if (!ignoreErrors) throw SourceUtil.handle(se);
@@ -596,14 +584,8 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.getLogger().debug("BEGIN startCompiledXMLRecording");
         }
 
-        try {
-            this.recorder = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+        this.addRecorder(new XMLByteStreamCompiler());
 
-            this.addRecorder(recorder);
-
-        } catch (ServiceException ce) {
-            throw new SAXException("Unable to lookup xml serializer for compiling xml.", ce);
-        }
         if (this.getLogger().isDebugEnabled()) {
            this.getLogger().debug("END startCompiledXMLRecording");
         }
@@ -619,7 +601,7 @@ public class CIncludeTransformer extends AbstractSAXTransformer
             this.getLogger().debug("BEGIN endCompiledXMLRecording");
         }
 
-        XMLSerializer recorder = (XMLSerializer)this.removeRecorder();
+        XMLByteStreamCompiler recorder = (XMLByteStreamCompiler)this.removeRecorder();
         Object text = recorder.getSAXFragment();
 
         if (this.getLogger().isDebugEnabled()) {
@@ -643,16 +625,9 @@ public class CIncludeTransformer extends AbstractSAXTransformer
     public void endDocument() throws SAXException {
         if ( this.compiling ) {
             Object compiledXML = this.endCompiledXMLRecording();
-            XMLDeserializer deserializer = null;
-            try {
-                deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
-                deserializer.setConsumer(this.filter);
-                deserializer.deserialize(compiledXML);
-            } catch (ServiceException ce) {
-                throw new SAXException("Unable to lookup xml deserializer.", ce);
-            } finally {
-                this.manager.release( deserializer );
-            }
+            XMLByteStreamInterpreter deserializer = new XMLByteStreamInterpreter();
+            deserializer.setConsumer(this.filter);
+            deserializer.deserialize(compiledXML);
         }
         super.endDocument();
     }

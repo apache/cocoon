@@ -29,8 +29,9 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
+
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
@@ -177,10 +178,10 @@ public final class DefaultIncludeCacheManager
             // now we start a parallel thread, this thread gets all required avalon components
             // so it does not have to lookup them by itself
             try {
-                XMLSerializer serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+                XMLByteStreamCompiler serializer = new XMLByteStreamCompiler();
                 Source source = session.resolveURI(uri, this.resolver);
 
-                LoaderThread loader = new LoaderThread(source, serializer, this.manager);
+                LoaderThread loader = new LoaderThread(source, serializer);
                 final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
                 session.add(uri, loader);
                 runnableManager.execute( new CocoonRunnable(loader) );
@@ -271,16 +272,9 @@ public final class DefaultIncludeCacheManager
             }
             
             // stream the content
-            XMLDeserializer deserializer = null;
-            try {
-                deserializer = (XMLDeserializer)this.manager.lookup( XMLDeserializer.ROLE );
-                deserializer.setConsumer(handler);
-                deserializer.deserialize(result);
-            } catch (ServiceException ce) {
-                throw new SAXException("Unable to lookup xml deserializer.", ce);
-            } finally {
-                this.manager.release( deserializer );
-            }
+            XMLByteStreamInterpreter deserializer = new XMLByteStreamInterpreter();
+            deserializer.setConsumer(handler);
+            deserializer.deserialize(result);
             return;
             
         } else {
@@ -300,16 +294,9 @@ public final class DefaultIncludeCacheManager
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("Streaming from cached response.");
                     }
-                    XMLDeserializer deserializer = null;
-                    try {
-                        deserializer = (XMLDeserializer)this.manager.lookup( XMLDeserializer.ROLE );
-                        deserializer.setConsumer(handler);
-                        deserializer.deserialize(response.getResponse());
-                    } catch (ServiceException ce) {
-                        throw new SAXException("Unable to lookup xml deserializer.", ce);
-                    } finally {
-                        this.manager.release( deserializer );
-                    }
+                    XMLByteStreamInterpreter deserializer =  new XMLByteStreamInterpreter();
+                    deserializer.setConsumer(handler);
+                    deserializer.deserialize(response.getResponse());
                     
                     // load preemptive if the response is not valid
                     if ( session.getExpires() > 0
@@ -333,7 +320,7 @@ public final class DefaultIncludeCacheManager
         }
 
         // we are not processing in parallel and have no (valid) cached response
-        XMLSerializer serializer = null;
+        XMLByteStreamCompiler serializer = null;
         try {
             final Source source = session.resolveURI(uri, this.resolver);
             
@@ -342,7 +329,7 @@ public final class DefaultIncludeCacheManager
                 this.getLogger().debug("Streaming directly from source.");
             }
             if (session.getExpires() > 0) {
-                serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+                serializer = new XMLByteStreamCompiler();
                 XMLTeePipe tee = new XMLTeePipe(handler, serializer);
                 
                 SourceUtil.toSAX(source, tee);
@@ -358,10 +345,6 @@ public final class DefaultIncludeCacheManager
             
         } catch (ProcessingException pe) {
             throw new SAXException("ProcessingException", pe);
-        } catch (ServiceException e) {
-            throw new SAXException("Unable to lookup xml serializer.", e);
-        } finally {
-            this.manager.release(serializer);
         }
     }
 
@@ -420,19 +403,16 @@ public final class DefaultIncludeCacheManager
     final private static class LoaderThread implements Runnable {
         
         private final Source source;
-        private final XMLSerializer serializer;
+        private final XMLByteStreamCompiler serializer;
         private final CountDown finished;
         Exception exception;
         byte[]    content;
-        final private ServiceManager manager;
         
         public LoaderThread(Source source, 
-                            XMLSerializer serializer,
-                            ServiceManager manager) {
+                            XMLByteStreamCompiler serializer) {
             this.source = source;
             this.serializer = serializer;
             this.finished = new CountDown( 1 );
-            this.manager = manager;
         }
         
         public void run() {
@@ -442,7 +422,6 @@ public final class DefaultIncludeCacheManager
             } catch (Exception local) {
                 this.exception = local;
             } finally {
-                this.manager.release( this.serializer );
                 this.finished.release();
             }
         }
