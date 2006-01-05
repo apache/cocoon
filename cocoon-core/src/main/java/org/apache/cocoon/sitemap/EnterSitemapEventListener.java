@@ -15,15 +15,11 @@
  */
 package org.apache.cocoon.sitemap;
 
-import java.util.EventListener;
-
 /**
- * Base interface for all sitemap event listeners.
- *
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
-public interface SitemapListener extends EventListener {
+public interface EnterSitemapEventListener extends SitemapListener {
 
-    // just a marker interface
+    void enteredSitemap(EnterSitemapEvent event);
 }

@@ -15,17 +15,12 @@
  */
 package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.environment.Environment;
-
 /**
  *
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
-public class LeaveSitemapEvent extends SitemapEvent {
+public interface LeaveSitemapEventListener extends SitemapListener {
 
-    public LeaveSitemapEvent(Processor source, Environment env) {
-        super(source, env);
-    }
+    void leftSitemap(LeaveSitemapEvent event);
 }

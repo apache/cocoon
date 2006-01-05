@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.Environment;
  * logging implementation to access and log information about the current
  * request.
  * 
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
 public interface PerRequestLoggerManager extends LoggerManager {

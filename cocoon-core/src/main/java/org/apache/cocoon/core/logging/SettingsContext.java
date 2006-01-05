@@ -25,7 +25,7 @@ import org.apache.cocoon.core.Settings;
  * It first looks into the settings object and only if the key
  * is not found there, it delegates to the parent.
  * 
- * @version $Id:$
+ * @version $Id$
  * @since 2.2
  */
 public class SettingsContext extends DefaultContext {
