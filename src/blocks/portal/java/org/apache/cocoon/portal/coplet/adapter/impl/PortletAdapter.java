@@ -341,25 +341,23 @@ public class PortletAdapter
         objectModel.put("portlet-response",  res);
         objectModel.put("portlet-request", req);        
 
+        // change portlet mode and window state
+        final InformationProviderService ips = (InformationProviderService)this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
+        final DynamicInformationProvider dynProv = ips.getDynamicProvider(req);
+        final PortletActionProvider pap = dynProv.getPortletActionProvider(event.getPortletWindow());
+
+        final PortletMode mode = event.getPortletMode();
+        if ( mode != null ) {
+            pap.changePortletMode(mode);
+        }
+        final WindowState state = event.getWindowState();
+        if ( state != null ) {
+            pap.changePortletWindowState(state);
+        }
         if ( event.isAction() ) {
             // This means we can only have ONE portlet event per request!
             objectModel.put("portlet-event", event);
         } else {
-            DynamicInformationProvider dynProv;
-            InformationProviderService ips;
-            PortletActionProvider pap;
-
-            ips = (InformationProviderService)this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
-            dynProv = ips.getDynamicProvider(req);
-            pap = dynProv.getPortletActionProvider(event.getPortletWindow());
-            final PortletMode mode = event.getPortletMode();
-            if ( mode != null ) {
-                pap.changePortletMode(mode);
-            }
-            final WindowState state = event.getWindowState();
-            if ( state != null ) {
-                pap.changePortletWindowState(state);
-            }
             ((PortletActionProviderImpl)pap).changeRenderParameters(event.getParameters());
         }
     }
