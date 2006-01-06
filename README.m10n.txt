@@ -21,7 +21,17 @@ project already. Do File-Import->Existing projects into workspace, then
 point to your trunk directory and it should detect the newly created
 blocks as projects.
 
-Note that you need to declare the M2_HOME classpath variable in your
+Note that you need to declare the M2_REPO classpath variable in your
 workspace, it should point to your local m2 repository. At the moment
 there are still compilation problems because of htmlunit, but this
 should be enough to get you going already.
+
+You can also get eclipse to download the sources of the dependent libraries and attach them 
+to the jars in eclipse :
+
+$ mvn -Declipse.downloadSources=true eclipse:eclipse
+
+
+For further information about the maven eclipse plugin visit 
+
+http://maven.apache.org/plugins/maven-eclipse-plugin/
