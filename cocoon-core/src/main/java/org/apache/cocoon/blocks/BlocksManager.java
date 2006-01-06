@@ -60,8 +60,6 @@ public class BlocksManager
 	{ 
 
     public static String ROLE = BlocksManager.class.getName();
-    private ServletConfig servletConfig;
-    private ServletContext servletContext;
     private ServiceManager serviceManager;
     private Context context;
     private org.apache.cocoon.environment.Context environmentContext;
@@ -83,8 +81,6 @@ public class BlocksManager
         if (this.containerEncoding == null) {
         	this.containerEncoding = "ISO-8859-1";
         }
-    	this.servletConfig = servletConfig;
-    	this.servletContext = servletConfig.getServletContext();
     	CoreUtil coreUtil = new CoreUtil(servletConfig, Constants.WIRING);
 		Core core = coreUtil.getCore();
 		this.settings = coreUtil.getSettings();
@@ -98,9 +94,9 @@ public class BlocksManager
 		
 		InputSource is = null;
 		try {
-			this.getLogger().debug("Wiring file: " + this.servletContext.getResource(this.wiringFileName));
+			this.getLogger().debug("Wiring file: " + this.getServletContext().getResource(this.wiringFileName));
 			URLSource urlSource = new URLSource();
-			urlSource.init(this.servletContext.getResource(this.wiringFileName), null);
+			urlSource.init(this.getServletContext().getResource(this.wiringFileName), null);
 			this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, 1000);
 			is = SourceUtil.getInputSource(this.wiringFile);
 		} catch (IOException e) {
@@ -157,6 +153,7 @@ public class BlocksManager
         }
         this.blocks = null;
         this.mountedBlocks = null;
+        super.destroy();
     }
     
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -205,7 +202,7 @@ public class BlocksManager
                                   this.contextURL,
                                   request,
                                   response,
-                                  this.servletContext,
+                                  this.getServletContext(),
                                   this.environmentContext,
                                   this.containerEncoding,
                                   formEncoding);
@@ -218,15 +215,6 @@ public class BlocksManager
 			throw new ServletException(e);
 		}
 		env.commitResponse();
-	}
-
-	public ServletConfig getServletConfig() {
-		return this.servletConfig;
-	}
-
-	public String getServletInfo() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	private Logger getLogger() {
