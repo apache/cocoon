@@ -31,6 +31,7 @@ import org.apache.cocoon.Cocoon;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
+import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
 
@@ -146,13 +147,13 @@ public class ServletTestCase extends TestCase {
     protected InputStream process(String uri) throws Exception {
     	String dummySite = "http://www.test.org";
     	WebRequest request = new GetMethodWebRequest(dummySite + uri);
-    	/*
+
     	InvocationContext ic = this.client.newInvocation(request);
     	ic.getServlet();
     	ic.service();
     	WebResponse response = ic.getServletResponse();
-    	*/
-    	WebResponse response = this.client.getResponse(request);
+
+    	//WebResponse response = this.client.getResponse(request);
     	getLogger().info("Content type: " + response.getContentType());
     	getLogger().info("Content length: " + response.getContentLength());
     	getLogger().info("Output: " + response.getText());
