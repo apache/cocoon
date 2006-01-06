@@ -27,13 +27,10 @@
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <modules>
-    <module>core</module>
-<!--
-    <module>core/test-core</module>
-    <module>webapp</module>
-    <module>src/blocks</module>
-    <module>src/mocks</module>
--->
+    <module>cocoon-core</module>
+    <module>cocoon-mocks</module>
+    <module>cocoon-session-fw</module>
+    <module>cocoon-authentication-fw</module>
   </modules>
   <repositories>
     <repository>
