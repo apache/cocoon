@@ -10,3 +10,18 @@ HOW TO CONVERT AN EXISTING BLOCK TO MAVEN STRUCTURE
   $svn move location_of_pom.xml .
   $svn move location_of_testsources/java src/test
 5. copy/move jar resources in src/main/resources and test resources in src/test/resources
+
+HOW TO MOUNT THE PROJECTS IN ECLIPSE
+
+from /trunk, run mvn eclipse:clean first to remove any left over eclipse
+files. Then run mvn eclipse:eclipse.
+
+Next go to eclipse, and make sure you haven't got trunk mounted as a
+project already. Do File-Import->Existing projects into workspace, then
+point to your trunk directory and it should detect the newly created
+blocks as projects.
+
+Note that you need to declare the M2_HOME classpath variable in your
+workspace, it should point to your local m2 repository. At the moment
+there are still compilation problems because of htmlunit, but this
+should be enough to get you going already.
