@@ -23,7 +23,7 @@
   <block id="core" location="core/"/>
 
   <block id="test1id" location="test1/">
-    <mount path="/test1/"/>
+    <mount path="/test1"/>
     <connections>
       <connection name="core" block="core"/>
       <connection name="test2" block="test2id"/>
@@ -34,14 +34,14 @@
   </block>
 
   <block id="test2id" location="test2/">
-    <mount path="/test2/"/>
+    <mount path="/test2"/>
     <connections>
       <connection name="core" block="core"/>
     </connections>
   </block>
 
   <block id="test3id" location="test3/">
-    <mount path="/test3/"/>
+    <mount path="/test3"/>
     <connections>
       <connection name="core" block="core"/>
       <connection name="super" block="test1id"/>

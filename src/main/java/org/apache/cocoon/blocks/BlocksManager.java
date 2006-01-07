@@ -23,27 +23,24 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
 import org.xml.sax.InputSource;
@@ -52,19 +49,14 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class BlocksManager
-	extends
-		HttpServlet
+    extends
+        HttpServlet
     implements
-    	Blocks,
-        Modifiable
-	{ 
+        Blocks,
+        Modifiable { 
 
     public static String ROLE = BlocksManager.class.getName();
-    private ServiceManager serviceManager;
     private Context context;
-    private org.apache.cocoon.environment.Context environmentContext;
-    private Settings settings;
-    private String contextURL;
     private String containerEncoding;
 
     private String wiringFileName = "/" + Constants.WIRING;
@@ -72,75 +64,71 @@ public class BlocksManager
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
     
-    private Processor processor;
     private Logger logger;    
 
     public void init(ServletConfig servletConfig) throws ServletException {
-    	super.init(servletConfig);
+        super.init(servletConfig);
         this.containerEncoding = servletConfig.getInitParameter("container-encoding");
         if (this.containerEncoding == null) {
-        	this.containerEncoding = "ISO-8859-1";
+                this.containerEncoding = "ISO-8859-1";
         }
-    	CoreUtil coreUtil = new CoreUtil(servletConfig, Constants.WIRING);
-		Core core = coreUtil.getCore();
-		this.settings = coreUtil.getSettings();
-		this.environmentContext = core.getEnvironmentContext();
-		this.context = core.getContext();
-		this.contextURL = coreUtil.getContextURL();
-		this.serviceManager = coreUtil.getServiceManager();
-		LoggerUtil loggerUtil = new LoggerUtil(servletConfig, this.context, this.settings);
-		this.logger = loggerUtil.getCocoonLogger();
-		this.getLogger().debug("Initializing the Blocks Manager");
-		
-		InputSource is = null;
-		try {
-			this.getLogger().debug("Wiring file: " + this.getServletContext().getResource(this.wiringFileName));
-			URLSource urlSource = new URLSource();
-			urlSource.init(this.getServletContext().getResource(this.wiringFileName), null);
-			this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, 1000);
-			is = SourceUtil.getInputSource(this.wiringFile);
-		} catch (IOException e) {
-			throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);
-		} catch (ProcessingException e) {
-			throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);			
-		}
-				
-		DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-		Configuration wiring = null;
-		try {
-			wiring = builder.build(is);
-		} catch (Exception e) {
-			throw new ServletException("Could not create configuration from file: " + this.wiringFileName, e);			
-		}
-		
-		Configuration[] blockConfs = wiring.getChildren("block");
-		
-		try {
-		// Create and store all blocks
-		for (int i = 0; i < blockConfs.length; i++) {
-			Configuration blockConf = blockConfs[i];
-			this.getLogger().debug("Creating " + blockConf.getName() +
-					" id=" + blockConf.getAttribute("id") +
-					" location=" + blockConf.getAttribute("location"));
-			BlockManager blockManager = new BlockManager();
-			blockManager.setBlocks(this);
-			LifecycleHelper.setupComponent(blockManager,
-					this.getLogger(),
-					this.context,
-					this.serviceManager,
-					blockConf);
-			this.blocks.put(blockConf.getAttribute("id"), blockManager);
-			String mountPath = blockConf.getChild("mount").getAttribute("path", null);
-			if (mountPath != null) {
-				this.mountedBlocks.put(mountPath, blockManager);
-				this.getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
-						" at " + mountPath);
-			}
-		}
-		} catch (Exception e) {
-			throw new ServletException(e);
-		}
-		this.createProcessor();
+        CoreUtil coreUtil = new CoreUtil(servletConfig, Constants.WIRING);
+        Core core = coreUtil.getCore();
+        Settings settings = coreUtil.getSettings();
+        this.context = core.getContext();
+        LoggerUtil loggerUtil = new LoggerUtil(servletConfig, this.context, settings);
+        this.logger = loggerUtil.getCocoonLogger();
+        this.getLogger().debug("Initializing the Blocks Manager");
+        
+        InputSource is = null;
+        try {
+            this.getLogger().debug("Wiring file: " + this.getServletContext().getResource(this.wiringFileName));
+            URLSource urlSource = new URLSource();
+            urlSource.init(this.getServletContext().getResource(this.wiringFileName), null);
+            this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, 1000);
+            is = SourceUtil.getInputSource(this.wiringFile);
+        } catch (IOException e) {
+            throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);
+        } catch (ProcessingException e) {
+            throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);                 
+        }
+        
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        Configuration wiring = null;
+        try {
+            wiring = builder.build(is);
+        } catch (Exception e) {
+            throw new ServletException("Could not create configuration from file: " + this.wiringFileName, e);                  
+        }
+        
+        Configuration[] blockConfs = wiring.getChildren("block");
+                
+        try {
+            // Create and store all blocks
+            for (int i = 0; i < blockConfs.length; i++) {
+                Configuration blockConf = blockConfs[i];
+                this.getLogger().debug("Creating " + blockConf.getName() +
+                                       " id=" + blockConf.getAttribute("id") +
+                                       " location=" + blockConf.getAttribute("location"));
+                BlockManager blockManager = new BlockManager();
+                blockManager.init(this.getServletConfig());
+                blockManager.setBlocks(this);
+                LifecycleHelper.setupComponent(blockManager,
+                                               this.getLogger(),
+                                               this.context,
+                                               null,
+                                               blockConf);
+                this.blocks.put(blockConf.getAttribute("id"), blockManager);
+                String mountPath = blockConf.getChild("mount").getAttribute("path", null);
+                if (mountPath != null) {
+                    this.mountedBlocks.put(mountPath, blockManager);
+                    this.getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
+                                           " at " + mountPath);
+                }
+            }
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
     
     public void destroy() {
@@ -148,31 +136,24 @@ public class BlocksManager
         while (blocksIter.hasNext()) {
             LifecycleHelper.dispose(blocksIter.next());
         }
-        if (this.serviceManager != null) {
-            this.serviceManager = null;            
-        }
         this.blocks = null;
         this.mountedBlocks = null;
         super.destroy();
     }
     
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpEnvironment env;
-
         // We got it... Process the request
-        String uri = request.getServletPath();
-        if (uri == null) {
-            uri = "";
-        }
-        String pathInfo = request.getPathInfo();
-        if (pathInfo != null) {
-            // VG: WebLogic fix: Both uri and pathInfo starts with '/'
-            // This problem exists only in WL6.1sp2, not in WL6.0sp2 or WL7.0b.
-            if (uri.length() > 0 && uri.charAt(0) == '/') {
-                uri = uri.substring(1);
-            }
-            uri += pathInfo;
-        }
+        System.out.println("Service: contextPath=" + request.getContextPath() +
+                           " servletPath=" + request.getServletPath() +
+                           " pathInfo=" + request.getPathInfo() +
+                           " requestURI=" + request.getRequestURI() +
+                           " requestURL=" + request.getRequestURL());
+
+        String contextPath = trimPath(request.getContextPath());
+        String servletPath = trimPath(request.getServletPath());
+        String pathInfo = trimPath(request.getPathInfo());
+        
+        String uri = servletPath + pathInfo;
 
         if (uri.length() == 0) {
             /* empty relative URI
@@ -190,42 +171,66 @@ public class BlocksManager
             return;
         }
 
-        if (uri.charAt(0) == '/') {
-        	uri = uri.substring(1);
+        // The mount points start with '/' make sure that the URI also
+        // does, so that they are compareable.
+        if (pathInfo.length() == 0) {
+            pathInfo = "/";
         }
 
-        String formEncoding = request.getParameter("cocoon-form-encoding");
-        if (formEncoding == null) {
-            formEncoding = this.settings.getFormEncoding();
-        }
-        env = new HttpEnvironment(uri,
-                                  this.contextURL,
-                                  request,
-                                  response,
-                                  this.getServletContext(),
-                                  this.environmentContext,
-                                  this.containerEncoding,
-                                  formEncoding);
-        env.enableLogging(getLogger());
-		
+        Block block = this.getMountedBlock(pathInfo);
+        if (block == null)
+                throw new ServletException("No block mounted at " + pathInfo);
+
+        // This servlet is the context for the called block servlet
+        final String newContextPath = contextPath + servletPath;
+        
+        // Resolve the URI relative to the mount point
+        final String newServletPath = block.getMountPath();
+        uri = uri.substring(newServletPath.length());
+        final String newPathInfo = uri;
+        
+        HttpServletRequest newRequest = new HttpServletRequestWrapper(request) {
+
+                        /* (non-Javadoc)
+                         * @see javax.servlet.http.HttpServletRequestWrapper#getContextPath()
+                         */
+                        public String getContextPath() {
+                                return newContextPath;
+                        }
+
+                        /* (non-Javadoc)
+                         * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
+                         */
+                        public String getPathInfo() {
+                                return newPathInfo;
+                        }
+
+                        /* (non-Javadoc)
+                         * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
+                         */
+                        public String getServletPath() {
+                                return newServletPath;
+                        }
+                
+        };
+        
         try {
-	        this.processor.process(env);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e);
-		}
-		env.commitResponse();
-	}
-
-	private Logger getLogger() {
-    	return this.logger;
+                getLogger().debug("Enter processing in block at " + newServletPath);
+                        // It is important to set the current block each time
+                        // a new block is entered, this is used for the block
+                        // protocol
+                        BlockEnvironmentHelper.enterBlock(block);
+                block.service(newRequest, response);
+                } finally {
+                        BlockEnvironmentHelper.leaveBlock();
+                        getLogger().debug("Leaving processing in block at " + newServletPath);
+                }
     }
 
-    private void createProcessor() {
-        this.processor = new BlockDispatcherProcessor(this);
-        ((BlockDispatcherProcessor)this.processor).enableLogging(this.getLogger());
+    private Logger getLogger() {
+        return this.logger;
     }
-    
+
     public Block getBlock(String blockId) {
         return (Block)this.blocks.get(blockId);
     }
@@ -235,7 +240,7 @@ public class BlocksManager
      * chosen. The implementation could be made much more efficient.
      * @param uri
      */
-    public Block getMountedBlock(String uri) {
+    private Block getMountedBlock(String uri) {
         Block block = null;
         // All mount points that are before or equal to the URI in
         // lexicographical order. This includes all prefixes.
@@ -261,6 +266,21 @@ public class BlocksManager
      */
     public boolean modifiedSince(long date) {
         return date < this.wiringFile.getLastModified();
+    }
+    
+    /**
+     * Utility function to ensure that the parts of the request URI not is null
+     * and not ends with /
+     * @param path
+     * @return the trimmed path
+     */
+    private static String trimPath(String path) {
+        if (path == null)
+                return "";
+        int length = path.length();
+        if (length > 0 && path.charAt(length - 1) == '/')
+                path = path.substring(0, length - 1);
+        return path;
     }
 
     private static class InverseLexicographicalOrder implements Comparator {
