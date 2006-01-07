@@ -97,60 +97,73 @@ public class CoreUtil {
 
 	private File contextForWriting = null;
 	private String contextURL;
-	// path to a file that is supposed to be present in the servlet context
-	// and that is used for calculating the context URI
-	private String knownFile;
-
+	
 	public CoreUtil(ServletConfig config) throws ServletException {
 		this(config, "WEB-INF/web.xml");
 	}
+	
 	/**
      * Setup a new instance.
      * @param config
+	 * @param knownFile path to a file that is supposed to be present in the servlet context
+	 * and that is used for calculating the context URI
      * @throws ServletException
      */
     public CoreUtil(ServletConfig config, String knownFile) throws ServletException {
 		this.config = config;
-		this.knownFile = knownFile;
 		this.servletContext = this.config.getServletContext();
 		this.servletContext.log("Initializing Apache Cocoon " + Constants.VERSION);
 		
-		String writeableContextPath = this.servletContext.getRealPath("/");
-		String path = writeableContextPath;
-		if (path == null) {
-		    // Try to figure out the path of the root from that of a known file
-			this.servletContext.log("Figuring out root from " + this.knownFile);
-		    try {
-		        path = this.servletContext.getResource("/" + this.knownFile).toString();
-				this.servletContext.log("Got " + path);
-		    } catch (MalformedURLException me) {
-		        throw new ServletException("Unable to get resource '" + this.knownFile + "'.", me);
-		    }
-		    path = path.substring(0, path.length() - this.knownFile.length());
-			this.servletContext.log("And servlet root " + path);
-		}
-		try {
-		    if (path.indexOf(':') > 1) {
-		        this.contextURL = path;
-		    } else {
-		        this.contextURL = new File(path).toURL().toExternalForm();
-		    }
-		} catch (MalformedURLException me) {
-		    // VG: Novell has absolute file names starting with the
-		    // volume name which is easily more then one letter.
-		    // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-		    try {
-		        this.contextURL= new File(path).toURL().toExternalForm();
-		    } catch (MalformedURLException ignored) {
-		        throw new ServletException("Unable to determine servlet context URL.", me);
-		    }
-		}
+		this.contextURL = CoreUtil.getContextURL(this.servletContext, knownFile);
+		String writeableContextPath = CoreUtil.getWritableContextPath(this.servletContext);
 		if (writeableContextPath != null) {
 			this.contextForWriting = new File(writeableContextPath);
 		}
     	this.environmentContext = new HttpContext(config.getServletContext());
     	this.init();
     }
+    
+    public static String getWritableContextPath(ServletContext servletContext) {
+    	return servletContext.getRealPath("/");
+    }
+    
+	/**
+	 * @param servletContext
+	 * @throws ServletException
+	 */
+	public static String getContextURL(ServletContext servletContext, String knownFile) throws ServletException {
+		String path = CoreUtil.getWritableContextPath(servletContext);
+		String contextURL;
+		if (path == null) {
+		    // Try to figure out the path of the root from that of a known file
+			servletContext.log("Figuring out root from " + knownFile);
+		    try {
+		        path = servletContext.getResource("/" + knownFile).toString();
+				servletContext.log("Got " + path);
+		    } catch (MalformedURLException me) {
+		        throw new ServletException("Unable to get resource '" + knownFile + "'.", me);
+		    }
+		    path = path.substring(0, path.length() - knownFile.length());
+			servletContext.log("And servlet root " + path);
+		}
+		try {
+		    if (path.indexOf(':') > 1) {
+		        contextURL = path;
+		    } else {
+		        contextURL = new File(path).toURL().toExternalForm();
+		    }
+		} catch (MalformedURLException me) {
+		    // VG: Novell has absolute file names starting with the
+		    // volume name which is easily more then one letter.
+		    // Examples: sys:/apache/cocoon or sys:\apache\cocoon
+		    try {
+		        contextURL = new File(path).toURL().toExternalForm();
+		    } catch (MalformedURLException ignored) {
+		        throw new ServletException("Unable to determine servlet context URL.", me);
+		    }
+		}
+		return contextURL;
+	}
     
     private void init() throws ServletException {
         // first let's set up the appContext with some values to make
@@ -366,13 +379,6 @@ public class CoreUtil {
     	return this.parentManager;
     }
     
-    /**
-     * The root context path for the servlet
-     * @return context URL
-     */
-    public String getContextURL() {
-    	return this.contextURL;
-    }
     /**
      * Instatiates the parent service manager, as specified in the
      * parent-service-manager init parameter.

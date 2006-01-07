@@ -25,11 +25,4 @@ public interface Blocks {
      * @param blockId
      */
     Block getBlock(String blockId);
-    
-    /**
-     * The block with the largest mount point that is a prefix of the URI is
-     * chosen.
-     * @param uri
-     */
-    Block getMountedBlock(String uri);
 }

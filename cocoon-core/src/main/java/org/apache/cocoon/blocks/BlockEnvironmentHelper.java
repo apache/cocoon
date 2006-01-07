@@ -17,7 +17,7 @@ package org.apache.cocoon.blocks;
 
 import java.util.Stack;
 
-import org.apache.cocoon.ProcessingException;
+import javax.servlet.ServletException;
 
 /**
  * Stack used for geting hold on the current block manager
@@ -36,12 +36,12 @@ public class BlockEnvironmentHelper {
      * <p>This method should never raise an exception, except when the
      * parameters are not set!</p>
      *
-     * @throws ProcessingException if block is null
+     * @throws ServletException if block is null
      */
     public static void enterBlock(Block block)
-    throws ProcessingException {
+    throws ServletException {
         if (null == block) {
-            throw new ProcessingException("Block is not set.");
+            throw new ServletException("Block is not set.");
         }
 
         Stack stack = (Stack)blockStack.get();

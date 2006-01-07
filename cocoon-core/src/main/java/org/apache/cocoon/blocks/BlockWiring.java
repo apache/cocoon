@@ -16,26 +16,19 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.core.source.SimpleSourceResolver;
-import org.apache.excalibur.source.Source;
 import org.xml.sax.SAXException;
 
 /**
@@ -43,10 +36,9 @@ import org.xml.sax.SAXException;
  */
 public class BlockWiring
     extends AbstractLogEnabled
-    implements Configurable, Contextualizable { 
+    implements Configurable{ 
 
-    private Context context;
-    private URL contextRootURL;
+    private ServletContext servletContext;
     private String id;
     private String location;
     private Map connections = new HashMap();
@@ -61,12 +53,15 @@ public class BlockWiring
     
     private boolean core = false;
 
-    // Life cycle
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-        this.contextRootURL = (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL);
+    /**
+      * @param servletContext The servletContext to set.
+      */
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
+
+    
+    // Life cycle
 
     public void configure(Configuration config)
         throws ConfigurationException {
@@ -103,35 +98,28 @@ public class BlockWiring
 
         // Read the block.xml file
         String blockPath = this.location + "COB-INF/block.xml";
-        Source source = null;
+        if (blockPath.charAt(0) != '/') {
+            blockPath = "/" + blockPath;
+        }
+        URL blockURL;
         Configuration block = null;
 
-        SimpleSourceResolver resolver = new SimpleSourceResolver();
-        resolver.enableLogging(this.getLogger());
-
         try {
-            resolver.contextualize(this.context);
-            source = resolver.resolveURI(blockPath);
-	    // FIXME: Have used different locations for block.xml in the OSGi and the block stuff.
-	    if (!source.exists()) {
-		blockPath = this.location + "WEB-INF/block.xml";
-		source = resolver.resolveURI(blockPath);
-	    }
+            blockURL = this.servletContext.getResource(blockPath);
+            if (blockURL == null) {
+                // FIXME: Have used different locations for block.xml in the OSGi and the block stuff.
+                blockPath = this.location + "WEB-INF/block.xml";
+                blockURL = this.servletContext.getResource(blockPath);                          
+            }
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            block = builder.build(source.getInputStream(), source.getURI());
+            //block = builder.build(source.getInputStream(), source.getURI());
+            block = builder.build(blockURL.openStream(), blockURL.toExternalForm());
         } catch (IOException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
         } catch (SAXException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
             throw new ConfigurationException(msg, e);
-        } catch (ContextException e) {
-            String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
-        } finally {
-            if (resolver != null) {
-                resolver.release(source);
-            }
         }
 
         properties =
@@ -164,21 +152,12 @@ public class BlockWiring
     public String getId() {
         return this.id;
     }
-
+    
     /**
-     * Get the URL of the root of the block
+     * Get the location of the block
      */
-    public URL getContextURL() throws MalformedURLException {
-        URL contextURL = null;
-        try {
-            contextURL = ((new URI(this.contextRootURL.toExternalForm())).resolve(this.location)).toURL();
-            getLogger().debug("Root URL " + contextRootURL);
-            getLogger().debug("Block Root URL " + contextURL.toString());
-        } catch (URISyntaxException e) {
-            throw new MalformedURLException("Couldn't create context URL from " + this.contextRootURL.toExternalForm() +
-                " and " + this.location + " error: " + e.getMessage());
-        }
-        return contextURL;
+    public String getLocation() {
+        return this.location;
     }
 
     /**

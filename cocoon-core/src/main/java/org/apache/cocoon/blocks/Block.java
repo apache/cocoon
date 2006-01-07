@@ -18,13 +18,15 @@ package org.apache.cocoon.blocks;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.servlet.Servlet;
+
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 
 /**
  * @version $Id$
  */
-public interface Block extends Processor { 
+public interface Block extends Processor, Servlet { 
 
     public static String NAME = Block.class.getName() + "-name";
     public static String SUPER = "super";

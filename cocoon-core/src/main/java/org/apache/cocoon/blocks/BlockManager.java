@@ -15,9 +15,19 @@
  */
 package org.apache.cocoon.blocks;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -29,9 +39,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
@@ -41,31 +49,42 @@ import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 
 /**
  * @version $Id$
  */
 public class BlockManager
     extends AbstractLogEnabled
-    implements Block, Configurable, Contextualizable, Disposable, Initializable, Serviceable { 
+    implements Servlet, Block, Configurable, Contextualizable, Disposable, Initializable { 
 
     public static String ROLE = BlockManager.class.getName();
 
+    private ServletConfig servletConfig;
+    private ServletContext servletContext;
+    private String containerEncoding;
+
     private Context context;
     private Configuration config;
-    private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
 
     private Processor blockProcessor;
     private BlockWiring blockWiring;
     private BlockContext blockContext;
     private Blocks blocks;
+    private String contextURL;
 
-    // Life cycle
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.parentServiceManager = manager;
+    public void init(ServletConfig servletConfig) throws ServletException {
+    	this.servletConfig = servletConfig;
+    	this.servletContext = servletConfig.getServletContext();
+        this.containerEncoding = this.servletConfig.getInitParameter("container-encoding");
+        if (this.containerEncoding == null) {
+        	this.containerEncoding = "ISO-8859-1";
+        }
     }
+    
+    // Life cycle
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
@@ -78,21 +97,26 @@ public class BlockManager
 
     public void initialize() throws Exception {
         this.blockWiring = new BlockWiring();
+        this.blockWiring.setServletContext(this.servletContext);
         LifecycleHelper.setupComponent(this.blockWiring,
                                        this.getLogger(),
-                                       this.context,
+                                       null,
                                        null,
                                        this.config);    
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
-        this.blockContext = new BlockContext(this.blockWiring, this);
+        this.blockContext = new BlockContext(this.servletContext, this.blockWiring, this.blocks);
+        this.contextURL = CoreUtil.getContextURL(this.blockContext, "COB-INF/block.xml");
         Context newContext = this.getAvalonContext();
-        String confLocation = this.blockWiring.getContextURL() + "::";
+        String confLocation = this.contextURL + "::";
 
         if (this.blockWiring.isCore()) {
             this.getLogger().debug("Block with core=true");
-            this.serviceManager = this.parentServiceManager;
+            ServletConfig blockServletConfig =
+            	new ServletConfigurationWrapper(this.servletConfig, this.blockContext);
+            CoreUtil coreUtil = new CoreUtil(blockServletConfig);
+            this.serviceManager = coreUtil.getServiceManager();
        } else {
             // Create a service manager for getting components from other blocks
             ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
@@ -101,6 +125,7 @@ public class BlockManager
             this.serviceManager =
                 this.createLocalSourceResolverSM(newContext, topServiceManager, confLocation);
         }
+        // FIXME this.settings = (Settings) this.serviceManager.lookup(Core.ROLE);
         
         // Create a service manager with the exposed components of the block
         if (this.blockWiring.getComponentConfiguration() != null) {
@@ -128,7 +153,6 @@ public class BlockManager
     }
 
     public void dispose() {
-        this.parentServiceManager = null;
     }
 
     /**
@@ -138,8 +162,8 @@ public class BlockManager
         ComponentContext newContext = new ComponentContext(this.context);
         // A block is supposed to be an isolated unit so it should not have
         // any direct access to the global root context
-        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.blockWiring.getContextURL().toExternalForm()));
-        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, this.blockContext);
+        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.contextURL));
+        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.blockContext));
         newContext.makeReadOnly();
         
         return newContext;
@@ -199,17 +223,7 @@ public class BlockManager
      * Get a block property
      */
     public String getProperty(String name) {
-		String value = this.blockWiring.getProperty(name);
-		if (value == null) {
-		    // Ask the super block for the property
-		    String superId = this.blockWiring.getBlockId(Block.SUPER);
-		    this.getLogger().debug("Try super property=" + name + " block=" + superId);
-		    Block block = this.blocks.getBlock(superId);
-		    if (block != null) {
-		        value =  block.getProperty(name);
-		    }
-		}
-		return value;
+    	return this.blockContext.getInitParameter(name);
     }
 
     // TODO: We should have a reflection friendly Map getProperties() also
@@ -400,4 +414,50 @@ public class BlockManager
     public void setAttribute(String name, Object value) {
         this.blockProcessor.setAttribute(name, value);
     }
+
+	public ServletConfig getServletConfig() {
+		return this.servletConfig;
+	}
+
+	public void service(ServletRequest request0, ServletResponse response0) throws ServletException, IOException {
+		HttpServletRequest request = (HttpServletRequest)request0;
+		HttpServletResponse response =(HttpServletResponse)response0;
+
+        String uri = request.getPathInfo();
+
+        if (uri.charAt(0) == '/') {
+        	uri = uri.substring(1);
+        }
+
+        String formEncoding = request.getParameter("cocoon-form-encoding");
+        if (formEncoding == null) {
+        	formEncoding = "ISO-8859-1";
+            // FIXME formEncoding = this.settings.getFormEncoding();
+        }
+        HttpEnvironment env =
+        	new HttpEnvironment(uri,
+        			this.contextURL,
+        			request,
+        			response,
+        			this.servletContext,
+        			new HttpContext(this.servletContext),
+        			this.containerEncoding,
+        			formEncoding);
+        env.enableLogging(getLogger());
+		
+        try {
+	        this.process(env);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException(e);
+		}
+		env.commitResponse();		
+	}
+
+	public String getServletInfo() {
+		return "BlockManager";
+	}
+
+	public void destroy() {
+	}
 }
