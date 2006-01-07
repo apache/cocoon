@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id$ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  
+  <map:views>
+    <map:view name="debug1" from-label="debug1">
+      <map:serialize type="xml"/>
+    </map:view>
+    <map:view name="debug2" from-label="debug2">
+      <map:serialize type="xml"/>
+    </map:view>
+  </map:views>
+  
+  <map:pipelines>
+    <map:pipeline>
+    
+      <map:match pattern="">
+        <map:redirect-to uri="main-samples"/>
+      </map:match>
+      
+      <!-- generate the samples pages by filtering the aggregation of .xsamples files -->
+      <map:match pattern="*-samples">
+        <map:aggregate label="debug1" element="root">
+          <map:part element="gump" src="module.xml"/>
+          <map:part element="xsamples" src="cocoon:/xsamples"/>
+          <map:part element="pages" src="samples-pages.xml"/>
+        </map:aggregate>
+        
+        <!-- 
+        		keep only blocks defined in samples-pages.xml for the current page,
+        		and mix with gump info
+        -->
+        <map:transform label="debug2" src="filter-blocks.xsl">
+          <map:parameter name="currentPage" value="{1}"/>
+        </map:transform>
+        
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        
+        <map:serialize/>
+      </map:match>
+      
+      <!-- 
+      	aggregate all the xsamples files
+       --> 
+      <map:match pattern="xsamples">
+      	<map:generate type="xpathdirectory" src="./">
+      	  <map:parameter name="depth" value="2"/>
+      	  <map:parameter name="xpath" value="/xsamples"/>
+      	  <map:parameter name="xmlFiles" value="\.xsamples$"/>
+      	  <map:parameter name="include" value="^[a-z0-9\-]+$|\.xsamples"/>
+      	</map:generate>
+      	<map:transform src="directory2xsamples.xsl"/>
+      	<map:serialize type="xml"/>
+      </map:match>
+      
+      <!-- mount everything else -->
+      <map:match pattern="*/**">
+        <map:mount src="{1}/" uri-prefix="{1}"/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>
