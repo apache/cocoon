@@ -16,12 +16,15 @@
 package org.apache.cocoon.bean.helpers;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 
 import org.w3c.dom.Document;
@@ -464,27 +467,26 @@ public class BeanConfigurator {
      */
     public static List processURIFile(String filename) {
         List uris = new ArrayList();
+        FileReader fr = null;
+        BufferedReader uriFile = null;
         try {
-            BufferedReader uriFile = new BufferedReader(new FileReader(filename));
-
-            while (true) {
-                String uri = uriFile.readLine();
-
-                if (null == uri) {
-                    break;
-                }
-                
+            fr = new FileReader(filename);
+            uriFile = new BufferedReader(fr);
+            String uri;
+            while ((uri = uriFile.readLine()) != null) {
                 uri = uri.trim();
-                if (!uri.equals("") && !uri.startsWith("#")){
+                if (!uri.equals("") && !uri.startsWith("#")) {
                     uris.add(uri.trim());
                 }
             }
-
-            uriFile.close();
-        } catch (Exception e) {
-            // ignore errors.
+        } catch (FileNotFoundException e) {
+            // nothing to do
+        } catch (IOException e) {
+            // nothing to do
+        } finally {
+            IOUtils.closeQuietly(uriFile);
+            IOUtils.closeQuietly(fr);
         }
         return uris;
     }
-
 }
