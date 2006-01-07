@@ -418,7 +418,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         }
                     } finally {
                         if (reader != null) reader.close();
-                        if (isr != null) reader.close();
+                        if (isr != null) isr.close();
                         if (is != null) is.close();
                     }
                 } else if (parse.equals("xml")) {
