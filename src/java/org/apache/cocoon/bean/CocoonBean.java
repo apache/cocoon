@@ -33,6 +33,7 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceUtil;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -594,14 +595,15 @@ public class CocoonBean extends CocoonWrapper {
             n.addExtraDescription("missing-file", target.getSourceURI());
 
             ModifiableSource source = getSource(target);
+            OutputStream stream = null;
+            PrintStream out = null;
             try {
-                OutputStream stream = source.getOutputStream();
-
-                PrintStream out = new PrintStream(stream);
+                stream = source.getOutputStream();
+                out = new PrintStream(stream);
                 Notifier.notify(n, out, "text/html");
-                out.flush();
-                out.close();
             } finally {
+                if (out != null) out.close();
+                if (stream != null) stream.close();
                 releaseSource(source);
             }
         }
@@ -672,30 +674,38 @@ public class CocoonBean extends CocoonWrapper {
      */ 
     private void readChecksumFile() throws Exception {
         checksums = new HashMap();
-        
+        InputStream is = null;
+        InputStreamReader isr = null;
+        BufferedReader reader = null;
         try {
             Source checksumSource = sourceResolver.resolveURI(checksumsURI);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(checksumSource.getInputStream()));
+            is = checksumSource.getInputStream();
+            isr = new InputStreamReader(is);
+            reader = new BufferedReader(isr);
             String line;
-            int lineNo=0;
-            while ((line = reader.readLine())!=null) {
+            int lineNo = 0;
+            while ((line = reader.readLine()) != null) {
                 lineNo++;
-                if (line.trim().startsWith("#") || line.trim().length()==0 ) {
+                if (line.trim().startsWith("#") || line.trim().length() == 0) {
                     continue;
                 }
-                if (line.indexOf("\t")==-1) { 
-                    throw new ProcessingException("Missing tab at line "+lineNo+" of " + checksumsURI);
+                if (line.indexOf("\t") == -1) { 
+                    throw new ProcessingException("Missing tab at line " + lineNo + " of " + checksumsURI);
                 }
-                String filename = line.substring(0,line.indexOf("\t"));
-                String checksum = line.substring(line.indexOf("\t")+1);
+                String filename = line.substring(0, line.indexOf("\t"));
+                String checksum = line.substring(line.indexOf("\t") + 1);
                 checksums.put(filename, checksum);
             }
             reader.close();
         } catch (SourceNotFoundException e) {
             // return leaving checksums map empty
+        } finally {
+            if (reader != null) reader.close();
+            if (isr != null) isr.close();
+            if (is != null) is.close();
         }
     }
-    
+
     private void writeChecksumFile() throws Exception {
         Source checksumSource = sourceResolver.resolveURI(checksumsURI);
         if (!(checksumSource instanceof ModifiableSource)) {
