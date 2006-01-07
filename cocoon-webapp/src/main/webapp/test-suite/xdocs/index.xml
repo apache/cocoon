@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Cocoon TestSuite</title>
+    <authors>
+      <person name="Cocoon community" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="General information">
+      <p>
+          Apache Cocoon is a web development framework built around the concepts 
+          of component-based web development and separation of concerns, ensuring 
+          that people can interact and collaborate on a project without stepping 
+          on each other toes.
+      </p>
+      <p>
+          The purpose of these pages is to provide a webapp to be used in testing
+          Cocoon itself. These pages are not intended to be read by humans - rather
+          to be read by automated tests that are a part of Cocoon itself.
+      </p>
+    </s1>    
+  </body>
+</document>
