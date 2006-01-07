@@ -708,12 +708,11 @@ public final class SourceUtil {
                     } catch (ComponentException e) {
                         throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
-                        if (oStream != null) {
-                            oStream.flush();
-                            try {
-                                oStream.close();
-                            } catch (Exception ignore) {
-                            }
+                        oStream.flush();
+                        try {
+                            oStream.close();
+                        } catch (Exception ignore) {
+                            // do nothing
                         }
                         if (selector != null) {
                             selector.release(serializer);

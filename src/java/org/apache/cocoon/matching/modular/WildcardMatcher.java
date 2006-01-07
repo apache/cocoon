@@ -43,7 +43,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardMatcher.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class WildcardMatcher extends AbstractWildcardMatcher
     implements Configurable, Composable
@@ -102,7 +102,7 @@ public class WildcardMatcher extends AbstractWildcardMatcher
         try {
             // obtain input module
             inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (inputName != null && inputSelector != null && inputSelector.hasComponent(inputName)){
+            if (inputSelector != null && inputSelector.hasComponent(inputName)) {
                 input = (InputModule) inputSelector.select(inputName);
             }
             if (input != null) {

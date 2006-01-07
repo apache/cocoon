@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingWildcardMatcher.java,v 1.3 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CachingWildcardMatcher extends AbstractWildcardMatcher
     implements Configurable,  Initializable, Composable, Disposable
@@ -175,7 +175,7 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
             try {
                 // obtain input module
                 iputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (inputName != null && iputSelector != null && iputSelector.hasComponent(inputName)){
+                if (iputSelector != null && iputSelector.hasComponent(inputName)) {
                     iput = (InputModule) iputSelector.select(inputName);
                 }
                 if (iput != null) {
