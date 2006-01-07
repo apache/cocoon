@@ -97,7 +97,7 @@ public class WildcardMatcher extends AbstractWildcardMatcher
         try {
             // obtain input module
             inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (inputName != null && inputSelector != null && inputSelector.isSelectable(inputName)){
+            if (inputSelector != null && inputSelector.isSelectable(inputName)) {
                 input = (InputModule) inputSelector.select(inputName);
             }
             if (input != null) {

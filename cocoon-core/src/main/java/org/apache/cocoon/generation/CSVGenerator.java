@@ -415,7 +415,7 @@ public class CSVGenerator extends FileGenerator {
                 for (i = 1; i < l ; i++) {
                     c = read();
                     if (c == -1) break;
-                    if (b != null) b[o + i] = (char)c;
+                    b[o + i] = (char)c;
                 }
             } catch (IOException ee) {
                 return i;

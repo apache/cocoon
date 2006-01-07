@@ -411,10 +411,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         reader = new BufferedReader(isr);
                         int read;
                         char ary[] = new char[1024 * 4];
-                        if (reader != null) {
-                            while ((read = reader.read(ary)) != -1) {
-                                super.characters(ary,0,read);
-                            }
+                        while ((read = reader.read(ary)) != -1) {
+                            super.characters(ary,0,read);
                         }
                     } finally {
                         if (reader != null) reader.close();
