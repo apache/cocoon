@@ -168,7 +168,7 @@ public class CachingWildcardMatcher extends AbstractWildcardMatcher
             try {
                 // obtain input module
                 iputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (inputName != null && iputSelector != null && iputSelector.isSelectable(inputName)){
+                if (iputSelector != null && iputSelector.isSelectable(inputName)) {
                     iput = (InputModule) iputSelector.select(inputName);
                 }
                 if (iput != null) {

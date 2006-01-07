@@ -335,7 +335,7 @@ public final class DOMUtil {
                             }
                         }
                         value = valueBuffer.toString().trim();
-                        if (key != null && value != null && value.length() > 0) {
+                        if (key != null && value.length() > 0) {
                             par.setParameter(key, value);
                         }
                     }

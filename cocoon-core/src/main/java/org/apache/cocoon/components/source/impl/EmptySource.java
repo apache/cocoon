@@ -53,9 +53,9 @@ public class EmptySource implements XMLizable, Source {
         final int pos = location.indexOf(':');
         this.scheme = location.substring(0, pos);
 
-        final String rootName = location.substring(pos + 1);
-        if (rootName != null && rootName.trim().length() > 0) {
-            this.rootElementName = rootName.trim();
+        final String rootName = location.substring(pos + 1).trim();
+        if (rootName.length() > 0) {
+            this.rootElementName = rootName;
             this.xmlDocument = '<' + this.rootElementName + "/>";
         } else {
             this.xmlDocument = "";
