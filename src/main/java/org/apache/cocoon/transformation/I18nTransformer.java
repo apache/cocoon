@@ -2069,23 +2069,15 @@ public class I18nTransformer extends AbstractTransformer
             to_fmt.applyPattern(pattern);
         }
 
-        if (value == null) {
-            numberValue = new Long(0);
-        } else {
-            try {
-                numberValue = from_fmt.parse(value);
-                if (int_currency > 0) {
-                    numberValue = new Double(numberValue.doubleValue() /
-                                             int_currency);
-                } else {
-                    // what?
-                }
-            } catch (ParseException pe) {
-                throw new SAXException(
-                        this.getClass().getName()
-                        + "i18n:number - parsing error.", pe
-                );
+        try {
+            numberValue = from_fmt.parse(value);
+            if (int_currency > 0) {
+                numberValue = new Double(numberValue.doubleValue() / int_currency);
+            } else {
+                // what?
             }
+        } catch (ParseException pe) {
+            throw new SAXException(this.getClass().getName() + "i18n:number - parsing error.", pe);
         }
 
         // we have all necessary data here: do formatting.

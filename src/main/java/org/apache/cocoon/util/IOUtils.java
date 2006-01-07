@@ -79,7 +79,7 @@ public class IOUtils {
             fw.write(string);
             fw.flush();
         } finally {
-            if (fw != null) fw.close();
+            fw.close();
         }
     }
 
@@ -102,7 +102,7 @@ public class IOUtils {
                 buffer.append(chr, 0, len);
             }
         } finally {
-            if (reader != null) reader.close();
+            reader.close();
         }
         return buffer.toString();
     }
@@ -123,7 +123,7 @@ public class IOUtils {
             oos.writeObject(object);
             oos.flush();
         } finally {
-            if (fos != null) fos.close();
+            fos.close();
         }
     }
 
@@ -143,7 +143,7 @@ public class IOUtils {
             ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fis));
             object = ois.readObject();
         } finally {
-            if (fis != null) fis.close();
+            fis.close();
         }
         return object;
     }
