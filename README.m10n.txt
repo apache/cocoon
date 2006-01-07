@@ -35,3 +35,14 @@ $ mvn -Declipse.downloadSources=true eclipse:eclipse
 For further information about the maven eclipse plugin visit 
 
 http://maven.apache.org/plugins/maven-eclipse-plugin/
+
+HOW TO START THE COCOON WEBAPP
+
+1. go to cocoon-webapp
+  $ mvn war:inplace
+  $ mvn jetty6:run
+2. point your browser to http://localhost:8888/cocoon-webapp/
+
+FIXME: The above doesn't work yet. The jetty plugin require the precence of the directory
+target/classes, which isn't added by any of the above goals so it has to be added manually.
+Cocoon fails during startup.
