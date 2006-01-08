@@ -34,43 +34,46 @@ import java.util.Vector;
  * ProjectPathModule provides relative and absolute paths with regards to the root of a project.
  * <p>Config:
  * <pre>
- *    <component-instance logger="core.modules.input"
- *           name="myproject"
- *           class="org.apache.cocoon.components.modules.input.ProjectPathModule">
- *      	<uri-prefix>my/project/</uri-prefix>
- *    </component-instance>
+ *    &lt;component-instance logger=&quot;core.modules.input&quot;
+ *           name=&quot;myproject&quot;
+ *           class=&quot;org.apache.cocoon.components.modules.input.ProjectPathModule&quot;&gt;
+ *          &lt;uri-prefix&gt;my/project/&lt;/uri-prefix&gt;
+ *    &lt;/component-instance&gt;
  * </pre>
  * </p>
  * <p>Usage:
  * <pre>
- * <map:transform src="skins/{forrest:skin}/xslt/fo/document2html.xsl">
- *    <map:parameter name="base" value="{myproject:relative}"/>
- * </map:transform>
- *
+ *    &lt;map:transform src=&quot;skins/{forrest:skin}/xslt/fo/document2html.xsl&quot;&gt;
+ *       &lt;map:parameter name=&quot;base&quot; value=&quot;{myproject:relative}&quot;/&gt;
+ *    &lt;/map:transform&gt;
+ *</pre>
  * And then prepend this to all image paths:
+ * <pre>
  *  ...
- *  <xsl:param name="base"/>
+ *  &lt;xsl:param name=&quot;base&quot;/&gt;
  *  ...
- *  <xsl:template match="img">
- *      <img src="{concat($base, @src)}" ...
+ *  &lt;xsl:template match=&quot;img&quot;&gt;
+ *      &lt;img src=&quot;{concat($base, @src)}&quot; ...
  *      ...
- *  </xsl:template>
+ *  &lt;/xsl:template&gt;
  *  </pre>
  * Then if you are in my/project/some/folder/page.html, the image will have a relative path bact to the root of the project.
  * <pre>
- *   <img src="../../imagename.png"/>
+ *   &lt;img src=&quot;../../imagename.png&quot;/&gt;
  * </pre>
  * Using 'myproject:path' would have given you: /some/folder/page.html<br/>
  * Using 'myproject:folder' would have given you: /some/folder/
  * </p>
+ * 
+ * @version $Id$
  *
  */
 public class ProjectPathModule
     extends AbstractInputModule
     implements Configurable, ThreadSafe {
 
-    protected static String PROJECT_PARAM_NAME = "uri-prefix";
-    protected static String PROJECT_PARAM_DEFAULT = "/";
+    protected static final String PROJECT_PARAM_NAME = "uri-prefix";
+    protected static final String PROJECT_PARAM_DEFAULT = "/";
 
     protected String projectBase;
 	

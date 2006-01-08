@@ -38,6 +38,7 @@ import org.apache.excalibur.source.SourceResolver;
  *  is resolved via the SourceResolver system.
  * </p>
  *
+ * @version $Id$
  */
 public class PropertiesFileModule extends AbstractJXPathModule
 implements InputModule, Serviceable, Configurable, ThreadSafe {
