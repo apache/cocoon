@@ -923,9 +923,9 @@ public abstract class AbstractProcessingPipeline
     protected void handleException(Exception e) throws ProcessingException {
         // Check if the client aborted the connection
         if (e instanceof SocketException) {
-            if (e.getMessage().indexOf("reset") > 0
-                    || e.getMessage().indexOf("aborted") > 0
-                    || e.getMessage().indexOf("connection abort") > 0) {
+            if (e.getMessage().indexOf("reset") > -1
+                    || e.getMessage().indexOf("aborted") > -1
+                    || e.getMessage().indexOf("connection abort") > -1) {
                 throw new ConnectionResetException("Connection reset by peer", e);
             }
         } else if (e instanceof IOException) {
