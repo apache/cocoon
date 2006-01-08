@@ -24,14 +24,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.blocks.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.util.BlockHttpServletRequestWrapper;
+import org.apache.cocoon.blocks.util.BlockHttpServletResponseWrapper;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
@@ -45,14 +49,19 @@ import org.apache.excalibur.source.impl.AbstractSource;
 public final class BlockSource
     extends AbstractSource {
 
-    /** The environment */
-    private final EnvironmentWrapper environment;
+    /** Wrapped request */
+    private BlockHttpServletRequestWrapper wrappedRequest;
+    
+    /** Wrapped response */
+    private BlockHttpServletResponseWrapper wrappedResponse;
 
     /** The name of the called block */
     private String blockName;
 
     /** The current block */
     private final Block block;
+    
+    private String systemId;
 
     /**
      * Construct a new object
@@ -64,35 +73,41 @@ public final class BlockSource
         throws MalformedURLException {
 
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        if ( env == null ) {
+        if (env == null) {
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
         }
         this.block = BlockEnvironmentHelper.getCurrentBlock();
         if (this.block == null)
             throw new MalformedURLException("Must be used in a block context " + this.getURI());
 
-        SitemapSourceInfo info = null;
+        URI blockURI = null;
         try {
-            info = parseBlockURI(env, uri);
+            blockURI = parseBlockURI(env, uri);
         } catch (URISyntaxException e) {
             throw new MalformedURLException("Malformed URI in block source " +
                                             e.getMessage());
         }
-        setScheme(info.protocol);
-        setSystemId(info.systemId);
+        setScheme(blockURI.getScheme());
+        setSystemId(this.systemId);
 
-        // create environment...
-        this.environment = new EnvironmentWrapper(env, info, logger);
+        // wrap the request
+        HttpServletRequest originalRequest =
+            (HttpServletRequest) env.getObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        if (originalRequest == null)
+            throw new MalformedURLException("Blocks only work in an HttpEnvironment");
+        
+        this.wrappedRequest = new BlockHttpServletRequestWrapper(originalRequest, blockURI);
 
-        // ...and put information passed from the parent request to the internal request
-        if ( null != parameters ) {
-            this.environment.getObjectModel().put(ObjectModelHelper.PARENT_CONTEXT, parameters);
-        } else {
-            this.environment.getObjectModel().remove(ObjectModelHelper.PARENT_CONTEXT);
-        }
+        // indicate what block that is called 
+        this.wrappedRequest.setAttribute(Block.NAME, this.blockName);
 
-        this.environment.setURI(info.prefix, info.uri);
-        this.environment.setAttribute(Block.NAME, this.blockName);
+        // wrap the response
+        HttpServletResponse originalResponse =
+            (HttpServletResponse) env.getObjectModel().get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+        if (originalResponse == null)
+            throw new MalformedURLException("Blocks only work in an HttpEnvironment");
+        
+        this.wrappedResponse = new BlockHttpServletResponseWrapper(originalResponse);
     }
 
     /**
@@ -102,18 +117,16 @@ public final class BlockSource
         throws IOException, SourceException {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        this.environment.setOutputStream(os);
+        this.wrappedResponse.setOutputStream(os);
 
         try {
-            this.block.process(this.environment);
+            this.block.service(this.wrappedRequest, this.wrappedResponse);
+            this.wrappedResponse.flushBuffer();
             
             return new ByteArrayInputStream(os.toByteArray());
 
         } catch (Exception e) {
             throw new SourceException("Exception during processing of " + this.getURI(), e);
-        } finally {
-            // Unhide wrapped environment output stream
-            this.environment.setOutputStream(null);
         }
     }
 
@@ -132,12 +145,8 @@ public final class BlockSource
     }
 
     // Parse the block protocol.
-    private SitemapSourceInfo parseBlockURI(Environment env, String blockURI) 
+    private URI parseBlockURI(Environment env, String blockURI) 
         throws URISyntaxException {
-
-        SitemapSourceInfo info = new SitemapSourceInfo();
-        // Maybe rawMode should be available for the block protocol.
-        info.rawMode = false;
 
         URI uri = new URI(blockURI);
 
@@ -146,7 +155,7 @@ public final class BlockSource
             throw new URISyntaxException(blockURI,
                                          "Only absolute URIs are allowed for the block protocol.");
         }
-        info.protocol = uri.getScheme();
+        String scheme = uri.getScheme();
 
         String baseURI = env.getURIPrefix();
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
@@ -156,22 +165,15 @@ public final class BlockSource
                                     new URI(null, null, baseURI, null));
         
         this.blockName = uri.getScheme();
-        info.uri = uri.getPath();
-        // Sub sitemap URI parsing doesn't like URIs starting with "/"
-        if (info.uri.length() != 0 && info.uri.startsWith("/"))
-            info.uri = info.uri.substring(1);
+        String path = uri.getPath();
         // All URIs, also relative are resolved and processed from the block manager
-        info.processFromRoot = true;
-        info.prefix = "";
-        info.requestURI = info.uri;
-        info.queryString = uri.getQuery();
-        info.view = SitemapSourceInfo.getView(info.queryString, env);
+        String queryString = uri.getQuery();
         
         // FIXME: This will not be a system global id, as the blockName is block local.
-        String ssp = (new URI(this.blockName, null, uri.getPath(), info.queryString, null)).toString();
-        info.systemId = (new URI(info.protocol, ssp, null)).toString();
+        String ssp = (new URI(this.blockName, null, path, queryString, null)).toString();
+        this.systemId = (new URI(scheme, ssp, null)).toString();
         
-        return info;
+        return new URI(scheme, null, path, queryString, null);
     }
 }
 

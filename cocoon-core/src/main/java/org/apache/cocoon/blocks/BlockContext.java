@@ -29,6 +29,8 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.cocoon.blocks.util.ServletContextWrapper;
+
 /**
 * @version $Id$
 */
