@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -51,8 +50,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * @since 2.1
  * @version $Id$
  */
-public class XPathExceptionSelector extends ExceptionSelector
-  implements Configurable {
+public class XPathExceptionSelector extends ExceptionSelector {
 
     private Map exception2XPath = new HashMap();
 

@@ -17,7 +17,6 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.NamedContainerNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.NamedProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -27,7 +26,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  *
  * @version $Id$
  */
-public class ViewNodeBuilder extends NamedContainerNodeBuilder implements ThreadSafe {
+public class ViewNodeBuilder extends NamedContainerNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 

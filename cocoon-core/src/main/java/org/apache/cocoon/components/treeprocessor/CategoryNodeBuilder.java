@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -31,7 +30,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  */
 public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder
-  implements Configurable, ThreadSafe {
+  implements ThreadSafe {
 
     // Prefix used for registering as a TreeBuilder attribute
     private static String PREFIX = CategoryNodeBuilder.class.getName() + "/";

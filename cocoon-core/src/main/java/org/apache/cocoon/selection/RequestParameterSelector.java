@@ -19,7 +19,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Map;
@@ -36,7 +35,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class RequestParameterSelector extends AbstractSwitchSelector
-  implements Configurable, ThreadSafe {
+  implements Configurable {
 
     protected String defaultName;
 

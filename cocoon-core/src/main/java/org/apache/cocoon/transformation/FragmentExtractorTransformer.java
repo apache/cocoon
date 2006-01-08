@@ -30,8 +30,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
@@ -69,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id$
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
+    implements CacheableProcessingComponent, Configurable, Serviceable, Disposable {
 
     public static final String FE_URI = "http://apache.org/cocoon/fragmentextractor/2.0";
 

@@ -19,7 +19,6 @@ package org.apache.cocoon.components.modules.input;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -37,7 +36,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
-    implements Serviceable, Disposable {
+    implements Serviceable {
 
     /** The service manager instance */
     protected ServiceManager manager;

@@ -187,8 +187,7 @@ import java.util.Vector;
  * @version $Id$
  */
 public abstract class AbstractValidatorAction
-    extends AbstractComplementaryConfigurableAction
-    implements Configurable {
+    extends AbstractComplementaryConfigurableAction {
 
     /**
      * This is the name of the request attribute containing the result

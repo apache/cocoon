@@ -18,7 +18,6 @@ package org.apache.cocoon.components.modules.input;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -81,8 +80,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @version $Id$
  */
-public class JXPathMetaModule extends AbstractMetaModule
-                              implements Configurable, ThreadSafe {
+public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
 
     /**
      * Contains all globally registered extension classes and
