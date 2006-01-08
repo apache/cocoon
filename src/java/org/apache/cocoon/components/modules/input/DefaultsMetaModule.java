@@ -26,9 +26,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * Old name for {@link DefaultsModule}.
- * @deprecated Use DefaultsModule instead; this is not a 'meta' module and is
+ * @deprecated Use {@link DefaultsModule} instead; this is not a 'meta' module and is
  * thus misnamed.
- * @version CVS $Id: DefaultsMetaModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 
 /* Deprecated 2003-03-19. Suggest we keep this class for compat with 2.0.x
