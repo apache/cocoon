@@ -34,7 +34,7 @@ import java.util.Map;
  * <strong>NOTE:</strong> The module does not create a new session.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: SessionModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class SessionModule extends AbstractJXPathModule
     implements ThreadSafe {

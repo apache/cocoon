@@ -47,7 +47,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * </tbody></table>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SelectMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 

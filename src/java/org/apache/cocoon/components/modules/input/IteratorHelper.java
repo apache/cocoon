@@ -21,7 +21,7 @@ import java.util.Iterator;
 /**
  * Wraps an Enumeration and provides Iterator interface.
  *
- * @version CVS $Id$
+ * @version $Id$
  */
 class IteratorHelper implements Iterator {
 

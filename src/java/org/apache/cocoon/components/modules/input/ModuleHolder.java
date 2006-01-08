@@ -19,7 +19,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: ModuleHolder.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ModuleHolder {
 

@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleHelper.java,v 1.2 2004/04/30 23:07:55 joerg Exp $
+ * @version $Id$
  */
 public class InputModuleHelper {
     

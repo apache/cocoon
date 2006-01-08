@@ -38,7 +38,7 @@ import java.util.TreeSet;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class RequestAttributeModule extends AbstractInputModule implements ThreadSafe {
 
