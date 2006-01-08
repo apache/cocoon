@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
 implements CocoonCrawler, Configurable, Disposable, Recyclable {
-    
+
     /**
      * Config element name specifying expected link content-typ.
      * <p>
@@ -52,7 +52,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String LINK_CONTENT_TYPE_CONFIG = "link-content-type";
-    
+
     /**
      * Default value of <code>link-content-type</code> configuration value.
      * <p>
@@ -60,7 +60,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final String LINK_CONTENT_TYPE_DEFAULT = Constants.LINK_CONTENT_TYPE;
-    
+
     /**
      * Config element name specifying query-string appendend for requesting links
      * of an URL.
@@ -69,7 +69,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String LINK_VIEW_QUERY_CONFIG = "link-view-query";
-    
+
     /**
      * Default value of <code>link-view-query</code> configuration option.
      * <p>
@@ -77,7 +77,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String LINK_VIEW_QUERY_DEFAULT = "cocoon-view=links";
-    
+
     /**
      * Config element name specifying excluding regular expression pattern.
      * <p>
@@ -85,7 +85,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String EXCLUDE_CONFIG = "exclude";
-    
+
     /**
      * Config element name specifying including regular expression pattern.
      * <p>
@@ -93,7 +93,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String INCLUDE_CONFIG = "include";
-    
+
     /**
      * Config element name specifying http header value for user-Agent.
      * <p>
@@ -101,13 +101,13 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String USER_AGENT_CONFIG = "user-agent";
-    
+
     /**
      * Default value of <code>user-agent</code> configuration option.
      * @see Constants#COMPLETE_NAME
      */
     public final static String USER_AGENT_DEFAULT = Constants.COMPLETE_NAME;
-    
+
     /**
      * Config element name specifying http header value for accept.
      * <p>
@@ -115,7 +115,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String ACCEPT_CONFIG = "accept";
-    
+
     /**
      * Default value of <code>accept</code> configuration option.
      * <p>
@@ -123,23 +123,19 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      */
     public final static String ACCEPT_DEFAULT = "*/*";
-    
-    
+
     private String linkViewQuery = LINK_VIEW_QUERY_DEFAULT;
     private String linkContentType = LINK_CONTENT_TYPE_DEFAULT;
     private HashSet excludeCrawlingURL;
     private HashSet includeCrawlingURL;
     private String userAgent = USER_AGENT_DEFAULT;
     private String accept = ACCEPT_DEFAULT;
-    
-    private int depth;
-    
     private HashSet crawled;
-    private HashSet urlsToProcess;
-    private HashSet urlsNextDepth;
-    
-    
-    
+
+    protected int depth;
+    protected HashSet urlsToProcess;
+    protected HashSet urlsNextDepth;
+
     /**
      * Constructor for the SimpleCocoonCrawlerImpl object
      */
@@ -149,8 +145,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         // by default exclude common image patterns
         excludeCrawlingURL = null;
     }
-    
-    
+
     /**
      * Configure the crawler component.
      * <p>
@@ -174,7 +169,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
-        
+
         Configuration[] children;
         children = configuration.getChildren(INCLUDE_CONFIG);
         if (children.length > 0) {
@@ -197,7 +192,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 getLogger().debug("Include all URLs");
             }
         }
-        
+
         children = configuration.getChildren(EXCLUDE_CONFIG);
         if (children.length > 0) {
             excludeCrawlingURL = new HashSet();
@@ -221,7 +216,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 getLogger().debug("Exclude default URLs only");
             }
         }
-        
+
         Configuration child;
         String value;
         child = configuration.getChild(LINK_CONTENT_TYPE_CONFIG, false);
@@ -238,7 +233,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 this.linkViewQuery = value.trim();
             }
         }
-        
+
         child = configuration.getChild(USER_AGENT_CONFIG, false);
         if (child != null) {
             value = child.getValue();
@@ -246,7 +241,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 this.userAgent = value;
             }
         }
-        
+
         child = configuration.getChild(ACCEPT_CONFIG, false);
         if (child != null) {
             value = child.getValue();
@@ -254,10 +249,8 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 this.accept = value;
             }
         }
-        
     }
-    
-    
+
     /**
      * dispose at end of life cycle, releasing all resources.
      */
@@ -268,8 +261,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         excludeCrawlingURL = null;
         includeCrawlingURL = null;
     }
-    
-    
+
     /**
      * recylcle this object, relasing resources
      */
@@ -279,8 +271,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         urlsNextDepth = null;
         depth = -1;
     }
-    
-    
+
     /**
      * The same as calling crawl(url,-1);
      *
@@ -289,7 +280,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
     public void crawl(URL url) {
         crawl(url, -1);
     }
-    
+
     /**
      * Start crawling a URL.
      *
@@ -327,11 +318,9 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("crawl URL " + url + " to depth " + maxDepth);
         }
-        
         urlsToProcess.add(url);
     }
-    
-    
+
     /**
      * Return iterator, iterating over all links of the currently crawled URL.
      * <p>
@@ -345,8 +334,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
     public Iterator iterator() {
         return new CocoonCrawlerIterator(this);
     }
-    
-    
+
     /**
      * Default exclude patterns.
      * <p>
@@ -370,7 +358,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             ".*\\.js(\\?.*)?$",
             ".*\\.css(\\?.*)?$"
         };
-        
+
         for (int i = 0; i < EXCLUDE_FROM_CRAWLING_DEFAULT.length; i++) {
             String pattern = EXCLUDE_FROM_CRAWLING_DEFAULT[i];
             try {
@@ -381,8 +369,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             }
         }
     }
-    
-    
+
     /**
      * Compute list of links from the url.
      * <p>
@@ -397,19 +384,19 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
     private List getLinks(URL url) {
         ArrayList url_links = null;
         String sURL = url.toString();
-        
+
         if (!isIncludedURL(sURL) || isExcludedURL(sURL)) {
             return null;
         }
-        
+
         // don't try to get links for url which has been crawled already
         if (crawled.contains(sURL)) {
             return null;
         }
-        
+
         // mark it as crawled
         crawled.add(sURL);
-        
+
         // get links of url
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Getting links of URL " + sURL);
@@ -426,7 +413,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             links_url_connection.connect();
             InputStream is = links_url_connection.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
-            
+
             String contentType = links_url_connection.getContentType();
             if (contentType == null) {
                 if (getLogger().isDebugEnabled()) {
@@ -435,42 +422,42 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
                 // there is a check on null in the calling method
                 return null;
             }
-            
+
             int index = contentType.indexOf(';');
             if (index != -1) {
                 contentType = contentType.substring(0, index);
             }
-            
+
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Content-type: " + contentType);
             }
-            
+
             if (contentType.equals(linkContentType)) {
                 url_links = new ArrayList();
-                
+
                 // content is supposed to be a list of links,
                 // relative to current URL
                 String line;
                 while ((line = br.readLine()) != null) {
                     final URL newUrl = new URL(url, line);
                     final String sNewUrl = newUrl.toString();
-                    
+
                     boolean add_url = true;
                     // don't add new_url twice
                     if (add_url) {
                         add_url &= !url_links.contains(sNewUrl);
                     }
-                    
+
                     // don't add new_url if it has been crawled already
                     if (add_url) {
                         add_url &= !crawled.contains(sNewUrl);
                     }
-                    
+
                     // don't add if is not matched by existing include definition
                     if (add_url) {
                         add_url &= isIncludedURL(sNewUrl);
                     }
-                    
+
                     // don't add if is matched by existing exclude definition
                     if (add_url) {
                         add_url &= !isExcludedURL(sNewUrl);
@@ -497,8 +484,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         }
         return url_links;
     }
-    
-    
+
     /**
      * check if URL is a candidate for indexing
      *
@@ -510,7 +496,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         if (excludeCrawlingURL == null) {
             return false;
         }
-        
+
         final String s = url.toString();
         Iterator i = excludeCrawlingURL.iterator();
         while (i.hasNext()) {
@@ -527,8 +513,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         }
         return false;
     }
-    
-    
+
     /**
      * check if URL is a candidate for indexing
      *
@@ -540,7 +525,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         if (includeCrawlingURL == null) {
             return true;
         }
-        
+
         final String s = url.toString();
         Iterator i = includeCrawlingURL.iterator();
         while (i.hasNext()) {
@@ -557,8 +542,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         }
         return false;
     }
-    
-    
+
     /**
      * Helper class implementing an Iterator
      * <p>
@@ -570,8 +554,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;
-        
-        
+
         /**
          * Constructor for the CocoonCrawlerIterator object
          *
@@ -580,8 +563,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         CocoonCrawlerIterator(SimpleCocoonCrawlerImpl cocoonCrawler) {
             this.cocoonCrawler = cocoonCrawler;
         }
-        
-        
+
         /**
          * check if crawling is finished.
          *
@@ -592,8 +574,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             return cocoonCrawler.urlsToProcess.size() > 0
             || cocoonCrawler.urlsNextDepth.size() > 0;
         }
-        
-        
+
         /**
          * @return    the next URL
          */
@@ -635,8 +616,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             // finally return url
             return theNextUrl;
         }
-        
-        
+
         /**
          * remove is not implemented
          */
@@ -645,4 +625,3 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         }
     }
 }
-
