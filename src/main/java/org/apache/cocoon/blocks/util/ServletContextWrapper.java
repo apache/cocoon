@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.util;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;

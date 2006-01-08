@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.cocoon.blocks.util.ServletContextWrapper;
+
 /**
  * @version $Id$
  */

@@ -42,13 +42,13 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.blocks.util.CoreUtil;
+import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 
@@ -74,17 +74,6 @@ public class BlockManager
     private BlockContext blockContext;
     private Blocks blocks;
     private String contextURL;
-
-    public void init(ServletConfig servletConfig) throws ServletException {
-    	this.servletConfig = servletConfig;
-    	this.servletContext = servletConfig.getServletContext();
-        this.containerEncoding = this.servletConfig.getInitParameter("container-encoding");
-        if (this.containerEncoding == null) {
-        	this.containerEncoding = "ISO-8859-1";
-        }
-    }
-    
-    // Life cycle
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
@@ -296,162 +285,104 @@ public class BlockManager
         }
         return uri;
     }
+    
+    // Servlet methods
 
-    // The Processor methods
-
-    public boolean process(Environment environment) throws Exception {
-        String blockName = (String)environment.getAttribute(Block.NAME);
-
-        if (blockName != null) {
-            // Request to other block.
-        	String blockId = this.blockWiring.getBlockId(blockName);
-        	boolean superCall = false;
-            // Call to named block
-            if (blockId != null && !Block.SUPER.equals(blockName)) {
-                // The block name should not be used in the recieving block.
-                environment.removeAttribute(Block.NAME);
-            } else {
-            	if (Block.SUPER.equals(blockName)) {
-            		// Explicit call to super block
-            		// The block name should not be used in the recieving block.
-            		environment.removeAttribute(Block.NAME);
-            	} else if (blockId == null) {
-            		// If there is a super block, the connection might
-            		// be defined there instead.
-            		blockId = this.blockWiring.getBlockId(Block.SUPER);
-            	}
-        		superCall = true;
-            }
-            Block block = this.blocks.getBlock(blockId);
-    		if (block == null) {
-    			return false;
-    		}
-            this.getLogger().debug("Enter processing in block " + blockName);
-            try {
-				// A super block should be called in the context of
-				// the called block to get polymorphic calls resolved
-				// in the right way. Therefore no new current block is
-				// set.
-            	if (!superCall) {
-                	// It is important to set the current block each time
-                	// a new block is entered, this is used for the block
-                	// protocol
-            		BlockEnvironmentHelper.enterBlock(block);
-            	}
-            	return block.process(environment);
-            } finally {
-            	if (!superCall) {
-            		BlockEnvironmentHelper.leaveBlock();
-            	}
-            	this.getLogger().debug("Leaving processing in block " + blockName);
-			}            	
-
-        } else {
-            // Request to the own block
-            boolean result = this.blockProcessor.process(environment);
-
-            return result;
-
-            // Pipelines seem to throw an exception instead of
-            // returning false when the pattern is not found. For the
-            // moment an explicit call of the super block is called in
-            // the end of the sitemap. It might be better to be
-            // explicit about it anyway.
-
-//             if (result) {
-//                 return true;
-//             } else if (this.superId != null) {
-//                 // Wasn't defined in the current block try super block
-//                 return this.process(this.superId, environment, true);
-//             } else {
-//                 return false;
-//             }
+	public void init(ServletConfig servletConfig) throws ServletException {
+    	this.servletConfig = servletConfig;
+    	this.servletContext = servletConfig.getServletContext();
+        this.containerEncoding = this.servletConfig.getInitParameter("container-encoding");
+        if (this.containerEncoding == null) {
+        	this.containerEncoding = "ISO-8859-1";
         }
     }
 
-    // FIXME: Not consistently supported for blocks yet. Most of the
-    // code just use process.
-    public InternalPipelineDescription buildPipeline(Environment environment)
-        throws Exception {
-        return this.blockProcessor.buildPipeline(environment);
-    }
-
-    public Configuration[] getComponentConfigurations() {
-        return this.blockProcessor.getComponentConfigurations();
-    }
-
-    // A block is supposed to be an isolated unit so it should not have
-    // any direct access to the global root sitemap
-    public Processor getRootProcessor() {
-        return this.blockProcessor;
-    }
-    
-    public SourceResolver getSourceResolver() {
-        return this.blockProcessor.getSourceResolver();
-    }
-    
-    public String getContext() {
-        return this.blockProcessor.getContext();
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(String name) {
-        return this.blockProcessor.getAttribute(name);
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#removeAttribute(java.lang.String)
-     */
-    public Object removeAttribute(String name) {
-        return this.blockProcessor.removeAttribute(name);
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
-     */
-    public void setAttribute(String name, Object value) {
-        this.blockProcessor.setAttribute(name, value);
-    }
-
-	public ServletConfig getServletConfig() {
+    public ServletConfig getServletConfig() {
 		return this.servletConfig;
 	}
-
+    
 	public void service(ServletRequest request0, ServletResponse response0) throws ServletException, IOException {
 		HttpServletRequest request = (HttpServletRequest)request0;
 		HttpServletResponse response =(HttpServletResponse)response0;
 
-        String uri = request.getPathInfo();
+        String blockName = (String) request.getAttribute(Block.NAME);
 
-        if (uri.charAt(0) == '/') {
-        	uri = uri.substring(1);
-        }
+        if (blockName != null) {
+            // Request to other block.
+            String blockId = this.blockWiring.getBlockId(blockName);
+            boolean superCall = false;
+            // Call to named block
+            if (blockId != null && !Block.SUPER.equals(blockName)) {
+                // The block name should not be used in the recieving block.
+                request.removeAttribute(Block.NAME);
+            } else {
+                if (Block.SUPER.equals(blockName)) {
+                    // Explicit call to super block
+                    // The block name should not be used in the recieving block.
+                    request.removeAttribute(Block.NAME);
+                } else if (blockId == null) {
+                    // If there is a super block, the connection might
+                    // be defined there instead.
+                    blockId = this.blockWiring.getBlockId(Block.SUPER);
+                }
+                superCall = true;
+            }
+            Block block = this.blocks.getBlock(blockId);
+            if (block == null)
+                throw new ServletException("No block with name=" + blockName +
+                        " id=" + blockId);
+            this.getLogger().debug("Enter processing in block " + blockName);
+            try {
+                // A super block should be called in the context of
+                // the called block to get polymorphic calls resolved
+                // in the right way. Therefore no new current block is
+                // set.
+                if (!superCall) {
+                    // It is important to set the current block each time
+                    // a new block is entered, this is used for the block
+                    // protocol
+                    BlockEnvironmentHelper.enterBlock(block);
+                }
+                block.service(request, response);
+            } finally {
+                if (!superCall) {
+                    BlockEnvironmentHelper.leaveBlock();
+                }
+                this.getLogger().debug("Leaving processing in block " + blockName);
+            }               
 
-        String formEncoding = request.getParameter("cocoon-form-encoding");
-        if (formEncoding == null) {
-        	formEncoding = "ISO-8859-1";
-            // FIXME formEncoding = this.settings.getFormEncoding();
+        } else {
+            // Request to the own block
+            String uri = request.getPathInfo();
+
+            if (uri.charAt(0) == '/') {
+                uri = uri.substring(1);
+            }
+
+            String formEncoding = request.getParameter("cocoon-form-encoding");
+            if (formEncoding == null) {
+                formEncoding = "ISO-8859-1";
+                // FIXME formEncoding = this.settings.getFormEncoding();
+            }
+            HttpEnvironment env =
+                new HttpEnvironment(uri,
+                        this.contextURL,
+                        request,
+                        response,
+                        this.servletContext,
+                        new HttpContext(this.servletContext),
+                        this.containerEncoding,
+                        formEncoding);
+            env.enableLogging(getLogger());
+            
+            try {
+                this.blockProcessor.process(env);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServletException(e);
+            }
+            env.commitResponse();       
         }
-        HttpEnvironment env =
-        	new HttpEnvironment(uri,
-        			this.contextURL,
-        			request,
-        			response,
-        			this.servletContext,
-        			new HttpContext(this.servletContext),
-        			this.containerEncoding,
-        			formEncoding);
-        env.enableLogging(getLogger());
-		
-        try {
-	        this.process(env);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e);
-		}
-		env.commitResponse();		
 	}
 
 	public String getServletInfo() {

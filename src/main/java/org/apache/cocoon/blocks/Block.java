@@ -26,7 +26,7 @@ import org.apache.cocoon.Processor;
 /**
  * @version $Id$
  */
-public interface Block extends Processor, Servlet { 
+public interface Block extends Servlet { 
 
     public static String NAME = Block.class.getName() + "-name";
     public static String SUPER = "super";
