@@ -48,7 +48,7 @@ import java.util.Set;
  * attribute name.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SimpleMappingMetaModule extends AbstractMetaModule implements ThreadSafe {
 

@@ -32,7 +32,7 @@ import java.util.Map;
  * <p>Configuration: "input-module", "object", "parameter"</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: MapMetaModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
 

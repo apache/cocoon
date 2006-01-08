@@ -54,7 +54,7 @@ import java.util.Vector;
  * getAttributeNames() will return an Iterator to an empty collection.</p>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LocateResource extends AbstractInputModule implements Composable, ThreadSafe {
 

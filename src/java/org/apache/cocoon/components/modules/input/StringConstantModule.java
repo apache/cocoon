@@ -31,7 +31,7 @@ import java.util.Vector;
  * Constant must be the only content of the configuration object.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: StringConstantModule.java,v 1.2 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class StringConstantModule extends AbstractInputModule implements ThreadSafe {
 
