@@ -22,10 +22,8 @@ import java.net.URL;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,10 +36,10 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.ContextHelper;
@@ -50,30 +48,30 @@ import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.http.HttpContext;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 
 /**
  * @version $Id$
  */
 public class BlockManager
-    extends AbstractLogEnabled
-    implements Servlet, Block, Configurable, Contextualizable, Disposable, Initializable { 
+    extends HttpServlet
+    implements Block, Configurable, Contextualizable, Disposable, Initializable, LogEnabled { 
 
     public static String ROLE = BlockManager.class.getName();
 
-    private ServletConfig servletConfig;
-    private ServletContext servletContext;
-    private String containerEncoding;
-
+    private Logger logger;
     private Context context;
     private Configuration config;
     private ServiceManager serviceManager;
 
-    private Processor blockProcessor;
+    private Servlet blockServlet;
     private BlockWiring blockWiring;
     private BlockContext blockContext;
     private Blocks blocks;
     private String contextURL;
+
+    public void enableLogging(Logger logger) {
+        this.logger = logger;
+    }
 
     public void contextualize(Context context) throws ContextException {
         this.context = context;
@@ -86,7 +84,7 @@ public class BlockManager
 
     public void initialize() throws Exception {
         this.blockWiring = new BlockWiring();
-        this.blockWiring.setServletContext(this.servletContext);
+        this.blockWiring.setServletContext(this.getServletContext());
         LifecycleHelper.setupComponent(this.blockWiring,
                                        this.getLogger(),
                                        null,
@@ -95,15 +93,16 @@ public class BlockManager
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
-        this.blockContext = new BlockContext(this.servletContext, this.blockWiring, this.blocks);
+        this.blockContext = new BlockContext(this.getServletContext(), this.blockWiring, this.blocks);
         this.contextURL = CoreUtil.getContextURL(this.blockContext, "COB-INF/block.xml");
         Context newContext = this.getAvalonContext();
         String confLocation = this.contextURL + "::";
 
+        ServletConfig blockServletConfig =
+            new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
+
         if (this.blockWiring.isCore()) {
             this.getLogger().debug("Block with core=true");
-            ServletConfig blockServletConfig =
-            	new ServletConfigurationWrapper(this.servletConfig, this.blockContext);
             CoreUtil coreUtil = new CoreUtil(blockServletConfig);
             this.serviceManager = coreUtil.getServiceManager();
        } else {
@@ -131,8 +130,9 @@ public class BlockManager
 
         // Create a processor for the block
         if (this.blockWiring.getProcessorConfiguration() != null) {
-            this.blockProcessor = new BlockProcessor();
-            LifecycleHelper.setupComponent(this.blockProcessor,
+            this.blockServlet = new SitemapServlet();
+            this.blockServlet.init(blockServletConfig);
+            LifecycleHelper.setupComponent(this.blockServlet,
                     this.getLogger(),
                     newContext,
                     this.serviceManager,
@@ -142,6 +142,10 @@ public class BlockManager
     }
 
     public void dispose() {
+    }
+    
+    protected final Logger getLogger() {
+        return this.logger;
     }
 
     /**
@@ -289,21 +293,10 @@ public class BlockManager
     // Servlet methods
 
 	public void init(ServletConfig servletConfig) throws ServletException {
-    	this.servletConfig = servletConfig;
-    	this.servletContext = servletConfig.getServletContext();
-        this.containerEncoding = this.servletConfig.getInitParameter("container-encoding");
-        if (this.containerEncoding == null) {
-        	this.containerEncoding = "ISO-8859-1";
-        }
+	    super.init(servletConfig);
     }
 
-    public ServletConfig getServletConfig() {
-		return this.servletConfig;
-	}
-    
-	public void service(ServletRequest request0, ServletResponse response0) throws ServletException, IOException {
-		HttpServletRequest request = (HttpServletRequest)request0;
-		HttpServletResponse response =(HttpServletResponse)response0;
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String blockName = (String) request.getAttribute(Block.NAME);
 
@@ -353,35 +346,7 @@ public class BlockManager
 
         } else {
             // Request to the own block
-            String uri = request.getPathInfo();
-
-            if (uri.charAt(0) == '/') {
-                uri = uri.substring(1);
-            }
-
-            String formEncoding = request.getParameter("cocoon-form-encoding");
-            if (formEncoding == null) {
-                formEncoding = "ISO-8859-1";
-                // FIXME formEncoding = this.settings.getFormEncoding();
-            }
-            HttpEnvironment env =
-                new HttpEnvironment(uri,
-                        this.contextURL,
-                        request,
-                        response,
-                        this.servletContext,
-                        new HttpContext(this.servletContext),
-                        this.containerEncoding,
-                        formEncoding);
-            env.enableLogging(getLogger());
-            
-            try {
-                this.blockProcessor.process(env);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ServletException(e);
-            }
-            env.commitResponse();       
+            this.blockServlet.service(request, response);
         }
 	}
 
@@ -390,5 +355,6 @@ public class BlockManager
 	}
 
 	public void destroy() {
-	}
+	    super.destroy();
+    }
 }
