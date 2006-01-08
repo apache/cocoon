@@ -78,7 +78,7 @@ public class XModuleSource
     private String attributeType;
     private String attributeName;
     private String xPath;
-    private ServiceManager manager;
+    protected ServiceManager manager;
     private Map objectModel;
     private Logger logger;
     
@@ -342,7 +342,7 @@ public class XModuleSource
                               XModuleSource.this.getContentHandler());
             } catch (Exception e){
                 throw new IOException("Exception during processing of " +
-                                       XModuleSource.super.getURI() +
+                                       XModuleSource.this.getURI() +
                                        e.getMessage());
             } finally {
                 if (parser != null) XModuleSource.this.manager.release( parser );

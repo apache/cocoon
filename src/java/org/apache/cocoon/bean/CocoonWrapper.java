@@ -183,13 +183,15 @@ public class CocoonWrapper {
     }
 
     private Cocoon getCocoon() {
-        return new CocoonAccess() {
-            final Cocoon instance() {
-                return super.getCocoon();
-            }
-        }.instance();
+        return new CocoonInstance().instance();
     }
-    
+
+    private static class CocoonInstance extends CocoonAccess {
+        final Cocoon instance() {
+            return super.getCocoon();
+        }
+    }    
+
     protected ExcaliburComponentManager getComponentManager() {
         return cocoon.getComponentManager();
     }

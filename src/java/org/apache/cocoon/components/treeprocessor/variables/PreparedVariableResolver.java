@@ -45,8 +45,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
     private ServiceManager manager;
     private ServiceSelector selector;
-    private List tokens;
-    private boolean needsMapStack;
+    protected List tokens;
+    protected boolean needsMapStack;
 
     private static final int OPEN = -2;
     private static final int CLOSE = -3;

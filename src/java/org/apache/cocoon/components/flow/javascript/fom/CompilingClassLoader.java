@@ -205,7 +205,7 @@ public class CompilingClassLoader extends ClassLoader {
         }
     }
 
-    private String makeFileName(String className) {
+    protected String makeFileName(String className) {
         Source src = getSource(className);
         if (src != null) {
             String result = src.getURI();
