@@ -90,7 +90,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     private static final String XINCLUDE_CACHE_KEY = "XInclude"; 
 
     /** The {@link SourceValidity} instance associated with this request. */ 
-    private MultiSourceValidity validity; 
+    protected MultiSourceValidity validity; 
 
     public void setup(SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
