@@ -46,3 +46,5 @@ HOW TO START THE COCOON WEBAPP
 FIXME: The above doesn't work yet. The jetty plugin require the precence of the directory
 target/classes, which isn't added by any of the above goals so it has to be added manually.
 Cocoon fails during startup.
+
+2b. Use ./cocoon.sh instead.

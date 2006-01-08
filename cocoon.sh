@@ -109,7 +109,9 @@ if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
     COCOON_WEBAPP_HOME=$STANDALONE_WEBAPP
   else
     # when in the build environment
-    COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
+    # COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
+    # For mvn war:inplace
+    COCOON_WEBAPP_HOME="$COCOON_HOME/cocoon-webapp/src/main/webapp"
   fi
 fi
 echo "$0: using $COCOON_WEBAPP_HOME as the webapp directory"
