@@ -30,10 +30,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * <code>../../</code> etc) to the base of the current request or sitemap URI.  For
  * instance, if called within a &lt;map:match pattern="a/b/c.xsp"> pipeline,
  * <code>{baselink:SitemapBaseLink}</code> would evaluate to <code>../../</code>.
+ * 
+ * based on {@link RequestURIModule}
  *
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
- * based on RequestURIModule
- *
  */
 public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
 

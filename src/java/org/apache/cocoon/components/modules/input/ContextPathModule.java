@@ -54,24 +54,26 @@ import java.util.Vector;
  * </p>
  * <p>
  * <pre>
- * <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl">
- *    <map:parameter name="basedir" value="{contextpath:resources}/"/>
- * </map:transform>
+ * &lt;map:transform src=&quot;skins/{forrest:skin}/xslt/fo/document2fo.xsl&quot;&gt;
+ *    &lt;map:parameter name=&quot;basedir&quot; value=&quot;{contextpath:resources}/&quot;/&gt;
+ * &lt;/map:transform&gt;
+ * </pre>
  *
  * And then prepend this to all image paths:
+ * <pre>
  *  ...
- *  <xsl:param name="basedir" select="''"/>
+ *  &lt;xsl:param name=&quot;basedir&quot; select=&quot;&apos;&apos;&quot;/&gt;
  *  ...
- *  <xsl:template match="img">
- *      <xsl:variable name="imgpath" select="concat($basedir, @src)"/>
- *      <fo:external-graphic src="{$imgpath}" ...
+ *  &lt;xsl:template match=&quot;img&quot;&gt;
+ *      &lt;xsl:variable name=&quot;imgpath&quot; select=&quot;concat($basedir, @src)&quot;/&gt;
+ *      &lt;fo:external-graphic src=&quot;{$imgpath}&quot; ...
  *      ...
- *  </xsl:template>
+ *  &lt;/xsl:template&gt;
  *  </pre>
  *  </p>
  *
  * @author <a href="mailto:giacomo at apache dor org">Giacomo Pati</a>
- * @version $Id$
+ * @version $Id: ContextPathModule.java 359191 2005-12-27 08:51:54Z cziegeler $
  */
 public class ContextPathModule extends AbstractInputModule implements Serviceable, ThreadSafe {
 

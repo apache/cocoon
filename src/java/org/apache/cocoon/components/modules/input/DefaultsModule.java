@@ -32,15 +32,17 @@ import java.util.TreeSet;
  * Set a number of constants. To override the values with input from
  * another module, combine this one with the ChainMetaModule and an
  * arbitrary number of other modules.
- *
+ * 
+ * <pre>
  * &lt;values&gt;
  *  &lt;skin&gt;myskin&lt;/skin&gt;
  *  &lt;base&gt;baseurl&lt;/base&gt;
  *  ...
  * &lt;/values&gt;
- *
+ * </pre>
+ * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DefaultsModule.java,v 1.5 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version $Id$
  */
 public class DefaultsModule extends AbstractLogEnabled
     implements InputModule, Configurable, ThreadSafe {
