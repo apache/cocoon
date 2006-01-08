@@ -33,12 +33,14 @@ import java.util.TreeSet;
  * another module, combine this one with the ChainMetaModule and an
  * arbitrary number of other modules.
  *
+ * <pre>
  * &lt;values&gt;
  *  &lt;skin&gt;myskin&lt;/skin&gt;
  *  &lt;base&gt;baseurl&lt;/base&gt;
  *  ...
  * &lt;/values&gt;
- *
+ * </pre>
+ * 
  * @version $Id$
  */
 public class DefaultsModule extends AbstractLogEnabled
