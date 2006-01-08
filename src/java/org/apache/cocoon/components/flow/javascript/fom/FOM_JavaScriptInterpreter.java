@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.flow.javascript.fom;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -89,7 +88,7 @@ import java.util.StringTokenizer;
  * @version CVS $Id$
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
-        implements Configurable, Initializable {
+        implements Initializable {
 
     /**
      * A long value is stored under this key in each top level JavaScript

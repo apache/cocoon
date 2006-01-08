@@ -43,9 +43,7 @@ import org.apache.cocoon.util.Deprecation;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-public class EnvironmentWrapper 
-    extends AbstractEnvironment 
-    implements Environment {
+public class EnvironmentWrapper extends AbstractEnvironment {
 
     /** The wrapped environment */
     protected Environment environment;

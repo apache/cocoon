@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
@@ -34,7 +33,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
-public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
+public class PipelinesNodeBuilder extends ContainerNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config)
     throws Exception {

@@ -26,10 +26,10 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  * Builds a &lt;map:view&gt;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ViewNodeBuilder.java,v 1.2 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public class ViewNodeBuilder extends NamedContainerNodeBuilder implements ThreadSafe {
+public class ViewNodeBuilder extends NamedContainerNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 

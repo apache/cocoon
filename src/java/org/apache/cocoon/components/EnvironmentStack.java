@@ -33,8 +33,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-final class EnvironmentStack extends ArrayStack
-                             implements Cloneable {
+final class EnvironmentStack extends ArrayStack {
 
     int offset;
 

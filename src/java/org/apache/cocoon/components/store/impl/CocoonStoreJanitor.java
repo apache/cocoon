@@ -16,9 +16,7 @@
 package org.apache.cocoon.components.store.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -35,7 +33,7 @@ import org.apache.cocoon.components.thread.RunnableManager;
  * @version $Id$
  */
 public class CocoonStoreJanitor extends StoreJanitorImpl
-                                implements Parameterizable, Serviceable, Disposable, Component {
+                                implements Serviceable, Disposable {
 
     //~ Instance fields --------------------------------------------------------
 

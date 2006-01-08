@@ -190,8 +190,7 @@ import java.util.Vector;
  * @version CVS $Id$
  */
 public abstract class AbstractValidatorAction
-    extends AbstractComplementaryConfigurableAction
-    implements Configurable {
+    extends AbstractComplementaryConfigurableAction {
 
     /**
      * Reads parameter values for all parameters that are contained in the active

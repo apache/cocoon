@@ -27,8 +27,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.SourceResolver;
@@ -58,7 +56,7 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
-    implements Configurable, Serviceable, Recyclable {
+    implements Configurable, Serviceable {
 
     protected static class ElementData {
         public String uri = null;

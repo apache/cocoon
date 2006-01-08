@@ -228,104 +228,104 @@ public class Main {
              printUsage();
         } else if (line.hasOption(VERSION_OPT)) {
              printVersion();
-        }
-
-        String uriGroup = null;
-        if (line.hasOption(URI_GROUP_NAME_OPT)) {
-            uriGroup = line.getOptionValue(URI_GROUP_NAME_OPT);
-        }
-            
-        String destDir = null;
-        if (line.hasOption(XCONF_OPT)) {
-            // destDir from command line overrides one in xconf file
-            destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir, uriGroup);
-        }
-        if (line.hasOption(DEST_DIR_OPT)) {
-            destDir = line.getOptionValue(DEST_DIR_OPT);
-        }
-
-        if (line.hasOption(VERBOSE_OPT)) {
-            cocoon.setVerbose(true);
-        }
-        if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
-            cocoon.setPrecompileOnly(true);
-        }
-
-        if (line.hasOption(WORK_DIR_OPT)) {
-            String workDir = line.getOptionValue(WORK_DIR_OPT);
-            if (workDir.length() == 0) {
-                listener.messageGenerated(
-                    "Careful, you must specify a work dir when using the -w/--workDir argument");
-                System.exit(1);
-            } else {
-                cocoon.setWorkDir(line.getOptionValue(WORK_DIR_OPT));
+        } else {
+            String uriGroup = null;
+            if (line.hasOption(URI_GROUP_NAME_OPT)) {
+                uriGroup = line.getOptionValue(URI_GROUP_NAME_OPT);
             }
-        }
-        if (line.hasOption(CONTEXT_DIR_OPT)) {
-            String contextDir = line.getOptionValue(CONTEXT_DIR_OPT);
-            if (contextDir.length() == 0) {
-                listener.messageGenerated(
-                    "Careful, you must specify a configuration file when using the -c/--contextDir argument");
-                System.exit(1);
-            } else {  
-                cocoon.setContextDir(contextDir);
+                
+            String destDir = null;
+            if (line.hasOption(XCONF_OPT)) {
+                // destDir from command line overrides one in xconf file
+                destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir, uriGroup);
             }
+            if (line.hasOption(DEST_DIR_OPT)) {
+                destDir = line.getOptionValue(DEST_DIR_OPT);
+            }
+    
+            if (line.hasOption(VERBOSE_OPT)) {
+                cocoon.setVerbose(true);
+            }
+            if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
+                cocoon.setPrecompileOnly(true);
+            }
+    
+            if (line.hasOption(WORK_DIR_OPT)) {
+                String workDir = line.getOptionValue(WORK_DIR_OPT);
+                if (workDir.length() == 0) {
+                    listener.messageGenerated(
+                        "Careful, you must specify a work dir when using the -w/--workDir argument");
+                    System.exit(1);
+                } else {
+                    cocoon.setWorkDir(line.getOptionValue(WORK_DIR_OPT));
+                }
+            }
+            if (line.hasOption(CONTEXT_DIR_OPT)) {
+                String contextDir = line.getOptionValue(CONTEXT_DIR_OPT);
+                if (contextDir.length() == 0) {
+                    listener.messageGenerated(
+                        "Careful, you must specify a configuration file when using the -c/--contextDir argument");
+                    System.exit(1);
+                } else {  
+                    cocoon.setContextDir(contextDir);
+                }
+            }
+            if (line.hasOption(CONFIG_FILE_OPT)) {
+                cocoon.setConfigFile(line.getOptionValue(CONFIG_FILE_OPT));
+            }
+            if (line.hasOption(LOG_KIT_OPT)) {
+                cocoon.setLogKit(line.getOptionValue(LOG_KIT_OPT));
+            }
+            if (line.hasOption(LOGGER_OPT)) {
+                cocoon.setLogger(line.getOptionValue(LOGGER_OPT));
+            }
+            if (line.hasOption(LOG_LEVEL_OPT)) {
+                cocoon.setLogLevel(line.getOptionValue(LOG_LEVEL_OPT));
+            }
+            if (line.hasOption(AGENT_OPT)) {
+                cocoon.setAgentOptions(line.getOptionValue(AGENT_OPT));
+            }
+            if (line.hasOption(ACCEPT_OPT)) {
+                cocoon.setAcceptOptions(line.getOptionValue(ACCEPT_OPT));
+            }
+            if (line.hasOption(DEFAULT_FILENAME_OPT)) {
+                cocoon.setDefaultFilename(line.getOptionValue(DEFAULT_FILENAME_OPT));
+            }
+            if (line.hasOption(BROKEN_LINK_FILE_OPT)) {
+                listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
+            }
+            if (line.hasOption(FOLLOW_LINKS_OPT)) {
+                cocoon.setFollowLinks(BooleanUtils.toBoolean(line.getOptionValue(FOLLOW_LINKS_OPT)));
+            }
+            if (line.hasOption(CONFIRM_EXTENSIONS_OPT)) {
+                cocoon.setConfirmExtensions(BooleanUtils.toBoolean(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes")));
+            }
+            if (line.hasOption(LOAD_CLASS_OPT)){
+                cocoon.addLoadedClasses(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
+            }
+            if (line.hasOption(URI_FILE_OPT)) {
+                cocoon.addTargets(BeanConfigurator.processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
+            }
+    
+            cocoon.addTargets(line.getArgList(), destDir);
+    
+            listener.messageGenerated(CocoonBean.getProlog());
+    
+            if (cocoon.getTargetCount() == 0 && cocoon.isPrecompileOnly()) {
+                listener.messageGenerated("Please, specify at least one starting URI.");
+                System.exit(1);
+            }
+    
+            cocoon.initialize();
+            cocoon.process();
+            cocoon.dispose();
+    
+            listener.complete();
+    
+    
+            int exitCode = (listener.isSuccessful() ? 0 : 1);
+            System.exit(exitCode);
         }
-        if (line.hasOption(CONFIG_FILE_OPT)) {
-            cocoon.setConfigFile(line.getOptionValue(CONFIG_FILE_OPT));
-        }
-        if (line.hasOption(LOG_KIT_OPT)) {
-            cocoon.setLogKit(line.getOptionValue(LOG_KIT_OPT));
-        }
-        if (line.hasOption(LOGGER_OPT)) {
-            cocoon.setLogger(line.getOptionValue(LOGGER_OPT));
-        }
-        if (line.hasOption(LOG_LEVEL_OPT)) {
-            cocoon.setLogLevel(line.getOptionValue(LOG_LEVEL_OPT));
-        }
-        if (line.hasOption(AGENT_OPT)) {
-            cocoon.setAgentOptions(line.getOptionValue(AGENT_OPT));
-        }
-        if (line.hasOption(ACCEPT_OPT)) {
-            cocoon.setAcceptOptions(line.getOptionValue(ACCEPT_OPT));
-        }
-        if (line.hasOption(DEFAULT_FILENAME_OPT)) {
-            cocoon.setDefaultFilename(line.getOptionValue(DEFAULT_FILENAME_OPT));
-        }
-        if (line.hasOption(BROKEN_LINK_FILE_OPT)) {
-            listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
-        }
-        if (line.hasOption(FOLLOW_LINKS_OPT)) {
-            cocoon.setFollowLinks(BooleanUtils.toBoolean(line.getOptionValue(FOLLOW_LINKS_OPT)));
-        }
-        if (line.hasOption(CONFIRM_EXTENSIONS_OPT)) {
-            cocoon.setConfirmExtensions(BooleanUtils.toBoolean(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes")));
-        }
-        if (line.hasOption(LOAD_CLASS_OPT)){
-            cocoon.addLoadedClasses(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
-        }
-        if (line.hasOption(URI_FILE_OPT)) {
-            cocoon.addTargets(BeanConfigurator.processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
-        }
-
-        cocoon.addTargets(line.getArgList(), destDir);
-
-        listener.messageGenerated(CocoonBean.getProlog());
-
-        if (cocoon.getTargetCount() ==0 && cocoon.isPrecompileOnly()) {
-            listener.messageGenerated("Please, specify at least one starting URI.");
-            System.exit(1);
-        }
-
-        cocoon.initialize();
-        cocoon.process();
-        cocoon.dispose();
-
-        listener.complete();
-
-
-        int exitCode = (listener.isSuccessful() ? 0 : 1);
-        System.exit(exitCode);
     }
 
     private static String processXConf(CocoonBean cocoon, String filename, String destDir, String uriGroup) {
@@ -350,7 +350,6 @@ public class Main {
                             CocoonBean.getProlog(),
                             options,
                             "Note: the context directory defaults to '"+ Constants.DEFAULT_CONTEXT_DIR + "'");
-        System.exit(0);
     }
 
     /**
@@ -358,6 +357,5 @@ public class Main {
      */
     private static void printVersion() {
         System.out.println(Constants.VERSION);
-        System.exit(0);
     }
 }
