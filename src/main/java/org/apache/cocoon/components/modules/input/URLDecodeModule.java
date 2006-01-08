@@ -30,6 +30,8 @@ import org.apache.cocoon.util.NetUtils;
  * &lt;map:generate src="http://remote/page?param1={url-encode:{request-param:param1}}"/&gt;<br/>
  * Module configuration takes only one configuration parameter:
  * "encoding" which is a target string encoding. This is utf-8 by default.
+ * 
+ * @version $Id$
  */
 public final class URLDecodeModule extends AbstractInputModule
                                    implements ThreadSafe {
