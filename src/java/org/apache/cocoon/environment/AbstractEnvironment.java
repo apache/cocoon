@@ -322,11 +322,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
     }
 
-    /**
-     * Redirect the client to a new URL
-     */
-    public abstract void redirect(boolean sessionmode, String newURL) throws IOException;
-
     public void globalRedirect(boolean sessionmode, String newURL) throws IOException {
         redirect(sessionmode, newURL);
     }

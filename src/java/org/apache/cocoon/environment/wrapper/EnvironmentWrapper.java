@@ -438,15 +438,6 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     }
 
     /**
-     * Remove attribute from the current instance.
-     *
-     * @param name a <code>String</code> value
-     */
-    public void removeAttribute(String name) {
-        super.removeAttribute(name);
-    }
-
-    /**
      * Always return <code>false</code>.
      */
     public boolean isExternal() {

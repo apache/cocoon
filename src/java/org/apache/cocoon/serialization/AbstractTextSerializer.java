@@ -44,8 +44,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,11 +137,11 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         return this.getTransformerFactory().newTransformerHandler();
     }
 
-    /**
-     * Set the {@link OutputStream} where the requested resource should
-     * be serialized.
-     */
-    public void setOutputStream(OutputStream out) throws IOException {
+    ///**
+    // * Set the {@link OutputStream} where the requested resource should
+    // * be serialized.
+    // */
+    // public void setOutputStream(OutputStream out) throws IOException {
         /*
          * Add a level of buffering to the output stream. Xalan serializes
          * every character individually. In conjunction with chunked
@@ -154,9 +152,9 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //      super.setOutputStream(
         //        new BufferedOutputStream(out, outputBufferSize));
         //  } else {
-        super.setOutputStream(out);
+        // super.setOutputStream(out);
         //  }
-    }
+    // }
 
     /**
      * Uses the context to retrieve a default encoding for the serializers.
@@ -549,19 +547,4 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             this.uriList.clear();
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.xml.sax.ContentHandler#endDocument()
-     */
-    public void endDocument() throws SAXException {
-        super.endDocument();
-
-        //   if (this.output != null) {
-        //       try {
-        //           this.output.flush();
-        //       } catch (IOException ignored) {
-        //       }
-        //   }
-    }
-
 }
