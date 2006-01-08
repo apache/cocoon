@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -55,7 +54,7 @@ import java.util.ArrayList;
  * @version $Id$
  */
 public class LinkStatusGenerator extends ServiceableGenerator
-                                 implements Recyclable, Configurable {
+                                 implements Configurable {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI =

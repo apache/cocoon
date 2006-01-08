@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.Request;
  *
  * @version $Id$
  */
-public class RequestAttributeMap extends AbstractOutputModule implements OutputModule, ThreadSafe {
+public class RequestAttributeMap extends AbstractOutputModule implements ThreadSafe {
     
     public final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
     public final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.RequestAttributeMap.transient";

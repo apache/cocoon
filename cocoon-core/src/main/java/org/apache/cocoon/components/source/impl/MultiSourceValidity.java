@@ -29,8 +29,7 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  *
  * @version $Id$
  */
-public class MultiSourceValidity extends AbstractAggregatedValidity
-                                 implements SourceValidity {
+public class MultiSourceValidity extends AbstractAggregatedValidity {
 
     /** <p>When validity expiration is performed.</p> */
     private long expiry;

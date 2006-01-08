@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
@@ -24,7 +23,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  * @version $Id$
  */
-public class NamedContainerNodeBuilder extends ContainerNodeBuilder implements Configurable {
+public class NamedContainerNodeBuilder extends ContainerNodeBuilder {
 
     protected String nameAttr;
 

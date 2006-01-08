@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -122,7 +121,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id$
  */
 public class CIncludeTransformer extends AbstractSAXTransformer
-                                 implements Disposable, CacheableProcessingComponent {
+                                 implements CacheableProcessingComponent {
 
     public static final String CINCLUDE_NAMESPACE_URI = "http://apache.org/cocoon/include/1.0";
     public static final String CINCLUDE_INCLUDE_ELEMENT = "include";

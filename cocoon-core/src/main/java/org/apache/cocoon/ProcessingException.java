@@ -28,7 +28,7 @@ import org.apache.cocoon.util.location.MultiLocatable;
  *
  * @version $Id$
  */
-public class ProcessingException extends LocatedException implements MultiLocatable {
+public class ProcessingException extends LocatedException {
     
     /**
      * Construct a new <code>ProcessingException</code> instance.

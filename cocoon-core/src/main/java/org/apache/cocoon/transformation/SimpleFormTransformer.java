@@ -21,8 +21,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
 import org.apache.cocoon.transformation.helpers.FormValidatorHelper;
@@ -146,7 +144,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
+public class SimpleFormTransformer extends AbstractSAXTransformer {
 
     /** strip numbers from repeated element name attributes */
     private boolean stripNumber = true;

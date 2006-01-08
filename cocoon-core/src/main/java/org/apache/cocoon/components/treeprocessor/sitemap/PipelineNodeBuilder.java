@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -31,8 +30,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  *
  * @version $Id$
  */
-public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder
-                                 implements ThreadSafe {
+public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
     /** This builder can have parameters -- return <code>true</code> */
     protected boolean hasParameters() {
