@@ -53,7 +53,7 @@ public interface Environment {
     String getAction();
 
     /**
-     * Redirect to the given URL
+     * Redirect the client to the given URL
      */
     void redirect(String url, boolean global, boolean permanent) 
     throws IOException;
