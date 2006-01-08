@@ -206,7 +206,7 @@ public class IncludeTransformer extends AbstractTransformer
     //
 
     /** The {@link ServiceManager} instance associated with this instance. */
-    private ServiceManager manager;
+    protected ServiceManager manager;
 
     /** Configuration option controlling recursive includes processing */
     private boolean defaultRecursive;
@@ -218,7 +218,7 @@ public class IncludeTransformer extends AbstractTransformer
     private boolean defaultRecursiveParallel;
 
     /** The name of the thread pool to use (for parallel processing). */
-    private String threadPool;
+    protected String threadPool;
 
     /** The default value to be appended to the caching key. */
     private String defaultKey;
@@ -228,10 +228,10 @@ public class IncludeTransformer extends AbstractTransformer
     //
 
     /** The {@link SourceResolver} used to resolve included URIs. */
-    private SourceResolver resolver;
+    protected SourceResolver resolver;
 
     /** The {@link Environment} used within parallel threads */
-    private Environment environment;
+    protected Environment environment;
 
     /** The {@link Processor} used within parallel threads */
     private Processor processor;
@@ -244,7 +244,7 @@ public class IncludeTransformer extends AbstractTransformer
     //
 
     /** The {@link SourceValidity} instance associated with this request. */
-    private MultiSourceValidity validity;
+    protected MultiSourceValidity validity;
 
     /** A {@link NamespacesTable} used to filter namespace declarations. */
     private NamespacesTable namespaces;
@@ -471,25 +471,25 @@ public class IncludeTransformer extends AbstractTransformer
         private String base;
 
         /** The source URI to be included declared in an src attribute of the include element. */
-        private String source;
+        protected String source;
 
         /** The flag indicating whether source content has to be parsed into XML or included as text. */
-        private boolean parse;
+        protected boolean parse;
 
         /** The mime type hint to the {@link org.apache.excalibur.xmlizer.XMLizer} when parsing the source content. */
-        private String mimeType;
+        protected String mimeType;
 
         /** The buffer collecting fallback content. */
-        private SaxBuffer fallback;
+        protected SaxBuffer fallback;
 
         /** A {@link Map} of the parameters to supply to the included source. */
-        private Map parameters;
+        protected Map parameters;
 
         /** The current parameter name captured. */
-        private String parameter;
+        protected String parameter;
 
         /** The current parameter value (as a {@link StringBuffer}). */
-        private StringBuffer value;
+        protected StringBuffer value;
 
         /** Create include element */
         private IncludeElement(String base, boolean parallel, boolean recursive, boolean recursiveParallel) {

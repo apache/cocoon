@@ -69,16 +69,15 @@ public class LocationTrackingDebugger implements Debugger {
         } 
     };
 
-    
     static {
         // Register what's needed to analyze exceptions produced by Rhino
         ExceptionUtils.addCauseMethodName("getWrappedException");
         LocationUtils.addFinder(rhinoLocFinder);
     }
     
-    private List locations;
-    private Throwable throwable;
-    
+    protected List locations;
+    protected Throwable throwable;
+
     public void handleCompilationDone(Context cx, DebuggableScript fnOrScript, String source) {
         // nothing
     }
