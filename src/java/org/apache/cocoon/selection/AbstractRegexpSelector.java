@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -71,7 +70,7 @@ import org.apache.regexp.RESyntaxException;
  * @version CVS $Id: AbstractRegexpSelector.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
 public abstract class AbstractRegexpSelector extends AbstractSwitchSelector
-implements Configurable, ThreadSafe {
+implements Configurable {
 
     /** <p>A {@link Map} of regular expression programs by name.</p> */
     protected Map patterns = new HashMap();

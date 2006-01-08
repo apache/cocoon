@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -66,9 +65,7 @@ import java.util.Vector;
  * @version $Id$
  *
  */
-public class ProjectPathModule
-    extends AbstractInputModule
-    implements Configurable, ThreadSafe {
+public class ProjectPathModule extends AbstractInputModule implements ThreadSafe {
 
     protected static final String PROJECT_PARAM_NAME = "uri-prefix";
     protected static final String PROJECT_PARAM_DEFAULT = "/";

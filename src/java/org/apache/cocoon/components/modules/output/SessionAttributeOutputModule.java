@@ -38,7 +38,7 @@ import org.apache.cocoon.environment.Session;
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version CVS $Id$
  */
-public class SessionAttributeOutputModule extends AbstractOutputModule implements OutputModule {
+public class SessionAttributeOutputModule extends AbstractOutputModule {
     
     public final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
     public final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.transient";

@@ -171,7 +171,7 @@ import java.util.Stack;
  */
 public class IncludeTransformer extends AbstractTransformer
                                 implements Serviceable, Configurable,
-                                           Transformer, CacheableProcessingComponent {
+                                           CacheableProcessingComponent {
 
     /** <p>The namespace URI of the elements recognized by this transformer.</p> */
     private static final String NS_URI = "http://apache.org/cocoon/include/1.0";

@@ -39,7 +39,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version CVS $Id$
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
-    implements Composable, Disposable {
+    implements Composable {
 
     /** The component manager instance */
     protected ComponentManager manager;

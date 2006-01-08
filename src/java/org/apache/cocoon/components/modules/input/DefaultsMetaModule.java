@@ -19,10 +19,8 @@ package org.apache.cocoon.components.modules.input;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * Old name for {@link DefaultsModule}.
@@ -34,8 +32,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /* Deprecated 2003-03-19. Suggest we keep this class for compat with 2.0.x
  * until at least v2.2 (JT) */
 
-public class DefaultsMetaModule extends DefaultsModule
-    implements InputModule, Configurable, ThreadSafe {
+public class DefaultsMetaModule extends DefaultsModule {
 
     public void configure(Configuration config) throws ConfigurationException {
         super.configure( config );

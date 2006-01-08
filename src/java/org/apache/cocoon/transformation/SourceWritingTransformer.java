@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -232,8 +231,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @version $Id$
  */
-public class SourceWritingTransformer extends AbstractSAXTransformer
-                                      implements Disposable {
+public class SourceWritingTransformer extends AbstractSAXTransformer {
 
     public static final String SWT_URI = "http://apache.org/cocoon/source/1.0";
     public static final String DEFAULT_SERIALIZER = "xml";

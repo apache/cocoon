@@ -17,7 +17,6 @@ package org.apache.cocoon.components.sax;
 
 import java.util.ArrayList;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -28,10 +27,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: XMLByteStreamInterpreter.java,v 1.6 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public final class XMLByteStreamInterpreter extends AbstractXMLProducer implements XMLDeserializer, Recyclable {
+public final class XMLByteStreamInterpreter extends AbstractXMLProducer implements XMLDeserializer {
 
     private static final int START_DOCUMENT         = 0;
     private static final int END_DOCUMENT           = 1;
