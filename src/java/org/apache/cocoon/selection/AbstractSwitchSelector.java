@@ -25,30 +25,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractSwitchSelector.java,v 1.2 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version $Id$
  */
 public abstract class AbstractSwitchSelector extends AbstractLogEnabled
     implements SwitchSelector {
-
-    /**
-     * Method to create a selector context.
-     *
-     * @param objectModel The <code>Map</code> containing object of the
-     *                    calling environment which may be used
-     *                    to select values to test the expression.
-     * @param parameters  The sitemap parameters, as specified by
-     *                    &lt;parameter/&gt; tags.
-     * @return selector context
-     */
-    public abstract Object getSelectorContext(Map objectModel, Parameters parameters);
-
-    /**
-     * Selectors test pattern against some objects in a <code>Map</code>
-     * model and signals success with the returned boolean value
-     * @param expression  The expression to test.
-     * @return boolean    Signals successful test.
-     */
-    public abstract boolean select(String expression, Object selectorContext);
 
     /**
      * Selectors test pattern against some objects in a <code>Map</code>
@@ -60,5 +40,3 @@ public abstract class AbstractSwitchSelector extends AbstractLogEnabled
         return select(expr, getSelectorContext(objectModel, params));
     }
 }
-
-

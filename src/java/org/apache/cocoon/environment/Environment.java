@@ -26,7 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.7 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public interface Environment
     extends SourceResolver {
@@ -73,7 +73,7 @@ public interface Environment
     void changeContext(String uriprefix, String context) throws Exception;
 
     /**
-     * Redirect to the given URL
+     * Redirect the client to the given URL
      */
     void redirect(boolean sessionmode, String url) throws IOException;
 

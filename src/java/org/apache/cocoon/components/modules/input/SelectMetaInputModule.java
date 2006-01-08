@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -211,13 +209,6 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -245,7 +236,6 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
         if (this.initialized) {
             return;
         }
-
         super.lazy_initialize();
         
         if (this.expression != null) {

@@ -15,13 +15,6 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
 /**
  * Old name for {@link DefaultsModule}.
  * @deprecated Use {@link DefaultsModule} instead; this is not a 'meta' module and is
@@ -32,24 +25,4 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 /* Deprecated 2003-03-19. Suggest we keep this class for compat with 2.0.x
  * until at least v2.2 (JT) */
 
-public class DefaultsMetaModule extends DefaultsModule {
-
-    public void configure(Configuration config) throws ConfigurationException {
-        super.configure( config );
-    }
-
-    public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-        return super.getAttributeValues( name, modeConf, objectModel );
-    }
-
-    public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-        return super.getAttributeNames( modeConf, objectModel );
-     }
-
-    public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-        return super.getAttribute( name, modeConf, objectModel );
-    }
-}
+public class DefaultsMetaModule extends DefaultsModule {}
