@@ -80,7 +80,7 @@ public class WebContinuationDataBean {
 
     public String getType() {
         if (wc.getUserObject().getClass().getName().indexOf(
-                "FOM_WebContinuation") > 0) {
+                "FOM_WebContinuation") > -1) {
             return TYPE_FLOWSCRIPT;
         }
         return TYPE_JAVAFLOW;
