@@ -47,7 +47,7 @@ public class ExceptionGenerator extends AbstractGenerator {
     
     private Throwable thr;
     
-    public static String EXCEPTION_NS = "http://apache.org/cocoon/exception/1.0";
+    public static final String EXCEPTION_NS = "http://apache.org/cocoon/exception/1.0";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
