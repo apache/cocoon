@@ -142,18 +142,6 @@ public class ElementPathPart implements PointerPart {
                 super.endDocument();
         }
 
-        public void startPrefixMapping(String prefix, String uri)
-                throws SAXException {
-            // let namespace prefix alway through
-            super.startPrefixMapping(prefix, uri);
-        }
-
-        public void endPrefixMapping(String prefix)
-                throws SAXException {
-            // let namespace prefix alway through
-            super.endPrefixMapping(prefix);
-        }
-
         public void characters(char c[], int start, int len)
                 throws SAXException {
             if (include)

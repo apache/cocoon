@@ -46,10 +46,9 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.memory.MemoryCache;
 
-
 /**
  * This is the default store implementation based on JCS
- * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
+ * http://jakarta.apache.org/jcs/BasicJCSConfiguration.html
  * 
  * @version $Id$
  */
@@ -65,13 +64,13 @@ public class JCSDefaultStore
 
     /** The JCS configuration properties */
     protected Properties properties;
-    
+
     /** The JCS region name */
     protected String region;
-    
+
     /** JCS Cache manager */
     private CompositeCacheManager cacheManager;
-    
+
     /** The Java Cache System object */
     private JCSCacheAccess jcs;
 
@@ -83,17 +82,17 @@ public class JCSDefaultStore
 
     /** Service Manager */
     private ServiceManager manager;
-    
+
     /** Store janitor */
     private StoreJanitor janitor;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context aContext) throws ContextException {
         this.context = aContext;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -101,7 +100,7 @@ public class JCSDefaultStore
         this.manager = aManager;
         this.janitor = (StoreJanitor)this.manager.lookup(StoreJanitor.ROLE);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
@@ -120,7 +119,7 @@ public class JCSDefaultStore
         } catch (IOException e) {
             throw new ParameterException("Failure loading cache defaults",e);
         }
-        
+
         this.properties = new Properties(defaults);
         String[] names = parameters.getNames();
         for (int i = 0; i < names.length; i++) {
@@ -128,7 +127,7 @@ public class JCSDefaultStore
                 this.properties.put(names[i], parameters.getParameter(names[i]));
             }
         }
-        
+
         int maxobjects = parameters.getParameterAsInteger("maxobjects", -1);
         if (maxobjects != -1) {
             String key = "jcs.region." + region + ".cacheattributes.MaxObjects";
@@ -167,9 +166,8 @@ public class JCSDefaultStore
         } catch (IOException e) {
             throw new ParameterException("Unable to set directory", e);
         }
-        
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
@@ -179,7 +177,7 @@ public class JCSDefaultStore
         this.jcs = new JCSCacheAccess(cacheManager.getCache(region));
         this.janitor.register(this);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
@@ -202,11 +200,11 @@ public class JCSDefaultStore
             this.manager = null;
         }
     }
-    
+
     protected String getDefaultPropertiesFile() {
         return DEFAULT_PROPERTIES;
     }
-    
+
     /**
      * Sets the disk cache location.
      */
@@ -239,7 +237,7 @@ public class JCSDefaultStore
     }
 
     // ---------------------------------------------------- Store implementation
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#get(java.lang.Object)
      */
@@ -252,27 +250,26 @@ public class JCSDefaultStore
                 getLogger().debug("NOT Found key: " + key);
             }
         }
-        
         return value;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#store(java.lang.Object, java.lang.Object)
      */
     public void store(Object key, Object value)
     throws IOException {
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Store object " + value + " with key "+ key);
         }
-        
+
         try {
             this.jcs.put(key, value);
         } catch (CacheException ce) {
             getLogger().error("Failure storing object ", ce);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()
      */
@@ -288,7 +285,7 @@ public class JCSDefaultStore
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#clear()
      */
@@ -296,14 +293,14 @@ public class JCSDefaultStore
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Clearing the store");
         }
-        
+
         try {
             this.jcs.remove();               
         } catch (CacheException ce) {
             getLogger().error("Failure clearing store", ce);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
      */
@@ -311,22 +308,21 @@ public class JCSDefaultStore
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Removing item " + key);
         }
-        
+
         try {
            this.jcs.remove(key);
         } catch (CacheException ce) {
             getLogger().error("Failure removing object", ce);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
         return this.jcs.get(key) != null;
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#keys()
      */
@@ -337,7 +333,7 @@ public class JCSDefaultStore
         return new IteratorEnumeration(Arrays.asList(keys).iterator());
         //return new IteratorEnumeration(this.jcs.getGroupKeys("").iterator());
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#size()
      */
@@ -347,7 +343,6 @@ public class JCSDefaultStore
         return memoryCache.getSize();
         //return this.jcs.getSize();
     }
-    
 
     private static class JCSCacheAccess extends GroupCacheAccess {
         private JCSCacheAccess(CompositeCache cacheControl) {
@@ -357,10 +352,5 @@ public class JCSDefaultStore
         /*private int getSize() {
             return super.cacheControl.getSize();
         }*/
-        
-        public void dispose() {
-            super.dispose();
-        }
     }
-    
 }
