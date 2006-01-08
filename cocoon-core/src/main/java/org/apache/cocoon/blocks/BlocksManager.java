@@ -36,6 +36,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.blocks.util.CoreUtil;
+import org.apache.cocoon.blocks.util.LoggerUtil;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
