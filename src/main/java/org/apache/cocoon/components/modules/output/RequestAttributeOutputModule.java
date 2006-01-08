@@ -37,7 +37,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class RequestAttributeOutputModule extends AbstractOutputModule implements OutputModule, ThreadSafe {
+public class RequestAttributeOutputModule extends AbstractOutputModule implements ThreadSafe {
 
     public static final String PREFIX = OutputModule.ROLE;
     public static final String TRANS_PREFIX = PREFIX + ".RequestAttributeOutputModule.transient";

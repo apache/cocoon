@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.xml.sax.Attributes;
@@ -38,7 +37,7 @@ import java.util.Vector;
  *
  * @version $Id$
  */
-public class DocumentHandlerWrapper extends AbstractXMLConsumer implements LogEnabled /*, Recyclable*/ {
+public class DocumentHandlerWrapper extends AbstractXMLConsumer {
 
     protected Logger log;
 

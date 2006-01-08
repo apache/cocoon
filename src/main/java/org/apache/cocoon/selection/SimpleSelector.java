@@ -18,7 +18,6 @@ package org.apache.cocoon.selection;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * A very simple selector that operates on string literals, useful especially 
@@ -46,7 +45,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  * @since 2.1
  */
-public class SimpleSelector extends AbstractSwitchSelector implements ThreadSafe {
+public class SimpleSelector extends AbstractSwitchSelector {
 
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
         return parameters.getParameter("value", "");

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -106,7 +105,7 @@ import java.util.Stack;
  * @version $Id$
  */
 public abstract class AbstractSAXTransformer extends AbstractTransformer
-                                             implements Serviceable, Configurable, Recyclable, Disposable {
+                                             implements Serviceable, Configurable, Disposable {
 
     /**
      * Empty immutable attributes (for performance). Use them

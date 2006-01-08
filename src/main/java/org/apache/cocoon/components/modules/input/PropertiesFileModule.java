@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
@@ -41,7 +40,7 @@ import org.apache.excalibur.source.SourceResolver;
  * @version $Id$
  */
 public class PropertiesFileModule extends AbstractJXPathModule
-implements InputModule, Serviceable, Configurable, ThreadSafe {
+       implements Serviceable, ThreadSafe {
 
     private ServiceManager m_manager;
     private SourceResolver m_resolver;
