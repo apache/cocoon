@@ -360,14 +360,9 @@
     </dependency>
     <dependency>
       <groupId>mx4j</groupId>
-      <artifactId>mx4j-jmx</artifactId>
+      <artifactId>mx4j</artifactId>
       <version>3.0.1</version>
       <!-- <scope>provided</scope> -->
-    </dependency>
-    <dependency>
-      <groupId>jetty</groupId>
-      <artifactId>org.mortbay.jmx</artifactId>
-      <version>5.1.8</version>
     </dependency>
   </dependencies>
 </project>
