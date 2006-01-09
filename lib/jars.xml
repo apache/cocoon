@@ -1298,24 +1298,14 @@
     <homepage>http://jdbi.codehaus.org/</homepage>
   </file>
   
-  <file id="mx4j-jmx">
-    <title>JMX interfaces</title>
+  <file id="mx4j">
+    <title>JMX implementation</title>
     <description>
-      The JMX interfaces from the MX4J project.
+      The JMX implementation from the MX4J project.
     </description>
     <used-by>Core</used-by>
-    <lib>core/mx4j-jmx-3.0.1.jar</lib>
+    <lib>core/mx4j-3.0.1.jar</lib>
     <homepage>http://mx4j.sourceforge.net/</homepage>
-  </file>
-
-  <file id="jetty-jmx">
-    <title>Jetty JMX</title>
-    <description>
-      Jetty JMX support for ModelMBeanImpl.
-    </description>
-    <used-by>Core</used-by>
-    <lib>core/jetty-jmx-5.1.8.jar</lib>
-    <homepage>http://jetty.mortbay.org/jetty/</homepage>
   </file>
 
 </jars>
