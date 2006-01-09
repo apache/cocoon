@@ -40,7 +40,7 @@ public class PoolableComponentHandler
 extends NonThreadSafePoolableComponentHandler {
     
     /** All the interfaces for the proxy */
-    protected final Class[] interfaces;
+    private final Class[] interfaces;
     
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
@@ -120,6 +120,14 @@ extends NonThreadSafePoolableComponentHandler {
             workInterfaces.add( interfaces[i] );
             this.addInterfaces(interfaces[i].getInterfaces(), workInterfaces);
         }
+    }
+
+    /**
+     * @return Returns the interfaces.
+     */
+    public Class[] getInterfaces()
+    {
+        return interfaces;
     }
 
     protected static final class ProxyHandler implements InvocationHandler, Core.CleanupTask {
