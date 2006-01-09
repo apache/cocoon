@@ -29,6 +29,7 @@
   <modules>
     <module>cocoon-core</module>
     <module>cocoon-mocks</module>
+    <module>cocoon-ajax</module>
     <module>cocoon-session-fw</module>
     <module>cocoon-authentication-fw</module>
   </modules>
