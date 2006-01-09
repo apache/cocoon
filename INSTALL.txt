@@ -1,4 +1,16 @@
-
+#  Copyright 2006 The Apache Software Foundation
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License
 
                       +-----------------------------+
                       |     I  N  S  T  A  L  L     |
@@ -30,7 +42,7 @@
   
  3) Build Cocoon by typing "build" or "./build.sh"
 
- 4) Run Cocoon by typing "cocoon servlet" or "./cocoon.sh servlet"
+ 4) Run Cocoon by typing "cocoon" or "./cocoon.sh"
  
  5) Open http://localhost:8888/ with your browser
 
@@ -138,6 +150,32 @@ Other properties that you can change are:
 Note that the "standalone-demo" build target prepares a directory that you can
 move elsewhere to run "cocoon servlet" outside of the build tree.
 
+
+Choosing the running mode
+-------------------------
+Cocoon comes with a smart configuration mechanism based on "running modes". The
+configuration of Cocoon is based on XML files for the various components. To
+customize these configuration files you can define properties to which you
+can refer to from within the configuration files.
+You can define as many property files and define your own properties as you want.
+Store them in the WEB-INF/properties directory and Cocoon will read all of
+them on start up. You can then refer to the values of the properties by
+using the common ${PROPERTY_NAME} syntax in your configuration file.
+In addition Cocoon supports running modes. You define a running mode when
+you start Cocoon (default is "dev"). Now this name of the running mode is
+used to read additional property files on startup. Cocoon reads first all
+property files from "WEB-INF/properties" and then from
+"WEB-INF/properties/${RUNNING_MODE}". For example if you have different
+database connections during development and in production, just put
+a properties file containing the connection information for development
+in the "WEB-INF/properties/dev" directory and put another property file
+with the production settings in "WEB-INF/properties/prod".
+You can easily switch the running mode by setting the system property
+"org.apache.cocoon.mode" on startup of Cocoon ,for example:
+"-Dorg.apache.cocoon.mode=prod".
+Note, that "dev" and "prod" are not predefined. So you can create a
+"myenv" directory underneath the properties directory and set the
+running mode to "myenv" etc.
 
 
 All right, that's it for now. 
