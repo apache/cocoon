@@ -1,0 +1,92 @@
+/*
+* Copyright 1999-2004 The Apache Software Foundation
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+#forms_calendarDiv {
+    position: absolute;
+    visibility: hidden;
+    background-color: white;
+    layer-background-color: white;
+}
+
+.forms_cpYearNavigation, .forms_cpMonthNavigation {
+    background-color:#C0C0C0;
+    text-align:center;
+    vertical-align:center;
+    text-decoration:none;
+    color:#000000;
+    font-weight:bold;
+}
+  
+.forms_cpDayColumnHeader, .forms_cpYearNavigation, .forms_cpMonthNavigation, .forms_cpCurrentMonthDate, .forms_cpCurrentMonthDateDisabled, .forms_cpOtherMonthDate, .forms_cpOtherMonthDateDisabled, .forms_cpCurrentDate, .forms_cpCurrentDateDisabled, .forms_cpTodayText, .forms_cpTodayTextDisabled, .forms_cpText {
+    font-family:arial;
+    font-size:8pt;
+}
+  
+TD.forms_cpDayColumnHeader {
+    text-align:right;
+    border:solid thin #C0C0C0;
+    border-width:0 0 19 0;
+}
+  
+.forms_cpCurrentMonthDate, .forms_cpOtherMonthDate, .forms_cpCurrentDate  {
+    text-align:right;
+    text-decoration:none;
+}
+  
+.forms_cpCurrentMonthDateDisabled, .forms_cpOtherMonthDateDisabled, .forms_cpCurrentDateDisabled {
+    color:#D0D0D0;
+    text-align:right;
+    text-decoration:line-through;
+}
+  
+.forms_cpCurrentMonthDate, .forms_cpCurrentDate {
+    color:#000000;
+}
+  
+.forms_cpOtherMonthDate {
+    color:#808080;
+}
+  
+TD.forms_cpCurrentDate {
+    color:white; background-color: #C0C0C0;
+    border-width:1;
+    border:solid thin #800000;
+}
+  
+TD.forms_cpCurrentDateDisabled {
+    border-width:1;
+    border:solid thin #FFAAAA;
+}
+  
+TD.forms_cpTodayText, TD.forms_cpTodayTextDisabled {
+    border:solid thin #C0C0C0;
+    border-width:1 0 0 0;
+}
+  
+A.forms_cpTodayText, SPAN.forms_cpTodayTextDisabled {
+    height:20px;
+}
+  
+A.forms_cpTodayText {
+    color:black;
+}
+  
+.forms_cpTodayTextDisabled {
+    color:#D0D0D0;
+}
+  
+.forms_cpBorder {
+    border:solid thin #808080;
+}
