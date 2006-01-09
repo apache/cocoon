@@ -20,51 +20,30 @@
     +-->
 <project>
   <parent>
-    <groupId>apache-cocoon</groupId>
-    <artifactId>cocoon</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <groupId>org.apache.cocoon.portal</groupId>
+    <artifactId>cocoon-portal</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>apache-cocoon</groupId>
   <artifactId>cocoon-portal-sample</artifactId>
-  <version>2.2-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <name>Portal Sample Block</name>
-  <build>
-    <sourceDirectory>java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>java</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <warSourceDirectory>samples</warSourceDirectory>
-          <webXml>${basedir}/../../../webapp/WEB-INF/web.xml</webXml>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Portal Block Sample</name>
   <dependencies>
     <dependency>
-      <groupId>apache-cocoon</groupId>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
       <version>2.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-portal</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <groupId>org.apache.cocoon.portal</groupId>
+      <artifactId>cocoon-portal-impl</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>apache-cocoon</groupId>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ojb</artifactId>
-      <version>2.2-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>cowarp</groupId>
