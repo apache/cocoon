@@ -254,7 +254,7 @@ extends AbstractFactoryHandler {
     /**
      * @return Returns the max.
      */
-    protected int getMax()
+    public int getMax()
     {
         return max;
     }
@@ -262,7 +262,7 @@ extends AbstractFactoryHandler {
     /**
      * @return Returns the readySize.
      */
-    protected int getReadySize()
+    public int getReadySize()
     {
         return readySize;
     }
@@ -270,7 +270,7 @@ extends AbstractFactoryHandler {
     /**
      * @return Returns the size.
      */
-    protected int getSize()
+    public int getSize()
     {
         return size;
     }
@@ -278,7 +278,7 @@ extends AbstractFactoryHandler {
     /**
      * @return Returns the highWaterMark.
      */
-    protected int getHighWaterMark()
+    public int getHighWaterMark()
     {
         return highWaterMark;
     }
