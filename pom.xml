@@ -26,6 +26,13 @@
   <version>2.2.0-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   <modules>
     <module>cocoon-core</module>
     <module>cocoon-mocks</module>
