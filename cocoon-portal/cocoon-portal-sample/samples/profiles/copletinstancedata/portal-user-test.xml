@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <!--  This portlet is on every page. -->
+   <coplet-instance-data id="static-sample-1">
+      <coplet-data>static-sample</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portal-Intro-1">
+      <coplet-data>Portal-Intro</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Right-1">
+      <coplet-data>Portal-Right</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Left-1">
+      <coplet-data>Portal-Left</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Bottom-1">
+      <coplet-data>Portal-Bottom</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Demo-1">
+      <coplet-data>Portal-Demo</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Gallery-Petstore">
+      <coplet-data>Gallery</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="GalleryViewer-1">
+      <coplet-data>GalleryViewer</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-1">
+      <coplet-data>Portlet1</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-2">
+      <coplet-data>Portlet2</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="TestPortlet-1">
+      <coplet-data>TestPortlet1</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="CocoonPortlet">
+      <coplet-data>CocoonPortlet</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="app-test-1">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-2">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-3">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-4">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Google-1">
+      <coplet-data>Google</coplet-data>
+   </coplet-instance-data>
+
+   <!-- wsrp example -->
+   <coplet-instance-data id="WSRP-Calc-1">
+      <coplet-data>wsrp-calc-portlet</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="WSRP-Test-1">
+      <coplet-data>wsrp-test-portlet</coplet-data>
+   </coplet-instance-data>
+
+</coplets>

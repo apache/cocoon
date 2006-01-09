@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<auth>
+	<plugin id="copletManagement">
+		<functions>
+			<function id="showTab">
+				<roles>
+					<role>admin</role>
+				</roles>
+				<users>
+					<user>cocoon</user>
+				</users>
+			</function>
+			<actions>
+				<action id="moveUp">
+					<roles>
+						<role>admin</role>
+					</roles>
+				</action>
+			</actions>
+		</functions>
+	</plugin>
+</auth>
