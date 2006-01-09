@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2005 The Apache Software Foundation
+  Copyright 2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,134 +20,18 @@
     +-->
 <project>
   <parent>
-    <groupId>apache-cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <groupId>org.apache.cocoon</groupId>
+    <version>2.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>apache-cocoon</groupId>
+  <groupId>org.apache.cocoon.portal</groupId>
   <artifactId>cocoon-portal</artifactId>
-  <version>2.2-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>Portal Block</name>
-  <build>
-    <sourceDirectory>java</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>java</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-  </build>
-  <dependencies>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-ajax</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-authentication-fw</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-cron</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-forms-impl</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>apache-cocoon</groupId>
-      <artifactId>cocoon-session-fw</artifactId>
-      <version>2.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis</artifactId>
-      <version>1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis-saaj</artifactId>
-      <version>1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis-jaxrpc</artifactId>
-      <version>1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis-wsdl4j</artifactId>
-      <version>1.5.1</version>
-    </dependency>
-    <dependency>
-      <groupId>castor</groupId>
-      <artifactId>castor</artifactId>
-      <version>0.9.6</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-discovery</groupId>
-      <artifactId>commons-discovery</artifactId>
-      <version>0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.pluto</groupId>
-      <artifactId>pluto</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>portlet-api</groupId>
-      <artifactId>portlet-api</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>servletapi</groupId>
-      <artifactId>servletapi</artifactId>
-      <version>2.3</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>wsrp4j</groupId>
-      <artifactId>wsrp4j-consumer</artifactId>
-      <version>0.3-dev</version>
-    </dependency>
-    <dependency>
-      <groupId>wsrp4j</groupId>
-      <artifactId>wsrp4j-shared</artifactId>
-      <version>0.3-dev</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.portals.bridges</groupId>
-      <artifactId>portals-bridges-common</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>0.9.5</version>
-    </dependency>
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekodtd</artifactId>
-      <version>0.1.11</version>
-    </dependency>
-  </dependencies>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>cocoon-portal-impl</module>
+    <module>cocoon-portal-sample</module>
+  </modules>
 </project>
