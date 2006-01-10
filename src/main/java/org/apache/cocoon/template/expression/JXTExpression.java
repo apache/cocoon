@@ -134,7 +134,7 @@ public class JXTExpression extends Subst {
             else
                 return compiled;
         } else
-            return null;
+            return this.getRaw();
     }
 
     public void setLenient(Boolean lenient) {
