@@ -176,6 +176,9 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="update">
+      Removed obsolete support for JCS.
+    </action>
+    <action dev="CZ" type="update">
       XMLSerializer and XMLDeserializer are no longer managed components. Use the XMLByteStreamCompiler
       and XMLByteStreamInterpreter classes directly.
     </action>

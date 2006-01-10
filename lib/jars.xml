@@ -435,15 +435,6 @@
     <lib>optional/icu4j-3.0.jar</lib>
     <homepage>http://www-306.ibm.com/software/globalization/icu/</homepage>
   </file>
-
-  <file id="jcs">
-    <title>JCS</title>
-    <description>Java Caching System</description>
-    <used-by>JCS Store</used-by>
-    <lib>core/jcs-1.2.5-dev-20050313.jar</lib>
-    <homepage>http://jakarta.apache.org/jcs/</homepage>
-  </file>
-
   <file id="ehcache">
     <title>EHCache</title>
     <description>Easy Hibernate Cache</description>

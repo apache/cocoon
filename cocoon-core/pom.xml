@@ -273,11 +273,6 @@
     </dependency>
 
     <dependency>
-      <groupId>jcs</groupId>
-      <artifactId>jcs</artifactId>
-      <version>1.2.5-dev-20050313</version>
-    </dependency>
-    <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
       <version>2.7.0</version>
