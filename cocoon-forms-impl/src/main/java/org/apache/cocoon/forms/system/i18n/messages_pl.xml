@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
+<catalogue>
+  <message key="validation.captcha.mismatch">#CAPTCHA check failed.#</message>
+  
+  <message key="general.field-required">To pole jest wymagane.</message>
+
+  <message key="datatype.conversion-failed">Niepoprawna wartość typu: {0}.</message>
+  <message key="datatype.decimal">liczba rzeczywista</message>
+  <message key="datatype.integer">liczba całkowita</message>
+  <message key="datatype.long">liczba całkowita</message>
+  <message key="datatype.float">liczba rzeczywista</message>
+  <message key="datatype.double">liczba rzeczywista</message>
+  <message key="datatype.date.date">data</message>
+  <message key="datatype.date.time">czas</message>
+  <message key="datatype.date.datetime">data i czas</message>
+
+  <message key="validation.string.exact-length">Wprowadź dokładnie {0} znaków.</message>
+  <message key="validation.string.range-length">Wprowadź od {0} do {1} znaków.</message>
+  <message key="validation.string.min-length">Wprowadź przynajmniej {0} znaków.</message>
+  <message key="validation.string.max-length">Wprowadź co najwyżej {0} znaków.</message>
+  <message key="validation.string.regexp">Wartość nie odpowiada wyrażeniu regularnemu: {0}.</message>
+  <message key="validation.string.invalidemail">To pole nie zawiera poprawnego adresu e-mail.</message>
+
+  <message key="validation.array.exact-valuecount">Dokładnie {0} element(ów) powinno zostać zaznaczonych.</message>
+  <message key="validation.array.range-valuecount">Co najmniej {0} i co najwyżej {1} element(ów) powinno zostać zaznaczonych.</message>
+  <message key="validation.array.min-valuecount">Co najmniej {0} element(ów) powinno zostać zaznaczonych.</message>
+  <message key="validation.array.max-valuecount">Co najwyżej {0} element(ów) powinno zostać zaznaczonych.</message>
+
+  <message key="multivaluefield.conversionfailed">Jedna z zaznaczonych wartości jest niepoprawnego typu.</message>
+
+  <message key="validation.numeric.range">Wprowadź liczbę w zakresie od {0} do {1}.</message>
+  <message key="validation.numeric.min">Wprowadź liczbę większą lub równą {0}.</message>
+  <message key="validation.numeric.max">Wprowadź liczbę mniejszą lub równą {0}.</message>
+
+  <message key="validation.mod10">Wartość nie dzieli się bez reszty przez 10.</message>
+
+  <message key="aggregatedfield.split-failed">Zawartość tego pola nie odpowiada wyrażeniu regularnemu: {0}.</message>
+  <message key="upload.invalid-type">Niepoprawny typ: {0}.</message>
+  <message key="calendar.alt"></message>
+</catalogue>
