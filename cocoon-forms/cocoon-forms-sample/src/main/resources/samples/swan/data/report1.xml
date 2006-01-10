@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2005 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<report id="REPORT_A">
+
+  <name>report_a.name</name>
+  <description>report_a.description</description>
+  <required-datasource-type>sample_ds</required-datasource-type>
+  <catalogs>
+    <catalog>Samples</catalog>
+  </catalogs>
+
+  <flow>
+    <step id="step1">
+      <interaction>
+        <parameter id="startdate" required="true" datatype-id="startdate"/>
+        <parameter id="enddate"   required="true" datatype-id="enddate"  />
+      </interaction>
+    </step>
+  </flow>
+
+  <output>
+    <database>
+      <sql>
+        <dialect types="default">
+          <literal>
+  select
+    some_table.some_data some_data, some_other_table.some_more_data some_other_data,
+    </literal><parameter idref="startdate"/><literal> startdate,
+    </literal><parameter idref="enddate"/><literal> enddate
+  from
+    some_table, some_other_table
+  where
+    some_table.some_field between
+      </literal><parameter idref="begindept"/><literal>
+      and </literal><parameter idref="enddept"/><literal>
+    and some_table.some_other_field = some_other_table.some_other_field
+  order
+    by some_other_table.some_other_field
+          </literal>
+        </dialect>
+      </sql>
+
+      <columns>
+        <column id="some_data" field="some_data">
+          <type base="string"/>
+          <title>Some Data</title>
+        </column>
+        <column id="some_other_data" field="some_other_data">
+          <type base="string"/>
+          <title>Some Other Data</title>
+        </column>
+      </columns>
+
+      <subreports>
+        <subreport id="report_b" report-id="REPORT_B" datasource-id="sample_ds">
+          <name>Sample Subreport</name>
+          <description>A Sample Subreport</description>
+          <parameter name="some_data" expression='Column("some_data")'/>
+          <parameter name="startdate" expression='Column("startdate")'/>
+          <parameter name="enddate"   expression='Column("enddate")'/>
+        </subreport>
+      </subreports>
+
+      <links>
+        <link>
+          <title>linktitle.show-details</title>
+          <report-id>REPORT_C</report-id>
+          <parameter id="some_other_data" column-id="some_other_data"/>
+          <parameter id="startdate"       column-id="startdate"/>
+          <parameter id="enddate"         column-id="enddate"/>
+        </link>
+      </links>
+
+    </database>
+  </output>
+</report>
