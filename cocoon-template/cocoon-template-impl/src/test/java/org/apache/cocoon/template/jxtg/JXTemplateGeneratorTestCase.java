@@ -27,13 +27,30 @@ import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
 
 /**
- * @version SVN $Id$
+ * @version SVN $Id: JXTemplateGeneratorTestCase.java 358974 2005-12-25
+ *          14:00:24Z lgawron $
  */
 public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
     String JX = "jx";
     Map flowContext = new HashMap();
+
+    public class StringContainer {
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public StringContainer(String value) {
+            this.value = value;
+        }
+    }
 
     public void setUp() throws Exception {
         super.setUp();
@@ -102,7 +119,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxForEach.xml";
         String outputURI = docBase + "jxForEach-output.xml";
 
-        String[] array = {"one", "two", "three"};
+        String[] array = { "one", "two", "three" };
         getFlowContext().put("test", array);
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
@@ -111,7 +128,8 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxMacro.xml";
         String outputURI = docBase + "jxMacro-output.xml";
 
-        assertEqual( load(outputURI), generate(JX, inputURI, EMPTY_PARAMS) );
+        getFlowContext().put("container", new StringContainer("foobar"));
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
 
     public void testJXDynamicMacro() throws Exception {
@@ -136,7 +154,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getFlowContext().put("date", cal.getTime());
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
     }
-    
+
     public void testFormatDate() throws Exception {
         String inputURI = docBase + "formatDate.xml";
         String outputURI = docBase + "formatDate-output.xml";
@@ -158,7 +176,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         String inputURI = docBase + "jxOut.xml";
         String outputURI = docBase + "jxOut-output.xml";
         String includeURI = docBase + "jxOutInclude.xml";
-        
+
         getFlowContext().put("value", "simple");
         getFlowContext().put("xml", "<root><node>value</node></root>");
         getFlowContext().put("document", load(includeURI));

@@ -20,7 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version SVN $Id$ 
+ * @version SVN $Id: DefaultStringTemplateParser.java 325973 2005-10-17
+ *          19:59:39Z lgawron $
  */
 public class DefaultStringTemplateParser extends StringTemplateParser {
     public List parseSubstitutions(Reader in) throws Exception {
@@ -45,7 +46,7 @@ public class DefaultStringTemplateParser extends StringTemplateParser {
                     } else {
                         buf.append(c);
                     }
-                } else if (c == '{' ) {
+                } else if (c == '{') {
                     ch = in.read();
                     if (ch != '{') {
                         inExpr = true;
@@ -69,7 +70,9 @@ public class DefaultStringTemplateParser extends StringTemplateParser {
         }
         if (inExpr)
             throw new Exception("Unterminated {");
-        substitutions.add(new Literal(buf.toString()));
+
+        if (buf.length() > 0)
+            substitutions.add(new Literal(buf.toString()));
         return substitutions;
     }
 
