@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node uuid="deadbeef-cafe-babe-cafe-babecafebabe" parentUUID="cafebabe-cafe-babe-cafe-babecafebabe" definitionId="-1971945898" nodeType="{internal}system">
+	<mixinTypes>
+	</mixinTypes>
+	<properties>
+		<property name="{http://www.jcp.org/jcr/1.0}primaryType">
+		</property>
+	</properties>
+	<nodes>
+		<node name="{http://www.jcp.org/jcr/1.0}versionStorage" uuid="deadbeef-face-babe-cafe-babecafebabe">
+		</node>
+		<node name="{http://www.jcp.org/jcr/1.0}nodeTypes" uuid="deadbeef-cafe-cafe-cafe-babecafebabe">
+		</node>
+	</nodes>
+</node>
