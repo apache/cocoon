@@ -1,5 +1,8 @@
 #!/usr/bin/perl -W
 
+#Use this script to generate the archetype descriptor, as the format does not allow wildcards yet
+# perl makeDescriptor.pl > META-INF/archetype.xml
+
 use Data::Dumper;
 
 #find all files
