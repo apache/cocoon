@@ -1,0 +1,52 @@
+Manifest-Version: 1.0
+Specification-Vendor: The Apache Software Fundation
+Implementation-Vendor: The Apache Software Fundation
+Bundle-Name: cocoon
+Bundle-SymbolicName: org.apache.cocoon:template:1.0.0
+Bundle-Version: 1.0.0
+Bundle-Description: Cocoon bundle
+Bundle-Vendor: The Apache Software Foundation
+Bundle-DocURL: http://cocoon.apache.org
+Bundle-ContactAddress: http://cocoon.apache.org
+Bundle-Category: library
+Bundle-Classpath: .
+Export-Package: 
+ org.apache.cocoon.template, 
+ org.apache.cocoon.template.instruction,
+ org.apache.cocoon.template.script, 
+ org.apache.cocoon.template.xml, 
+ org.apache.cocoon.components.expression,
+ org.apache.cocoon.components.expression.jxpath,
+ org.apache.cocoon.components.expression.jexl,
+ org.apache.cocoon.components.accessor,
+ org.apache.cocoon.environment
+Import-Package: org.osgi.framework,
+ org.apache.avalon.framework.context,
+ org.apache.avalon.framework.logger,
+ org.apache.avalon.framework.service,
+ org.apache.avalon.framework.activity,
+ org.apache.avalon.framework.thread,
+ org.apache.avalon.framework.configuration,
+ org.apache.cocoon,
+ org.apache.cocoon.caching,
+ org.apache.cocoon.environment,
+ org.apache.cocoon.generation,
+ org.apache.cocoon.transformation,
+ org.apache.cocoon.util,
+ org.apache.cocoon.util.log,
+ org.apache.cocoon.xml,
+ org.apache.avalon.excalibur.logger,
+ org.apache.excalibur.source,
+ org.apache.excalibur.source.impl,
+ org.apache.excalibur.xml.sax, 
+ org.apache.excalibur.xmlizer,
+ org.apache.log,
+ org.xml.sax,
+ org.apache.cocoon.template.script,
+ org.apache.commons.lang,
+ org.apache.excalibur.store,
+ org.apache.cocoon.components.source,
+ org.apache.cocoon.components.flow,
+ org.apache.commons.jxpath,
+ org.apache.cocoon.xml.dom
+Bundle-UUID: org.apache.cocoon:template:1.0.0:all
