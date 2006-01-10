@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<date locale="pl_PL"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/></date>
+	<date locale="sv_SE"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="sv_SE"/></date>
+</root>
