@@ -49,14 +49,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     final protected PortletURLProviderImpl provider;
 
-    protected PortletWindow window;
-
-    public ServletRequestImpl(HttpServletRequest request,
-                              PortletURLProviderImpl provider) {
-        super(request);
-        this.provider = provider;
-        this.originalRequest = request;
-    }
+    final protected PortletWindow window;
 
     public ServletRequestImpl(HttpServletRequest request,
                               PortletURLProviderImpl provider,
