@@ -12,6 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
+This is some quick info about the Mavenization (m10n) of Cocoon 2.2.
+
+There's also a Daisy documentation page about this, for more "stable" information:
+http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
+
 HOW TO CONVERT AN EXISTING BLOCK TO MAVEN STRUCTURE
 
 1. use archetype plugin to create template block structure in the repo root  
