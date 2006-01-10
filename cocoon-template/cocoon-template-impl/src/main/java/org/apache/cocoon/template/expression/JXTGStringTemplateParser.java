@@ -20,7 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version SVN $Id$
+ * @version SVN $Id: JXTGStringTemplateParser.java 325986 2005-10-17 21:35:18Z
+ *          lgawron $
  */
 public class JXTGStringTemplateParser extends StringTemplateParser {
     public final static String JXPATH = "jxpath";
@@ -75,7 +76,9 @@ public class JXTGStringTemplateParser extends StringTemplateParser {
         }
         if (inExpr)
             throw new Exception("Unterminated {");
-        substitutions.add(new Literal(buf.toString()));
+
+        if (buf.length() > 0)
+            substitutions.add(new Literal(buf.toString()));
         return substitutions;
     }
 
