@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+    <fd:widgets>
+        <fd:repeater id="teammembers">
+            <fd:widgets>
+                <!-- The ID is here to keep track of row creation order, 
+                which can have no relation with row index when the users 
+                used move up/down -->
+                <fd:field id="ID">
+                    <fd:label>ID</fd:label>
+                    <fd:datatype base="long"/>
+                </fd:field>
+                <fd:field id="position">
+                    <fd:label>Position</fd:label>
+                    <fd:datatype base="string"/>
+                    <fd:selection-list dynamic="true" type="flow-jxpath"
+                        list-path="positionList" value-path="value"
+                        label-path="label"/>
+                    <fd:on-value-changed>
+                        <fd:javascript> 
+                        // this script can be found in team.js 
+                        updateNameWidget(event);
+                         </fd:javascript>
+                    </fd:on-value-changed>
+                </fd:field>
+                <fd:field id="memberId">
+                    <fd:label>Name</fd:label>
+                    <fd:datatype base="string"/>
+                    <fd:selection-list dynamic="true" type="flow-jxpath"
+                        list-path="nameList" value-path="memberId"
+                        label-path="name"/>
+                    <fd:on-value-changed>
+                    <fd:javascript>
+                       // this script can be found in team.js 
+                       updateCountryWidget(event);
+                    </fd:javascript>
+                    </fd:on-value-changed>
+                        
+                </fd:field>
+                <fd:output id="country">
+                   <fd:label>Country</fd:label>
+                   <fd:datatype base="string"/>
+                </fd:output>
+                <fd:booleanfield id="select">
+                    <fd:label>Select</fd:label>
+                </fd:booleanfield>
+
+            <fd:row-action id="add" action-command="add-after">
+              <fd:label>+</fd:label>
+            </fd:row-action>
+            <fd:row-action id="up" action-command="move-up">
+              <fd:label>^</fd:label>
+            </fd:row-action>
+            <fd:row-action id="down" action-command="move-down">
+              <fd:label>v</fd:label>
+            </fd:row-action>
+            <fd:row-action id="delete" action-command="delete">
+              <fd:label>X</fd:label>
+            </fd:row-action>
+        </fd:widgets>
+           <fd:validation>
+           <!-- This demonstrates validating a repeater: we check here if all
+                teammembers are distinct.
+                A repeater cannot itself display a validation error, and
+                therefore sets a validation error on a field in the 
+                offending row. -->
+           <fd:javascript>
+                return validateRepeater(widget);
+           </fd:javascript>
+         </fd:validation>
+        </fd:repeater>
+
+        <fd:repeater-action id="addmember" 
+           action-command="add-row" repeater="teammembers">
+            <fd:label>Add player</fd:label>
+            <fd:on-action>
+                <fd:javascript>
+                   // this script can be found in team.js 
+                   updateRowIDcounter(event);
+                </fd:javascript>
+            </fd:on-action>
+        </fd:repeater-action>
+        <fd:repeater-action id="removemember" action-command="delete-rows"
+            repeater="teammembers" select="select">
+            <fd:label>Remove selected players</fd:label>
+        </fd:repeater-action>
+    </fd:widgets>
+</fd:form>
