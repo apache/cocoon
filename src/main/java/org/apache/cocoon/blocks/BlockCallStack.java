@@ -17,15 +17,16 @@ package org.apache.cocoon.blocks;
 
 import java.util.Stack;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 /**
- * Stack used for geting hold on the current block manager
+ * Stack used for geting hold on the current block servlet
  *
  * @version $Id$
  * @since 2.2 
  */
-public class BlockEnvironmentHelper {
+public class BlockCallStack {
 
     /** The block stack */
     static protected final ThreadLocal blockStack = new ThreadLocal();
@@ -38,7 +39,7 @@ public class BlockEnvironmentHelper {
      *
      * @throws ServletException if block is null
      */
-    public static void enterBlock(Block block)
+    public static void enterBlock(Servlet block)
     throws ServletException {
         if (null == block) {
             throw new ServletException("Block is not set.");
@@ -63,10 +64,10 @@ public class BlockEnvironmentHelper {
         stack.pop();
     }
 
-    public static Block getCurrentBlock() {
+    public static Servlet getCurrentBlock() {
         final Stack stack = (Stack)blockStack.get();
         if ( stack != null && !stack.isEmpty()) {
-        	return (Block)stack.peek();
+        	return (Servlet)stack.peek();
         }
         return null;
     }

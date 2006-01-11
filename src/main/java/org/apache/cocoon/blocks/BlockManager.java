@@ -16,8 +16,6 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.servlet.Servlet;
@@ -100,7 +98,6 @@ public class BlockManager
 
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
-
         if (this.blockWiring.isCore()) {
             this.getLogger().debug("Block with core=true");
             CoreUtil coreUtil = new CoreUtil(blockServletConfig);
@@ -213,15 +210,6 @@ public class BlockManager
     }
 
     /**
-     * Get a block property
-     */
-    public String getProperty(String name) {
-    	return this.blockContext.getInitParameter(name);
-    }
-
-    // TODO: We should have a reflection friendly Map getProperties() also
-
-    /**
      * The exported components of the block. Return null if the block doesn't export components.
      * 
      * @return a ServiceManager containing the blocks exported components
@@ -235,61 +223,6 @@ public class BlockManager
         }
     }
     
-    /**
-     * Takes the scheme specific part of a block URI (the scheme is
-     * the responsibilty of the BlockSource) and resolve it with
-     * respect to the blocks mount point.
-     */
-    public URI absolutizeURI(URI uriToResolve, URI base) throws URISyntaxException {
-        URI uri = resolveURI(uriToResolve, base);
-        String blockName = uri.getScheme();
-        Block block = null;
-        if (blockName == null) {
-            // this block
-            block = this;
-        } else {
-            // another block
-        	String blockId = this.blockWiring.getBlockId(blockName);
-            block = this.blocks.getBlock(blockId);
-        }
-        if (block == null)
-            throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
-
-        String mountPath = block.getMountPath();
-        if (mountPath == null)
-            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
-        if (mountPath.endsWith("/"))
-            mountPath = mountPath.substring(0, mountPath.length() - 1);
-        String absoluteURI = mountPath + uri.getSchemeSpecificPart();
-        getLogger().debug("Resolving " + uri.toString() + " to " + absoluteURI);
-        return new URI(absoluteURI);
-    }
-
-    /**
-     * Parses and resolves the scheme specific part of a block URI
-     * with respect to the base URI of the current sitemap. The scheme
-     * specific part of the block URI has the form
-     * <code>foo:/bar</code> when refering to another block, in this
-     * case only an absolute path is allowed. For reference to the own
-     * block, both absolute <code>/bar</code> and relative
-     * <code>./foo</code> paths are allowed.
-     */
-    public URI resolveURI(URI uri, URI base) throws URISyntaxException {
-        getLogger().debug("BlockManager: resolving " + uri.toString() + " with scheme " +
-                          uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
-        if (uri.getPath() != null && uri.getPath().length() >= 2 &&
-            uri.getPath().startsWith("./")) {
-            // self reference relative to the current sitemap, e.g. ./foo
-            if (uri.isAbsolute())
-                throw new URISyntaxException(uri.toString(), "When the protocol refers to other blocks the path must be absolute");
-            URI resolvedURI = base.resolve(uri);
-            getLogger().debug("BlockManager: resolving " + uri.toString() +
-                              " to " + resolvedURI.toString() + " with base URI " + base.toString());
-            uri = resolvedURI;
-        }
-        return uri;
-    }
-    
     // Servlet methods
 
 	public void init(ServletConfig servletConfig) throws ServletException {
@@ -297,56 +230,15 @@ public class BlockManager
     }
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String blockName = (String) request.getAttribute(Block.NAME);
-
-        if (blockName != null) {
-            // Request to other block.
-            String blockId = this.blockWiring.getBlockId(blockName);
-            boolean superCall = false;
-            // Call to named block
-            if (blockId != null && !Block.SUPER.equals(blockName)) {
-                // The block name should not be used in the recieving block.
-                request.removeAttribute(Block.NAME);
-            } else {
-                if (Block.SUPER.equals(blockName)) {
-                    // Explicit call to super block
-                    // The block name should not be used in the recieving block.
-                    request.removeAttribute(Block.NAME);
-                } else if (blockId == null) {
-                    // If there is a super block, the connection might
-                    // be defined there instead.
-                    blockId = this.blockWiring.getBlockId(Block.SUPER);
-                }
-                superCall = true;
-            }
-            Block block = this.blocks.getBlock(blockId);
-            if (block == null)
-                throw new ServletException("No block with name=" + blockName +
-                        " id=" + blockId);
-            this.getLogger().debug("Enter processing in block " + blockName);
-            try {
-                // A super block should be called in the context of
-                // the called block to get polymorphic calls resolved
-                // in the right way. Therefore no new current block is
-                // set.
-                if (!superCall) {
-                    // It is important to set the current block each time
-                    // a new block is entered, this is used for the block
-                    // protocol
-                    BlockEnvironmentHelper.enterBlock(block);
-                }
-                block.service(request, response);
-            } finally {
-                if (!superCall) {
-                    BlockEnvironmentHelper.leaveBlock();
-                }
-                this.getLogger().debug("Leaving processing in block " + blockName);
-            }               
-
-        } else {
-            // Request to the own block
+	    // Request to the own block
+        try {
+            // It is important to set the current block servlet each time
+            // a new block is entered, this is used for the block
+            // protocol
+            BlockCallStack.enterBlock(this.blockServlet);
             this.blockServlet.service(request, response);
+        } finally {
+            BlockCallStack.leaveBlock();
         }
 	}
 
@@ -356,5 +248,9 @@ public class BlockManager
 
 	public void destroy() {
 	    super.destroy();
+    }
+    
+    public Servlet getBlockServlet() {
+        return this.blockServlet;
     }
 }

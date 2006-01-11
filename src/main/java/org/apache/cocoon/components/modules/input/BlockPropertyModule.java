@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.blocks.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.BlockCallStack;
 
 /**
  * BlockPropertyModule provides access to the properties of the current block.
@@ -33,7 +33,8 @@ public class BlockPropertyModule implements InputModule, ThreadSafe {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        return BlockEnvironmentHelper.getCurrentBlock().getProperty(name);
+        // FIXME Should get init parameters from ServletConfig
+        return BlockCallStack.getCurrentBlock().getServletConfig().getServletContext().getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)

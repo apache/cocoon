@@ -216,18 +216,10 @@ public class BlocksManager
                 
         };
         
-        try {
-                getLogger().debug("Enter processing in block at " + newServletPath);
-                        // It is important to set the current block each time
-                        // a new block is entered, this is used for the block
-                        // protocol
-                        BlockEnvironmentHelper.enterBlock(block);
-                block.service(newRequest, response);
-                } finally {
-                        BlockEnvironmentHelper.leaveBlock();
-                        getLogger().debug("Leaving processing in block at " + newServletPath);
-                }
-    }
+        getLogger().debug("Enter processing in block at " + newServletPath);
+        block.service(newRequest, response);
+        getLogger().debug("Leaving processing in block at " + newServletPath);
+    }   
 
     private Logger getLogger() {
         return this.logger;
