@@ -35,6 +35,7 @@
   </licenses>
   <modules>
     <module>cocoon-core</module>
+    <module>cocoon-blocks-fw</module>
     <module>cocoon-mocks</module>
     <module>cocoon-ajax</module>
     <module>cocoon-session-fw</module>
