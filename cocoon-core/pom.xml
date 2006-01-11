@@ -265,12 +265,6 @@
       <version>1.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>httpunit</groupId>
-      <artifactId>httpunit</artifactId>
-      <version>1.6</version>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>xalan</groupId>
