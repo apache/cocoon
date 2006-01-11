@@ -191,29 +191,6 @@ public class BlockContext extends ServletContextWrapper {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.ServletContext#getServlet(java.lang.String)
-	 */
-	public Servlet getServlet(String arg0) throws ServletException {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletContext#getServlets()
-	 */
-	public Enumeration getServlets() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletContext#getServletNames()
-	 */
-	public Enumeration getServletNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see javax.servlet.ServletContext#getServerInfo()
 	 */
 	public String getServerInfo() {
