@@ -393,7 +393,7 @@ public class PortletAdapter
         } else if ( objectModel.get("portlet-response") == null ) {
             final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
             objectModel.put("portlet-response",  new ServletResponseImpl(res));
-            final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null, event.getPortletWindow());
+            final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null, null);
             objectModel.put("portlet-request",  req);
         }
     }
