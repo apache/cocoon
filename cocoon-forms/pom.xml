@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2006 The Apache Software Foundation
 
@@ -25,13 +25,14 @@
     <version>2.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon.forms</groupId>
+  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-forms</artifactId>
   <packaging>pom</packaging>
   <name>Forms Block</name>
   <version>1.0-SNAPSHOT</version>
   <modules>
-    <module>cocoon-form-impl</module>
-    <module>cocoon-form-sample</module>
+    <module>cocoon-forms-impl</module>
+    <module>cocoon-forms-sample</module>
   </modules>
 </project>
+
