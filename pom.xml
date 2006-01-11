@@ -72,9 +72,22 @@
     </pluginRepository>
   </pluginRepositories>
   -->
+  <ciManagement>
+    <system>continuum</system>
+      <notifiers>
+        <notifier>
+          <type>irc</type>
+          <configuration>
+            <host>irc.freenode.org</host>
+            <port>6667</port>
+            <channel>#cocoon</channel>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
   <scm>
-    <connection>http://svn.apache.org/repos/asf/cocoon/trunk</connection>
-    <developerConnection>https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
+    <developerConnection>scn:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
     <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>
   <distributionManagement>
