@@ -64,12 +64,19 @@
       <url>http://snapshots.maven.codehaus.org/maven2/</url>
     </repository>
   </repositories>
-<!--
+  <!--
+  <pluginRepositories>
+    <pluginRepository>
+      <id>snapshots</id>
+      <url>http://snapshots.maven.codehaus.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+  -->
   <scm>
     <connection>http://svn.apache.org/repos/asf/cocoon/trunk</connection>
-    <url>http://svn.apache.org/repos/asf/cocoon/trunk</url>
+    <developerConnection>https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>
--->
   <distributionManagement>
     <repository>
       <id>apache-maven-snapshot</id>
