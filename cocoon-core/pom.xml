@@ -113,7 +113,7 @@
       <artifactId>excalibur-i18n</artifactId>
       <version>1.1</version>
     </dependency>
-    
+
     <!-- commons -->
     <dependency>
       <groupId>commons-io</groupId>
@@ -197,7 +197,7 @@
       <artifactId>commons-httpclient</artifactId>
       <version>2.0.2</version>
     </dependency>
-        
+
     <!-- osgi -->
     <dependency>
       <groupId>knopflerfish</groupId>
@@ -239,7 +239,7 @@
       <artifactId>knopflerfish-framework</artifactId>
       <version>1.3.3</version>
     </dependency>
-            
+
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>
@@ -301,7 +301,7 @@
     <dependency>
       <groupId>rhino</groupId>
       <artifactId>js</artifactId>
-      <version>1.6R1</version>
+      <version>1.6R2</version>
     </dependency>
     <dependency>
       <groupId>ant</groupId>
@@ -347,7 +347,7 @@
       <groupId>ant</groupId>
       <artifactId>ant</artifactId>
       <version>1.6.5</version>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>jakarta-bcel</groupId>
       <artifactId>jakarta-bcel</artifactId>
