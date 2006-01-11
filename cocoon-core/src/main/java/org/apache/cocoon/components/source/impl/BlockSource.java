@@ -24,13 +24,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.blocks.Block;
-import org.apache.cocoon.blocks.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.BlockCallStack;
+import org.apache.cocoon.blocks.BlockContext;
 import org.apache.cocoon.blocks.util.BlockHttpServletRequestWrapper;
 import org.apache.cocoon.blocks.util.BlockHttpServletResponseWrapper;
 import org.apache.cocoon.environment.Environment;
@@ -58,8 +60,8 @@ public final class BlockSource
     /** The name of the called block */
     private String blockName;
 
-    /** The current block */
-    private final Block block;
+    /** The current block servlet */
+    private final Servlet block;
     
     private String systemId;
 
@@ -76,7 +78,7 @@ public final class BlockSource
         if (env == null) {
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
         }
-        this.block = BlockEnvironmentHelper.getCurrentBlock();
+        this.block = BlockCallStack.getCurrentBlock();
         if (this.block == null)
             throw new MalformedURLException("Must be used in a block context " + this.getURI());
 
@@ -98,9 +100,6 @@ public final class BlockSource
         
         this.wrappedRequest = new BlockHttpServletRequestWrapper(originalRequest, blockURI);
 
-        // indicate what block that is called 
-        this.wrappedRequest.setAttribute(Block.NAME, this.blockName);
-
         // wrap the response
         HttpServletResponse originalResponse =
             (HttpServletResponse) env.getObjectModel().get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
@@ -118,9 +117,17 @@ public final class BlockSource
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.wrappedResponse.setOutputStream(os);
+        
+        Servlet blockServlet = this.block;
 
         try {
-            this.block.service(this.wrappedRequest, this.wrappedResponse);
+            if (this.blockName == null) {
+                blockServlet.service(this.wrappedRequest, this.wrappedResponse);
+            } else {
+                RequestDispatcher dispatcher =
+                    blockServlet.getServletConfig().getServletContext().getNamedDispatcher(this.blockName);
+                dispatcher.forward(this.wrappedRequest, this.wrappedResponse);
+            }
             this.wrappedResponse.flushBuffer();
             
             return new ByteArrayInputStream(os.toByteArray());
@@ -160,9 +167,12 @@ public final class BlockSource
         String baseURI = env.getURIPrefix();
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
             baseURI = "/" + baseURI;
+        
+        BlockContext blockContext =
+            (BlockContext) this.block.getServletConfig().getServletContext();
 
-        uri = this.block.resolveURI(new URI(uri.getSchemeSpecificPart()),
-                                    new URI(null, null, baseURI, null));
+        uri = blockContext.resolveURI(new URI(uri.getSchemeSpecificPart()),
+                new URI(null, null, baseURI, null));
         
         this.blockName = uri.getScheme();
         String path = uri.getPath();

@@ -21,12 +21,14 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.Servlet;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.blocks.Block;
+import org.apache.cocoon.blocks.BlockContext;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.blocks.BlockEnvironmentHelper;
+import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
@@ -39,13 +41,15 @@ public class BlockPathModule implements InputModule, ThreadSafe {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        Block block = BlockEnvironmentHelper.getCurrentBlock();
+        Servlet block = BlockCallStack.getCurrentBlock();
         String absoluteURI = null;
         String baseURI = env.getURIPrefix();
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
             baseURI = "/" + baseURI;
         try {
-            URI uri = block.absolutizeURI(new URI(name), new URI(null, null, baseURI, null));
+            BlockContext blockContext =
+                (BlockContext) block.getServletConfig().getServletContext();
+            URI uri = blockContext.absolutizeURI(new URI(name), new URI(null, null, baseURI, null));
             absoluteURI = uri.toString();
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Couldn't absolutize " + name);

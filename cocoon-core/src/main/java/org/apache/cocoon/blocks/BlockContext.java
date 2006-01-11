@@ -18,16 +18,19 @@ package org.apache.cocoon.blocks;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
 
@@ -39,6 +42,7 @@ public class BlockContext extends ServletContextWrapper {
     private Hashtable attributes;
     private BlockWiring wiring;
     private Blocks blocks;
+    
     public BlockContext(ServletContext parentContext, BlockWiring wiring, Blocks blocks)
     throws ServletException, MalformedURLException {
     	super(parentContext);
@@ -46,51 +50,37 @@ public class BlockContext extends ServletContextWrapper {
         this.blocks = blocks;
     }
 
-    /**
-     * Returns the servlet container attribute with the given name, or null if there is no attribute by that name.
-     * An attribute allows a servlet container to give the servlet additional information not already
-     * provided by this interface. See your server documentation for information
-     * about its attributes. A list of supported attributes can be retrieved using getAttributeNames.
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
 
-    public Map getAttributes() {
-        return this.attributes;
-    }
-
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String name) {
         this.attributes.remove(name);
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getAttributeNames()
+     */
     public Enumeration getAttributeNames() {
         return this.attributes.keys();
     }
 
-    /**
-     * Returns a URL to the resource that is mapped to a specified path. The path must begin
-     * with a "/" and is interpreted as relative to the current context root.
-     * <p>
-     * This method allows the servlet container to make a resource available to servlets from any source.
-     * Resources can be located on a local or remote file system, in a database, or in a .war file.
-     * <p>
-     * The servlet container must implement the URL handlers and URLConnection objects that are necessary to access the resource.
-     * <p>
-     * This method returns null if no resource is mapped to the pathname.
-     *
-     * Some containers may allow writing to the URL returned by this method using the methods of the URL class.
-     *
-     * The resource content is returned directly, so be aware that requesting a .jsp page returns the JSP source code. Use a
-     * RequestDispatcher instead to include results of an execution.
-     *
-     * This method has a different purpose than java.lang.Class.getResource, which looks up resources based on a class loader. This
-     * method does not use class loaders.
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getResource(java.lang.String)
+     */
     public URL getResource(String path) throws MalformedURLException {
         // A path starting with '/' should be resolved relative to the context and
         // the '/' need to be removed to work with the URI resolver.
@@ -104,25 +94,18 @@ public class BlockContext extends ServletContextWrapper {
         return super.servletContext.getResource(location +  path);
     }
 
-    /**
-     * Returns a String containing the real path for a given virtual path. For example, the virtual path "/index.html" has a real path of
-     * whatever file on the server's filesystem would be served by a request for "/index.html".
-     *
-     * The real path returned will be in a form appropriate to the computer and operating system on which the servlet container is running,
-     * including the proper path separators. This method returns null if the servlet container cannot translate the virtual path to a real path for
-     * any reason (such as when the content is being made available from a .war archive).
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
+     */
     public String getRealPath(String path) {
         // We better don't assume that blocks are unpacked
         return null;
     }
 
-    /**
-     * Returns a String containing the value of the named context-wide initialization parameter, or null if the parameter does not exist.
-     *
-     * This method can make available configuration information useful to an entire "web application". For example, it can provide a
-     * webmaster's email address or the name of a system that holds critical data.
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
+     */
+    // FIXME, this should be defined in the config instead
     public String getInitParameter(String name) {
 		String value = this.wiring.getProperty(name);
 	    // Ask the super block for the property
@@ -131,7 +114,8 @@ public class BlockContext extends ServletContextWrapper {
 		    // this.getLogger().debug("Try super property=" + name + " block=" + superId);
 		    Block block = this.blocks.getBlock(superId);
 		    if (block != null) {
-		        value =  block.getProperty(name);
+                // FIXME Should be taken from the ServletConfig rather than the ServletContext
+		        value =  block.getBlockServlet().getServletConfig().getServletContext().getInitParameter(name);
 		    }
 		}
 		// Ask the parent context
@@ -141,28 +125,17 @@ public class BlockContext extends ServletContextWrapper {
 		return value;
     }
 
-    /**
-     * Returns the names of the context's initialization parameters as an Enumeration of String objects,
-     * or an empty Enumeration if the context has no initialization parameters.
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getInitParameterNames()
+     */
     public Enumeration getInitParameterNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-    /**
-     * Returns the resource located at the named path as an InputStream object.
-     *
-     * The data in the InputStream can be of any type or length. The path must be specified according to the rules given in getResource.
-     * This method returns null if no resource exists at the specified path.
-
-     * Meta-information such as content length and content type that is available via getResource method is lost when using this method.
-
-     * The servlet container must implement the URL handlers and URLConnection objects necessary to access the resource.
-
-     * This method is different from java.lang.Class.getResourceAsStream, which uses a class loader. This method allows servlet
-     * containers to make a resource available to a servlet from any location, without using a class loader.
-     **/
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
+     */
     public InputStream getResourceAsStream(String path) {
         try {
             return this.getResource(path).openStream();
@@ -173,161 +146,228 @@ public class BlockContext extends ServletContextWrapper {
         }
     }
 
-    /**
-     * Returns a ServletContext object that corresponds to a specified URL on the server.
-     * <p>
-     * This method allows servlets to gain access to the context for various parts of the server,
-     * and as needed obtain RequestDispatcher objects from the context. The given path must be
-     * absolute (beginning with "/") and is interpreted based on the server's document root.
-     * <p>
-     * In a security conscious environment, the servlet container may return null for a given URL.
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getContext(java.lang.String)
+	 */
 	public ServletContext getContext(String uripath) {
 		return null;
 	}
 
-    /**
-     * Returns the major version of the Java Servlet API that this servlet container supports.
-     * All implementations that comply with Version 2.3 must have this method return the integer 2.
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getMajorVersion()
+	 */
 	public int getMajorVersion() {
 		return 2;
 	}
 
-    /**
-     * Returns the minor version of the Servlet API that this servlet container supports.
-     * All implementations that comply with Version 2.3 must have this method return the integer 3.
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getMinorVersion()
+	 */
 	public int getMinorVersion() {
 		return 3;
 	}
 
-    /**
-     * Returns a directory-like listing of all the paths to resources within the web application
-     * whose longest sub-path matches the supplied path argument. Paths indicating subdirectory paths end with a '/'.
-     * The returned paths are all relative to the root of the web application and have a leading '/'.
-     * For example, for a web application containing
-     * <p>
-     * /welcome.html<br />
-     * /catalog/index.html<br /><br />
-     * /catalog/products.html<br />
-     * /catalog/offers/books.html<br />
-     * /catalog/offers/music.html<br />
-     * /customer/login.jsp<br />
-     * /WEB-INF/web.xml<br />
-     * /WEB-INF/classes/com.acme.OrderServlet.class,<br />
-     * <br />
-     * getResourcePaths("/") returns {"/welcome.html", "/catalog/", "/customer/", "/WEB-INF/"}<br />
-     * getResourcePaths("/catalog/") returns {"/catalog/index.html", "/catalog/products.html", "/catalog/offers/"}.
-     *
-     * @param path partial path used to match the resources, which must start with a /
-     * @return a Set containing the directory listing, or null if there are no resources
-     *         in the web application whose path begins with the supplied path.
-     * @since HttpUnit 1.3
-     */
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
+	 */
 	public Set getResourcePaths(String arg0) {
 		return null;
 	}
 
-    /**
-     * Returns a RequestDispatcher object that acts as a wrapper for the resource located at the given path. A RequestDispatcher
-     * object can be used to forward a request to the resource or to include the resource in a response. The resource can be dynamic or static.
-
-     * The pathname must begin with a "/" and is interpreted as relative to the current context root. Use getContext to obtain a
-     * RequestDispatcher for resources in foreign contexts. This method returns null if the ServletContext cannot return a
-     * RequestDispatcher.
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
+	 */
 	public RequestDispatcher getRequestDispatcher(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-    /**
-     * Returns a RequestDispatcher object that acts as a wrapper for the named servlet.
-     *
-     * Servlets (and JSP pages also) may be given names via server administration or via a web application deployment descriptor. A servlet
-     * instance can determine its name using ServletConfig.getServletName().
-     *
-     * This method returns null if the ServletContext cannot return a RequestDispatcher for any reason.
-     **/
-	public RequestDispatcher getNamedDispatcher(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getNamedDispatcher(java.lang.String)
+	 */
+	public RequestDispatcher getNamedDispatcher(String name) {
+        NamedDispatcher dispatcher = new NamedDispatcher(name); 
+		return dispatcher.exists() ? dispatcher : null;
 	}
 
-    /**
-     * @deprecated as of Servlet API 2.1
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getServlet(java.lang.String)
+	 */
 	public Servlet getServlet(String arg0) throws ServletException {
 		return null;
 	}
 
-    /**
-     * @deprecated as of Servlet API 2.0
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getServlets()
+	 */
 	public Enumeration getServlets() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-    /**
-     * @deprecated as of Servlet API 2.1
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getServletNames()
+	 */
 	public Enumeration getServletNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-    /**
-     * Writes the specified message to a servlet log file, usually an event log.
-     * The name and type of the servlet log file is specific to the servlet container.
-     **/
-	public void log(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-    /**
-     * @deprecated as of Servlet API 2.1
-     **/
-	public void log(Exception arg0, String arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-    /**
-     * Writes an explanatory message and a stack trace for a given Throwable exception to the servlet log file.
-     * The name and type of the servlet log file is specific to the servlet container, usually an event log.
-     **/
-	public void log(String arg0, Throwable arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-    /**
-     * Returns the name and version of the servlet container on which the servlet is running.
-
-     * The form of the returned string is servername/versionnumber. For example, the JavaServer Web Development Kit may return the
-     * string JavaServer Web Dev Kit/1.0.
-
-     * The servlet container may return other optional information after the primary string in parentheses, for example, JavaServer Web
-     * Dev Kit/1.0 (JDK 1.1.6; Windows NT 4.0 x86).
-     **/
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getServerInfo()
+	 */
 	public String getServerInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-    /**
-     * Returns the name of this web application correponding to this ServletContext as specified
-     * in the deployment descriptor for this web application by the display-name element.
-     *
-     * @return The name of the web application or null if no name has been declared in the deployment descriptor
-     * @since HttpUnit 1.3
-     */
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContext#getServletContextName()
+	 */
 	public String getServletContextName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    
+    // Block specific methods
+    
+    /**
+     * Takes the scheme specific part of a block URI (the scheme is
+     * the responsibilty of the BlockSource) and resolve it with
+     * respect to the blocks mount point.
+     */
+    public URI absolutizeURI(URI uriToResolve, URI base) throws URISyntaxException {
+        URI uri = resolveURI(uriToResolve, base);
+        String blockName = uri.getScheme();
+        String blockId = null;
+        if (blockName == null) {
+            // this block
+            blockId = this.wiring.getId();
+        } else {
+            // another block
+            blockId = this.wiring.getBlockId(blockName);
+        }
+        Block block = this.blocks.getBlock(blockId);
+        if (block == null)
+            throw new URISyntaxException(uriToResolve.toString(), "Unknown block name");
 
+        String mountPath = block.getMountPath();
+        if (mountPath == null)
+            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
+        if (mountPath.endsWith("/"))
+            mountPath = mountPath.substring(0, mountPath.length() - 1);
+        String absoluteURI = mountPath + uri.getSchemeSpecificPart();
+        log("Resolving " + uri.toString() + " to " + absoluteURI);
+        return new URI(absoluteURI);
+    }
+
+    /**
+     * Parses and resolves the scheme specific part of a block URI
+     * with respect to the base URI of the current sitemap. The scheme
+     * specific part of the block URI has the form
+     * <code>foo:/bar</code> when refering to another block, in this
+     * case only an absolute path is allowed. For reference to the own
+     * block, both absolute <code>/bar</code> and relative
+     * <code>./foo</code> paths are allowed.
+     */
+    public URI resolveURI(URI uri, URI base) throws URISyntaxException {
+        log("BlockManager: resolving " + uri.toString() + " with scheme " +
+                          uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
+        if (uri.getPath() != null && uri.getPath().length() >= 2 &&
+            uri.getPath().startsWith("./")) {
+            // self reference relative to the current sitemap, e.g. ./foo
+            if (uri.isAbsolute())
+                throw new URISyntaxException(uri.toString(), "When the protocol refers to other blocks the path must be absolute");
+            URI resolvedURI = base.resolve(uri);
+            log("BlockManager: resolving " + uri.toString() +
+                              " to " + resolvedURI.toString() + " with base URI " + base.toString());
+            uri = resolvedURI;
+        }
+        return uri;
+    }
+    
+
+    private class NamedDispatcher implements RequestDispatcher {
+        
+        private String blockName;
+        private String blockId;
+        private boolean superCall = false;
+        private Servlet servlet;
+        private RequestDispatcher dispatcher;
+ 
+        
+        private NamedDispatcher(String blockName) {
+            this.blockName = blockName;
+            this.blockId = BlockContext.this.wiring.getBlockId(this.blockName);
+            
+            this.superCall = Block.SUPER.equals(this.blockName);
+
+            if (blockId != null) {
+                // Call to a named block that exists in the current context
+                Block block = BlockContext.this.blocks.getBlock(blockId);
+                if (block != null)
+                    this.servlet = block.getBlockServlet();
+            } else {
+                // If there is a super block, the connection might
+                // be defined there instead.
+                blockId = BlockContext.this.wiring.getBlockId(Block.SUPER);
+                if (blockId != null) {
+                    Block superBlock = BlockContext.this.blocks.getBlock(blockId);
+                    if (superBlock != null) {
+                        Servlet superServlet = superBlock.getBlockServlet();
+                        this.dispatcher =
+                            superServlet.getServletConfig().getServletContext().getNamedDispatcher(blockName);
+                        this.superCall = true;                        
+                    }
+                }
+            }
+        }
+        
+        private boolean exists() {
+            return this.servlet != null || this.dispatcher != null;
+        }
+
+        /* (non-Javadoc)
+         * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+         */
+        public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+            // Call to named block
+
+            BlockContext.this.log("Enter processing in block " + this.blockName);
+            if (this.servlet != null) {
+                if (!this.superCall) {
+                    try {
+                        // It is important to set the current block each time
+                        // a new block is entered, this is used for the block
+                        // protocol
+                        BlockCallStack.enterBlock(this.servlet);
+
+                        this.servlet.service(request, response);
+                    } finally {
+                        BlockCallStack.leaveBlock();
+                    }               
+                } else {
+                    // A super block should be called in the context of
+                    // the called block to get polymorphic calls resolved
+                    // in the right way. Therefore no new current block is
+                    // set.
+                    this.servlet.service(request, response);                    
+                }
+            } else if (this.dispatcher != null) {
+                this.dispatcher.forward(request, response);
+            } else {
+                // Cannot happen
+                throw new IllegalStateException();
+            }
+            BlockContext.this.log("Leaving processing in block " + this.blockName);
+         }
+
+        /* (non-Javadoc)
+         * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+         */
+        public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+            throw new UnsupportedOperationException();
+        }
+        
+    }
 }
