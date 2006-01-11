@@ -42,7 +42,7 @@
     <module>cocoon-captcha</module>
     <module>cocoon-forms</module>
     <!--module>cocoon-jcr</module-->
-    <!--module>cocoon-portal</module-->
+    <module>cocoon-portal</module>
     <module>cocoon-template</module>
     <module>cocoon-validation</module>
   </modules>
