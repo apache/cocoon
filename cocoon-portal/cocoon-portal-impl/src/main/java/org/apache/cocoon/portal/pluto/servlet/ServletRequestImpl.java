@@ -48,14 +48,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     final protected PortletURLProviderImpl provider;
 
-    protected PortletWindow window;
-
-    public ServletRequestImpl(HttpServletRequest request,
-                              PortletURLProviderImpl provider) {
-        super(request);
-        this.provider = provider;
-        this.originalRequest = request;
-    }
+    final protected PortletWindow window;
 
     public ServletRequestImpl(HttpServletRequest request,
                               PortletURLProviderImpl provider,
@@ -153,8 +146,11 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                 }
             } else {
                 // provider is null or different window, use stored render parameters
-                final CopletInstanceData cid = ((PortletWindowImpl)this.window).getLayout().getCopletInstanceData();
-                this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
+                // check for NP - FIXME we should ensure that the layout is always set
+                if ( window != null && ((PortletWindowImpl)this.window).getLayout() != null) {
+                    final CopletInstanceData cid = ((PortletWindowImpl)this.window).getLayout().getCopletInstanceData();
+                    this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
+                }
             }
             if ( this.portletParameterMap == null ) {
                 this.portletParameterMap = Collections.EMPTY_MAP;

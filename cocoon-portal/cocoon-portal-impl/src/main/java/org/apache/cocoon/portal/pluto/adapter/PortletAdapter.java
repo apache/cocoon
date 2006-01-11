@@ -145,7 +145,7 @@ public class PortletAdapter
             if ( req == null ) {
                 final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
                 objectModel.put("portlet-response",  new ServletResponseImpl(res));
-                req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
+                req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null, portletWindow);
                 objectModel.put("portlet-request",  req);                
             }
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
@@ -306,7 +306,7 @@ public class PortletAdapter
      */
     public void inform(PortletURLProviderImpl event, PortalService service) {
         final Map objectModel = ContextHelper.getObjectModel(this.context);
-        final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
+        final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event, event.getPortletWindow());
         final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
         if ( !service.getProfileManager().getUser().isAnonymous() ) {
             req.setAttribute(PortletRequest.USER_INFO,
@@ -366,7 +366,7 @@ public class PortletAdapter
         } else if ( objectModel.get("portlet-response") == null ) {
             final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
             objectModel.put("portlet-response",  new ServletResponseImpl(res));
-            final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
+            final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null, null);
             objectModel.put("portlet-request",  req);
             if ( !service.getProfileManager().getUser().isAnonymous() ) {
                 req.setAttribute(PortletRequest.USER_INFO,
