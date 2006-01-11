@@ -39,6 +39,12 @@
     <module>cocoon-ajax</module>
     <module>cocoon-session-fw</module>
     <module>cocoon-authentication-fw</module>
+    <module>cocoon-captcha</module>
+    <module>cocoon-forms</module>
+    <module>cocoon-jcr</module>
+    <module>cocoon-portal</module>
+    <module>cocoon-template</module>
+    <module>cocoon-validation</module>
   </modules>
   <repositories>
     <repository>
@@ -77,6 +83,7 @@
     </snapshotRepository>
   </distributionManagement>
   <build>
+    <defaultGoal>install</defaultGoal>
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>

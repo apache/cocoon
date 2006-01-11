@@ -25,7 +25,7 @@
     <version>2.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon.session-fw</groupId>
+  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-session-fw</artifactId>
   <packaging>pom</packaging>
   <name>Session Framework</name>

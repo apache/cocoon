@@ -20,7 +20,7 @@
     +-->
 <project>
   <parent>
-    <groupId>org.apache.cocoon.captcha</groupId>
+    <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-captcha</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>

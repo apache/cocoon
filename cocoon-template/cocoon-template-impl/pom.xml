@@ -20,12 +20,12 @@
     +-->
 <project>
   <parent>
-    <groupId>org.apache.cocoon.template</groupId>
+    <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-template</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon.template</groupId>
+  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-template-impl</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
