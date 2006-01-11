@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.cocoon.test.SitemapTestCase;
+import org.apache.cocoon.SitemapTestCase;
 
 public class VirtualPipelineTransformerTestCase extends SitemapTestCase {
     public void testTransformer() throws Exception {

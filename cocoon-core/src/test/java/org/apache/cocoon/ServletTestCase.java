@@ -13,101 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.test;
+package org.apache.cocoon;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
+
 import junit.framework.TestCase;
+
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.core.BootstrapEnvironment;
-import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.test.core.TestBootstrapEnvironment;
-import org.apache.cocoon.test.core.TestCoreUtil;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.mock.MockContext;
-import org.apache.cocoon.environment.mock.MockEnvironment;
-import org.apache.cocoon.environment.mock.MockRequest;
-import org.apache.cocoon.environment.mock.MockResponse;
 
-public class SitemapTestCase extends TestCase {
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.servletunit.InvocationContext;
+import com.meterware.servletunit.ServletRunner;
+import com.meterware.servletunit.ServletUnitClient;
 
-    private MockRequest request = new MockRequest();
-    private MockResponse response = new MockResponse();
-    private MockContext environmentContext = new MockContext();
-    private Map objectmodel = new HashMap();
+public class ServletTestCase extends TestCase {
+
+	private ServletRunner servletRunner;
+    protected ServletUnitClient client;
 
     private Logger logger;
-    private CoreUtil coreUtil;
-    private Processor processor;
-    private String classDir;
+    private URL classDirURL;
     
     protected String processorClassName = Cocoon.class.getName();
 
     protected void setUp() throws Exception {
         super.setUp();
-
+        
         String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
         this.logger = new ConsoleLogger(Integer.parseInt(level));
 
-        objectmodel.clear();
-
-        request.reset();
-        objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-
-        response.reset();
-        objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
-
-        environmentContext.reset();
-        objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, environmentContext);
-
-        this.classDir = this.getClassDirURL().toExternalForm();
-        BootstrapEnvironment env = 
-            new TestBootstrapEnvironment(this.getConfiguration(),
-                                         this.classDir,
-                                         environmentContext,
-                                         this.logger,
-                                         this.processorClassName);
-
-        this.coreUtil = new TestCoreUtil(env);
-        this.processor = this.coreUtil.createProcessor();
+        this.classDirURL = this.getClassDirURL();
+        URL webInf = new URL(classDirURL, "WEB-INF/web.xml");
+        File webInfFile = new File(webInf.getPath());
+        this.servletRunner = new ServletRunner(webInfFile, "");
+        this.client = this.servletRunner.newClient();
     }
 
     protected void tearDown() throws Exception {
-        this.coreUtil.destroy();
+    	this.servletRunner.shutDown();
         super.tearDown();
     }
 
     /** Return the logger */
     protected Logger getLogger() {
         return this.logger;
-    }
-    
-    protected final Object lookup( final String key ) throws ServiceException {
-        if (this.processor instanceof Cocoon) {
-            return ((Cocoon)this.processor).getServiceManager().lookup( key );
-        } else {
-            throw new ServiceException(key, "The processor have no service manager");
-        }
-    }
-
-    protected final void release( final Object object ) {
-        if (this.processor instanceof Cocoon) {
-            ((Cocoon)this.processor).getServiceManager().release( object );
-        }
-    }
-    
-    protected String getConfiguration() {
-        String className = this.getClass().getName();
-        return className.substring(className.lastIndexOf('.') + 1) + ".xconf";
     }
     
     /**
@@ -119,7 +77,7 @@ public class SitemapTestCase extends TestCase {
         String classDir = null;
         try {
             classURL =
-                getClass().getClassLoader().getResource( className ).toExternalForm();
+                getClass().getClassLoader().getResource(className).toExternalForm();
             getLogger().debug("classURL=" + classURL);
             classDir = classURL.substring(0, classURL.lastIndexOf('/') + 1);
             getLogger().debug("classDir=" + classDir);
@@ -137,18 +95,15 @@ public class SitemapTestCase extends TestCase {
     /**
      * Load a binary document.
      *
-     * @param source Source location.
+     * @param input Stream containing the document.
      *
      * @return Binary data.
      */
-    public final byte[] loadByteArray(String source) {
+    public final byte[] loadByteArray(InputStream input) {
 
         byte[] assertiondocument = null;
 
         try {
-            URL url = new URL(source);
-            InputStream input = url.openStream();
-
             Vector document = new Vector();
             int i = 0;
             int c;
@@ -189,26 +144,26 @@ public class SitemapTestCase extends TestCase {
 
     }
 
-    protected MockEnvironment getEnvironment(String uri) {
-        MockEnvironment env = new MockEnvironment();
-        env.setURI("", uri);
-        this.request.setEnvironment(env);
-        env.setObjectModel(this.objectmodel);
+    protected InputStream process(String uri) throws Exception {
+    	String dummySite = "http://www.test.org";
+    	WebRequest request = new GetMethodWebRequest(dummySite + uri);
 
-        return env;
-    }
+    	InvocationContext ic = this.client.newInvocation(request);
+    	ic.getServlet();
+    	ic.service();
+    	WebResponse response = ic.getServletResponse();
 
-    protected byte[] process(String uri) throws Exception {
-        MockEnvironment env = getEnvironment(uri);
-        this.processor.process(env);
-        getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
+    	//WebResponse response = this.client.getResponse(request);
+    	getLogger().info("Content type: " + response.getContentType());
+    	getLogger().info("Content length: " + response.getContentLength());
+    	getLogger().info("Output: " + response.getText());
 
-        return env.getOutput();
+        return response.getInputStream();
     }
 
     protected void pipeTest(String uri, String expectedSource) throws Exception {
-        byte[] expected = loadByteArray(this.classDir + expectedSource);
-        byte[] actual = process(uri);
+        byte[] expected = loadByteArray((new URL(classDirURL, expectedSource)).openStream());
+        byte[] actual = loadByteArray(process(uri));
         assertIdentical(expected, actual);
     }
 }

@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.test.blocks;
 
-import org.apache.cocoon.test.ServletTestCase;
+import org.apache.cocoon.ServletTestCase;
 
 public class BlocksManagerTestCase extends ServletTestCase {
     
