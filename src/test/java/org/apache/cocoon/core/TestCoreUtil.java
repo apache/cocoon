@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.test.core;
+package org.apache.cocoon.core;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.logger.Logger;
