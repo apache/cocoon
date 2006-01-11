@@ -44,7 +44,7 @@
     <!--module>cocoon-jcr</module-->
     <!--module>cocoon-portal</module-->
     <module>cocoon-template</module>
-    <!--module>cocoon-validation</module-->
+    <module>cocoon-validation</module>
   </modules>
   <repositories>
     <repository>
