@@ -41,10 +41,10 @@
     <module>cocoon-authentication-fw</module>
     <module>cocoon-captcha</module>
     <module>cocoon-forms</module>
-    <module>cocoon-jcr</module>
-    <module>cocoon-portal</module>
+    <!--module>cocoon-jcr</module-->
+    <!--module>cocoon-portal</module-->
     <module>cocoon-template</module>
-    <module>cocoon-validation</module>
+    <!--module>cocoon-validation</module-->
   </modules>
   <repositories>
     <repository>
