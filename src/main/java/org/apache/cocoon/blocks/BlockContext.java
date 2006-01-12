@@ -40,16 +40,14 @@ import org.apache.cocoon.blocks.util.ServletContextWrapper;
 public class BlockContext extends ServletContextWrapper {
 
     private Hashtable attributes;
-
     private BlockWiring wiring;
-
-    private Blocks blocks;
-
-    public BlockContext(ServletContext parentContext, BlockWiring wiring,
-            Blocks blocks) throws ServletException, MalformedURLException {
+    private Block block;
+    
+    public BlockContext(ServletContext parentContext, BlockWiring wiring, Block block)
+    throws ServletException, MalformedURLException {
         super(parentContext);
         this.wiring = wiring;
-        this.blocks = blocks;
+        this.block = block;
     }
 
     /*
@@ -127,16 +125,9 @@ public class BlockContext extends ServletContextWrapper {
         String value = this.wiring.getProperty(name);
         // Ask the super block for the property
         if (value == null) {
-            String superId = this.wiring.getBlockId(Block.SUPER);
-            // this.getLogger().debug("Try super property=" + name + " block=" +
-            // superId);
-            Block block = this.blocks.getBlock(superId);
-            if (block != null) {
-                // FIXME Should be taken from the ServletConfig rather than the
-                // ServletContext
-                value = block.getBlockServlet().getServletConfig()
-                        .getServletContext().getInitParameter(name);
-            }
+            ServletContext superContext = this.getNamedContext(Block.SUPER);
+            if (superContext != null)
+                value = superContext.getInitParameter(name);
         }
         // Ask the parent context
         if (value == null) {
@@ -211,9 +202,9 @@ public class BlockContext extends ServletContextWrapper {
      * 
      * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
      */
-    public RequestDispatcher getRequestDispatcher(String arg0) {
-        // TODO Auto-generated method stub
-        return null;
+    public RequestDispatcher getRequestDispatcher(String path) {
+        PathDispatcher dispatcher = new PathDispatcher(path);
+        return dispatcher.exists() ? dispatcher : null;
     }
 
     /*
@@ -255,19 +246,18 @@ public class BlockContext extends ServletContextWrapper {
      */
     public URI absolutizeURI(URI uri) throws URISyntaxException {
         String blockName = uri.getScheme();
-        String blockId = null;
+        BlockContext blockContext;
         if (blockName == null) {
             // this block
-            blockId = this.wiring.getId();
+            blockContext = this;
         } else {
             // another block
-            blockId = this.wiring.getBlockId(blockName);
+            blockContext = (BlockContext) this.getNamedContext(blockName);
+            if (blockContext == null)
+                throw new URISyntaxException(uri.toString(), "Unknown block name");
         }
-        Block block = this.blocks.getBlock(blockId);
-        if (block == null)
-            throw new URISyntaxException(uri.toString(), "Unknown block name");
 
-        String mountPath = block.getMountPath();
+        String mountPath = blockContext.getMountPath();
         if (mountPath == null)
             throw new URISyntaxException(uri.toString(),
                     "No mount point for this URI");
@@ -277,50 +267,53 @@ public class BlockContext extends ServletContextWrapper {
         log("Resolving " + uri.toString() + " to " + absoluteURI);
         return new URI(absoluteURI);
     }
+    
+    /**
+     * Get the context of a block with a given name.
+     */
+    public ServletContext getNamedContext(String name) {
+        ServletContext context = null;
+        String blockId = this.wiring.getBlockId(name);
+        if (blockId != null)
+            context = ((BlocksContext)super.servletContext).getNamedContext(blockId);
 
+        return context;
+    }
+    
+    /**
+     * Get the mount path of the block context
+     */
+    public String getMountPath() {
+        return this.wiring.getMountPath();
+    }
+    
     private class NamedDispatcher implements RequestDispatcher {
 
         private String blockName;
-
-        private String blockId;
-
         private boolean superCall = false;
-
-        private Servlet servlet;
-
         private RequestDispatcher dispatcher;
 
         private NamedDispatcher(String blockName) {
             this.blockName = blockName;
-            this.blockId = BlockContext.this.wiring.getBlockId(this.blockName);
-
             this.superCall = Block.SUPER.equals(this.blockName);
+            String blockId = BlockContext.this.wiring.getBlockId(this.blockName);
 
             if (blockId != null) {
                 // Call to a named block that exists in the current context
-                Block block = BlockContext.this.blocks.getBlock(blockId);
-                if (block != null)
-                    this.servlet = block.getBlockServlet();
+                this.dispatcher = BlockContext.super.servletContext.getNamedDispatcher(blockId);
             } else {
                 // If there is a super block, the connection might
                 // be defined there instead.
-                blockId = BlockContext.this.wiring.getBlockId(Block.SUPER);
-                if (blockId != null) {
-                    Block superBlock = BlockContext.this.blocks
-                            .getBlock(blockId);
-                    if (superBlock != null) {
-                        Servlet superServlet = superBlock.getBlockServlet();
-                        this.dispatcher = superServlet.getServletConfig()
-                                .getServletContext().getNamedDispatcher(
-                                        blockName);
-                        this.superCall = true;
-                    }
+                ServletContext superContext = BlockContext.this.getNamedContext(Block.SUPER);
+                if (superContext != null) {
+                    this.dispatcher = superContext.getNamedDispatcher(blockName);
+                    this.superCall = true;
                 }
             }
         }
 
         private boolean exists() {
-            return this.servlet != null || this.dispatcher != null;
+            return this.dispatcher != null;
         }
 
         /*
@@ -333,17 +326,17 @@ public class BlockContext extends ServletContextWrapper {
                 throws ServletException, IOException {
             // Call to named block
 
-            BlockContext.this
-                    .log("Enter processing in block " + this.blockName);
-            if (this.servlet != null) {
+            BlockContext.this.log("Enter processing in block " + this.blockName);
+            if (this.dispatcher != null) {
                 if (!this.superCall) {
                     try {
                         // It is important to set the current block each time
                         // a new block is entered, this is used for the block
                         // protocol
-                        BlockCallStack.enterBlock(this.servlet);
+                        ServletContext context = BlockContext.this.getNamedContext(this.blockName);
+                        BlockCallStack.enterBlock(context);
 
-                        this.servlet.service(request, response);
+                        this.dispatcher.forward(request, response);
                     } finally {
                         BlockCallStack.leaveBlock();
                     }
@@ -352,10 +345,8 @@ public class BlockContext extends ServletContextWrapper {
                     // the called block to get polymorphic calls resolved
                     // in the right way. Therefore no new current block is
                     // set.
-                    this.servlet.service(request, response);
+                    this.dispatcher.forward(request, response);
                 }
-            } else if (this.dispatcher != null) {
-                this.dispatcher.forward(request, response);
             } else {
                 // Cannot happen
                 throw new IllegalStateException();
@@ -374,6 +365,38 @@ public class BlockContext extends ServletContextWrapper {
                 throws ServletException, IOException {
             throw new UnsupportedOperationException();
         }
+    }
+    
+    /**
+     *  Limited functionality, assumes that there is at most one servlet in the block
+     */
+    private class PathDispatcher implements RequestDispatcher {
+        
+        Servlet servlet;
 
+        // Ignores path, as the assumed only servlet within the block is
+        // implicitly mounted on '/*'
+        private PathDispatcher(String path) {
+            this.servlet = BlockContext.this.block.getBlockServlet();
+        }
+
+        private boolean exists() {
+            return this.servlet != null;
+        }
+
+        /* (non-Javadoc)
+         * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+         */
+        public void forward(ServletRequest request, ServletResponse response)
+        throws ServletException, IOException {
+            this.servlet.service(request, response);
+        }
+
+        /* (non-Javadoc)
+         * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+         */
+        public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

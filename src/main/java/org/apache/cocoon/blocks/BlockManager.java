@@ -91,7 +91,8 @@ public class BlockManager
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
-        this.blockContext = new BlockContext(this.getServletContext(), this.blockWiring, this.blocks);
+        this.blockContext =
+            new BlockContext(this.getServletContext(), this.blockWiring, this);
         this.contextURL = CoreUtil.getContextURL(this.blockContext, "COB-INF/block.xml");
         Context newContext = this.getAvalonContext();
         String confLocation = this.contextURL + "::";
@@ -231,15 +232,15 @@ public class BlockManager
 
         protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             // Request to the own block
-        try {
-            // It is important to set the current block servlet each time
-            // a new block is entered, this is used for the block
-            // protocol
-            BlockCallStack.enterBlock(this.blockServlet);
-            this.blockServlet.service(request, response);
-        } finally {
-            BlockCallStack.leaveBlock();
-        }
+            try {
+                // It is important to set the current block context each time
+                // a new block is entered, this is used for the block
+                // protocol
+                BlockCallStack.enterBlock(this.blockContext);
+                this.blockServlet.service(request, response);
+            } finally {
+                BlockCallStack.leaveBlock();
+            }
         }
 
         public String getServletInfo() {

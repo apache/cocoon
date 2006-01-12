@@ -46,8 +46,8 @@ public class BlocksContext extends ServletContextWrapper {
      * @see org.apache.cocoon.blocks.ServletContextWrapper#getNamedDispatcher(java.lang.String)
      */
     public RequestDispatcher getNamedDispatcher(String name) {
-        // TODO Auto-generated method stub
-        return super.getNamedDispatcher(name);
+        NamedDispatcher dispatcher = new NamedDispatcher(name); 
+        return dispatcher.exists() ? dispatcher : null;
     }
 
     /*
@@ -59,20 +59,44 @@ public class BlocksContext extends ServletContextWrapper {
         // TODO Auto-generated method stub
         return super.getRequestDispatcher(path);
     }
+    
+    // BlocksContext specific method
+    
+    /**
+     * Get the context of a block with a given name.
+     */
+    public ServletContext getNamedContext(String name) {
+        Block block;
+        ServletContext context = null;
+        block = BlocksContext.this.blocks.getBlock(name);
+        if (block != null)
+            context = block.getBlockServlet().getServletConfig().getServletContext();
+
+        return context;
+    }
+    
+
 
     private class NamedDispatcher implements RequestDispatcher {
 
+        private Block block;
+        
+        public NamedDispatcher(String name) {
+            this.block = BlocksContext.this.blocks.getBlock(name);
+        }
+
         public void forward(ServletRequest request, ServletResponse response)
                 throws ServletException, IOException {
-            // TODO Auto-generated method stub
-
+            this.block.getBlockServlet().service(request, response);
         }
 
         public void include(ServletRequest request, ServletResponse response)
                 throws ServletException, IOException {
-            // TODO Auto-generated method stub
-
+            throw new UnsupportedOperationException();
         }
 
+        private boolean exists() {
+            return this.block != null;
+        }
     }
 }

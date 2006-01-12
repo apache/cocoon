@@ -17,7 +17,7 @@ package org.apache.cocoon.blocks;
 
 import java.util.Stack;
 
-import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 /**
@@ -29,7 +29,7 @@ import javax.servlet.ServletException;
 public class BlockCallStack {
 
     /** The block stack */
-    static protected final ThreadLocal blockStack = new ThreadLocal();
+    private static final ThreadLocal blockStack = new ThreadLocal();
 
     /**
      * This hook must be called each time a block is entered.
@@ -39,9 +39,9 @@ public class BlockCallStack {
      *
      * @throws ServletException if block is null
      */
-    public static void enterBlock(Servlet block)
+    static void enterBlock(ServletContext context)
     throws ServletException {
-        if (null == block) {
+        if (null == context) {
             throw new ServletException("Block is not set.");
         }
 
@@ -50,7 +50,7 @@ public class BlockCallStack {
             stack = new Stack();
             blockStack.set(stack);
         }
-        stack.push(block);
+        stack.push(context);
     }
 
     /**
@@ -59,15 +59,15 @@ public class BlockCallStack {
      * <p>It's the counterpart to the {@link #enterBlock(Block)}
      * method.</p>
      */
-    public static void leaveBlock() {
+    static void leaveBlock() {
         final Stack stack = (Stack)blockStack.get();
         stack.pop();
     }
 
-    public static Servlet getCurrentBlock() {
+    public static ServletContext getCurrentBlockContext() {
         final Stack stack = (Stack)blockStack.get();
-        if ( stack != null && !stack.isEmpty()) {
-                return (Servlet)stack.peek();
+        if (stack != null && !stack.isEmpty()) {
+                return (ServletContext)stack.peek();
         }
         return null;
     }

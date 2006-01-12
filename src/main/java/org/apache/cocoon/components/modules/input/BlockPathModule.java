@@ -21,8 +21,6 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.Servlet;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -42,14 +40,12 @@ public class BlockPathModule implements InputModule, ThreadSafe {
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        Servlet block = BlockCallStack.getCurrentBlock();
+        BlockContext blockContext = (BlockContext) BlockCallStack.getCurrentBlockContext();
         String absoluteURI = null;
         String baseURI = env.getURIPrefix();
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
             baseURI = "/" + baseURI;
         try {
-            BlockContext blockContext =
-                (BlockContext) block.getServletConfig().getServletContext();
             URI uri = BlockSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
             absoluteURI= blockContext.absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {

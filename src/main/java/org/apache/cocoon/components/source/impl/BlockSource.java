@@ -25,7 +25,8 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,8 +60,8 @@ public final class BlockSource
     /** The name of the called block */
     private String blockName;
 
-    /** The current block servlet */
-    private final Servlet block;
+    /** The current block context */
+    private final ServletContext context;
     
     private String systemId;
     
@@ -81,8 +82,8 @@ public final class BlockSource
         if (env == null) {
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
         }
-        this.block = BlockCallStack.getCurrentBlock();
-        if (this.block == null)
+        this.context = BlockCallStack.getCurrentBlockContext();
+        if (this.context == null)
             throw new MalformedURLException("Must be used in a block context " + this.getURI());
 
         URI blockURI = null;
@@ -121,14 +122,20 @@ public final class BlockSource
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         this.wrappedResponse.setOutputStream(os);
         
-        Servlet blockServlet = this.block;
-
         try {
             if (this.blockName == null) {
-                blockServlet.service(this.wrappedRequest, this.wrappedResponse);
+                // FIXME Should be called with path + queryString,
+                // but the argument is ignored so it doesn't matter
+                RequestDispatcher dispatcher =
+                    this.context.getRequestDispatcher(this.systemId);
+                if (dispatcher == null)
+                    throw new ServletException("No dispatcher for " + this.systemId);
+                dispatcher.forward(this.wrappedRequest, this.wrappedResponse);
             } else {
                 RequestDispatcher dispatcher =
-                    blockServlet.getServletConfig().getServletContext().getNamedDispatcher(this.blockName);
+                    this.context.getNamedDispatcher(this.blockName);
+                if (dispatcher == null)
+                    throw new ServletException("No dispatcher for " + this.blockName);
                 dispatcher.forward(this.wrappedRequest, this.wrappedResponse);
             }
             this.wrappedResponse.flushBuffer();
