@@ -80,7 +80,7 @@
         <notifier>
           <type>irc</type>
           <configuration>
-            <host>irc.freenode.org</host>
+            <host>irc.freenode.net</host>
             <port>6667</port>
             <channel>#cocoon</channel>
         </configuration>
