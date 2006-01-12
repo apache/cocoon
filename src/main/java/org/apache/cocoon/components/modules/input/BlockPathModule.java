@@ -29,6 +29,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.blocks.BlockContext;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.blocks.BlockCallStack;
+import org.apache.cocoon.components.source.impl.BlockSource;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
@@ -49,8 +50,8 @@ public class BlockPathModule implements InputModule, ThreadSafe {
         try {
             BlockContext blockContext =
                 (BlockContext) block.getServletConfig().getServletContext();
-            URI uri = blockContext.absolutizeURI(new URI(name), new URI(null, null, baseURI, null));
-            absoluteURI = uri.toString();
+            URI uri = BlockSource.resolveURI(new URI(name), new URI(null, null, baseURI, null));
+            absoluteURI= blockContext.absolutizeURI(uri).toString();
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Couldn't absolutize " + name);
         }
