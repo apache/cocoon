@@ -62,6 +62,7 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
         InputStream is = null;
         InputStreamReader reader = null;
         try {
+            boolean append = getLogger().isInfoEnabled();
             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
             src = resolver.resolveURI("cocoon://" + pipeline);
 
@@ -71,10 +72,12 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
             char[] b = new char[8192];
             int n;
             while ((n = reader.read (b)) > 0) {
-                sb.append(b, 0, n);
+                if ( append ) {
+                    sb.append(b, 0, n);
+                }
             }
             reader.close();
-            if (getLogger().isInfoEnabled()) {
+            if (append) {
                 getLogger().info("CocoonPipelineCronJob: " + name + ", called pipeline: " +
                                    pipeline + ", and received following content:\n" + sb.toString());
             }
