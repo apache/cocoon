@@ -199,7 +199,7 @@ public class BlockManager
     // a little bit clumsy. Question is what components, if any, the
     // blocks should have in common.
     public void setBlocks(Blocks blocks) {
-    	this.blocks = blocks;
+        this.blocks = blocks;
     }
 
     /**
@@ -225,12 +225,12 @@ public class BlockManager
     
     // Servlet methods
 
-	public void init(ServletConfig servletConfig) throws ServletException {
-	    super.init(servletConfig);
+        public void init(ServletConfig servletConfig) throws ServletException {
+            super.init(servletConfig);
     }
 
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    // Request to the own block
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            // Request to the own block
         try {
             // It is important to set the current block servlet each time
             // a new block is entered, this is used for the block
@@ -240,14 +240,14 @@ public class BlockManager
         } finally {
             BlockCallStack.leaveBlock();
         }
-	}
+        }
 
-	public String getServletInfo() {
-		return "BlockManager";
-	}
+        public String getServletInfo() {
+                return "BlockManager";
+        }
 
-	public void destroy() {
-	    super.destroy();
+        public void destroy() {
+            super.destroy();
     }
     
     public Servlet getBlockServlet() {

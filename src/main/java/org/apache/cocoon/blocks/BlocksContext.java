@@ -30,40 +30,49 @@ import org.apache.cocoon.blocks.util.ServletContextWrapper;
  */
 public class BlocksContext extends ServletContextWrapper {
 
-	Blocks blocks;
-	/**
-	 * @param servletContext
-	 */
-	public BlocksContext(ServletContext servletContext, Blocks blocks) {
-		super(servletContext);
-		this.blocks = blocks;
-	}
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.blocks.ServletContextWrapper#getNamedDispatcher(java.lang.String)
-	 */
-	public RequestDispatcher getNamedDispatcher(String name) {
-		// TODO Auto-generated method stub
-		return super.getNamedDispatcher(name);
-	}
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.blocks.ServletContextWrapper#getRequestDispatcher(java.lang.String)
-	 */
-	public RequestDispatcher getRequestDispatcher(String path) {
-		// TODO Auto-generated method stub
-		return super.getRequestDispatcher(path);
-	}
-	
-	private class NamedDispatcher implements RequestDispatcher {
+    Blocks blocks;
 
-		public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-			// TODO Auto-generated method stub
-			
-		}
+    /**
+     * @param servletContext
+     */
+    public BlocksContext(ServletContext servletContext, Blocks blocks) {
+        super(servletContext);
+        this.blocks = blocks;
+    }
 
-		public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.cocoon.blocks.ServletContextWrapper#getNamedDispatcher(java.lang.String)
+     */
+    public RequestDispatcher getNamedDispatcher(String name) {
+        // TODO Auto-generated method stub
+        return super.getNamedDispatcher(name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.cocoon.blocks.ServletContextWrapper#getRequestDispatcher(java.lang.String)
+     */
+    public RequestDispatcher getRequestDispatcher(String path) {
+        // TODO Auto-generated method stub
+        return super.getRequestDispatcher(path);
+    }
+
+    private class NamedDispatcher implements RequestDispatcher {
+
+        public void forward(ServletRequest request, ServletResponse response)
+                throws ServletException, IOException {
+            // TODO Auto-generated method stub
+
+        }
+
+        public void include(ServletRequest request, ServletResponse response)
+                throws ServletException, IOException {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
 }

@@ -21,57 +21,68 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 /**
- * @version $Id$
- *
+ * @version $Id: ServletConfigurationWrapper.java 368000 2006-01-11 10:45:20Z
+ *          danielf $
+ * 
  */
 public class ServletConfigurationWrapper implements ServletConfig {
 
-	protected ServletConfig servletConfig;
-	protected ServletContext servletContext;
-	
-	
-	/**
-	 * @param servletConfig
-	 */
-	public ServletConfigurationWrapper(ServletConfig servletConfig) {
-		this(servletConfig, null);
-	}
+    protected ServletConfig servletConfig;
 
-	/**
-	 * @param servletConfig
-	 * @param servletContext
-	 */
-	public ServletConfigurationWrapper(ServletConfig servletConfig, ServletContext servletContext) {
-		this.servletConfig = servletConfig;
-		this.servletContext = servletContext;
-	}
+    protected ServletContext servletContext;
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletConfig#getServletName()
-	 */
-	public String getServletName() {
-		return this.servletConfig.getServletName();
-	}
+    /**
+     * @param servletConfig
+     */
+    public ServletConfigurationWrapper(ServletConfig servletConfig) {
+        this(servletConfig, null);
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletConfig#getServletContext()
-	 */
-	public ServletContext getServletContext() {
-		return this.servletContext != null ? this.servletContext : this.servletConfig.getServletContext();
-	}
+    /**
+     * @param servletConfig
+     * @param servletContext
+     */
+    public ServletConfigurationWrapper(ServletConfig servletConfig,
+            ServletContext servletContext) {
+        this.servletConfig = servletConfig;
+        this.servletContext = servletContext;
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
-	 */
-	public String getInitParameter(String name) {
-		return this.servletConfig.getInitParameter(name);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.ServletConfig#getServletName()
+     */
+    public String getServletName() {
+        return this.servletConfig.getServletName();
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.ServletConfig#getInitParameterNames()
-	 */
-	public Enumeration getInitParameterNames() {
-		return this.servletConfig.getInitParameterNames();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.ServletConfig#getServletContext()
+     */
+    public ServletContext getServletContext() {
+        return this.servletContext != null ? this.servletContext
+                : this.servletConfig.getServletContext();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
+     */
+    public String getInitParameter(String name) {
+        return this.servletConfig.getInitParameter(name);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.ServletConfig#getInitParameterNames()
+     */
+    public Enumeration getInitParameterNames() {
+        return this.servletConfig.getInitParameterNames();
+    }
 
 }
