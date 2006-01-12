@@ -109,8 +109,20 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
          <artifactId>wagon-ssh-external</artifactId>
-         <version>1.0-alpha-6-SNAPSHOT</version>
+         <version>1.0-alpha-6</version>
       </extension>
     </extensions>
+   <!--
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <source>1.4</source>
+              <target>1.4</target>
+          </configuration>
+      </plugin>
+    </plugins>
+    -->
   </build>
 </project>
