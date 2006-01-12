@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.BlockCallStack;
-import org.apache.cocoon.blocks.BlockContext;
 import org.apache.cocoon.blocks.util.BlockHttpServletRequestWrapper;
 import org.apache.cocoon.blocks.util.BlockHttpServletResponseWrapper;
 import org.apache.cocoon.environment.Environment;
@@ -64,6 +63,8 @@ public final class BlockSource
     private final Servlet block;
     
     private String systemId;
+    
+    private Logger logger;
 
     /**
      * Construct a new object
@@ -74,6 +75,8 @@ public final class BlockSource
                        Logger         logger)
         throws MalformedURLException {
 
+        this.logger = logger;
+        
         Environment env = EnvironmentHelper.getCurrentEnvironment();
         if (env == null) {
             throw new MalformedURLException("The block protocol can not be used outside an environment.");
@@ -144,6 +147,10 @@ public final class BlockSource
     public boolean exists() {
         return true;
     }
+    
+    protected final Logger getLogger() {
+        return this.logger;
+    }
 
     /**
      * Recyclable
@@ -151,6 +158,27 @@ public final class BlockSource
     public void recycle() {
     }
 
+    /**
+     * Parses and resolves the scheme specific part of a block URI
+     * with respect to the base URI of the current sitemap. The scheme
+     * specific part of the block URI has the form
+     * <code>foo:/bar</code> when refering to another block, in this
+     * case only an absolute path is allowed. For reference to the own
+     * block, both absolute <code>/bar</code> and relative
+     * <code>./foo</code> paths are allowed.
+     */
+    public static URI resolveURI(URI uri, URI base) throws URISyntaxException {
+        if (uri.getPath() != null && uri.getPath().length() >= 2 &&
+            uri.getPath().startsWith("./")) {
+            // self reference relative to the current sitemap, e.g. ./foo
+            if (uri.isAbsolute())
+                throw new URISyntaxException(uri.toString(), "When the protocol refers to other blocks the path must be absolute");
+            URI resolvedURI = base.resolve(uri);
+            uri = resolvedURI;
+        }
+        return uri;
+    }
+    
     // Parse the block protocol.
     private URI parseBlockURI(Environment env, String blockURI) 
         throws URISyntaxException {
@@ -168,11 +196,12 @@ public final class BlockSource
         if (baseURI.length() == 0 || !baseURI.startsWith("/"))
             baseURI = "/" + baseURI;
         
-        BlockContext blockContext =
-            (BlockContext) this.block.getServletConfig().getServletContext();
-
-        uri = blockContext.resolveURI(new URI(uri.getSchemeSpecificPart()),
-                new URI(null, null, baseURI, null));
+        this.getLogger().debug("BlockSource: resolving " + uri.toString() + " with scheme " +
+                        uri.getScheme() + " and ssp " + uri.getSchemeSpecificPart());
+        uri = BlockSource.resolveURI(new URI(uri.getSchemeSpecificPart()),
+                        new URI(null, null, baseURI, null));
+        this.getLogger().debug("BlockSource: resolved to " + uri.toString() +
+                        " with base URI " + baseURI.toString());
         
         this.blockName = uri.getScheme();
         String path = uri.getPath();
@@ -186,4 +215,3 @@ public final class BlockSource
         return new URI(scheme, null, path, queryString, null);
     }
 }
-
