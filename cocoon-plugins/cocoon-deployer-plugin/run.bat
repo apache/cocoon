@@ -1,0 +1,1 @@
+mvn -X org.apache.cocoon:deployer-maven-plugin:1.0-SNAPSHOT:deploy
