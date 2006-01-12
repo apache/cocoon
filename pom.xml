@@ -34,6 +34,7 @@
     </license>
   </licenses>
   <modules>
+    <module>cocoon-archetypes</module>
     <module>cocoon-core</module>
     <module>cocoon-blocks-fw</module>
     <module>cocoon-mocks</module>
