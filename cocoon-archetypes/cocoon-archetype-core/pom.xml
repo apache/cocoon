@@ -1,6 +1,6 @@
 <project>
   <parent>
-    <artifactId>cocoon</artifactId>
+    <artifactId>cocoon-archetypes</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>2.2.0-SNAPSHOT</version>
   </parent>
