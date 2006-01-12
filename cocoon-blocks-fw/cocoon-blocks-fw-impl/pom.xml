@@ -9,7 +9,7 @@
   <artifactId>cocoon-blocks-fw-impl</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Cocoon Blocks Framework</name>
+  <name>Blocks Framework Implementation</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
