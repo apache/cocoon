@@ -53,19 +53,21 @@ import org.apache.excalibur.source.TraversableSource;
  * This is an utility class to create a new Cocoon instance.
  * 
  * TODO - Remove dependencies to LogKit and Log4J
- *
+ * 
  * @version $Id$
  * @since 2.2
  */
 public class LoggerUtil {
 
     /** Parameter map for the context protocol */
-    private static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
+    private static final Map CONTEXT_PARAMETERS = Collections.singletonMap(
+            "force-traversable", Boolean.TRUE);
 
     private ServletConfig config;
-	/** "legacy" support: create an avalon context. */
+
+    /** "legacy" support: create an avalon context. */
     private Context appContext;
-    
+
     /** The settings. */
     private Settings settings;
 
@@ -79,16 +81,18 @@ public class LoggerUtil {
 
     /**
      * Setup a new instance.
+     * 
      * @param config
      */
-    public LoggerUtil(ServletConfig config, Context appContext, Settings settings) {
-    	this.config = config;
-    	this.appContext = appContext;
-    	this.settings = settings;
-    	// Init logger
-		this.initLogger();
+    public LoggerUtil(ServletConfig config, Context appContext,
+            Settings settings) {
+        this.config = config;
+        this.appContext = appContext;
+        this.settings = settings;
+        // Init logger
+        this.initLogger();
     }
-    
+
     /**
      * Create a simple source resolver.
      */
@@ -102,7 +106,7 @@ public class LoggerUtil {
             throw new CoreInitializationException(
                     "Cannot setup source resolver.", ce);
         }
-        return resolver;        
+        return resolver;
     }
 
     private void initLogger() {
@@ -117,19 +121,24 @@ public class LoggerUtil {
         }
 
         // create bootstrap logger
-        final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel.getLogLevelForName(logLevel);
-        final Logger bootstrapLogger = new ServletLogger(this.config, level.getLevel());
+        final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel
+                .getLogLevelForName(logLevel);
+        final Logger bootstrapLogger = new ServletLogger(this.config, level
+                .getLevel());
 
         // Create our own resolver
-        final SourceResolver resolver = this.createSourceResolver(bootstrapLogger);
+        final SourceResolver resolver = this
+                .createSourceResolver(bootstrapLogger);
 
         // create an own service manager for the logger manager
         final ServiceManager loggerManagerServiceManager = new SingleComponentServiceManager(
-                 null, resolver, SourceResolver.ROLE);
+                null, resolver, SourceResolver.ROLE);
 
         // create an own context for the logger manager
-        final DefaultContext subcontext = new SettingsContext(this.appContext, this.settings);
-        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
+        final DefaultContext subcontext = new SettingsContext(this.appContext,
+                this.settings);
+        subcontext.put("context-work", new File(this.settings
+                .getWorkDirectory()));
         if (this.contextForWriting == null) {
             File logSCDir = new File(this.settings.getWorkDirectory(), "log");
             logSCDir.mkdirs();
@@ -144,7 +153,8 @@ public class LoggerUtil {
         // the log4j support requires currently that the log4j system is already
         // configured elsewhere
 
-        final LoggerManager loggerManager = this.newLoggerManager(loggerManagerClass);
+        final LoggerManager loggerManager = this
+                .newLoggerManager(loggerManagerClass);
         ContainerUtil.enableLogging(loggerManager, bootstrapLogger);
 
         try {
@@ -154,28 +164,30 @@ public class LoggerUtil {
             this.loggerManager = loggerManager;
 
             if (loggerManager instanceof Configurable) {
-                //Configure the logkit management
+                // Configure the logkit management
                 String logkitConfig = settings.getLoggingConfiguration();
 
-                if ( logkitConfig != null ) {
+                if (logkitConfig != null) {
                     Source source = null;
                     try {
                         source = resolver.resolveURI(logkitConfig);
                         final ConfigurationBuilder builder = new ConfigurationBuilder(
                                 settings);
-                        final Configuration conf = builder.build(source.getInputStream());
+                        final Configuration conf = builder.build(source
+                                .getInputStream());
                         final DefaultConfiguration categories = (DefaultConfiguration) conf
                                 .getChild("categories");
                         final DefaultConfiguration targets = (DefaultConfiguration) conf
                                 .getChild("targets");
                         final DefaultConfiguration factories = (DefaultConfiguration) conf
                                 .getChild("factories");
-    
+
                         // now process includes
                         final Configuration[] children = conf
                                 .getChildren("include");
                         for (int i = 0; i < children.length; i++) {
-                            String directoryURI = children[i].getAttribute("dir");
+                            String directoryURI = children[i]
+                                    .getAttribute("dir");
                             final String pattern = children[i].getAttribute(
                                     "pattern", null);
                             int[] parsedPattern = null;
@@ -198,12 +210,14 @@ public class LoggerUtil {
                                             final Configuration includeConf = builder
                                                     .build(s.getInputStream());
                                             // add targets and categories
-                                            categories.addAllChildren(includeConf
-                                                    .getChild("categories"));
+                                            categories
+                                                    .addAllChildren(includeConf
+                                                            .getChild("categories"));
                                             targets.addAllChildren(includeConf
                                                     .getChild("targets"));
-                                            factories.addAllChildren(includeConf
-                                                    .getChild("factories"));
+                                            factories
+                                                    .addAllChildren(includeConf
+                                                            .getChild("factories"));
                                         }
                                     }
                                 } else {
@@ -219,9 +233,10 @@ public class LoggerUtil {
                             } finally {
                                 resolver.release(directory);
                             }
-    
+
                             // finally remove include
-                            ((DefaultConfiguration) conf).removeChild(children[i]);
+                            ((DefaultConfiguration) conf)
+                                    .removeChild(children[i]);
                         }
                         // override log level?
                         if (settings.getOverrideLogLevel() != null) {
@@ -246,18 +261,21 @@ public class LoggerUtil {
 
     /**
      * Create a new logger manager.
-     * @param loggerManagerClass The class name or one of the allowed shortcuts.
+     * 
+     * @param loggerManagerClass
+     *            The class name or one of the allowed shortcuts.
      * @return A new logger manager.
      */
     private LoggerManager newLoggerManager(String loggerManagerClass) {
-        if ("LogKit".equalsIgnoreCase(loggerManagerClass) || loggerManagerClass == null) {
+        if ("LogKit".equalsIgnoreCase(loggerManagerClass)
+                || loggerManagerClass == null) {
             loggerManagerClass = CocoonLogKitLoggerManager.class.getName();
         } else if ("LOG4J".equalsIgnoreCase(loggerManagerClass)) {
             loggerManagerClass = Log4JConfLoggerManager.class.getName();
         }
         try {
             Class clazz = Class.forName(loggerManagerClass);
-            if ( PerRequestLoggerManager.class.isAssignableFrom(clazz) ) {
+            if (PerRequestLoggerManager.class.isAssignableFrom(clazz)) {
             }
             return (LoggerManager) clazz.newInstance();
         } catch (Exception e) {
@@ -267,16 +285,16 @@ public class LoggerUtil {
 
     public void overrideLogLevel(Configuration root, String value) {
         Configuration[] c = root.getChildren("category");
-        for(int i=0;i<c.length;i++) {
-            ((DefaultConfiguration)c[i]).setAttribute("log-level", value);
+        for (int i = 0; i < c.length; i++) {
+            ((DefaultConfiguration) c[i]).setAttribute("log-level", value);
             this.overrideLogLevel(c[i], value);
         }
     }
 
-    private boolean match(String uri, int[] parsedPattern ) {
+    private boolean match(String uri, int[] parsedPattern) {
         int pos = uri.lastIndexOf('/');
-        if ( pos != -1 ) {
-            uri = uri.substring(pos+1);
+        if (pos != -1) {
+            uri = uri.substring(pos + 1);
         }
         return WildcardHelper.match(null, uri, parsedPattern);
     }
@@ -288,8 +306,8 @@ public class LoggerUtil {
         }
         return this.log;
     }
-    
+
     public LoggerManager getCocoonLoggerManager() {
-    	return this.loggerManager;
+        return this.loggerManager;
     }
 }

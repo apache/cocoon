@@ -67,7 +67,7 @@ public class BlockCallStack {
     public static Servlet getCurrentBlock() {
         final Stack stack = (Stack)blockStack.get();
         if ( stack != null && !stack.isEmpty()) {
-        	return (Servlet)stack.peek();
+                return (Servlet)stack.peek();
         }
         return null;
     }
