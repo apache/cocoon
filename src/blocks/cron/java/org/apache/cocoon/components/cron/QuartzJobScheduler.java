@@ -73,22 +73,6 @@ public class QuartzJobScheduler extends AbstractLogEnabled
                                            Serviceable, Configurable, Startable,
                                            Disposable, Contextualizable, Initializable {
 
-    /** QuartzThreadPool policy RUN */
-    private static final String POLICY_RUN = "RUN";
-
-    /** QuartzThreadPool policy WAIT */
-    private static final String POLICY_WAIT = "WAIT";
-
-    /** QuartzThreadPool policy ABORT */
-    private static final String POLICY_ABORT = "ABORT";
-
-    /** QuartzThreadPool policy DISCARD */
-    private static final String POLICY_DISCARD = "DISCARD";
-
-    /** QuartzThreadPool policy DISCARD-OLDEST */
-    private static final String POLICY_DISCARD_OLDEST = "DISCARDOLDEST";
-
-
     /** Map key for the component role */
     static final String DATA_MAP_ROLE = "QuartzJobScheduler.ROLE";
 
@@ -473,7 +457,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      */
     public void stop()
     throws Exception {
-        scheduler.pause();
+        scheduler.standby();
     }
 
     /**
@@ -598,7 +582,6 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      */
     private QuartzThreadPool createThreadPool(final Configuration poolConfig) 
     throws ServiceException {
-        final boolean useQueueing = poolConfig.getChild("use-queueing").getValueAsBoolean(false);
         final int queueSize = poolConfig.getChild("queue-size").getValueAsInteger(-1);
         final int maxPoolSize = poolConfig.getChild("max-pool-size").getValueAsInteger(-1);
         final int minPoolSize = poolConfig.getChild("min-pool-size").getValueAsInteger(-1);
