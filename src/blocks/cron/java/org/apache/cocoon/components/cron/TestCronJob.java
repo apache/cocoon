@@ -47,31 +47,33 @@ public class TestCronJob extends ServiceableCronJob
     /** Parameter key for the pipeline to be called */
     public static final String PARAMETER_PIPELINE = "TestCronJob.Parameter.Pipeline";
 
-    /** The configured message */
-    private String m_msg;
+    /** The configured message. */
+    private String msg;
 
-    /** The configured sleep time */
-    private int m_sleep;
+    /** The configured sleep time. */
+    private int sleep;
 
-    /** The pipeline to be called */
+    /** The pipeline to be called. */
     private String pipeline;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(final Configuration config)
     throws ConfigurationException {
-        m_msg = config.getChild("msg").getValue("I was not configured");
-        m_sleep = config.getChild("sleep").getValueAsInteger(11000);
+        msg = config.getChild("msg").getValue("I was not configured");
+        sleep = config.getChild("sleep").getValueAsInteger(11000);
         pipeline = config.getChild("pipeline").getValue("samples/hello-world/hello.xhtml");
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
      */
     public void execute(String name) {
-        getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
-                         "' and sleep timeout of " + m_sleep + "ms");
+        if ( this.getLogger().isInfoEnabled() ) {
+            getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + msg +
+                             "' and sleep timeout of " + sleep + "ms");
+        }
 
         SourceResolver resolver = null;
         Source src = null;
@@ -79,24 +81,29 @@ public class TestCronJob extends ServiceableCronJob
             resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
             src = resolver.resolveURI("cocoon://" + this.pipeline);
 
-            InputStreamReader r = new InputStreamReader(src.getInputStream());
+            final InputStreamReader r = new InputStreamReader(src.getInputStream());
             try {
+                boolean append = this.getLogger().isInfoEnabled();
                 StringBuffer sb = new StringBuffer();
                 char[] b = new char[8192];
                 int n;
 
                 while((n = r.read(b)) > 0) {
-                    sb.append(b, 0, n);
+                    if ( append ) {
+                        sb.append(b, 0, n);
+                    }
                 }
 
-                getLogger().info("CronJob " + name + " called pipeline " + pipeline +
-                                 " and received following content:\n" + sb.toString());
+                if ( append ) {
+                    getLogger().info("CronJob " + name + " called pipeline " + pipeline +
+                                     " and received following content:\n" + sb.toString());
+                }
             } finally {
                 r.close();
             }
 
         } catch(Exception e) {
-            throw new CascadingRuntimeException("CronJob " + name + " raised an exception", e);
+            throw new CascadingRuntimeException("CronJob " + name + " raised an exception.", e);
         } finally {
             if (resolver != null) {
                 resolver.release(src);
@@ -107,22 +114,24 @@ public class TestCronJob extends ServiceableCronJob
         }
 
         try {
-            Thread.sleep(m_sleep);
+            Thread.sleep(sleep);
         } catch (final InterruptedException ie) {
             //getLogger().error("CronJob " + name + " interrupted", ie);
         }
 
-        getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
-                         "' and sleep timeout of " + m_sleep + "ms");
+        if ( this.getLogger().isInfoEnabled() ) {
+            getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + msg +
+                             "' and sleep timeout of " + sleep + "ms");
+        }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.cron.ConfigurableCronJob#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
      */
     public void setup(Parameters params, Map objects) {
         if (null != params) {
-            m_msg = params.getParameter(PARAMETER_MESSAGE, m_msg);
-            m_sleep = params.getParameterAsInteger(PARAMETER_SLEEP, m_sleep);
+            msg = params.getParameter(PARAMETER_MESSAGE, msg);
+            sleep = params.getParameterAsInteger(PARAMETER_SLEEP, sleep);
             pipeline = params.getParameter(PARAMETER_PIPELINE, pipeline );
 
         }
