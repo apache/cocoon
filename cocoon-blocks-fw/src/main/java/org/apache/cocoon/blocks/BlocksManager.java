@@ -38,6 +38,7 @@ import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.blocks.util.LoggerUtil;
+import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -59,7 +60,7 @@ public class BlocksManager
 
     public static String ROLE = BlocksManager.class.getName();
     private Context context;
-    private String containerEncoding;
+    private BlocksContext blocksContext;
 
     private String wiringFileName = "/" + Constants.WIRING;
     private Source wiringFile;
@@ -70,15 +71,13 @@ public class BlocksManager
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        this.containerEncoding = servletConfig.getInitParameter("container-encoding");
-        if (this.containerEncoding == null) {
-                this.containerEncoding = "ISO-8859-1";
-        }
-        CoreUtil coreUtil = new CoreUtil(servletConfig, Constants.WIRING);
+        this.blocksContext = new BlocksContext(this.getServletContext(), this);
+        
+        CoreUtil coreUtil = new CoreUtil(this.getServletConfig(), Constants.WIRING);
         Core core = coreUtil.getCore();
         Settings settings = coreUtil.getSettings();
         this.context = core.getContext();
-        LoggerUtil loggerUtil = new LoggerUtil(servletConfig, this.context, settings);
+        LoggerUtil loggerUtil = new LoggerUtil(this.getServletConfig(), this.context, settings);
         this.logger = loggerUtil.getCocoonLogger();
         this.getLogger().debug("Initializing the Blocks Manager");
         
@@ -103,6 +102,9 @@ public class BlocksManager
             throw new ServletException("Could not create configuration from file: " + this.wiringFileName, e);                  
         }
         
+        ServletConfig blocksConfig =
+            new ServletConfigurationWrapper(this.getServletConfig(), this.blocksContext);
+        
         Configuration[] blockConfs = wiring.getChildren("block");
                 
         try {
@@ -113,7 +115,7 @@ public class BlocksManager
                                        " id=" + blockConf.getAttribute("id") +
                                        " location=" + blockConf.getAttribute("location"));
                 BlockManager blockManager = new BlockManager();
-                blockManager.init(this.getServletConfig());
+                blockManager.init(blocksConfig);
                 blockManager.setBlocks(this);
                 LifecycleHelper.setupComponent(blockManager,
                                                this.getLogger(),

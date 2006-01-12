@@ -33,8 +33,7 @@ public class BlockPropertyModule implements InputModule, ThreadSafe {
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        // FIXME Should get init parameters from ServletConfig
-        return BlockCallStack.getCurrentBlock().getServletConfig().getServletContext().getInitParameter(name);
+        return BlockCallStack.getCurrentBlockContext().getInitParameter(name);
     }
 
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
