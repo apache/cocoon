@@ -26,7 +26,6 @@
          implementation="stable"/>
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
-  <sitemap src="block-sitemap.xmap"/>
   
   <implements>
     <interface id="interface-02"/>
