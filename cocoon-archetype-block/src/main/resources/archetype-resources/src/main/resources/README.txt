@@ -1,0 +1,1 @@
+Place resources that should be packaged into the jar in here 
