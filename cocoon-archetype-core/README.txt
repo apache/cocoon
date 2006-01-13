@@ -7,8 +7,8 @@ it locally first. You can do this by running "mvn install" from this directory.
 
 To try it out, go to your favourite temp directory and do :
 
-mvn archetype:create -DarchetypeGroupId=org.apache.cocoon.maven.archetypes \
--DarchetypeArtifactId=archetype-core -DgroupId=mynewapplication \
+mvn archetype:create -DarchetypeGroupId=org.apache.cocoon \
+-DarchetypeArtifactId=cocoon-archetype-core -DgroupId=mynewapplication \
 -DartifactId=theApplication -DarchetypeVersion=2.2.0-SNAPSHOT
 
 Note: You can replace -DartifactId=theApplication with anything you like, same goes for 
