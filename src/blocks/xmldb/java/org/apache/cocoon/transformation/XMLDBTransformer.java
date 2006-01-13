@@ -15,36 +15,9 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.TraxErrorHandler;
-
-import org.apache.excalibur.source.SourceValidity;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import org.xmldb.api.DatabaseManager;
-import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Database;
-import org.xmldb.api.base.Resource;
-import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.modules.CollectionManagementService;
-import org.xmldb.api.modules.XUpdateQueryService;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,6 +29,28 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
+
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xmldb.api.DatabaseManager;
+import org.xmldb.api.base.Collection;
+import org.xmldb.api.base.Database;
+import org.xmldb.api.base.Resource;
+import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.CollectionManagementService;
+import org.xmldb.api.modules.XUpdateQueryService;
 
 /**
  * This transformer allows to perform resource creation, deletion, and
@@ -71,13 +66,18 @@ import javax.xml.transform.stream.StreamResult;
  *   &lt;driver&gt;org.apache.xindice.client.xmldb.DatabaseImpl&lt;/driver&gt;
  *   --&gt;
  *   &lt;base&gt;xmldb:xindice:///db/collection&lt;/base&gt;
+ *   &lt;user&gt;myDatabaseLogin&lt;/user&gt;
+ *   &lt;password&gt;myDatabasePassword&lt;/password&gt;
  * &lt;/map:transformer&gt;
  * </pre>
  *
- * <p>Invocation:</p>
+ * <p>The component configuration defined in &lt;map:transformer&gt; can be
+ * overriden with sitemap parameters on the &lt;map:transform&gt;:</p>
  * <pre>
  * &lt;map:transform type="xmldb"&gt;
  *   &lt;map:parameter name="base" value="xmldb:xindice:///db/collection"/&gt;
+ *   &lt;map:parameter name="user" value="myDatabaseLogin"/&gt;
+ *   &lt;map:parameter name="password" value="myDatabasePassword"/&gt;
  * &lt;/map:transform&gt;
  * </pre>
  *
@@ -109,7 +109,7 @@ import javax.xml.transform.stream.StreamResult;
  *   &lt;db:query type="create" oid="inner/"/&gt;
  *
  *   &lt;p&gt;Create XML resource in context collection with specified object ID&lt;/p&gt;
- *   &lt;xmldb:query type="create" collection="inner" oid="xmldb-object-id"&gt;
+ *   &lt;db:query type="create" collection="inner" oid="xmldb-object-id"&gt;
  *     &lt;page&gt;
  *       XML Object body
  *     &lt;/page&gt;
@@ -138,8 +138,7 @@ import javax.xml.transform.stream.StreamResult;
  * <li>No namespaces with Xalan (see AbstractTextSerializer)</li>
  * </ul>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLDBTransformer extends AbstractTransformer
         implements CacheableProcessingComponent, Configurable, Initializable {
@@ -164,6 +163,12 @@ public class XMLDBTransformer extends AbstractTransformer
     /** Default collection name. */
     private String default_base;
 
+    /** Default user name. */
+    private String default_user;
+
+    /** Default password. */
+    private String default_password;
+
     /** Current collection name. */
     private String local_base;
 
@@ -172,6 +177,12 @@ public class XMLDBTransformer extends AbstractTransformer
 
     /** Current collection. */
     private Collection collection;
+
+    /** database login */
+    private String local_user = null;
+
+    /** database password */
+    private String local_password = null;
 
     /** Operation. One of: create, delete, update. */
     private String operation;
@@ -205,6 +216,8 @@ public class XMLDBTransformer extends AbstractTransformer
         }
 
         this.default_base = configuration.getChild("base").getValue(null);
+        this.default_user = configuration.getChild("user").getValue(null);
+        this.default_password = configuration.getChild("password").getValue(null);
     }
 
     /**
@@ -227,8 +240,12 @@ public class XMLDBTransformer extends AbstractTransformer
             throw new ProcessingException("Required base parameter is missing. Syntax is: xmldb:xindice:///db/collection");
         }
 
+        /** Get user password from parameter for the database. Usefull for update action */
+        this.local_user     = par.getParameter("user",     this.default_user);
+        this.local_password = par.getParameter("password", this.default_password);
+
         try {
-            this.collection = DatabaseManager.getCollection(this.local_base);
+            this.collection = DatabaseManager.getCollection(this.local_base, this.local_user, this.local_password);
         } catch (XMLDBException e) {
             throw new ProcessingException("Could not get collection " + this.local_base + ": " + e.errorCode, e);
         }
@@ -414,7 +431,7 @@ public class XMLDBTransformer extends AbstractTransformer
                 Collection collection = null;
                 try {
                     // Obtain collection for the current operation
-                    collection = (xbase != null)? DatabaseManager.getCollection(local_base + "/" + xbase) : this.collection;
+                    collection = (xbase != null)? DatabaseManager.getCollection(local_base + "/" + xbase, this.local_user, this.local_password) : this.collection;
 
                     if (collection == null) {
                         message = "Failed to " + operation + " resource " + this.key + ": Collection " + local_base + "/" + xbase + " not found.";
