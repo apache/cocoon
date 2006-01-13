@@ -27,11 +27,12 @@
         <xs:element name="state" type="state"/>        
         <xs:element name="license" type="href"/>
         <xs:element name="author" type="href"/>
-        <xs:element name="sitemap" type="src" minOccurs="0"/>
         <xs:element name="properties" type="properties" minOccurs="0"/>
         <xs:element name="requirements" type="requirements" minOccurs="0"/>
         <xs:element name="implements" type="implements" minOccurs="0"/>
         <xs:element name="extends" type="extends" minOccurs="0"/>
+        <xs:element name="components" type="configuration" minOccurs="0"/>
+        <xs:element name="servlets" type="servlets" minOccurs="0"/>        
       </xs:all>
       <xs:attribute name="id" type="xs:anyURI" use="required"/>
     </xs:complexType>
@@ -117,9 +118,32 @@
   	<xs:attribute name="id" type="xs:anyURI" use="required"/>
   </xs:complexType>  	  	
 
-  <!-- implements -->
+  <!-- extends -->
   <xs:complexType name="extends">
   	<xs:attribute name="block" type="xs:anyURI" use="required"/>
-  </xs:complexType>  	  	
+  </xs:complexType>  	 
+  
+  <!-- configuration -->
+  <xs:complexType name="configuration">
+    <xs:sequence>
+      <xs:any namespace="##any"  minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+    <xs:attribute name="class" type="java-classes" use="required"/>
+  </xs:complexType>  	    	
+
+  <!-- servlets -->
+  <xs:complexType name="servlets">
+    <xs:sequence>
+      <xs:element name="servlet" type="configuration" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>  
+  
+  
+  <!-- type for class attributes -->
+  <xs:simpleType name="java-classes">
+    <xs:restriction base="xs:string">
+      <!-- add here the regexp to test for valid package + class name -->
+    </xs:restriction>
+  </xs:simpleType>      
 
 </xs:schema>
