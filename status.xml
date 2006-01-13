@@ -102,6 +102,7 @@
   <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
   <person name="Marc Portier" email="mpo@apache.org" id="MPO"/>
   <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
+  <person name="Jean-Baptiste Quenot" email="jbq@apache.org" id="JBQ"/>
   <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
   <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
   <person name="Gianugo Rabellino" email="gianugo@apache.org" id="GR"/>
@@ -179,6 +180,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1259">
+      XMLDBTransformer can use username/password to access XMLDB.
+      Note that DatabaseManager.getCollection() accepts null values for user and
+      password, see
+      http://xmldb-org.sourceforge.net/xapi/api/org/xmldb/api/DatabaseManager.html#getCollection(java.lang.String,%20java.lang.String,%20java.lang.String)
+    </action>
    <action dev="CZ" type="add">
       Portal Block: Provide user name to portlets.
     </action> 
