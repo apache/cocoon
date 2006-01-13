@@ -1,0 +1,1 @@
+Place your webapp stuff in here if you have such. Otherwise drop this directory
