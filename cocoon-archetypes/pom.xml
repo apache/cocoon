@@ -31,5 +31,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>cocoon-archetype-core</module>
+    <module>cocoon-archetype-block</module>
   </modules>
 </project>
