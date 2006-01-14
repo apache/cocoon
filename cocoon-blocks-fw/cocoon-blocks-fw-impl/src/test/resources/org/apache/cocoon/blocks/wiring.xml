@@ -20,9 +20,9 @@
         xsi:schemaLocation="http://apache.org/cocoon/blocks/wiring/1.0 wiring-schema-1.0.xsd"
 >
 
-  <block id="core" location="core/"/>
+  <block id="core" location="/core/"/>
 
-  <block id="test1id" location="test1/">
+  <block id="test1id" location="/test1/">
     <mount path="/test1"/>
     <connections>
       <connection name="core" block="core"/>
@@ -33,14 +33,14 @@
     </properties>
   </block>
 
-  <block id="test2id" location="test2/">
+  <block id="test2id" location="/test2/">
     <mount path="/test2"/>
     <connections>
       <connection name="core" block="core"/>
     </connections>
   </block>
 
-  <block id="test3id" location="test3/">
+  <block id="test3id" location="/test3/">
     <mount path="/test3"/>
     <connections>
       <connection name="core" block="core"/>

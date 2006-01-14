@@ -84,7 +84,7 @@ public class SitemapServlet
     }
 
     public void initialize() throws Exception {
-        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), "COB-INF/block.xml");
+        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
 
         // Create an own service manager
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
