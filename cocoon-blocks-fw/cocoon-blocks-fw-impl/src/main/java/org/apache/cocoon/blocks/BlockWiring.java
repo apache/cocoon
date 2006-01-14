@@ -97,10 +97,7 @@ public class BlockWiring
         }
 
         // Read the block.xml file
-        String blockPath = this.location + "COB-INF/block.xml";
-        if (blockPath.charAt(0) != '/') {
-            blockPath = "/" + blockPath;
-        }
+        String blockPath = this.location + BlockConstants.BLOCK_CONF;
         URL blockURL;
         Configuration block = null;
 
@@ -108,7 +105,7 @@ public class BlockWiring
             blockURL = this.servletContext.getResource(blockPath);
             if (blockURL == null) {
                 // FIXME: Have used different locations for block.xml in the OSGi and the block stuff.
-                blockPath = this.location + "WEB-INF/block.xml";
+                blockPath = this.location + "/WEB-INF/block.xml";
                 blockURL = this.servletContext.getResource(blockPath);                          
             }
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
