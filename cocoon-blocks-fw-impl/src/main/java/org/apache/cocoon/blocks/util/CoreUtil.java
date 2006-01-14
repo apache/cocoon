@@ -103,7 +103,7 @@ public class CoreUtil {
     private String contextURL;
 
     public CoreUtil(ServletConfig config) throws ServletException {
-        this(config, "WEB-INF/web.xml");
+        this(config, "/WEB-INF/web.xml");
     }
 
     /**
@@ -148,14 +148,19 @@ public class CoreUtil {
         if (path == null) {
             // Try to figure out the path of the root from that of a known file
             servletContext.log("Figuring out root from " + knownFile);
+            URL url;
             try {
-                path = servletContext.getResource("/" + knownFile).toString();
-                servletContext.log("Got " + path);
+                url = servletContext.getResource(knownFile); 
             } catch (MalformedURLException me) {
                 throw new ServletException("Unable to get resource '"
                         + knownFile + "'.", me);
             }
-            path = path.substring(0, path.length() - knownFile.length());
+            if (url == null)
+                throw new ServletException("Couldn't find " + knownFile);
+            path = url.toString();
+            servletContext.log("Got " + path);
+
+            path = path.substring(0, path.length() - (knownFile.length() - 1));
             servletContext.log("And servlet root " + path);
         }
         try {

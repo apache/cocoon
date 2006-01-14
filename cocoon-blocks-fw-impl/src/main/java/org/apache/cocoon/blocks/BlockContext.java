@@ -99,9 +99,7 @@ public class BlockContext extends ServletContextWrapper {
             path = path.substring(1);
         }
         String location = this.wiring.getLocation();
-        if (location.length() > 0 && location.charAt(0) != '/') {
-            location = "/" + location;
-        }
+
         return super.servletContext.getResource(location + path);
     }
 
