@@ -70,6 +70,9 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     // configuration options
     private int maxObjects;
     private boolean overflowToDisk;
+    private boolean eternal;
+    private long timeToLiveSeconds;
+    private long timeToIdleSeconds;
 
     /** The service manager */
     private ServiceManager manager;
@@ -109,6 +112,15 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
      *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
      *   maxobjects has been exceeded.</li>
+     * <li><code>eternal</code> (true) - whether or not entries expire. When set to
+     * <code>false</code> the <code>timeToLiveSeconds</code> and
+     * <code>timeToIdleSeconds</code> parameters are used to determine when an
+     * item expires.</li>
+     * <li><code>timeToLiveSeconds</code> (0) - how long an entry may live in the cache
+     * before it is removed. The entry will be removed no matter how frequently it is retrieved.</li>
+     * <li><code>timeToIdleSeconds</code> (0) - the maximum time between retrievals
+     * of an entry. If the entry is not retrieved for this period, it is removed from the
+     * cache.</li>
      *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
      *   context entry will be used as the location of the disk store. 
      *   Within the servlet environment this is set in web.xml.</li>
@@ -117,11 +129,50 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      *   Within the servlet environment this is set in web.xml.</li>
      *  <li><code>directory</code> - Specify an alternative location of the disk store.
      * </ul>
+     * 
+     * <p>
+     * Setting <code>eternal</code> to <code>false</code> but not setting
+     * <code>timeToLiveSeconds</code> and/or <code>timeToIdleSeconds</code>, has the
+     * same effect as setting <code>eternal</code> to <code>true</code>.
+     * </p>
+     * 
+     * <p>
+     * Here is an example to clarify the purpose of the <code>timeToLiveSeconds</code> and
+     * <code>timeToIdleSeconds</code> parameters:
+     * </p>
+     * <ul>
+     *   <li>timeToLiveSeconds = 86400 (1 day)</li>
+     *   <li>timeToIdleSeconds = 10800 (3 hours)</li>
+     * </ul>
+     * 
+     * <p>
+     * With these settings the entry will be removed from the cache after 24 hours. If within
+     * that 24-hour period the entry is not retrieved within 3 hours after the last retrieval, it will
+     * also be removed from the cache.
+     * </p>
+     * 
+     * <p>
+     * By setting <code>timeToLiveSeconds</code> to <code>0</code>, an item can stay in
+     * the cache as long as it is retrieved within <code>timeToIdleSeconds</code> after the
+     * last retrieval.
+     * </p>
+     * 
+     * <p>
+     * By setting <code>timeToIdleSeconds</code> to <code>0</code>, an item will stay in
+     * the cache for exactly <code>timeToLiveSeconds</code>.
+     * </p>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
 
         this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
         this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+        
+        this.eternal = parameters.getParameterAsBoolean("eternal", true);
+        if (!this.eternal)
+        {
+            this.timeToLiveSeconds = parameters.getParameterAsLong("timeToLiveSeconds", 0L);
+            this.timeToIdleSeconds = parameters.getParameterAsLong("timeToIdleSeconds", 0L);
+        }
 
         try {
             if (parameters.getParameterAsBoolean("use-cache-directory", false)) {
@@ -211,7 +262,8 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     public void initialize() throws Exception {
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
-        this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, true, 0, 0, true, 120);
+        this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
+                this.timeToLiveSeconds, this.timeToIdleSeconds, true, 120);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
     }
