@@ -93,7 +93,7 @@ public class BlockManager
 
         this.blockContext =
             new BlockContext(this.getServletContext(), this.blockWiring, this);
-        this.contextURL = CoreUtil.getContextURL(this.blockContext, "COB-INF/block.xml");
+        this.contextURL = CoreUtil.getContextURL(this.blockContext, BlockConstants.BLOCK_CONF);
         Context newContext = this.getAvalonContext();
         String confLocation = this.contextURL + "::";
 

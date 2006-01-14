@@ -33,7 +33,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.blocks.util.CoreUtil;
@@ -62,7 +61,6 @@ public class BlocksManager
     private Context context;
     private BlocksContext blocksContext;
 
-    private String wiringFileName = "/" + Constants.WIRING;
     private Source wiringFile;
     private HashMap blocks = new HashMap();
     private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
@@ -73,7 +71,7 @@ public class BlocksManager
         super.init(servletConfig);
         this.blocksContext = new BlocksContext(this.getServletContext(), this);
         
-        CoreUtil coreUtil = new CoreUtil(this.getServletConfig(), Constants.WIRING);
+        CoreUtil coreUtil = new CoreUtil(this.getServletConfig(), BlockConstants.WIRING);
         Core core = coreUtil.getCore();
         Settings settings = coreUtil.getSettings();
         this.context = core.getContext();
@@ -83,15 +81,15 @@ public class BlocksManager
         
         InputSource is = null;
         try {
-            this.getLogger().debug("Wiring file: " + this.getServletContext().getResource(this.wiringFileName));
+            this.getLogger().debug("Wiring file: " + this.getServletContext().getResource(BlockConstants.WIRING));
             URLSource urlSource = new URLSource();
-            urlSource.init(this.getServletContext().getResource(this.wiringFileName), null);
+            urlSource.init(this.getServletContext().getResource(BlockConstants.WIRING), null);
             this.wiringFile = new DelayedRefreshSourceWrapper(urlSource, 1000);
             is = SourceUtil.getInputSource(this.wiringFile);
         } catch (IOException e) {
-            throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);
+            throw new ServletException("Could not open configuration file: " + BlockConstants.WIRING, e);
         } catch (ProcessingException e) {
-            throw new ServletException("Could not open configuration file: " + this.wiringFileName, e);                 
+            throw new ServletException("Could not open configuration file: " + BlockConstants.WIRING, e);                 
         }
         
         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
@@ -99,7 +97,7 @@ public class BlocksManager
         try {
             wiring = builder.build(is);
         } catch (Exception e) {
-            throw new ServletException("Could not create configuration from file: " + this.wiringFileName, e);                  
+            throw new ServletException("Could not create configuration from file: " + BlockConstants.WIRING, e);                  
         }
         
         ServletConfig blocksConfig =
