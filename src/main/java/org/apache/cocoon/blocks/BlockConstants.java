@@ -25,7 +25,7 @@ public final class BlockConstants {
     public static final String WEBAPP_META_DIR = "WEB-INF";
 
     /** Name of the meta directory of a block */
-    public static final String BLOCK_META_DIR = "COB-INF";
+    public static final String BLOCK_META_DIR = "META-INF";
 
     /** Name of the resource directory of a block */
     public static final String BLOCK_RESOURCES_DIR = "";
