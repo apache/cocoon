@@ -39,11 +39,6 @@
       <param-value>work</param-value>
     </init-param>
 
-    <init-param>
-      <param-name>configurations</param-name>
-      <param-value>wiring.xml</param-value>
-    </init-param>
-
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding
       will be assumed.

@@ -31,7 +31,7 @@
   <components>
     <include src="META-INF/xconf/test1.xconf"/>
   </components>
-  <sitemap src="block-sitemap.xmap"/>
+  <sitemap src="COB-INF/block-sitemap.xmap"/>
   <properties>
     <property name="foo">
       <default>baz</default>
