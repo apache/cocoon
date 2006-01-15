@@ -46,10 +46,11 @@ public class BlockWiring
     private Vector connectionNames;
 
     private String mountPath;
-    private String sitemapPath;
 
     private Configuration componentConfiguration;
-    private Configuration processorConfiguration;
+    private boolean hasServlet;
+    private String servletClass;
+    private Configuration servletConfiguration;
     
     private boolean core = false;
 
@@ -137,9 +138,12 @@ public class BlockWiring
             }
         }
 
-        this.sitemapPath = block.getChild("sitemap").getAttribute("src", null);
-        getLogger().debug("sitemapPath=" + this.sitemapPath);
-        this.processorConfiguration = block.getChild("sitemap", false);
+        Configuration servletElement = block.getChild("servlet", false);
+        this.hasServlet = servletElement != null;
+        if (this.hasServlet) {
+            this.servletClass = servletElement.getAttribute("class");
+            this.servletConfiguration = servletElement.getChildren()[0];            
+        }
 
         this.componentConfiguration = block.getChild("components", false);
         this.core = block.getChild("components").getAttributeAsBoolean("core", false);
@@ -199,10 +203,30 @@ public class BlockWiring
     }
 
     /**
-     * Get the processor configuration of the block
+     * Is there a servlet in the block
+     * 
+     * @return Returns whether there is a servlet in the block.
      */
-    Configuration getProcessorConfiguration() {
-        return this.processorConfiguration;
+    public boolean hasServlet() {
+        return this.hasServlet;
+    }
+
+
+    /**
+     * The class of the block servlet
+     * 
+     * @return Returns the servletClass.
+     */
+    public String getServletClass() {
+        return this.servletClass;
+    }
+
+
+    /**
+     * Get the servlet configuration of the block
+     */
+    Configuration getServletConfiguration() {
+        return this.servletConfiguration;
     }
 
     /**

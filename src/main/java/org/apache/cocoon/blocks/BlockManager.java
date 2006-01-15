@@ -46,7 +46,7 @@ import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.http.HttpContext;
-import org.apache.cocoon.sitemap.SitemapServlet;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @version $Id$
@@ -127,14 +127,15 @@ public class BlockManager
                     componentConf);
         }
 
-        // Create a processor for the block
-        if (this.blockWiring.getProcessorConfiguration() != null) {
-            this.blockServlet = new SitemapServlet();
+        // Create a servlet for the block
+        if (this.blockWiring.hasServlet()) {
+            String servletClass = this.blockWiring.getServletClass();
+            this.blockServlet = (Servlet) ClassUtils.newInstance(servletClass);
             LifecycleHelper.setupComponent(this.blockServlet,
                     this.getLogger(),
                     newContext,
                     this.serviceManager,
-                    this.blockWiring.getProcessorConfiguration());    
+                    this.blockWiring.getServletConfiguration());
             this.blockServlet.init(blockServletConfig);            
         }
     }
