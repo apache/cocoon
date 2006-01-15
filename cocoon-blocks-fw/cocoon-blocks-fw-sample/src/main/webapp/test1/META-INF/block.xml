@@ -31,7 +31,9 @@
   <components>
     <include src="META-INF/xconf/test1.xconf"/>
   </components>
-  <sitemap src="COB-INF/block-sitemap.xmap"/>
+  <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
+    <sitemap file="COB-INF/block-sitemap.xmap"/>
+  </servlet>
   <properties>
     <property name="foo">
       <default>baz</default>
