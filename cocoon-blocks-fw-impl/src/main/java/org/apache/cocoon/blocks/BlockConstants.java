@@ -31,7 +31,7 @@ public final class BlockConstants {
     public static final String BLOCK_RESOURCES_DIR = "";
     
     /** Path to the wiring file in the context */
-    public static final String WIRING = "/wiring.xml";
+    public static final String WIRING = "/" + WEBAPP_META_DIR + "/wiring.xml";
 
     /** Path to the block configuration file in the block context */
     public static final String BLOCK_CONF = "/" + BLOCK_META_DIR + "/block.xml";

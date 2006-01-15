@@ -20,15 +20,15 @@ import org.apache.cocoon.ServletTestCase;
 public class BlocksManagerTestCase extends ServletTestCase {
     
     public void testBlockSource1() throws Exception {
-        pipeTest("/test1/test", "test1/test.xml");
+        pipeTest("/test1/test", "test1/COB-INF/test.xml");
     }
 
     public void testBlockSource2() throws Exception {
-        pipeTest("/test1/test2", "test2/test.xml");
+        pipeTest("/test1/test2", "test2/COB-INF/test.xml");
     }
 
     public void testBlockSource3() throws Exception {
-        pipeTest("/test1/test3", "test1/test.xml");
+        pipeTest("/test1/test3", "test1/COB-INF/test.xml");
     }
     /*
     public void testBlockSource4() throws Exception {
@@ -36,38 +36,38 @@ public class BlocksManagerTestCase extends ServletTestCase {
     }
     */
     public void testBlockSourceSub1() throws Exception {
-        pipeTest("/test1/sub/test", "test1/sub/test.xml");
+        pipeTest("/test1/sub/test", "test1/COB-INF/sub/test.xml");
     }
 
     public void testBlockSourceSub2() throws Exception {
-        pipeTest("/test1/sub/test2", "test1/sub/test.xml");
+        pipeTest("/test1/sub/test2", "test1/COB-INF/sub/test.xml");
     }
 
     public void testBlockSourceSub3() throws Exception {
-        pipeTest("/test1/sub/test3", "test1/test.xml");
+        pipeTest("/test1/sub/test3", "test1/COB-INF/test.xml");
     }
 
     public void testBlockExtend1() throws Exception {
-        pipeTest("/test3/test", "test3/test.xml");
+        pipeTest("/test3/test", "test3/COB-INF/test.xml");
     }
 
     public void testBlockExtend2() throws Exception {
-        pipeTest("/test3/test2", "test2/test.xml");
+        pipeTest("/test3/test2", "test2/COB-INF/test.xml");
     }
 
     public void testBlockExtend3() throws Exception {
-        pipeTest("/test3/test3", "test3/test.xml");
+        pipeTest("/test3/test3", "test3/COB-INF/test.xml");
     }
 
     public void testBlockExtend4() throws Exception {
-        pipeTest("/test3/test4", "test1/test.xml");
+        pipeTest("/test3/test4", "test1/COB-INF/test.xml");
     }
 
     public void testBlockProperty() throws Exception {
-        pipeTest("/test3/prop", "test3/prop-expected.xml");
+        pipeTest("/test3/prop", "test3/COB-INF/prop-expected.xml");
     }
 
     public void testAbsolutize() throws Exception {
-        pipeTest("/test1/sub/abs", "test1/sub/path-expected.xml");
+        pipeTest("/test1/sub/abs", "test1/COB-INF/sub/path-expected.xml");
     }
 }
