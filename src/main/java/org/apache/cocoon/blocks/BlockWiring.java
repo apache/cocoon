@@ -66,8 +66,13 @@ public class BlockWiring
     public void configure(Configuration config)
         throws ConfigurationException {
         this.id = config.getAttribute("id");
-        this.location = config.getAttribute("location");
         this.mountPath = config.getChild("mount").getAttribute("path", null);
+
+        this.location = config.getAttribute("location");
+        int length = this.location.length();
+        if (length > 0 && this.location.charAt(length - 1) == '/')
+            this.location = this.location.substring(0, length - 1);
+
 
         getLogger().debug("BlockWiring configure: " +
                           " id=" + this.id +
@@ -103,11 +108,8 @@ public class BlockWiring
 
         try {
             blockURL = this.servletContext.getResource(blockPath);
-            if (blockURL == null) {
-                // FIXME: Have used different locations for block.xml in the OSGi and the block stuff.
-                blockPath = this.location + "/WEB-INF/block.xml";
-                blockURL = this.servletContext.getResource(blockPath);                          
-            }
+            if (blockURL == null)
+                throw new ConfigurationException("Couldn't find " + blockPath);
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             //block = builder.build(source.getInputStream(), source.getURI());
             block = builder.build(blockURL.openStream(), blockURL.toExternalForm());
