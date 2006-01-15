@@ -204,13 +204,6 @@ public class BlockManager
     }
 
     /**
-     * Get the mount path of the block
-     */
-    public String getMountPath() {
-        return this.blockWiring.getMountPath();
-    }
-
-    /**
      * The exported components of the block. Return null if the block doesn't export components.
      * 
      * @return a ServiceManager containing the blocks exported components

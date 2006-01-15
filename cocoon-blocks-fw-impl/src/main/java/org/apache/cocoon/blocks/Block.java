@@ -28,11 +28,6 @@ public interface Block extends Servlet {
     public static String SUPER = "super";
 
     /**
-     * Get the mount path of the block
-     */
-    public String getMountPath();
-
-    /**
      * The exported components of the block. Return null if the block doesn't export components.
      * 
      * @return a ServiceManager containing the blocks exported components

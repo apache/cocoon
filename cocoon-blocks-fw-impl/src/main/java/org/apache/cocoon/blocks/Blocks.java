@@ -25,4 +25,10 @@ public interface Blocks {
      * @param blockId
      */
     Block getBlock(String blockId);
+    
+    /**
+     * Returns the block that is mounted at the specified uri
+     * @param uri
+     */
+    Block getMountedBlock(String uri);    
 }
