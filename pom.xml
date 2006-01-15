@@ -104,6 +104,17 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>gianugo</id>
+      <name>Gianugo Rabellino</name>
+      <email>gianugo@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
   <issueManagement>
     <system>jira</system>
