@@ -101,7 +101,7 @@ public class BlockManager
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
         if (this.blockWiring.isCore()) {
             this.getLogger().debug("Block with core=true");
-            CoreUtil coreUtil = new CoreUtil(blockServletConfig);
+            CoreUtil coreUtil = new CoreUtil(blockServletConfig, BlockConstants.BLOCK_CONF);
             this.serviceManager = coreUtil.getServiceManager();
        } else {
             // Create a service manager for getting components from other blocks
