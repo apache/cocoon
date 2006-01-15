@@ -16,17 +16,14 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -63,8 +60,7 @@ public class BlocksManager
 
     private Source wiringFile;
     private HashMap blocks = new HashMap();
-    private TreeMap mountedBlocks = new TreeMap(new InverseLexicographicalOrder());
-    
+    private HashMap mountedBlocks = new HashMap();
     private Logger logger;    
 
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -123,7 +119,7 @@ public class BlocksManager
                 this.blocks.put(blockConf.getAttribute("id"), blockManager);
                 String mountPath = blockConf.getChild("mount").getAttribute("path", null);
                 if (mountPath != null) {
-                    this.mountedBlocks.put(mountPath, blockManager);
+                    this.mountedBlocks.put(fixPath(mountPath), blockManager);
                     this.getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
                                            " at " + mountPath);
                 }
@@ -144,17 +140,8 @@ public class BlocksManager
     }
     
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // We got it... Process the request
-        System.out.println("Service: contextPath=" + request.getContextPath() +
-                           " servletPath=" + request.getServletPath() +
-                           " pathInfo=" + request.getPathInfo() +
-                           " requestURI=" + request.getRequestURI() +
-                           " requestURL=" + request.getRequestURL());
-
-        String contextPath = trimPath(request.getContextPath());
         String servletPath = trimPath(request.getServletPath());
-        String pathInfo = trimPath(request.getPathInfo());
-        
+        String pathInfo = trimPath(request.getPathInfo());        
         String uri = servletPath + pathInfo;
 
         if (uri.length() == 0) {
@@ -172,86 +159,30 @@ public class BlocksManager
             response.sendRedirect(response.encodeRedirectURL(prefix + "/"));
             return;
         }
-
-        // The mount points start with '/' make sure that the URI also
-        // does, so that they are compareable.
-        if (pathInfo.length() == 0) {
-            pathInfo = "/";
-        }
-
-        Block block = this.getMountedBlock(pathInfo);
-        if (block == null)
-                throw new ServletException("No block mounted at " + pathInfo);
-
-        // This servlet is the context for the called block servlet
-        final String newContextPath = contextPath + servletPath;
         
-        // Resolve the URI relative to the mount point
-        final String newServletPath = block.getMountPath();
-        uri = uri.substring(newServletPath.length());
-        final String newPathInfo = uri;
-        
-        HttpServletRequest newRequest = new HttpServletRequestWrapper(request) {
+        RequestDispatcher dispatcher = this.blocksContext.getRequestDispatcher(pathInfo);
+        if (dispatcher == null)
+            throw new ServletException("No block mounted at " + pathInfo);
 
-                        /* (non-Javadoc)
-                         * @see javax.servlet.http.HttpServletRequestWrapper#getContextPath()
-                         */
-                        public String getContextPath() {
-                                return newContextPath;
-                        }
-
-                        /* (non-Javadoc)
-                         * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
-                         */
-                        public String getPathInfo() {
-                                return newPathInfo;
-                        }
-
-                        /* (non-Javadoc)
-                         * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
-                         */
-                        public String getServletPath() {
-                                return newServletPath;
-                        }
-                
-        };
-        
-        getLogger().debug("Enter processing in block at " + newServletPath);
-        block.service(newRequest, response);
-        getLogger().debug("Leaving processing in block at " + newServletPath);
-    }   
-
+        dispatcher.forward(request, response);
+    }
+    
     private Logger getLogger() {
         return this.logger;
     }
 
+    // Blocks specific methods
+    
     public Block getBlock(String blockId) {
         return (Block)this.blocks.get(blockId);
     }
     
-    /**
-     * The block with the largest mount point that is a prefix of the URI is
-     * chosen. The implementation could be made much more efficient.
-     * @param uri
-     */
-    private Block getMountedBlock(String uri) {
-        Block block = null;
-        // All mount points that are before or equal to the URI in
-        // lexicographical order. This includes all prefixes.
-        Map possiblePrefixes = this.mountedBlocks.tailMap(uri);
-        Iterator possiblePrefixesIt = possiblePrefixes.entrySet().iterator();
-        // Find the largest prefix to the uri
-        while (possiblePrefixesIt.hasNext()) {
-            Map.Entry entry = (Map.Entry) possiblePrefixesIt.next();
-            String mountPoint = (String)entry.getKey();
-            if (uri.startsWith(mountPoint)) {
-                block = (BlockManager)entry.getValue();
-                break;
-            }
-        }
-        return block;
+    public Block getMountedBlock(String uri) {
+        return (Block)this.mountedBlocks.get(uri);
     }
-
+    
+    // Modified interface
+    
     /**
      * Queries the class to estimate its ergodic period termination.
      *
@@ -276,10 +207,14 @@ public class BlocksManager
                 path = path.substring(0, length - 1);
         return path;
     }
-
-    private static class InverseLexicographicalOrder implements Comparator {
-        public int compare(Object o1, Object o2) {
-            return ((String)o2).compareTo((String)o1);
-        }
+    
+    /**
+     * If a block is mounted on "/" it should be registred at "" to get the servlet
+     * path right
+     * @param path
+     * @return fixed path
+     */
+    private static String fixPath(String path) {
+        return "/".equals(path) ? "" : path;
     }
 }
