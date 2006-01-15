@@ -28,7 +28,9 @@
          implementation="stable"/>
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
-  <sitemap src="COB-INF/block-sitemap.xmap"/>
+  <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
+    <sitemap file="COB-INF/block-sitemap.xmap"/>
+  </servlet>
   <requirements>
     <requires interface="http://cocoon.apache.org/blocks/core/1.0"
               name="core"

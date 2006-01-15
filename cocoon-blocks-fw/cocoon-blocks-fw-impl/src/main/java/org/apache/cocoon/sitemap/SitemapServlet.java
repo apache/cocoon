@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -96,19 +95,6 @@ public class SitemapServlet
         
         this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
         
-        // Create the tree processor
-        String sitemapPath = null;
-        try {
-            sitemapPath = this.config.getAttribute("src");
-        } catch (ConfigurationException e) {
-            throw new ServletException(e);
-        }
-        getLogger().debug("SitemapServlet: create sitemap " + sitemapPath);
-        DefaultConfiguration sitemapConf =
-            new DefaultConfiguration("sitemap", "SitemapServlet sitemap: " + " for " + sitemapPath);
-        sitemapConf.setAttribute("file", sitemapPath);
-        sitemapConf.setAttribute("check-reload", "yes");
-            
         try {
             this.processor = (Processor) ClassUtils.newInstance(TreeProcessor.class.getName());
         } catch (Exception e) {
@@ -119,7 +105,7 @@ public class SitemapServlet
                     this.getLogger(),
                     this.context,
                     this.serviceManager,
-                    sitemapConf);
+                    this.config);
         } catch (Exception e) {
             throw new ServletException(e);
         }
