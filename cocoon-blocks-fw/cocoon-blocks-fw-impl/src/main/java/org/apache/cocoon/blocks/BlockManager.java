@@ -46,6 +46,7 @@ import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.sitemap.SitemapServlet;
 
 /**
  * @version $Id$
@@ -129,13 +130,12 @@ public class BlockManager
         // Create a processor for the block
         if (this.blockWiring.getProcessorConfiguration() != null) {
             this.blockServlet = new SitemapServlet();
-            this.blockServlet.init(blockServletConfig);
             LifecycleHelper.setupComponent(this.blockServlet,
                     this.getLogger(),
                     newContext,
                     this.serviceManager,
                     this.blockWiring.getProcessorConfiguration());    
-            
+            this.blockServlet.init(blockServletConfig);            
         }
     }
 

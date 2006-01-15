@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
 
@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -38,28 +36,26 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.blocks.BlockConstants;
 import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
+import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * @version $Id$
  */
 public class SitemapServlet
     extends HttpServlet
-    implements Configurable, Contextualizable, Disposable, Initializable, LogEnabled, Serviceable { 
+    implements Configurable, Contextualizable, LogEnabled, Serviceable { 
 
     private String containerEncoding;
     private String contextURL;
 
     private Logger logger;
     private Context context;
-    private ServiceManager parentServiceManager;
     private ServiceManager serviceManager;
     private Configuration config;
     private Processor processor;
@@ -74,66 +70,14 @@ public class SitemapServlet
         this.context = context;
     }
 
-    public void service(ServiceManager manager) throws ServiceException {
-        this.parentServiceManager = manager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
     }
 
-    public void configure(Configuration config)
-        throws ConfigurationException {
+    public void configure(Configuration config) throws ConfigurationException {
         this.config = config;
     }
 
-    public void initialize() throws Exception {
-        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
-
-        // Create an own service manager
-        this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
-
-        String sitemapPath = this.config.getAttribute("src");
-
-        // Hack to put a sitemap configuration for the main sitemap of
-        // the block into the service manager
-        getLogger().debug("SitemapServlet: create sitemap " + sitemapPath);
-        DefaultConfiguration sitemapConf =
-            new DefaultConfiguration("sitemap", "SitemapServlet sitemap: " + " for " + sitemapPath);
-        sitemapConf.setAttribute("file", sitemapPath);
-        sitemapConf.setAttribute("check-reload", "yes");
-        // The source resolver must be defined in this service
-        // manager, otherwise the root path will be the one from the
-        // parent manager
-        DefaultConfiguration resolverConf =
-            new DefaultConfiguration("source-resolver", "SitemapServlet source resolver");
-        DefaultConfiguration conf =
-            new DefaultConfiguration("components", "SitemapServlet components");
-        conf.addChild(sitemapConf);
-        conf.addChild(resolverConf);
-
-        LifecycleHelper.setupComponent(this.serviceManager,
-                                       this.getLogger(),
-                                       this.context,
-                                       null,
-                                       conf);
-
-        SourceResolver sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
-        final Processor processor = EnvironmentHelper.getCurrentProcessor();
-        if (processor != null) {
-            getLogger().debug("processor context" + processor.getContext());
-        }
-        Source sitemapSrc = sourceResolver.resolveURI(sitemapPath);
-        getLogger().debug("Sitemap Source " + sitemapSrc.getURI());
-        sourceResolver.release(sitemapSrc);
-        this.serviceManager.release(sourceResolver);
-
-        // Get the Processor and keep it
-        this.processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-    }
-
-    public void dispose() {
-        LifecycleHelper.dispose(this.serviceManager);
-        this.serviceManager = null;
-        this.parentServiceManager = null;
-    }
-    
     protected final Logger getLogger() {
         return this.logger;
     }
@@ -148,6 +92,36 @@ public class SitemapServlet
         this.containerEncoding = this.getInitParameter("container-encoding");
         if (this.containerEncoding == null) {
             this.containerEncoding = "ISO-8859-1";
+        }
+        
+        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
+        
+        // Create the tree processor
+        String sitemapPath = null;
+        try {
+            sitemapPath = this.config.getAttribute("src");
+        } catch (ConfigurationException e) {
+            throw new ServletException(e);
+        }
+        getLogger().debug("SitemapServlet: create sitemap " + sitemapPath);
+        DefaultConfiguration sitemapConf =
+            new DefaultConfiguration("sitemap", "SitemapServlet sitemap: " + " for " + sitemapPath);
+        sitemapConf.setAttribute("file", sitemapPath);
+        sitemapConf.setAttribute("check-reload", "yes");
+            
+        try {
+            this.processor = (Processor) ClassUtils.newInstance(TreeProcessor.class.getName());
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+        try {
+            LifecycleHelper.setupComponent(this.processor,
+                    this.getLogger(),
+                    this.context,
+                    this.serviceManager,
+                    sitemapConf);
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
     }
 
