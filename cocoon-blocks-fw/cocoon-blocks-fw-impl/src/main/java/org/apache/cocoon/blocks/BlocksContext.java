@@ -22,6 +22,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
 
@@ -56,8 +59,8 @@ public class BlocksContext extends ServletContextWrapper {
      * @see org.apache.cocoon.blocks.ServletContextWrapper#getRequestDispatcher(java.lang.String)
      */
     public RequestDispatcher getRequestDispatcher(String path) {
-        // TODO Auto-generated method stub
-        return super.getRequestDispatcher(path);
+        PathDispatcher dispatcher = new PathDispatcher(path);
+        return dispatcher.exists() ? dispatcher : null;
     }
     
     // BlocksContext specific method
@@ -97,6 +100,98 @@ public class BlocksContext extends ServletContextWrapper {
 
         private boolean exists() {
             return this.block != null;
+        }
+    }
+    private class PathDispatcher implements RequestDispatcher {
+        
+        private String mountPath;
+        private String path;
+        private Block block;
+        /**
+         * @param path
+         */
+        private PathDispatcher(String path) {
+            this.path = path;
+            this.block= null;
+        
+            this.mountPath = this.path;
+            int index = this.mountPath.length();
+            while (this.block == null && index != -1) {
+                this.mountPath = this.mountPath.substring(0, index);
+                this.block = (Block) BlocksContext.this.blocks.getMountedBlock(this.mountPath);
+                index = this.mountPath.lastIndexOf('/');
+            }
+        }
+        
+        private boolean exists() {
+            return this.block != null;
+        }
+
+        public void forward(ServletRequest request0, ServletResponse response0) throws ServletException, IOException {
+            HttpServletRequest request = (HttpServletRequest) request0;
+            HttpServletResponse response = (HttpServletResponse) response0;
+            // We got it... Process the request
+            System.out.println("Service: contextPath=" + request.getContextPath() +
+                               " servletPath=" + request.getServletPath() +
+                               " pathInfo=" + request.getPathInfo() +
+                               " requestURI=" + request.getRequestURI() +
+                               " requestURL=" + request.getRequestURL());
+        
+            // This servlet is the context for the called block servlet
+            String contextPath = trimPath(request.getContextPath());
+            String servletPath = trimPath(request.getServletPath());
+            final String newContextPath = contextPath + servletPath;
+            
+            // Resolve the URI relative to the mount point
+            final String newServletPath = this.mountPath;
+            final String newPathInfo = this.path.substring(newServletPath.length());
+            
+            HttpServletRequest newRequest = new HttpServletRequestWrapper(request) {
+        
+                /* (non-Javadoc)
+                 * @see javax.servlet.http.HttpServletRequestWrapper#getContextPath()
+                 */
+                public String getContextPath() {
+                    return newContextPath;
+                }
+                
+                /* (non-Javadoc)
+                 * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
+                 */
+                public String getPathInfo() {
+                    return newPathInfo;
+                }
+                
+                /* (non-Javadoc)
+                 * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
+                 */
+                public String getServletPath() {
+                    return newServletPath;
+                }
+                    
+            };
+            
+            BlocksContext.this.log("Enter processing in block at " + newServletPath);
+            this.block.service(newRequest, response);
+            BlocksContext.this.log("Leaving processing in block at " + newServletPath);
+        }
+
+        public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+            throw new UnsupportedOperationException();
+        }
+        /**
+         * Utility function to ensure that the parts of the request URI not is null
+         * and not ends with /
+         * @param path
+         * @return the trimmed path
+         */
+        private String trimPath(String path) {
+            if (path == null)
+                    return "";
+            int length = path.length();
+            if (length > 0 && path.charAt(length - 1) == '/')
+                    path = path.substring(0, length - 1);
+            return path;
         }
     }
 }
