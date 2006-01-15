@@ -77,6 +77,23 @@
     </pluginRepository>
   </pluginRepositories>
   -->
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://www.apache.org/</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>jheymans</id>
+      <name>Jorg Heymans</name>
+      <email>jheymans@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
   <issueManagement>
     <system>jira</system>
     <url>https://issues.apache.org/jira/browse/COCOON</url>
