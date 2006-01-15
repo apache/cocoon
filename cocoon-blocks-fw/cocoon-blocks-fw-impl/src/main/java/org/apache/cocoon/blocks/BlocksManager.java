@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
@@ -101,31 +102,38 @@ public class BlocksManager
         
         Configuration[] blockConfs = wiring.getChildren("block");
                 
-        try {
-            // Create and store all blocks
-            for (int i = 0; i < blockConfs.length; i++) {
-                Configuration blockConf = blockConfs[i];
-                this.getLogger().debug("Creating " + blockConf.getName() +
-                                       " id=" + blockConf.getAttribute("id") +
-                                       " location=" + blockConf.getAttribute("location"));
-                BlockManager blockManager = new BlockManager();
-                blockManager.init(blocksConfig);
-                blockManager.setBlocks(this);
-                LifecycleHelper.setupComponent(blockManager,
-                                               this.getLogger(),
-                                               this.context,
-                                               null,
-                                               blockConf);
-                this.blocks.put(blockConf.getAttribute("id"), blockManager);
-                String mountPath = blockConf.getChild("mount").getAttribute("path", null);
-                if (mountPath != null) {
-                    this.mountedBlocks.put(fixPath(mountPath), blockManager);
-                    this.getLogger().debug("Mounted block " + blockConf.getAttribute("id") +
-                                           " at " + mountPath);
-                }
+        // Create and store all blocks
+        for (int i = 0; i < blockConfs.length; i++) {
+            Configuration blockConf = blockConfs[i];
+            String id = null;
+            String location = null;
+            try {
+                id = blockConf.getAttribute("id");
+                location = blockConf.getAttribute("location");
+            } catch (ConfigurationException e) {
+                throw new ServletException("Couldn't get id or location from the wiring file");
             }
-        } catch (Exception e) {
-            throw new ServletException(e);
+            this.getLogger().debug("Creating " + blockConf.getName() +
+                    " id=" + id +
+                    " location=" + location);
+            BlockManager blockManager = new BlockManager();
+            blockManager.init(blocksConfig);
+            blockManager.setBlocks(this);
+            try {
+                LifecycleHelper.setupComponent(blockManager,
+                        this.getLogger(),
+                        this.context,
+                        null,
+                        blockConf);
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
+            this.blocks.put(id, blockManager);
+            String mountPath = blockConf.getChild("mount").getAttribute("path", null);
+            if (mountPath != null) {
+                this.mountedBlocks.put(fixPath(mountPath), blockManager);
+                this.getLogger().debug("Mounted block " + id + " at " + mountPath);
+            }
         }
     }
     
