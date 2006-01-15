@@ -296,6 +296,13 @@ public class CoreUtil {
         cacheDir.mkdirs();
         appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
+        
+        /*
+         * Doesn't work when the CoreUtil is called on both the BlocksManager
+         * and the BlockManager level (which will be fixed later) furthermore
+         * the configuration file path configuration isn't necessary as we have
+         * default positions for the files.
+         * 
         String configFileName = this.settings.getConfiguration();
         final String usedFileName;
 
@@ -350,7 +357,8 @@ public class CoreUtil {
         final URL u = result;
         this.settings.setConfiguration(u.toExternalForm());
         this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
-
+        */
+        
         // set encoding
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings
                 .getFormEncoding());
