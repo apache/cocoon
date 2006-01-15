@@ -83,6 +83,17 @@
   </organization>
   <developers>
     <developer>
+      <id>danielf</id>
+      <name>Daniel Fagerstrom</name>
+      <email>danielf@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>jheymans</id>
       <name>Jorg Heymans</name>
       <email>jheymans@apache.org</email>
