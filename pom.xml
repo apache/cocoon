@@ -43,8 +43,8 @@
     <module>cocoon-session-fw</module>
     <module>cocoon-authentication-fw</module>
     <module>cocoon-captcha</module>
-    <module>cocoon-forms</module> 
-    <!--module>cocoon-jcr</module> --> 
+    <module>cocoon-forms</module>
+    <!--module>cocoon-jcr</module> -->
     <module>cocoon-portal</module>
     <module>cocoon-plugins</module>
     <module>cocoon-template</module>
@@ -86,6 +86,17 @@
       <id>danielf</id>
       <name>Daniel Fagerstrom</name>
       <email>danielf@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>lgawron</id>
+      <name>Leszek Gawron</name>
+      <email>lgawron@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
@@ -155,7 +166,7 @@
       <otherArchives>
         <otherArchive>http://www.mail-archive.com/users@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-user</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.user</otherArchive>	
+        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.user</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -167,7 +178,7 @@
       <otherArchives>
         <otherArchive>http://www.mail-archive.com/dev@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-dev</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.dev</otherArchive>	
+        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.dev</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -179,7 +190,7 @@
       <otherArchives>
         <otherArchive>http://www.mail-archive.com/dev@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-docs</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.docs</otherArchive>	
+        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.docs</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -190,7 +201,7 @@
       <otherArchives>
         <otherArchive>http://www.mail-archive.com/cvs@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-cvs</otherArchive>
-        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.cvs</otherArchive>	
+        <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.cvs</otherArchive>
       </otherArchives>
     </mailingList>
   </mailingLists>
