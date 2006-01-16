@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.1 2004/04/28 21:29:08 upayavira Exp $ -->
+<!-- CVS $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -59,6 +59,14 @@
      </map:transform>
      <map:serialize type="html"/>
    </map:match>
+
+    <!--+
+        | Mount everything else by calling the sitemap.xmap file located
+        | in the requested folder.
+        +-->
+    <map:match pattern="*/**">
+      <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+    </map:match>
    </map:pipeline>
  </map:pipelines>
 </map:sitemap>
