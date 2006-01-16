@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
- * @version CVS $Id$
+ * @version $Id$
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */
