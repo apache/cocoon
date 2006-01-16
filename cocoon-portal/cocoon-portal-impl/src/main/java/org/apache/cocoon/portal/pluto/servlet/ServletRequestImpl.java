@@ -51,8 +51,13 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
     final protected PortletWindow window;
 
     public ServletRequestImpl(HttpServletRequest request,
-                              PortletURLProviderImpl provider,
-                              PortletWindow window) {
+                              PortletURLProviderImpl provider) {
+        this(request, provider, null);
+    }
+
+    private ServletRequestImpl(HttpServletRequest request,
+                               PortletURLProviderImpl provider,
+                               PortletWindow window) {
         super(request);
         this.provider = provider;
         this.window = window;
@@ -179,7 +184,8 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
      */
     public String getProtocol() {
         return null;
-}
+    }
+
     /**
      * JST-168 PLT.16.3.3 cxxix
      * @see javax.servlet.ServletRequest#getRemoteAddr()
