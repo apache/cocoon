@@ -185,7 +185,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      */
     private String getNewInstanceTabName(CompositeLayout layout) {
         Integer data = (Integer) layout.getAspectData("tab");
-        Item selectedItem = (NamedItem) layout.getItem(data.intValue());
+        Item selectedItem = layout.getItem(data.intValue());
 
         if (selectedItem instanceof NamedItem) {
             return ((NamedItem) selectedItem).getName();
