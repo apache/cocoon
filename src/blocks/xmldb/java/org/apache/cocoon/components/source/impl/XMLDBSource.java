@@ -151,9 +151,9 @@ public class XMLDBSource extends AbstractLogEnabled
      * The constructor.
      *
      * @param logger the Logger instance.
-     * @param credential username and password
+     * @param user username 
+     * @param password password
      * @param srcUrl the URL being queried.
-     * @param manager component manager
      */
     public XMLDBSource(Logger logger,
                        String user, String password,
