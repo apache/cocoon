@@ -80,6 +80,13 @@
     </copy>
 
     <if>
+      <isfalse value="${internal.exclude.webapp.test-suite}"/>
+      <then>
+        <copy file="${build}/${name}-testcase.jar" todir="${build.webapp.lib}"/>
+      </then>
+    </if>
+
+    <if>
       <istrue value="${include.sources-jars}"/>
       <then>
         <copy file="${build}/${name}.src.jar"
