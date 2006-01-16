@@ -252,42 +252,31 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
     getLogger ().debug ("DBXMLAUTH: query is: " + query);
 
 
-    Collection col = CreateConnection( conf );
+    Collection col = CreateConnection(conf);
 
-    if ( col != null )
-    {
-      if ( col.isOpen() )
-      {
-
-        try
-        {
+    if (col != null) {
+      if (col.isOpen()) {
+        try {
           XPathQueryService service = (XPathQueryService) col.getService("XPathQueryService", "1.0");
 
           rs = service.query(query);
           ResourceIterator results = rs.getIterator();
 
-          if (results.hasMoreResources() == false)
-          {
+          if (results.hasMoreResources() == false) {
               getLogger ().debug ("DBXMLAUTH: auth failed");
               return null;
           } else {
             getLogger ().debug ("DBXMLAUTH: auth OK");
             return rs;
           }
-
         } catch (XMLDBException e) {
-
           getLogger ().debug ("DBXMLAUTH: got exception: " + e);
           return null;
-
         } finally {
-
           // close col
-          if (col != null) {
-            try {
-              col.close();
-            } catch (Exception e) { /* ignore */ }
-          }
+          try {
+            col.close();
+          } catch (Exception e) { /* ignore */ }
           getLogger ().debug ("DBXMLAUTH: collection closed");
 
         }
