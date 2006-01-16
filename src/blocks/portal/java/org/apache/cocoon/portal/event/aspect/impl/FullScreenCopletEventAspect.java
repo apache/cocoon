@@ -104,7 +104,7 @@ public class FullScreenCopletEventAspect
      * @see Receiver
      */
     public void inform(FullScreenCopletEvent event, PortalService service) {
-        final Layout startingLayout = (CopletLayout)event.getLayout();
+        final Layout startingLayout = event.getLayout();
         PortalService portalService = null;
         try {
             portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
