@@ -165,7 +165,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
       * member fields indicating the activity of the sepearate load and save
       * actions of a given binding.
       */
-     protected static class CommonAttributes{
+     public static class CommonAttributes{
 
     	/**
     	 * store direction (load/save enabledness) too for easier merging
