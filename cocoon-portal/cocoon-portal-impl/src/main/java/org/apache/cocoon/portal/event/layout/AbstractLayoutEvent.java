@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event;
+package org.apache.cocoon.portal.event.layout;
 
-/**
- * This event is performed "on" a target.
- *
- * @version $Id$
- */
-public interface ActionEvent extends Event {
+import org.apache.cocoon.portal.event.LayoutEvent;
+import org.apache.cocoon.portal.layout.Layout;
 
-    Object getTarget();
+public class AbstractLayoutEvent
+    implements LayoutEvent {
+
+    protected Layout target;
+
+    public AbstractLayoutEvent(Layout target) {
+        this.target = target;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.LayoutEvent#getTarget()
+     */
+    public Layout getTarget() {
+        return this.target;
+    }
 }

@@ -59,14 +59,14 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceEvent event, PortalService service) {
-        CopletInstanceDataFeatures.addChangedCopletInstanceData(service, (CopletInstanceData)event.getTarget());
+        CopletInstanceDataFeatures.addChangedCopletInstanceData(service, event.getTarget());
     }
 
     /**
      * @see Receiver
      */
     public void inform(JXPathEvent event, PortalService service) {
-        final Object target = event.getTarget();
+        final Object target = event.getObject();
         if ( target != null && event.getPath() != null && event.getValue() != null) {
             if ( target instanceof CopletInstanceData && event.getPath().equals("size") ) {
                 int newSize = new Integer(event.getValue().toString()).intValue();
@@ -83,7 +83,7 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceSizingEvent event, PortalService service) {
-        final CopletInstanceData cid = (CopletInstanceData)event.getTarget();
+        final CopletInstanceData cid = event.getTarget();
         Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
         if ( cid != null ) {
             final int oldSize = cid.getSize();
@@ -125,7 +125,7 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceDataRemovedEvent e, PortalService service) {
-        CopletInstanceData cid = (CopletInstanceData)e.getTarget();
+        CopletInstanceData cid = e.getTarget();
         // full screen?
         if ( cid.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
@@ -144,7 +144,7 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletDataEvent e, PortalService service) {
-        CopletData data = (CopletData)e.getTarget();
+        CopletData data = e.getTarget();
         List instances = null;
 
         ProfileManager profileManager = service.getProfileManager();
@@ -168,7 +168,7 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(LayoutChangeParameterEvent e, PortalService service) {
-        final Layout l = (Layout)e.getTarget();
+        final Layout l = e.getTarget();
         if ( e.isTemporary() ) {
             l.setTemporaryAttribute(e.getParameterName(), e.getValue());
         } else {

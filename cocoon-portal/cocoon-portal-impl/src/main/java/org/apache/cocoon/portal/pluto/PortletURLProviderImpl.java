@@ -246,9 +246,9 @@ public class PortletURLProviderImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.ActionEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
-    public Object getTarget() {        
+    public CopletInstanceData getTarget() {        
         return ((PortletEntityImpl)this.portletWindow.getPortletEntity()).getCopletInstanceData();
     }
 

@@ -18,8 +18,6 @@ package org.apache.cocoon.portal.event.layout;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.event.LayoutEvent;
-import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 
@@ -29,8 +27,8 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
  * @version $Id$
  */
 public class LayoutRemoveEvent
-    extends AbstractActionEvent
-    implements LayoutEvent, ConvertableEvent {
+    extends AbstractLayoutEvent
+    implements ConvertableEvent {
 
     /**
      * Constructor.
@@ -54,7 +52,7 @@ public class LayoutRemoveEvent
      * @see org.apache.cocoon.portal.event.ConvertableEvent#asString()
      */
     public String asString() {
-        final Layout l = (Layout)this.getTarget();
+        final Layout l = this.getTarget();
         if ( l.getId() == null ) {
             // if this is a coplet layout we can use the coplet instance id
             if ( l instanceof CopletLayout ) {

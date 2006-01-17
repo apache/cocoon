@@ -240,7 +240,7 @@ public class GroupBasedProfileManager
      */
     public void inform(CopletInstanceDataAddedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
-        profile.add((CopletInstanceData) event.getTarget());
+        profile.add(event.getTarget());
     }
 
     /**
@@ -248,9 +248,9 @@ public class GroupBasedProfileManager
      * @see Receiver
      */
     public void inform(CopletDataAddedEvent event, PortalService service) {
-        this.deployedCopletDatas.put(((CopletData)event.getTarget()).getId(), event.getTarget());
+        this.deployedCopletDatas.put(event.getTarget().getId(), event.getTarget());
         if ( this.copletDatas.objects != null ) {
-            this.copletDatas.objects.put(((CopletData)event.getTarget()).getId(), event.getTarget());
+            this.copletDatas.objects.put(event.getTarget().getId(), event.getTarget());
         }
     }
 
@@ -260,7 +260,7 @@ public class GroupBasedProfileManager
      */
     public void inform(CopletInstanceDataRemovedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
-        profile.remove((CopletInstanceData) event.getTarget());
+        profile.remove(event.getTarget());
     }
 
     /**

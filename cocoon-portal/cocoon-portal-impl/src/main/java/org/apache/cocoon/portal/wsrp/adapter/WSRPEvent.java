@@ -46,9 +46,9 @@ public class WSRPEvent
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.ActionEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
-    public Object getTarget() {
+    public CopletInstanceData getTarget() {
         return this.coplet;
     }
 

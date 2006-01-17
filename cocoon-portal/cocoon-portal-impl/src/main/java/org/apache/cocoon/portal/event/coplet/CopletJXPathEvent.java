@@ -31,4 +31,12 @@ public class CopletJXPathEvent
     public CopletJXPathEvent(CopletInstanceData target, String path, Object value) {
         super( target, path, value );
     }
+
+    /**
+     * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
+     */
+    public CopletInstanceData getTarget() {
+        return (CopletInstanceData)this.target;
+    }
+
 }

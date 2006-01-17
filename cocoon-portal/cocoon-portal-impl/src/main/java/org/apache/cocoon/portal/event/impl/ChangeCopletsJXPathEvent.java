@@ -24,11 +24,11 @@ import org.apache.cocoon.portal.event.CopletDataEvent;
  * @version $Id$
  */
 public class ChangeCopletsJXPathEvent
-extends AbstractActionEvent 
-implements CopletDataEvent {
+    implements CopletDataEvent {
 
     protected String path;
     protected Object value;
+    protected CopletData target;
 
     /**
      * Constructor
@@ -37,9 +37,9 @@ implements CopletDataEvent {
      * @param value  The value to set
      */
     public ChangeCopletsJXPathEvent(CopletData target, String path, Object value) {
-        super( target );
         this.path = path;
         this.value = value;
+        this.target = target;
     }
 
     /**
@@ -54,5 +54,12 @@ implements CopletDataEvent {
      */
     public Object getValue() {
         return this.value;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.CopletDataEvent#getTarget()
+     */
+    public CopletData getTarget() {
+        return this.target;
     }
 }

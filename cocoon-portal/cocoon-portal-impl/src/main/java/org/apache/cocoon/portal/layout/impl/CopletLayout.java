@@ -16,7 +16,6 @@
 package org.apache.cocoon.portal.layout.impl;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
@@ -25,7 +24,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  *
  * @version $Id$
  */
-public final class CopletLayout extends AbstractLayout {
+public final class CopletLayout extends Layout {
 
     /** The coplet instance data. */
     protected CopletInstanceData copletInstanceData;

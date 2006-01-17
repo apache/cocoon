@@ -260,7 +260,7 @@ public class DefaultLayoutFactory
      * @see Receiver
      */
     public void inform(LayoutRemoveEvent event, PortalService service) {
-        this.remove( (Layout)event.getTarget() );
+        this.remove( event.getTarget() );
     }
 
     /**

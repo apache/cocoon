@@ -33,7 +33,7 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.layout.AbstractLayout"
+  <class name="org.apache.cocoon.portal.layout.Layout"
          extends="org.apache.cocoon.portal.layout.AbstractParameters"
          verify-constructable="false">
 
@@ -52,7 +52,7 @@
   </class>
 
   <class name="org.apache.cocoon.portal.layout.impl.LinkLayout"
-         extends="org.apache.cocoon.portal.layout.AbstractLayout"
+         extends="org.apache.cocoon.portal.layout.Layout"
          verify-constructable="false">
     <map-to xml="link-layout"/>
 
@@ -73,7 +73,7 @@
   </class>
 
   <class name="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
-         extends="org.apache.cocoon.portal.layout.AbstractLayout"
+         extends="org.apache.cocoon.portal.layout.Layout"
          verify-constructable="false">
     <map-to xml="composite-layout"/>
 
@@ -93,7 +93,7 @@
 
   <class name="org.apache.cocoon.portal.layout.impl.CopletLayout"
          auto-complete="false"
-         extends="org.apache.cocoon.portal.layout.AbstractLayout"
+         extends="org.apache.cocoon.portal.layout.Layout"
          verify-constructable="false">
     <map-to xml="coplet-layout"/>
 
@@ -111,7 +111,7 @@
   </class>
 
   <class name="org.apache.cocoon.portal.layout.impl.FrameLayout"
-         extends="org.apache.cocoon.portal.layout.AbstractLayout"
+         extends="org.apache.cocoon.portal.layout.Layout"
          verify-constructable="false">
     <map-to xml="frame-layout"/>
 

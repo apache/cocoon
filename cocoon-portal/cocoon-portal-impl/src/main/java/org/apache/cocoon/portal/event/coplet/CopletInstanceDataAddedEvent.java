@@ -16,8 +16,6 @@
 package org.apache.cocoon.portal.event.coplet;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.CopletInstanceEvent;
-import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
 
 /**
  * This event is fired if a new instance is created.
@@ -25,8 +23,7 @@ import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
  * @version $Id$
  */
 public class CopletInstanceDataAddedEvent
-    extends AbstractActionEvent
-    implements CopletInstanceEvent {
+    extends AbstractCopletInstanceEvent {
 
     public CopletInstanceDataAddedEvent(CopletInstanceData target) {
         super(target);

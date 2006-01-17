@@ -18,11 +18,9 @@ package org.apache.cocoon.portal.event.coplet;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
-import org.apache.cocoon.portal.event.ActionEvent;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
-import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
 
 /**
  * This event is fired for resizing a coplet.
@@ -30,8 +28,8 @@ import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
  * @version $Id$
  */
 public class CopletInstanceSizingEvent
-    extends AbstractActionEvent
-    implements CopletInstanceEvent, ComparableEvent, ConvertableEvent {
+    extends AbstractCopletInstanceEvent
+    implements ComparableEvent, ConvertableEvent {
 
     protected int size;
 
@@ -65,7 +63,7 @@ public class CopletInstanceSizingEvent
     public boolean equalsEvent(ComparableEvent event) {
         if ( event instanceof CopletInstanceEvent
              && CopletInstanceDataFeatures.isSizingEvent((CopletInstanceEvent)event) ) {
-            if ( this.getTarget().equals( ((ActionEvent)event).getTarget()) ) {
+            if ( this.getTarget().equals( ((CopletInstanceEvent)event).getTarget()) ) {
                 return true;
             }
         }
@@ -76,6 +74,6 @@ public class CopletInstanceSizingEvent
      * @see org.apache.cocoon.portal.event.ConvertableEvent#asString()
      */
     public String asString() {
-        return ((CopletInstanceData)this.getTarget()).getId() + ':' + this.getSize();
+        return this.getTarget().getId() + ':' + this.getSize();
     }
 }

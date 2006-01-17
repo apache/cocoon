@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.user;
 
-import org.apache.cocoon.portal.event.ActionEvent;
+import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.profile.PortalUser;
 
 /**
@@ -24,7 +24,8 @@ import org.apache.cocoon.portal.profile.PortalUser;
  * @version $Id$
  * @since 2.2
  */
-public abstract class UserEvent implements ActionEvent {
+public abstract class UserEvent
+    implements Event {
 
     protected PortalUser portalUser;
 
@@ -35,12 +36,4 @@ public abstract class UserEvent implements ActionEvent {
     public PortalUser getPortalUser() {
         return this.portalUser;
     }
-
-    /**
-     * @see org.apache.cocoon.portal.event.ActionEvent#getTarget()
-     */
-    public Object getTarget() {
-        return this.getPortalUser();
-    }
-
 }

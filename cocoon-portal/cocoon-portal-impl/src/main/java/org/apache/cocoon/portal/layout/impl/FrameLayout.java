@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.cocoon.portal.layout.AbstractLayout;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
 /**
@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  *
  * @version $Id$
  */
-public class FrameLayout extends AbstractLayout {
+public class FrameLayout extends Layout {
 
     protected String source;
 

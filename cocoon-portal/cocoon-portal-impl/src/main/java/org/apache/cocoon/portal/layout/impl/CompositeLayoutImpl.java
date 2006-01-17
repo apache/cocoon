@@ -15,16 +15,8 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
-import org.apache.cocoon.util.ClassUtils;
 
 
 /**
@@ -33,11 +25,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @version $Id$
  */
 public class CompositeLayoutImpl 
-    extends AbstractLayout
-    implements CompositeLayout {
-
-    /** The children of this layout object. */
-    protected List items = new ArrayList();
+    extends CompositeLayout {
 
     /**
      * Create a new composite layout object.
@@ -48,103 +36,5 @@ public class CompositeLayoutImpl
      */
     public CompositeLayoutImpl(String id, String name) {
         super(id, name);
-    }
-
-	/**
-	 * Add indexed item to the itemList.
-	 * @param index index for the position inside the list
-	 * @param item item to add
-	 */
-	public final void addItem(int index, Item item) {
-		this.items.add(index, item);
-        item.setParent(this);
-	}
-
-	/**
-	 * Add Item to the ItemList.
-	 * @param item item to add
-	 */
-	public final void addItem(Item item) {
-		this.items.add(item);
-		item.setParent(this);
-	}
-
-	/**
-	 * Get Item from the ItemList.
-	 * @return Item
-	 */
-	public final Item getItem(int index) {
-		return (Item) this.items.get(index);
-	}
-
-	/**
-	 * Get the ItemList.
-	 * @return items
-	 */
-	public final List getItems() {
-		return this.items;
-	}
-
-	/**
-	 * Get size of ItemList.
-	 * @return size
-	 */
-	public final int getSize() {
-		return this.items.size();
-	}
-
-    /**
-     * @see org.apache.cocoon.portal.layout.CompositeLayout#removeItem(org.apache.cocoon.portal.layout.Item)
-     */
-    public final void removeItem(Item item) {
-        this.items.remove(item);
-        item.setParent(null);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.layout.CompositeLayout#createNewItem()
-     */
-    public Item createNewItem() {
-        if ( this.description.getItemClassName() == null ) {
-            return new Item();
-        }
-        try {
-            return (Item)ClassUtils.newInstance(this.description.getItemClassName());
-        } catch (Exception ignore) {
-            return new Item();
-        }
-    }
-
-    /**
-     * @return Returns the item class name.
-     */
-    public String getItemClassName() {
-        return this.description.getItemClassName();
-    }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        CompositeLayoutImpl clone = (CompositeLayoutImpl)super.clone();
-
-        // we are not cloning the items
-        clone.items = new ArrayList();
-
-        return clone;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.layout.Layout#copy()
-     */
-    public Layout copy() {
-        CompositeLayoutImpl clone = (CompositeLayoutImpl)super.copy();
-        final Iterator i = this.items.iterator();
-        while ( i.hasNext() ) {
-            final Item current = (Item)i.next();
-            final Item clonedItem = current.copy(clone);
-            clone.addItem(clonedItem);
-        }
-        return clone;
     }
 }
