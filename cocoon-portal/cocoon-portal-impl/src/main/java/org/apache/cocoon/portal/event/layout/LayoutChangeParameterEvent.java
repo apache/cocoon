@@ -18,8 +18,6 @@ package org.apache.cocoon.portal.event.layout;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.event.LayoutEvent;
-import org.apache.cocoon.portal.event.impl.AbstractActionEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.commons.lang.ObjectUtils;
 
@@ -28,8 +26,8 @@ import org.apache.commons.lang.ObjectUtils;
  * @version $Id$
  */
 public class LayoutChangeParameterEvent
-    extends AbstractActionEvent
-    implements LayoutEvent, ComparableEvent, ConvertableEvent {
+    extends AbstractLayoutEvent
+    implements ComparableEvent, ConvertableEvent {
 
     protected String parameterName;
     protected String value;
@@ -103,7 +101,7 @@ public class LayoutChangeParameterEvent
      * @see org.apache.cocoon.portal.event.ConvertableEvent#asString()
      */
     public String asString() {
-        final Layout l = (Layout)this.getTarget();
+        final Layout l = this.getTarget();
         if ( l.getId() == null ) {
             return null;
         }

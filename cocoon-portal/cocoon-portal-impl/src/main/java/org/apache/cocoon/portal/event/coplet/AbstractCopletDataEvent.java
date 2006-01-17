@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event;
+package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.event.CopletDataEvent;
 
-/**
- * This interface marks an event as targetted at a
- * {@link org.apache.cocoon.portal.layout.Layout} object.
- *
- * @version $Id$
- */
-public interface LayoutEvent extends Event {
+public class AbstractCopletDataEvent
+    implements CopletDataEvent {
 
-    Layout getTarget();
+    protected CopletData target;
+
+    public AbstractCopletDataEvent(CopletData target) {
+        this.target = target;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.event.CopletDataEvent#getTarget()
+     */
+    public CopletData getTarget() {
+        return this.target;
+    }
 }

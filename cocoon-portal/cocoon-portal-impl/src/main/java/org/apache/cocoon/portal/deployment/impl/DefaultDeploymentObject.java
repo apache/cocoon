@@ -113,9 +113,8 @@ public class DefaultDeploymentObject implements DeploymentObject {
         if (dot != -1) {
             final String ext = uri.substring(dot);
             return ext.equals(".war") || ext.equals(".jar") || ext.equals(".zip");
-        } else {
-            return false;
         }
+        return false;
     }
 
 }

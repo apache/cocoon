@@ -607,7 +607,7 @@ public class WSRPAdapter
      * @see Receiver
      */
     public void inform(WSRPEvent event, PortalService service) {
-        final CopletInstanceData coplet = (CopletInstanceData)event.getTarget();
+        final CopletInstanceData coplet = event.getTarget();
         this.setCurrentCopletInstanceData(coplet);
         
         try {

@@ -31,4 +31,11 @@ public class LayoutJXPathEvent
     public LayoutJXPathEvent(Layout target, String path, Object value) {
         super( target, path, value );
     }
+
+    /**
+     * @see org.apache.cocoon.portal.event.LayoutEvent#getTarget()
+     */
+    public Layout getTarget() {
+        return (Layout)this.target;
+    }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright 1999-2002,2004-2005 The Apache Software Foundation.
- * 
+ * Copyright 2006 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.event.ActionEvent;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 
-/**
- * This event is performed on a target
- *
- * @version $Id$
- */
-public abstract class AbstractActionEvent implements ActionEvent {
+public class AbstractCopletInstanceEvent
+    implements CopletInstanceEvent {
 
-    protected Object target;
+    protected CopletInstanceData target;
 
-    public AbstractActionEvent(Object target) {
+    public AbstractCopletInstanceEvent(CopletInstanceData target) {
         this.target = target;
     }
 
     /**
-     * @return Object
+     * @see org.apache.cocoon.portal.event.CopletDataEvent#getTarget()
      */
-    public Object getTarget() {
+    public CopletInstanceData getTarget() {
         return this.target;
     }
 }

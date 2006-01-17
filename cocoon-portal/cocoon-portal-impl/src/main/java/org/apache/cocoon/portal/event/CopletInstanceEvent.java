@@ -15,14 +15,15 @@
  */
 package org.apache.cocoon.portal.event;
 
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+
 
 /**
  * This interface marks an event as an event for a coplet instance.
  *
  * @version $Id$
  */
-public interface CopletInstanceEvent
-    extends ActionEvent {
+public interface CopletInstanceEvent extends Event {
 
-    // just a marker interface
+    CopletInstanceData getTarget();
 }

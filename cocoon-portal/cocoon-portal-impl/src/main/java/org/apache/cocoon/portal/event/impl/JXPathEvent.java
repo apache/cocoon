@@ -15,17 +15,20 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
+import org.apache.cocoon.portal.event.Event;
+
 /**
  * This event changes the value of an instance.
  *
  * @version $Id$
  */
-public abstract class JXPathEvent
-    extends AbstractActionEvent {
+public abstract class JXPathEvent implements Event {
 
     protected String path;
 
     protected Object value;
+
+    protected Object target;
 
     /**
      * @return Returns the path.
@@ -41,8 +44,15 @@ public abstract class JXPathEvent
         return value;
     }
 
+    /**
+     * @return Returns the target.
+     */
+    public Object getObject() {
+        return this.target;
+    }
+
     public JXPathEvent(Object target, String path, Object value) {
-        super( target );
+        this.target = target;
         this.path = path;
         this.value = value;
     }

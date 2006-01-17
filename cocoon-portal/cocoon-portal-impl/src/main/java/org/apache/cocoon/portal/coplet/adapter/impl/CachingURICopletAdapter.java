@@ -190,7 +190,7 @@ public class CachingURICopletAdapter
      * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid.
      */
     public void handleCopletInstanceEvent(CopletInstanceEvent event) {
-        final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
+        final CopletInstanceData coplet = event.getTarget();
 
         // do we ignore SizingEvents
         boolean ignoreSizing = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_IGNORE_SIZING_EVENTS, Boolean.TRUE)).booleanValue();

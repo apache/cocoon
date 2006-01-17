@@ -110,9 +110,8 @@ public class TestProfileManager extends GroupBasedProfileManager {
 
             this.storeUserProfile(layoutKey, profile);
             return profile;
-        } else {
-            return super.loadProfile(layoutKey);
         }
+        return super.loadProfile(layoutKey);
     }
 
     /**

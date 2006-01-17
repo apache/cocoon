@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.event.CopletInstanceEvent;
+import org.apache.cocoon.portal.event.coplet.AbstractCopletInstanceEvent;
 
 /**
  * This class realizes a link event created by the EventLinkTransformer.
@@ -24,8 +24,7 @@ import org.apache.cocoon.portal.event.CopletInstanceEvent;
  * @version $Id$
  */
 public class CopletLinkEvent
-extends AbstractActionEvent
-implements CopletInstanceEvent {
+    extends AbstractCopletInstanceEvent {
 
     /**
      * The link to be handled by this event.
