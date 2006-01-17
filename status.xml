@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1731" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
+      Allow to extend JXPathBinding outside the org.apache.cocoon.forms.binding package
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1687" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
       When saving a cform, remove xml elements if the value of the widget is null.
       Symptom is eg date field initialized to 1970-01-01
