@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1627" due-to="Aurélien DEHAY" due-to-email="ad@zorel.org">
+      Permit the choice of attributes to augment in AugmentTransformer
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1621" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
       Allow to use a &lt;fd:value-count> validation rule with &lt;fd:multivaluefield>
     </action>
