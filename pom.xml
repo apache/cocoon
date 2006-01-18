@@ -83,6 +83,17 @@
   </organization>
   <developers>
     <developer>
+      <id>bdelacretaz</id>
+      <name>Bertrand Delacretaz</name>
+      <email>bdelacretaz@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>danielf</id>
       <name>Daniel Fagerstrom</name>
       <email>danielf@apache.org</email>
@@ -92,6 +103,17 @@
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>antonio</id>
+      <name>Antonio Gallardo</name>
+      <email>antonio@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>-6</timezone>
     </developer>
     <developer>
       <id>lgawron</id>
@@ -119,17 +141,6 @@
       <id>gianugo</id>
       <name>Gianugo Rabellino</name>
       <email>gianugo@apache.org</email>
-      <organization>ASF</organization>
-      <organizationUrl>http://www.apache.org</organizationUrl>
-      <roles>
-        <role>Committer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>bdelacretaz</id>
-      <name>Bertrand Delacretaz</name>
-      <email>bdelacretaz@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
