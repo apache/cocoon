@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1610" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
+       Add ids to CForms validation messages, so that they can be unit-tested
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1627" due-to="Aurélien DEHAY" due-to-email="ad@zorel.org">
       Permit the choice of attributes to augment in AugmentTransformer
     </action>
