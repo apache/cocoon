@@ -35,8 +35,17 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    
-    protected void setupDefinition(Element widgetElement, AbstractDatatypeWidgetDefinition definition) throws Exception {
+
+    protected void setupDefinition(Element widgetElement,
+            AbstractDatatypeWidgetDefinition definition) throws Exception
+    {
+        setupDefinition(widgetElement, definition, false);
+    }
+
+    protected void setupDefinition(Element widgetElement,
+            AbstractDatatypeWidgetDefinition definition, boolean isArrayType)
+        throws Exception
+    {
         super.setupDefinition(widgetElement, definition);
         // parse "label", "hint", etc.
         setDisplayData(widgetElement, definition);
@@ -46,13 +55,13 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
         while (iter.hasNext()) {
             definition.addValueChangedListener((ValueChangedListener)iter.next());
         }
-        
+
         //---- parse "datatype"
         Element datatypeElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "datatype");
         if (datatypeElement != null) {
-        	Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
-        	
-        	// ---- parse "initial-value"
+            Datatype datatype = datatypeManager.createDatatype(datatypeElement, isArrayType);
+
+            // ---- parse "initial-value"
             Object initialValue = null;
             Element initialValueElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "initial-value", false);
             if (initialValueElement != null) {
@@ -66,11 +75,11 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
                 }
                 initialValue = result.getResult();
             }
-            
+
             definition.setDatatype(datatype, initialValue);
         }
-        
-        
+
+
         //---- parse "selection-list"
         // FIXME: pass the manager to the definition as a side effect. Should be removed
         // when definition are managed like components.
@@ -81,14 +90,14 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
             definition.setSelectionList(list);
         }
     }
-    
+
     protected SelectionList buildSelectionList(
             Element widgetElement, AbstractDatatypeWidgetDefinition definition, String name) throws Exception {
         Element selectionListElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, name);
-        
+
         if(selectionListElement != null && definition.getDatatype() == null)
             throw new Exception("A widget with a selection list always requires a datatype as well! (at "+DomHelper.getLocation(selectionListElement)+" )");
-        
+
         if (selectionListElement == null)
             return null;
 
