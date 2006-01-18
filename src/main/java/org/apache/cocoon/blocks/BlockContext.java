@@ -43,8 +43,7 @@ public class BlockContext extends ServletContextWrapper {
     private BlockWiring wiring;
     private Block block;
     
-    public BlockContext(ServletContext parentContext, BlockWiring wiring, Block block)
-    throws ServletException, MalformedURLException {
+    public BlockContext(ServletContext parentContext, BlockWiring wiring, Block block) {
         super(parentContext);
         this.wiring = wiring;
         this.block = block;

@@ -16,7 +16,6 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
-import java.net.URL;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -25,27 +24,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -53,12 +47,11 @@ import org.apache.cocoon.util.ClassUtils;
  */
 public class BlockManager
     extends HttpServlet
-    implements Block, Configurable, Contextualizable, Disposable, Initializable, LogEnabled { 
+    implements Block, Configurable, LogEnabled { 
 
     public static String ROLE = BlockManager.class.getName();
 
     private Logger logger;
-    private Context context;
     private Configuration config;
     private ServiceManager serviceManager;
 
@@ -72,47 +65,64 @@ public class BlockManager
         this.logger = logger;
     }
 
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
     public void configure(Configuration config)
         throws ConfigurationException {
         this.config = config;
     }
 
-    public void initialize() throws Exception {
+    protected final Logger getLogger() {
+        return this.logger;
+    }
+
+    // FIXME The InterBlockServiceManager need access to the BlocksManager,
+    // it should preferably just need to access something more component
+    // handling specific.
+    public void setBlocks(Blocks blocks) {
+        this.blocks = blocks;
+    }
+
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
         this.blockWiring = new BlockWiring();
         this.blockWiring.setServletContext(this.getServletContext());
-        LifecycleHelper.setupComponent(this.blockWiring,
-                                       this.getLogger(),
-                                       null,
-                                       null,
-                                       this.config);    
+        try {
+            LifecycleHelper.setupComponent(this.blockWiring,
+                                           this.getLogger(),
+                                           null,
+                                           null,
+                                           this.config);
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }    
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
         this.blockContext =
             new BlockContext(this.getServletContext(), this.blockWiring, this);
         this.contextURL = CoreUtil.getContextURL(this.blockContext, BlockConstants.BLOCK_CONF);
-        Context newContext = this.getAvalonContext();
-        String confLocation = this.contextURL + "::";
-
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
-        if (this.blockWiring.isCore()) {
-            this.getLogger().debug("Block with core=true");
-            CoreUtil coreUtil = new CoreUtil(blockServletConfig, BlockConstants.BLOCK_CONF);
-            this.serviceManager = coreUtil.getServiceManager();
-       } else {
-            // Create a service manager for getting components from other blocks
-            ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
-            ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
 
-            this.serviceManager =
-                this.createLocalSourceResolverSM(newContext, topServiceManager, confLocation);
+        Settings settings = CoreUtil.createSettings(blockServletConfig);
+        Context newContext =
+            CoreUtil.createContext(blockServletConfig, settings, BlockConstants.BLOCK_CONF); 
+        Core core = new Core(settings, newContext);
+        String confLocation = this.contextURL + "::";
+
+        // Create a service manager for getting components from other blocks
+        ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
+        ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
+
+        this.serviceManager = new SingleComponentServiceManager(topServiceManager, core, Core.ROLE);
+        if (!this.blockWiring.isCore()) {
+            this.getLogger().debug("Non core Block");
+            try {
+                this.serviceManager =
+                    this.createLocalSourceResolverSM(newContext, this.serviceManager , confLocation);
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
         }
-        // FIXME this.settings = (Settings) this.serviceManager.lookup(Core.ROLE);
         
         // Create a service manager with the exposed components of the block
         if (this.blockWiring.getComponentConfiguration() != null) {
@@ -120,53 +130,81 @@ public class BlockManager
                 new DefaultConfiguration("components", confLocation);
             componentConf.addAll(this.blockWiring.getComponentConfiguration());
             this.serviceManager = new CocoonServiceManager(this.serviceManager);
-            LifecycleHelper.setupComponent(this.serviceManager,
-                    this.getLogger(),
-                    newContext,
-                    null,
-                    componentConf);
+            try {
+                LifecycleHelper.setupComponent(this.serviceManager,
+                        this.getLogger(),
+                        newContext,
+                        null,
+                        componentConf);
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
         }
 
         // Create a servlet for the block
         if (this.blockWiring.hasServlet()) {
             String servletClass = this.blockWiring.getServletClass();
-            this.blockServlet = (Servlet) ClassUtils.newInstance(servletClass);
-            LifecycleHelper.setupComponent(this.blockServlet,
-                    this.getLogger(),
-                    newContext,
-                    this.serviceManager,
-                    this.blockWiring.getServletConfiguration());
+            try {
+                this.blockServlet = (Servlet) ClassUtils.newInstance(servletClass);
+                LifecycleHelper.setupComponent(this.blockServlet,
+                        this.getLogger(),
+                        newContext,
+                        this.serviceManager,
+                        this.blockWiring.getServletConfiguration());
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
             this.blockServlet.init(blockServletConfig);            
         }
     }
 
-    public void dispose() {
-    }
-    
-    protected final Logger getLogger() {
-        return this.logger;
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Request to the own block
+        try {
+            // It is important to set the current block context each time
+            // a new block is entered, this is used for the block
+            // protocol
+            BlockCallStack.enterBlock(this.blockContext);
+            this.blockServlet.service(request, response);
+        } finally {
+            BlockCallStack.leaveBlock();
+        }
     }
 
+    public String getServletInfo() {
+        return "BlockManager";
+    }
+
+    public void destroy() {
+        super.destroy();
+    }
+    
     /**
-     * @throws Exception
+     * The exported components of the block. Return null if the block doesn't export components.
+     * 
+     * @return a ServiceManager containing the blocks exported components
      */
-    protected Context getAvalonContext() throws Exception {
-        ComponentContext newContext = new ComponentContext(this.context);
-        // A block is supposed to be an isolated unit so it should not have
-        // any direct access to the global root context
-        newContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.contextURL));
-        newContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.blockContext));
-        newContext.makeReadOnly();
-        
-        return newContext;
+    public ServiceManager getServiceManager() {
+        // Check that the block have a local service manager
+        if (this.blockWiring.getComponentConfiguration() != null) {
+            return this.serviceManager;
+        } else {
+            return null;
+        }
+    }
+
+    public Servlet getBlockServlet() {
+        return this.blockServlet;
     }
 
     /**
      * @param newContext
      * @param confLocation
+     * @throws Exception 
      * @throws Exception
      */
-    protected ServiceManager createLocalSourceResolverSM(Context newContext, ServiceManager parentServiceManager, String confLocation) throws Exception {
+    protected ServiceManager createLocalSourceResolverSM(Context newContext,
+            ServiceManager parentServiceManager, String confLocation) throws Exception {
         // The source resolver must be defined in this service
         // manager, otherwise the root path will be the one from the
         // parent manager, we add a resolver to get it right. If the
@@ -192,60 +230,5 @@ public class BlockManager
                 null,
                 sourceManagerConf);
         return sourceResolverSM;
-    }
-
-    // Block methods
-
-    // The blocks manager should not be available within a block so I
-    // didn't want to make it part of the parent manager. But this is
-    // a little bit clumsy. Question is what components, if any, the
-    // blocks should have in common.
-    public void setBlocks(Blocks blocks) {
-        this.blocks = blocks;
-    }
-
-    /**
-     * The exported components of the block. Return null if the block doesn't export components.
-     * 
-     * @return a ServiceManager containing the blocks exported components
-     */
-    public ServiceManager getServiceManager() {
-        // Check that the block have a local service manager
-        if (this.blockWiring.getComponentConfiguration() != null) {
-            return this.serviceManager;
-        } else {
-            return null;
-        }
-    }
-    
-    // Servlet methods
-
-        public void init(ServletConfig servletConfig) throws ServletException {
-            super.init(servletConfig);
-    }
-
-        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            // Request to the own block
-            try {
-                // It is important to set the current block context each time
-                // a new block is entered, this is used for the block
-                // protocol
-                BlockCallStack.enterBlock(this.blockContext);
-                this.blockServlet.service(request, response);
-            } finally {
-                BlockCallStack.leaveBlock();
-            }
-        }
-
-        public String getServletInfo() {
-                return "BlockManager";
-        }
-
-        public void destroy() {
-            super.destroy();
-    }
-    
-    public Servlet getBlockServlet() {
-        return this.blockServlet;
     }
 }
