@@ -24,7 +24,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.w3c.dom.Element;
 
 /**
- * Abstract base class enabling logging and supporting the intrepretation of
+ * Abstract base class enabling logging and supporting the interpretation of
  * common configuration settings on all specific implementations of
  * {@link org.apache.cocoon.forms.binding.JXPathBindingBase}.
  *
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * <ul>
  * <li>Attribute direction="load|save|both": defaults to 'both'</li>
  * <li>Attribute lenient="true|false|[undefined]": defaults to [undefined]
- *     which means: "continue in same leniency-mode as parent" </li>
+ *     which means: "lenient mode inherited from parent" </li>
  * </ul>
  *
  * @version $Id$
@@ -162,7 +162,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
      /**
       * CommonAttributes is a simple helper class for holding the distinct data
-      * member fields indicating the activity of the sepearate load and save
+      * member fields indicating the activity of the separate load and save
       * actions of a given binding.
       */
      public static class CommonAttributes{
@@ -210,7 +210,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
         }
 
         /**
-         * Interpretes the value of the direction attribute into activity of the load action.
+         * Interprets the value of the direction attribute into activity of the load action.
          * @param direction
          * @return true if direction is either set to "both" or "load"
          */
@@ -219,7 +219,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
         }
 
         /**
-         * Interpretes the value of the direction attribute into activity of the save action.
+         * Interprets the value of the direction attribute into activity of the save action.
          * @param direction value of the @direction attribute
          * @return true if direction is either set to "both" or "save"
          */
@@ -229,7 +229,7 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
 
         /**
-         * Interpretes the value of the lenient attribute into a Boolean object
+         * Interprets the value of the lenient attribute into a Boolean object
          * allowing three-state logic (true/false/unset)
          * @param leniency value of the @lenient attribute
          * @return null if the leniency parameter is null or a String otherwise the allowed values
