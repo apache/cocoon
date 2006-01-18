@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
     protected WidgetDefinition parent;
-    
+
     //TODO consider final on these
     private Location location = Location.UNKNOWN;
     private String id;
@@ -51,9 +51,9 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private Map displayData;
     private List validators;
     private WidgetState state = WidgetState.ACTIVE;
-    
+
     protected CreateListener createListener;
-    
+
     public FormDefinition getFormDefinition() {
         if (this.formDefinition == null) {
             if (this instanceof FormDefinition) {
@@ -71,16 +71,16 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void initializeFrom(WidgetDefinition definition) throws Exception {
         if(definition instanceof AbstractWidgetDefinition) {
             AbstractWidgetDefinition other = (AbstractWidgetDefinition)definition;
-            
+
             this.state = other.state;
             this.createListener = other.createListener; // this works, we don't really remove listeners, right?
-            
+
             this.validators = new ArrayList();
             if(other.validators!=null) {
                 for(int i=0; i<other.validators.size(); i++)
                     this.validators.add(other.validators.get(i));
             }
-            
+
             if(other.attributes!=null) {
                 if(attributes==null)
                     attributes = new HashMap();
@@ -95,7 +95,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
         }
     }
-    
+
     /**
      * Checks if this definition is complete or not.
      */
@@ -104,12 +104,12 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         // FormDefinition is the only one allowed not to have an ID
         if( (id==null || "".equals(id) && !(this instanceof FormDefinition) ))
             throw new IncompletenessException("Widget found without an ID! "+this,this);
-        
-        
+
+
         // TODO: don't know what else to check now
     }
-    
-    
+
+
     /**
      * Locks this definition so that it becomes immutable.
      */
@@ -125,7 +125,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             throw new IllegalStateException("Attempt to modify an immutable WidgetDefinition");
         }
     }
-    
+
     /**
      * Sets the parent of this definition
      */
@@ -134,7 +134,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         //reorganization of the definition tree
         this.parent = definition;
     }
-    
+
     /**
      * Gets the parent of this definition.
      * This method returns null for the root definition.
@@ -142,34 +142,34 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public WidgetDefinition getParent() {
         return this.parent;
     }
-    
+
     public WidgetState getState() {
         return this.state;
     }
-    
+
     public void setState(WidgetState state) {
         checkMutable();
         this.state = state;
     }
-    
+
     public void setLocation(Location location) {
         checkMutable();
         this.location = location;
     }
-    
+
     public Location getLocation() {
         return location;
     }
-    
+
     public String getId() {
         return id;
     }
-    
+
     public void setId(String id) {
         checkMutable();
         this.id = id;
     }
-    
+
     public void setAttributes(Map attributes) {
         checkMutable();
         //this.attributes = attributes;
@@ -179,30 +179,30 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         }
         if(attributes==null)
             return;
-        
+
         // merge attribute lists
         this.attributes.putAll(attributes);
     }
-    
+
     public Object getAttribute(String name) {
         if (this.attributes != null) {
             return this.attributes.get(name);
         }
         return null;
     }
-    
+
     public void addCreateListener(CreateListener listener) {
         checkMutable();
         // Event listener daisy-chain
         this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
     }
-    
+
     public void widgetCreated(Widget widget) {
         if (this.createListener != null) {
             widget.getForm().addWidgetEvent(new CreateEvent(widget));
         }
     }
-    
+
     public void fireCreateEvent(CreateEvent event) {
         // Check that this widget was created by the current definition
         if (event.getSourceWidget().getDefinition() != this) {
@@ -212,11 +212,11 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             this.createListener.widgetCreated(event);
         }
     }
-    
+
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
         generateDisplayData("label", contentHandler);
     }
-    
+
     /**
      * Sets the various display data for this widget. This includes the label, hint and help.
      * They must all be objects implementing the XMLizable interface. This approach
@@ -227,14 +227,14 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void setDisplayData(Map displayData) {
         checkMutable();
         //this.displayData = displayData;
-        
+
         if(this.displayData==null) {
             this.displayData = displayData;
             return;
         }
         if(displayData==null)
             return;
-        
+
         // merge displayData lists
         Iterator entries = displayData.entrySet().iterator();
         while(entries.hasNext()) {
@@ -245,16 +245,16 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
                 this.displayData.put(key,value);
         }
     }
-    
+
     public void addValidator(WidgetValidator validator) {
         checkMutable();
         if (this.validators == null) {
             this.validators = new ArrayList();
         }
-        
+
         this.validators.add(validator);
     }
-    
+
     public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
         Object data = this.displayData.get(name);
         if (data != null) {
@@ -263,7 +263,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             throw new IllegalArgumentException("Unknown display data name '" + name + "'");
         }
     }
-    
+
     public void generateDisplayData(ContentHandler contentHandler) throws SAXException {
         // Output all non-null display data
         Iterator iter = this.displayData.entrySet().iterator();
@@ -271,23 +271,23 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             Map.Entry entry = (Map.Entry)iter.next();
             if (entry.getValue() != null) {
                 String name = (String)entry.getKey();
-                
+
                 // Enclose the data into a "wi:{name}" element
                 contentHandler.startElement(FormsConstants.INSTANCE_NS, name, FormsConstants.INSTANCE_PREFIX_COLON + name, XMLUtils.EMPTY_ATTRIBUTES);
-                
+
                 ((XMLizable)entry.getValue()).toSAX(contentHandler);
-                
+
                 contentHandler.endElement(FormsConstants.INSTANCE_NS, name, FormsConstants.INSTANCE_PREFIX_COLON + name);
             }
-        }   
+        }
     }
-    
+
     public boolean validate(Widget widget) {
         if (this.validators == null) {
             // No validators
             return true;
-            
-        } 
+
+        }
         Iterator iter = this.validators.iterator();
         while(iter.hasNext()) {
             WidgetValidator validator = (WidgetValidator)iter.next();
