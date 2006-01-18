@@ -37,16 +37,18 @@
     <module>cocoon-archetypes</module>
     <module>cocoon-core</module>
     <module>cocoon-blocks-fw</module>
-    <module>cocoon-deployer</module>
+    <!-- module>cocoon-deployer</module -->
+    <!-- module>cocoon-plugins</module -->
     <module>cocoon-mocks</module>
+    <!--  Blocks  -->
     <module>cocoon-ajax</module>
-    <module>cocoon-session-fw</module>
     <module>cocoon-authentication-fw</module>
     <module>cocoon-captcha</module>
     <module>cocoon-forms</module>
     <!--module>cocoon-jcr</module> -->
     <module>cocoon-portal</module>
-    <module>cocoon-plugins</module>
+    <module>cocoon-session-fw</module>
+    <module>cocoon-spring</module>
     <module>cocoon-template</module>
     <module>cocoon-validation</module>
   </modules>
