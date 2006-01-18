@@ -113,7 +113,7 @@ public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled impleme
                 if (rule.supportsType(datatype.getTypeClass(), datatype.isArrayType())) {
                     datatype.addValidationRule(rule);
                 } else {
-                    throw new Exception("Validation rule \"" + validationElements[i].getLocalName() + "\" cannot be used with strings, error at " + DomHelper.getLocation(validationElements[i]));
+                    throw new Exception("Validation rule \"" + validationElements[i].getLocalName() + "\" cannot be used with type <" + (datatype.isArrayType() ? "array of " : "") + datatype.getTypeClass().getName() + ">, error at " + DomHelper.getLocation(validationElements[i]));
                 }
             }
         }
