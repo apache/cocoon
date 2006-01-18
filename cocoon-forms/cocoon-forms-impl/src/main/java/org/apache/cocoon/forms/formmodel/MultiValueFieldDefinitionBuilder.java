@@ -26,7 +26,7 @@ public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefi
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, true);
         definition.makeImmutable();
         return definition;
     }

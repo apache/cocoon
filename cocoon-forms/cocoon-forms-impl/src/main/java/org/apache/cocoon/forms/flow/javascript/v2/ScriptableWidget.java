@@ -360,39 +360,8 @@ public class ScriptableWidget extends ScriptableObject {
             }
             // fall through
         }
-        if (delegate instanceof DataWidget) {
-            value = unwrap(value);
-            if (value != null) {
-                // Coerce values
-                Datatype datatype = ((DataWidget)delegate).getDatatype();
-                Class typeClass = datatype.getTypeClass();
-                if (typeClass == String.class) {
-                    value = Context.toString(value);
-                } else if (typeClass == boolean.class || 
-                           typeClass == Boolean.class) {
-                    value = Context.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE;
-                } else {
-                    if (value instanceof Double) {
-                        // make cform accept a JS Number
-                        if (typeClass == long.class || typeClass == Long.class) {
-                            value = new Long(((Number)value).longValue());
-                        } else if (typeClass == int.class || 
-                                   typeClass == Integer.class) {
-                            value = new Integer(((Number)value).intValue());
-                        } else if (typeClass == float.class || 
-                                   typeClass == Float.class) {
-                            value = new Float(((Number)value).floatValue());
-                        } else if (typeClass == short.class || 
-                                   typeClass == Short.class) {
-                            value = new Short(((Number)value).shortValue());
-                        } else if (typeClass == BigDecimal.class) {
-                            value = new BigDecimal(((Number)value).doubleValue());
-                        }
-                    } 
-                }
-            }
-            delegate.setValue(value);
-        } else if (delegate instanceof BooleanField) {
+
+        if (delegate instanceof BooleanField) {
             BooleanField field = (BooleanField)delegate;
             field.setValue(BooleanUtils.toBooleanObject(Context.toBoolean(value)));
         } else if (delegate instanceof Repeater) {
@@ -454,7 +423,42 @@ public class ScriptableWidget extends ScriptableObject {
                 values = (Object[])value;
             }
             field.setValues(values);
-        } else {
+        }
+        else if (delegate instanceof DataWidget) {
+            value = unwrap(value);
+            if (value != null) {
+                // Coerce values
+                Datatype datatype = ((DataWidget)delegate).getDatatype();
+                Class typeClass = datatype.getTypeClass();
+                if (typeClass == String.class) {
+                    value = Context.toString(value);
+                } else if (typeClass == boolean.class || 
+                           typeClass == Boolean.class) {
+                    value = Context.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE;
+                } else {
+                    if (value instanceof Double) {
+                        // make cform accept a JS Number
+                        if (typeClass == long.class || typeClass == Long.class) {
+                            value = new Long(((Number)value).longValue());
+                        } else if (typeClass == int.class || 
+                                   typeClass == Integer.class) {
+                            value = new Integer(((Number)value).intValue());
+                        } else if (typeClass == float.class || 
+                                   typeClass == Float.class) {
+                            value = new Float(((Number)value).floatValue());
+                        } else if (typeClass == short.class || 
+                                   typeClass == Short.class) {
+                            value = new Short(((Number)value).shortValue());
+                        } else if (typeClass == BigDecimal.class) {
+                            value = new BigDecimal(((Number)value).doubleValue());
+                        }
+                    } 
+                }
+            }
+            delegate.setValue(value);
+        }
+        else
+        {
             delegate.setValue(value);
         }
     }
