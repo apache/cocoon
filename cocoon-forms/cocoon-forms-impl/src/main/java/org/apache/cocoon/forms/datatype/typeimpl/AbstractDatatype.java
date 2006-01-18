@@ -66,7 +66,7 @@ public abstract class AbstractDatatype implements Datatype {
         this.arrayType = arrayType;
     }
 
-    protected void setConvertor(Convertor convertor) {
+    public void setConvertor(Convertor convertor) {
         this.convertor = convertor;
     }
 

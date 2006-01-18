@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class Output extends AbstractWidget implements DataWidget, ValueChangedListenerEnabled {
-    
+
     private final OutputDefinition definition;
     private Object value;
     private ValueChangedListener listener;
@@ -53,7 +53,7 @@ public class Output extends AbstractWidget implements DataWidget, ValueChangedLi
         return definition.getDatatype();
     }
 
-    protected Output(OutputDefinition definition) {
+    public Output(OutputDefinition definition) {
         super(definition);
         this.definition = definition;
         this.listener = definition.getValueChangedListener();
