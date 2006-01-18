@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.logger.ServletLogger;
@@ -83,12 +85,12 @@ public class LoggerUtil {
      * Setup a new instance.
      * 
      * @param config
+     * @throws ServletException 
      */
-    public LoggerUtil(ServletConfig config, Context appContext,
-            Settings settings) {
+    public LoggerUtil(ServletConfig config, String knownFile) throws ServletException {
         this.config = config;
-        this.appContext = appContext;
-        this.settings = settings;
+        this.settings = CoreUtil.createSettings(config);
+        this.appContext = CoreUtil.createContext(this.config, this.settings, knownFile);
         // Init logger
         this.initLogger();
     }

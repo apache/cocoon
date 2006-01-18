@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,18 +30,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.blocks.util.LoggerUtil;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
 import org.xml.sax.InputSource;
@@ -56,7 +53,6 @@ public class BlocksManager
         Modifiable { 
 
     public static String ROLE = BlocksManager.class.getName();
-    private Context context;
     private BlocksContext blocksContext;
 
     private Source wiringFile;
@@ -68,11 +64,8 @@ public class BlocksManager
         super.init(servletConfig);
         this.blocksContext = new BlocksContext(this.getServletContext(), this);
         
-        CoreUtil coreUtil = new CoreUtil(this.getServletConfig(), BlockConstants.WIRING);
-        Core core = coreUtil.getCore();
-        Settings settings = coreUtil.getSettings();
-        this.context = core.getContext();
-        LoggerUtil loggerUtil = new LoggerUtil(this.getServletConfig(), this.context, settings);
+        LoggerUtil loggerUtil =
+            new LoggerUtil(this.getServletConfig(), BlockConstants.WIRING);
         this.logger = loggerUtil.getCocoonLogger();
         this.getLogger().debug("Initializing the Blocks Manager");
         
@@ -117,17 +110,17 @@ public class BlocksManager
                     " id=" + id +
                     " location=" + location);
             BlockManager blockManager = new BlockManager();
-            blockManager.init(blocksConfig);
             blockManager.setBlocks(this);
             try {
                 LifecycleHelper.setupComponent(blockManager,
                         this.getLogger(),
-                        this.context,
+                        null,
                         null,
                         blockConf);
             } catch (Exception e) {
                 throw new ServletException(e);
             }
+            blockManager.init(blocksConfig);
             this.blocks.put(id, blockManager);
             String mountPath = blockConf.getChild("mount").getAttribute("path", null);
             if (mountPath != null) {
@@ -138,9 +131,9 @@ public class BlocksManager
     }
     
     public void destroy() {
-        Iterator blocksIter = this.blocks.entrySet().iterator();
+        Iterator blocksIter = this.blocks.values().iterator();
         while (blocksIter.hasNext()) {
-            LifecycleHelper.dispose(blocksIter.next());
+            ((Servlet)blocksIter.next()).destroy();
         }
         this.blocks = null;
         this.mountedBlocks = null;
