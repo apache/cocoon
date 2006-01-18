@@ -18,7 +18,7 @@
 <!--
     XSP event-based cache sample.
 
-    Cvs $Id: eventcache.xsp,v 1.4 2004/04/05 12:25:30 antonio Exp $
+    Cvs $Id$
  -->
 
 
@@ -168,8 +168,8 @@
         </para>
 
         <para>
-            Please refer to the <a href="../eventcache">event based cache example</a> for more details
-            on the event based cache invalidation.
+          Please refer to the <a href="../../eventcache/">event based cache example</a> for more details
+          on the event based cache invalidation.
         </para>
 
         <xsp:logic>
