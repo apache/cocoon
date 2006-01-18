@@ -51,6 +51,7 @@
     <module>cocoon-spring</module>
     <module>cocoon-template</module>
     <module>cocoon-validation</module>
+    <!--module>cocoon-xmldb</module-->
   </modules>
   <repositories>
     <repository>
@@ -140,9 +141,9 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <id>gianugo</id>
-      <name>Gianugo Rabellino</name>
-      <email>gianugo@apache.org</email>
+      <id>giacomo</id>
+      <name>Giacomo Pati</name>
+      <email>giacomo@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
@@ -151,9 +152,20 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <id>giacomo</id>
-      <name>Giacomo Pati</name>
-      <email>giacomo@apache.org</email>
+      <id>jbq</id>
+      <name>Jean-Baptiste Quenot</name>
+      <email>jbq@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>gianugo</id>
+      <name>Gianugo Rabellino</name>
+      <email>gianugo@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
