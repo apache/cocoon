@@ -69,7 +69,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
         if ( e instanceof CopletLinkEvent ) {
             CopletLinkEvent event = (CopletLinkEvent) e;
-            CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
+            CopletInstanceData coplet = event.getTarget();
 
             // this is a normal link event, so save the url in the instance data
             // for ProxyTransformer
