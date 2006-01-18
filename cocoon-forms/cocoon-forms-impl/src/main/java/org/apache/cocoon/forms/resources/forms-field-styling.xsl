@@ -167,7 +167,7 @@
       |
       +-->
   <xsl:template match="fi:validation-message">
-    <a href="#" class="forms-validation-message">
+    <a href="#" class="forms-validation-message" id="forms-validation-message-{../@id}">
       <xsl:attribute name="onclick">
         <xsl:text>alert('</xsl:text>
         <xsl:call-template name="apos-replace">
