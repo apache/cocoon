@@ -44,6 +44,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *     different if this is <i>true</i> or <i>false</i> (default: <i>false</i>).
  *   </li>
  *   <li>
+ *     <b>max-records</b>: the maximum number of records to read
+ *     (default: <i>-1</i> read all records).
+ *   </li>
+ *   <li>
  *     <b>encoding</b>: the character encoding (UTF-8, ISO8859-1, ...) used to
  *     interpret the input CSV source file (default: <i>system default</i>).
  *   </li>
@@ -110,6 +114,7 @@ public class CSVGenerator extends FileGenerator {
     private static final String DEFAULT_ESCAPE = "\"";
     /** <p>The default field separator character.</p> */
     private static final int DEFAULT_BUFFER_SIZE = 4096;
+    private static final int UNLIMITED_MAXRECORDS = -1;
     /** <p>A string used for indenting.</p> */
     private static final char INDENT_STRING[] = "\n          ".toCharArray();
 
@@ -125,6 +130,8 @@ public class CSVGenerator extends FileGenerator {
     private int fieldnumber = 1;
     /** <p>The current record (line) number in the current CSV.</p> */
     private int recordnumber = 1;
+    /** <p>The maximum number of records to read (-1 = read all records)</p> */
+    private int maxrecords;
     /** <p>A flag indicating whether the &lt;record&gt; tag was opened.</p> */
     private boolean openrecord = false;
     /** <p>The character buffer for the current field.</p> */
@@ -164,12 +171,13 @@ public class CSVGenerator extends FileGenerator {
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, object_model, source, parameters);
 
-        boolean header = parameters.getParameterAsBoolean("process-header", false);
+        boolean header = parameters.getParameterAsBoolean("process-headers", false);
 
         this.encoding = parameters.getParameter("encoding", DEFAULT_ENCODING);
         this.separator = parameters.getParameter("separator", DEFAULT_SEPARATOR).charAt(0);
         this.escape = parameters.getParameter("escape", DEFAULT_ESCAPE).charAt(0);
         this.buffersize = parameters.getParameterAsInteger("buffer-size", DEFAULT_BUFFER_SIZE);
+        this.maxrecords = parameters.getParameterAsInteger("max-records", UNLIMITED_MAXRECORDS);
         this.buffer = new CharArrayWriter();
         this.columns =  (header ? new HashMap() : null);
         this.recordnumber = (header ? 0 : 1);
@@ -181,8 +189,11 @@ public class CSVGenerator extends FileGenerator {
      * <p>Generate the unique key.</p>
      */
     public Serializable getKey() {
-        String key = this.inputSource.getURI();
-        if (this.columns != null) return (key + "+headers");
+        StringBuffer key = new StringBuffer(this.inputSource.getURI());
+        if (this.columns != null) key.append("headers");
+        key.append(separator);
+        key.append(maxrecords);
+        key.append(escape);
         return key;
     }
 
@@ -209,7 +220,7 @@ public class CSVGenerator extends FileGenerator {
             int curr = -1;
 
             /* Parse the file reading characters one-by-one */
-            while ((curr = csv.read()) >= 0) {
+            while ((curr = csv.read()) >= 0 && (this.maxrecords == UNLIMITED_MAXRECORDS || recordnumber <= this.maxrecords)) {
 
                 /* Process any occurrence of the escape character */
                 if (curr == this.escape) {

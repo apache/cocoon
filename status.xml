@@ -180,6 +180,13 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" due-to="Philippe Laplanche" due-to-email="philippe.laplanche@horus-si.com">
+       CSVGenerator now looks for the sitemap parameter "process-headers" (with
+       the s at the end) as told in the documentation.  Accepts a new sitemap
+       parameter "max-records" which allows to limit the number of records to
+       read.  Fixes a caching bug: the same result was returned notwithstanding
+       the modification of separator or escape character.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1610" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
        Add ids to CForms validation messages, so that they can be unit-tested
     </action>
