@@ -126,7 +126,7 @@ public class SitemapServlet
         // Request to the own block
         String uri = request.getPathInfo();
 
-        if (uri.charAt(0) == '/') {
+        if (uri.length() > 0 && uri.charAt(0) == '/') {
             uri = uri.substring(1);
         }
 
