@@ -89,7 +89,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
             if(other.displayData!=null) {
                 if(displayData==null)
                     displayData = new HashMap();
-                attributes.putAll(other.displayData);
+                displayData.putAll(other.displayData);
             }
         } else {
             throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
