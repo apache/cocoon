@@ -86,6 +86,17 @@
   </organization>
   <developers>
     <developer>
+      <id>crossley</id>
+      <name>David Crossley</name>
+      <email>crossley@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org/</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+10</timezone>
+    </developer>
+    <developer>
       <id>bdelacretaz</id>
       <name>Bertrand Delacretaz</name>
       <email>bdelacretaz@apache.org</email>
