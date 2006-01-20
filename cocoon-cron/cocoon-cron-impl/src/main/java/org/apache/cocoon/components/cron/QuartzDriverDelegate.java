@@ -524,4 +524,8 @@ public class QuartzDriverDelegate implements DriverDelegate {
             throws SQLException, ClassNotFoundException, IOException {
         return delegate.selectTriggerJobDataMap(conn, triggerName, groupName);
     }
+
+    public int updateSchedulerState(Connection arg0, String arg1, long arg2) throws SQLException {
+        return delegate.updateSchedulerState(arg0, arg1, arg2);
+    }
 }
