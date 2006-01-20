@@ -38,7 +38,7 @@
     <module>cocoon-core</module>
     <module>cocoon-blocks-fw</module>
     <module>cocoon-deployer</module>
-    <!-- module>cocoon-plugins</module -->
+    <module>cocoon-plugins</module>
     <module>cocoon-mocks</module>
     <!--  Blocks  -->
     <module>cocoon-ajax</module>
