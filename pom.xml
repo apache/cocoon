@@ -44,6 +44,7 @@
     <module>cocoon-ajax</module>
     <module>cocoon-authentication-fw</module>
     <module>cocoon-captcha</module>
+    <module>cocoon-cron</module>
     <module>cocoon-forms</module>
     <!--module>cocoon-jcr</module> -->
     <module>cocoon-portal</module>
