@@ -80,8 +80,8 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <properties>src/main/castor/castorbuilder.properties</properties>
-              <schemaDirectory>src/main/resources/xsd</schemaDirectory>
+              <properties>${basedir}/src/main/castor/castorbuilder.properties</properties>
+              <schemaDirectory>${basedir}/src/main/resources/xsd</schemaDirectory>
             </configuration>
           </execution>
         </executions>
