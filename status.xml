@@ -180,6 +180,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="add">
+      CForms: Added the sendForm() function to Form.js, same as showForm() but
+      without creating a continuation.  Added the sendFormAndWait() function,
+      alias for showForm()
+    </action> 
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1720">
+       Fix a bug in CForms: Form.js overwriting the CFormsInstance attribute in viewData
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1736" due-to="Daniele Madama" due-to-email="d.madama@pro-netics.com">
        Fix a bug in CForms library when extending a field
     </action>
