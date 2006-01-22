@@ -73,7 +73,7 @@ public class BlocksContext extends ServletContextWrapper {
         ServletContext context = null;
         block = BlocksContext.this.blocks.getBlock(name);
         if (block != null)
-            context = block.getBlockServlet().getServletConfig().getServletContext();
+            context = block.getBlockContext();
 
         return context;
     }
@@ -88,9 +88,12 @@ public class BlocksContext extends ServletContextWrapper {
             this.block = BlocksContext.this.blocks.getBlock(name);
         }
 
-        public void forward(ServletRequest request, ServletResponse response)
+        public void forward(ServletRequest request0, ServletResponse response)
                 throws ServletException, IOException {
-            this.block.getBlockServlet().service(request, response);
+            HttpServletRequest request = (HttpServletRequest) request0;
+            RequestDispatcher dispatcher =
+                this.block.getBlockContext().getRequestDispatcher(request.getPathInfo());
+            dispatcher.forward(request, response);
         }
 
         public void include(ServletRequest request, ServletResponse response)
