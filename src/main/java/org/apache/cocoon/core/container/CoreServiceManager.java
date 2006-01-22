@@ -69,7 +69,7 @@ import org.apache.excalibur.source.TraversableSource;
  */
 public class CoreServiceManager
         extends AbstractLogEnabled
-        implements Contextualizable, ThreadSafe, Disposable, Initializable, ServiceManager, Configurable {
+        implements Contextualizable, ThreadSafe, Disposable, Initializable, ServiceManager, Configurable, RoleManagerOwner {
 
     /** The attribute containing the JMX domain name */
     public static final String JMX_DOMAIN_ATTR_NAME = "jmx-domain";
@@ -145,9 +145,12 @@ public class CoreServiceManager
         if ( parent instanceof ComponentManager ) {
             coreServicemanager = ((ComponentManager)parent).getServiceManager();
         }
-        // get role manager and logger manager
+        // get role manager
+        if ( coreServicemanager instanceof RoleManagerOwner ) {
+            parentRoleManager = ((RoleManagerOwner)coreServicemanager).getRoleManager();
+        }
+        // get logger manager
         if ( coreServicemanager instanceof CoreServiceManager ) {
-            parentRoleManager = ((CoreServiceManager)coreServicemanager).roleManager;
             this.loggerManager = ((CoreServiceManager)coreServicemanager).loggerManager;
         }
 
@@ -632,6 +635,13 @@ public class CoreServiceManager
         }
 
         this.componentHandlers.put(newRole, new AliasComponentHandler(this.getLogger(), handler));
+    }
+
+    /* 
+     * Get the role manager
+     */
+    public RoleManager getRoleManager() {
+        return this.roleManager;
     }
 
     /**
