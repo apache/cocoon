@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * DOCUMENT ME!
  *
- * @goal simple-deploy
+ * @goal simple-deploy-giacomo
  * @phase package
  * @requiresProject false
  */

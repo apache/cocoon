@@ -26,11 +26,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipInputStream;
 
 import org.apache.cocoon.deployer.ArtifactProvider;
@@ -51,7 +49,7 @@ import org.apache.commons.transaction.file.ResourceManagerException;
 
 public class CocoonServer22 implements CocoonServer {
 
-	public static final String COCOON_22_SERVER_ARTIFACT = "org.apache.cocoon:cocoon-server:2.2";
+	public static final String DEFAULT_COCOON_22_SERVER_ARTIFACT = "org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war";
 	public static final String WIRING_10_NAMESPACE = "http://apache.org/cocoon/blocks/wiring/1.0";
 	public static final String WIRING_FILE = "WEB-INF/wiring.xml";
 	public static final String WEB_INF_BLOCKS_DIR = "WEB-INF/blocks";
@@ -87,6 +85,7 @@ public class CocoonServer22 implements CocoonServer {
 
 	    try {
 	    	File baseDirectoryFile = new File(this.baseDirectory);
+	    	
 			// install the Cocoon server if necessary
 			if(baseDirectoryFile.list().length == 0) {
 				deployCocoonServer(frm, txId, "");
@@ -299,7 +298,7 @@ public class CocoonServer22 implements CocoonServer {
 	 * Extract the Cocoon server to the filesystem using the FileResourceManager
 	 */
 	protected void deployCocoonServer(FileResourceManager frm, String txId, String relativeOutputDir) {
-		File zip = this.artifactProvider.getArtifact(COCOON_22_SERVER_ARTIFACT);
+		File zip = this.artifactProvider.getArtifact(DEFAULT_COCOON_22_SERVER_ARTIFACT);
 		try {
 			ZipUtils.extractZip(new ZipInputStream(new FileInputStream(zip)), frm, txId, relativeOutputDir);
 		} catch (FileNotFoundException e) {

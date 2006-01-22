@@ -43,7 +43,7 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		ArtifactProvider aProvider = (ArtifactProvider) aProviderCtrl.getMock();
 		
 		// server
-		aProvider.getArtifact(CocoonServer22.COCOON_22_SERVER_ARTIFACT);
+		aProvider.getArtifact(CocoonServer22.DEFAULT_COCOON_22_SERVER_ARTIFACT);
 		File vanillaCocoonServerArtifact = this.getMockArtefact("validVanillaCocoon22App/appRoot.zip");
 		assertTrue(vanillaCocoonServerArtifact.exists());		
 		aProviderCtrl.setReturnValue(vanillaCocoonServerArtifact);

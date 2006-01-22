@@ -108,6 +108,11 @@ public final class MavenArtifactProvider
      * @see org.apache.cocoon.deployer.ArtifactProvider#getArtifact(java.lang.String[])
      */
     public final File[] getArtifact(String[] artifactIds) {
+    	
+    	// FIXME (reinhard) this doesn't use transitive dependency resolving!
+    	
+    	Validate.notNull(artifactIds, "artifactIds mustn't be null");
+    	Validate.noNullElements(artifactIds, "Quering a 'null'-artifact is not possible");
         final File[] files = new File[artifactIds.length];
 
         for(int i = 0; i < artifactIds.length; i++) {
@@ -129,6 +134,8 @@ public final class MavenArtifactProvider
      */
     private Artifact getArtifactFor(final String artifactSpec)
         throws ArtifactResolutionException, ArtifactNotFoundException {
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: artifactSpec=" + artifactSpec);    	
+    	
         final int p1 = artifactSpec.indexOf(':');
         Validate.isTrue(p1 > 0, "invalid artifact specifier: " + artifactSpec);
 
@@ -137,14 +144,26 @@ public final class MavenArtifactProvider
         Validate.isTrue(p2 > 0, "invalid artifact specifier: " + artifactSpec);
 
         final String artifactId = artifactSpec.substring(p1 + 1, p2);
-        final int p3 = artifactId.indexOf(':', p2 + 1);
+        final int p3 = artifactSpec.indexOf(':', p2 + 1);
+        System.out.println("p3: " + p3);
         final String version =
             (p3 > 0) ? artifactSpec.substring(p2 + 1, p3) : artifactSpec.substring(p2 + 1);
         final String type = (p3 > 0) ? artifactSpec.substring(p3 + 1) : "jar";
-        final Artifact artifact =
-            this.artifactFactory.createBuildArtifact(groupId, artifactId, version, type);
-        this.artifactResolver.resolve(artifact, remoteArtifactRepositories, localRepository);
+        
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: groupId=" + groupId);
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: artifactId=" + artifactId);
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: version=" + version);       
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: type=" + type);            
+        
+        final Artifact artifact = 
+        	this.artifactFactory.createBuildArtifact(groupId, artifactId, version, type);
+        
+        this.artifactResolver.resolve(artifact, this.remoteArtifactRepositories, 
+            this.localRepository);
 
+        this.log.debug("[MavenArtifactProvider.getArtifactFor: found " + 
+            artifact.getFile().getAbsolutePath());
+        
         return artifact;
     }
 }
