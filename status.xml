@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="update">
+      Updated log4j to 1.2.13.
+    </action>  
     <action dev="JBQ" type="add">
       CForms: Added the sendForm() function to Form.js, same as showForm() but
       without creating a continuation.  Added the sendFormAndWait() function,
