@@ -16,6 +16,7 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -27,19 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.SingleComponentServiceManager;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -59,7 +52,6 @@ public class BlockManager
     private BlockWiring blockWiring;
     private BlockContext blockContext;
     private Blocks blocks;
-    private String contextURL;
 
     public void enableLogging(Logger logger) {
         this.logger = logger;
@@ -99,46 +91,33 @@ public class BlockManager
 
         this.blockContext =
             new BlockContext(this.getServletContext(), this.blockWiring, this);
-        this.contextURL = CoreUtil.getContextURL(this.blockContext, BlockConstants.BLOCK_CONF);
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
-
-        Settings settings = CoreUtil.createSettings(blockServletConfig);
-        Context newContext =
-            CoreUtil.createContext(blockServletConfig, settings, BlockConstants.BLOCK_CONF); 
-        Core core = new Core(settings, newContext);
-        String confLocation = this.contextURL + "::";
 
         // Create a service manager for getting components from other blocks
         ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
         ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
 
-        this.serviceManager = new SingleComponentServiceManager(topServiceManager, core, Core.ROLE);
-        if (!this.blockWiring.isCore()) {
-            this.getLogger().debug("Non core Block");
-            try {
-                this.serviceManager =
-                    this.createLocalSourceResolverSM(newContext, this.serviceManager , confLocation);
-            } catch (Exception e) {
-                throw new ServletException(e);
-            }
-        }
-        
-        // Create a service manager with the exposed components of the block
-        if (this.blockWiring.getComponentConfiguration() != null) {
-            DefaultConfiguration componentConf =
-                new DefaultConfiguration("components", confLocation);
-            componentConf.addAll(this.blockWiring.getComponentConfiguration());
-            this.serviceManager = new CocoonServiceManager(this.serviceManager);
-            try {
-                LifecycleHelper.setupComponent(this.serviceManager,
-                        this.getLogger(),
-                        newContext,
-                        null,
-                        componentConf);
-            } catch (Exception e) {
-                throw new ServletException(e);
-            }
+        // Set up the component manager of the block
+        try {
+            // FIXME make the component manager class configurable
+            String serviceManagerClassName = "org.apache.cocoon.container.ECMBlockServiceManager";
+            this.serviceManager = (ServiceManager) ClassUtils.newInstance(serviceManagerClassName);
+
+            // FIXME Don't know if this is the way to go, but I didn't feel like introducing interfaces
+            // for something that a DI container could take care of
+            Class serviceManagerClass = Class.forName(serviceManagerClassName);
+            Method method = serviceManagerClass.getMethod("setServletConfig", new Class[]{ServletConfig.class});
+            method.invoke(this.serviceManager, new Object[]{blockServletConfig});
+            
+            LifecycleHelper.setupComponent(this.serviceManager,
+                    this.getLogger(),
+                    null,
+                    topServiceManager,
+                    this.blockWiring.getComponentConfiguration());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException(e);
         }
 
         // Create a servlet for the block
@@ -148,7 +127,7 @@ public class BlockManager
                 this.blockServlet = (Servlet) ClassUtils.newInstance(servletClass);
                 LifecycleHelper.setupComponent(this.blockServlet,
                         this.getLogger(),
-                        newContext,
+                        null,
                         this.serviceManager,
                         this.blockWiring.getServletConfiguration());
             } catch (Exception e) {
@@ -157,7 +136,7 @@ public class BlockManager
             this.blockServlet.init(blockServletConfig);            
         }
     }
-
+    
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Request to the own block
         try {
@@ -195,40 +174,5 @@ public class BlockManager
 
     public Servlet getBlockServlet() {
         return this.blockServlet;
-    }
-
-    /**
-     * @param newContext
-     * @param confLocation
-     * @throws Exception 
-     * @throws Exception
-     */
-    protected ServiceManager createLocalSourceResolverSM(Context newContext,
-            ServiceManager parentServiceManager, String confLocation) throws Exception {
-        // The source resolver must be defined in this service
-        // manager, otherwise the root path will be the one from the
-        // parent manager, we add a resolver to get it right. If the
-        // components section contain includes the CoreComponentManager
-        // use the location of the configuration an the parent SourceResolver
-        // for resolving the include.
-        DefaultConfiguration sourceManagerConf =
-            new DefaultConfiguration("components", confLocation);
-        // FIXME: Need a local role manager as it is not inherited through the InterBlockServiceManager 
-        DefaultConfiguration roleInclude =
-            new DefaultConfiguration("include");
-        roleInclude.setAttribute("src", "resource://org/apache/cocoon/cocoon.roles");
-        sourceManagerConf.addChild(roleInclude);
-        DefaultConfiguration resolverConf =
-            new DefaultConfiguration("source-resolver");
-        sourceManagerConf.addChild(resolverConf);
-        ServiceManager sourceResolverSM =
-            new CoreServiceManager(parentServiceManager);
-        LifecycleHelper.setupComponent(
-                sourceResolverSM,
-                this.getLogger(),
-                newContext,
-                null,
-                sourceManagerConf);
-        return sourceResolverSM;
     }
 }
