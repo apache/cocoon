@@ -71,12 +71,12 @@ public class BlockDeployer {
 		
 		Validate.notNull(deploymentDescriptor, "A deployment descriptor object has to be passed.");
 
-
 		// read the deploy script
 		org.apache.cocoon.deployer.generated.deploy.x10.Block[] installBlocks = deploymentDescriptor.getBlock();
 
 		for(int i = 0; i < installBlocks.length; i++) {
 			org.apache.cocoon.deployer.generated.deploy.x10.Block installBlock = installBlocks[i];
+			log.verbose("Block urn: " + installBlock.getUrn());			
 			String blockUrn = installBlock.getUrn();
 			File blockArchive = null;
 			if(installBlock.getLocation() == null) {
