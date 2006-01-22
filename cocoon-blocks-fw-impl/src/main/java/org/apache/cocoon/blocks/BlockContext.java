@@ -41,12 +41,11 @@ public class BlockContext extends ServletContextWrapper {
 
     private Hashtable attributes;
     private BlockWiring wiring;
-    private Block block;
+    private Servlet servlet;
     
-    public BlockContext(ServletContext parentContext, BlockWiring wiring, Block block) {
+    public BlockContext(ServletContext parentContext, BlockWiring wiring) {
         super(parentContext);
         this.wiring = wiring;
-        this.block = block;
     }
 
     /*
@@ -229,6 +228,14 @@ public class BlockContext extends ServletContextWrapper {
     }
 
     // Block specific methods
+    
+    /**
+     * Set the servlet of the block
+     * @param servlet
+     */
+    public void setServlet(Servlet servlet) {
+        this.servlet = servlet;
+    }
 
     /**
      * Takes the scheme specific part of a block URI (the scheme is the
@@ -363,16 +370,13 @@ public class BlockContext extends ServletContextWrapper {
      */
     private class PathDispatcher implements RequestDispatcher {
         
-        Servlet servlet;
-
         // Ignores path, as the assumed only servlet within the block is
         // implicitly mounted on '/*'
         private PathDispatcher(String path) {
-            this.servlet = BlockContext.this.block.getBlockServlet();
         }
 
         private boolean exists() {
-            return this.servlet != null;
+            return BlockContext.this.servlet != null;
         }
 
         /* (non-Javadoc)
@@ -380,7 +384,7 @@ public class BlockContext extends ServletContextWrapper {
          */
         public void forward(ServletRequest request, ServletResponse response)
         throws ServletException, IOException {
-            this.servlet.service(request, response);
+            BlockContext.this.servlet.service(request, response);
         }
 
         /* (non-Javadoc)
