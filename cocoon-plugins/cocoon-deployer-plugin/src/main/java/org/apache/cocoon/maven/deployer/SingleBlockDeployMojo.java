@@ -30,22 +30,34 @@ import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
 
 import java.util.List;
 
 
 /**
- * DOCUMENT ME!
+ * This Mojo is used to deploy a single Cocoon block, usually just at development time. All block dependencies
+ * are resolved automatically (auto-wiring is true). If you need more, use the @link org.apache.cocoon.maven.deployer.DeployMojo
+ * that requires a deployment configuration file.
  *
- * @goal test-deploy
- * @phase package
+ * @goal simple-deploy
  * @requiresProject true
+ * @description
+ * @execute phase="install"
  */
 public class SingleBlockDeployMojo
     extends AbstractMojo {
     //~ Instance fields ---------------------------------------------------------------------------------
 
+    /**
+     * The project whose project files to create.
+     *
+     * @parameter expression="${project}"
+     * @required
+     */
+    private MavenProject project;	
+	
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
      *
@@ -53,16 +65,8 @@ public class SingleBlockDeployMojo
      * @required
      * @readonly
      */
-    private ArtifactFactory artifactFactory;
-
-    /**
-     * Local maven repository.
-     *
-     * @required
-     * @readonly
-     */
-    private ArtifactRepository localRepository;
-
+    private ArtifactFactory artifactFactory;	
+    
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -70,16 +74,8 @@ public class SingleBlockDeployMojo
      * @required
      * @readonly
      */
-    private ArtifactResolver artifactResolver;
-
-    /**
-     * Remote repositories which will be searched for blocks.
-     *
-     * @required
-     * @readonly
-     */
-    private List remoteArtifactRepositories;
-
+    private ArtifactResolver artifactResolver;   
+    
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -87,7 +83,26 @@ public class SingleBlockDeployMojo
      * @required
      * @readonly
      */
-    private MavenMetadataSource metadataSource;
+    private MavenMetadataSource metadataSource;    
+    
+    /**
+     * Local maven repository.
+     *
+     * @parameter expression="${localRepository}"
+     * @required
+     * @readonly
+     */
+    private ArtifactRepository localRepository;    
+    
+
+    /**
+     * Remote repositories which will be searched for blocks.
+     *
+     * @parameter expression="${project.remoteArtifactRepositories}"
+     * @required
+     * @readonly
+     */
+    private List remoteArtifactRepositories;      
 
     //~ Methods -----------------------------------------------------------------------------------------
 
@@ -98,32 +113,52 @@ public class SingleBlockDeployMojo
      */
     public void execute()
         throws MojoExecutionException {
-        getLog().info("Start deployment of ...");
+        
+    	// collecting information from POM
+        String projectName = this.project.getName();
+        String artifactId = this.project.getArtifactId();
+        String groupId = this.project.getGroupId();        
+        String version = this.project.getVersion();
+        
+        String urn = groupId + ":" + artifactId + ":" + version;
+        
+        // inform user what's happening
+        this.getLog().info("Start deployment of '" + projectName + "'");
+        this.getLog().info("[" + urn + "]");        
 
+        // create the Cocoon object
         Cocoon cocoon = new Cocoon();
         cocoon.setExclusive(true);
-        cocoon.setUrl("target/webapp/xyz");
+        cocoon.setUrl("target/cocoon-webapp");
         cocoon.setVersion("2.2");
 
         Block block = new Block();
+        block.setId(artifactId);
         block.setAutoWire(true);
-        block.setLocation("blah");
-
         Mount mount = new Mount();
-        mount.setPath("xyz");
+        mount.setPath("/");
         block.setMount(mount);
-        block.setUrn("blah");
+        
+        block.setUrn(urn);
+        // Disabled for now! Using block.setLocation() make rapid application development possible.
+        // block.setLocation("target/classes");
 
+        // create the deployment object
         Deploy deploy = new Deploy();
         deploy.setCocoon(cocoon);
         deploy.addBlock(block);
-
+        
         BlockDeployer blockDeployer =
-            new BlockDeployer(new MavenArtifactProvider(this.artifactResolver, this.artifactFactory,
+            new BlockDeployer(new MavenArtifactProvider(this.artifactResolver, 
+            											this.artifactFactory,
                                                         this.localRepository,
                                                         this.remoteArtifactRepositories,
-                                                        this.metadataSource, this.getLog()),
-                              new NullVariableResolver(), new MavenLoggingWrapper(this.getLog()));
+                                                        this.metadataSource, 
+                                                        this.getLog()),
+                              new NullVariableResolver(),
+                              new MavenLoggingWrapper(this.getLog()));
+        
         blockDeployer.deploy(deploy);
+        
     }
 }

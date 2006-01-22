@@ -99,12 +99,10 @@ public class DeployMojo extends AbstractMojo {
     {
         getLog().info("Cocoon block deployer");
         getLog().info("factory: " + artifactFactory.toString());
-        
-        Artifact sourceArtifact = artifactFactory.createArtifactWithClassifier( "junit", "junit", "3.8.1", "java-source", "sources" );        
+         
         Set artifacts = null;
         ArtifactResolutionResult result = null;  
         try {
-			artifactResolver.resolve( sourceArtifact, remoteArtifactRepositories, localRepository );
 			
 			// see org.apache.maven.artifact.ant.DependenciesTask
 			Dependency dependency = new Dependency();
@@ -150,10 +148,8 @@ public class DeployMojo extends AbstractMojo {
             Artifact artifact = (Artifact) i.next();
             System.out.println("res " + artifact.getId());
         }		
-		getLog().info("deployDescriptor: " + new File(deployDescriptor).getAbsolutePath());
-        getLog().info("sourceArtifact: " + sourceArtifact.toString());
-        getLog().info("sourceArtifact path: " + sourceArtifact.getFile().getAbsolutePath());                
-        getLog().info("sourceArtifact exists: " + sourceArtifact.getFile().exists());        
+	    
+		getLog().info("deployDescriptor: " + new File(deployDescriptor).getAbsolutePath());   
 
     }	
 	

@@ -140,7 +140,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		MockControl aProviderCtrl = MockControl.createControl(ArtifactProvider.class);
 		ArtifactProvider aProvider = (ArtifactProvider) aProviderCtrl.getMock();
 		
-		aProvider.getArtifact(CocoonServer22.COCOON_22_SERVER_ARTIFACT);
+		aProvider.getArtifact(CocoonServer22.DEFAULT_COCOON_22_SERVER_ARTIFACT);
 		File vanillaCocoonServerArtifact = this.getMockArtefact("validVanillaCocoon22App/appRoot.zip");
 		assertTrue(vanillaCocoonServerArtifact.exists());		
 		aProviderCtrl.setReturnValue(vanillaCocoonServerArtifact);
