@@ -52,8 +52,6 @@ public class BlockWiring
     private String servletClass;
     private Configuration servletConfiguration;
     
-    private boolean core = false;
-
     /**
       * @param servletContext The servletContext to set.
       */
@@ -146,7 +144,6 @@ public class BlockWiring
         }
 
         this.componentConfiguration = block.getChild("components", false);
-        this.core = block.getChild("components").getAttributeAsBoolean("core", false);
     }
 
     /**
@@ -227,12 +224,5 @@ public class BlockWiring
      */
     Configuration getServletConfiguration() {
         return this.servletConfiguration;
-    }
-
-    /**
-     * Is it the block containing the Core object.
-     */
-    public boolean isCore() {
-        return this.core;
     }
 }
