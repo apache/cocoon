@@ -16,6 +16,7 @@
 package org.apache.cocoon.blocks;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.service.ServiceManager;
 
@@ -34,5 +35,5 @@ public interface Block extends Servlet {
      */
     public ServiceManager getServiceManager();
     
-    public Servlet getBlockServlet();
+    public ServletContext getBlockContext();
 }

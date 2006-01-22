@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -90,7 +91,7 @@ public class BlockManager
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
         this.blockContext =
-            new BlockContext(this.getServletContext(), this.blockWiring, this);
+            new BlockContext(this.getServletContext(), this.blockWiring);
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
 
@@ -133,7 +134,9 @@ public class BlockManager
             } catch (Exception e) {
                 throw new ServletException(e);
             }
-            this.blockServlet.init(blockServletConfig);            
+            this.blockServlet.init(blockServletConfig);
+            
+            this.blockContext.setServlet(this.blockServlet);
         }
     }
     
@@ -172,7 +175,7 @@ public class BlockManager
         }
     }
 
-    public Servlet getBlockServlet() {
-        return this.blockServlet;
+    public ServletContext getBlockContext() {
+        return this.blockContext;
     }
 }
