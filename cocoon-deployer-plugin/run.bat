@@ -1,1 +1,1 @@
-mvn -X org.apache.cocoon:deployer-maven-plugin:1.0-SNAPSHOT:deploy
+mvn -X -e org.apache.cocoon:cocoon-block-deployer-plugin:1.0-SNAPSHOT:simple-deploy1
