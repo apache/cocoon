@@ -83,7 +83,7 @@
     <li>
       <span class="description"><xsl:value-of select="@status:name"/><xsl:text>: </xsl:text></span>
       <xsl:choose>
-        <xsl:when test="contains(@status:name,'free') or contains(@status:name,'total')">
+        <xsl:when test="contains(@status:name,'free') or contains(@status:name,'used') or contains(@status:name,'total')">
           <xsl:call-template name="suffix">
             <xsl:with-param name="bytes" select="number(.)"/>
           </xsl:call-template>
