@@ -27,8 +27,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
@@ -39,6 +37,7 @@ import org.apache.cocoon.blocks.BlockConstants;
 import org.apache.cocoon.blocks.util.CoreUtil;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.ClassUtils;
@@ -48,13 +47,12 @@ import org.apache.cocoon.util.ClassUtils;
  */
 public class SitemapServlet
     extends HttpServlet
-    implements Configurable, Contextualizable, LogEnabled, Serviceable { 
+    implements Configurable, LogEnabled, Serviceable { 
 
     private String containerEncoding;
     private String contextURL;
 
     private Logger logger;
-    private Context context;
     private ServiceManager serviceManager;
     private Configuration config;
     private Processor processor;
@@ -63,10 +61,6 @@ public class SitemapServlet
 
     public void enableLogging(Logger logger) {
         this.logger = logger;
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
     }
 
     public void service(ServiceManager serviceManager) throws ServiceException {
@@ -93,6 +87,14 @@ public class SitemapServlet
             this.containerEncoding = "ISO-8859-1";
         }
         
+        Core core = null;
+        try {
+            core = (Core) this.serviceManager.lookup(Core.ROLE);
+        } catch (ServiceException e) {
+            throw new ServletException("Could not find a Core object from the parent service manager", e);
+        }
+        
+        Context context = CoreUtil.createContext(config, core.getSettings(), BlockConstants.BLOCK_CONF);
         this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
         
         try {
@@ -103,7 +105,7 @@ public class SitemapServlet
         try {
             LifecycleHelper.setupComponent(this.processor,
                     this.getLogger(),
-                    this.context,
+                    context,
                     this.serviceManager,
                     this.config);
         } catch (Exception e) {
