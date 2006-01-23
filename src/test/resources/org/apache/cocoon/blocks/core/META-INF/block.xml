@@ -29,6 +29,6 @@
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
   <components>
-    <include src="resource://org/apache/cocoon/blocks/core-components.xconf"/>
+    <include src="META-INF/core-components.xconf"/>
   </components>
 </block>
