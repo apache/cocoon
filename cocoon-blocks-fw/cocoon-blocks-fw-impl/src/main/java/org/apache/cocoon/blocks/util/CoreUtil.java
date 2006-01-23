@@ -312,11 +312,11 @@ public class CoreUtil {
     }
 
     private static void addSettingsContext(DefaultContext appContext, Settings settings) {
-        appContext.put(Constants.CONTEXT_WORK_DIR, settings.getWorkDirectory());
+        appContext.put(Constants.CONTEXT_WORK_DIR, new File(settings.getWorkDirectory()));
 
-        appContext.put(Constants.CONTEXT_UPLOAD_DIR, settings.getUploadDirectory());
+        appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(settings.getUploadDirectory()));
 
-        appContext.put(Constants.CONTEXT_CACHE_DIR, settings.getCacheDirectory());
+        appContext.put(Constants.CONTEXT_CACHE_DIR, new File(settings.getCacheDirectory()));
 
         //appContext.put(Constants.CONTEXT_CONFIG_URL, settings.getConfiguration());
 
