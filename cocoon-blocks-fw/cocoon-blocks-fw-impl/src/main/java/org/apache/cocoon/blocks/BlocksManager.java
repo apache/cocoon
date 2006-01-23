@@ -16,8 +16,13 @@
 package org.apache.cocoon.blocks;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -58,7 +63,8 @@ public class BlocksManager
     private Source wiringFile;
     private HashMap blocks = new HashMap();
     private HashMap mountedBlocks = new HashMap();
-    private Logger logger;    
+    private Logger logger;
+    private ClassLoader classLoader;
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -95,6 +101,40 @@ public class BlocksManager
         
         Configuration[] blockConfs = wiring.getChildren("block");
                 
+        // get all wired blocks and add their classed directory to the classloader
+        List urlList = new ArrayList();        
+        for (int i = 0; i < blockConfs.length; i++) {
+            Configuration blockConf = blockConfs[i];
+            String location = null;
+            try {
+                location = blockConf.getAttribute("location");
+            } catch (ConfigurationException e) {
+                throw new ServletException("Couldn't get location from the wiring file");
+            }
+            URL classesDir;
+            try {
+                classesDir = this.getServletContext().getResource(location);
+            } catch (MalformedURLException e) {
+                throw new ServletException("Couldn't get location of the classes of the block", e);
+            }
+            if (classesDir != null) {
+                urlList.add(classesDir);
+                if(this.logger.isDebugEnabled()) {
+                    this.logger.debug("added " + classesDir.toString());
+                }
+            } else {
+                if(this.logger.isDebugEnabled()) {
+                    this.logger.debug("didn't add " + location);
+                }                
+            }
+        }
+        // setup the classloader using the current classloader as parent
+        ClassLoader parentClassloader = Thread.currentThread().getContextClassLoader();
+        URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);        
+        URLClassLoader classloader = new URLClassLoader(urls, parentClassloader);
+        Thread.currentThread().setContextClassLoader(classloader);
+        this.classLoader = Thread.currentThread().getContextClassLoader();
+            
         // Create and store all blocks
         for (int i = 0; i < blockConfs.length; i++) {
             Configuration blockConf = blockConfs[i];
@@ -161,6 +201,9 @@ public class BlocksManager
             return;
         }
         
+        // set the blocks classloader for this thread
+        Thread.currentThread().setContextClassLoader(this.classLoader);        
+
         RequestDispatcher dispatcher = this.blocksContext.getRequestDispatcher(pathInfo);
         if (dispatcher == null)
             throw new ServletException("No block mounted at " + pathInfo);
@@ -193,7 +236,7 @@ public class BlocksManager
     public boolean modifiedSince(long date) {
         return date < this.wiringFile.getLastModified();
     }
-    
+        
     /**
      * Utility function to ensure that the parts of the request URI not is null
      * and not ends with /

@@ -19,12 +19,6 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components>
-    <!--map:classpath>
-      <class-dir src="COB-INF/classes"/>
-    </map:classpath-->
-  </map:components>
-
   <map:pipelines>
     <map:pipeline>
 
@@ -44,7 +38,7 @@
       </map:match>
 
       <map:match pattern="test4">
-        <map:generate src="resource://test.xml"/>
+        <map:generate src="resource://META-INF/classes/test.xml"/>
         <map:serialize/>
       </map:match>
 
