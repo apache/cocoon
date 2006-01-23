@@ -180,17 +180,21 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="add" fixes-bug="COCOON-1170" due-to="Simon Mieth" due-to-email="simon.mieth@t-online.de">
+      Added a "precompile" target for the cocoon startup script.  It precompiles
+      all XSPs found in the webapp.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1698" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
       Portal block: Fix handling of caching-global-use-attributes bug in CachingCopletAdapter.
     </action>
     <action dev="AG" type="update">
       Updated log4j to 1.2.13.
-    </action>  
+    </action>
     <action dev="JBQ" type="add">
       CForms: Added the sendForm() function to Form.js, same as showForm() but
       without creating a continuation.  Added the sendFormAndWait() function,
       alias for showForm()
-    </action> 
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1720">
        Fix a bug in CForms: Form.js overwriting the CFormsInstance attribute in viewData
     </action>

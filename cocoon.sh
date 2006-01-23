@@ -140,6 +140,8 @@ LOADER_LIB="${COCOON_HOME}/tools/loader"
 
 CLI=-Dloader.main.class=org.apache.cocoon.Main
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
+PRECOMPILE=-Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper
+PRECOMPILE_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 
 JETTY=-Dloader.main.class=org.mortbay.jetty.Server
 JETTY_CONF="$COCOON_HOME/tools/jetty/conf"
@@ -156,6 +158,10 @@ JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP
 case "$ACTION" in
   cli)
         $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $CLI_LIBRARIES $CLI $LOADER $ARGS
+        ;;
+
+  precompile)
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PRECOMPILE_LIBRARIES $PRECOMPILE $LOADER $ARGS
         ;;
 
   servlet)
