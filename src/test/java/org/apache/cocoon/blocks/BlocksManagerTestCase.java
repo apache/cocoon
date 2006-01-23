@@ -30,11 +30,11 @@ public class BlocksManagerTestCase extends ServletTestCase {
     public void testBlockSource3() throws Exception {
         pipeTest("/test1/test3", "test1/COB-INF/test.xml");
     }
-    /*
+
     public void testBlockSource4() throws Exception {
-        pipeTest("/test1/test4", "test1/COB-INF/classes/test.xml");
+        pipeTest("/test1/test4", "test1/META-INF/classes/test.xml");
     }
-    */
+
     public void testBlockSourceSub1() throws Exception {
         pipeTest("/test1/sub/test", "test1/COB-INF/sub/test.xml");
     }
