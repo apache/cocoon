@@ -484,8 +484,10 @@ public class EffectPipe extends AbstractXMLPipe {
             }
             this.buffers.addFirst(this.buffer);
         }
-        locators.addFirst(locator);
-        locator = new LocatorImpl(locator);
+        if (locator != null) {
+            locators.addFirst(locator);
+            locator = new LocatorImpl(locator);
+        }
         this.buffer = new SaxBuffer();
     }
 
@@ -496,7 +498,9 @@ public class EffectPipe extends AbstractXMLPipe {
         } else {
             this.buffer = null;
         }
-        locator = (Locator)locators.removeFirst();
+        if (locator != null) {
+            locator = (Locator)locators.removeFirst();
+        }
         return buffer;
     }
 
