@@ -88,14 +88,14 @@ public class CocoonWrapper {
     private List classList = new ArrayList();
 
     // Objects used alongside User Supplied Parameters
-    private File context;
+    protected File context;
     private File work;
     private File conf;
 
     // Internal Objects
-    private CommandLineContext cliContext;
+    protected CommandLineContext cliContext;
     private LogKitLoggerManager logManager;
-    private Cocoon cocoon;
+    protected Cocoon cocoon;
     protected Logger log;
     private HashMap empty = new HashMap();
 
