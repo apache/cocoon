@@ -214,7 +214,8 @@ public class CachingURICopletAdapter
     }
 
     /**
-     * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid.
+     * This adapter listens for CopletInstanceEvents. Each event sets the cache invalid,
+     * except for global caching using attributes, as all attributes are part of the cache key.
      */
     public void handleCopletInstanceEvent(CopletInstanceEvent event) {
         final CopletInstanceData coplet = (CopletInstanceData) event.getTarget();
@@ -225,7 +226,8 @@ public class CachingURICopletAdapter
         if ( !ignoreSizing || !isSizingEvent(event)) {
             // do we cache globally?
             boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL, Boolean.FALSE)).booleanValue();
-            if ( cacheGlobal ) {
+            boolean cacheGlobalUseAttributes = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES, Boolean.FALSE)).booleanValue();
+            if ( cacheGlobal && !cacheGlobalUseAttributes ) {
                 final String key = this.getCacheKey(coplet,
                                                     (String) coplet.getCopletData().getAttribute("uri"));
                 this.cache.remove(key);
