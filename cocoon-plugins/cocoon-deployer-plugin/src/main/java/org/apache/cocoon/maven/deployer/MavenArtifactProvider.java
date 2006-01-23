@@ -16,23 +16,26 @@
  */
 package org.apache.cocoon.maven.deployer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.cocoon.deployer.ArtifactProvider;
-
 import org.apache.commons.lang.Validate;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
-
 import org.apache.maven.project.artifact.MavenMetadataSource;
-
-import java.io.File;
-import java.util.List;
 
 
 /**
@@ -65,12 +68,12 @@ public final class MavenArtifactProvider
     /**
      * Creates a new MavenArtifactProvider object.
      *
-     * @param artifactResolver DOCUMENT ME!
-     * @param artifactFactory DOCUMENT ME!
-     * @param localRepository DOCUMENT ME!
-     * @param remoteArtifactRepositories DOCUMENT ME!
-     * @param metadataSource DOCUMENT ME!
-     * @param log DOCUMENT ME!
+     * @param artifactResolver - used to get Maven artifacts from the repositories
+     * @param artifactFactory - used to create Maven artifact skeletons
+     * @param localRepository - get access to the user's local repo
+     * @param remoteArtifactRepositories - get access to all configured remote repositories
+     * @param metadataSource - used to resolve transitive dependencies
+     * @param log - get access to the logger
      */
     public MavenArtifactProvider(final ArtifactResolver artifactResolver,
                                  final ArtifactFactory artifactFactory,
@@ -93,33 +96,81 @@ public final class MavenArtifactProvider
      * @see org.apache.cocoon.deployer.ArtifactProvider#getArtifact(java.lang.String)
      */
     public final File getArtifact(final String artifactId) {
-        try {
-            final Artifact artifact = getArtifactFor(artifactId);
+		try {
+			final ArtifactBean artifactBean = getArtifactBeanFor(artifactId);
+			final Artifact artifact = this.artifactFactory.createBuildArtifact(
+					artifactBean.getGroupId(), 
+					artifactBean.getArtifactId(),
+					artifactBean.getVersion(),
+					artifactBean.getType());
 
-            return artifact.getFile();
-        } catch(Exception ex) {
-            this.log.error(ex);
-        }
+			this.artifactResolver.resolve(artifact, this.remoteArtifactRepositories, this.localRepository);
 
-        return null;
-    }
+			this.log.debug("[MavenArtifactProvider.getArtifactFor: found "
+					+ artifact.getFile().getAbsolutePath());
+			
+			return artifact.getFile();
+		} catch (Exception ex) {
+			this.log.error(ex);
+		}
+		return null;
+	}
 
     /**
-     * @see org.apache.cocoon.deployer.ArtifactProvider#getArtifact(java.lang.String[])
-     */
-    public final File[] getArtifact(String[] artifactIds) {
+	 * @see org.apache.cocoon.deployer.ArtifactProvider#getArtifact(java.lang.String[])
+	 */
+    public final File[] getArtifact(String mainArtifactId, String[] artifactIds) {
     	
-    	// FIXME (reinhard) this doesn't use transitive dependency resolving!
+    	// !!! this method has never been testet !!!
     	
     	Validate.notNull(artifactIds, "artifactIds mustn't be null");
     	Validate.noNullElements(artifactIds, "Quering a 'null'-artifact is not possible");
-        final File[] files = new File[artifactIds.length];
+    	
+    	File[] returnFiles = new File[0];
+        List returnFilesList = new ArrayList();
+        
+    	try {
+			List dependencies = new ArrayList();
+	        Set artifacts = null;		
+	        
+	        ArtifactBean mainArtifactBean = getArtifactBeanFor(mainArtifactId);
+            Artifact mainArtifact = artifactFactory.createBuildArtifact(
+                mainArtifactBean.getGroupId(),
+                mainArtifactBean.getArtifactId(),
+                mainArtifactBean.getVersion(),
+                mainArtifactBean.getType());		        
+	        
+    		for(int i = 0; i < artifactIds.length; i++) {
+	    		ArtifactBean artifactBean = getArtifactBeanFor(artifactIds[i]);
+				Dependency dependency = new Dependency();
+				dependency.setGroupId(artifactBean.getGroupId());				
+				dependency.setArtifactId(artifactBean.getArtifactId());
+				dependency.setVersion(artifactBean.getVersion());    	
+				dependency.setType(artifactBean.getType());
+				dependencies.add(dependencies);
+	    	}
+    		
+            artifacts = MavenMetadataSource.createArtifacts( this.artifactFactory, dependencies, null, null, null );		   		
+		
+            Map managedDependencies = Collections.EMPTY_MAP;			
+            artifacts = MavenMetadataSource.createArtifacts( artifactFactory, dependencies, null, null, null );			
+            ArtifactResolutionResult result = artifactResolver.resolveTransitively( 
+            		artifacts, mainArtifact, managedDependencies, localRepository,
+                    remoteArtifactRepositories, metadataSource);   
+            
 
-        for(int i = 0; i < artifactIds.length; i++) {
-            files[i] = getArtifact(artifactIds[i]);
-        }
+    	    for(Iterator i = result.getArtifacts().iterator(); i.hasNext();) {
+                Artifact artifact = (Artifact) i.next();
+                returnFilesList.add(artifact.getFile());
+            }		            
 
-        return files;
+    	    returnFiles = (File[]) returnFilesList.toArray((new File[returnFilesList.size()]));
+    	    
+    	} catch (Exception ex) {
+			this.log.error(ex);
+		}
+    	
+    	return returnFiles;
     }
 
     /**
@@ -132,7 +183,7 @@ public final class MavenArtifactProvider
      * @throws ArtifactResolutionException The <code>ArtifactResolutionException</code>
      * @throws ArtifactNotFoundException The <code>ArtifactNotFoundException</code>
      */
-    private Artifact getArtifactFor(final String artifactSpec)
+    private ArtifactBean getArtifactBeanFor(final String artifactSpec)
         throws ArtifactResolutionException, ArtifactNotFoundException {
         this.log.debug("[MavenArtifactProvider.getArtifactFor: artifactSpec=" + artifactSpec);    	
     	
@@ -155,15 +206,38 @@ public final class MavenArtifactProvider
         this.log.debug("[MavenArtifactProvider.getArtifactFor: version=" + version);       
         this.log.debug("[MavenArtifactProvider.getArtifactFor: type=" + type);            
         
-        final Artifact artifact = 
-        	this.artifactFactory.createBuildArtifact(groupId, artifactId, version, type);
-        
-        this.artifactResolver.resolve(artifact, this.remoteArtifactRepositories, 
-            this.localRepository);
-
-        this.log.debug("[MavenArtifactProvider.getArtifactFor: found " + 
-            artifact.getFile().getAbsolutePath());
-        
-        return artifact;
+        return new ArtifactBean(groupId, artifactId, version, type);
     }
+    
+    /**
+     * Used to hold the data of the artifact data parsing process.
+     */
+    static class ArtifactBean {
+    	private String groupId;
+    	private String artifactId;
+    	private String version;
+    	private String type;
+    	
+    	public ArtifactBean(String groupId, String artifactId, String version, String type) {
+    		this.groupId = groupId;
+    		this.artifactId = artifactId;
+    		this.version = version;
+    		this.type = type;
+    	}
+    	
+		public String getArtifactId() {
+			return artifactId;
+		}
+		public String getGroupId() {
+			return groupId;
+		}
+		public String getType() {
+			return type;
+		}
+		public String getVersion() {
+			return version;
+		}
+
+    }
+    
 }
