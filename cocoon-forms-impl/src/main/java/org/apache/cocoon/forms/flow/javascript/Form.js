@@ -109,7 +109,7 @@ Form.prototype.showForm = function(uri, viewdata, ttl) {
 }
 
 Form.prototype.sendForm = function(uri, viewdata) {
-    this.buildViewData(viewdata)
+    viewdata = this.buildViewData(viewdata)
     cocoon.sendPage(uri, viewdata);
 
     // Clean up after sending the page
@@ -121,11 +121,16 @@ Form.prototype.sendForm = function(uri, viewdata) {
 }
 
 Form.prototype.buildViewData = function(viewdata) {
+    if (! viewdata)
+        viewdata = new Object();
+
     viewdata[Packages.org.apache.cocoon.forms.transformation.FormsPipelineConfig.CFORMSKEY] = this.form;
 
     if (this.locale == null)
         this.locale = java.util.Locale.getDefault();
     viewdata["locale"] = this.locale;
+
+    return viewdata
 }
 
 Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
@@ -200,7 +205,7 @@ Form.prototype.sendFormAndWait = function(uri, viewdata, ttl) {
     }
 
     comingBack = true;
-    this.buildViewData(viewdata)
+    viewdata = this.buildViewData(viewdata)
     cocoon.sendPage(uri, viewdata, bookmark);
 
     // Clean up after sending the page
