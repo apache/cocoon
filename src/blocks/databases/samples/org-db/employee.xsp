@@ -46,14 +46,15 @@
               <esql:query>select id, department_id, name from employee order by name</esql:query>
               <esql:results>
                 <esql:row-results>
+                 <option>
                   <xsp:logic>
                         if (<esql:get-string column="id"/>.equals(empID)) {
                             depID = <esql:get-string column="department_id"/>;
-			                      name = <esql:get-string column="name"/>;
-			                      xspAttr.addAttribute("", "selected", "selected", "CDATA", "");
+			      </xsp:logic>
+			       	<xsp:attribute name="selected">selected</xsp:attribute>
+			       <xsp:logic>
                         }
                   </xsp:logic>
-                  <option>
                     <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
                     <esql:get-string column="name"/>
                   </option>
@@ -83,12 +84,14 @@
                 <esql:query>select id, name from department order by name</esql:query>
                 <esql:results>
                   <esql:row-results>
+                  	<option>
                     <xsp:logic>
                         if (<esql:get-string column="id"/>.equals(depID)) {
-			                    xspAttr.addAttribute("", "selected", "selected", "CDATA", "");
+			        </xsp:logic>
+			       	  <xsp:attribute name="selected">selected</xsp:attribute>
+			       	<xsp:logic>
                         }
                     </xsp:logic>
-                    <option>
                       <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
                       <esql:get-string column="name"/>
                     </option>
