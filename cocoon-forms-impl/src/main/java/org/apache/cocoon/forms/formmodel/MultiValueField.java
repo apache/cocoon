@@ -24,8 +24,7 @@ import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
-import org.apache.cocoon.forms.event.ValueChangedEvent;
-import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.*;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
@@ -51,7 +50,7 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class MultiValueField extends AbstractWidget
-                             implements ValidationErrorAware, SelectableWidget, DataWidget {
+                             implements ValidationErrorAware, SelectableWidget, DataWidget, ValueChangedListenerEnabled {
 
     private static final String MULTIVALUEFIELD_EL = "multivaluefield";
     private static final String VALUES_EL = "values";
@@ -65,10 +64,12 @@ public class MultiValueField extends AbstractWidget
     private String invalidEnteredValue;
     private Object[] values;
     private ValidationError validationError;
+    private ValueChangedListener listener;
 
     public MultiValueField(MultiValueFieldDefinition definition) {
         super(definition);
         this.definition = definition;
+        this.listener = definition.getValueChangedListener();
     }
 
     public void initialize() {
@@ -87,6 +88,7 @@ public class MultiValueField extends AbstractWidget
         enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
         invalidEnteredValue = null;
         validationError = null;
+        Object[] oldValues = values;
         values = null;
 
         boolean conversionFailed = false;
@@ -110,6 +112,31 @@ public class MultiValueField extends AbstractWidget
                 values = null;
         } else {
             values = new Object[0];
+        }
+
+        engenderChangeEvent(oldValues);
+    }
+
+    private void engenderChangeEvent(Object[] oldValues) {
+        boolean hasListeners = hasValueChangedListeners() || this.getForm().hasFormHandler();
+        if (hasListeners) {
+            if (values != null) {
+                boolean changed = false;
+                if (oldValues == null) {
+                    changed = true;
+                } else if (oldValues.length != values.length) {
+                    changed = true;
+                } else {
+                    for (int i = 0; i < values.length; i++) {
+                        if (!values[i].equals(oldValues[i])) {
+                            changed = true;
+                            break;
+                        }
+                    }
+                }
+                if (changed)
+                    getForm().addWidgetEvent(new ValueChangedEvent(this, oldValues, values));
+            }
         }
     }
 
@@ -190,7 +217,9 @@ public class MultiValueField extends AbstractWidget
             if (!definition.getDatatype().getTypeClass().isAssignableFrom(values[i].getClass()))
                 throw new RuntimeException("Cannot set value of field \"" + getRequestParameterName() + "\" with an object of type " + values[i].getClass().getName());
         }
+        Object[] oldValues = this.values;
         this.values = values;
+        engenderChangeEvent(oldValues);
         getForm().addWidgetUpdate(this);
     }
 
@@ -247,7 +276,9 @@ public class MultiValueField extends AbstractWidget
 
     public void broadcastEvent(WidgetEvent event) {
         if (event instanceof ValueChangedEvent) {
-            this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+            if (this.listener != null) {
+                this.listener.valueChanged((ValueChangedEvent)event);
+            }
         } else {
             // Other kinds of events
             super.broadcastEvent(event);
@@ -265,5 +296,17 @@ public class MultiValueField extends AbstractWidget
 
     public Datatype getDatatype() {
         return definition.getDatatype();
+    }
+
+    public void addValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+
+    public void removeValueChangedListener(ValueChangedListener listener) {
+        this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+
+    public boolean hasValueChangedListeners() {
+        return this.listener != null;
     }
 }
