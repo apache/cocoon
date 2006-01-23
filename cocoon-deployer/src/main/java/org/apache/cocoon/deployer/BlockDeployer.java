@@ -100,6 +100,7 @@ public class BlockDeployer {
 		}
 		
 		// get all dependant libraries transitivly
+		// TBD artifactProvider.getArtifact()
 		
 		// deploy the blocks
 		CocoonServer cocoonServer = CocoonServerFactory.createServer(
