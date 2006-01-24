@@ -210,10 +210,12 @@ public class CachingURICopletAdapter
                 // do we cache globally?
                 boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL, Boolean.FALSE)).booleanValue();
                 boolean cacheGlobalUseAttributes = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES, Boolean.FALSE)).booleanValue();
-                if ( cacheGlobal && !cacheGlobalUseAttributes ) {
-                    final String key = this.getCacheKey(coplet,
-                                                        (String) coplet.getCopletData().getAttribute("uri"));
-                    this.cache.remove(key);
+                if ( cacheGlobal ) {
+                    if ( !cacheGlobalUseAttributes ) {
+                        final String key = this.getCacheKey(coplet,
+                                                            (String) coplet.getCopletData().getAttribute("uri"));
+                        this.cache.remove(key);
+                    }
                 } else {
                     coplet.removeTemporaryAttribute(CACHE);
                 }
