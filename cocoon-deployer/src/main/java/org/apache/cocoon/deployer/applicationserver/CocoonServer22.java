@@ -49,7 +49,6 @@ import org.apache.commons.transaction.file.ResourceManagerException;
 
 public class CocoonServer22 implements CocoonServer {
 
-	public static final String DEFAULT_COCOON_22_SERVER_ARTIFACT = "org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war";
 	public static final String WIRING_10_NAMESPACE = "http://apache.org/cocoon/blocks/wiring/1.0";
 	public static final String WIRING_FILE = "WEB-INF/wiring.xml";
 	public static final String WEB_INF_BLOCKS_DIR = "WEB-INF/blocks";
@@ -71,7 +70,7 @@ public class CocoonServer22 implements CocoonServer {
 	 * TODO exclusive mode not implemented yet
 	 * TODO variable resolver not used yet
 	 */
-	public synchronized boolean deploy(Block[] blocks, File[] libraries, Logger log) {
+	public synchronized boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log) {
 		Validate.notNull(blocks, "A blocks object (Block[]) has to be passed to this method!");
 		Validate.notNull(libraries, "A libraries object (File[]) has to passed to this method!");
 		
@@ -88,7 +87,7 @@ public class CocoonServer22 implements CocoonServer {
 	    	
 			// install the Cocoon server if necessary
 			if(baseDirectoryFile.list().length == 0) {
-				deployCocoonServer(frm, txId, "");
+				deployCocoonServer(frm, txId, "", serverArtifact);
 			} else {
 				// TODO logging
 			}
@@ -147,9 +146,11 @@ public class CocoonServer22 implements CocoonServer {
 			}
 			
 			// install all libraries
+			// TODO What happens if two libraries have the same filename by chance ...?
 			for(int i = 0; i < libraries.length; i++) {
 				File lib = libraries[i];
 				String libName = lib.getName();
+				log.info("Installing library " + WEB_INF_LIBS_DIR + "/" + libName);		
 				OutputStream out = frm.writeResource(txId, WEB_INF_LIBS_DIR + "/" + libName);
 				FileInputStream fis = new FileInputStream(lib);
 				int b;
@@ -167,7 +168,6 @@ public class CocoonServer22 implements CocoonServer {
             
             // committ transaction
 			frm.commitTransaction(txId); 
-			log.info("All block successfully deployed.");
 			
 	    } catch(Exception ex) {
 	    	try {
@@ -297,8 +297,8 @@ public class CocoonServer22 implements CocoonServer {
 	/**
 	 * Extract the Cocoon server to the filesystem using the FileResourceManager
 	 */
-	protected void deployCocoonServer(FileResourceManager frm, String txId, String relativeOutputDir) {
-		File zip = this.artifactProvider.getArtifact(DEFAULT_COCOON_22_SERVER_ARTIFACT);
+	protected void deployCocoonServer(FileResourceManager frm, String txId, String relativeOutputDir, String serverArtifact) {
+		File zip = this.artifactProvider.getArtifact(serverArtifact);
 		try {
 			ZipUtils.extractZip(new ZipInputStream(new FileInputStream(zip)), frm, txId, relativeOutputDir);
 		} catch (FileNotFoundException e) {

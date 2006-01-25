@@ -15,8 +15,8 @@
   limitations under the License. 
 -->
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
-       id="http://cocoon.apache.org/blocks/anyblock-03/1.0">
-  <name>anyblock02</name>
+  id="anyblock:anyblock-03:1.0">
+  <name>anyblock03</name>
   <description href="http://cocoon.apache.org/blocks/anyblock/1.0">
     A test block
   </description>

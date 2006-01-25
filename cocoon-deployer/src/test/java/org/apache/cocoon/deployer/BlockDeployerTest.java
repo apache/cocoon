@@ -18,7 +18,6 @@ package org.apache.cocoon.deployer;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.cocoon.deployer.applicationserver.CocoonServer22;
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
 import org.apache.cocoon.deployer.logger.ConsoleLogger;
 import org.apache.cocoon.deployer.resolver.NullVariableResolver;
@@ -43,7 +42,7 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		ArtifactProvider aProvider = (ArtifactProvider) aProviderCtrl.getMock();
 		
 		// server
-		aProvider.getArtifact(CocoonServer22.DEFAULT_COCOON_22_SERVER_ARTIFACT);
+		aProvider.getArtifact("org.apache.cocoon:cocoon-minimal-webapp:2.0-SNAPSHOT:war");
 		File vanillaCocoonServerArtifact = this.getMockArtefact("validVanillaCocoon22App/appRoot.zip");
 		assertTrue(vanillaCocoonServerArtifact.exists());		
 		aProviderCtrl.setReturnValue(vanillaCocoonServerArtifact);
@@ -62,6 +61,9 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		
 		aProvider.getArtifact("mvn:anyblock:anyblock-07:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-07/valid-block-1.0.jar"));			
+		
+		aProvider.getArtifact((String[]) null);
+		aProviderCtrl.setDefaultReturnValue(new File[0]);
 		
 		aProviderCtrl.replay();
 		return aProvider;

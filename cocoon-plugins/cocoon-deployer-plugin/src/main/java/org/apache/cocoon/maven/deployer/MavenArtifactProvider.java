@@ -119,9 +119,7 @@ public final class MavenArtifactProvider
     /**
 	 * @see org.apache.cocoon.deployer.ArtifactProvider#getArtifact(java.lang.String[])
 	 */
-    public final File[] getArtifact(String mainArtifactId, String[] artifactIds) {
-    	
-    	// !!! this method has never been testet !!!
+    public final File[] getArtifact(String[] artifactIds) {
     	
     	Validate.notNull(artifactIds, "artifactIds mustn't be null");
     	Validate.noNullElements(artifactIds, "Quering a 'null'-artifact is not possible");
@@ -132,14 +130,7 @@ public final class MavenArtifactProvider
     	try {
 			List dependencies = new ArrayList();
 	        Set artifacts = null;		
-	        
-	        ArtifactBean mainArtifactBean = getArtifactBeanFor(mainArtifactId);
-            Artifact mainArtifact = artifactFactory.createBuildArtifact(
-                mainArtifactBean.getGroupId(),
-                mainArtifactBean.getArtifactId(),
-                mainArtifactBean.getVersion(),
-                mainArtifactBean.getType());		        
-	        
+
     		for(int i = 0; i < artifactIds.length; i++) {
 	    		ArtifactBean artifactBean = getArtifactBeanFor(artifactIds[i]);
 				Dependency dependency = new Dependency();
@@ -147,20 +138,24 @@ public final class MavenArtifactProvider
 				dependency.setArtifactId(artifactBean.getArtifactId());
 				dependency.setVersion(artifactBean.getVersion());    	
 				dependency.setType(artifactBean.getType());
-				dependencies.add(dependencies);
+				dependencies.add(dependency);		
 	    	}
-    		
+
+    		Artifact mainArtifact = artifactFactory.createBuildArtifact( "unspecified", "unspecified", "0.0", "jar");
+            
             artifacts = MavenMetadataSource.createArtifacts( this.artifactFactory, dependencies, null, null, null );		   		
 		
-            Map managedDependencies = Collections.EMPTY_MAP;			
-            artifacts = MavenMetadataSource.createArtifacts( artifactFactory, dependencies, null, null, null );			
+            Map managedDependencies = Collections.EMPTY_MAP;	
+            
+            artifacts = MavenMetadataSource.createArtifacts( artifactFactory, dependencies, null, null, null );		
+            
             ArtifactResolutionResult result = artifactResolver.resolveTransitively( 
             		artifacts, mainArtifact, managedDependencies, localRepository,
                     remoteArtifactRepositories, metadataSource);   
             
 
     	    for(Iterator i = result.getArtifacts().iterator(); i.hasNext();) {
-                Artifact artifact = (Artifact) i.next();
+                Artifact artifact = (Artifact) i.next();       
                 returnFilesList.add(artifact.getFile());
             }		            
 
@@ -168,6 +163,7 @@ public final class MavenArtifactProvider
     	    
     	} catch (Exception ex) {
 			this.log.error(ex);
+			// TBD: catch specific exceptions and throw new MojoExecutionException(...) with explanations what went wrong
 		}
     	
     	return returnFiles;
@@ -185,7 +181,6 @@ public final class MavenArtifactProvider
      */
     private ArtifactBean getArtifactBeanFor(final String artifactSpec)
         throws ArtifactResolutionException, ArtifactNotFoundException {
-        this.log.debug("[MavenArtifactProvider.getArtifactFor: artifactSpec=" + artifactSpec);    	
     	
         final int p1 = artifactSpec.indexOf(':');
         Validate.isTrue(p1 > 0, "invalid artifact specifier: " + artifactSpec);
@@ -196,7 +191,6 @@ public final class MavenArtifactProvider
 
         final String artifactId = artifactSpec.substring(p1 + 1, p2);
         final int p3 = artifactSpec.indexOf(':', p2 + 1);
-        System.out.println("p3: " + p3);
         final String version =
             (p3 > 0) ? artifactSpec.substring(p2 + 1, p3) : artifactSpec.substring(p2 + 1);
         final String type = (p3 > 0) ? artifactSpec.substring(p3 + 1) : "jar";

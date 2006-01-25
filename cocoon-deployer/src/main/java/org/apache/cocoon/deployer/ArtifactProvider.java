@@ -29,6 +29,6 @@ public interface ArtifactProvider {
 	 * This method is used to resolve all dependencies of the passed artifact ids. It supports
 	 * transitive dependencies and makes sure that only one version of an artifact is returned.
 	 */
-	public File[] getArtifact(String mainArtifactId, String[] artifactIds);
+	public File[] getArtifact(String[] artifactIds);
 	
 }

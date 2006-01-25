@@ -35,6 +35,7 @@ import org.easymock.MockControl;
 public class CocoonServer22Test extends AbstractDeployerTestCase {
 	
 	private static final String deployPath = "target/test/deployServer22";
+	private static final String DEFAULT_WEBAPP_ARTIFACT = "org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war";
 	
 	/**
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deploy(Block[])'
@@ -50,7 +51,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		BinaryBlock[] blocks = new Block10[1];
 		blocks[0] = createBlock10Instance("validBlock-02/valid-block-1.0.jar", "validDeploy-02/deploy.xml", 0);	
 		
-		cocoonServer.deploy(blocks, createLibraries(), this.getLogger());
+		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger());
 		
 	    // assertions: check if setting the properties works correctly
 		Wiring wiring = (Wiring) Wiring.unmarshal(new FileReader(new File(deployPath + "/WEB-INF/wiring.xml")));
@@ -73,7 +74,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		blocks[1] = createBlock10Instance("validBlock-03/valid-block-1.0.jar", "validDeploy-03/deploy.xml", 1);
 		blocks[2] = createBlock10Instance("validBlock-03/valid-block-1.0.jar", "validDeploy-03/deploy.xml", 2);
 		
-		cocoonServer.deploy(blocks, createLibraries(), this.getLogger());
+		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger());
 		
 	    // assertions: names, location, connections
 		Wiring wiring = (Wiring) Wiring.unmarshal(new FileReader(new File(deployPath + "/WEB-INF/wiring.xml")));
@@ -125,7 +126,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	    frm.start();
 	    frm.startTransaction(txId);
 	    
-	    cocoonServer.deployCocoonServer(frm, txId, relativeOutputDir);
+	    cocoonServer.deployCocoonServer(frm, txId, relativeOutputDir, DEFAULT_WEBAPP_ARTIFACT);
 	    frm.commitTransaction(txId);
 	    
 	    // ASSERTIONS!!!
@@ -140,7 +141,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		MockControl aProviderCtrl = MockControl.createControl(ArtifactProvider.class);
 		ArtifactProvider aProvider = (ArtifactProvider) aProviderCtrl.getMock();
 		
-		aProvider.getArtifact(CocoonServer22.DEFAULT_COCOON_22_SERVER_ARTIFACT);
+		aProvider.getArtifact("org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war");
 		File vanillaCocoonServerArtifact = this.getMockArtefact("validVanillaCocoon22App/appRoot.zip");
 		assertTrue(vanillaCocoonServerArtifact.exists());		
 		aProviderCtrl.setReturnValue(vanillaCocoonServerArtifact);

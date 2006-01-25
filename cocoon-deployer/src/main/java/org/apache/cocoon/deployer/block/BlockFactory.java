@@ -76,7 +76,7 @@ public class BlockFactory {
 		deployBlock.setId(deployBlockId);
 		
 		BinaryBlock block = BlockFactory.createBinaryBlock(artifact, deployBlock);
-		deployBlock.setUrn("mvn:" + block.getBlockDescriptor().getId());
+		deployBlock.setUrn(block.getBlockDescriptor().getId());
 		
 		return block;
 	}
