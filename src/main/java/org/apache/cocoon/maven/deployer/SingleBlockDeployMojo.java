@@ -107,9 +107,9 @@ public class SingleBlockDeployMojo
     //~ Methods -----------------------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Create a minimal web application based on the current block
      *
-     * @throws MojoExecutionException DOCUMENT ME!
+     * @throws MojoExecutionException if any problem occurs while executing this Mojo
      */
     public void execute()
         throws MojoExecutionException {
@@ -129,9 +129,10 @@ public class SingleBlockDeployMojo
         // create the Cocoon object
         Cocoon cocoon = new Cocoon();
         cocoon.setExclusive(true);
-        cocoon.setUrl("target/cocoon-webapp");
-        cocoon.setVersion("2.2");
-
+        cocoon.setTargetUrl("target/cocoon-webapp");
+        cocoon.setWebappUrn("org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war");
+        cocoon.setBlockFwUrn("org.apache.cocoon:cocoon-blocks-fw-impl:1.0-SNAPSHOT");
+        
         Block block = new Block();
         block.setId(artifactId);
         block.setAutoWire(true);
