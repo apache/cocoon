@@ -145,5 +145,7 @@
       <fd:label>Remove selected Contacts</fd:label>
     </fd:repeater-action>
     
+    <fd:new id="lib:rec-class-1"/>
+    
   </fd:widgets>
 </fd:form>

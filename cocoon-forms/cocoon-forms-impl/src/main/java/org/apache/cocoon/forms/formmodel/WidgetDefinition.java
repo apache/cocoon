@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.formmodel.library.Library;
 import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.Location;
 import org.xml.sax.ContentHandler;
@@ -39,6 +40,16 @@ public interface WidgetDefinition extends Locatable {
      * Gets the {@link FormDefinition}.
      */
     FormDefinition getFormDefinition();
+    
+    /**
+     * Gets the Library object containing this definition
+     */
+    Library getEnclosingLibrary();
+    
+    /**
+     * Sets the Library object containing this definition (should only be used by Library itself!)
+     */
+    void setEnclosingLibrary(Library library);
 
     /**
      * Sets the parent of this definition.
