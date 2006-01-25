@@ -39,10 +39,18 @@ public class NewDefinition extends AbstractWidgetDefinition {
 
     private ClassDefinition getClassDefinition() throws Exception {
         FormDefinition formDefinition = getFormDefinition();
-        WidgetDefinition classDefinition = formDefinition.getWidgetDefinition(getId());
+        WidgetDefinition classDefinition = null;
         
-        if (classDefinition == null) // not found in local form, try library
-        	classDefinition = formDefinition.getLocalLibrary().getDefinition(getId());
+        // we found a form definition to ask
+        if( formDefinition != null ) {
+        	classDefinition = formDefinition.getWidgetDefinition(getId());
+        	
+        	if (classDefinition == null) // not found in local form, try library
+            	classDefinition = formDefinition.getLocalLibrary().getDefinition(getId());
+        }
+        
+        if (classDefinition == null && getEnclosingLibrary() != null) // not found in form's library, so ask enclosing library
+        	classDefinition = getEnclosingLibrary().getDefinition(getId());
         
         if (classDefinition == null)
             throw new Exception("NewDefinition: Class with id \"" + getId() + "\" does not exist (" + getLocation() + ")");

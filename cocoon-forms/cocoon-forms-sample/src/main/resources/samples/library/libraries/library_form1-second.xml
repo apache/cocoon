@@ -32,5 +32,73 @@
     
     <fd:expand id="ext:field2"/>
     
+    <fd:class id="rec-class-1">
+      <fd:widgets>
+        <fd:repeater id="fields-rec-1">
+          <fd:widgets>
+            
+            <fd:field id="field-rec-1">
+              <fd:label>Field (recursive) 1:</fd:label>
+              <fd:datatype base="string"/>
+            </fd:field>
+            
+            <fd:new id="rec-class-2"/>
+            
+            <!-- these actions will act on the "tasks" repeater in which this class is inlined -->
+            <fd:row-action id="add" command="add-after">
+              <fd:label>+</fd:label>
+            </fd:row-action>
+            <fd:row-action id="up" command="move-up">
+              <fd:label>^</fd:label>
+            </fd:row-action>
+            <fd:row-action id="down" command="move-down">
+              <fd:label>v</fd:label>
+            </fd:row-action>
+            <fd:row-action id="delete" command="delete">
+              <fd:label>X</fd:label>
+            </fd:row-action>
+          </fd:widgets>
+        </fd:repeater>
+        
+        <fd:repeater-action id="addfields-rec-1" command="add-row" repeater="fields-rec-1">
+          <fd:label>Add row</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+    
+    <fd:class id="rec-class-2">
+      <fd:widgets>
+        <fd:repeater id="fields-rec-2">
+          <fd:widgets>
+            
+            <fd:field id="field-rec-2">
+              <fd:label>Field (recursive) 2:</fd:label>
+              <fd:datatype base="string"/>
+            </fd:field>
+            
+            <fd:new id="rec-class-1"/>
+            
+            <!-- these actions will act on the "tasks" repeater in which this class is inlined -->
+            <fd:row-action id="add" command="add-after">
+              <fd:label>+</fd:label>
+            </fd:row-action>
+            <fd:row-action id="up" command="move-up">
+              <fd:label>^</fd:label>
+            </fd:row-action>
+            <fd:row-action id="down" command="move-down">
+              <fd:label>v</fd:label>
+            </fd:row-action>
+            <fd:row-action id="delete" command="delete">
+              <fd:label>X</fd:label>
+            </fd:row-action>
+          </fd:widgets>
+        </fd:repeater>
+        
+        <fd:repeater-action id="addfields-rec-2" command="add-row" repeater="fields-rec-2">
+          <fd:label>Add row</fd:label>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+    
   </fd:widgets>
 </fd:library>
