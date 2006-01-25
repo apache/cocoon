@@ -101,7 +101,7 @@ public class BlocksManager
         
         Configuration[] blockConfs = wiring.getChildren("block");
                 
-        // get all wired blocks and add their classed directory to the classloader
+        // get all wired blocks and add them to the classloader
         List urlList = new ArrayList();        
         for (int i = 0; i < blockConfs.length; i++) {
             Configuration blockConf = blockConfs[i];
@@ -128,6 +128,7 @@ public class BlocksManager
                 }                
             }
         }
+        
         // setup the classloader using the current classloader as parent
         ClassLoader parentClassloader = Thread.currentThread().getContextClassLoader();
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);        
