@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1699" due-to="Paul Focke" due-to-email="paul@outerthought.org">
+       CForms: Enable MultiValueFields with checkbox style to be disabled
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1719">
        IncludeTransformer: source must not be cached if an error occurs
     </action>
