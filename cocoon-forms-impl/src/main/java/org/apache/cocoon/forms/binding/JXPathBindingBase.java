@@ -47,7 +47,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     /**
      * the local library, if this is the top binding
      */
-    private Library localLibrary = null;
+    private Library enclosingLibrary = null;
     
     /**
      * Object holding the values of the common objects on all Bindings.
@@ -73,25 +73,25 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         this.commonAtts = commonAtts;
     }
     
-    public Library getLocalLibrary() {
+    public Library getEnclosingLibary() {
     	if(parent != null) {
-    		return parent.getLocalLibrary();
+    		return parent.getEnclosingLibary();
     	} else {
-    		return localLibrary;
+    		return enclosingLibrary;
     	}
     }
-    public void setLocalLibary(Library lib) {
-    	this.localLibrary = lib;
+    public void setEnclosingLibary(Library lib) {
+    	this.enclosingLibrary = lib;
     }
     
     public boolean isValid() {
-    	if(this.localLibrary!=null) {
+    	if(this.enclosingLibrary!=null) {
     		if(parent!=null)
     			return parent.isValid();
     		return true; // no library used
     	} else {
     		try {
-    			return !this.localLibrary.dependenciesHaveChanged();
+    			return !this.enclosingLibrary.dependenciesHaveChanged();
     		} catch(Exception e) {
     			logger.error("Error checking dependencies!",e);
     			throw new NestableRuntimeException("Error checking dependencies!",e);
@@ -129,7 +129,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         Binding classBinding = null;
         
         try {
-            if(this.localLibrary!=null && (classBinding = this.localLibrary.getBinding(id))!=null)
+            if(this.enclosingLibrary!=null && (classBinding = this.enclosingLibrary.getBinding(id))!=null)
                 return classBinding;
         } catch(Exception ignore) {}
         

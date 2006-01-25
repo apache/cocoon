@@ -25,6 +25,7 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+import org.apache.cocoon.forms.formmodel.library.Library;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.XMLUtils;
@@ -40,6 +41,8 @@ import org.xml.sax.SAXException;
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
     protected WidgetDefinition parent;
+    
+    protected Library enclosingLibrary = null;
 
     //TODO consider final on these
     private Location location = Location.UNKNOWN;
@@ -58,11 +61,24 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         if (this.formDefinition == null) {
             if (this instanceof FormDefinition) {
                 this.formDefinition = (FormDefinition)this;
-            } else {
+            } else if(this.parent != null) {
                 this.formDefinition = this.parent.getFormDefinition();
+            } else {
+            	// no form definition in this widget tree, must be in a library!
+            	return null;
             }
         }
         return this.formDefinition;
+    }
+    
+    public Library getEnclosingLibrary() {
+    	if (this.enclosingLibrary == null) {
+    		this.enclosingLibrary = this.parent.getEnclosingLibrary();
+        }
+        return this.enclosingLibrary;
+    }
+    public void setEnclosingLibrary(Library library) {
+    	enclosingLibrary = library;
     }
     
     /**

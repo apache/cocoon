@@ -78,6 +78,80 @@
         </tr>
       </table>
       
+      <ft:class id="rec-class-1">
+        <table border="1">
+          <tr>
+            <td>
+              <ft:widget id="addfields-rec-1"/>
+            </td>
+          </tr>
+          <jx:choose>
+            <jx:when test="${widget.getChild('fields-rec').getSize() == 0}">
+              <tr><td align="center"><em>There are no rows to display</em></td></tr>
+            </jx:when>
+            <jx:otherwise>
+              <ft:repeater-widget id="fields-rec-1">
+                <tr>
+                  <td><ft:widget id="field-rec-1"/></td>
+                </tr>
+                <td>
+                  <span class="actions">
+                    <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+                    <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+                    <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+                    <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                  </span>
+                </td>
+                <tr>
+                  <td><ft:new id="rec-class-2"/></td>
+                </tr>
+              </ft:repeater-widget>
+            </jx:otherwise>
+          </jx:choose>
+        </table>
+      </ft:class>
+      
+      <p>
+        <em>Recursive inter-library class/new inclusion madness:</em>
+      </p>
+      
+      <ft:class id="rec-class-2">
+        <table border="1">
+          <tr>
+            <td>
+              <ft:widget id="addfields-rec-2"/>
+            </td>
+          </tr>
+          <jx:choose>
+            <jx:when test="${widget.getChild('fields-rec').getSize() == 0}">
+              <tr><td align="center"><em>There are no rows to display</em></td></tr>
+            </jx:when>
+            <jx:otherwise>
+              <ft:repeater-widget id="fields-rec-2">
+                <tr>
+                  <td><ft:widget id="field-rec-2"/></td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="actions">
+                      <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+                      <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+                      <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+                      <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><ft:new id="rec-class-1"/></td>
+                </tr>
+              </ft:repeater-widget>
+            </jx:otherwise>
+          </jx:choose>
+        </table>
+      </ft:class>
+      
+      <ft:new id="rec-class-1"/>
+      
       <input type="submit"/>
       
     </ft:form-template>

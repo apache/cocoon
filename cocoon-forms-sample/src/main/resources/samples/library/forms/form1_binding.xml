@@ -25,5 +25,7 @@
   
   <fb:expand id="lib:ext:field2"/>
   <fb:value id="myField3" path="field3" extends="lib:ext:field2"/>
-  
+
+  <fb:new id="lib:rec-class-1"/>
+
 </fb:context>
