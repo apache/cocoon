@@ -93,9 +93,9 @@
       <xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
     </xsl:if>
 
-  	<xsl:if test="@state = 'disabled'">
-  		<xsl:attribute name="disabled">disabled</xsl:attribute>
-  	</xsl:if>
+    <xsl:if test="@state = 'disabled'">
+      <xsl:attribute name="disabled">disabled</xsl:attribute>
+    </xsl:if>
 
     <!--+
         | @listbox-size needs to be handled separately as even if it is not
@@ -413,12 +413,16 @@
   <xsl:template match="fi:multivaluefield[fi:styling/@list-type='checkbox']">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
+    <xsl:variable name="state" select="@state" />
 
     <span id="{@id}" title="{fi:hint}">
       <xsl:for-each select="fi:selection-list/fi:item">
         <xsl:variable name="value" select="@value"/>
         <xsl:variable name="item-id" select="concat($id, ':', position())"/>
         <input id="{$item-id}" type="checkbox" value="{@value}" name="{$id}">
+          <xsl:if test="$state = 'disabled'">
+            <xsl:attribute name="disabled">disabled</xsl:attribute>
+          </xsl:if>
           <xsl:if test="$values[. = $value]">
             <xsl:attribute name="checked">checked</xsl:attribute>
           </xsl:if>
