@@ -76,6 +76,11 @@ public class AggregateField extends Field implements ContainerWidget {
 
     public void initialize() {
         this.selectionList = getAggregateFieldDefinition().getSelectionList();
+        
+        Iterator it = this.getChildren();
+        while(it.hasNext()) {
+          ((Widget)it.next()).initialize();
+        }
     }
 
     public void addChild(Widget widget) {
