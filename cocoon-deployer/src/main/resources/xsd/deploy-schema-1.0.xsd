@@ -31,10 +31,10 @@
   </xs:element>
   
   <xs:complexType name="cocoon">
-  	<xs:attribute name="url" type="xs:anyURI" use="required"/>
+  	<xs:attribute name="target-url" type="xs:anyURI" use="required"/>
     <xs:attribute name="exclusive" type="xs:boolean" use="required"/>
-  	<xs:attribute name="version" type="xs:string" use="required"/>	
-  	<xs:attribute name="webapp" type="xs:anyURI" use="optional"/>
+  	<xs:attribute name="webapp-urn" type="xs:anyURI" use="optional"/>
+  	<xs:attribute name="block-fw-urn" type="xs:anyURI" use="optional"/>
   </xs:complexType>
   
   <xs:complexType name="block">

@@ -20,6 +20,7 @@ package org.apache.cocoon.deployer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.deployer.applicationserver.CocoonServer;
@@ -92,24 +93,36 @@ public class BlockDeployer {
 		// validate deployment descriptor (correct dependencies, mount path only used once in exclusive mode, 
 		// set only available properties)
 		
-		
-		// check if this version of the deployer supports the requested Cocoon version
-		String version = deploymentDescriptor.getCocoon().getVersion();
-		if(!version.equals("2.2") && !version.equals("2.2-SNAPSHOT")) {
-			throw new DeploymentException("This version of the block deployer only supports Cocoon 2.2.");
-		}
+		// get the Cocoon urn
+		String cocoonWebappUrn = deploymentDescriptor.getCocoon().getWebappUrn();
+		String cocoonBlockFwWebappUrn = deploymentDescriptor.getCocoon().getBlockFwUrn();		
 		
 		// get all dependant libraries transitivly
-		// TBD artifactProvider.getArtifact()
+		File[] libraries = artifactProvider.getArtifact( 
+				this.getAllBlockUrns(this.blockList, cocoonBlockFwWebappUrn));
 		
 		// deploy the blocks
 		CocoonServer cocoonServer = CocoonServerFactory.createServer(
 				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider);
-		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), new File[0], this.log);
+		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), 
+				cocoonWebappUrn, libraries, this.log);
 		
 		stopWatch.stop();
 		this.log.info("SUCESSFULLY deployed in " + stopWatch);
 		
+	}
+	
+	/**
+	 * @return a list of all urns to be installed
+	 */
+	private String[] getAllBlockUrns(List blocks, String urn) {
+		List urnList = new ArrayList();
+		urnList.add(urn);
+		for(Iterator it = blocks.iterator(); it.hasNext();) {
+			String blockUrn = ((Block) it.next()).getId();
+			urnList.add(blockUrn);
+		}
+		return (String[]) urnList.toArray(new String[urnList.size()]);
 	}
 
 	

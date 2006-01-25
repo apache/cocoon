@@ -16,7 +16,8 @@
 -->
 <deploy xmlns="http://apache.org/cocoon/blocks/deploy/1.0">
   
-  <cocoon version="2.2" url="file://d:/my-cocoon/" exclusive="true"/>
+  <cocoon target-url="file://d:/my-cocoon/" 
+    webapp-urn="org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war" exclusive="true"/>
   
   <block id="webmail" location="00001" urn="webmail:webmail:3.27">
     <connections>
