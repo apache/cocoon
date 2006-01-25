@@ -112,7 +112,9 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                 throw new Exception("A widget name cannot contain '.' or '/' as this conflicts with widget paths, at " +
                         DomHelper.getLocation(widgetElement));
             }
-            if (id.indexOf(':') != -1) {
+            // NewDefinitions are allowed to have a : in their id because they can look up
+            // class widgets from the library directly
+            if (id.indexOf(':') != -1 && !(widgetDefinition instanceof NewDefinition)) {
                 throw new Exception("A widget name cannot contain ':' as this conflicts with library prefixes, at " +
                         DomHelper.getLocation(widgetElement));
             }
