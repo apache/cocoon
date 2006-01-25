@@ -16,7 +16,8 @@
 -->
 <deploy xmlns="http://apache.org/cocoon/blocks/deploy/1.0">
   
-  <cocoon version="2.2" url="target/test/validDeploy-02/myServer" exclusive="true"/>
+  <cocoon target-url="target/test/validDeploy-02/myServer" 
+    webapp-urn="org.apache.cocoon:cocoon-minimal-webapp:2.0-SNAPSHOT:war" exclusive="true"/>  
   
   <block id="b03" urn="mvn:validBlock-03:validBlock-03:1.0">
     <connections>

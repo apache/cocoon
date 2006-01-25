@@ -32,7 +32,7 @@ public class CocoonServerFactory {
 		cocoonServer.setArtifactProvider(artifactProvider);
 		
 		try {
-			cocoonServer.setBaseDirectory(new URI(cocoon.getUrl()));
+			cocoonServer.setBaseDirectory(new URI(cocoon.getTargetUrl()));
 		} catch (URISyntaxException e) {
 			throw new DeploymentException("Invalid Cocoon server URL");
 		}
