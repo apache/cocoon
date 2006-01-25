@@ -158,6 +158,10 @@ public class Library {
 		if(definitions.containsKey(definition.getId()))
 			throw new LibraryException("Library already contains a widget with this ID!");
 		
+		// let the definition know where it comes from
+		definition.setEnclosingLibrary(this);
+		
+		// add def to our list of defs
 		definitions.put(definition.getId(),definition);
 		manager.debug(this+": Put definition with id: "+definition.getId());
 	}
