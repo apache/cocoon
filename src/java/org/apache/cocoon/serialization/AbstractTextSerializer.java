@@ -328,7 +328,8 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             // Output a single element
             handler.startDocument();
             handler.startPrefixMapping(prefix, uri);
-            handler.startElement(uri, "element", "", XMLUtils.EMPTY_ATTRIBUTES);
+            handler.startElement(uri, "element", "element", XMLUtils.EMPTY_ATTRIBUTES);
+            handler.endElement(uri, "element", "element");
             handler.endPrefixMapping(prefix);
             handler.endDocument();
 
