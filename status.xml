@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1695">
+       Allow AbstractTextSerializer to be used with Saxon
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1704">
        Disable Error Message when SAXON is used as the XSLT transformer
     </action>
