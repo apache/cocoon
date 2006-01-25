@@ -525,12 +525,18 @@ public class IncludeTransformer extends AbstractTransformer
         /** Load URI into the provided handlers, process fallback */
         public void process(ContentHandler contentHandler, LexicalHandler lexicalHandler)
         throws SAXException {
-            if (this.fallback != null) {
-                SaxBuffer buffer = new SaxBuffer();
-                process(buffer);
-                buffer.toSAX(contentHandler);
-            } else {
-                process0(contentHandler, lexicalHandler);
+            try {
+                if (this.fallback != null) {
+                    SaxBuffer buffer = new SaxBuffer();
+                    process(buffer);
+                    buffer.toSAX(contentHandler);
+                } else {
+                    process0(contentHandler, lexicalHandler);
+                }
+            } catch (SAXException e) {
+                // source must not be cached if an error occurs
+                validity = null;
+                throw e;
             }
         }
 
