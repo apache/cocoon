@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1719">
+       IncludeTransformer: source must not be cached if an error occurs
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1651" due-to="Tom Green" due-to-email="tom@slaxicon.org">
        Fix a bug in CForms: Null locator in EffectPipe triggers NPE
     </action>
