@@ -388,6 +388,10 @@ public class TraxProcessor extends AbstractLogEnabled implements XSLTProcessor, 
         if (_factory.getClass().getName().equals("org.apache.xalan.processor.TransformerFactoryImpl")) {
             _factory.setAttribute("http://xml.apache.org/xalan/features/incremental", Boolean.valueOf(m_incrementalProcessing));
         }
+        // SAXON 8 will not report errors unless version warning is set to false.
+        if (_factory.getClass().getName().equals("net.sf.saxon.TransformerFactoryImpl")) {
+            _factory.setAttribute("http://saxon.sf.net/feature/version-warning", Boolean.FALSE);
+        }
 
         return _factory;
     }
