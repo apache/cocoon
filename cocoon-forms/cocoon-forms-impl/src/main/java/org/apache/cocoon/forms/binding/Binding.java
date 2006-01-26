@@ -41,12 +41,12 @@ public interface Binding {
     /**
      * returns the local library for this tree of bindings
      */
-    Library getEnclosingLibary();
+    Library getEnclosingLibrary();
     
     /**
      * sets the library this binding is a part of
      */
-    void setEnclosingLibary(Library lib);
+    void setEnclosingLibrary(Library lib);
     
     /**
      * checks for deep validity of this binding tree (taking into accound included libraries)
