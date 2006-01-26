@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.samples.bindings;
 import org.apache.cocoon.forms.binding.AbstractCustomBinding;
 import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingException;
+import org.apache.cocoon.forms.binding.library.Library;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.commons.jxpath.JXPathContext;
@@ -96,4 +97,15 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
             throw new BindingException("Could not create instance of CustomValueWrapBinding." ,e);
         }
     }
+
+    public Library getEnclosingLibary() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void setEnclosingLibary(Library lib) {
+        // TODO Auto-generated method stub
+        
+    }
+   
 }
