@@ -49,9 +49,12 @@ public abstract class AbstractCustomBinding implements Binding {
     public boolean isValid() {
     	return false; // pessimistic
     }
-    public Library getLocalLibrary() {
+    
+    // needed for the Binding interface, should never need to be used in a subclass
+    public Library getEnclosingLibrary() {
     	return null;
     }
+    public void setEnclosingLibrary(Library lib) {}
     
     /**
      * Binding service method called upon loading.

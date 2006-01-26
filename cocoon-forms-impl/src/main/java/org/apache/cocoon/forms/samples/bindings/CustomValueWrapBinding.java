@@ -97,15 +97,5 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
             throw new BindingException("Could not create instance of CustomValueWrapBinding." ,e);
         }
     }
-
-    public Library getEnclosingLibary() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public void setEnclosingLibary(Library lib) {
-        // TODO Auto-generated method stub
-        
-    }
    
 }

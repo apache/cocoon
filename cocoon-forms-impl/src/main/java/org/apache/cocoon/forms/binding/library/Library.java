@@ -150,7 +150,7 @@ public class Library {
 		if(definitions.containsKey(binding.getId()))
 			throw new LibraryException("Library already contains a binding with this ID!");
 		
-		binding.setEnclosingLibary(this);
+		binding.setEnclosingLibrary(this);
 		
 		definitions.put(binding.getId(),binding);
 		manager.debug(this+": Put binding with id: "+binding.getId());
