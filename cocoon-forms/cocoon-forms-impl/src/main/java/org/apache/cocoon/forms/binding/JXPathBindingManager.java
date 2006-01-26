@@ -247,7 +247,7 @@ ThreadSafe {
             JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
 
             if (flag && childBinding != null) {
-                childBinding.setEnclosingLibary(context.getLocalLibrary());
+                childBinding.setEnclosingLibrary(context.getLocalLibrary());
             }
 
             // this might get called unnecessarily, but solves issues with the libraries

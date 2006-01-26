@@ -73,14 +73,14 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         this.commonAtts = commonAtts;
     }
     
-    public Library getEnclosingLibary() {
+    public Library getEnclosingLibrary() {
     	if(parent != null) {
-    		return parent.getEnclosingLibary();
+    		return parent.getEnclosingLibrary();
     	} else {
     		return enclosingLibrary;
     	}
     }
-    public void setEnclosingLibary(Library lib) {
+    public void setEnclosingLibrary(Library lib) {
     	this.enclosingLibrary = lib;
     }
     
