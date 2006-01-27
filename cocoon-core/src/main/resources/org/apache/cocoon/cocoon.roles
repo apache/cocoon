@@ -165,7 +165,7 @@
 
   <!-- system-defined sitemap components -->
   <role name="org.apache.cocoon.generation.Generator/&lt;notifier&gt;"
-        default-class="org.apache.cocoon.generation.NotifyingGenerator"
+        default-class="org.apache.cocoon.sitemap.NotifyingGenerator"
         model="non-thread-safe-pooled"/>
         
   <role name="org.apache.cocoon.generation.Generator/&lt;aggregator&gt;"
