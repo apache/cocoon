@@ -27,8 +27,9 @@
 
   <group name="Using Persistence Broker">
     <note>
-      Low-level API that can be used directly by applications that don't need
-      full fledged object level transactions.
+      API which serves as the OJB persistence kernel. The OTM-, ODMG- and JDO-implementations are built on top 
+      of this kernel. This API can also be used directly by applications that don't need full fledged object
+      level transactions.
     </note>
     <sample name="XSP" href="pb/xspdemo">Sample using JDO in a XSP page.</sample>
     <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done!</sample>
@@ -48,7 +49,7 @@
     <sample name="Cocoon Forms" href="jdo/forms/employee">Sample using JDO with Cocoon Forms Binding.</sample>
   </group>
 
-  <group name="Using ODMG 3.0 (To be done)">
+  <group name="Using ODMG 3.0">
     <note>
       Object Data Management Group (ODMG) 3 standard for binding databases.
       Uses Object Query Language (OQL). ODMG has been superceded by JDO.
