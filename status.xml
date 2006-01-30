@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="update">
+      Updated db-ojb to 1.0.4.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1695">
        Allow AbstractTextSerializer to be used with Saxon
     </action>
@@ -203,7 +206,7 @@
       Portal block: Fix handling of caching-global-use-attributes bug in CachingCopletAdapter.
     </action>
     <action dev="AG" type="update">
-      Updated log4j to 1.2.13.
+      Updated log4j to 1.2.13, quartz to 1.5.1.
     </action>
     <action dev="JBQ" type="add">
       CForms: Added the sendForm() function to Form.js, same as showForm() but
