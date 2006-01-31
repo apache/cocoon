@@ -5,22 +5,22 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-plugins</artifactId>    
+    <artifactId>cocoon-deployer</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>cocoon-block-deployer-plugin</artifactId>
+  <artifactId>cocoon-deployer-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
     
   <packaging>maven-plugin</packaging>
   
-  <name>Cocoon Block Deployer - Maven 2 Plugin</name>
+  <name>Cocoon Deployer - Maven 2 Plugin</name>
   <url>http://cocoon.apache.org</url>
   
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-block-deployer</artifactId>
+      <artifactId>cocoon-deployer-core</artifactId>
       <version>1.0-SNAPSHOT</version>  
       </dependency>
     <dependency>
