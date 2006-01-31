@@ -14,25 +14,4 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | @version $Id: pom.xml 367957 2006-01-11 07:18:15Z giacomo $
-    |
-    +-->
-<project>
-  <parent>
-    <artifactId>cocoon</artifactId>
-    <groupId>org.apache.cocoon</groupId>
-    <version>2.2.0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-plugins</artifactId>
-  <packaging>pom</packaging>
-  <name>Various Maven Plugins</name>
-  <version>1.0-SNAPSHOT</version>
-  <modules>
-    <module>cocoon-deployer-plugin</module>
-    <module>cocoon-deployer-plugin-demo</module>
-    <module>cocoon-minimal-webapp</module>        
-  </modules>
-</project>
+<test/>
