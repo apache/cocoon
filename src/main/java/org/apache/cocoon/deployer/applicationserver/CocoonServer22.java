@@ -51,9 +51,8 @@ public class CocoonServer22 implements CocoonServer {
 
 	public static final String WIRING_10_NAMESPACE = "http://apache.org/cocoon/blocks/wiring/1.0";
 	public static final String WIRING_FILE = "WEB-INF/wiring.xml";
-	public static final String WEB_INF_BLOCKS_DIR = "WEB-INF/blocks";
 	public static final String WEB_INF_LIBS_DIR = "WEB-INF/lib";
-	public static final String BLOCKS_DIR = "blocks";
+	public static final String BLOCKS_DIR = "/blocks/";
 	
 	private boolean exclusive = false;
 	private URI baseDirectory;
@@ -132,11 +131,11 @@ public class CocoonServer22 implements CocoonServer {
 					// check if the block has already been unpacked
 					if(!installedBlocks.containsKey(block.getId())) {
 						String nextDirectory = intDirToStringDirConvert(
-								getNextDirectory(new File(baseDirectoryFile, WEB_INF_BLOCKS_DIR), this.lastDir));
+								getNextDirectory(new File(baseDirectoryFile, BLOCKS_DIR), this.lastDir));
 						this.lastDir = Integer.parseInt(nextDirectory);
-						String installDirectory = BLOCKS_DIR + "/" + nextDirectory;
+						String installDirectory = BLOCKS_DIR + nextDirectory;
 						wiringBlock.setLocation(installDirectory);					
-						deployBlock(binaryBlock, frm, txId, WEB_INF_BLOCKS_DIR + "/" + nextDirectory);
+						deployBlock(binaryBlock, frm, txId, BLOCKS_DIR + nextDirectory);
 						installedBlocks.put(block.getId(), installDirectory);
 					} else {
 						wiringBlock.setLocation((String) installedBlocks.get(block.getId()));
