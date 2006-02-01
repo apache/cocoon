@@ -89,7 +89,7 @@ public class AutoWiringResolver {
 				// create a new block
 				String newBlockDeployId = getNextDeployBlockId();
 				Block autoWiredBlock = BlockFactory.createAutowiredBlock(
-			        artifactProvider.getArtifact("mvn:" + requires[i].getDefault()), newBlockDeployId);
+			        artifactProvider.getArtifact(requires[i].getDefault()), newBlockDeployId);
 				this.log.info("auto-wiring: create new block [" + newBlockDeployId + "].");
 				
 				// add the connection to the deployer

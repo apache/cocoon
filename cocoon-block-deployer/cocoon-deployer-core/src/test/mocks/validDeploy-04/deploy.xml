@@ -19,7 +19,7 @@
   <cocoon target-url="target/test/validDeploy-02/myServer" 
     webapp-urn="org.apache.cocoon:cocoon-minimal-webapp:2.0-SNAPSHOT:war" exclusive="true"/>  
   
-  <block id="b03" urn="mvn:validBlock-03:validBlock-03:1.0">
+  <block id="b03" urn="validBlock-03:validBlock-03:1.0">
     <connections>
       <connection name="db" block="db"/>
     </connections>
@@ -28,6 +28,6 @@
     </properties>
   </block>
   
-  <block id="db" urn="mvn:validBlock-04:validBlock-04:1.0"/>  
+  <block id="db" urn="validBlock-04:validBlock-04:1.0"/>  
   
 </deploy>
