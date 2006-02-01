@@ -47,19 +47,19 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		assertTrue(vanillaCocoonServerArtifact.exists());		
 		aProviderCtrl.setReturnValue(vanillaCocoonServerArtifact);
 		
-		aProvider.getArtifact("mvn:validBlock-03:validBlock-03:1.0");
+		aProvider.getArtifact("validBlock-03:validBlock-03:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-03/valid-block-1.0.jar"));
 		
-		aProvider.getArtifact("mvn:validBlock-04:validBlock-04:1.0");
+		aProvider.getArtifact("validBlock-04:validBlock-04:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-04/valid-block-1.0.jar"));		
 		
-		aProvider.getArtifact("mvn:anyblock:anyblock-05:1.0");
+		aProvider.getArtifact("anyblock:anyblock-05:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-05/valid-block-1.0.jar"));
 		
-		aProvider.getArtifact("mvn:anyblock:anyblock-06:1.0");
+		aProvider.getArtifact("anyblock:anyblock-06:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-06/valid-block-1.0.jar"));		
 		
-		aProvider.getArtifact("mvn:anyblock:anyblock-07:1.0");
+		aProvider.getArtifact("anyblock:anyblock-07:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-07/valid-block-1.0.jar"));			
 		
 		aProvider.getArtifact((String[]) null);
