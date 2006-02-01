@@ -28,6 +28,7 @@
 		implementation="stable"/>
 	<license href="http://www.apache.org/licenses/">Apache License 2.0</license>
 	<author href="http://cocoon.apache.org">Apache Cocoon community</author>
+	
 	<properties>
 		<property name="mailserver">
 			<default>localhost</default>
@@ -37,6 +38,7 @@
 			<description>bar</description>
 		</property>
 	</properties>
+	
 	<requirements>
 		<requires 
 		  interface="http://cocoon.apache.org/interface/portal/1.0" 
@@ -44,16 +46,16 @@
 		  default="http://cocoon.apache.org/blocks/portal/1.0.2"
 		  />
 	</requirements>
+	
 	<extends block="http://cocoon.apache.org/blocks/another-block/1.0"/>
+	
 	<implements>
 		<interface id="http://cocoon.apache.org/interface/bla/1.0"/>
 	</implements>
   
-  <servlets>
-    <servlet class="org.apache.cocoon.servlet.SitemapServlet">
-      <sitemap>COB-INF/sitemap.xmap</sitemap>
-    </servlet>
-  </servlets>
+  <servlet class="org.apache.cocoon.servlet.SitemapServlet">
+    <sitemap>COB-INF/sitemap.xmap</sitemap>
+  </servlet>
   
   <components class="org.apache.cocoon.some.component.manager">
     <include>META-INF/block.xconf</include>

@@ -32,7 +32,7 @@
         <xs:element name="implements" type="implements" minOccurs="0"/>
         <xs:element name="extends" type="extends" minOccurs="0"/>
         <xs:element name="components" type="configuration" minOccurs="0"/>
-        <xs:element name="servlets" type="servlets" minOccurs="0"/>        
+        <xs:element name="servlet" type="configuration" minOccurs="0"/>   
       </xs:all>
       <xs:attribute name="id" type="xs:anyURI" use="required"/>
     </xs:complexType>
@@ -130,13 +130,6 @@
     </xs:sequence>
     <xs:attribute name="class" type="java-classes" use="required"/>
   </xs:complexType>  	    	
-
-  <!-- servlets -->
-  <xs:complexType name="servlets">
-    <xs:sequence>
-      <xs:element name="servlet" type="configuration" minOccurs="1" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>  
   
   
   <!-- type for class attributes -->
