@@ -19,6 +19,6 @@
   <cocoon target-url=".target/test/validDeploy-02/myServer" 
     urn="org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war" exclusive="true"/>    
   
-  <block id="db" urn="mvn:validBlock-04:validBlock-04:1.0"/>  
+  <block id="db" urn="validBlock-04:validBlock-04:1.0"/>  
   
 </deploy>
