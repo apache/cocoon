@@ -141,6 +141,17 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>joerg</id>
+      <name>Jörg Heinicke</name>
+      <email>joerg@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <timezone>+1</timezone>
+      <roles>
+         <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
       <id>jheymans</id>
       <name>Jorg Heymans</name>
       <email>jheymans@apache.org</email>
