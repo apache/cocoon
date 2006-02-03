@@ -986,7 +986,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 ValidationError error = ((ValidationErrorAware)widget).getValidationError();
                 if (error != null) {
                     getContentHandler().startElement(FormsConstants.INSTANCE_NS, VALIDATION_ERROR, FormsConstants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
-                    error.generateSaxFragment(hStyling);
+                    error.generateSaxFragment(getContentHandler());
                     getContentHandler().endElement(FormsConstants.INSTANCE_NS, VALIDATION_ERROR, FormsConstants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
                 }
             }
