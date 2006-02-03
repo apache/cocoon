@@ -18,30 +18,6 @@
 <!-- SVN $Id:$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
-  <map:components>
-    <map:generators default="file">
-      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
-    </map:generators>
-
-    <map:transformers default="xslt">
-      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
-    </map:transformers>
-
-    <map:serializers default="xml">
-      <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    </map:serializers>
-
-    <map:matchers default="wildcard">
-      <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
-    </map:matchers>
-
-    <map:pipes default="noncaching">
-      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
-      </map:pipe>
-    </map:pipes>
-  </map:components>
-
   <map:pipelines>
     <map:pipeline>
 
