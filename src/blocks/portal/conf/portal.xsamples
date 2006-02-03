@@ -20,7 +20,7 @@
   <group name="Portal Engine">
     <sample name="Portal Block" href="portal/portal">
       This is a demo of the new powerful portal engine based on Apache Cocoon.
-      The demo requires JDK 1.4+.
+      Parts of the demo require JDK 1.4+.
     </sample>
   </group>
   
