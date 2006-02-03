@@ -39,5 +39,25 @@
     <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
+  
+  <generators default="file">
+    <generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
+  </generators>
 
+  <transformers default="xslt">
+    <transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
+  </transformers>
+
+  <serializers default="xml">
+    <serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer" />
+  </serializers>
+
+  <matchers default="wildcard">
+    <matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
+  </matchers>
+
+  <pipes default="noncaching">
+    <pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+  </pipes>
+  
 </components>

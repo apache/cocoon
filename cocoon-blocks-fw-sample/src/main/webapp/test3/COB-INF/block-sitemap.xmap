@@ -24,10 +24,6 @@
       <component-instance name="block-property"  class="org.apache.cocoon.components.modules.input.BlockPropertyModule"/>
     </input-modules>
 
-    <map:serializers default="xml">
-      <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    </map:serializers>
-
     <map:readers default="resource">
       <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
     </map:readers>
@@ -38,12 +34,12 @@
 
       <map:match type="wildcard" pattern="test">
         <map:generate type="file" src="test.xml"/>
-        <map:serialize/>
+        <map:serialize type="xml"/>
       </map:match>
 
       <map:match type="wildcard" pattern="test4">
         <map:generate type="file" src="block:super:/test"/>
-        <map:serialize/>
+        <map:serialize type="xml"/>
       </map:match>
 
       <map:match type="wildcard" pattern="prop">
@@ -53,7 +49,7 @@
           <map:parameter name="bar" value="{block-property:bar}"/>
           <map:parameter name="baz" value="{block-property:baz}"/>
         </map:transform>
-        <map:serialize/>
+        <map:serialize type="xml"/>
       </map:match>
 
       <map:match type="wildcard" pattern="**">
