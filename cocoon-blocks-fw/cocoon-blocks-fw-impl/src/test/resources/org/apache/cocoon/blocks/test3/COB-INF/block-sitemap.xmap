@@ -24,10 +24,6 @@
       <component-instance name="block-property"  class="org.apache.cocoon.components.modules.input.BlockPropertyModule"/>
     </input-modules>
 
-    <map:serializers default="xml">
-      <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
-    </map:serializers>
-
     <map:readers default="resource">
       <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
     </map:readers>

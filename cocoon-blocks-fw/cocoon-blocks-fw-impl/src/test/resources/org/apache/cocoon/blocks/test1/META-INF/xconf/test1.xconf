@@ -17,7 +17,7 @@
 
 <!-- SVN $Id:test1.xconf 349759 2005-11-29 17:54:59 +0100 (Tue, 29 Nov 2005) danielf $ -->
 
-<map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+<components>
   <source-factories>
     <component-instance name="block" class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/>
   </source-factories>
@@ -25,24 +25,4 @@
   <input-modules>
     <component-instance name="block-path" class="org.apache.cocoon.components.modules.input.BlockPathModule" />
   </input-modules>
-
-  <map:generators default="file">
-    <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
-  </map:generators>
-
-  <map:transformers default="xslt">
-    <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"/>
-  </map:transformers>
-
-  <map:serializers default="xml">
-    <map:serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer" />
-  </map:serializers>
-
-  <map:matchers default="wildcard">
-    <map:matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
-  </map:matchers>
-
-  <map:pipes default="noncaching">
-    <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
-  </map:pipes>
-</map:components>
+</components>
