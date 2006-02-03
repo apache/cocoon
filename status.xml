@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1558" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      CForms: fix &lt;ft:validation-error&gt; handling when used with FormsTemplateTransformer
+    </action>
     <action dev="AG" type="update">
       Updated db-ojb to 1.0.4.
     </action>
