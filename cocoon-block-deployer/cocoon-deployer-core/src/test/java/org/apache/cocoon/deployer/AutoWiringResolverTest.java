@@ -41,7 +41,6 @@ public class AutoWiringResolverTest extends AbstractDeployerTestCase {
 				this.getMockArtefact("validBlock-04/valid-block-1.0.jar"), deploy.getBlock(0))
 		);
 		autoWiringResolver.resolve(blocks);
-		System.out.println("blocks: " + blocks);
 	}
 
 	private ArtifactProvider getArtifactProviderInstance() {
