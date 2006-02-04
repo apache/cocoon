@@ -20,6 +20,7 @@ package org.apache.cocoon.deployer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -104,6 +105,7 @@ public class BlockDeployer {
 		// deploy the blocks
 		CocoonServer cocoonServer = CocoonServerFactory.createServer(
 				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider);
+		Collections.reverse(blockList);
 		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), 
 				cocoonWebappUrn, libraries, this.log);
 		
