@@ -52,7 +52,7 @@ public class BlockManager
     private Servlet blockServlet;
     private BlockWiring blockWiring;
     private BlockContext blockContext;
-    private Blocks blocks;
+    private ServiceManagerRegistry serviceManagerRegistry;
 
     public void enableLogging(Logger logger) {
         this.logger = logger;
@@ -67,11 +67,8 @@ public class BlockManager
         return this.logger;
     }
 
-    // FIXME The InterBlockServiceManager need access to the BlocksManager,
-    // it should preferably just need to access something more component
-    // handling specific.
-    public void setBlocks(Blocks blocks) {
-        this.blocks = blocks;
+    public void setServiceManagerRegistry(ServiceManagerRegistry serviceManagerRegistry) {
+        this.serviceManagerRegistry = serviceManagerRegistry;
     }
 
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -95,10 +92,6 @@ public class BlockManager
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
 
-        // Create a service manager for getting components from other blocks
-        ServiceManager topServiceManager = new InterBlockServiceManager(this.blockWiring, this.blocks);
-        ((InterBlockServiceManager)topServiceManager).enableLogging(this.getLogger());
-
         // Set up the component manager of the block
         try {
             // FIXME make the component manager class configurable
@@ -114,7 +107,7 @@ public class BlockManager
             LifecycleHelper.setupComponent(this.serviceManager,
                     this.getLogger(),
                     null,
-                    topServiceManager,
+                    this.serviceManagerRegistry,
                     this.blockWiring.getComponentConfiguration());
         } catch (Exception e) {
             e.printStackTrace();
