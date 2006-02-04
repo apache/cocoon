@@ -65,6 +65,7 @@ public class BlocksManager
     private HashMap mountedBlocks = new HashMap();
     private Logger logger;
     private ClassLoader classLoader;
+    private ServiceManagerRegistry serviceManagerRegistry = new ServiceManagerRegistryImpl();
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -151,7 +152,7 @@ public class BlocksManager
                     " id=" + id +
                     " location=" + location);
             BlockManager blockManager = new BlockManager();
-            blockManager.setBlocks(this);
+            blockManager.setServiceManagerRegistry(this.serviceManagerRegistry);
             try {
                 LifecycleHelper.setupComponent(blockManager,
                         this.getLogger(),
