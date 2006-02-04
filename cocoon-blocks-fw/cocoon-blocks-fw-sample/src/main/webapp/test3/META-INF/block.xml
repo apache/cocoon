@@ -40,10 +40,5 @@
       <description>Still another test property</description>
     </property>
   </properties>
-  <requirements>
-    <requires interface="http://cocoon.apache.org/blocks/core/1.0"
-              name="core"
-              default="http://cocoon.apache.org/blocks/core/1.0"/>
-  </requirements>
   <extends block="http://cocoon.apache.org/blocks/anyblock/1.0"/>
 </block>

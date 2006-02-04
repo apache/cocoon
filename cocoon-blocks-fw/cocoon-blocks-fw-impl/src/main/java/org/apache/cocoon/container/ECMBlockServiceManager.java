@@ -30,7 +30,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.blocks.BlockConstants;
+import org.apache.cocoon.blocks.ServiceManagerRegistry;
 import org.apache.cocoon.blocks.util.CoreUtil;
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.source.impl.ContextSourceFactory;
@@ -56,6 +58,7 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
     Configuration configuration;
     ServiceManager parentServiceManager;
     ServiceManager serviceManager;
+    ServiceManagerRegistry serviceManagerRegistry;
     
     // Wiring
 
@@ -75,6 +78,7 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
 
     public void service(ServiceManager parentServiceManager) throws ServiceException {
         this.parentServiceManager = parentServiceManager;
+        this.serviceManagerRegistry = (ServiceManagerRegistry) parentServiceManager;
     }
 
     public void initialize() throws Exception {
@@ -140,8 +144,8 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
         // The source resolver must be defined in this service
         // manager, otherwise the root path will be the one from the
         // parent manager, we add a resolver to get it right. If the
-        // components section contain includes the CoreComponentManager
-        // use the location of the configuration an the parent SourceResolver
+        // components section contain the CoreComponentManager, use the
+        // location of the configuration and the parent SourceResolver
         // for resolving the include.
         DefaultConfiguration sourceManagerConf =
             new DefaultConfiguration("components", confLocation);
@@ -166,12 +170,35 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
         this.serviceManager =
             sourceResolverSM;
         
-        // Create a service manager with the exposed components of the block
+        // Create a service manager with the exposed components of the block and register
+        // the roles in the global registry
         if (this.configuration != null) {
             DefaultConfiguration componentConf =
                 new DefaultConfiguration("components", confLocation);
             componentConf.addAll(this.configuration);
-            this.serviceManager = new CocoonServiceManager(this.serviceManager);
+            this.serviceManager =
+                new CocoonServiceManager(this.serviceManager) {
+
+                    /* (non-Javadoc)
+                     * @see org.apache.cocoon.components.container.CocoonServiceManager#addComponent(java.lang.String, java.lang.String, org.apache.avalon.framework.configuration.Configuration, org.apache.cocoon.components.ComponentInfo)
+                     */
+                    public void addComponent(String role, String className, Configuration config, ComponentInfo info) throws ConfigurationException {
+                        super.addComponent(role, className, config, info);
+
+                        if (configuration.getAttributeAsBoolean("exported", true)) {
+                            ECMBlockServiceManager.this.serviceManagerRegistry.registerServiceManager(role, this);
+                        }
+                    }
+
+                    /* (non-Javadoc)
+                     * @see org.apache.cocoon.core.container.CoreServiceManager#addInstance(java.lang.String, java.lang.Object)
+                     */
+                    public void addInstance(String role, Object instance) throws ServiceException {
+                        super.addInstance(role, instance);
+                        ECMBlockServiceManager.this.serviceManagerRegistry.registerServiceManager(role, this);
+                    }
+                
+            };
             LifecycleHelper.setupComponent(this.serviceManager,
                     this.getLogger(),
                     newContext,
