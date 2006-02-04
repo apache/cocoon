@@ -30,4 +30,8 @@
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
     <sitemap file="COB-INF/sitemap.xmap"/>
   </servlet>  
+  <requirements>
+    <requires interface="http://cocoon.apache.org/blocks/core-components/1.0" 
+      name="core" default="org.apache.cocoon:cocoon-core-components:1.0-SNAPSHOT"/>
+  </requirements>
 </block>
