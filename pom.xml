@@ -45,6 +45,7 @@
     <module>cocoon-captcha</module>
     <module>cocoon-cron</module>
     <module>cocoon-forms</module>
+    <module>cocoon-core-components</module>    
     <!--module>cocoon-jcr</module> -->
     <module>cocoon-portal</module>
     <module>cocoon-session-fw</module>
@@ -173,6 +174,17 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>reinhard</id>
+      <name>Reinhard Poetz</name>
+      <email>reinhard@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>    
     <developer>
       <id>jbq</id>
       <name>Jean-Baptiste Quenot</name>
