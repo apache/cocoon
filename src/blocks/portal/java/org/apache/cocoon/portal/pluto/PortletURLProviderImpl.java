@@ -229,8 +229,11 @@ public class PortletURLProviderImpl
             Event sizingEvent = null;
             if ( cl != null ) {
                 final CopletInstanceData cid = cl.getCopletInstanceData();
-                WindowState oldState = (WindowState)cid.getTemporaryAttribute("window-state"); 
-                if ( oldState == null ) {
+                String oldStateString = (String)cid.getTemporaryAttribute("window-state");
+                WindowState oldState = null;
+                if ( oldStateString != null ) {
+                    oldState = new WindowState(oldStateString);
+                } else {
                     oldState = WindowState.NORMAL;
                 }
                 if ( this.state != null && !this.state.equals(oldState) ) {

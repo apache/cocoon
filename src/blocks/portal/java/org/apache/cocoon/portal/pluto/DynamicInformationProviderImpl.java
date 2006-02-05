@@ -69,56 +69,38 @@ implements DynamicInformationProvider {
         return new ResourceURLProviderImpl(this.provider);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.DynamicInformationProvider#getPortletActionProvider(org.apache.pluto.om.window.PortletWindow)
      */
     public PortletActionProvider getPortletActionProvider(PortletWindow portletWindow) {
         return new PortletActionProviderImpl(portletWindow);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.DynamicInformationProvider#getPortletMode(org.apache.pluto.om.window.PortletWindow)
      */
     public PortletMode getPortletMode(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        PortletMode pm = (PortletMode) cid.getTemporaryAttribute("portlet-mode");
-        if ( pm == null ) {
-            pm = PortletMode.VIEW;
+        final String pmString = (String)cid.getTemporaryAttribute("portlet-mode");
+        if ( pmString == null ) {
+            return PortletMode.VIEW;
         }
-        return pm;
+        return new PortletMode(pmString);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.information.DynamicInformationProvider#getPreviousPortletMode(org.apache.pluto.om.window.PortletWindow)
-     */
-    public PortletMode getPreviousPortletMode(PortletWindow portletWindow) {
-        final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        PortletMode pm = (PortletMode) cid.getTemporaryAttribute("previous-portlet-mode");
-        return pm;
-    }
-
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.DynamicInformationProvider#getWindowState(org.apache.pluto.om.window.PortletWindow)
      */
     public WindowState getWindowState(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
-        if ( ws == null ) {
-            ws = WindowState.NORMAL;
+        final String wsString = (String)cid.getTemporaryAttribute("window-state");
+        if ( wsString != null ) {
+            return new WindowState(wsString);
         }
-        return ws;
+        return WindowState.NORMAL;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.pluto.services.information.DynamicInformationProvider#getPreviousWindowState(org.apache.pluto.om.window.PortletWindow)
-     */
-    public WindowState getPreviousWindowState(PortletWindow portletWindow) {
-        final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        WindowState ws = (WindowState) cid.getTemporaryAttribute("previous-window-state");        
-        return ws;
-    }
-
-    /* (non-Javadoc)
+    /**
      * @see org.apache.pluto.services.information.DynamicInformationProvider#getResponseContentType()
      */
     public String getResponseContentType() {
