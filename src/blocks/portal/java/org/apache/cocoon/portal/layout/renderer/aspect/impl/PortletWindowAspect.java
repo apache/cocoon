@@ -143,8 +143,11 @@ implements Contextualizable {
                 DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) context.getObjectModel().get("portlet-request"));
                 
                 // Sizing
-                WindowState ws = (WindowState)copletInstanceData.getTemporaryAttribute("window-state"); 
-                if ( ws == null ) {
+                final String wsString = (String)copletInstanceData.getTemporaryAttribute("window-state");
+                WindowState ws; 
+                if ( wsString != null ) {
+                    ws = new WindowState(wsString);
+                } else {
                     ws = WindowState.NORMAL;
                 }
                 
@@ -171,9 +174,12 @@ implements Contextualizable {
                 }
 
                 // portlet modes
-                PortletMode pm = (PortletMode)copletInstanceData.getTemporaryAttribute("portlet-mode"); 
-                if ( pm == null ) {
+                final String pmString = (String)copletInstanceData.getTemporaryAttribute("portlet-mode");
+                PortletMode pm;
+                if ( pmString == null ) {
                     pm = PortletMode.VIEW;
+                } else {
+                    pm = new PortletMode(pmString);
                 }
                 if ( !pm.equals(PortletMode.EDIT) ) {
                     PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
