@@ -91,11 +91,11 @@ public class DynamicInformationProviderImpl
      */
     public PortletMode getPortletMode(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        PortletMode pm = (PortletMode) cid.getTemporaryAttribute("portlet-mode");
-        if ( pm == null ) {
-            pm = PortletMode.VIEW;
+        final String pmString = (String)cid.getTemporaryAttribute("portlet-mode");
+        if ( pmString == null ) {
+            return PortletMode.VIEW;
         }
-        return pm;
+        return new PortletMode(pmString);
     }
 
     /**
@@ -103,11 +103,11 @@ public class DynamicInformationProviderImpl
      */
     public WindowState getWindowState(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
-        if ( ws == null ) {
-            ws = WindowState.NORMAL;
+        final String wsString = (String)cid.getTemporaryAttribute("window-state");
+        if ( wsString == null ) {
+            return WindowState.NORMAL;
         }
-        return ws;
+        return new WindowState(wsString);
     }
 
     /**

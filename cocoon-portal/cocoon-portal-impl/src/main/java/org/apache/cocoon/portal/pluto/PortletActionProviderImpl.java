@@ -56,11 +56,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletMode(PortletMode mode) {
         if ( mode != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            PortletMode pm = (PortletMode) cid.getTemporaryAttribute("portlet-mode");
-            if ( (pm == null && !mode.equals(PortletMode.VIEW)) 
-                || (pm != null && !pm.equals(mode)) ) {
-                cid.setTemporaryAttribute("portlet-mode", mode);
-            }
+            cid.setTemporaryAttribute("portlet-mode", mode.toString());
         }
     }
 
@@ -70,16 +66,14 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletWindowState(WindowState state) {
         if ( state != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            WindowState ws = (WindowState) cid.getTemporaryAttribute("window-state");
-            if ( (ws == null && !state.equals(WindowState.NORMAL))
-                || (ws != null && !ws.equals(state)) ) {
-                cid.setTemporaryAttribute("window-state", state);
-                int size = CopletInstanceData.SIZE_NORMAL;
-                if ( state.equals(WindowState.MAXIMIZED) ) {
-                    size = CopletInstanceData.SIZE_MAXIMIZED;
-                } else if ( state.equals(WindowState.MINIMIZED) ) {
-                    size = CopletInstanceData.SIZE_MINIMIZED;
-                }
+            cid.setTemporaryAttribute("window-state", state.toString());
+            int size = CopletInstanceData.SIZE_NORMAL;
+            if ( state.equals(WindowState.MAXIMIZED) ) {
+                size = CopletInstanceData.SIZE_MAXIMIZED;
+            } else if ( state.equals(WindowState.MINIMIZED) ) {
+                size = CopletInstanceData.SIZE_MINIMIZED;
+            }
+            if ( size != cid.getSize() ) {
                 final Event e = new CopletInstanceSizingEvent(cid, size);
                 this.portalService.getEventManager().send(e);
             }

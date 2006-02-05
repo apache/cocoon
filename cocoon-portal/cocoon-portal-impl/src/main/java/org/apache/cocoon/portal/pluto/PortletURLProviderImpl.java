@@ -220,27 +220,7 @@ public class PortletURLProviderImpl
      */
     private String getURL() {
         if ( this.generatedURL == null ) {
-            final PortletWindowImpl impl = (PortletWindowImpl)this.portletWindow;
-            final CopletLayout cl = impl.getLayout();
-            Event sizingEvent = null;
-            if ( cl != null ) {
-                final CopletInstanceData cid = cl.getCopletInstanceData();
-                WindowState oldState = (WindowState)cid.getTemporaryAttribute("window-state"); 
-                if ( oldState == null ) {
-                    oldState = WindowState.NORMAL;
-                }
-            }
-
-            List l = new ArrayList();
-            if ( sizingEvent != null ) {
-                l.add(sizingEvent);
-            }
-            l.add(this);
-            if (secure == null) {
-                this.generatedURL = this.linkService.getLinkURI(l);
-            } else {
-                this.generatedURL = this.linkService.getLinkURI(l, secure);
-            }
+            this.generatedURL = this.linkService.getLinkURI(this, this.secure);
         }
         return linkService.encodeURL(this.generatedURL);
     }
