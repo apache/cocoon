@@ -147,9 +147,12 @@ public final class PortletWindowAspect
                 DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) context.getObjectModel().get("portlet-request"));
 
                 // Sizing
-                WindowState ws = (WindowState)copletInstanceData.getTemporaryAttribute("window-state"); 
-                if ( ws == null ) {
+                final String wsString = (String)copletInstanceData.getTemporaryAttribute("window-state");
+                final WindowState ws; 
+                if ( wsString == null ) {
                     ws = WindowState.NORMAL;
+                } else {
+                    ws = new WindowState(wsString);
                 }
 
                 if ( !ws.equals(WindowState.MINIMIZED) && !ws.equals(WindowState.MAXIMIZED)) {
@@ -175,9 +178,12 @@ public final class PortletWindowAspect
                 }
 
                 // portlet modes
-                PortletMode pm = (PortletMode)copletInstanceData.getTemporaryAttribute("portlet-mode"); 
-                if ( pm == null ) {
+                final String pmString = (String)copletInstanceData.getTemporaryAttribute("portlet-mode");
+                final PortletMode pm; 
+                if ( pmString == null ) {
                     pm = PortletMode.VIEW;
+                } else {
+                    pm = new PortletMode(pmString);
                 }
                 if ( !pm.equals(PortletMode.EDIT) ) {
                     PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
