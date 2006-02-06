@@ -89,7 +89,7 @@ public class Loader {
 
         String verboseProperty = System.getProperty(VERBOSE_PROPERTY);
         if (verboseProperty != null)
-            verbose = Boolean.parseBoolean(verboseProperty);
+            verbose = Boolean.valueOf(verboseProperty).booleanValue();
         String classPath = System.getProperty(CLASSPATH_PROPERTY);
 
         if (verbose) System.out.println("-------------------- Loading --------------------");
