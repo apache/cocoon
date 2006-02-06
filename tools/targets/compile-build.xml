@@ -65,6 +65,9 @@
   <target name="compile-core" depends="compile-mocks, clover.on">
     <cocoon.compile srcdir="${java}"
                     destdir="${build.dest}"/>
+    <echo>Compiling jdk ${used.vm} core classes</echo>
+    <cocoon.compile srcdir="${jdk.java}"
+                    destdir="${build.dest}"/>
   </target>
 
   <!-- compiles deprecated code -->
