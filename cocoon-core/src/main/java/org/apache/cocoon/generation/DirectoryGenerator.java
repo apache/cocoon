@@ -54,7 +54,7 @@ import java.util.Comparator;
  *               Uses the last modification date of the directory and the contained files
  * 
  * @cocoon.sitemap.component.pooling.max  16
- *  
+ *
  * @version $Id$
  */
 public class DirectoryGenerator 
@@ -512,28 +512,29 @@ public class DirectoryGenerator
 
         public int isValid() {
             if (System.currentTimeMillis() <= expiry) {
-                return 1;
+                return SourceValidity.VALID;
             }
 
-            expiry = System.currentTimeMillis() + delay;
             int len = files.size();
             for (int i = 0; i < len; i++) {
                 File f = (File)files.get(i);
                 if (!f.exists()) {
-                    return -1; // File was removed
+                    return SourceValidity.INVALID; // File was removed
                 }
 
                 long oldDate = ((Long)fileDates.get(i)).longValue();
                 long newDate = f.lastModified();
 
                 if (oldDate != newDate) {
-                    return -1;
+                    // File's last modified date has changed since last check
+                    // NOTE: this occurs on directories as well when a file is added
+                    return SourceValidity.INVALID;
                 }
             }
 
             // all content is up to date: update the expiry date
             expiry = System.currentTimeMillis() + delay;
-            return 1;
+            return SourceValidity.VALID;
         }
 
         public int isValid(SourceValidity newValidity) {
