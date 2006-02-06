@@ -138,8 +138,12 @@ PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
 LOADER_LIB="${COCOON_HOME}/tools/loader"
 
-CLI=-Dloader.main.class=org.apache.cocoon.Main
+CLI="-Dloader.main.class=org.apache.cocoon.Main"
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
+CLI_CLASSPATH="-Dloader.class.path=lib/core/servlet_2_2.jar"
+CLI_VERBOSE="-Dloader.verbose=false"
+CLI_PROPERTIES="$CLI_LIBRARIES $CLI_CLASSPATH $CLI_VERBOSE"
+
 PRECOMPILE=-Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper
 PRECOMPILE_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 
@@ -157,7 +161,7 @@ JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP
 
 case "$ACTION" in
   cli)
-        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $CLI_LIBRARIES $CLI $LOADER $ARGS
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $CLI_PROPERTIES $CLI $LOADER $ARGS
         ;;
 
   precompile)

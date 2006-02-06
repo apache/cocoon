@@ -30,10 +30,12 @@ import java.util.StringTokenizer;
  */
 public class Loader {
 
-    static final boolean VERBOSE = true;
+    static boolean verbose = true;
     
     static final String REPOSITORIES = "loader.jar.repositories";
     static final String MAIN_CLASS = "loader.main.class";
+    static final String VERBOSE_PROPERTY = "loader.verbose";
+    static final String CLASSPATH_PROPERTY = "loader.class.path";
     
     class RepositoryClassLoader extends URLClassLoader {
 
@@ -42,7 +44,7 @@ public class Loader {
         }
             
         public void addRepository(File repository) {
-            if (VERBOSE) System.out.println("Processing repository: " + repository);
+            if (verbose) System.out.println("Processing repository: " + repository);
 
             if (repository.exists() && repository.isDirectory()) {
                 File[] jars = repository.listFiles();
@@ -51,7 +53,7 @@ public class Loader {
                     if (jars[i].getAbsolutePath().endsWith(".jar")) {
                         try  {
                             URL url = jars[i].toURL();
-                            if (VERBOSE) System.out.println("Adding jar: " + jars[i]);
+                            if (verbose) System.out.println("Adding jar: " + jars[i]);
                             super.addURL(url);                
                         } catch (MalformedURLException e) {
                             throw new IllegalArgumentException(e.toString());
@@ -60,39 +62,56 @@ public class Loader {
                 }
             }
         }
+
+        public void addFile(File file) throws MalformedURLException {
+            if (verbose) System.out.println("Adding path: " + file);
+            super.addURL(file.toURL());
+        }
     }
 
     public static void main(String[] args) throws Exception {
         new Loader().run(args);
     }
-    
+
     void run(String[] args) throws Exception 
-    {    
+    {
         String repositories = System.getProperty(REPOSITORIES);
         if (repositories == null) {
             System.out.println("Loader requires the '" + REPOSITORIES + "' property to be set");
             System.exit(1);
         }
-            
+
         String mainClass = System.getProperty(MAIN_CLASS);
         if (mainClass == null) {
             System.out.println("Loader requires the '" + MAIN_CLASS + "' property to be set");
             System.exit(1);
         }
 
-        if (VERBOSE) System.out.println("-------------------- Loading --------------------");
+        String verboseProperty = System.getProperty(VERBOSE_PROPERTY);
+        if (verboseProperty != null)
+            verbose = Boolean.parseBoolean(verboseProperty);
+        String classPath = System.getProperty(CLASSPATH_PROPERTY);
+
+        if (verbose) System.out.println("-------------------- Loading --------------------");
 
         RepositoryClassLoader classLoader = new RepositoryClassLoader(this.getClass().getClassLoader());
 
         StringTokenizer st = new StringTokenizer(repositories, File.pathSeparator);
         while (st.hasMoreTokens()) {
             classLoader.addRepository(new File(st.nextToken()));        
-        }        
+        }
+
+        if (classPath != null) {
+            st = new StringTokenizer(classPath, File.pathSeparator);
+            while (st.hasMoreTokens()) {
+                classLoader.addFile(new File(st.nextToken()));
+            }
+        }
 
         Thread.currentThread().setContextClassLoader(classLoader);
 
-        if (VERBOSE) System.out.println("-------------------- Executing -----------------");
-        if (VERBOSE) System.out.println("Main Class: " + mainClass);
+        if (verbose) System.out.println("-------------------- Executing -----------------");
+        if (verbose) System.out.println("Main Class: " + mainClass);
             
         invokeMain(classLoader, mainClass, args);            
     }

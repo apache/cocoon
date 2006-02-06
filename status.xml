@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1715">
+      Allow to run Cocoon CLI by adding servlet.jar in the classpath.  Turn off cli's debug messages by default.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1681" due-to="Antonio Fiol" due-to-email="antonio.fiol@gmail.com">
       Fix a bug in DirectoryGenerator: when using cocoon: changes were not detected
     </action>
