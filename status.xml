@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1681" due-to="Antonio Fiol" due-to-email="antonio.fiol@gmail.com">
+      Fix a bug in DirectoryGenerator: when using cocoon: changes were not detected
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1238" due-to="Bart Molenkamp" due-to-email="b.molenkamp@bizzdesign.nl">
       CForms: Incompatible change for &lt;fb:custom&gt;: the base context is now passed instead of the relative context.
       <strong>Please change corresponding classes and use getXpath() to create the relative context yourself</strong>.
