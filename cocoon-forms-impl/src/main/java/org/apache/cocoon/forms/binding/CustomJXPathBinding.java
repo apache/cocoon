@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.binding.JXPathBindingBuilderBase.CommonAttributes;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
@@ -22,7 +25,7 @@ import org.apache.commons.jxpath.JXPathContext;
 /**
  * CustomJXPathBinding
  */
-public class CustomJXPathBinding extends JXPathBindingBase {
+public class CustomJXPathBinding extends JXPathBindingBase implements Serviceable {
     
     /** 
      * The id of the cforms widget
@@ -53,6 +56,7 @@ public class CustomJXPathBinding extends JXPathBindingBase {
         this.widgetId = widgetId;
         this.xpath = xpath;
         this.wrappedBinding = wrappedBinding;
+        wrappedBinding.setXpath(xpath);
     }
     
     public String getXPath() { return xpath; }
@@ -69,10 +73,9 @@ public class CustomJXPathBinding extends JXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget selectedWidget = selectWidget(frmModel, this.widgetId);
-        JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        
-        this.wrappedBinding.loadFormFromModel(selectedWidget, context);
-    }    
+
+        this.wrappedBinding.loadFormFromModel(selectedWidget, jxpc);
+    }
 
     /**
      * Delegates the actual saving operation to the provided Custom Binding Class
@@ -84,10 +87,16 @@ public class CustomJXPathBinding extends JXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget selectedWidget = selectWidget(frmModel, this.widgetId);
-        JXPathContext context = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
-        
-        this.wrappedBinding.saveFormToModel(selectedWidget, context);
-    }
-    
 
+        this.wrappedBinding.saveFormToModel(selectedWidget, jxpc);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+	    	if (wrappedBinding instanceof Serviceable) {
+            ((Serviceable) wrappedBinding).service(manager);
+        }
+    }
 }
