@@ -53,7 +53,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      * Method signature and semantics complies to {@link AbstractCustomBinding#doLoad(Widget, JXPathContext)}
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        String appValue = (String)jxpc.getValue(".");
+        String appValue = (String)jxpc.getValue(getXpath());
         String formValue= null;
         if (appValue.startsWith(this.prefix) 
                 && appValue.endsWith(suffix) 
@@ -72,7 +72,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Object formValue = frmModel.getValue();       
-        jxpc.setValue(".", "" + this.prefix + formValue + this.suffix);        
+        jxpc.setValue(getXpath(), "" + this.prefix + formValue + this.suffix);        
     }
     
     
