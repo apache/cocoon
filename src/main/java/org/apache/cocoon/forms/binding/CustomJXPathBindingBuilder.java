@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.binding;
 
 import java.lang.reflect.Method;
 
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.binding.JXPathBindingManager.Assistant;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
@@ -128,6 +129,10 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             CustomJXPathBinding customBinding = 
                 new CustomJXPathBinding(commonAtts, widgetId, xpath, (AbstractCustomBinding)bindingInstance);
+
+            // Fire Avalon-setup for the custom binding
+            LifecycleHelper.setupComponent(customBinding, getLogger(), null, assistant.getServiceManager(), null);
+
             return customBinding;
         } catch (BindingException e) {
             throw e;

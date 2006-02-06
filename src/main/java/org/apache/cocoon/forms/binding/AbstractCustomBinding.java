@@ -28,6 +28,16 @@ public abstract class AbstractCustomBinding implements Binding {
     private Binding parent;
     private String id;
 
+    private String xpath;
+
+    public void setXpath(String path) {
+        this.xpath = path;
+    }
+
+    public String getXpath() {
+        return xpath;
+    }
+
     /**
      * Sets parent binding.
      */
