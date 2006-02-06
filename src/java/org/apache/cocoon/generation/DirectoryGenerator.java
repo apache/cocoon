@@ -55,11 +55,7 @@ import java.util.Comparator;
  * 
  * @cocoon.sitemap.component.pooling.max  16
  *
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation)
- * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
- *         (SMB GmbH) for Virbus AG
- * @version CVS $Id$
+ * @version $Id$
  */
 public class DirectoryGenerator 
     extends ServiceableGenerator 
