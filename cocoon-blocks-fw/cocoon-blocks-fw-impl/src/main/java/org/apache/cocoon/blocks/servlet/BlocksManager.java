@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.servlet;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,6 +38,12 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.blocks.Block;
+import org.apache.cocoon.blocks.BlockConstants;
+import org.apache.cocoon.blocks.Blocks;
+import org.apache.cocoon.blocks.BlocksContext;
+import org.apache.cocoon.blocks.ServiceManagerRegistry;
+import org.apache.cocoon.blocks.ServiceManagerRegistryImpl;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;

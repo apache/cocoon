@@ -39,7 +39,7 @@ public class BlockCallStack {
      *
      * @throws ServletException if block is null
      */
-    static void enterBlock(ServletContext context)
+    public static void enterBlock(ServletContext context)
     throws ServletException {
         if (null == context) {
             throw new ServletException("Block is not set.");
@@ -59,7 +59,7 @@ public class BlockCallStack {
      * <p>It's the counterpart to the {@link #enterBlock(Block)}
      * method.</p>
      */
-    static void leaveBlock() {
+    public static void leaveBlock() {
         final Stack stack = (Stack)blockStack.get();
         stack.pop();
     }
