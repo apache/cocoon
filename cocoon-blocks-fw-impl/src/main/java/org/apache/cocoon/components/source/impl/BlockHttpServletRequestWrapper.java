@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks.util;
+package org.apache.cocoon.components.source.impl;
 
 import java.net.URI;
 import java.util.Enumeration;
@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.wrapper.RequestParameters;
  * 
  * @version $Id$
  */
-public class BlockHttpServletRequestWrapper extends HttpServletRequestWrapper {
+class BlockHttpServletRequestWrapper extends HttpServletRequestWrapper {
     
     private URI uri;
     private Hashtable attributes = new Hashtable();
