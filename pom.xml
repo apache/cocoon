@@ -49,6 +49,7 @@
     <!--module>cocoon-jcr</module> -->
     <module>cocoon-portal</module>
     <module>cocoon-session-fw</module>
+    <module>cocoon-sitemap</module>
     <module>cocoon-spring</module>
     <module>cocoon-template</module>
     <module>cocoon-validation</module>
