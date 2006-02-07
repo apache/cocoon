@@ -195,7 +195,7 @@ public class BlockWiring
     /**
      * Get the component configuration of the block
      */
-    Configuration getComponentConfiguration() {
+    public Configuration getComponentConfiguration() {
         return this.componentConfiguration;
     }
 
@@ -222,7 +222,7 @@ public class BlockWiring
     /**
      * Get the servlet configuration of the block
      */
-    Configuration getServletConfiguration() {
+    public Configuration getServletConfiguration() {
         return this.servletConfiguration;
     }
 }
