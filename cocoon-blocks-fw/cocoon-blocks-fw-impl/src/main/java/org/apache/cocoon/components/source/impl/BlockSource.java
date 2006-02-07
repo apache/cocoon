@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.BlockCallStack;
-import org.apache.cocoon.blocks.util.BlockHttpServletRequestWrapper;
-import org.apache.cocoon.blocks.util.BlockHttpServletResponseWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
