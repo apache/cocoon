@@ -33,7 +33,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.blocks.BlockConstants;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.core.Core;
@@ -94,8 +93,15 @@ public class SitemapServlet
             throw new ServletException("Could not find a Core object from the parent service manager", e);
         }
         
-        Context context = CoreUtil.createContext(config, core.getSettings(), BlockConstants.BLOCK_CONF);
-        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), BlockConstants.BLOCK_CONF);
+        String sitemapPath = null;
+        try {
+            sitemapPath = this.config.getAttribute("file");
+        } catch (ConfigurationException e) {
+            throw new ServletException("Faulty sitemap configuration ", e);
+        }
+        
+        Context context = CoreUtil.createContext(config, core.getSettings(), sitemapPath);
+        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), sitemapPath);
         
         try {
             this.processor = (Processor) ClassUtils.newInstance(TreeProcessor.class.getName());
