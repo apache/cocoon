@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks.util;
+package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * 
  * @version $Id$
  */
-public class BlockHttpServletResponseWrapper extends HttpServletResponseWrapper {
+class BlockHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     private OutputStream outputStream;
     private ServletOutputStream servletStream;
