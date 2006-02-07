@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.servlet;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -32,6 +32,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.blocks.Block;
+import org.apache.cocoon.blocks.BlockCallStack;
+import org.apache.cocoon.blocks.BlockContext;
+import org.apache.cocoon.blocks.BlockWiring;
+import org.apache.cocoon.blocks.ServiceManagerRegistry;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.util.ClassUtils;
