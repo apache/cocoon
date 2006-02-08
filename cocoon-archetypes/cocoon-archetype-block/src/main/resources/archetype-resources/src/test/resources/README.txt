@@ -1,1 +1,0 @@
-Place resources that should be available through the classloader during JUnit test in here 
