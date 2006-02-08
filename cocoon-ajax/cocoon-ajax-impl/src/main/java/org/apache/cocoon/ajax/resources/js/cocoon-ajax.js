@@ -57,6 +57,7 @@ cocoon.ajax.DOMUtils.firstChildElement = function(element) {
         }
     }
 }
+
 cocoon.ajax.DOMUtils.ScriptRegexp = '(?:<script.*?>)((\n|.)*?)(?:<\/script>)';
 /**
  * Imports an element into a document, taking care of using the correct implementation
@@ -284,12 +285,31 @@ cocoon.ajax.Fader.prototype._changeColor = function() {
     this.element.style.backgroundColor = color;
 }
 
-/** Converts a "#RRGGBB" color as an array of 3 ints */
-cocoon.ajax.Fader.colorToRgb = function(hex) {
-    return [
-        parseInt(hex.substr(1,2),16),
-        parseInt(hex.substr(3,2),16),
-        parseInt(hex.substr(5,2),16) ];
+/**
+ * Converts a long hex "#RRGGBB" or short hex "#RGB" color as an array of 3 ints.
+ * If neither pattern matches, returns defaultValue or 255,255,255 if none specified.
+ */
+cocoon.ajax.Fader.colorToRgb = function(hex, defaultValues) {
+    var r = 255; // defaults if no match and no defaultValues specified
+    var g = 255;
+    var b = 255;
+
+    if (defaultValues) {
+        r = defaultValues[0];
+        g = defaultValues[1];
+        b = defaultValues[2];
+    }
+    var colors = hex.match(/^#(\d{2})(\d{2})(\d{2})$/);
+    if (colors) {
+        r = parseInt(colors[0]);
+        g = parseInt(colors[1]);
+        b = parseInt(colors[2]);
+    } else if (colors = hex.match(/^#(\d)(\d)(\d)$/)) {
+        r = parseInt(colors[0] + colors[0]);
+        g = parseInt(colors[1] + colors[1]);
+        b = parseInt(colors[2] + colors[2]);
+    }
+    return [r,g,b];
 }
 
 /** Converts rgb values to a "#RRGGBB" color */
