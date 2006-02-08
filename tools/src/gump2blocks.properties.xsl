@@ -42,6 +42,14 @@
 #
 </desc:desc>
 
+<desc:desc name="do-not-edit">
+#------------------------------------------------------------------------------#
+# ***** DO  NOT edit blocks.properties yourself! ********                      #
+# This file is generated from gump.xml - to keep it in sync when that file is  #
+# modified, use the generate-blocks.properties build target.                   #
+#------------------------------------------------------------------------------#
+</desc:desc>
+
 <desc:desc name="common">
 #------------------------------------------------------------------------------#
 #                             Cocoon Blocks                                    #
@@ -127,6 +135,7 @@
 
 <xsl:template match="/module">
     <xsl:value-of select="document('')/xsl:stylesheet/desc:descs/desc:desc[@name = 'license']"/>
+    <xsl:value-of select="document('')/xsl:stylesheet/desc:descs/desc:desc[@name = 'do-not-edit']"/>
     <xsl:value-of select="document('')/xsl:stylesheet/desc:descs/desc:desc[@name = 'common']"/>
     <xsl:apply-templates
         select="project[starts-with(@name, 'cocoon-block-')]
