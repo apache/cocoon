@@ -1663,6 +1663,27 @@
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
+
+  <project name="cocoon-block-imageop" status="unstable" dir="src/blocks/imageop">
+    <package>org.apache.cocoon</package>
+
+    <description>ImageOp - Image Operation Reader</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="imageop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/forms/imageop"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/imageop-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
