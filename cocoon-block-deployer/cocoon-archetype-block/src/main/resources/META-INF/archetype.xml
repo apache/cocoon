@@ -1,0 +1,8 @@
+<archetype>
+  <id>cocoon-archetype-block</id>
+  <resources>
+    <resource>src/main/resources/COB-INF/sitemap.xmap</resource>
+    <resource>src/main/resources/COB-INF/test.xml</resource>
+    <resource>src/main/resources/META-INF/block.xml</resource>
+  </resources>
+</archetype>
