@@ -99,7 +99,13 @@ public class SitemapServlet
         } catch (ConfigurationException e) {
             throw new ServletException("Faulty sitemap configuration ", e);
         }
-        
+
+        // FIXME: All context relative paths are supposed to start with '/' but of some
+        // reason that doesn't work for the sitemap engine, or maybe a different covention
+        // applies there.
+        if (sitemapPath != null && sitemapPath.charAt(0) != '/')
+            sitemapPath = "/" + sitemapPath;
+
         Context context = CoreUtil.createContext(config, core.getSettings(), sitemapPath);
         this.contextURL = CoreUtil.getContextURL(this.getServletContext(), sitemapPath);
         
