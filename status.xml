@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1771" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
+      cocoon.ajax.Fader runtime error when style uses abreviated form #ccc in IE6.0sp2.
+    </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1301" due-to="Niclas Hedhman" due-to-email="niclas@apache.org">
       Added the imageop block, an Image Operation Reader providing a fairly
       flexible and powerful Image Reader that is capable of performing a stack
