@@ -55,6 +55,7 @@ usage()
     echo "Usage: $0 (action)"
     echo "actions:"
     echo "  cli               Run Cocoon from the command line"
+    echo "  precompile        Crawl your webapp to compile all XSP files (requires the xsp block)"
     echo "  servlet           Run Cocoon in a servlet container (default)"
     echo "  servlet-admin     Run Cocoon in a servlet container and turn on container web administration"
     echo "  servlet-debug     Run Cocoon in a servlet container and turn on JVM remote debug"
@@ -145,7 +146,6 @@ CLI_VERBOSE="-Dloader.verbose=false"
 CLI_PROPERTIES="$CLI_LIBRARIES $CLI_CLASSPATH $CLI_VERBOSE"
 
 PRECOMPILE=-Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper
-PRECOMPILE_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 
 JETTY=-Dloader.main.class=org.mortbay.jetty.Server
 JETTY_CONF="$COCOON_HOME/tools/jetty/conf"
@@ -165,7 +165,7 @@ case "$ACTION" in
         ;;
 
   precompile)
-        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $PRECOMPILE_LIBRARIES $PRECOMPILE $LOADER $ARGS
+        $JAVA $JAVA_OPTIONS -cp $LOADER_LIB $ENDORSED $CLI_PROPERTIES $PRECOMPILE $LOADER $ARGS
         ;;
 
   servlet)
