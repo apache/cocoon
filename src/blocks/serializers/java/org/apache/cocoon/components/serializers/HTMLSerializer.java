@@ -153,7 +153,7 @@ public class HTMLSerializer extends XHTMLSerializer {
             this.doctype = HTML401_DOCTYPE_TRANSITIONAL;
         } else if (XHTML1_DOCTYPE_FRAMESET.equals(this.doctype)) {
             this.doctype = HTML401_DOCTYPE_FRAMESET;
-        } else {
+        } else if (this.doctype != null) {
             /* The root element is uppercase, always!!! */
             this.doctype = new DocType(this.doctype.getName().toUpperCase(),
                                        this.doctype.getPublicId(),

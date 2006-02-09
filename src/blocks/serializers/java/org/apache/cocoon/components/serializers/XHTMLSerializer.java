@@ -21,7 +21,6 @@ import org.apache.cocoon.components.serializers.encoding.XHTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.xml.sax.SAXException;
 
-
 /**
  * <p>A pedantinc XHTML serializer encoding all recognized entities with their
  * proper HTML names.</p> 
