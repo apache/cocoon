@@ -19,11 +19,35 @@ import org.apache.cocoon.components.serializers.encoding.XHTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.xml.sax.SAXException;
 
-
 /**
+ * <p>A pedantinc XHTML serializer encoding all recognized entities with their
+ * proper HTML names.</p> 
+ * 
+ * <p>For configuration options of this serializer, please look at the
+ * {@link EncodingSerializer}, in addition to those, this serializer also
+ * support the specification of a default doctype. This default will be used
+ * if no document type is received in the SAX events, and can be configured
+ * in the following way:</p>
  *
+ * <pre>
+ * &lt;serializer class="org.apache.cocoon.components.serializers..." ... &gt;
+ *   &lt;doctype-default&gt;mytype&lt;/doctype-default&gt;
+ * &lt;/serializer&gt;
+ * </pre>
+ * 
+ * <p>The value <i>mytype</i> can be one of:</p>
+ * 
+ * <dl>
+ *   <dt>"<code>none</code>"</dt>
+ *   <dd>Not to emit any dococument type declaration.</dd> 
+ *   <dt>"<code>strict</code>"</dt>
+ *   <dd>The XHTML 1.0 Strict document type.</dd> 
+ *   <dt>"<code>loose</code>"</dt>
+ *   <dd>The XHTML 1.0 Transitional document type.</dd> 
+ *   <dt>"<code>frameset</code>"</dt>
+ *   <dd>The XHTML 1.0 Frameset document type.</dd>
+ * </dl> 
  *
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version CVS $Id$
  */
 public class XHTMLSerializer extends XMLSerializer {
@@ -51,6 +75,13 @@ public class XHTMLSerializer extends XMLSerializer {
 
     private static final XHTMLEncoder XHTML_ENCODER = new XHTMLEncoder();
 
+    /* ====================================================================== */
+
+    /** The <code>DocType</code> instance representing the document. */
+    protected DocType doctype_default = null;
+
+    /* ====================================================================== */
+
     /**
      * Create a new instance of this <code>XHTMLSerializer</code>
      */
@@ -73,6 +104,28 @@ public class XHTMLSerializer extends XMLSerializer {
         return("text/html; charset=" + this.charset.getName());
     }
 
+    /**
+     * Configure this instance by selecting the default document type to use.
+     */
+    public void configure(Configuration conf)
+    throws ConfigurationException {
+        super.configure(conf);
+
+        String doctype = conf.getChild("doctype-default").getValue(null);
+        if ("none".equalsIgnoreCase(doctype)) {
+            this.doctype_default = null;
+        } else if ("strict".equalsIgnoreCase(doctype)) {
+            this.doctype_default = XHTML1_DOCTYPE_STRICT;
+        } else if ("loose".equalsIgnoreCase(doctype)) {
+            this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
+        } else if ("frameset".equalsIgnoreCase(doctype)) {
+            this.doctype_default = XHTML1_DOCTYPE_FRAMESET;
+        } else {
+            /* Default is transitional */
+            this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
+        }
+    }
+
     /* ====================================================================== */
 
     /**
@@ -84,7 +137,7 @@ public class XHTMLSerializer extends XMLSerializer {
      */
     public void body(String uri, String local, String qual)
     throws SAXException {
-        if (this.doctype == null) this.doctype = XHTML1_DOCTYPE_TRANSITIONAL;
+        if (this.doctype == null) this.doctype = this.doctype_default;
         if (this.namespaces.getUri("").length() == 0) {
             this.namespaces.push("", XHTML1_NAMESPACE);
         }

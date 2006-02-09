@@ -36,9 +36,26 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>An abstract serializer supporting multiple encodings.</p>
  * 
+ * <p>This serializer can accept the following configuration whenever it
+ * is declared into a sitemap:</p>
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
+ * <pre>
+ * &lt;serializer class="org.apache.cocoon.components.serializers..." ... &gt;
+ *   &lt;encoding&gt;myencoding&lt;/encoding&gt;
+ *   &lt;indent&gt;myindenting&lt;/indent&gt;
+ * &lt;/serializer&gt;
+ * </pre>
+ * 
+ * <p>The value indicated by <i>myencoding</i> must be replaced with a valid
+ * charset encoding (this serializer does not rely on the JVM for character
+ * encoding, you can look into the <code>cocoon-serializers-charsets</code>
+ * JAR file for a list).<p>
+ * 
+ * <p>The value indicated by <i>myindenting</i> will control the indenting
+ * level for each element.<p>
+ *
  * @version CVS $Id$
  */
 public abstract class EncodingSerializer implements Serializer, Locator, Recyclable, Configurable  {
