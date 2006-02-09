@@ -1811,7 +1811,7 @@
   </project>
 
   <project name="cocoon-serializers-charsets">
-    <jar name="lib/optional/cocoon-serializers-charsets-0.1.jar"/>
+    <jar name="lib/optional/cocoon-serializers-charsets-0.2.jar"/>
   </project>
 
   <project name="nekodtd">
