@@ -15,10 +15,14 @@
  */
 package org.apache.cocoon.forms.event.impl;
 
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.w3c.dom.Element;
 
@@ -32,15 +36,20 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe {
+public class JavaClassWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe, Serviceable {
+	ServiceManager manager;
 
-    public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
+	public void service(ServiceManager manager) throws ServiceException {
+		this.manager = manager;
+	}
+
+	public WidgetListener buildListener(Element element, Class listenerClass) throws Exception {
 
         String name = DomHelper.getAttribute(element, "class");
 
         Object listener = ClassUtils.newInstance(name);
         if (listenerClass.isAssignableFrom(listener.getClass())) {
-            // FIXME : apply filecyclehelper
+            LifecycleHelper.setupComponent(listener, null, null, manager, null);
             return (WidgetListener)listener;
         } else {
             throw new Exception("Class " + listener.getClass() + " is not a " + listenerClass);
