@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
+      CForms: when building the query string in AJAX mode, do not include &lt;input type="button"&gt;
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1771" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
       cocoon.ajax.Fader runtime error when style uses abreviated form #ccc in IE6.0sp2.
     </action>
