@@ -15,9 +15,12 @@
  */
 package org.apache.cocoon.components.serializers;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.serializers.encoding.XHTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.xml.sax.SAXException;
+
 
 /**
  * <p>A pedantinc XHTML serializer encoding all recognized entities with their
@@ -175,7 +178,6 @@ public class XHTMLSerializer extends XMLSerializer {
 
         if (XHTML1_NAMESPACE.equals(uri)) {
             if ((local.equalsIgnoreCase("textarea")) ||
-                (local.equalsIgnoreCase("iframe")) ||
                 (local.equalsIgnoreCase("script")) ||
                 (local.equalsIgnoreCase("style"))) {
                 this.closeElement(false);
