@@ -24,8 +24,11 @@ import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>A fancy XML serializer not relying on the JAXP API.</p> 
+ * 
+ * <p>For configuration options of this serializer, please look at the
+ * {@link EncodingSerializer}.</p>
  *
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version CVS $Id$
  */
 public class XMLSerializer extends EncodingSerializer {

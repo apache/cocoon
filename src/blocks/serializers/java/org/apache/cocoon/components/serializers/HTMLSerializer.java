@@ -15,16 +15,38 @@
  */
 package org.apache.cocoon.components.serializers;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.serializers.encoding.HTMLEncoder;
 import org.apache.cocoon.components.serializers.util.DocType;
 import org.apache.cocoon.components.serializers.util.SGMLDocType;
 import org.xml.sax.SAXException;
 
-
 /**
+ * <p>A serializer converting XHTML into plain old HTML.</p>
+ *  
+ * <p>For configuration options of this serializer, please look at the
+ * {@link XHTMLSerializer} and {@link EncodingSerializer}.</p>
+ * 
+ * <p>Any of the XHTML document type declared or used will be converted into
+ * its HTML 4.01 counterpart, and in addition to those a "compatible" doctype
+ * can be supported to exploit a couple of shortcuts into MSIE's rendering
+ * engine. The values for the <code>doctype-default</code> can then be:</p>
  *
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HTMLSerializer.java,v 1.4 2004/04/30 22:57:22 joerg Exp $
+ * <dl>
+ *   <dt>"<code>none</code>"</dt>
+ *   <dd>Not to emit any dococument type declaration.</dd> 
+ *   <dt>"<code>compatible</code>"</dt>
+ *   <dd>The HTML 4.01 Transitional (exploiting MSIE shortcut).</dd> 
+ *   <dt>"<code>strict</code>"</dt>
+ *   <dd>The HTML 4.01 Strict document type.</dd> 
+ *   <dt>"<code>loose</code>"</dt>
+ *   <dd>The HTML 4.01 Transitional document type.</dd> 
+ *   <dt>"<code>frameset</code>"</dt>
+ *   <dd>The HTML 4.01 Frameset document type.</dd>
+ * </dl> 
+ *
+ * @version CVS $Id$
  */
 public class HTMLSerializer extends XHTMLSerializer {
 
@@ -56,6 +78,30 @@ public class HTMLSerializer extends XHTMLSerializer {
      */
     public HTMLSerializer() {
         super(HTML_ENCODER);
+    }
+
+    /**
+     * Configure this instance by selecting the default document type to use.
+     */
+    public void configure(Configuration conf)
+    throws ConfigurationException {
+        super.configure(conf);
+
+        String doctype = conf.getChild("doctype-default").getValue(null);
+        if ("none".equalsIgnoreCase(doctype)) {
+            this.doctype_default = null;
+        } else if ("compatible".equalsIgnoreCase(doctype)) {
+            this.doctype_default = HTML401_DOCTYPE_COMPATIBLE;
+        } else if ("strict".equalsIgnoreCase(doctype)) {
+            this.doctype_default = HTML401_DOCTYPE_STRICT;
+        } else if ("loose".equalsIgnoreCase(doctype)) {
+            this.doctype_default = HTML401_DOCTYPE_TRANSITIONAL;
+        } else if ("frameset".equalsIgnoreCase(doctype)) {
+            this.doctype_default = HTML401_DOCTYPE_FRAMESET;
+        } else {
+            /* Default is compatible (MSIE hack) */
+            this.doctype_default = HTML401_DOCTYPE_COMPATIBLE;
+        }
     }
 
     /* ====================================================================== */
@@ -99,22 +145,22 @@ public class HTMLSerializer extends XHTMLSerializer {
                                    + this.getLocation());
         }
 
-        if (this.doctype == null) {
-            this.doctype = HTML401_DOCTYPE_COMPATIBLE;
-        } else if (XHTML1_DOCTYPE_STRICT.equals(this.doctype)) {
+        if (this.doctype == null) this.doctype = this.doctype_default;
+
+        if (XHTML1_DOCTYPE_STRICT.equals(this.doctype)) {
             this.doctype = HTML401_DOCTYPE_STRICT;
         } else if (XHTML1_DOCTYPE_TRANSITIONAL.equals(this.doctype)) {
             this.doctype = HTML401_DOCTYPE_TRANSITIONAL;
         } else if (XHTML1_DOCTYPE_FRAMESET.equals(this.doctype)) {
             this.doctype = HTML401_DOCTYPE_FRAMESET;
         } else {
+            /* The root element is uppercase, always!!! */
             this.doctype = new DocType(this.doctype.getName().toUpperCase(),
                                        this.doctype.getPublicId(),
                                        this.doctype.getSystemId());
         }
         super.body(XHTML1_NAMESPACE, name, name);
     }
-
 
     /**
      * Receive notification of the beginning of an element.
