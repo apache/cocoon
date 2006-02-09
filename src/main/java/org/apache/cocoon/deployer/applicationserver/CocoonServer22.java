@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -148,16 +149,33 @@ public class CocoonServer22 implements CocoonServer {
 			// TODO What happens if two libraries have the same filename by chance ...?
 			for(int i = 0; i < libraries.length; i++) {
 				File lib = libraries[i];
-				String libName = lib.getName();
-				log.info("Installing library " + WEB_INF_LIBS_DIR + "/" + libName);		
-				OutputStream out = frm.writeResource(txId, WEB_INF_LIBS_DIR + "/" + libName);
-				FileInputStream fis = new FileInputStream(lib);
-				int b;
-				while((b = fis.read()) != -1) {
-					out.write(b);
+				
+				// check if a library is a block, if yes, don't add it to WEB_INF_LIBS_DIR
+				boolean isBlock = true;
+				InputStream blockIs = null;
+				try {
+					blockIs = ZipUtils.getBlockDescriptorIs(lib);
+				} catch(FileNotFoundException fnfe) {
+					isBlock = false;
 				}
-				fis.close();
-				out.close();
+				
+				if(!isBlock) {
+					FileInputStream fis = null;
+					OutputStream out = null;
+					try {
+						fis = new FileInputStream(lib);
+						String libName = lib.getName();
+						log.info("Installing library " + WEB_INF_LIBS_DIR + "/" + libName);		
+						out = frm.writeResource(txId, WEB_INF_LIBS_DIR + "/" + libName);	
+						int b;
+						while((b = fis.read()) != -1) {
+							out.write(b);
+						}					
+					} finally {
+						fis.close();
+						out.close();
+					}
+				}
 			}
 			
 			// write the wiring

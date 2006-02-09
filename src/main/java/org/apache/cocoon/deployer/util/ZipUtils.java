@@ -84,7 +84,7 @@ public class ZipUtils {
 	    return new ByteArrayInputStream(baos.toByteArray());        
 	}
 
-	public static InputStream getBlockDescriptIs(File blockArchive) throws FileNotFoundException, IOException {
+	public static InputStream getBlockDescriptorIs(File blockArchive) throws FileNotFoundException, IOException {
 		return getDescriptorInputStream(new ZipInputStream(new FileInputStream(blockArchive)));
 	}	
 	
