@@ -105,6 +105,7 @@ set CP=%COCOON_HOME%\tools\loader
 
 if ""%1"" == """" goto doServlet
 if ""%1"" == ""cli"" goto doCli
+if ""%1"" == ""precompile"" goto doPrecompile
 if ""%1"" == ""servlet"" goto doServlet
 if ""%1"" == ""servlet-admin"" goto doAdmin
 if ""%1"" == ""servlet-debug"" goto doDebug
@@ -114,6 +115,7 @@ IF ""%1"" == ""yourkit-profile"" goto doYourkitProfile
 echo Usage: cocoon (action)
 echo actions:
 echo   cli             Run Cocoon from command line
+echo   precompile      Crawl your webapp to compile all XSP files (requires the xsp block)
 echo   servlet         Run Cocoon in a servlet container (default)
 echo   servlet-admin   Run Cocoon in a servlet container and turn container web administration on
 echo   servlet-debug   Run Cocoon in a servlet container and turn on remote JVM debug
@@ -134,7 +136,23 @@ goto cliLoop
 
 :cliLoopEnd
 
-"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" -Dloader.main.class=org.apache.cocoon.Main Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" -Dloader.class.path=lib\core\servlet_2_2.jar -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.Main Loader %param%
+goto end
+
+:: ----- Precompile ------------------------------------------------------------
+
+:doPrecompile
+set param=
+shift
+:PrecompileLoop
+if "%1"=="" goto PrecompileLoopEnd
+if not "%1"=="" set param=%param% %1
+shift
+goto PrecompileLoop
+
+:PrecompileLoopEnd
+
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" -Dloader.class.path=lib\core\servlet_2_2.jar -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper Loader %param%
 goto end
 
 :: ----- Servlet ---------------------------------------------------------------
