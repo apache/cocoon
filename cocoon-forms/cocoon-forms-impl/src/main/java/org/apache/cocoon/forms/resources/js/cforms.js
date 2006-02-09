@@ -107,7 +107,7 @@ cocoon.forms._buildQueryString = function(form, submitId) {
         	// Skip fieldset
         	continue;
         }
-        if (input.type == "submit" || input.type == "image") {
+        if (input.type == "submit" || input.type == "image" || input.type == "button") {
             // Skip buttons
             continue;
         }
