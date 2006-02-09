@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.datatype.typeimpl;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  * will derive from this class.
  * @version $Id$
  */
-public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled implements DatatypeBuilder, Serviceable, Configurable, Contextualizable {
+public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled implements DatatypeBuilder, Serviceable, Configurable, Contextualizable, Disposable {
     protected ServiceManager serviceManager;
     private SimpleServiceSelector convertorBuilders;
     private String defaultConvertorHint;
@@ -81,6 +82,10 @@ public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled impleme
         } catch (Exception e) {
             throw new ConfigurationException("Error create plain convertor.", e);
         }
+    }
+
+    public void dispose() {
+	convertorBuilders.dispose();
     }
 
     public void buildConvertor(Element datatypeEl, AbstractDatatype datatype) throws Exception {
