@@ -24,7 +24,7 @@
    +-->
   <property name="dir.source"         value="${basedir}/src"/>
   <property name="dir.build"          value="${basedir}/bld"/>
-  <property name="version"            value="0.1"/>
+  <property name="version"            value="0.2"/>
 
   <!-- ========================================================================
    | Compile all Java source files (written or generated).
