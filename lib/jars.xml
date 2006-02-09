@@ -746,7 +746,7 @@
       A large list of character sets used for XML/HTML serialization.
     </description>
     <used-by>serializers</used-by>
-    <lib>optional/cocoon-serializers-charsets-0.1.jar</lib>
+    <lib>optional/cocoon-serializers-charsets-0.2.jar</lib>
     <homepage>http://cocoon.apache.org/</homepage>
   </file>
 
