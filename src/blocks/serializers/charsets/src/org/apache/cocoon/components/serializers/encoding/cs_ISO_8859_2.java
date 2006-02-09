@@ -36,6 +36,7 @@ class cs_ISO_8859_2 extends CompiledCharset {
         "latin2",
         "csISOLatin2",
         "iso8859_2",
+        "ISO8859-2",
     };
 
     /** The array all characters encoded by this encoding. */

@@ -30,7 +30,7 @@ import java.util.Collection;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: Compiler.java,v 1.1 2004/04/30 18:35:25 pier Exp $
+ * @version CVS $Id$
  */
 public class Compiler extends CompiledCharset {
 
@@ -192,11 +192,17 @@ public class Compiler extends CompiledCharset {
 
         while (iterator.hasNext()) {
             Charset charset = (Charset)iterator.next();
-            Compiler compiler = process(charset);
-            compiler.save(directory);
-            System.out.println("Generating \"" + compiler.clazz + ".java\" "
-                               + "for \"" + compiler.getName() + "\" charset ("
-                               + (++pos) + " of " + len + ")");
+            try {
+                Compiler compiler = process(charset);
+                compiler.save(directory);
+                System.out.println("Generating \"" + compiler.clazz + ".java\" "
+                                   + "for \"" + compiler.getName() + "\" charset ("
+                                   + (++pos) + " of " + len + ")");
+            } catch (Exception exception) {
+                System.err.println("Error generating charset \"" + charset + "\"");
+                System.err.print(exception.getClass().getName() + ": ");
+                System.err.println(exception.getMessage());
+            }
         }
     }
 }
