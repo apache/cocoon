@@ -58,7 +58,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		assertEquals(wiring.getBlock(0).getProperties().getProperty(0).getValue(), "defaultValue1");
 		assertEquals(wiring.getBlock(0).getProperties().getProperty(1).getValue(), "new-value");		
 		assertTrue(new File(deployPath + "/WEB-INF/lib/lib-01.jar").exists());
-		assertTrue(new File(deployPath + "/WEB-INF/lib/lib-02.jar").exists());		
+		assertFalse(new File(deployPath + "/WEB-INF/lib/valid-block-1.0.jar").exists());		
 	}
 	
 	public void testDeployWithConnections() throws Exception {
@@ -93,6 +93,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		// check libraries
 		assertTrue(new File(deployPath + "/WEB-INF/lib/lib-01.jar").exists());
 		assertTrue(new File(deployPath + "/WEB-INF/lib/lib-02.jar").exists());			
+		assertFalse(new File(deployPath + "/WEB-INF/lib/valid-block-1.0.jar").exists());				
 	}	
 
 	private BinaryBlock createBlock10Instance(String blockArchive, String deployDescriptorFile, int deployDescPos) 
@@ -150,9 +151,10 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	}
 	
 	private File[] createLibraries() {
-		File[] libraries = new File[2];
+		File[] libraries = new File[3];
 		libraries[0] = this.getMockArtefact("lib-01/lib-01.jar");
 		libraries[1] = this.getMockArtefact("lib-02/lib-02.jar");	
+		libraries[2] = this.getMockArtefact("validBlock-02/valid-block-1.0.jar");
 		return libraries;
 	}
 
