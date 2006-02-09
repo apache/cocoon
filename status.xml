@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1344" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
+      CForms: call dispose() on every DatatypeBuilder if needed
+    </action>
     <action dev="JBQ" type="add" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
       CForms: Java event listeners can now implement Serviceable to get a ServiceManager
     </action>
