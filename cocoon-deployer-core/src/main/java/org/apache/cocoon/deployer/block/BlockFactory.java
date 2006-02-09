@@ -49,10 +49,10 @@ public class BlockFactory {
 		try {
 			Unmarshaller unmarshaller = new Unmarshaller(Block.class);
 			// unmarshaller.setDebug(true);
-			blockDescriptor = (Block) unmarshaller.unmarshal(new InputStreamReader(ZipUtils.getBlockDescriptIs(blockArchive)));
+			blockDescriptor = (Block) unmarshaller.unmarshal(new InputStreamReader(ZipUtils.getBlockDescriptorIs(blockArchive)));
 			block.setBlockDescriptor(blockDescriptor);
 			block.setInputStream(new FileInputStream(blockArchive));
-			block.setNameSpace(XMLUtils.getDocumentNamespace(ZipUtils.getBlockDescriptIs(blockArchive)));
+			block.setNameSpace(XMLUtils.getDocumentNamespace(ZipUtils.getBlockDescriptorIs(blockArchive)));
 			block.setId(blockDescriptor.getId());
 		} catch (FileNotFoundException e) {
 			throw new DeploymentException("The block archive file can't be found.");
