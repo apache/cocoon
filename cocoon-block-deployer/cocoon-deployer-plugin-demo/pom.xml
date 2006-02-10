@@ -85,7 +85,7 @@
          why the plugin requires it as it is added to WEB-INF/lib by the deployer ... -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-blocks-fw-impl</artifactId>
+      <artifactId>cocoon-default</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>  
