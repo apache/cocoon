@@ -180,6 +180,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="BRD" type="add" >
+      CForms: binding: implemented support for a new attribute "jxpath-factory"
+      (can be used on any binding element) to change the factory used by JXPath
+      when it needs to create new paths (currently this is fixed to the
+      DOMFactory). This is useful when using non-DOM, non-bean data models.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1344" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
       CForms: call dispose() on every DatatypeBuilder if needed
     </action>
