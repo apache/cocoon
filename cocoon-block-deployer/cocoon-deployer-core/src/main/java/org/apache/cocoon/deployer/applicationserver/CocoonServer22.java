@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -36,6 +35,7 @@ import org.apache.cocoon.deployer.ArtifactProvider;
 import org.apache.cocoon.deployer.DeploymentException;
 import org.apache.cocoon.deployer.block.BinaryBlock;
 import org.apache.cocoon.deployer.block.Block;
+import org.apache.cocoon.deployer.block.LocalBlock;
 import org.apache.cocoon.deployer.generated.block.x10.Property;
 import org.apache.cocoon.deployer.generated.wiring.x10.Mount;
 import org.apache.cocoon.deployer.generated.wiring.x10.Wiring;
@@ -141,6 +141,10 @@ public class CocoonServer22 implements CocoonServer {
 					} else {
 						wiringBlock.setLocation((String) installedBlocks.get(block.getId()));
 					}
+				} 
+				else if(block instanceof LocalBlock) {
+					LocalBlock localBlock = (LocalBlock) block;
+					wiringBlock.setLocation(localBlock.getBaseDirectory());
 				}
 				wiring.addBlock(wiringBlock);
 			}
@@ -152,9 +156,8 @@ public class CocoonServer22 implements CocoonServer {
 				
 				// check if a library is a block, if yes, don't add it to WEB_INF_LIBS_DIR
 				boolean isBlock = true;
-				InputStream blockIs = null;
 				try {
-					blockIs = ZipUtils.getBlockDescriptorIs(lib);
+					ZipUtils.getBlockDescriptorIs(lib);
 				} catch(FileNotFoundException fnfe) {
 					isBlock = false;
 				}
