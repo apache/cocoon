@@ -20,7 +20,6 @@
 
     <category log-level="INFO" name="imageop">
         <log-target id-ref="imageop" />
-        <log-target id-ref="error"/>
     </category>
 
 </xlog>
