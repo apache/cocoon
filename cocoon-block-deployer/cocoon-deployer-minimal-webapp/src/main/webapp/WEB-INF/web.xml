@@ -32,7 +32,7 @@
     <display-name>BlocksManager</display-name>
     <description>BlocksManager</description>
 
-    <servlet-class>org.apache.cocoon.blocks.BlocksManager</servlet-class>
+    <servlet-class>org.apache.cocoon.blocks.servlet.BlocksManager</servlet-class>
 
     <init-param>
       <param-name>work-directory</param-name>
