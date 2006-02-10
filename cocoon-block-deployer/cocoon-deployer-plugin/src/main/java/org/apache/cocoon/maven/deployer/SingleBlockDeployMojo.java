@@ -16,24 +16,21 @@
  */
 package org.apache.cocoon.maven.deployer;
 
+import java.util.List;
+
 import org.apache.cocoon.deployer.BlockDeployer;
 import org.apache.cocoon.deployer.generated.deploy.x10.Block;
 import org.apache.cocoon.deployer.generated.deploy.x10.Cocoon;
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
 import org.apache.cocoon.deployer.generated.deploy.x10.Mount;
 import org.apache.cocoon.deployer.resolver.NullVariableResolver;
-
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
-
-import java.util.List;
 
 
 /**
@@ -130,9 +127,10 @@ public class SingleBlockDeployMojo
         Cocoon cocoon = new Cocoon();
         cocoon.setExclusive(true);
         cocoon.setTargetUrl("target/cocoon-webapp");
-        cocoon.setWebappUrn("org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war");
-        cocoon.setBlockFwUrn("org.apache.cocoon:cocoon-blocks-fw-impl:1.0-SNAPSHOT");
+        cocoon.setWebappUrn("org.apache.cocoon:cocoon-deployer-minimal-webapp:1.0-SNAPSHOT:war");
+        cocoon.setBlockFwUrn("org.apache.cocoon:cocoon-default:1.0-SNAPSHOT");
         
+        // create the block
         Block block = new Block();
         block.setId(artifactId);
         block.setAutoWire(true);
@@ -141,9 +139,10 @@ public class SingleBlockDeployMojo
         block.setMount(mount);
         
         block.setUrn(urn);
-        // Disabled for now! Using block.setLocation() make rapid application development possible.
-        // block.setLocation("target/classes");
-
+        // needs to be commented out as long as the blocks-fw supports directories outside
+        // of the servlet context
+//        block.setLocation("target/classes");
+                
         // create the deployment object
         Deploy deploy = new Deploy();
         deploy.setCocoon(cocoon);
