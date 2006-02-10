@@ -198,48 +198,6 @@
       <version>2.0.2</version>
     </dependency>
 
-    <!-- osgi -->
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-console_all</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-cm_api</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-consoletty</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-logcommands</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-log_all</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-frameworkcommands</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-http_all</artifactId>
-      <version>1.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>knopflerfish</groupId>
-      <artifactId>knopflerfish-framework</artifactId>
-      <version>1.3.3</version>
-    </dependency>
-
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>
