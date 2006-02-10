@@ -15,28 +15,15 @@
  */
 package org.apache.cocoon.deployer.block;
 
-import java.io.File;
-
-
 /**
  * A block that is under development and available from within the filesystem
  * of the server it is deployed to.
  */
-public interface DevelopmentBlock extends Block {
+public interface LocalBlock extends Block {
 
 	/**
 	 * @return the root directory of the block
 	 */
-	public File getRootDirectory();
-	
-	/**
-	 * @return the root sitemap of the block
-	 */
-	public File getSitemap();
-	
-	/**
-	 * @return the directory where all Java classes are compiled to
-	 */
-	public File getClassesDirectory();
+	public String getBaseDirectory();
 	
 }

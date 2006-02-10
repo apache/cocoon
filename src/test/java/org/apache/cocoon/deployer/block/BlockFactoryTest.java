@@ -23,6 +23,7 @@ public class BlockFactoryTest extends AbstractDeployerTestCase {
 	
 	private static final String VALID_BLOCK_01_JAR = "validBlock-01/valid-block-1.0.jar";
 	private static final String VALID_DEPLOY_01 = "validDeploy-01/deploy.xml";
+	private static final String VALID_DEPLOY_06 = "validDeploy-06/deploy.xml";;
 
 	/**
 	 * Test if the passed block is a file and not a directory
@@ -67,7 +68,7 @@ public class BlockFactoryTest extends AbstractDeployerTestCase {
 		
 	}
 	
-	public void testBlockCreation() throws Exception {
+	public void testBinaryBlockCreation() throws Exception {
 		File blockAsFile = this.getMockArtefact(VALID_BLOCK_01_JAR);
 		BinaryBlock block = BlockFactory.createBinaryBlock(blockAsFile, this.getDeploy(VALID_DEPLOY_01).getBlock(0));
 		assertNotNull(block);
@@ -81,4 +82,49 @@ public class BlockFactoryTest extends AbstractDeployerTestCase {
 		assertEquals("http://cocoon.apache.org/blocks/anyblock/1.0", block.getId());
 	}
 
+	public void testLocalBlockCreation() throws Exception {
+		LocalBlock block = BlockFactory.createLocalBlock(this.getDeploy(VALID_DEPLOY_06).getBlock(0), ".");
+		assertNotNull(block);
+		assertNotNull(block.getBlockDescriptor());
+		assertEquals( Block.BLOCK_NS_10, block.getNamespace());
+		assertEquals("anyblock:anyblock-06:1.0", block.getId());	
+		assertTrue(new File(block.getBaseDirectory()).exists());
+	}
+	
+	
+	// -------------- test the algorithm that gets calculates the local path
+	
+	public void testRelativeDirectoryCreationAlgForSameDriverWin() {
+		String relDir = BlockFactory.createRelativeLocation("C:\\test\\ax\\server", "C:\\test\\ay\\blockRoot");
+		assertEquals("../../ay/blockRoot/", relDir);
+	}	
+	
+	public void testRelativeDirectoryCreationAlgForSameDriverWin1() {
+		String relDir = BlockFactory.createRelativeLocation("C:\\test\\ax\\server\\", "C:\\test\\ay\\blockRoot\\");
+		assertEquals("../../ay/blockRoot/", relDir);
+	}
+	
+	public void testRelativeDirectoryCreationAlgForSameDriveNix() {
+		String relDir = BlockFactory.createRelativeLocation("/home/test/ax/server", "/home/test/ay/blockRoot");
+		assertEquals("../../ay/blockRoot/", relDir);
+	}	
+	
+	public void testRelativeDirectoryCreationAlgForSameDriveNix1() {
+		String relDir = BlockFactory.createRelativeLocation("/home/test/ax/server/", "/home/test/ay/blockRoot/");
+		assertEquals("../../ay/blockRoot/", relDir);
+	}		
+	
+	public void testRelativeDirectoryCreationAlgForDifferent() {
+		String relDir = BlockFactory.createRelativeLocation("D:\\server\\", "C:\\test\\ay\\blockRoot\\");
+		assertEquals("C:/test/ay/blockRoot/", relDir);
+	}	
+	
+	// ---------------- test relatizing of a path
+	 
+	public void testPathRelativizing() {
+		String relPath = BlockFactory.relativizePath("blah/foo/bar/");
+		assertEquals("../../../", relPath);
+	}
+	
+	
 }

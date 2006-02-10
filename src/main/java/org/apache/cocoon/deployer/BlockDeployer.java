@@ -82,9 +82,12 @@ public class BlockDeployer {
 			String blockUrn = installBlock.getUrn();
 			File blockArchive = null;
 			if(installBlock.getLocation() == null) {
-				blockArchive = this.artifactProvider.getArtifact(blockUrn);				
+				blockArchive = this.artifactProvider.getArtifact(blockUrn);			
+				blockList.add(BlockFactory.createBinaryBlock(blockArchive, installBlock));				
+			} else {
+				blockList.add(BlockFactory.createLocalBlock(installBlock, 
+				    deploymentDescriptor.getCocoon().getTargetUrl()));
 			}
-			blockList.add(BlockFactory.createBinaryBlock(blockArchive, installBlock));
 		}
 		
 		// auto-wiring: if a connection is not specified, use the default implementation and

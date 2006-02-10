@@ -16,21 +16,9 @@
 -->
 <deploy xmlns="http://apache.org/cocoon/blocks/deploy/1.0">
   
-  <cocoon target-url="target/test/validDeploy-02/myServer" 
-    webapp-urn="org.apache.cocoon:cocoon-minimal-webapp:2.0-SNAPSHOT:war" exclusive="true"/>  
+  <cocoon target-url=".target/test/validDeploy-02/myServer" 
+    urn="org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war" exclusive="true"/>    
   
-  <block id="b03" urn="validBlock-03:validBlock-03:1.0">
-    <connections>
-      <connection name="db" block="db"/>
-    </connections>
-    <properties>
-      <property name="prop1" value="new-value"/>
-    </properties>
-  </block>
-  
-  <block id="db" urn="validBlock-04:validBlock-04:1.0"/>  
-  
-  <block id="db1" urn="validBlock-04:validBlock-04:1.0" 
-    location="src/test/mocks/validBlock-04/blockRoot"/>    
+  <block id="db" urn="validBlock-04:validBlock-04:1.0" location="src/test/mocks/validBlock-06/blockRoot"/>  
   
 </deploy>
