@@ -24,8 +24,6 @@ import java.io.InputStream;
  */
 public interface BinaryBlock extends Block {
 	
-	String BLOCK_DESCRIPTOR_LOCATION = "META-INF/block.xml";
-
 	/**
 	 * @return the InputStream to get access to the blocks binaries
 	 */

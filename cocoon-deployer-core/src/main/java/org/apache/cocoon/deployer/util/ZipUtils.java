@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.cocoon.deployer.block.BinaryBlock;
+import org.apache.cocoon.deployer.block.Block;
 import org.apache.commons.transaction.file.FileResourceManager;
 import org.apache.commons.transaction.file.ResourceManagerException;
 
@@ -51,7 +51,7 @@ public class ZipUtils {
 	    do {
 	        document = blockStream.getNextEntry();
 	        if (document != null) {
-	            if (document.getName().equals(BinaryBlock.BLOCK_DESCRIPTOR_LOCATION)) {
+	            if (document.getName().equals(Block.BLOCK_DESCRIPTOR_LOCATION)) {
 	                found = true;
 	            } else {
 	                // go to next entry
@@ -61,7 +61,7 @@ public class ZipUtils {
 	    } while (document != null && found == false);        
 	    
 	    if(found == false) {
-	        String debugMsg = "The ZIP file doesn't contain " + BinaryBlock.BLOCK_DESCRIPTOR_LOCATION;
+	        String debugMsg = "The ZIP file doesn't contain " + Block.BLOCK_DESCRIPTOR_LOCATION;
 	        throw new FileNotFoundException(debugMsg);
 	    }
 	    

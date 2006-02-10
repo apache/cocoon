@@ -22,6 +22,7 @@ package org.apache.cocoon.deployer.block;
 public interface Block {
 
 	public static final String BLOCK_NS_10 = "http://apache.org/cocoon/blocks/cob/1.0";
+	String BLOCK_DESCRIPTOR_LOCATION = "META-INF/block.xml";
 	
 	/**
 	 * @return the block namespace

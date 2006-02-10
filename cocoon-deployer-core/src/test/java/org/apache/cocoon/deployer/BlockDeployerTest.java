@@ -60,6 +60,15 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-06/valid-block-1.0.jar"));		
 		
 		aProvider.getArtifact("anyblock:anyblock-07:1.0");
+		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-07/valid-block-1.0.jar"));		
+		
+		aProvider.getArtifact("anyblock:anyblock-05:1.0");
+		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-05/valid-block-1.0.jar"));
+		
+		aProvider.getArtifact("anyblock:anyblock-06:1.0");
+		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-06/valid-block-1.0.jar"));		
+		
+		aProvider.getArtifact("anyblock:anyblock-07:1.0");
 		aProviderCtrl.setReturnValue(this.getMockArtefact("validBlock-07/valid-block-1.0.jar"));			
 		
 		aProvider.getArtifact((String[]) null);
