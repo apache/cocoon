@@ -31,6 +31,8 @@
     <sitemap file="COB-INF/sitemap.xmap"/>
   </servlet>  
   <requirements>
+    <requires interface="http://cocoon.apache.org/blocks/tutorial-1/1.0" name="otherBlock"
+      default="org.apache.cocoon:cocoon-tutorial-simple-block:1.0-SNAPSHOT"/>    
     <requires interface="http://cocoon.apache.org/blocks/core-components/1.0" 
       name="core" default="org.apache.cocoon:cocoon-core-components:1.0-SNAPSHOT"/>
   </requirements>
