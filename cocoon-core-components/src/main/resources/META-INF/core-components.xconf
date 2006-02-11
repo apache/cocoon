@@ -37,6 +37,7 @@
     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
     <component-instance class="org.apache.cocoon.components.source.impl.ContextSourceFactory" name="context"/>
     <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file"/>
+    <component-instance class="org.apache.cocoon.components.source.impl.BlockSourceFactory" name="block" />    
     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
   </source-factories>
   
@@ -59,5 +60,9 @@
   <pipes default="noncaching">
     <pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
   </pipes>
+  
+  <input-modules>
+    <component-instance name="block-path" class="org.apache.cocoon.components.modules.input.BlockPathModule" />
+  </input-modules>  
   
 </components>
