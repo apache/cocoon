@@ -25,9 +25,9 @@ import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
- * The profile manager.
- * Via this component you can get the profile (or parts of it) of the
- * current 'user'.
+ * The profile manager provides access to the portal profile (or parts
+ * of it). The portal profile stores all information about the portal
+ * view of the current user, like the layout and the contained coplets.
  *
  * @version $Id$
  */
@@ -81,18 +81,6 @@ public interface ProfileManager {
      * @param layoutKey
      */
     void saveUserProfiles(String layoutKey);
-
-    /**
-     * Save the layout
-     * @param layoutKey
-     */
-    void saveUserLayout(String layoutKey);
-
-    /**
-     * Save the coplet instance data
-     * @param layoutKey
-     */
-    void saveUserCopletInstanceDatas(String layoutKey);
 
     /**
      * Get all instances

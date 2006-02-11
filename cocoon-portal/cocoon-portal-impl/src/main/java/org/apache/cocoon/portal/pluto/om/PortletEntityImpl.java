@@ -20,7 +20,8 @@ import java.util.Locale;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.pluto.PortletPreferencesProvider;
+import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.Description;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.common.PreferenceSet;
@@ -42,6 +43,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
     protected final CopletInstanceData coplet;
     protected final PortletApplicationEntity applicationEntity;
     protected final PortalService service;
+    protected final PortletPreferencesProvider prefProvider;
 
     /**
      * Constructor.
@@ -56,6 +58,8 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
         this.definition = pd;
         this.applicationEntity = pae;
         this.service = service;
+        this.prefProvider = (PortletPreferencesProvider)PortletContainerServices.get(PortletPreferencesProvider.class);
+;
     }
     
     /**
@@ -97,7 +101,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntity#getPreferenceSet()
      */
     public PreferenceSet getPreferenceSet() {
-        return this.coplet.getPreferences();
+        return this.prefProvider.getPreferenceSet(this.coplet);
     }
 
     /**
@@ -133,8 +137,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#store()
      */
     public void store() throws IOException {
-        final ProfileManager manager = this.service.getProfileManager();
-        manager.saveUserCopletInstanceDatas(null);
+        this.prefProvider.storePreferenceSet(this.coplet);
     }
 
 }

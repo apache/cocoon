@@ -141,6 +141,7 @@ public class CastorSourceConverter
         this.mappingSources.put("copletbasedata", prefix + "copletbasedata.xml");
         this.mappingSources.put("copletdata", prefix + "copletdata.xml");
         this.mappingSources.put("copletinstancedata", prefix + "copletinstancedata.xml");
+        this.mappingSources.put("portletpreferences", prefix + "pluto.xml");
 
         // the custom configuration might overwrite the default config
         Configuration[] children = config.getChildren("mapping-source");
