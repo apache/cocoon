@@ -36,6 +36,7 @@
   <name>Cocoon Deployer - Projects</name>
 
   <modules>
+    <module>cocoon-archetype-block</module>
     <module>cocoon-deployer-core</module>  
     <module>cocoon-deployer-plugin</module>
     <module>cocoon-deployer-plugin-demo</module>
