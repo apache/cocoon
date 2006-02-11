@@ -18,10 +18,6 @@ package org.apache.cocoon.portal.coplet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
-import org.apache.pluto.om.common.PreferenceSet;
-
-
 /**
  * A coplet instance data describes an instance of a coplet.
  *
@@ -34,8 +30,6 @@ import org.apache.pluto.om.common.PreferenceSet;
  *   SIZE_FULLSCREEN - the coplet is the only coplet on the screen.
  *   SIZE_MAXIMIZED - the coplet gets the most available space, but still shares
  *                  its space with other coplets, e.g. a navigation etc.
- *
- * TODO - Remove dependency to pluto
  *
  * @version $Id$
  */
@@ -55,9 +49,6 @@ public final class CopletInstanceData {
 
     /** Temporary attributes are not persisted. */
     transient protected Map temporaryAttributes = new HashMap();
-
-    /** Portlet preferences. */
-    protected PreferenceSetImpl preferences = new PreferenceSetImpl();
 
     /** The title of the coplet. */
     protected String title;
@@ -146,22 +137,6 @@ public final class CopletInstanceData {
         this.title = title;
     }
 
-    public void setPreferences(PreferenceSetImpl preferences) {
-        this.preferences = preferences;
-    }
-
-    public PreferenceSet getPreferences() {
-        return this.preferences;
-    }
-
-    public PreferenceSet getCastorPreferences() {
-        return getPreferences();
-    }
-
-    public void setCastorPreferences(PreferenceSet castorPreferences) {
-        setPreferences((PreferenceSetImpl)castorPreferences);
-    }
-
     /**
      * @see java.lang.Object#clone()
      */
@@ -171,8 +146,6 @@ public final class CopletInstanceData {
         clone.copletData = this.copletData;
         clone.attributes = new HashMap(this.attributes);
         clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-        clone.preferences = new PreferenceSetImpl();
-        clone.preferences.addAll(this.preferences.getPreferences());
 
         return clone;
     }

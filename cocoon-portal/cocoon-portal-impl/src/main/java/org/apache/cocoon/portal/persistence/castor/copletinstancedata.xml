@@ -24,24 +24,6 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.pluto.om.common.PreferenceImpl">
-    <field name="name" type="java.lang.String" required="true">
-      <bind-xml name="name" node="element"/>
-    </field>
-    <field name="castorValues" type="java.lang.String"
-           collection="collection" required="true">
-      <bind-xml name="value" node="element"/>
-    </field>
-  </class>
-
-  <class name="org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl">
-    <field name="preferences"
-           type="org.apache.cocoon.portal.pluto.om.common.PreferenceImpl"
-           collection="set">
-      <bind-xml name="preference" node="element"/>
-    </field>
-  </class>
-
   <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
     <map-to xml="coplets" />
 
@@ -70,10 +52,6 @@
       <bind-xml name="attribute"/>
     </field>
 
-    <field name="castorPreferences" type="org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl">
-      <bind-xml name="preferences" node="element"/>
-    </field>
-
     <field name="title" type="java.lang.String" get-method="getInstanceTitle" set-method="setTitle">
       <bind-xml name="title"/>
     </field>
@@ -93,4 +71,3 @@
   </class>
 
 </mapping>
-

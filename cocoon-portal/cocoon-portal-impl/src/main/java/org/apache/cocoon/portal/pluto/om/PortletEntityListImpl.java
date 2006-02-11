@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
+import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.entity.PortletApplicationEntity;
 import org.apache.pluto.om.entity.PortletEntity;
@@ -59,10 +60,10 @@ public class PortletEntityListImpl
      * @see org.apache.pluto.om.entity.PortletEntityListCtrl#add(org.apache.pluto.om.entity.PortletApplicationEntity, java.lang.String)
      */
     public PortletEntity add(PortletApplicationEntity appEntity, String definitionId) {
-        // FIXME
-        PortletDefinitionRegistry registry = null;
+        PortletDefinitionRegistry registry = (PortletDefinitionRegistry)PortletContainerServices.get(PortletDefinitionRegistry.class);
         PortletDefinition pd = registry.getPortletDefinition(ObjectIDImpl.createFromString(definitionId));
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
+        // FIXME
         CopletInstanceData coplet = null;
         PortletEntity portletEntity = new PortletEntityImpl(pae, coplet, pd, registry.getPortalService());
         this.portlets.put(portletEntity.getId(), portletEntity);

@@ -112,6 +112,8 @@ extends AbstractLogEnabled
                 this.init(new DynamicTitleServiceImpl()));
         this.staticServices.put(PropertyManagerService.class.getName(),
         		this.init(new PropertyManagerServiceImpl()));
+        this.staticServices.put(PortletPreferencesProvider.class.getName(),
+                this.init(new PortletPreferencesProviderImpl()));
     }
 
     /**
