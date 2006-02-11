@@ -40,7 +40,8 @@
     <module>cocoon-deployer-core</module>  
     <module>cocoon-deployer-plugin</module>
     <module>cocoon-deployer-plugin-demo</module>
-    <module>cocoon-deployer-minimal-webapp</module>        
+    <module>cocoon-deployer-minimal-webapp</module> 
+    <module>cocoon-tutorial-simple-block</module>             
   </modules>
   
 </project>
