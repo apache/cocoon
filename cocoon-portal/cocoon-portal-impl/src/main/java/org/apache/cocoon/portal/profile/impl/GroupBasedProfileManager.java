@@ -23,12 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -74,8 +70,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @version $Id: AbstractUserProfileManager.java 37123 2004-08-27 12:11:53Z cziegeler $
  */
 public class GroupBasedProfileManager 
-    extends AbstractProfileManager
-    implements Contextualizable, Disposable { 
+    extends AbstractProfileManager { 
 
     public static final String CATEGORY_GLOBAL = "global";
     public static final String CATEGORY_GROUP  = "group";
@@ -97,9 +92,6 @@ public class GroupBasedProfileManager
     /** All deployed coplet datas. */
     final protected Map deployedCopletDatas = new HashMap();
 
-    /** The component context. */
-    protected Context context;
-
     /** Check for changes? */
     protected boolean checkForChanges = true;
 
@@ -108,13 +100,6 @@ public class GroupBasedProfileManager
 
     /** The profiler loader/saver. */
     protected ProfileLS loader;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
 
     /**
      * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#configure(org.apache.avalon.framework.configuration.Configuration)
@@ -334,7 +319,7 @@ public class GroupBasedProfileManager
     protected Profile loadProfile(final String layoutKey) 
     throws Exception {
         final PortalUser info = (PortalUser)this.portalService.getTemporaryAttribute(USER_ATTRIBUTE);
-        final ProfileImpl profile = new ProfileImpl(layoutKey);
+        ProfileImpl profile = new ProfileImpl(layoutKey);
 
         // first "load" the global data
         profile.setCopletBaseDatas( this.getGlobalBaseDatas(layoutKey) );
@@ -357,9 +342,9 @@ public class GroupBasedProfileManager
             }
         }
 
-        this.storeUserProfile(layoutKey, profile);
-        this.processProfile(profile);
-        return profile;
+        final Profile processedProfile = this.processProfile(profile);
+        this.storeUserProfile(layoutKey, processedProfile);
+        return processedProfile;
     }
 
     protected Map getGlobalBaseDatas(final String     layoutKey)

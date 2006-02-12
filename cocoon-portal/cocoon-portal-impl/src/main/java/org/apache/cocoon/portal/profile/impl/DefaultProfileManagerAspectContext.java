@@ -16,7 +16,6 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
@@ -33,27 +32,23 @@ public final class DefaultProfileManagerAspectContext
     implements ProfileManagerAspectContext {
 
     private final PortalService service;
-    private final Map objectModel;
     private final Iterator iterator;
     private final Iterator configIterator;
     private Parameters config;
-    private final Profile profile;
+    private Profile profile;
  
     public DefaultProfileManagerAspectContext(ProfileManagerAspectChain chain,
-                                              PortalService             service,
-                                              Map                       objectModel,
-                                              Profile                   profile) {
+                                              PortalService             service) {
         this.service = service;
-        this.objectModel = objectModel;
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
-        this.profile = profile;
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#invokeNext()
+	 * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#invokeNext(org.apache.cocoon.portal.scratchpad.Profile)
 	 */
-	public void invokeNext() {
+	public void invokeNext(Profile profile) {
+        this.profile = profile;
         if (this.iterator.hasNext()) {
             this.config = (Parameters)this.configIterator.next();
             final ProfileManagerAspect aspect = (ProfileManagerAspect) iterator.next();
@@ -69,16 +64,13 @@ public final class DefaultProfileManagerAspectContext
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#getObjectModel()
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
-    }
-
-    /**
      * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#getPortalService()
      */
     public PortalService getPortalService() {
         return this.service;
+    }
+
+    public Profile getProfile() {
+        return this.profile;
     }
 }

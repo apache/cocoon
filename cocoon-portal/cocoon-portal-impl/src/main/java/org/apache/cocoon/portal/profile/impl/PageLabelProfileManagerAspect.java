@@ -38,7 +38,7 @@ public class PageLabelProfileManagerAspect
         if ( rootLayout instanceof CompositeLayout ) {
             this.populate((CompositeLayout)rootLayout, "");
         }
-        context.invokeNext();
+        context.invokeNext(profile);
     }
 
     private void populate(CompositeLayout layout, String name) {
