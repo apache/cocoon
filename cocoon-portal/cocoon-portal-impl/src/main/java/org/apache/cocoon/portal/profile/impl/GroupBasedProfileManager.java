@@ -24,11 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -74,7 +75,7 @@ import org.apache.excalibur.source.SourceValidity;
  */
 public class GroupBasedProfileManager 
     extends AbstractProfileManager
-    implements Parameterizable, Contextualizable, Disposable { 
+    implements Contextualizable, Disposable { 
 
     public static final String CATEGORY_GLOBAL = "global";
     public static final String CATEGORY_GROUP  = "group";
@@ -116,11 +117,12 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void parameterize(Parameters params) throws ParameterException {
-        this.checkForChanges = params.getParameterAsBoolean("check-for-changes", this.checkForChanges);
-        this.parameters = params;
+    public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+        this.parameters = Parameters.fromConfiguration(config);
+        this.checkForChanges = this.parameters.getParameterAsBoolean("check-for-changes", this.checkForChanges);
     }
 
     /**
