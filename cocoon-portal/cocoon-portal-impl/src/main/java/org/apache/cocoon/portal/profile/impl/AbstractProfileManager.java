@@ -19,6 +19,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -34,6 +40,7 @@ import org.apache.cocoon.portal.layout.LayoutException;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.profile.ProfileManagerAspect;
 import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
@@ -43,10 +50,50 @@ import org.apache.cocoon.portal.scratchpad.Profile;
  */
 public abstract class AbstractProfileManager 
     extends AbstractComponent 
-    implements ProfileManager, Receiver {
+    implements ProfileManager, Receiver, Configurable {
 
     /** Attribute to store the current user. */
     public static final String USER_ATTRIBUTE = AbstractProfileManager.class.getName() + "/User";
+
+    /** The configuration. */
+    protected Configuration configuration;
+
+    /** The chain for the configured profile manager aspects. */
+    protected ProfileManagerAspectChain chain;
+
+    /** The service selector for the profile manager aspects. */
+    protected ServiceSelector aspectSelector;
+
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.aspectSelector = (ServiceSelector) this.manager.lookup( ProfileManagerAspect.ROLE+"Selector");
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if (this.manager != null) {
+            if ( this.chain != null) {
+                this.chain.dispose( this.aspectSelector );
+            }
+            this.manager.release( this.aspectSelector );
+            this.aspectSelector = null;
+        }
+        super.dispose();
+    }
+
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration config) throws ConfigurationException {
+        this.configuration = config;
+        this.chain = new ProfileManagerAspectChain();
+        this.chain.configure(this.aspectSelector, config.getChild("aspects"));
+    }
 
     /**
      * Receives any user related event and invokes login, logout etc.

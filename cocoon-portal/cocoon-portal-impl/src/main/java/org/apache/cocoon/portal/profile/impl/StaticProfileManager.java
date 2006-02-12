@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.coplet.CopletBaseData;
@@ -42,8 +41,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @version $Id$
  */
 public class StaticProfileManager 
-extends AbstractProfileManager 
-implements Configurable {
+    extends AbstractProfileManager { 
 
     protected String profilesPath;
 
@@ -296,6 +294,7 @@ implements Configurable {
      */
     public void configure(Configuration configuration) 
     throws ConfigurationException {
+        super.configure(configuration);
         Configuration child = configuration.getChild("profiles-path");
         this.profilesPath = child.getValue("cocoon:/profiles");
     }
