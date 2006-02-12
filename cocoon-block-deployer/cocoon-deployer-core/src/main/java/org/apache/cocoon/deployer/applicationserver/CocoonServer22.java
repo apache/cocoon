@@ -134,7 +134,7 @@ public class CocoonServer22 implements CocoonServer {
 						String nextDirectory = intDirToStringDirConvert(
 								getNextDirectory(new File(baseDirectoryFile, BLOCKS_DIR), this.lastDir));
 						this.lastDir = Integer.parseInt(nextDirectory);
-						String installDirectory = BLOCKS_DIR + nextDirectory;
+						String installDirectory = BLOCKS_DIR + nextDirectory + "/";
 						wiringBlock.setLocation(installDirectory);					
 						deployBlock(binaryBlock, frm, txId, BLOCKS_DIR + nextDirectory);
 						installedBlocks.put(block.getId(), installDirectory);

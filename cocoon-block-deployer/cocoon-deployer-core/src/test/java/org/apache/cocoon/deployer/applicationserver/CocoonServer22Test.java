@@ -82,9 +82,9 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		assertEquals("db", wiring.getBlock(1).getId());
 		
 		// check locations
-		assertEquals("/blocks/00000001", wiring.getBlock(0).getLocation());
-		assertEquals("/blocks/00000002", wiring.getBlock(1).getLocation());
-		assertEquals("/blocks/00000002", wiring.getBlock(2).getLocation()); // ensure that a block is unpacked only once
+		assertEquals("/blocks/00000001/", wiring.getBlock(0).getLocation());
+		assertEquals("/blocks/00000002/", wiring.getBlock(1).getLocation());
+		assertEquals("/blocks/00000002/", wiring.getBlock(2).getLocation()); // ensure that a block is unpacked only once
 		
 		// check connections
 		assertEquals("db", wiring.getBlock(0).getConnections().getConnection(0).getName());
