@@ -18,7 +18,6 @@ package org.apache.cocoon.forms.samples.bindings;
 import org.apache.cocoon.forms.binding.AbstractCustomBinding;
 import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingException;
-import org.apache.cocoon.forms.binding.library.Library;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.commons.jxpath.JXPathContext;
