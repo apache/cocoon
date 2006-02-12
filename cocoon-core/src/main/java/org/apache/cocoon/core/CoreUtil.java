@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -257,7 +256,7 @@ public class CoreUtil {
         final Core core = this.createCore();
 
         // create parent service manager
-        this.parentManager = this.getParentServiceManager(core);
+        this.parentManager = new SingleComponentServiceManager(null, core, Core.ROLE);
 
         // settings can't be changed anymore
         settings.makeReadOnly();
@@ -291,44 +290,6 @@ public class CoreUtil {
      */
     public Settings getSettings() {
         return this.settings;
-    }
-
-    /**
-     * Instatiates the parent service manager, as specified in the
-     * parent-service-manager init parameter.
-     *
-     * If none is specified, the method returns <code>null</code>.
-     *
-     * @return the parent service manager, or <code>null</code>.
-     */
-    protected ServiceManager getParentServiceManager(Core core) {
-        String parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
-        String parentServiceManagerInitParam = null;
-        if (parentServiceManagerClass != null) {
-            int dividerPos = parentServiceManagerClass.indexOf('/');
-            if (dividerPos != -1) {
-                parentServiceManagerInitParam = parentServiceManagerInitParam.substring(dividerPos + 1);
-                parentServiceManagerClass = parentServiceManagerClass.substring(0, dividerPos);
-            }
-        }
-
-        ServiceManager parentServiceManager = null;
-        if (parentServiceManagerClass != null) {
-            try {
-                Class pcm = ClassUtils.loadClass(parentServiceManagerClass);
-                Constructor pcmc = pcm.getConstructor(new Class[]{String.class});
-                parentServiceManager = (ServiceManager) pcmc.newInstance(new Object[]{parentServiceManagerInitParam});
-
-                ContainerUtil.enableLogging(parentServiceManager, this.log);
-                ContainerUtil.contextualize(parentServiceManager, this.appContext);
-                ContainerUtil.initialize(parentServiceManager);
-            } catch (Exception e) {
-                if (this.log.isErrorEnabled()) {
-                    this.log.error("Could not initialize parent component manager.", e);
-                }
-            }
-        }
-        return new SingleComponentServiceManager(parentServiceManager, core, Core.ROLE);
     }
 
     /**
@@ -752,7 +713,7 @@ public class CoreUtil {
 
             // create the Core object
             final Core core = this.createCore();
-            this.parentManager = this.getParentServiceManager(core);
+            this.parentManager = new SingleComponentServiceManager(null, core, Core.ROLE);
             ContainerUtil.service(p, this.parentManager);
 
             ContainerUtil.initialize(p);

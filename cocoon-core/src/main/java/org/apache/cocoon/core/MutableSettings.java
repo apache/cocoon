@@ -168,16 +168,6 @@ public class MutableSettings implements Settings {
     protected List extraClasspaths = new ArrayList();
 
     /**
-     * This parameter allows you to select the parent service manager.
-     * The class will be instantiated via the constructor that takes a single
-     * String as a parameter. That String will be equal to the text after the '/'.
-     *
-     * Cocoon honors the LogEnabled, Initializable and Disposable interfaces for
-     * this class, if it implements them.
-     */
-    protected String parentServiceManagerClassName;
-
-    /**
      * Allow adding processing time to the response
      */
     protected boolean showTime = SHOW_TIME;
@@ -280,8 +270,6 @@ public class MutableSettings implements Settings {
                         this.cacheDirectory = value;
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                         this.workDirectory = value;
-                    } else if ( key.equals(KEY_PARENT_SERVICE_MANAGER) ) {
-                        this.parentServiceManagerClassName = value;
                     } else if ( key.equals(KEY_SHOWTIME) ) {
                         this.showTime = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
@@ -446,13 +434,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @return Returns the parentServiceManagerClassName.
-     */
-    public String getParentServiceManagerClassName() {
-        return this.parentServiceManagerClassName;
-    }
-
-    /**
      * @return Returns the showTime.
      */
     public boolean isShowTime() {
@@ -580,8 +561,6 @@ public class MutableSettings implements Settings {
                 value = this.cacheDirectory;
             } else if ( sKey.equals(KEY_WORK_DIRECTORY) ) {
                 value = this.workDirectory;
-            } else if ( sKey.equals(KEY_PARENT_SERVICE_MANAGER) ) {
-                value = this.parentServiceManagerClassName;
             } else if ( sKey.equals(KEY_SHOWTIME) ) {
                 value = String.valueOf(this.showTime);
             } else if ( sKey.equals(KEY_HIDE_SHOWTIME) ) {
@@ -637,7 +616,6 @@ public class MutableSettings implements Settings {
           KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerManagerClassName + '\n' +
           KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
-          KEY_PARENT_SERVICE_MANAGER + " : " + this.parentServiceManagerClassName + '\n' +
           KEY_UPLOADS_DIRECTORY + " : " + this.uploadDirectory + '\n' +
           KEY_UPLOADS_AUTOSAVE + " : " + this.autosaveUploads + '\n' +
           KEY_UPLOADS_ENABLE + " : " + this.enableUploads + '\n' +
@@ -837,15 +815,6 @@ public class MutableSettings implements Settings {
         this.overwriteUploads = overwriteUploads;
     }
     
-    /**
-     * @param parentServiceManagerClassName The parentServiceManagerClassName to set.
-     */
-    public void setParentServiceManagerClassName(
-            String parentServiceManagerClassName) {
-        this.checkWriteable();
-        this.parentServiceManagerClassName = parentServiceManagerClassName;
-    }
-
     /**
      * @param showTime The showTime to set.
      */
