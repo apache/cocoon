@@ -17,6 +17,7 @@ package org.apache.cocoon.blocks.servlet;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -59,6 +60,8 @@ public class BlockManager
     private BlockContext blockContext;
     private ServiceManagerRegistry serviceManagerRegistry;
 
+    private URL contextURL;
+
     public void enableLogging(Logger logger) {
         this.logger = logger;
     }
@@ -75,11 +78,15 @@ public class BlockManager
     public void setServiceManagerRegistry(ServiceManagerRegistry serviceManagerRegistry) {
         this.serviceManagerRegistry = serviceManagerRegistry;
     }
+    
+    public void setContextURL(URL contextURL) {
+        this.contextURL = contextURL;
+    }
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         this.blockWiring = new BlockWiring();
-        this.blockWiring.setServletContext(this.getServletContext());
+        this.blockWiring.setContextURL(this.contextURL);
         try {
             LifecycleHelper.setupComponent(this.blockWiring,
                                            this.getLogger(),
@@ -93,7 +100,7 @@ public class BlockManager
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
         this.blockContext =
-            new BlockContext(this.getServletContext(), this.blockWiring);
+            new BlockContext(this.getServletContext(), this.contextURL, this.blockWiring);
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
 

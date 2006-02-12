@@ -42,9 +42,11 @@ public class BlockContext extends ServletContextWrapper {
     private Hashtable attributes;
     private BlockWiring wiring;
     private Servlet servlet;
+    private URL contextURL;
     
-    public BlockContext(ServletContext parentContext, BlockWiring wiring) {
+    public BlockContext(ServletContext parentContext, URL contextURL, BlockWiring wiring) {
         super(parentContext);
+        this.contextURL = contextURL;
         this.wiring = wiring;
     }
 
@@ -91,8 +93,10 @@ public class BlockContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
-        String location = this.wiring.getLocation();
-        return super.servletContext.getResource(location + path);
+        if (path.length() == 0 || path.charAt(0) != '/')
+            throw new MalformedURLException("The path must start with '/' " + path);
+        path = path.substring(1);
+        return new URL(this.contextURL, path);
     }
 
     /*

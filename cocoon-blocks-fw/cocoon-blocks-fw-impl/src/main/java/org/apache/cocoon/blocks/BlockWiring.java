@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -38,9 +36,8 @@ public class BlockWiring
     extends AbstractLogEnabled
     implements Configurable{ 
 
-    private ServletContext servletContext;
+    private URL contextURL;
     private String id;
-    private String location;
     private Map connections = new HashMap();
     private Map properties = new HashMap();
     private Vector connectionNames;
@@ -51,12 +48,12 @@ public class BlockWiring
     private boolean hasServlet;
     private String servletClass;
     private Configuration servletConfiguration;
-    
+        
     /**
-      * @param servletContext The servletContext to set.
-      */
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
+     * @param contextURL The contextURL to set.
+     */
+    public void setContextURL(URL contextURL) {
+        this.contextURL = contextURL;
     }
 
     
@@ -67,15 +64,9 @@ public class BlockWiring
         this.id = config.getAttribute("id");
         this.mountPath = config.getChild("mount").getAttribute("path", null);
 
-        this.location = config.getAttribute("location");
-        int length = this.location.length();
-        if (length > 0 && this.location.charAt(length - 1) == '/')
-            this.location = this.location.substring(0, length - 1);
-
-
         getLogger().debug("BlockWiring configure: " +
                           " id=" + this.id +
-                          " location=" + this.location +
+                          " location=" + this.contextURL +
                           " mountPath=" + this.mountPath);
 
         Configuration[] connections =
@@ -101,16 +92,13 @@ public class BlockWiring
         }
 
         // Read the block.xml file
-        String blockPath = this.location + BlockConstants.BLOCK_CONF;
         URL blockURL;
+        String blockPath = this.contextURL + BlockConstants.BLOCK_CONF.substring(1);
         Configuration block = null;
 
         try {
-            blockURL = this.servletContext.getResource(blockPath);
-            if (blockURL == null)
-                throw new ConfigurationException("Couldn't find " + blockPath);
+            blockURL = new URL(this.contextURL, BlockConstants.BLOCK_CONF.substring(1));
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            //block = builder.build(source.getInputStream(), source.getURI());
             block = builder.build(blockURL.openStream(), blockURL.toExternalForm());
         } catch (IOException e) {
             String msg = "Exception while reading " + blockPath + ": " + e.getMessage();
@@ -153,13 +141,6 @@ public class BlockWiring
         return this.id;
     }
     
-    /**
-     * Get the location of the block
-     */
-    public String getLocation() {
-        return this.location;
-    }
-
     /**
      * Get the names for the connections from this block. The name (super) of the super block is not included.
      */
