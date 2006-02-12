@@ -141,7 +141,7 @@ public class SingleBlockDeployMojo
         block.setUrn(urn);
         // needs to be commented out as long as the blocks-fw supports directories outside
         // of the servlet context
-//        block.setLocation("target/classes");
+        block.setLocation("target/classes");
                 
         // create the deployment object
         Deploy deploy = new Deploy();
