@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.profile.ProfileManagerAspect;
 import org.apache.cocoon.portal.profile.ProfileManagerAspectContext;
@@ -54,8 +53,7 @@ public final class DefaultProfileManagerAspectContext
 	/**
 	 * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#invokeNext()
 	 */
-	public void invokeNext() 
-    throws ProcessingException {
+	public void invokeNext() {
         if (this.iterator.hasNext()) {
             this.config = (Parameters)this.configIterator.next();
             final ProfileManagerAspect aspect = (ProfileManagerAspect) iterator.next();

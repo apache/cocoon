@@ -358,6 +358,7 @@ public class GroupBasedProfileManager
         }
 
         this.storeUserProfile(layoutKey, profile);
+        this.processProfile(profile);
         return profile;
     }
 
