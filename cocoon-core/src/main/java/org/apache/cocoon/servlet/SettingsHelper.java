@@ -112,11 +112,6 @@ public class SettingsHelper {
 
         handleExtraClassPath(config.getInitParameter("extra-classpath"), s);
 
-        value = getInitParameter(config, "parent-service-manager");
-        if ( value != null ) {
-            s.setParentServiceManagerClassName(value);
-        }
-
         value = getInitParameter(config, "show-time");
         if ( value != null && value.equalsIgnoreCase("hide") ) {
             s.setShowTime(true);

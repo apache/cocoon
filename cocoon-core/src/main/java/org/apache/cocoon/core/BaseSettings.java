@@ -96,16 +96,6 @@ public interface BaseSettings {
     String KEY_EXTRA_CLASSPATHS = "extra.classpaths";
 
     /**
-     * This parameter allows you to select the parent service manager.
-     * The class will be instantiated via the constructor that takes a single
-     * String as a parameter. That String will be equal to the text after the '/'.
-     *
-     * Cocoon honors the LogEnabled, Initializable and Disposable interfaces for
-     * this class, if it implements them.
-     */
-    String KEY_PARENT_SERVICE_MANAGER = "parentservicemanager";
-
-    /**
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
@@ -215,12 +205,6 @@ public interface BaseSettings {
      * @see #KEY_LOGGING_BOOTSTRAP_LOGLEVEL
      */
     String getBootstrapLogLevel();
-
-    /**
-     * @return Returns the parentServiceManagerClassName.
-     * @see #KEY_PARENT_SERVICE_MANAGER
-     */
-    String getParentServiceManagerClassName();
 
     /**
      * @return Returns the uploadDirectory.
