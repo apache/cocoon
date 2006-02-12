@@ -15,8 +15,6 @@
   limitations under the License. 
 -->
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xsi:schemaLocation="http://apache.org/cocoon/blocks/cob/1.0 cob-schema-1.0.xsd"
        id="http://cocoon.apache.org/blocks/anyblock2/1.0">
   <name>anyblock2</name>
   <description href="http://cocoon.apache.org/blocks/anyblock2/1.0">
