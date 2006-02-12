@@ -48,6 +48,7 @@ import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.core.servlet.CoreUtil;
 import org.apache.cocoon.core.servlet.LoggerUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
@@ -65,6 +66,7 @@ public class BlocksManager
 
     public static String ROLE = BlocksManager.class.getName();
     private BlocksContext blocksContext;
+    private URL contextURL;
 
     private Source wiringFile;
     private HashMap blocks = new HashMap();
@@ -76,6 +78,12 @@ public class BlocksManager
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         this.blocksContext = new BlocksContext(this.getServletContext(), this);
+        String contextURL0 = CoreUtil.getContextURL(this.blocksContext, BlockConstants.WIRING);
+        try {
+            this.contextURL = new URL(contextURL0);
+        } catch (MalformedURLException e) {
+            throw new ServletException("Could not parse " + contextURL0, e);
+        }
         
         LoggerUtil loggerUtil =
             new LoggerUtil(this.getServletConfig(), BlockConstants.WIRING);
@@ -118,16 +126,17 @@ public class BlocksManager
             } catch (ConfigurationException e) {
                 throw new ServletException("Couldn't get location from the wiring file");
             }
-            URL classesDir;
+            URL url;
             try {
-                classesDir = this.getServletContext().getResource(location);
+                url = this.resolve(location);
             } catch (MalformedURLException e) {
+                e.printStackTrace();
                 throw new ServletException("Couldn't get location of the classes of the block", e);
             }
-            if (classesDir != null) {
-                urlList.add(classesDir);
+            if (url != null) {
+                urlList.add(url);
                 if(this.logger.isDebugEnabled()) {
-                    this.logger.debug("added " + classesDir.toString());
+                    this.logger.debug("added " + url.toString());
                 }
             } else {
                 if(this.logger.isDebugEnabled()) {
@@ -158,6 +167,11 @@ public class BlocksManager
                     " id=" + id +
                     " location=" + location);
             BlockManager blockManager = new BlockManager();
+            try {
+                blockManager.setContextURL(this.resolve(location));
+            } catch (MalformedURLException e) {
+                throw new ServletException("Could not resolve " + location, e);
+            }
             blockManager.setServiceManagerRegistry(this.serviceManagerRegistry);
             try {
                 LifecycleHelper.setupComponent(blockManager,
@@ -245,6 +259,27 @@ public class BlocksManager
         return date < this.wiringFile.getLastModified();
     }
         
+    /**
+     * Resolve a path relative to the servlet context. Paths starting with '/' are
+     * supposed to be relative the servlet context to follow the behavior from 
+     * ServletContext.getResource. Use "file:" for file system paths instead.
+     * @param path
+     * @return
+     * @throws MalformedURLException
+     */
+    private URL resolve(String path) throws MalformedURLException {
+        if (path.charAt(0) == '/')
+            path = path.substring(1);
+        System.out.println("BlocksManager.resolve path=" + path +
+                " contextURL=" + this.contextURL);
+
+        URL result = new URL(this.contextURL, path);
+        
+        System.out.println("BlocksManager.resolve to=" + result);
+        
+        return result;
+    }
+
     /**
      * Utility function to ensure that the parts of the request URI not is null
      * and not ends with /
