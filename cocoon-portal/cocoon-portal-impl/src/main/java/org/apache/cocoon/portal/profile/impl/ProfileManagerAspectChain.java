@@ -37,12 +37,15 @@ public final class ProfileManagerAspectChain {
 
     protected List configs = new ArrayList(3);
 
+    protected boolean process = false;
+
     public void configure(ServiceSelector selector,
                           Configuration   conf)
     throws ConfigurationException {
         if ( conf != null ) {
             Configuration[] aspects = conf.getChildren("aspect");
             for(int i=0; i < aspects.length; i++) {
+                this.process = true;
                 final Configuration current = aspects[i];
                 final String role = current.getAttribute("type");
                 try {
@@ -55,9 +58,11 @@ public final class ProfileManagerAspectChain {
                     throw new ConfigurationException("Unable to lookup profile manager aspect: " + role, se);
                 }
             }
-        } else {
-            throw new ConfigurationException("No aspects configured.");
         }
+    }
+
+    public boolean hasAspects() {
+        return this.process;
     }
 
     public Iterator getIterator() {

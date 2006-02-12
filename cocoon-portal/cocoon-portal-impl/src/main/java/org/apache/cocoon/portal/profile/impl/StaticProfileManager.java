@@ -37,7 +37,8 @@ import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
- *
+ * FIXME - This profile manager implementation does not use all of the new features of 2.2 yet,
+ *         like profile manager aspects etc.
  * @version $Id$
  */
 public class StaticProfileManager 

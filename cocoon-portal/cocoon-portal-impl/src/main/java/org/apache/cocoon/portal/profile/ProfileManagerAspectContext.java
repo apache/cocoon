@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.profile;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 
 /**
@@ -32,8 +31,7 @@ public interface ProfileManagerAspectContext {
     /**
      * Invoke next aspect .
      */
-    void invokeNext()
-    throws ProcessingException;
+    void invokeNext();
 
     /** 
      * Get the {@link Parameters} of the aspect.
