@@ -108,10 +108,11 @@ public class TestProfileManager extends GroupBasedProfileManager {
             this.prepareObject(rootLayout);
             profile.setRootLayout(rootLayout);
 
-            this.processProfile(profile);
+            final Profile processedProfile = this.processProfile(profile);
+            this.storeUserProfile(layoutKey, processedProfile);
 
-            this.storeUserProfile(layoutKey, profile);
-            return profile;
+            this.storeUserProfile(layoutKey, processedProfile);
+            return processedProfile;
         }
         return super.loadProfile(layoutKey);
     }

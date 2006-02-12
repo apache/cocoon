@@ -41,7 +41,6 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.profile.ProfileManagerAspect;
-import org.apache.cocoon.portal.profile.ProfileManagerAspectContext;
 import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
@@ -225,11 +224,13 @@ public abstract class AbstractProfileManager
     /**
      * Process a freshly loaded profile.
      */
-    protected void processProfile(Profile profile) {
+    protected Profile processProfile(Profile profile) {
         // FIXME we should add the calls to prepareObject here as well
         if ( this.chain.hasAspects() ) {
-            ProfileManagerAspectContext aspectContext = new DefaultProfileManagerAspectContext(this.chain, this.portalService, this.portalService.getObjectModel(), profile);
-            aspectContext.invokeNext();
+            DefaultProfileManagerAspectContext aspectContext = new DefaultProfileManagerAspectContext(this.chain, this.portalService);
+            aspectContext.invokeNext(profile);
+            profile = aspectContext.getProfile();
         }
+        return profile;
     }
 }

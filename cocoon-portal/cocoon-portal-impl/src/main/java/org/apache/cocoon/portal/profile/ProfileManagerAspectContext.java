@@ -15,10 +15,9 @@
  */
 package org.apache.cocoon.portal.profile;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
  * The context for a {@link  ProfileManagerAspect}
@@ -31,17 +30,12 @@ public interface ProfileManagerAspectContext {
     /**
      * Invoke next aspect .
      */
-    void invokeNext();
+    void invokeNext(Profile profile);
 
     /** 
      * Get the {@link Parameters} of the aspect.
      */
     Parameters getAspectParameters();
-
-    /**
-     * Get the object model.
-     */
-    Map getObjectModel();
 
     /**
      * Get the portal service.
