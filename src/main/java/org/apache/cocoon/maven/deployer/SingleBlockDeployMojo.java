@@ -41,7 +41,7 @@ import org.apache.maven.project.artifact.MavenMetadataSource;
  * @goal simple-deploy
  * @requiresProject true
  * @description
- * @execute phase="install"
+ * @execute phase="compile"
  */
 public class SingleBlockDeployMojo
     extends AbstractMojo {
