@@ -34,6 +34,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -82,7 +83,7 @@ implements SourceFactory,
     throws ContextException {
         this.envContext = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
         try {
-            this.servletContext = ((ServletConfig) context.get("servlet-config")).getServletContext();
+            this.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
         } catch (ContextException ignore) {
             // in other environments (CLI etc.), we don't have a servlet context
         }
