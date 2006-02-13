@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.ServletConfig;
+
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManageable;
 import org.apache.avalon.excalibur.logger.LoggerManager;
@@ -43,7 +45,6 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
@@ -53,12 +54,17 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.container.SingleComponentServiceManager;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.logging.CocoonLogKitLoggerManager;
 import org.apache.cocoon.core.logging.PerRequestLoggerManager;
 import org.apache.cocoon.core.logging.SettingsContext;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
@@ -67,6 +73,7 @@ import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
+import org.springframework.context.ApplicationContext;
 
 /**
  * This is an utility class to create a new Cocoon instance.
@@ -106,6 +113,9 @@ public class CoreUtil {
     protected boolean isPerRequestLoggerManager = false;
     
     protected ClassLoader classloader;
+
+    /** The core object. */
+    protected Core core;
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
@@ -313,26 +323,28 @@ public class CoreUtil {
         this.dumpSystemProperties();
 
         // create the Core object
-        final Core core = this.createCore();
+        this.core = this.createCore();
 
         // create parent service manager
-        this.parentManager = new SingleComponentServiceManager(null, core, Core.ROLE);
+        this.parentManager = new SingleComponentServiceManager(null, this.core, Core.ROLE);
 
         // settings can't be changed anymore
         settings.makeReadOnly();
 
         // put the core into the context - this is for internal use only
         // The Cocoon container fetches the Core object using the context.
+        // FIXME - We shouldn't need this - check where it is used
         this.appContext.put(Core.ROLE, core);
+
+        // test the setup of the spring based container
+        this.testSpringContainer();
     }
 
+    /**
+     * Return the core object.
+     */
     public Core getCore() {
-        try {
-            return (Core)this.parentManager.lookup(Core.ROLE);
-        } catch (ServiceException neverIgnore) {
-            // this should never happen!
-            throw new CoreFatalException("Fatal exception: no Cocoon core available.", neverIgnore);
-        }
+        return this.core;
     }
 
     /**
@@ -832,9 +844,7 @@ public class CoreUtil {
             }
             ContainerUtil.contextualize(p, this.appContext);
 
-            // create the Core object
-            final Core core = this.createCore();
-            this.parentManager = new SingleComponentServiceManager(null, core, Core.ROLE);
+            this.parentManager = new SingleComponentServiceManager(null, this.core, Core.ROLE);
             ContainerUtil.service(p, this.parentManager);
 
             ContainerUtil.initialize(p);
@@ -910,6 +920,20 @@ public class CoreUtil {
             return this.loggerManager.getLoggerForCategory(rootlogger);
         }
         return this.log;
+    }
+
+    protected void testSpringContainer() throws Exception {
+        System.out.println("Setting up test Spring container...");
+        AvalonEnvironment env = new AvalonEnvironment();
+        env.context = this.appContext;
+        env.core = this.core;
+        env.logger = this.log;
+        env.servletContext = ((ServletConfig)this.appContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        env.settings = this.core.getSettings();
+        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
+        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext);
+        System.out.println("Getting core cocoon processor context: " + mainContext.getBean(Core.ROLE));
     }
 
     /**
