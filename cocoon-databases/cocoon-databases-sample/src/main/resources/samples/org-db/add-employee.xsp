@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2">
+  <page>
+    <resources>
+      <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
+      <resource type="file" href="../schema.sql">Schema</resource>
+      <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
+      <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
+    </resources>
+
+    <title>Add an Employee</title>
+
+    <content>
+      <form action="process-employee" method="POST">
+        <input name="process" type="hidden" value="Add"/>
+        <para>Employee Name: <input name="name" type="text"/></para>
+        <para>Department:
+          <select name="department">
+            <esql:connection>
+              <esql:pool>personnel</esql:pool>
+              <esql:execute-query>
+                <esql:query>select id, name from department order by name</esql:query>
+                <esql:results>
+                  <esql:row-results>
+                    <option>
+                      <xsp:attribute name="value"><esql:get-int column="id"/></xsp:attribute>
+                      <esql:get-string column="name"/>
+                    </option>
+                  </esql:row-results>
+                </esql:results>
+              </esql:execute-query>
+            </esql:connection>
+          </select>
+        </para>
+        <input type="submit" value="Add"/>
+      </form>
+    </content>
+  </page>
+</xsp:page>
