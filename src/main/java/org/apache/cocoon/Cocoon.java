@@ -174,6 +174,19 @@ public class Cocoon
         this.loggerManager = loggerManager;
     }
 
+    protected void testSpringContainer() throws Exception {
+        System.out.println("Setting up test Spring container...");
+        AvalonEnvironment env = new AvalonEnvironment();
+        env.context = this.context;
+        env.core = this.core;
+        env.logger = this.getLogger();
+        env.servletContext = ((ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        env.settings = this.core.getSettings();
+        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurationInfo result = ConfigReader.readConfiguration(this.configurationFile.getURI(), env);
+        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext);
+        System.out.println("Getting core cocoon processor context: " + mainContext.getBean(Core.ROLE));
+    }
     /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
@@ -192,18 +205,7 @@ public class Cocoon
         }
 
         // Test setup spring container
-        System.out.println("Setting up test Spring container");
-        AvalonEnvironment env = new AvalonEnvironment();
-        env.context = this.context;
-        env.core = this.core;
-        env.logger = this.getLogger();
-        env.servletContext = ((ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
-        env.settings = this.core.getSettings();
-        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
-        ConfigurationInfo result = ConfigReader.readConfiguration(this.configurationFile.getURI(), env);
-        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext);
-        System.out.println("Getting something from mainContext: " + mainContext.getBean(Core.ROLE));
-        // END Test setup
+        this.testSpringContainer();
 
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
@@ -538,7 +540,7 @@ public class Cocoon
     }
 
     /**
-     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+     * @see org.apache.cocoon.Processor#getSourceResolver()
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return this.environmentHelper;
