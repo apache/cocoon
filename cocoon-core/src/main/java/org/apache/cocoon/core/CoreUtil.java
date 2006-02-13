@@ -25,6 +25,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,9 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
+import org.apache.cocoon.util.location.Location;
+import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -103,6 +107,55 @@ public class CoreUtil {
     
     protected ClassLoader classloader;
 
+    // Register the location finder for Avalon configuration objects and exceptions
+    // and keep a strong reference to it.
+    private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
+        public Location getLocation(Object obj, String description) {
+            if (obj instanceof Configuration) {
+                Configuration config = (Configuration)obj;
+                String locString = config.getLocation();
+                Location result = LocationUtils.parse(locString);
+                if (LocationUtils.isKnown(result)) {
+                    // Add description
+                    StringBuffer desc = new StringBuffer().append('<');
+                    // Unfortunately Configuration.getPrefix() is not public
+                    try {
+                        if (config.getNamespace().startsWith("http://apache.org/cocoon/sitemap/")) {
+                            desc.append("map:");
+                        }
+                    } catch (ConfigurationException e) {
+                        // no namespace: ignore
+                    }
+                    desc.append(config.getName()).append('>');
+                    return new LocationImpl(desc.toString(), result);
+                } else {
+                    return result;
+                }
+            }
+            
+            if (obj instanceof Exception) {
+                // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
+                String msg = ((Exception)obj).getMessage();
+                if (msg == null) return null;
+                
+                int pos = msg.lastIndexOf(" at ");
+                if (pos != -1) {
+                    return LocationUtils.parse(msg.substring(pos + 4));
+                } else {
+                    // Will try other finders
+                    return null;
+                }
+            }
+            
+            // Try next finders.
+            return null;
+        }
+    };
+    
+    static {
+        LocationUtils.addFinder(confLocFinder);
+    }
+    
     /**
      * Setup a new instance.
      * @param environment The hook back to the environment.
@@ -252,6 +305,13 @@ public class CoreUtil {
         // set class loader
         this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
 
+        // Set the system properties needed by Xalan2.
+        // FIXME Do we still need this?
+        this.setSystemProperties();
+
+        // dump system properties
+        this.dumpSystemProperties();
+
         // create the Core object
         final Core core = this.createCore();
 
@@ -368,6 +428,67 @@ public class CoreUtil {
         s.fill(System.getProperties());
 
         return s;
+    }
+
+    /**
+     * Dump System Properties.
+     */
+    protected void dumpSystemProperties() {
+        if (this.log.isDebugEnabled()) {
+            try {
+                Enumeration e = System.getProperties().propertyNames();
+                this.log.debug("===== System Properties Start =====");
+                for (; e.hasMoreElements();) {
+                    String key = (String) e.nextElement();
+                    this.log.debug(key + "=" + System.getProperty(key));
+                }
+                this.log.debug("===== System Properties End =====");
+            } catch (SecurityException se) {
+                // Ignore Exceptions.
+            }
+        }
+    }
+
+    /**
+     * Sets required system properties.
+     */
+    protected void setSystemProperties() {
+        try {
+            // FIXME We shouldn't have to specify the SAXParser...
+            // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
+            // to locate the SAX2 driver.
+            if (getSystemProperty("org.xml.sax.driver", null) == null) {
+                System.setProperty("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
+            }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
+        }
+
+        try {
+            // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
+            if (getSystemProperty("javax.xml.parsers.DocumentBuilderFactory", "").startsWith("weblogic")) {
+                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+                System.setProperty("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
+            }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
+        }
+    }
+
+    /**
+     * Helper method to retrieve system property.
+     * Returns default value if SecurityException is caught.
+     */
+    protected String getSystemProperty(String property, String value) {
+        try {
+            return System.getProperty(property, value);
+        } catch (SecurityException e) {
+            System.err.println("Caught a SecurityException reading the system property '" + property + "';" +
+                               " Cocoon will default to '" + value + "' value.");
+            return value;
+        }
     }
 
     /**
