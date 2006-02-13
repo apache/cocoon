@@ -141,7 +141,7 @@ LOADER_LIB="${COCOON_HOME}/tools/loader"
 
 CLI="-Dloader.main.class=org.apache.cocoon.Main"
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
-CLI_CLASSPATH="-Dloader.class.path=lib/core/servlet_2_2.jar"
+CLI_CLASSPATH="-Dloader.class.path=lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes"
 CLI_VERBOSE="-Dloader.verbose=false"
 CLI_PROPERTIES="$CLI_LIBRARIES $CLI_CLASSPATH $CLI_VERBOSE"
 
