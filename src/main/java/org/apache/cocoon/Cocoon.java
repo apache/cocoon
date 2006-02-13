@@ -15,6 +15,15 @@
  */
 package org.apache.cocoon;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletConfig;
+
 import org.apache.avalon.excalibur.logger.LoggerManageable;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
@@ -32,7 +41,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
@@ -52,25 +60,12 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.servlet.CocoonServlet;
-import org.apache.cocoon.util.location.Location;
-import org.apache.cocoon.util.location.LocationImpl;
-import org.apache.cocoon.util.location.LocationUtils;
-
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 import org.springframework.context.ApplicationContext;
 import org.xml.sax.InputSource;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletConfig;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -88,55 +83,6 @@ public class Cocoon
                    Serviceable,
                    LoggerManageable {
 
-    // Register the location finder for Avalon configuration objects and exceptions
-    // and keep a strong reference to it.
-    private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
-        public Location getLocation(Object obj, String description) {
-            if (obj instanceof Configuration) {
-                Configuration config = (Configuration)obj;
-                String locString = config.getLocation();
-                Location result = LocationUtils.parse(locString);
-                if (LocationUtils.isKnown(result)) {
-                    // Add description
-                    StringBuffer desc = new StringBuffer().append('<');
-                    // Unfortunately Configuration.getPrefix() is not public
-                    try {
-                        if (config.getNamespace().startsWith("http://apache.org/cocoon/sitemap/")) {
-                            desc.append("map:");
-                        }
-                    } catch (ConfigurationException e) {
-                        // no namespace: ignore
-                    }
-                    desc.append(config.getName()).append('>');
-                    return new LocationImpl(desc.toString(), result);
-                } else {
-                    return result;
-                }
-            }
-            
-            if (obj instanceof Exception) {
-                // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
-                String msg = ((Exception)obj).getMessage();
-                if (msg == null) return null;
-                
-                int pos = msg.lastIndexOf(" at ");
-                if (pos != -1) {
-                    return LocationUtils.parse(msg.substring(pos + 4));
-                } else {
-                    // Will try other finders
-                    return null;
-                }
-            }
-            
-            // Try next finders.
-            return null;
-        }
-    };
-    
-    static {
-        LocationUtils.addFinder(confLocFinder);
-    }
-    
     static Cocoon instance;
 
     /** The root Cocoon logger */
@@ -185,9 +131,6 @@ public class Cocoon
      * Creates a new <code>Cocoon</code> instance.
      */
     public Cocoon() {
-        // Set the system properties needed by Xalan2.
-        setSystemProperties();
-
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
         Cocoon.instance = this;
@@ -213,7 +156,7 @@ public class Cocoon
         this.core = (Core)this.parentServiceManager.lookup(Core.ROLE);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
@@ -266,9 +209,6 @@ public class Cocoon
         ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
 
-        // Log the System Properties.
-        dumpSystemProperties();
-
         this.configure();
 
         // add the logger manager to the component locator
@@ -289,23 +229,6 @@ public class Cocoon
             this.requestListener = (RequestListener) this.serviceManager.lookup(RequestListener.ROLE);
         }
         Core.cleanup();
-    }
-
-    /** Dump System Properties */
-    private void dumpSystemProperties() {
-        if (getLogger().isDebugEnabled()) {
-            try {
-                Enumeration e = System.getProperties().propertyNames();
-                getLogger().debug("===== System Properties Start =====");
-                for (; e.hasMoreElements();) {
-                    String key = (String) e.nextElement();
-                    getLogger().debug(key + "=" + System.getProperty(key));
-                }
-                getLogger().debug("===== System Properties End =====");
-            } catch (SecurityException se) {
-                // Ignore Exceptions.
-            }
-        }
     }
 
     /**
@@ -374,48 +297,6 @@ public class Cocoon
      */
     public boolean modifiedSince(long date) {
         return date < this.configurationFile.getLastModified();
-    }
-
-    /**
-     * Helper method to retrieve system property.
-     * Returns default value if SecurityException is caught.
-     */
-    public static String getSystemProperty(String property, String value) {
-        try {
-            return System.getProperty(property, value);
-        } catch (SecurityException e) {
-            System.err.println("Caught a SecurityException reading the system property '" + property + "';" +
-                               " Cocoon will default to '" + value + "' value.");
-            return value;
-        }
-    }
-
-    /**
-     * Sets required system properties.
-     */
-    protected void setSystemProperties() {
-        try {
-            // FIXME We shouldn't have to specify the SAXParser...
-            // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
-            // to locate the SAX2 driver.
-            if (getSystemProperty("org.xml.sax.driver", null) == null) {
-                System.setProperty("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-            }
-        } catch (SecurityException e) {
-            // Ignore security exceptions
-            System.out.println("Caught a SecurityException writing the system property: " + e);
-        }
-
-        try {
-            // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
-            if (getSystemProperty("javax.xml.parsers.DocumentBuilderFactory", "").startsWith("weblogic")) {
-                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-                System.setProperty("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
-            }
-        } catch (SecurityException e) {
-            // Ignore security exceptions
-            System.out.println("Caught a SecurityException writing the system property: " + e);
-        }
     }
 
     /**
@@ -544,7 +425,7 @@ public class Cocoon
         getLogger().debug(msg.toString());
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
      */
     public boolean process(Environment environment)
@@ -610,7 +491,7 @@ public class Cocoon
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
@@ -634,7 +515,7 @@ public class Cocoon
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Configuration[] getComponentConfigurations() {
@@ -656,14 +537,14 @@ public class Cocoon
         return activeRequestCount;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return this.environmentHelper;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getContext()
      */
     public String getContext() {
