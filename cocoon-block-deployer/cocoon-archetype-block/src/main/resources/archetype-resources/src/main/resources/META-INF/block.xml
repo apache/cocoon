@@ -28,7 +28,7 @@
   <license href="http://company.com/licenses/">[license]</license>
   <author href="http://company.com">[author]</author>
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
-    <sitemap file="COB-INF/sitemap.xmap"/>
+    <sitemap file="COB-INF/sitemap.xmap" check-reload="true"/>
   </servlet>  
   <requirements>
     <requires interface="http://cocoon.apache.org/blocks/core-components/1.0" 
