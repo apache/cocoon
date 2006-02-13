@@ -28,7 +28,7 @@
   <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
   <author href="http://cocoon.apache.org">Apache Cocoon community</author>
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
-    <sitemap file="COB-INF/sitemap.xmap"/>
+    <sitemap file="COB-INF/sitemap.xmap" check-reload="true"/>
   </servlet>  
   <requirements>
     <requires interface="http://cocoon.apache.org/blocks/tutorial-1/1.0" name="otherBlock"
