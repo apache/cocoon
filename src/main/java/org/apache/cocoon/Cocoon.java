@@ -42,11 +42,16 @@ import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.RoleManager;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
@@ -55,6 +60,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
+import org.springframework.context.ApplicationContext;
 import org.xml.sax.InputSource;
 
 import java.io.BufferedInputStream;
@@ -63,6 +69,8 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletConfig;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -223,7 +231,7 @@ public class Cocoon
         this.loggerManager = loggerManager;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
@@ -239,6 +247,20 @@ public class Cocoon
             throw new ConfigurationException(
                     "Could not open configuration file: " + settings.getConfiguration(), e);
         }
+
+        // Test setup spring container
+        System.out.println("Setting up test Spring container");
+        AvalonEnvironment env = new AvalonEnvironment();
+        env.context = this.context;
+        env.core = this.core;
+        env.logger = this.getLogger();
+        env.servletContext = ((ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        env.settings = this.core.getSettings();
+        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurationInfo result = ConfigReader.readConfiguration(this.configurationFile.getURI(), env);
+        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext);
+        System.out.println("Getting something from mainContext: " + mainContext.getBean(Core.ROLE));
+        // END Test setup
 
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
