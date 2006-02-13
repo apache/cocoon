@@ -141,17 +141,17 @@ public class ApplicationContextFactory {
         public Object postProcessBeforeInitialization(Object bean, String beanName)
         throws BeansException {
             final ComponentInfo info = (ComponentInfo)this.components.get(beanName);
-            if ( info == null ) {
-                // no info so just return as this is not an Avalon component
-                return bean;
-            }
             try {
+                if ( info == null ) {
+                    // no info so we just return the bean and don't apply any lifecycle interfaces
+                    return bean;
+                }
                 if ( info.getLoggerCategory() != null ) {
                     ContainerUtil.enableLogging(bean, this.logger.getChildLogger(info.getLoggerCategory()));
                 } else {
                     ContainerUtil.enableLogging(bean, this.logger);
                 }
-                ContainerUtil.contextualize(bean, context);
+                ContainerUtil.contextualize(bean, this.context);
                 ContainerUtil.service(bean, (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName()));
                 if ( info != null ) {
                     Configuration config = info.getConfiguration();
