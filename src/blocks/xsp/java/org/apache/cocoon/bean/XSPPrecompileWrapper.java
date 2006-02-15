@@ -54,7 +54,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
 	/**
      * Allow subclasses to recursively precompile XSPs.
      */
-    public void precompile() {
+    public void precompile() throws Exception {
         recursivelyPrecompile(context, context);
     }
 
@@ -67,27 +67,16 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
      *            a <code>File</code> value for a single XSP file or a
      *            directory to scan recursively
      */
-    private void recursivelyPrecompile(File contextDir, File file) {
+    private void recursivelyPrecompile(File contextDir, File file) throws Exception {
         if (file.isDirectory()) {
             String entries[] = file.list();
             for (int i = 0; i < entries.length; i++) {
                 recursivelyPrecompile(contextDir, new File(file, entries[i]));
             }
-        } else if (file.getName().toLowerCase().endsWith(".xmap")) {
-            try {
-                // necessary?
-                this.processXMAP(IOUtils.getContextFilePath(contextDir
-                        .getCanonicalPath(), file.getCanonicalPath()));
-            } catch (Exception e) {
-                // Ignore for now.
-            }
         } else if (file.getName().toLowerCase().endsWith(".xsp")) {
-            try {
-                this.processXSP(IOUtils.getContextFilePath(contextDir
-                        .getCanonicalPath(), file.getCanonicalPath()));
-            } catch (Exception e) {
-                // Ignore for now.
-            }
+            String contextFilePath = IOUtils.getContextFilePath(contextDir
+                    .getCanonicalPath(), file.getCanonicalPath());
+            this.processXSP(contextFilePath);
         }
     }
 
@@ -146,6 +135,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
             if (log.isDebugEnabled()) {
                 log.debug("XSP generation begin:" + fileName);
             }
+            System.out.println("Compiling " + fileName);
 
             programGenerator = (ProgramGenerator) getComponentManager().lookup(
                     ProgramGenerator.ROLE);
