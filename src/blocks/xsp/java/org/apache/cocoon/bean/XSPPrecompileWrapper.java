@@ -34,12 +34,14 @@ import org.apache.excalibur.source.SourceResolver;
 
 
 /**
- * This is simple Wrapper like CocoonWrapper and can only
- * precompile all XSP in the context-directory.
+ * This is simple Wrapper like CocoonWrapper and can only precompile all XSP in
+ * the context-directory.
+ *
+ * @version $Id$ $Date: 2005/01/16 17:17:34 $
  */
 public class XSPPrecompileWrapper extends CocoonWrapper {
-	private SourceResolver sourceResolver;
-	private static Options options;
+    private SourceResolver sourceResolver;
+    private static Options options;
     protected static final String HELP_OPT = "h";
     protected static final String LOG_KIT_OPT = "k";
     protected static final String CONTEXT_DIR_OPT = "c";
@@ -51,7 +53,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
     protected static final String HELP_LONG = "help";
     protected static final String CONFIG_FILE_LONG = "configFile";
 
-	/**
+    /**
      * Allow subclasses to recursively precompile XSPs.
      */
     public void precompile() throws Exception {
@@ -60,7 +62,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
 
     /**
      * Recurse the directory hierarchy and process the XSP's.
-     * 
+     *
      * @param contextDir
      *            a <code>File</code> value for the context directory
      * @param file
@@ -82,7 +84,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
 
     /**
      * Process a single XSP file
-     * 
+     *
      * @param uri
      *            a <code>String</code> pointing to an xsp URI
      * @exception Exception
@@ -98,7 +100,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
 
     /**
      * Process a single XMAP file
-     * 
+     *
      * @param uri
      *            a <code>String</code> pointing to an xmap URI
      * @exception Exception
@@ -115,7 +117,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
     /**
      * Process the given <code>Environment</code> to generate Java code for
      * specified XSP files.
-     * 
+     *
      * @param fileName
      *            a <code>String</code> value
      * @param environment
@@ -229,8 +231,8 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
         System.exit(0);
     }
 
-	public void initialize() throws Exception {
-		super.initialize();
-		sourceResolver = (SourceResolver) getComponentManager().lookup(SourceResolver.ROLE);
-	}
+    public void initialize() throws Exception {
+        super.initialize();
+        sourceResolver = (SourceResolver) getComponentManager().lookup(SourceResolver.ROLE);
+    }
 }
