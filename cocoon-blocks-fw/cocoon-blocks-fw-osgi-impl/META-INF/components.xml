@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+  <scr:component name="cocoon.activator">
+    <scr:implementation class="org.apache.cocoon.blocks.osgi.Activator"/>
+    <scr:reference name="LOG"
+                   interface="org.osgi.service.log.LogService"
+                   bind="setLog"/>
+    <scr:reference name="HTTP"
+                   interface="org.osgi.service.http.HttpService"
+                   bind="setHttpService"/>
+    <scr:reference name="Servlet"
+                   interface="javax.servlet.Servlet"
+                   cardinality="0..n"
+                   policy="dynamic"
+                   bind="setServlet"
+                   unbind="unsetServlet"/>
+  </scr:component>
+  
+  <scr:component name="cocoon.servlet1">
+    <scr:implementation class="org.apache.cocoon.blocks.osgi.TestServlet"/>
+    <scr:service>
+      <scr:provide interface="javax.servlet.Servlet"/>
+	</scr:service>
+	<scr:property name="path" value="/test1"/>
+  </scr:component>
+  
+  <scr:component name="cocoon.servlet2">
+    <scr:implementation class="org.apache.cocoon.blocks.osgi.TestServlet"/>
+    <scr:service>
+      <scr:provide interface="javax.servlet.Servlet"/>
+	</scr:service>
+	<scr:property name="path" value="/test2"/>
+  </scr:component>
+</components>
