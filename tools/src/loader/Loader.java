@@ -95,17 +95,20 @@ public class Loader {
         if (verbose) System.out.println("-------------------- Loading --------------------");
 
         RepositoryClassLoader classLoader = new RepositoryClassLoader(this.getClass().getClassLoader());
-
-        StringTokenizer st = new StringTokenizer(repositories, File.pathSeparator);
-        while (st.hasMoreTokens()) {
-            classLoader.addRepository(new File(st.nextToken()));        
-        }
+        StringTokenizer st;
 
         if (classPath != null) {
+            // Load classpath entries before jar repositories to allow
+            // WEB-INF/classes overriding WEB-INF/lib
             st = new StringTokenizer(classPath, File.pathSeparator);
             while (st.hasMoreTokens()) {
                 classLoader.addFile(new File(st.nextToken()));
             }
+        }
+
+        st = new StringTokenizer(repositories, File.pathSeparator);
+        while (st.hasMoreTokens()) {
+            classLoader.addRepository(new File(st.nextToken()));        
         }
 
         Thread.currentThread().setContextClassLoader(classLoader);
