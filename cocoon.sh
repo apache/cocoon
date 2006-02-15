@@ -140,7 +140,7 @@ esac
 
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
-JAVA="$JAVA_HOME/bin/java"
+JAVA="exec $JAVA_HOME/bin/java"
 ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser

@@ -180,6 +180,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix">
+      In cocoon.sh, use shell built-in command "exec" to replace sh's process
+      instead of forking a new process for executing the "java" command, useful
+      for proper service management
+    </action>
     <action dev="BRD" type="add" >
       CForms: binding: implemented support for a new attribute "jxpath-factory"
       (can be used on any binding element) to change the factory used by JXPath
