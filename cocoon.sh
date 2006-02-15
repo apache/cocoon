@@ -44,9 +44,17 @@
 #
 # JETTY_PORT
 #   Override the default port for Jetty
-# 
+#
 # JETTY_ADMIN_PORT
 #   The port where the jetty web administration should bind
+#
+# LOADER_LIB
+#   The classpath where to lookup the Loader class, defaults to
+#   ${COCOON_HOME}/tools/loader
+#
+# CLI_CLASSPATH
+#   The additional classpath for cli and precompile, defaults to
+#   lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes
 #
 
 
@@ -137,13 +145,17 @@ ENDORSED_LIBS="$COCOON_HOME/lib/endorsed"
 ENDORSED="-Djava.endorsed.dirs=$ENDORSED_LIBS"
 PARSER=-Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser
 LOADER=Loader
-LOADER_LIB="${COCOON_HOME}/tools/loader"
+if [ "$LOADER_LIB" = "" ] ; then
+	LOADER_LIB="${COCOON_HOME}/tools/loader"
+fi
 
 CLI="-Dloader.main.class=org.apache.cocoon.Main"
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
-CLI_CLASSPATH="-Dloader.class.path=lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes"
+if [ "$CLI_CLASSPATH" = "" ] ; then
+	CLI_CLASSPATH="lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes"
+fi
 CLI_VERBOSE="-Dloader.verbose=false"
-CLI_PROPERTIES="$CLI_LIBRARIES $CLI_CLASSPATH $CLI_VERBOSE"
+CLI_PROPERTIES="$CLI_LIBRARIES -Dloader.class.path=$CLI_CLASSPATH $CLI_VERBOSE"
 
 PRECOMPILE=-Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper
 
