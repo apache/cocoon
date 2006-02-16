@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
@@ -40,14 +41,14 @@ import org.apache.cocoon.blocks.util.ServletContextWrapper;
 public class BlockContext extends ServletContextWrapper {
 
     private Hashtable attributes;
-    private BlockWiring wiring;
     private Servlet servlet;
     private URL contextURL;
+    private String mountPath;
+    private Dictionary connections;
+    private Dictionary properties;
     
-    public BlockContext(ServletContext parentContext, URL contextURL, BlockWiring wiring) {
+    public BlockContext(ServletContext parentContext) {
         super(parentContext);
-        this.contextURL = contextURL;
-        this.wiring = wiring;
     }
 
     /*
@@ -116,7 +117,7 @@ public class BlockContext extends ServletContextWrapper {
      */
     // FIXME, this should be defined in the config instead
     public String getInitParameter(String name) {
-        String value = this.wiring.getProperty(name);
+        String value = (String) this.properties.get(name);
         // Ask the super block for the property
         if (value == null) {
             ServletContext superContext = this.getNamedContext(Block.SUPER);
@@ -275,7 +276,7 @@ public class BlockContext extends ServletContextWrapper {
      */
     public ServletContext getNamedContext(String name) {
         ServletContext context = null;
-        String blockId = this.wiring.getBlockId(name);
+        String blockId = (String) this.connections.get(name);
         if (blockId != null)
             context = ((BlocksContext)super.servletContext).getNamedContext(blockId);
 
@@ -283,12 +284,40 @@ public class BlockContext extends ServletContextWrapper {
     }
     
     /**
+     * @param contextURL The contextURL to set.
+     */
+    public void setContextURL(URL contextURL) {
+        this.contextURL = contextURL;
+    }
+
+    /**
+     * @param mountPath The mountPath to set.
+     */
+    public void setMountPath(String mountPath) {
+        this.mountPath = mountPath;
+    }
+
+    /**
      * Get the mount path of the block context
      */
     public String getMountPath() {
-        return this.wiring.getMountPath();
+        return this.mountPath;
     }
-    
+
+    /**
+     * @param connections The connections to set.
+     */
+    public void setConnections(Dictionary connections) {
+        this.connections = connections;
+    }
+
+    /**
+     * @param properties The properties to set.
+     */
+    public void setProperties(Dictionary properties) {
+        this.properties = properties;
+    }
+
     private class NamedDispatcher implements RequestDispatcher {
 
         private String blockName;
@@ -298,7 +327,8 @@ public class BlockContext extends ServletContextWrapper {
         private NamedDispatcher(String blockName) {
             this.blockName = blockName;
             this.superCall = Block.SUPER.equals(this.blockName);
-            String blockId = BlockContext.this.wiring.getBlockId(this.blockName);
+            String blockId =
+                (String) BlockContext.this.connections.get(this.blockName);
 
             if (blockId != null) {
                 // Call to a named block that exists in the current context

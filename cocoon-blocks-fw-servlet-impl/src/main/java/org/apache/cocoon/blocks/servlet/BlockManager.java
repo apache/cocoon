@@ -36,7 +36,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.blocks.BlockContext;
-import org.apache.cocoon.blocks.BlockWiring;
 import org.apache.cocoon.blocks.ServiceManagerRegistry;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -99,8 +98,11 @@ public class BlockManager
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
-        this.blockContext =
-            new BlockContext(this.getServletContext(), this.contextURL, this.blockWiring);
+        this.blockContext = new BlockContext(this.getServletContext());
+        this.blockContext.setContextURL(this.contextURL);
+        this.blockContext.setMountPath(this.blockWiring.getMountPath());
+        this.blockContext.setConnections(this.blockWiring.getConnections());
+        this.blockContext.setProperties(this.blockWiring.getProperties());
         ServletConfig blockServletConfig =
             new ServletConfigurationWrapper(this.getServletConfig(), this.blockContext);
 
@@ -166,20 +168,6 @@ public class BlockManager
         super.destroy();
     }
     
-    /**
-     * The exported components of the block. Return null if the block doesn't export components.
-     * 
-     * @return a ServiceManager containing the blocks exported components
-     */
-    public ServiceManager getServiceManager() {
-        // Check that the block have a local service manager
-        if (this.blockWiring.getComponentConfiguration() != null) {
-            return this.serviceManager;
-        } else {
-            return null;
-        }
-    }
-
     public ServletContext getBlockContext() {
         return this.blockContext;
     }
