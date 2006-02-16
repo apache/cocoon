@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1778" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
+       Cron block: NPE calling QuartzJobScheduler.fireJob if the job is a CronJob.
+    </action>
     <action dev="JBQ" type="fix">
       In cocoon.sh, use shell built-in command "exec" to replace sh's process
       instead of forking a new process for executing the "java" command, useful
