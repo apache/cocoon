@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.servlet;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -27,6 +27,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.blocks.BlockConstants;
 import org.xml.sax.SAXException;
 
 /**
@@ -38,8 +39,8 @@ public class BlockWiring
 
     private URL contextURL;
     private String id;
-    private Map connections = new HashMap();
-    private Map properties = new HashMap();
+    private Dictionary connections = new Hashtable();
+    private Dictionary properties = new Hashtable();
     private Vector connectionNames;
 
     private String mountPath;
@@ -149,27 +150,23 @@ public class BlockWiring
     }
         
     /**
-     * Get a block id from the blockname.
+     * Get connections
      */
-    public String getBlockId(String blockName) {
-        String blockId = (String)this.connections.get(blockName);
-        getLogger().debug("Resolving block: " + blockName + " to " + blockId);
-        return blockId;
+    public Dictionary getConnections() {
+        return this.connections;
     }
 
     /**
-     * Get a block property
+     * Get the block properties
      */
-    public String getProperty(String name) {
-        String value = (String)this.properties.get(name);
-        getLogger().debug("Accessing property=" + name + " value=" + value + " block=" + this.id);
-        return value;
+    public Dictionary getProperties() {
+        return this.properties;
     }
 
     /**
      * Get path where the block should be mounted
      */
-    String getMountPath() {
+    public String getMountPath() {
         return this.mountPath;
     }
 
