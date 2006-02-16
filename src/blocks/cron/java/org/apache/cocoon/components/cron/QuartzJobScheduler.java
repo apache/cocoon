@@ -697,21 +697,22 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      */
     private boolean fireJob(final String name, final Object job) {
         try {
-            if (job instanceof CronJob) {
+            if (job instanceof CronJob || job instanceof Job) {
                 JobDataMap jobDataMap = new JobDataMap();
                 jobDataMap.put(DATA_MAP_OBJECT, job);
                 initDataMap(jobDataMap, name, true, null, null);
 
                 final JobDetail detail = createJobDetail(name, jobDataMap);
 
-                TriggerFiredBundle trigger = new TriggerFiredBundle(detail, null, null, false, null, null, null, null);
+                final Trigger trigger = new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP);
+
+                TriggerFiredBundle fireBundle = new TriggerFiredBundle(detail, trigger, null, false, null, null, null, null);
 
                 final Job executor = createJobExecutor();
-                final JobExecutionContext context = new JobExecutionContext(this.scheduler, trigger, executor);
+                final JobExecutionContext context = new JobExecutionContext(this.scheduler, fireBundle, executor);
 
                 this.executor.execute(new Runnable() {
                         public void run() {
-                            // ((CronJob)job).execute(name);
                             try {
                                 executor.execute(context);
                             } catch (JobExecutionException e) {
