@@ -18,8 +18,6 @@ package org.apache.cocoon.blocks;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
-import org.apache.avalon.framework.service.ServiceManager;
-
 /**
  * @version $Id$
  */
@@ -28,12 +26,5 @@ public interface Block extends Servlet {
     public static String NAME = Block.class.getName() + "-name";
     public static String SUPER = "super";
 
-    /**
-     * The exported components of the block. Return null if the block doesn't export components.
-     * 
-     * @return a ServiceManager containing the blocks exported components
-     */
-    public ServiceManager getServiceManager();
-    
     public ServletContext getBlockContext();
 }
