@@ -65,5 +65,11 @@
       <artifactId>xreporter-expression</artifactId>
       <version>20040701</version>
     </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>0.8</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
