@@ -33,6 +33,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.lang.SystemUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -40,7 +43,7 @@ import org.apache.commons.lang.SystemUtils;
  * @version $Id$
  */
 public class SpringCocoon
-       implements Processor {
+       implements Processor, BeanFactoryAware {
 
     /** Active request count. */
     private volatile int activeRequestCount;
@@ -51,17 +54,17 @@ public class SpringCocoon
     /** The environment helper. */
     protected final EnvironmentHelper environmentHelper;
 
-    /** An optional component that is called before and after processing all requests. */
-    protected RequestListener requestListener;
-
     /** Processor attributes. */
-    protected Map processorAttributes = new HashMap();
+    protected final Map processorAttributes = new HashMap();
 
     /** The service manager. */
     protected final ServiceManager serviceManager;
 
     /** The logger. */
     protected final Logger logger;
+
+    /** An optional component that is called before and after processing all requests. */
+    protected RequestListener requestListener;
 
     /**
      * Creates a new <code>Cocoon</code> instance.
@@ -81,10 +84,13 @@ public class SpringCocoon
     }
 
     /**
-     * Set the (optional) request listener.
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
-    public void setRequestListener(RequestListener listener) {
-        this.requestListener = listener;
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        // get the optional request listener
+        if ( factory.containsBean(RequestListener.ROLE) ) {
+            this.requestListener = (RequestListener)factory.getBean(RequestListener.ROLE);
+        }
     }
 
     /**
@@ -191,8 +197,7 @@ public class SpringCocoon
     throws Exception {
         environment.startingProcessing();
         final int environmentDepth = EnvironmentHelper.markEnvironment();
-        // FIXME
-        //EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
+        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
             if (this.logger.isDebugEnabled()) {
