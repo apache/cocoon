@@ -31,33 +31,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
-import org.apache.avalon.excalibur.logger.LoggerManageable;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.configuration.Configurable;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
-import org.apache.cocoon.configuration.ConfigurationBuilder;
-import org.apache.cocoon.core.container.SingleComponentServiceManager;
-import org.apache.cocoon.core.logging.CocoonLogKitLoggerManager;
-import org.apache.cocoon.core.logging.PerRequestLoggerManager;
-import org.apache.cocoon.core.logging.SettingsContext;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
@@ -66,16 +60,15 @@ import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
+import org.springframework.context.ApplicationContext;
 
 /**
  * This is an utility class to create a new Cocoon instance.
  * 
- * TODO - Remove dependencies to LogKit and Log4J
- *
  * @version $Id$
  * @since 2.2
  */
-public class CoreUtil {
+public class SpringCoreUtil {
 
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
@@ -89,25 +82,22 @@ public class CoreUtil {
     /** The settings. */
     protected MutableSettings settings;
 
-    /** The parent service manager. */
-    protected ServiceManager parentManager;
-
     /** The root logger. */
     protected Logger log;
-
-    /** The logger manager. */
-    protected LoggerManager loggerManager;
 
     /** The Root processor instance */
     protected Processor processor;
 
-    /** Is this a per request logger manager */
-    protected boolean isPerRequestLoggerManager = false;
-    
     protected ClassLoader classloader;
 
     /** The core object. */
     protected Core core;
+
+    /** The servlet context. */
+    protected final ServletContext servletContext;
+
+    /** The container. */
+    protected ApplicationContext container;
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
@@ -163,8 +153,10 @@ public class CoreUtil {
      * @param environment The hook back to the environment.
      * @throws Exception
      */
-    public CoreUtil(BootstrapEnvironment environment)
+    public SpringCoreUtil(BootstrapEnvironment environment,
+                          ServletContext context)
     throws Exception {
+        this.servletContext = context;
         this.env = environment;
         this.init();
         this.createClassloader();        
@@ -220,7 +212,7 @@ public class CoreUtil {
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
-        this.initLogger();
+        this.log = ApplicationContextFactory.createRootLogger(servletContext, this.settings.getCocoonLogger());
         this.env.setLogger(this.log);
 
         // Output some debug info
@@ -317,9 +309,6 @@ public class CoreUtil {
         // create the Core object
         this.core = this.createCore();
 
-        // create parent service manager
-        this.parentManager = new SingleComponentServiceManager(null, this.core, Core.ROLE);
-
         // settings can't be changed anymore
         settings.makeReadOnly();
 
@@ -327,6 +316,9 @@ public class CoreUtil {
         // The Cocoon container fetches the Core object using the context.
         // FIXME - We shouldn't need this - check where it is used
         this.appContext.put(Core.ROLE, core);
+
+        // test the setup of the spring based container
+        this.container = this.setupSpringContainer();
     }
 
     /**
@@ -524,31 +516,6 @@ public class CoreUtil {
     }
 
     /**
-     * Initialize the current request.
-     * This method can be used to initialize anything required for processing
-     * the request. For example, if the logger manager is a {@link PerRequestLoggerManager}
-     * than this manager is invoked to initialize the logging context for the request.
-     * This method returns a handle that should be used to clean up everything
-     * when the request is finished by calling {@link #cleanUpRequest(Object)}.
-     */
-    public Object initializeRequest(Environment env) {
-        if ( this.isPerRequestLoggerManager ) {
-            return ((PerRequestLoggerManager)this.loggerManager).initializePerRequestLoggingContext(env);
-        }
-        return null;   
-    }
-
-    /**
-     * Cleanup everything initialized during the request processing in
-     * {@link #initializeRequest(Environment)}.
-     */
-    public void cleanUpRequest(Object handle) {
-        if ( handle != null && this.isPerRequestLoggerManager) {
-            ((PerRequestLoggerManager)this.loggerManager).cleanPerRequestLoggingContext(handle);
-        }
-    }
-
-    /**
      * Create a simple source resolver.
      */
     protected SourceResolver createSourceResolver(Logger logger) {
@@ -562,184 +529,6 @@ public class CoreUtil {
                     "Cannot setup source resolver.", ce);
         }
         return resolver;        
-    }
-
-    protected void initLogger() {
-        String logLevel = settings.getBootstrapLogLevel();
-        if (logLevel == null) {
-            logLevel = "INFO";
-        }
-
-        String accesslogger = settings.getEnvironmentLogger();
-        if (accesslogger == null) {
-            accesslogger = "cocoon";
-        }
-
-        // create bootstrap logger
-        final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel.getLogLevelForName(logLevel);
-        final Logger bootstrapLogger = this.env.getBootstrapLogger(level);
-
-        // Create our own resolver
-        final SourceResolver resolver = this.createSourceResolver(bootstrapLogger);
-
-        // create an own service manager for the logger manager
-        final ServiceManager loggerManagerServiceManager = new SingleComponentServiceManager(
-                 null, resolver, SourceResolver.ROLE);
-
-        // create an own context for the logger manager
-        final DefaultContext subcontext = new SettingsContext(this.appContext, this.settings);
-        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
-        if (this.env.getContextForWriting() == null) {
-            File logSCDir = new File(this.settings.getWorkDirectory(), "log");
-            logSCDir.mkdirs();
-            subcontext.put("context-root", logSCDir.toString());
-        } else {
-            subcontext.put("context-root", this.env.getContextForWriting().toString());
-        }
-        this.env.configureLoggingContext(subcontext);
-
-        String loggerManagerClass = settings.getLoggerManagerClassName();
-
-        // the log4j support requires currently that the log4j system is already
-        // configured elsewhere
-
-        final LoggerManager loggerManager = this.newLoggerManager(loggerManagerClass);
-        ContainerUtil.enableLogging(loggerManager, bootstrapLogger);
-
-        try {
-            ContainerUtil.contextualize(loggerManager, subcontext);
-            ContainerUtil.service(loggerManager, loggerManagerServiceManager);
-
-            this.loggerManager = loggerManager;
-
-            if (loggerManager instanceof Configurable) {
-                //Configure the logkit management
-                String logkitConfig = settings.getLoggingConfiguration();
-
-                if ( logkitConfig != null ) {
-                    Source source = null;
-                    try {
-                        source = resolver.resolveURI(logkitConfig);
-                        final ConfigurationBuilder builder = new ConfigurationBuilder(
-                                settings);
-                        final Configuration conf = builder.build(source.getInputStream());
-                        final DefaultConfiguration categories = (DefaultConfiguration) conf
-                                .getChild("categories");
-                        final DefaultConfiguration targets = (DefaultConfiguration) conf
-                                .getChild("targets");
-                        final DefaultConfiguration factories = (DefaultConfiguration) conf
-                                .getChild("factories");
-    
-                        // now process includes
-                        final Configuration[] children = conf
-                                .getChildren("include");
-                        for (int i = 0; i < children.length; i++) {
-                            String directoryURI = children[i].getAttribute("dir");
-                            final String pattern = children[i].getAttribute(
-                                    "pattern", null);
-                            int[] parsedPattern = null;
-                            if (pattern != null) {
-                                parsedPattern = WildcardHelper
-                                        .compilePattern(pattern);
-                            }
-                            Source directory = null;
-                            try {
-                                directory = resolver.resolveURI(directoryURI,
-                                        source.getURI(), CONTEXT_PARAMETERS);
-                                if (directory instanceof TraversableSource) {
-                                    final Iterator c = ((TraversableSource) directory)
-                                            .getChildren().iterator();
-                                    while (c.hasNext()) {
-                                        final Source s = (Source) c.next();
-                                        if (parsedPattern == null
-                                                || this.match(s.getURI(),
-                                                        parsedPattern)) {
-                                            final Configuration includeConf = builder
-                                                    .build(s.getInputStream());
-                                            // add targets and categories
-                                            categories.addAllChildren(includeConf
-                                                    .getChild("categories"));
-                                            targets.addAllChildren(includeConf
-                                                    .getChild("targets"));
-                                            factories.addAllChildren(includeConf
-                                                    .getChild("factories"));
-                                        }
-                                    }
-                                } else {
-                                    throw new ConfigurationException(
-                                            "Include.dir must point to a directory, '"
-                                                    + directory.getURI()
-                                                    + "' is not a directory.'");
-                                }
-                            } catch (IOException ioe) {
-                                throw new ConfigurationException(
-                                        "Unable to read configurations from "
-                                                + directoryURI);
-                            } finally {
-                                resolver.release(directory);
-                            }
-    
-                            // finally remove include
-                            ((DefaultConfiguration) conf).removeChild(children[i]);
-                        }
-                        // override log level?
-                        if (settings.getOverrideLogLevel() != null) {
-                            this.overrideLogLevel(conf.getChild("categories"),
-                                    settings.getOverrideLogLevel());
-                        }
-                        ContainerUtil.configure(loggerManager, conf);
-                    } finally {
-                        resolver.release(source);
-                    }
-                }
-            }
-            ContainerUtil.initialize(loggerManager);
-        } catch (Exception e) {
-            bootstrapLogger.error(
-                    "Could not set up Cocoon Logger, will use screen instead",
-                    e);
-        }
-
-        this.log = this.loggerManager.getLoggerForCategory(accesslogger);
-    }
-
-    /**
-     * Create a new logger manager.
-     * @param loggerManagerClass The class name or one of the allowed shortcuts.
-     * @return A new logger manager.
-     */
-    private LoggerManager newLoggerManager(String loggerManagerClass) {
-        if ("LogKit".equalsIgnoreCase(loggerManagerClass) || loggerManagerClass == null) {
-            loggerManagerClass = CocoonLogKitLoggerManager.class.getName();
-        } else if ("LOG4J".equalsIgnoreCase(loggerManagerClass)) {
-            loggerManagerClass = Log4JConfLoggerManager.class.getName();
-        }
-        try {
-            Class clazz = Class.forName(loggerManagerClass);
-            if ( PerRequestLoggerManager.class.isAssignableFrom(clazz) ) {
-                this.isPerRequestLoggerManager = true;
-            }
-            return (LoggerManager) clazz.newInstance();
-        } catch (Exception e) {
-            this.isPerRequestLoggerManager = true;
-            return new CocoonLogKitLoggerManager();
-        }
-    }
-
-    protected void overrideLogLevel(Configuration root, String value) {
-        Configuration[] c = root.getChildren("category");
-        for(int i=0;i<c.length;i++) {
-            ((DefaultConfiguration)c[i]).setAttribute("log-level", value);
-            this.overrideLogLevel(c[i], value);
-        }
-    }
-
-    private boolean match(String uri, int[] parsedPattern ) {
-        int pos = uri.lastIndexOf('/');
-        if ( pos != -1 ) {
-            uri = uri.substring(pos+1);
-        }
-        return WildcardHelper.match(null, uri, parsedPattern);
     }
 
     /**
@@ -826,22 +615,12 @@ public class CoreUtil {
             if (this.log.isInfoEnabled()) {
                 this.log.info("Reloading from: " + this.settings.getConfiguration());
             }
-            Processor p = (Processor)ClassUtils.newInstance(this.settings.getProcessorClassName());
-            ContainerUtil.enableLogging(p, getCocoonLogger());
-            if (p instanceof LoggerManageable) {
-                ((LoggerManageable)p).setLoggerManager(this.loggerManager);
-            }
-            ContainerUtil.contextualize(p, this.appContext);
+            Processor p = (Processor)this.container.getBean("org.apache.cocoon.Cocoon");
 
-            this.parentManager = new SingleComponentServiceManager(null, this.core, Core.ROLE);
-            ContainerUtil.service(p, this.parentManager);
-
-            ContainerUtil.initialize(p);
             this.settings.setCreationTime(System.currentTimeMillis());
             this.processor = p;
         } catch (Exception e) {
             this.log.error("Exception reloading root processor.", e);
-            this.disposeProcessor();
             throw e;
         }
         return this.processor;
@@ -854,7 +633,6 @@ public class CoreUtil {
      */
     public Processor getProcessor(final String pathInfo, final String reloadParam)
     throws Exception {
-        
         // set the blocks classloader for this thread
         Thread.currentThread().setContextClassLoader(this.classloader);        
         
@@ -881,6 +659,9 @@ public class CoreUtil {
             }
 
             if (reload) {
+                if (this.container != null) {
+                    this.container = null;
+                }
                 this.init();
                 this.createProcessor();
             }
@@ -888,27 +669,19 @@ public class CoreUtil {
         return this.processor;
     }
 
-    /**
-     * Destroy root processor
-     */
-    protected final void disposeProcessor() {
-        if (this.processor != null) {
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Disposing root processor");
-            }
-            ContainerUtil.dispose(this.processor);
-            this.processor = null;
-        }
-        ContainerUtil.dispose(this.parentManager);
-        this.parentManager = null;
-    }
-
-    protected Logger getCocoonLogger() {
-        final String rootlogger = this.settings.getCocoonLogger();
-        if (rootlogger != null) {
-            return this.loggerManager.getLoggerForCategory(rootlogger);
-        }
-        return this.log;
+    protected ApplicationContext setupSpringContainer() throws Exception {
+        System.out.println("Setting up test Spring container...");
+        AvalonEnvironment env = new AvalonEnvironment();
+        env.context = this.appContext;
+        env.core = this.core;
+        env.logger = this.log;
+        env.servletContext = ((ServletConfig)this.appContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        env.settings = this.core.getSettings();
+        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
+        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
+        System.out.println("Getting core cocoon processor context: " + mainContext.getBean(Core.ROLE));
+        return mainContext;
     }
 
     /**
@@ -998,7 +771,10 @@ public class CoreUtil {
      * Dispose the root processor when environment is destroyed
      */
     public void destroy() {
-        this.disposeProcessor();
+        // FIXME - we have to clean up here!
+        if ( this.container != null ) {
+            this.container = null;
+        }
     }
 
     /**

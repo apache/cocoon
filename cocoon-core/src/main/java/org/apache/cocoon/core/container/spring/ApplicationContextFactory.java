@@ -15,26 +15,14 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.util.Map;
+import javax.servlet.ServletContext;
 
-
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.logger.Log4JLogger;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -60,29 +48,29 @@ public class ApplicationContextFactory {
      */
     public static ApplicationContext createApplicationContext(AvalonEnvironment  env,
                                                               ConfigurationInfo  info,
-                                                              ApplicationContext parent)
+                                                              ApplicationContext parent,
+                                                              boolean            addCocoon)
     throws Exception {
-        final String xmlConfig = (new XmlConfigCreator()).createConfig(info.getComponents());
+        final String xmlConfig = (new XmlConfigCreator()).createConfig(info.getComponents(), addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
-        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(rsc, parent);
+        Logger logger = env.logger;
+        if ( info.rootLogger != null ) {
+            logger = env.logger.getChildLogger(info.rootLogger);
+        }
+        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(rsc, 
+                                                                                    parent,
+                                                                                    logger,
+                                                                                    info.getComponents(),
+                                                                                    env.context);
         context.addBeanFactoryPostProcessor(new CocoonSettingsConfigurer(env.settings));
 
         // TODO: Add context specific information
         //context.setSourceResolver(this.resolver);
         //context.setEnvironmentHelper(this.environmentHelper);
         context.setServletContext(env.servletContext);
-        AvalonPostProcessor processor = new AvalonPostProcessor();
-        processor.components = info.getComponents();
-        processor.logger = env.logger;
-        if ( info.rootLogger != null ) {
-            processor.logger = env.logger.getChildLogger(info.rootLogger);
-        }
-        processor.context = env.context;
         context.refresh();
-        processor.beanFactory = context.getBeanFactory();
-        context.getBeanFactory().addBeanPostProcessor(processor);
         if ( info.rootLogger != null ) {
-            context.getBeanFactory().registerSingleton(Logger.class.getName(), processor.logger);
+            context.getBeanFactory().registerSingleton(Logger.class.getName(), logger);
         }
         return context;
     }
@@ -100,7 +88,7 @@ public class ApplicationContextFactory {
     public static ApplicationContext createRootApplicationContext(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(null, parent);
+        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(parent);
         context.refresh();
         final ConfigurableListableBeanFactory factory = context.getBeanFactory();
         factory.registerSingleton(Context.class.getName(), env.context);
@@ -110,83 +98,17 @@ public class ApplicationContextFactory {
         return context;
     }
 
-    /**
-     * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
-     */
-    protected static final class AvalonPostProcessor implements DestructionAwareBeanPostProcessor {
-
-        protected static final Configuration EMPTY_CONFIG = new DefaultConfiguration("empty");
-
-        protected Logger logger;
-        protected Context context;
-        protected BeanFactory beanFactory;
-        protected Map components;
-
-        /**
-         * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
-         */
-        public Object postProcessAfterInitialization(Object bean, String beanName)
-        throws BeansException {
-            try {
-                ContainerUtil.start(bean);
-            } catch (Exception e) {
-                throw new BeanInitializationException("Unable to start bean " + beanName, e);
+    public static Logger createRootLogger(ServletContext context, String category) {
+        final ApplicationContext parent = (ApplicationContext)context.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        // test for a logger in the parent context
+        if ( parent != null && parent.containsBean(Logger.class.getName()) ) {
+            if ( category == null || category.length() == 0 ) {
+                return (Logger)parent.getBean(Logger.class.getName());
             }
-            return bean;
+            return ((Logger)parent.getBean(Logger.class.getName())).getChildLogger(category);
         }
-
-        /**
-         * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
-         */
-        public Object postProcessBeforeInitialization(Object bean, String beanName)
-        throws BeansException {
-            final ComponentInfo info = (ComponentInfo)this.components.get(beanName);
-            try {
-                if ( info == null ) {
-                    // no info so we just return the bean and don't apply any lifecycle interfaces
-                    return bean;
-                }
-                if ( info.getLoggerCategory() != null ) {
-                    ContainerUtil.enableLogging(bean, this.logger.getChildLogger(info.getLoggerCategory()));
-                } else {
-                    ContainerUtil.enableLogging(bean, this.logger);
-                }
-                ContainerUtil.contextualize(bean, this.context);
-                ContainerUtil.service(bean, (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName()));
-                if ( info != null ) {
-                    Configuration config = info.getConfiguration();
-                    if ( config == null ) {
-                        config = EMPTY_CONFIG;
-                    }
-                    if ( bean instanceof Configurable ) {
-                        ContainerUtil.configure(bean, config);
-                    } else if ( bean instanceof Parameterizable ) {
-                        Parameters p = info.getParameters();
-                        if ( p == null ) {
-                            p = Parameters.fromConfiguration(config);
-                            info.setParameters(p);
-                        }
-                        ContainerUtil.parameterize(bean, p);
-                    }
-                }
-                ContainerUtil.initialize(bean);
-            } catch (Exception e) {
-                throw new BeanCreationException("Unable to initialize Avalon component with role " + beanName, e);
-            }
-            return bean;
-        }
-
-        /**
-         * @see org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor#postProcessBeforeDestruction(java.lang.Object, java.lang.String)
-         */
-        public void postProcessBeforeDestruction(Object bean, String beanName)
-        throws BeansException {
-            try {
-                ContainerUtil.stop(bean);
-            } catch (Exception e) {
-                throw new BeanInitializationException("Unable to stop bean " + beanName, e);
-            }
-            ContainerUtil.dispose(bean);
-        }
+        // create a new log4j logger
+        org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(category);
+        return new Log4JLogger(logger);
     }
 }

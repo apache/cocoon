@@ -20,14 +20,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.SpringCocoon;
 import org.springframework.util.StringUtils;
 
 /**
  * This is a simple component that uses a {@link  ConfigurationInfo} to create
  * a Spring like configuration xml document.
  *
- * TODO: LogManager?
  * TODO: configure(Core)
  * TODO: register aliases for shorthands
  * @since 2.2
@@ -39,7 +45,7 @@ public class XmlConfigCreator {
     protected static final String DOCTYPE =
         "<!DOCTYPE beans PUBLIC \"-//SPRING//DTD BEAN//EN\" \"http://www.springframework.org/dtd/spring-beans.dtd\">\n";
 
-    public String createConfig(Map components) 
+    public String createConfig(Map components, boolean addCocoon) 
     throws Exception {
         final List pooledRoles = new ArrayList();
         final StringBuffer buffer = new StringBuffer();
@@ -51,6 +57,7 @@ public class XmlConfigCreator {
         buffer.append("<bean");
         this.appendAttribute(buffer, "id", ServiceManager.class.getName());
         this.appendAttribute(buffer, "class", AvalonServiceManager.class.getName());
+        this.appendAttribute(buffer, "singleton", "true");
         buffer.append("/>\n");
 
         final Iterator i = components.entrySet().iterator();
@@ -70,6 +77,15 @@ public class XmlConfigCreator {
                 className = AvalonServiceSelector.class.getName();
                 isSelector = true;
             } else {
+                // test for unknown model
+                if ( current.getModel() == ComponentInfo.MODEL_UNKNOWN ) {
+                    final Class serviceClass = Class.forName(className);
+                    if ( ThreadSafe.class.isAssignableFrom(serviceClass) ) {
+                        current.setModel(ComponentInfo.MODEL_SINGLETON);
+                    } else if ( Poolable.class.isAssignableFrom(serviceClass) ) {
+                        current.setModel(ComponentInfo.MODEL_POOLED);
+                    }
+                }
                 if ( current.getModel() == ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED 
                     || current.getModel() == ComponentInfo.MODEL_POOLED ) {
                     poolable = true;
@@ -142,6 +158,27 @@ public class XmlConfigCreator {
                 buffer.append("</bean>\n");
                 pooledRoles.add(role);
             }
+        }
+        // add the Cocoon object to the root
+        if ( addCocoon ) {
+            buffer.append("<bean");
+            this.appendAttribute(buffer, "id", Cocoon.class.getName());
+            this.appendAttribute(buffer, "class", SpringCocoon.class.getName());
+            this.appendAttribute(buffer, "singleton", "true");
+            buffer.append(">\n");
+            buffer.append("  <constructor-arg ref=\"");
+            buffer.append(Processor.ROLE);
+            buffer.append("\"/>\n");
+            buffer.append("  <constructor-arg ref=\"");
+            buffer.append(ServiceManager.class.getName());
+            buffer.append("\"/>\n");
+            buffer.append("  <constructor-arg ref=\"");
+            buffer.append(Context.class.getName());
+            buffer.append("\"/>\n");
+            buffer.append("  <constructor-arg ref=\"");
+            buffer.append(Logger.class.getName());
+            buffer.append("\"/>\n");
+            buffer.append("</bean>\n");
         }
         buffer.append("</beans>\n");
 
