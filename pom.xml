@@ -45,6 +45,7 @@
     <module>cocoon-authentication-fw</module>
     <module>cocoon-captcha</module>
     <module>cocoon-cron</module>
+    <module>cocoon-databases</module>
     <module>cocoon-forms</module>
     <module>cocoon-core-components</module>    
     <!--module>cocoon-jcr</module> -->
@@ -55,6 +56,7 @@
     <module>cocoon-template</module>
     <module>cocoon-validation</module>
     <!--module>cocoon-xmldb</module-->
+    <module>cocoon-webapp</module>
   </modules>
   <repositories>
     <repository>
