@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletConfig;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -38,10 +41,17 @@ import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
+import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
@@ -51,13 +61,22 @@ import org.apache.cocoon.sitemap.impl.ComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * The tree builder for the sitemap language.
  *
  * @version $Id$
  */
-public class SitemapLanguage extends DefaultTreeBuilder {
+public class SitemapLanguage
+    extends DefaultTreeBuilder
+    implements ApplicationContextAware {
+
+    /** Spring application context. */
+    protected CocoonXmlWebApplicationContext applicationContext;
 
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
@@ -94,11 +113,6 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         // Create the classloader, if needed.
         ServiceManager newManager;
         
-        newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
-
-        // Go through the component lifecycle
-        ContainerUtil.enableLogging(newManager, this.getLogger());
-        ContainerUtil.contextualize(newManager, context);
         // before we pass the configuration we have to strip the
         // additional configuration parts, like classpath etc. as these
         // are not configurations for the service manager
@@ -111,10 +125,32 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         c.removeChild(config.getChild("classpath"));
         c.removeChild(config.getChild("listeners"));
 
-        ContainerUtil.configure(newManager, c);
-        ContainerUtil.initialize(newManager);
+        Logger sitemapLogger;
+        // setup spring container
+        if ( this.applicationContext != null ) {
+            final AvalonEnvironment ae = new AvalonEnvironment();
+            ae.context = context;
+            ae.core = (Core)applicationContext.getBean(Core.ROLE);
+            ae.logger = this.getLogger();
+            ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+            ae.settings = ae.core.getSettings();
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(c, this.applicationContext.getConfigurationInfo(), ae);
+            System.out.println("Setting up spring based tree processor.");
+            final ApplicationContext sitemapContext = 
+                ApplicationContextFactory.createApplicationContext(ae, ci, this.applicationContext, false);
+            System.out.println("Looked up core: " + sitemapContext.getBean(Core.ROLE));
+            newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
+            sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
+        } else {
+            newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
 
-        Logger sitemapLogger = ((CocoonServiceManager)newManager).getServiceManagerLogger();
+            // Go through the component lifecycle
+            ContainerUtil.enableLogging(newManager, this.getLogger());
+            ContainerUtil.contextualize(newManager, context);
+            ContainerUtil.configure(newManager, c);
+            ContainerUtil.initialize(newManager);
+            sitemapLogger = ((CocoonServiceManager)newManager).getServiceManagerLogger();
+        }
         // check for an application specific container
         final Configuration appContainer = config.getChild("application-container", false);
         if ( appContainer != null ) {
@@ -520,5 +556,15 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             return Collections.EMPTY_SET;
         }
         return Arrays.asList(StringUtils.split(labels, ", \t\n\r"));
+    }
+
+    /**
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    public void setApplicationContext(ApplicationContext ae) throws BeansException {
+        if ( ! (ae instanceof CocoonXmlWebApplicationContext) ) {
+            throw new BeanCreationException("Application context for tree processor must be an instance of " + CocoonXmlWebApplicationContext.class.getName());
+        }
+        this.applicationContext = (CocoonXmlWebApplicationContext)ae;
     }
 }

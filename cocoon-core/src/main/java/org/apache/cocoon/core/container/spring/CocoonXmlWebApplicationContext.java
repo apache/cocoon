@@ -60,22 +60,26 @@ public class CocoonXmlWebApplicationContext extends XmlWebApplicationContext {
 
     protected final Logger avalonLogger;
     protected final Context avalonContext;
-    protected final Map avalonComponentDefinitions;
+    protected final ConfigurationInfo avalonConfiguration;
 
     public CocoonXmlWebApplicationContext(ApplicationContext parent) {
         this(null, parent, null, null, null);
     }
 
-    public CocoonXmlWebApplicationContext(Resource avalonResource,
+    public CocoonXmlWebApplicationContext(Resource           avalonResource,
                                           ApplicationContext parent,
                                           Logger             avalonLogger,
-                                          Map                avalonComponentDefs,
+                                          ConfigurationInfo  avalonConfiguration,
                                           Context            avalonContext) {
         this.setParent(parent);
         this.avalonResource = avalonResource;
         this.avalonLogger = avalonLogger;
-        this.avalonComponentDefinitions = avalonComponentDefs;
+        this.avalonConfiguration = avalonConfiguration;
         this.avalonContext = avalonContext;
+    }
+
+    public ConfigurationInfo getConfigurationInfo() {
+        return this.avalonConfiguration;
     }
 
     /**
@@ -94,8 +98,8 @@ public class CocoonXmlWebApplicationContext extends XmlWebApplicationContext {
      */
     protected DefaultListableBeanFactory createBeanFactory() {
         DefaultListableBeanFactory beanFactory = super.createBeanFactory();
-        if ( this.avalonComponentDefinitions != null ) {
-            AvalonPostProcessor processor = new AvalonPostProcessor(this.avalonComponentDefinitions,
+        if ( this.avalonConfiguration != null ) {
+            AvalonPostProcessor processor = new AvalonPostProcessor(this.avalonConfiguration.getComponents(),
                                                                     this.avalonContext,
                                                                     this.avalonLogger,
                                                                     beanFactory);

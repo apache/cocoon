@@ -48,23 +48,11 @@ public class ConfigReader {
 
     protected SourceResolver resolver;
 
-    /** Map for shorthand to role mapping. */
-    private final Map shorthands = new HashMap();
-
-    /** Map for role to default classname mapping. */
-    private final Map classNames = new HashMap();
-
-    /** Map for role->key to classname mapping. */
-    private final Map keyClassNames = new HashMap();
-
-    /** List of components. */
-    private final Map components = new HashMap();
-
-    /** Root logger. */
-    private String rootLogger;
+    /** The configuration info. */
+    protected ConfigurationInfo configInfo;
 
     /** Avalon environment. */
-    private AvalonEnvironment environment;
+    protected AvalonEnvironment environment;
 
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
@@ -75,16 +63,53 @@ public class ConfigReader {
         ConfigReader converter = new ConfigReader();
         converter.resolver = sourceResolver;
         converter.environment = env;
-
+        converter.configInfo = new ConfigurationInfo();
+        
         converter.convert(source);
+        final Iterator i = converter.configInfo.getClassNames().values().iterator();
+        while ( i.hasNext() ) {
+            final ComponentInfo current = (ComponentInfo)i.next();
+            converter.configInfo.addComponent(current);
+        }
+        converter.configInfo.clearClassNames();
 
-        ConfigurationInfo info = new ConfigurationInfo();
-        info.setComponents(converter.components);
-        info.setRootLogger(converter.rootLogger);
-        return info;
+        return converter.configInfo;
     }
 
-    public ConfigReader() {
+    public static ConfigurationInfo readConfiguration(Configuration config,
+                                                      ConfigurationInfo parentInfo,
+                                                      AvalonEnvironment env)
+    throws Exception {
+        final SimpleSourceResolver sourceResolver = new SimpleSourceResolver();
+        sourceResolver.enableLogging(env.logger);
+        sourceResolver.contextualize(env.context);
+
+        ConfigReader converter = new ConfigReader();
+        converter.resolver = sourceResolver;
+        converter.environment = env;
+        converter.configInfo = new ConfigurationInfo(parentInfo);
+        // now add selectors from parent
+        if ( parentInfo != null ) {
+            final Iterator i = parentInfo.getComponents().values().iterator();
+            while ( i.hasNext() ) {
+                final ComponentInfo current = (ComponentInfo)i.next();
+                if ( current.isSelector() ) {
+                    converter.configInfo.getClassNames().put(current.getRole(), current);
+                }
+            }
+        }
+        converter.convert(config);
+        final Iterator i = converter.configInfo.getClassNames().values().iterator();
+        while ( i.hasNext() ) {
+            final ComponentInfo current = (ComponentInfo)i.next();
+            converter.configInfo.addComponent(current);
+        }
+        converter.configInfo.clearClassNames();
+
+        return converter.configInfo;        
+    }
+
+    private ConfigReader() {
         // nothing to do
     }
 
@@ -97,18 +122,23 @@ public class ConfigReader {
             
             // It's possible to define a logger on a per sitemap/service manager base.
             // This is the default logger for all components defined with this sitemap/manager.
-            this.rootLogger = config.getAttribute("logger", null);
+            this.configInfo.setRootLogger(config.getAttribute("logger", null));
 
             // and load configuration with a empty list of loaded configurations
-            parseConfiguration(config, root.getURI(), new HashSet());
-            final Iterator i = this.classNames.values().iterator();
-            while ( i.hasNext() ) {
-                final ComponentInfo current = (ComponentInfo)i.next();
-                this.components.put(current.getRole(), current);
-            }
+            this.parseConfiguration(config, root.getURI(), new HashSet());
         } finally {
             this.resolver.release(root);
         }
+    }
+
+    protected void convert(Configuration config)
+    throws Exception {
+        // It's possible to define a logger on a per sitemap/service manager base.
+        // This is the default logger for all components defined with this sitemap/manager.
+        this.configInfo.setRootLogger(config.getAttribute("logger", null));
+
+        // and load configuration with a empty list of loaded configurations
+        this.parseConfiguration(config, null, new HashSet());
     }
 
     protected void parseConfiguration(final Configuration configuration,
@@ -131,7 +161,7 @@ public class ConfigReader {
                 String role = componentConfig.getAttribute("role", null);
                 if (role == null) {
                     // Get the role from the role manager if not explicitely specified
-                    role = (String)this.shorthands.get( componentName );
+                    role = (String)this.configInfo.getShorthands().get( componentName );
                     if (role == null) {
                         // Unknown role
                         throw new ConfigurationException("Unknown component type '" + componentName +
@@ -144,12 +174,12 @@ public class ConfigReader {
                 ComponentInfo info;
                 if (className == null) {
                     // Get the default class name for this role
-                    info = (ComponentInfo)this.classNames.get( role );
+                    info = (ComponentInfo)this.configInfo.getClassNames().get( role );
                     if (info == null) {
                         throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
                     }
-                    this.classNames.remove(info);
-                    className = info.getServiceClassName();
+                    this.configInfo.getClassNames().remove(info);
+                    className = info.getComponentClassName();
                 } else {                    
                     info = new ComponentInfo();
                 }
@@ -161,11 +191,11 @@ public class ConfigReader {
                     role = role + "/" + name;
                 }
                 info.fill(componentConfig);
-                info.setServiceClassName(className);
+                info.setComponentClassName(className);
                 info.setRole(role);
                 info.setConfiguration(componentConfig);
 
-                this.components.put(info.getRole(), info);
+                this.configInfo.addComponent(info);
                 // now if this is a selector, then we have to register the single components
                 if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
                     String classAttribute = null;
@@ -195,9 +225,9 @@ public class ConfigReader {
                             final ComponentInfo childInfo = new ComponentInfo();
                             childInfo.fill(current);
                             childInfo.setConfiguration(current);
-                            childInfo.setServiceClassName(current.getAttribute(classAttribute));
+                            childInfo.setComponentClassName(current.getAttribute(classAttribute));
                             childInfo.setRole(componentRole + current.getAttribute("name"));
-                            this.components.put(childInfo.getRole(), childInfo);
+                            this.configInfo.addComponent(childInfo);
                         }
                     }
                 }
@@ -329,7 +359,7 @@ public class ConfigReader {
 
             if (shorthand != null) {
                 // Store the shorthand and check that its consistent with any previous one
-                Object previous = this.shorthands.put( shorthand, roleName );
+                Object previous = this.configInfo.getShorthands().put( shorthand, roleName );
                 if (previous != null && !previous.equals(roleName)) {
                     throw new ConfigurationException("Shorthand '" + shorthand + "' already used for role " +
                             previous + ": inconsistent declaration at " + role.getLocation());
@@ -337,19 +367,19 @@ public class ConfigReader {
             }
 
             if ( defaultClassName != null ) {
-                ComponentInfo info = (ComponentInfo)this.classNames.get(roleName);
+                ComponentInfo info = (ComponentInfo)this.configInfo.getClassNames().get(roleName);
                 if (info == null) {
                     // Create a new info and store it
                     info = new ComponentInfo();
-                    info.setServiceClassName(defaultClassName);
+                    info.setComponentClassName(defaultClassName);
                     info.fill(role);
                     info.setRole(roleName);
                     info.setConfiguration(role);
-                    this.classNames.put(roleName, info);
+                    this.configInfo.getClassNames().put(roleName, info);
                 } else {
                     // Check that it's consistent with the existing info
-                    if (!defaultClassName.equals(info.getServiceClassName())) {
-                        throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getServiceClassName() +
+                    if (!defaultClassName.equals(info.getComponentClassName())) {
+                        throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getComponentClassName() +
                                 " for role " + roleName + " at " + role.getLocation());
                     }
                     //FIXME: should check also other ServiceInfo members
@@ -358,10 +388,10 @@ public class ConfigReader {
 
             final Configuration[] keys = role.getChildren( "hint" );
             if( keys.length > 0 ) {
-                Map keyMap = (Map)this.keyClassNames.get(roleName);
+                Map keyMap = (Map)this.configInfo.getKeyClassNames().get(roleName);
                 if (keyMap == null) {
                     keyMap = new HashMap();
-                    this.keyClassNames.put(roleName, keyMap);
+                    this.configInfo.getKeyClassNames().put(roleName, keyMap);
                 }
 
                 for( int j = 0; j < keys.length; j++ ) {
@@ -373,14 +403,14 @@ public class ConfigReader {
                     ComponentInfo info = (ComponentInfo)keyMap.get(shortHand);
                     if (info == null) {       
                         info = new ComponentInfo();
-                        info.setServiceClassName(className);
+                        info.setComponentClassName(className);
                         info.fill(key);
                         info.setConfiguration(key);
                         keyMap.put( shortHand, info );
                     } else {
                         // Check that it's consistent with the existing info
-                        if (!className.equals(info.getServiceClassName())) {
-                            throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getServiceClassName() +
+                        if (!className.equals(info.getComponentClassName())) {
+                            throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getComponentClassName() +
                                     " for hint " + shortHand + " at " + key.getLocation());
                         }
                         //FIXME: should check also other ServiceInfo members
