@@ -60,7 +60,7 @@ public class ApplicationContextFactory {
         CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(rsc, 
                                                                                     parent,
                                                                                     logger,
-                                                                                    info.getComponents(),
+                                                                                    info,
                                                                                     env.context);
         context.addBeanFactoryPostProcessor(new CocoonSettingsConfigurer(env.settings));
 

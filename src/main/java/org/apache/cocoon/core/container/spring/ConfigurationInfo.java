@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,16 +28,35 @@ import java.util.Map;
  */
 public class ConfigurationInfo {
 
-    protected Map components;
-    
+    /** Root logger. */
     protected String rootLogger;
+
+    /** Map for shorthand to role mapping. */
+    private final Map shorthands;
+
+    /** Map for role to default classname mapping. */
+    private final Map classNames;
+
+    /** Map for role->key to classname mapping. */
+    private final Map keyClassNames;
+
+    /** List of components. */
+    private final Map components = new HashMap();
+
+    public ConfigurationInfo() {
+        this.shorthands = new HashMap();
+        this.classNames = new HashMap();
+        this.keyClassNames = new HashMap();
+    }
+
+    public ConfigurationInfo(ConfigurationInfo parent) {
+        this.shorthands = new HashMap(parent.shorthands);
+        this.classNames = new HashMap(parent.classNames);
+        this.keyClassNames = new HashMap(parent.keyClassNames);
+    }
 
     public Map getComponents() {
         return components;
-    }
-
-    public void setComponents(Map components) {
-        this.components = components;
     }
 
     public String getRootLogger() {
@@ -47,5 +67,23 @@ public class ConfigurationInfo {
         this.rootLogger = rootLogger;
     }
 
+    public void addComponent(ComponentInfo info) {
+        this.components.put(info.getRole(), info);
+    }
 
+    public Map getClassNames() {
+        return this.classNames;
+    }
+
+    public void clearClassNames() {
+        this.classNames.clear();
+    }
+
+    public Map getShorthands() {
+        return this.shorthands;
+    }
+
+    public Map getKeyClassNames() {
+        return this.keyClassNames;
+    }
 }
