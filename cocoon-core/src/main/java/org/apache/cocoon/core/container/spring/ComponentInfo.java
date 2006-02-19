@@ -41,7 +41,7 @@ public final class ComponentInfo {
     private String destroyMethodName;
     private String poolInMethodName;
     private String poolOutMethodName;
-    private String serviceClassName;
+    private String componentClassName;
     private Configuration configuration;
     private Parameters parameters;
     private String loggerCategory;
@@ -124,15 +124,15 @@ public final class ComponentInfo {
     /**
      * @return Returns the serviceClassName.
      */
-    public String getServiceClassName() {
-        return serviceClassName;
+    public String getComponentClassName() {
+        return componentClassName;
     }
 
     /**
      * @param serviceClassName The serviceClassName to set.
      */
-    public void setServiceClassName(String serviceClassName) {
-        this.serviceClassName = serviceClassName;
+    public void setComponentClassName(String serviceClassName) {
+        this.componentClassName = serviceClassName;
     }
 
     /**
@@ -157,7 +157,7 @@ public final class ComponentInfo {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "ServiceInfo: {class=" + this.getServiceClassName()+"}";
+        return "ServiceInfo: {class=" + this.getComponentClassName()+"}";
     }
 
     public void fill(Configuration attr) {
@@ -218,4 +218,14 @@ public final class ComponentInfo {
         this.parameters = parameters;
     }
 
+    /**
+     * Is this a selector?
+     */
+    public boolean isSelector() {
+        if ( this.componentClassName.equals("org.apache.cocoon.core.container.DefaultServiceSelector")
+             || this.componentClassName.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
+            return true;
+        }
+        return false;
+    }
 }

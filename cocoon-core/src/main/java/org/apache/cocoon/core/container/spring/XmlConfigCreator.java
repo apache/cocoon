@@ -66,13 +66,12 @@ public class XmlConfigCreator {
             final ComponentInfo current = (ComponentInfo)entry.getValue();
             final String role = current.getRole();
     
-            String className = current.getServiceClassName();
+            String className = current.getComponentClassName();
             boolean isSelector = false;
             boolean singleton = true;
             boolean poolable = false;
-            // Test for Selector - we skip them
-            if ( className.equals("org.apache.cocoon.core.container.DefaultServiceSelector")
-                 || className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
+            // Test for Selector - we just create a wrapper for them to flatten the hierarchy
+            if ( current.isSelector() ) {
                 // Add selector
                 className = AvalonServiceSelector.class.getName();
                 isSelector = true;
