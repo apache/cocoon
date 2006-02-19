@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
  * This is a simple component that uses a {@link  ConfigurationInfo} to create
  * a Spring like configuration xml document.
  *
- * TODO: configure(Core)
  * TODO: register aliases for shorthands
  * @since 2.2
  * @version $Id$

@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.environment.portlet;
 
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
 import java.io.InputStream;
@@ -39,6 +41,7 @@ public final class PortletContext extends AbstractContext {
      * Constructs a PortletContext object from a PortletContext object
      */
     public PortletContext(javax.portlet.PortletContext context) {
+        super(new NullLogger());
         this.context = context;
     }
 
@@ -112,5 +115,26 @@ public final class PortletContext extends AbstractContext {
 
     public String getServerInfo() {
         return context.getServerInfo();
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.Exception, java.lang.String)
+     */
+    public void log(Exception arg0, String arg1) {
+        this.context.log(arg1, arg0);
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.String, java.lang.Throwable)
+     */
+    public void log(String arg0, Throwable arg1) {
+        this.context.log(arg0, arg1);
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.String)
+     */
+    public void log(String arg0) {
+        this.context.log(arg0);
     }
 }

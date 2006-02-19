@@ -85,7 +85,7 @@ public class BackgroundEnvironment extends AbstractEnvironment {
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
                              new CommandLineResponse());
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
-                             new CommandLineContext(context.getAbsolutePath()));
+                             new CommandLineContext(context.getAbsolutePath(), logger));
     }
 
     /* (non-Javadoc)

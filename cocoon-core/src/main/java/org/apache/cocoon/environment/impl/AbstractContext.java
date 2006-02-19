@@ -15,8 +15,21 @@
  */
 package org.apache.cocoon.environment.impl;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.Context;
 
 /**
@@ -25,9 +38,190 @@ import org.apache.cocoon.environment.Context;
  * @version $Id$
  */
 public abstract class AbstractContext 
-    implements Context {
+    implements Context, ServletContext {
 
+    /** The logger to use. */
+    protected final Logger logger;
+
+    /** Attributes. */
+    protected final Map attributes = new HashMap();
+
+    public AbstractContext(Logger logger) {
+        this.logger = logger;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String key) {
+        return this.attributes.get(key);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getAttributeNames()
+     */
+    public Enumeration getAttributeNames() {
+        return Collections.enumeration(this.attributes.keySet());
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getContext(java.lang.String)
+     */
+    public ServletContext getContext(String arg0) {
+        return this;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
+     */
+    public String getInitParameter(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getInitParameterNames()
+     */
+    public Enumeration getInitParameterNames() {
+        return Collections.enumeration(Collections.EMPTY_LIST);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getMajorVersion()
+     */
+    public int getMajorVersion() {
+        return 2;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getMimeType(java.lang.String)
+     */
+    public String getMimeType(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getMinorVersion()
+     */
+    public int getMinorVersion() {
+        return 3;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getNamedDispatcher(java.lang.String)
+     */
+    public RequestDispatcher getNamedDispatcher(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
+     */
+    public String getRealPath(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
+     */
+    public RequestDispatcher getRequestDispatcher(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getResource(java.lang.String)
+     */
+    public URL getResource(String arg0) throws MalformedURLException {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
+     */
+    public InputStream getResourceAsStream(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
+     */
+    public Set getResourcePaths(String arg0) {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getServerInfo()
+     */
+    public String getServerInfo() {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getServlet(java.lang.String)
+     */
+    public Servlet getServlet(String arg0) throws ServletException {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getServletContextName()
+     */
+    public String getServletContextName() {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getServletNames()
+     */
+    public Enumeration getServletNames() {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#getServlets()
+     */
+    public Enumeration getServlets() {
+        return null;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.Exception, java.lang.String)
+     */
+    public void log(Exception arg0, String arg1) {
+        this.logger.info(arg1, arg0);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.String, java.lang.Throwable)
+     */
+    public void log(String arg0, Throwable arg1) {
+        this.logger.info(arg0, arg1);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.String)
+     */
+    public void log(String arg0) {
+        this.logger.info(arg0);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
+     */
+    public void removeAttribute(String key) {
+        this.attributes.remove(key);
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String key, Object object) {
+        this.attributes.put(key, object);
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.Context#getAttributes()
+     */
     public Map getAttributes() {
-	return new ContextMap(this);
+	    return new ContextMap(this);
     }
 }

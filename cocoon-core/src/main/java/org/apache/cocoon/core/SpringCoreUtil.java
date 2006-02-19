@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -51,7 +50,6 @@ import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
@@ -675,7 +673,7 @@ public class SpringCoreUtil {
         env.context = this.appContext;
         env.core = this.core;
         env.logger = this.log;
-        env.servletContext = ((ServletConfig)this.appContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        env.servletContext = this.env.getEnvironmentContext();
         env.settings = this.core.getSettings();
         ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);

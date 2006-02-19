@@ -21,13 +21,15 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.io.InputStream;
 
+import javax.servlet.ServletContext;
+
 /**
  * Defines an interface to provide context information.
  *
+ * Since 2.2 this interface extends the {@link ServletContext} interface.
  * @version $Id$
- *
  */
-public interface Context {
+public interface Context extends ServletContext {
 
     Object getAttribute(String name);
 

@@ -105,8 +105,7 @@ public class CocoonWrapper {
         this.work = getDir(workDir, "working");
 
         this.conf = getConfigurationFile(this.context, this.configFile);
-        cliContext = new CommandLineContext(contextDir);
-        cliContext.enableLogging(envLogger);
+        cliContext = new CommandLineContext(contextDir, envLogger);
 
         // setup Cocoon core
         File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
