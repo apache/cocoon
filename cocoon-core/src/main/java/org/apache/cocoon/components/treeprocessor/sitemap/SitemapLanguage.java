@@ -40,11 +40,13 @@ import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
+import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Environment;
@@ -135,8 +137,9 @@ public class SitemapLanguage
             ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
             ae.settings = ae.core.getSettings();
             final ConfigurationInfo ci = ConfigReader.readConfiguration(c, this.applicationContext.getConfigurationInfo(), ae);
+
             System.out.println("Setting up spring based tree processor.");
-            final ApplicationContext sitemapContext = 
+            final CocoonXmlWebApplicationContext sitemapContext = 
                 ApplicationContextFactory.createApplicationContext(ae, ci, this.applicationContext, false);
             System.out.println("Looked up core: " + sitemapContext.getBean(Core.ROLE));
             newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
