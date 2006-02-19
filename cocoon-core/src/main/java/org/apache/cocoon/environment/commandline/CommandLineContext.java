@@ -15,77 +15,82 @@
  */
 package org.apache.cocoon.environment.commandline;
 
-import org.apache.commons.collections.iterators.IteratorEnumeration;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.impl.ContextMap;
-
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.InputStream;
+
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.impl.AbstractContext;
 
 /**
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @version $Id$
  */
-public class CommandLineContext extends AbstractLogEnabled implements Context {
+public class CommandLineContext extends AbstractContext implements Context {
 
     /** The context directory path*/
     private String contextDir;
 
-    /** The context attributes */
-    private Map attributes;
-
     /**
      * Constructs a CommandlineContext object from a ServletContext object
      */
-    public CommandLineContext (String contextDir) {
+    public CommandLineContext(String contextDir, Logger logger) {
+        super(logger);
         String contextDirPath = new File(contextDir).getAbsolutePath();
         // store contextDirPath as is don't remove trailing /.
         this.contextDir = contextDirPath;
-        this.attributes = new HashMap();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: getAttribute=" + name);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: getAttribute=" + name);
         }
-        return this.attributes.get(name);
+        return super.getAttribute(name);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: setAttribute=" + name);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: setAttribute=" + name);
         }
-        this.attributes.put(name, value);
+        super.setAttribute(name, value);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String name) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: removeAttribute=" + name);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: removeAttribute=" + name);
         }
-        this.attributes.remove(name);
+        super.removeAttribute(name);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getAttributeNames()
+     */
     public Enumeration getAttributeNames() {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: getAttributeNames");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: getAttributeNames");
         }
-        return new IteratorEnumeration(this.attributes.keySet().iterator());
+        return super.getAttributeNames();
     }
 
-    public Map getAttributes() {
-	return new ContextMap(this);
-    }
-
+    /**
+     * @see org.apache.cocoon.environment.Context#getResource(java.lang.String)
+     */
     public URL getResource(String path) throws MalformedURLException {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: getResource=" + path);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: getResource=" + path);
         }
         // rely on File to build correct File and URL
         File f = new File( contextDir, path );
@@ -93,30 +98,42 @@ public class CommandLineContext extends AbstractLogEnabled implements Context {
         return f.toURL();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getRealPath(java.lang.String)
+     */
     public String getRealPath(String path) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: getRealPath=" + path);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: getRealPath=" + path);
         }
         // rely on File to build correct File and URL
         File f = new File( this.contextDir, path );
         return f.getAbsolutePath();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getMimeType(java.lang.String)
+     */
     public String getMimeType(String file) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("CommandlineContext: getMimeType=" + file);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("CommandlineContext: getMimeType=" + file);
         }
         //return servletContext.getMimeType(file);
         return null;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getInitParameter(java.lang.String)
+     */
     public String getInitParameter(String name) {
-        getLogger().debug("CommandlineContext: getInitParameter=" + name);
-        return null;
+        this.logger.debug("CommandlineContext: getInitParameter=" + name);
+        return super.getInitParameter(name);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Context#getResourceAsStream(java.lang.String)
+     */
     public InputStream getResourceAsStream(String path){
-        getLogger().debug("CommandlineContext: getResourceAsStream "+path);
-    return null;
+        this.logger.debug("CommandlineContext: getResourceAsStream "+path);
+        return super.getResourceAsStream(path);
     }
 }

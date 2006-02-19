@@ -15,9 +15,13 @@
  */
 package org.apache.cocoon.serialization;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.core.Core;
@@ -53,7 +57,7 @@ import java.util.Properties;
  * @version $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
-        implements Configurable, CacheableProcessingComponent {
+        implements Configurable, Serviceable, CacheableProcessingComponent {
 
     /**
      * Cache for avoiding unnecessary checks of namespaces abilities.
@@ -150,11 +154,16 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
 //        //  }
 //    }
 
-    public void configure(Core core) {
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        final Core core = (Core)manager.lookup(Core.ROLE);
         String defaultEncoding  = core.getSettings().getFormEncoding();
         if (defaultEncoding != null) {
             this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);
-        }        
+        }
+        manager.release(core);
     }
 
     /**
