@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
+import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
 /**
@@ -39,6 +40,7 @@ public final class HttpContext extends AbstractContext {
      * Constructs a HttpContext object from a ServletContext object
      */
     public HttpContext (ServletContext servletContext) {
+        super(new NullLogger());
         this.servletContext = servletContext;
     }
 
@@ -134,11 +136,24 @@ public final class HttpContext extends AbstractContext {
         return this.servletContext.getServerInfo();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.String)
+     */
     public void log(String msg) {
         this.servletContext.log(msg);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.String, java.lang.Throwable)
+     */
     public void log(String msg, Throwable throwable) {
         this.servletContext.log(msg, throwable);
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.impl.AbstractContext#log(java.lang.Exception, java.lang.String)
+     */
+    public void log(Exception exception, String msg) {
+        this.servletContext.log(msg, exception);
     }
 }

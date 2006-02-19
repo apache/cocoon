@@ -145,16 +145,6 @@ public class Core {
     }
 
     /**
-     * Should not be used will be removed soon
-     * Return the Avalon context.
-     * @return The Avalon context.
-     */
-    // FIXME
-    public Context getContext() {
-        return this.context;
-    }
-
-    /**
      * Return the current object model
      * @return The object model.
      */

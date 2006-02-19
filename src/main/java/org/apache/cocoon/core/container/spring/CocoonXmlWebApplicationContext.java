@@ -29,7 +29,9 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.BeansException;
@@ -50,7 +52,9 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @since 2.2
  * @version $Id$
  */
-public class CocoonXmlWebApplicationContext extends XmlWebApplicationContext {
+public class CocoonXmlWebApplicationContext
+    extends XmlWebApplicationContext
+    implements ComponentLocator {
 
     public static final String DEFAULT_SPRING_CONFIG = "conf/applicationContext.xml";
 
@@ -161,6 +165,27 @@ public class CocoonXmlWebApplicationContext extends XmlWebApplicationContext {
             }
         }        
         return new String[]{};
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#getComponent(java.lang.String)
+     */
+    public Object getComponent(String key) throws ProcessingException {
+        return this.getBean(key);
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#hasComponent(java.lang.String)
+     */
+    public boolean hasComponent(String key) {
+        return this.containsBean(key);
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.ComponentLocator#release(java.lang.Object)
+     */
+    public void release(Object component) {
+        // nothing to do
     }
 
     /**
