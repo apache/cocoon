@@ -15,7 +15,9 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +44,9 @@ public class ConfigurationInfo {
 
     /** List of components. */
     private final Map components = new HashMap();
+
+    /** List of imports for spring configurations. */
+    private final List imports = new ArrayList();
 
     public ConfigurationInfo() {
         this.shorthands = new HashMap();
@@ -85,5 +90,13 @@ public class ConfigurationInfo {
 
     public Map getKeyClassNames() {
         return this.keyClassNames;
+    }
+
+    public void addImport(String uri) {
+        this.imports.add(uri);
+    }
+
+    public List getImports() {
+        return this.imports;
     }
 }

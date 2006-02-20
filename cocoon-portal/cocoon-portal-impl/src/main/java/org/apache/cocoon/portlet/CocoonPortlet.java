@@ -830,20 +830,6 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String)
-         */
-        public void log(String message) {
-            this.config.getPortletContext().log(message);
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
-         */
-        public void log(String message, Throwable error) {
-            this.config.getPortletContext().log(message, error);
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
          */
         public void setLogger(Logger rootLogger) {
