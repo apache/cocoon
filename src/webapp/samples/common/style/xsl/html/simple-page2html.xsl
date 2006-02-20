@@ -31,11 +31,11 @@
        <title><xsl:value-of select="title"/></title>
        <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
        <!-- copy local CSS, if any -->
-       <xsl:copy-of select="style"/>
+       <xsl:copy-of select="*[not(name() = 'content')]"/>
      </head>
      <body>
        <xsl:call-template name="resources"/>
-       <xsl:apply-templates/>
+       <xsl:apply-templates select="content"/>
      </body>
    </html>
   </xsl:template>
