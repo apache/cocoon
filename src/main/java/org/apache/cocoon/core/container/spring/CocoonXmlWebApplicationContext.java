@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container.spring;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -29,9 +30,14 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.sitemap.ComponentLocator;
+import org.apache.cocoon.sitemap.EnterSitemapEvent;
+import org.apache.cocoon.sitemap.EnterSitemapEventListener;
+import org.apache.cocoon.sitemap.LeaveSitemapEvent;
+import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.BeansException;
@@ -54,9 +60,10 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class CocoonXmlWebApplicationContext
     extends XmlWebApplicationContext
-    implements ComponentLocator {
+    implements EnterSitemapEventListener, LeaveSitemapEventListener {
 
     public static final String DEFAULT_SPRING_CONFIG = "conf/applicationContext.xml";
+    public static final String APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = "application-context";
 
     final private Resource avalonResource;
     protected SourceResolver resolver;
@@ -168,24 +175,48 @@ public class CocoonXmlWebApplicationContext
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.ComponentLocator#getComponent(java.lang.String)
+     * @see org.apache.cocoon.sitemap.EnterSitemapEventListener#enteredSitemap(org.apache.cocoon.sitemap.EnterSitemapEvent)
      */
-    public Object getComponent(String key) throws ProcessingException {
-        return this.getBean(key);
+    public void enteredSitemap(EnterSitemapEvent event) {
+        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
+        final Object oldContext = request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+        if ( oldContext != null ) {
+            Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+            if ( stack == null ) {
+                stack = new Stack();
+                request.setAttribute("ac-stack", stack, Request.REQUEST_SCOPE);
+            }
+            stack.push(oldContext);
+        }
+        request.setAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, this, Request.REQUEST_SCOPE);
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.ComponentLocator#hasComponent(java.lang.String)
+     * @see org.apache.cocoon.sitemap.LeaveSitemapEventListener#leftSitemap(org.apache.cocoon.sitemap.LeaveSitemapEvent)
      */
-    public boolean hasComponent(String key) {
-        return this.containsBean(key);
+    public void leftSitemap(LeaveSitemapEvent event) {
+        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
+        final Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+        if ( stack == null ) {
+            request.removeAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+        } else {
+            final Object oldContext = stack.pop();
+            request.setAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
+            if ( stack.size() == 0 ) {
+                request.removeAttribute("ac-stack", Request.REQUEST_SCOPE);
+            }
+        }
     }
 
-    /**
-     * @see org.apache.cocoon.sitemap.ComponentLocator#release(java.lang.Object)
-     */
-    public void release(Object component) {
-        // nothing to do
+    public CocoonXmlWebApplicationContext getCurrentApplicationContext() {
+        final Request request = ContextHelper.getRequest(this.avalonContext);
+        if ( this.avalonContext == null ) {
+            return this;
+        }
+        if ( request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE) != null ) {
+            return (CocoonXmlWebApplicationContext)request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE);
+        }
+        return this;
     }
 
     /**
