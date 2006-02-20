@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
@@ -37,6 +38,8 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * This component reads in Avalon style configuration files and returns all
  * contained components and their configurations.
+ *
+ * FIXME - Add logging statements
  *
  * @since 2.2
  * @version $Id$
@@ -118,14 +121,26 @@ public class ConfigReader {
         final Source root = this.resolver.resolveURI(relativePath);
         try {
             ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
-            Configuration config = b.build(root.getInputStream());
+            Configuration config = b.build(SourceUtil.getInputSource(root));
             
             // It's possible to define a logger on a per sitemap/service manager base.
             // This is the default logger for all components defined with this sitemap/manager.
             this.configInfo.setRootLogger(config.getAttribute("logger", null));
 
             // and load configuration with a empty list of loaded configurations
-            this.parseConfiguration(config, root.getURI(), new HashSet());
+            final Set loadedConfigs = new HashSet();
+            this.parseConfiguration(config, root.getURI(),loadedConfigs);
+            // test for optional user-roles attribute
+            final String userRoles = config.getAttribute("user-roles", null);
+            if (userRoles != null) {
+                final Source userRolesSource = this.resolver.resolveURI(userRoles, root.getURI(), null);
+                try {
+                    Configuration userRolesConfig = b.build(SourceUtil.getInputSource(userRolesSource));
+                    this.parseConfiguration(userRolesConfig, userRolesSource.getURI(), loadedConfigs);
+                } finally {
+                    this.resolver.release(userRolesSource);
+                }
+            }
         } finally {
             this.resolver.release(root);
         }

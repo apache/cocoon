@@ -29,24 +29,20 @@ import javax.servlet.ServletConfig;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
-import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Environment;
@@ -127,33 +123,20 @@ public class SitemapLanguage
         c.removeChild(config.getChild("classpath"));
         c.removeChild(config.getChild("listeners"));
 
-        Logger sitemapLogger;
         // setup spring container
-        if ( this.applicationContext != null ) {
-            final AvalonEnvironment ae = new AvalonEnvironment();
-            ae.context = context;
-            ae.core = (Core)applicationContext.getBean(Core.ROLE);
-            ae.logger = this.getLogger();
-            ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
-            ae.settings = ae.core.getSettings();
-            final ConfigurationInfo ci = ConfigReader.readConfiguration(c, this.applicationContext.getConfigurationInfo(), ae);
+        final AvalonEnvironment ae = new AvalonEnvironment();
+        ae.context = context;
+        ae.core = (Core)applicationContext.getBean(Core.ROLE);
+        ae.logger = this.getLogger();
+        ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
+        ae.settings = ae.core.getSettings();
+        final ConfigurationInfo ci = ConfigReader.readConfiguration(c, this.applicationContext.getConfigurationInfo(), ae);
 
-            System.out.println("Setting up spring based tree processor.");
-            final CocoonXmlWebApplicationContext sitemapContext = 
-                ApplicationContextFactory.createApplicationContext(ae, ci, this.applicationContext, false);
-            System.out.println("Looked up core: " + sitemapContext.getBean(Core.ROLE));
-            newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
-            sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
-        } else {
-            newManager = new CocoonServiceManager(this.parentProcessorManager, classloader);
+        final CocoonXmlWebApplicationContext sitemapContext = 
+            ApplicationContextFactory.createApplicationContext(ae, ci, this.applicationContext, false);
+        newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
+        Logger sitemapLogger = sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
 
-            // Go through the component lifecycle
-            ContainerUtil.enableLogging(newManager, this.getLogger());
-            ContainerUtil.contextualize(newManager, context);
-            ContainerUtil.configure(newManager, c);
-            ContainerUtil.initialize(newManager);
-            sitemapLogger = ((CocoonServiceManager)newManager).getServiceManagerLogger();
-        }
         // check for an application specific container
         final Configuration appContainer = config.getChild("application-container", false);
         if ( appContainer != null ) {
