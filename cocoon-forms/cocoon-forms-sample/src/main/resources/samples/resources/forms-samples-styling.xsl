@@ -30,9 +30,9 @@
   
   <xsl:template match="head">
     <head>
-      <xsl:apply-templates/>
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
+      <xsl:apply-templates/>
     </head>
   </xsl:template>
 
