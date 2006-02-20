@@ -55,7 +55,6 @@ import org.apache.cocoon.core.container.handler.InstanceComponentHandler;
 import org.apache.cocoon.core.container.handler.LazyHandler;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
-import org.apache.cocoon.sitemap.impl.ComponentManager;
 import org.apache.cocoon.util.JMXUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -142,9 +141,6 @@ public class CoreServiceManager
         RoleManager parentRoleManager = null;
         // FIXME - We should change this to a cleaner way!
         ServiceManager coreServicemanager = parent;
-        if ( parent instanceof ComponentManager ) {
-            coreServicemanager = ((ComponentManager)parent).getServiceManager();
-        }
         // get role manager
         if ( coreServicemanager instanceof RoleManagerOwner ) {
             parentRoleManager = ((RoleManagerOwner)coreServicemanager).getRoleManager();

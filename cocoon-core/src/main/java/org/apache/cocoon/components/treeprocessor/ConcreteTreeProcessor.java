@@ -37,14 +37,12 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
-import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.EnterSitemapEvent;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
-import org.apache.cocoon.sitemap.SitemapListener;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.commons.jci.listeners.NotificationListener;
@@ -80,9 +78,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** The sitemap executor */
     private SitemapExecutor sitemapExecutor;
-
-    /** Optional application container */
-    private ComponentLocator applicationContainer;
 
     /** Optional event listeners for the enter sitemap event */
     private List enterSitemapEventListeners = new ArrayList();
@@ -131,7 +126,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
-                                 ComponentLocator componentLocator,
                                  List enterSitemapEventListeners,
                                  List leaveSitemapEventListeners) {
         if (this.rootNode != null) {
@@ -144,7 +138,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
         this.leaveSitemapEventListeners = leaveSitemapEventListeners;
-        this.applicationContainer = componentLocator;
     }
 
     /** Set the sitemap component configurations (called as part of the tree building process) */
@@ -395,12 +388,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // dispose listeners
         this.disposeListeners(this.enterSitemapEventListeners);
         this.disposeListeners(this.leaveSitemapEventListeners);
-
-        // dispose component locator - if it is a SitemapListener it is already disposed!
-        if ( !(this.applicationContainer instanceof SitemapListener) ) {
-            ContainerUtil.dispose(this.applicationContainer);
-        }
-        this.applicationContainer = null;
     }
 
     protected void disposeListeners(List l) {

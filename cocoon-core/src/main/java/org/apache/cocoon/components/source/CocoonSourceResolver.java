@@ -34,10 +34,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -144,7 +142,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
             }
         }
 
-        final ComponentLocator m = this.getComponentLocator();
+        final ServiceManager m = this.getComponentLocator();
 
         Source source = null;
         // search for a SourceFactory implementing the protocol
@@ -218,14 +216,14 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
     /**
      * Get the component locator.
      */
-    protected ComponentLocator getComponentLocator() {
-        ComponentLocator l = null;
+    protected ServiceManager getComponentLocator() {
+        ServiceManager l = null;
         final Sitemap sitemap = this.core.getCurrentSitemap();
         if ( sitemap != null ) {
             l = sitemap.getComponentLocator();
         }
         if ( l == null ) {
-            l = new ComponentLocatorWrapper(this.manager);
+            l = this.manager;
         }
         return l;
     }
@@ -233,9 +231,13 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
     /**
      * Get the SourceFactory
      */
-    protected SourceFactory getSourceFactory(ComponentLocator m, String scheme) 
+    protected SourceFactory getSourceFactory(ServiceManager m, String scheme) 
     throws ProcessingException {
-        return (SourceFactory)m.getComponent(SourceFactory.ROLE + '/' + scheme);
+        try {
+            return (SourceFactory)m.lookup(SourceFactory.ROLE + '/' + scheme);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Unable to lookup source factory for scheme: " + scheme, se);
+        }
     }
 
     /**
@@ -247,7 +249,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
         if ( this.customResolver != null ) {
             this.customResolver.release( source );
         } else {
-            final ComponentLocator m = this.getComponentLocator();
+            final ServiceManager m = this.getComponentLocator();
             
             // search for a SourceFactory implementing the protocol
             final String scheme = source.getScheme();

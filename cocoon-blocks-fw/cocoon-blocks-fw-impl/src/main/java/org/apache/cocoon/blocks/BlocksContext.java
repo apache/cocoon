@@ -121,7 +121,7 @@ public class BlocksContext extends ServletContextWrapper {
             int index = this.mountPath.length();
             while (this.block == null && index != -1) {
                 this.mountPath = this.mountPath.substring(0, index);
-                this.block = (Block) BlocksContext.this.blocks.getMountedBlock(this.mountPath);
+                this.block = BlocksContext.this.blocks.getMountedBlock(this.mountPath);
                 index = this.mountPath.lastIndexOf('/');
             }
         }

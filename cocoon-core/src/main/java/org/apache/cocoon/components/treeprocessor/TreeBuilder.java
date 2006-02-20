@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.sitemap.ComponentLocator;
 
 /**
  *
@@ -116,11 +115,6 @@ public interface TreeBuilder {
      * Get the value of an attribute.
      */
     Object getAttribute(String name);
-
-    /**
-     * Return the sitemap component locator - if available.
-     */
-    ComponentLocator getComponentLocator();
 
     /**
      * Return all event listers that are registered for the
