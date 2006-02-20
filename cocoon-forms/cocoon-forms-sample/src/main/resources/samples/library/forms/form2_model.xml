@@ -25,6 +25,7 @@
     <fd:expand id="lib:field2"/>
     
     <fd:field id="field3" extends="lib:field2">
+      <fd:label>Field3:</fd:label>
       <fd:datatype base="integer"/>
     </fd:field>
     
