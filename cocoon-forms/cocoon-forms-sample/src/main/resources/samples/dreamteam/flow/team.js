@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/v3/Form.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 importClass (Packages.org.apache.cocoon.forms.util.I18nMessage);
 
 var manager = Packages.org.apache.cocoon.forms.samples.dreamteam.Manager.getManager();
