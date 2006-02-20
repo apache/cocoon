@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.forms.FormContext;
-
 /**
  * An action that acts on a repeater.
  * 
@@ -57,35 +55,5 @@ public class RepeaterAction extends Action {
         }
         
         return this.repeater;
-    }
-    
-    public static class Move extends RepeaterAction {
-        private int from;
-        private int to;
-        
-        public Move(RepeaterActionDefinition definition) {
-            super(definition);
-        }
-        
-        public void readFromRequest(FormContext formContext) {
-            String fullName = getFullName();
-            String fromStr = formContext.getRequest().getParameter(fullName + ".from");
-            if (fromStr != null) {
-                from = Integer.parseInt(fromStr);
-                to = Integer.parseInt(formContext.getRequest().getParameter(fullName + ".to"));
-            } else {
-                from = -1;
-                to = -1;
-            }
-            super.readFromRequest(formContext);
-        }
-        
-        public int getFrom() {
-            return from;
-        }
-        
-        public int getTo() {
-            return to;
-        }
     }
 }

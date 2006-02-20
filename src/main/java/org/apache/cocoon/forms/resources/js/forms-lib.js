@@ -15,6 +15,10 @@
 */
 /**
  * Runtime JavaScript library for Cocoon forms.
+ * NOTE: This file will be trimmed down to contain only the necessary
+ *       features for dynamic behaviour on non Ajax-capable browsers.
+ *       Advanced widgets such as double selection list and multivalue
+ *       field will be refactored as Dojo widgets.
  *
  * @version $Id$
  */
@@ -58,18 +62,14 @@ function forms_onsubmit() {
  * 'forms_submit_id' field the name of the element which triggered the submit.
  */
 function oldforms_submitForm(element, name) {
-    // Mac IE 5 doesn't recognize key word 'undefined', so use typeof and compare strings
-    if (typeof(name) == "undefined") {
-      name = element.name;
-    }
+    name = name || element.name;
     
     var form = forms_getForm(element);
     if (form == null) {
         alert("Cannot find form for " + element);
     } else {
         form["forms_submit_id"].value = name;
-        // FIXME: programmatically submitting the form doesn't trigger onsubmit ? (both in IE and Moz)
-        if (forms_onsubmit()) {
+        if (!form.onsubmit || form.onsubmit() != false) {
             form.submit();
         }
     }
