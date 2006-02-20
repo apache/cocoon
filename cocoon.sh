@@ -135,7 +135,8 @@ fi
 
 PATHSEP=":";
 case "`uname`" in
-   CYGWIN*) PATHSEP=";" ;;
+   CYGWIN*) PATHSEP=";"
+            JAVA_HOME=`cygpath --unix "$JAVA_HOME"`;;
 esac
 
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
