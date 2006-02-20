@@ -62,7 +62,7 @@ public class ApplicationContextFactory {
                                                                           ApplicationContext parent,
                                                                           boolean            addCocoon)
     throws Exception {
-        final String xmlConfig = (new XmlConfigCreator()).createConfig(info.getComponents(), addCocoon);
+        final String xmlConfig = (new XmlConfigCreator()).createConfig(info, addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
         Logger logger = env.logger;
         if ( info.rootLogger != null ) {

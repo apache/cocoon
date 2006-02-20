@@ -620,20 +620,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String)
-         */
-        public void log(String message) {
-            this.config.getServletContext().log(message);
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#log(java.lang.String, java.lang.Throwable)
-         */
-        public void log(String message, Throwable error) {
-            this.config.getServletContext().log(message, error);
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
          */
         public void setLogger(Logger rootLogger) {
