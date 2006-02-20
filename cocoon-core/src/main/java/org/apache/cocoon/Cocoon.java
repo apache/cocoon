@@ -15,301 +15,97 @@
  */
 package org.apache.cocoon;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.logger.LoggerManageable;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.container.CocoonServiceManager;
-import org.apache.cocoon.components.container.ComponentContext;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.impl.URLSource;
-import org.xml.sax.InputSource;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
- *
+ * 
  * @version $Id$
  */
-public class Cocoon
-        extends AbstractLogEnabled
-        implements ThreadSafe,
-                   Initializable,
-                   Disposable,
-                   Modifiable,
-                   Processor,
-                   Contextualizable,
-                   Serviceable,
-                   LoggerManageable {
+public class Cocoon implements Processor, BeanFactoryAware {
 
-    static Cocoon instance;
-
-    /** The root Cocoon logger */
-    private Logger rootLogger;
-
-    /** The application context */
-    private Context context;
-
-    /** The configuration file */
-    private Source configurationFile;
-
-    /** The logger manager */
-    private LoggerManager loggerManager;
-
-    /** The parent service manager. */
-    private ServiceManager parentServiceManager;
-
-    /** Flag for disposed or not */
-    private boolean disposed;
-
-    /** Active request count */
+    /** Active request count. */
     private volatile int activeRequestCount;
 
-    /** the Processor */
-    private Processor processor;
+    /** The processor used to process the requests. */
+    protected final Processor processor;
 
-    /** The source resolver */
-    protected SourceResolver sourceResolver;
+    /** The environment helper. */
+    protected final EnvironmentHelper environmentHelper;
 
-    /** The environment helper */
-    protected EnvironmentHelper environmentHelper;
+    /** Processor attributes. */
+    protected final Map processorAttributes = new HashMap();
 
-    /** A service manager */
-    protected CocoonServiceManager serviceManager;
+    /** The service manager. */
+    protected final ServiceManager serviceManager;
 
-    /** An optional Avalon Component that is called before and after processing all requests. */
+    /** The logger. */
+    protected final Logger logger;
+
+    /**
+     * An optional component that is called before and after processing all
+     * requests.
+     */
     protected RequestListener requestListener;
 
-    /** The Cocoon Core */
-    protected Core core;
-
-    /** Processor attributes */
-    protected Map processorAttributes = new HashMap();
+    /** Shared Cocoon instance - TODO: we should remove this. */
+    static Cocoon instance;
 
     /**
      * Creates a new <code>Cocoon</code> instance.
      */
-    public Cocoon() {
+    public Cocoon(Processor processor,
+                  ServiceManager serviceManager,
+                  Context context,
+                  Logger logger)
+    throws Exception {
         // HACK: Provide a way to share an instance of Cocoon object between
         //       several servlets/portlets.
         Cocoon.instance = this;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger logger) {
-        this.rootLogger = logger;
-        super.enableLogging(logger.getChildLogger("cocoon"));
-    }
-
-    /**
-     * Get the parent service manager. For purposes of
-     * avoiding extra method calls, the manager parameter may be null.
-     *
-     * @param manager the parent component manager. May be <code>null</code>
-     */
-    public void service(ServiceManager manager)
-    throws ServiceException {
-        this.parentServiceManager = manager;
-        this.core = (Core)this.parentServiceManager.lookup(Core.ROLE);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = new ComponentContext(context);
-        ((DefaultContext)this.context).makeReadOnly();
-    }
-
-    /**
-     * The <code>setLoggerManager</code> method will get a <code>LoggerManager</code>
-     * for further use.
-     *
-     * @param loggerManager a <code>LoggerManager</code> value
-     */
-    public void setLoggerManager(LoggerManager loggerManager) {
-        this.loggerManager = loggerManager;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        getLogger().debug("Initializing new Cocoon object.");
-        final Settings settings = this.core.getSettings();
-        try {
-            URLSource urlSource = new URLSource();
-            urlSource.init(new URL(settings.getConfiguration()), null);
-            this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                                                                     settings.getReloadDelay("config"));
-
-        } catch (IOException e) {
-            throw new ConfigurationException(
-                    "Could not open configuration file: " + settings.getConfiguration(), e);
-        }
-
-        this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
-        ContainerUtil.enableLogging(this.serviceManager, this.rootLogger.getChildLogger("manager"));
-        ContainerUtil.contextualize(this.serviceManager, this.context);
-
-        this.configure();
-
-        // add the logger manager to the component locator
-
-        ContainerUtil.initialize(this.serviceManager);
-
-        // Get the Processor and keep it
-        this.processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-
-        this.environmentHelper = new EnvironmentHelper(
-                (URL) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
-        ContainerUtil.enableLogging(this.environmentHelper, this.rootLogger);
+        this.processor = processor;
+        this.logger = logger;
+        this.serviceManager = serviceManager;
+        this.environmentHelper = new EnvironmentHelper((URL) context
+                .get(ContextHelper.CONTEXT_ROOT_URL));
+        ContainerUtil.enableLogging(this.environmentHelper, logger);
         ContainerUtil.service(this.environmentHelper, this.serviceManager);
-
-        this.sourceResolver = (SourceResolver)this.serviceManager.lookup(SourceResolver.ROLE);
-
-        if (this.serviceManager.hasService(RequestListener.ROLE)){
-            this.requestListener = (RequestListener) this.serviceManager.lookup(RequestListener.ROLE);
-        }
-        Core.cleanup();
     }
 
     /**
-     * Configure this <code>Cocoon</code> instance.
-     *
-     * @exception ConfigurationException if an error occurs
-     * @exception ContextException if an error occurs
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
-    private void configure() throws Exception {
-        InputSource is = SourceUtil.getInputSource(this.configurationFile);
-
-        final Settings settings = this.core.getSettings();
-        ConfigurationBuilder builder = new ConfigurationBuilder(settings);
-        Configuration conf = builder.build(is);
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Root configuration: " + conf.getName());
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        // get the optional request listener
+        if (factory.containsBean(RequestListener.ROLE)) {
+            this.requestListener = (RequestListener) factory.getBean(RequestListener.ROLE);
         }
-        if (!"cocoon".equals(conf.getName())) {
-            throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
-        }
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Configuration version: " + conf.getAttribute("version"));
-        }
-        if (!Constants.CONF_VERSION.equals(conf.getAttribute("version"))) {
-            throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
-        }
-
-        RoleManager drm = null;
-        String userRoles = conf.getAttribute("user-roles", "");
-        if (!"".equals(userRoles)) {
-            Configuration roles;
-            try {
-                org.apache.cocoon.environment.Context context =
-                    (org.apache.cocoon.environment.Context) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-                URL url = context.getResource(userRoles);
-                if (url == null) {
-                    throw new ConfigurationException("User-roles configuration '"+userRoles+"' cannot be found.");
-                }
-                is = new InputSource(new BufferedInputStream(url.openStream()));
-                is.setSystemId(url.toString());
-                roles = builder.build(is);
-            } catch (Exception e) {
-                throw new ConfigurationException("Error trying to load user-roles configuration", e);
-            }
-
-            RoleManager urm = new RoleManager(drm);
-            ContainerUtil.enableLogging(urm, this.rootLogger.getChildLogger("roles").getChildLogger("user"));
-            ContainerUtil.configure(urm, roles);
-            roles = null;
-            drm = urm;
-        }
-
-        this.serviceManager.setRoleManager(drm);
-        this.serviceManager.setLoggerManager(this.loggerManager);
-
-        getLogger().debug("Setting up components...");
-        ContainerUtil.configure(this.serviceManager, conf);
-    }
-
-    /**
-     * Queries the class to estimate its ergodic period termination.
-     *
-     * @param date a <code>long</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean modifiedSince(long date) {
-        return date < this.configurationFile.getLastModified();
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (this.serviceManager != null) {
-            this.serviceManager.release(this.requestListener);
-            this.requestListener = null;
-
-            this.serviceManager.release(this.processor);
-            this.processor = null;
-
-            this.serviceManager.release(this.sourceResolver);
-            this.sourceResolver = null;
-
-            ContainerUtil.dispose(this.serviceManager);
-            this.serviceManager = null;
-        }
-        if ( this.parentServiceManager != null ) {
-            this.parentServiceManager.release(this.core);
-            this.core = null;
-            this.parentServiceManager = null;
-        }
-        this.context = null;
-        if (Cocoon.instance == this) {
-            Cocoon.instance = null;
-        }
-        this.disposed = true;
     }
 
     /**
      * Log debug information about the current environment.
-     *
-     * @param environment an <code>Environment</code> value
+     * 
+     * @param environment
+     *            an <code>Environment</code> value
      */
     protected void debug(Environment environment, boolean internal) {
         String lineSeparator = SystemUtils.LINE_SEPARATOR;
@@ -321,24 +117,30 @@ public class Cocoon
         if (internal) {
             msg.append("INTERNAL ");
         }
-        msg.append("REQUEST: ").append(request.getRequestURI()).append(lineSeparator).append(lineSeparator);
+        msg.append("REQUEST: ").append(request.getRequestURI()).append(lineSeparator).append(
+                lineSeparator);
         msg.append("CONTEXT PATH: ").append(request.getContextPath()).append(lineSeparator);
         msg.append("SERVLET PATH: ").append(request.getServletPath()).append(lineSeparator);
-        msg.append("PATH INFO: ").append(request.getPathInfo()).append(lineSeparator).append(lineSeparator);
+        msg.append("PATH INFO: ").append(request.getPathInfo()).append(lineSeparator).append(
+                lineSeparator);
 
         msg.append("REMOTE HOST: ").append(request.getRemoteHost()).append(lineSeparator);
         msg.append("REMOTE ADDRESS: ").append(request.getRemoteAddr()).append(lineSeparator);
         msg.append("REMOTE USER: ").append(request.getRemoteUser()).append(lineSeparator);
-        msg.append("REQUEST SESSION ID: ").append(request.getRequestedSessionId()).append(lineSeparator);
-        msg.append("REQUEST PREFERRED LOCALE: ").append(request.getLocale().toString()).append(lineSeparator);
+        msg.append("REQUEST SESSION ID: ").append(request.getRequestedSessionId()).append(
+                lineSeparator);
+        msg.append("REQUEST PREFERRED LOCALE: ").append(request.getLocale().toString()).append(
+                lineSeparator);
         msg.append("SERVER HOST: ").append(request.getServerName()).append(lineSeparator);
-        msg.append("SERVER PORT: ").append(request.getServerPort()).append(lineSeparator).append(lineSeparator);
+        msg.append("SERVER PORT: ").append(request.getServerPort()).append(lineSeparator).append(
+                lineSeparator);
 
         msg.append("METHOD: ").append(request.getMethod()).append(lineSeparator);
         msg.append("CONTENT LENGTH: ").append(request.getContentLength()).append(lineSeparator);
         msg.append("PROTOCOL: ").append(request.getProtocol()).append(lineSeparator);
         msg.append("SCHEME: ").append(request.getScheme()).append(lineSeparator);
-        msg.append("AUTH TYPE: ").append(request.getAuthType()).append(lineSeparator).append(lineSeparator);
+        msg.append("AUTH TYPE: ").append(request.getAuthType()).append(lineSeparator).append(
+                lineSeparator);
         msg.append("CURRENT ACTIVE REQUESTS: ").append(activeRequestCount).append(lineSeparator);
 
         // log all of the request parameters
@@ -349,8 +151,7 @@ public class Cocoon
         while (e.hasMoreElements()) {
             String p = (String) e.nextElement();
 
-            msg.append("PARAM: '").append(p).append("' ")
-               .append("VALUES: '");
+            msg.append("PARAM: '").append(p).append("' ").append("VALUES: '");
             String[] params = request.getParameterValues(p);
             for (int i = 0; i < params.length; i++) {
                 msg.append("[" + params[i] + "]");
@@ -370,8 +171,7 @@ public class Cocoon
         while (e2.hasMoreElements()) {
             String p = (String) e2.nextElement();
 
-            msg.append("PARAM: '").append(p).append("' ")
-               .append("VALUES: '");
+            msg.append("PARAM: '").append(p).append("' ").append("VALUES: '");
             Enumeration e3 = request.getHeaders(p);
             while (e3.hasMoreElements()) {
                 msg.append("[" + e3.nextElement() + "]");
@@ -383,7 +183,8 @@ public class Cocoon
             msg.append("'").append(lineSeparator);
         }
 
-        msg.append(lineSeparator).append("SESSION ATTRIBUTES:").append(lineSeparator).append(lineSeparator);
+        msg.append(lineSeparator).append("SESSION ATTRIBUTES:").append(lineSeparator).append(
+                lineSeparator);
 
         // log all of the session attributes
         if (session != null) {
@@ -393,42 +194,35 @@ public class Cocoon
                 e = session.getAttributeNames();
                 while (e.hasMoreElements()) {
                     String p = (String) e.nextElement();
-                    msg.append("PARAM: '").append(p).append("' ")
-                       .append("VALUE: '").append(session.getAttribute(p)).append("'")
-                       .append(lineSeparator);
+                    msg.append("PARAM: '").append(p).append("' ").append("VALUE: '").append(
+                            session.getAttribute(p)).append("'").append(lineSeparator);
                 }
             }
         }
 
-        getLogger().debug(msg.toString());
+        this.logger.debug(msg.toString());
     }
 
     /**
      * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
      */
-    public boolean process(Environment environment)
-    throws Exception {
-
-        if (this.disposed) {
-            throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
-        }
-
+    public boolean process(Environment environment) throws Exception {
         environment.startingProcessing();
         final int environmentDepth = EnvironmentHelper.markEnvironment();
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
-            if (getLogger().isDebugEnabled()) {
+            if (this.logger.isDebugEnabled()) {
                 ++activeRequestCount;
-                debug(environment, false);
+                this.debug(environment, false);
             }
-
 
             if (this.requestListener != null) {
                 try {
                     requestListener.onRequestStart(environment);
                 } catch (Exception e) {
-                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    this.logger.error("Error encountered monitoring request start: "
+                            + e.getMessage());
                 }
             }
 
@@ -438,7 +232,8 @@ public class Cocoon
                 try {
                     requestListener.onRequestEnd(environment);
                 } catch (Exception e) {
-                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    this.logger.error("Error encountered monitoring request start: "
+                            + e.getMessage());
                 }
             }
 
@@ -451,7 +246,8 @@ public class Cocoon
                 try {
                     requestListener.onRequestException(environment, any);
                 } catch (Exception e) {
-                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
+                    this.logger.error("Error encountered monitoring request start: "
+                            + e.getMessage());
                 }
             }
             // reset response on error
@@ -460,26 +256,21 @@ public class Cocoon
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-            if (getLogger().isDebugEnabled()) {
+            if (this.logger.isDebugEnabled()) {
                 --activeRequestCount;
             }
             Core.cleanup();
 
-            EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
+            EnvironmentHelper.checkEnvironment(environmentDepth, this.logger);
         }
     }
 
     /**
      * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public InternalPipelineDescription buildPipeline(Environment environment)
-    throws Exception {
-        if (disposed) {
-            throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
-        }
-
+    public InternalPipelineDescription buildPipeline(Environment environment) throws Exception {
         try {
-            if (getLogger().isDebugEnabled()) {
+            if (this.logger.isDebugEnabled()) {
                 ++activeRequestCount;
                 debug(environment, true);
             }
@@ -487,7 +278,7 @@ public class Cocoon
             return this.processor.buildPipeline(environment);
 
         } finally {
-            if (getLogger().isDebugEnabled()) {
+            if (this.logger.isDebugEnabled()) {
                 --activeRequestCount;
             }
         }
@@ -502,6 +293,7 @@ public class Cocoon
 
     /**
      * Return this (Cocoon is always at the root of the processing chain).
+     * 
      * @since 2.1.1
      */
     public Processor getRootProcessor() {
@@ -530,13 +322,6 @@ public class Cocoon
     }
 
     /**
-     * FIXME -  Do we really need this method?
-     */
-    public ServiceManager getServiceManager() {
-        return this.serviceManager;
-    }
-
-    /**
      * @see org.apache.cocoon.Processor#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
@@ -551,10 +336,10 @@ public class Cocoon
     }
 
     /**
-     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String, java.lang.Object)
+     * @see org.apache.cocoon.Processor#setAttribute(java.lang.String,
+     *      java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
         this.processorAttributes.put(name, value);
     }
-
 }
