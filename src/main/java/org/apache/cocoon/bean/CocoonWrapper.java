@@ -33,7 +33,6 @@ import java.util.TreeMap;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -90,7 +89,7 @@ public class CocoonWrapper {
 
     private boolean initialized = false;
 
-    private CoreUtil coreUtil;
+    protected CoreUtil coreUtil;
 
     /**
      * INITIALISATION METHOD.
@@ -120,14 +119,10 @@ public class CocoonWrapper {
         env.setLoggingConfiguration(this.logKit);
         env.setConfigFile(this.conf);
         env.setLoadClassList(this.classList);
-        this.coreUtil = new CoreUtil(env);
+        this.coreUtil = new CoreUtil(env, cliContext);
         this.cocoon = this.coreUtil.createCocoon();
         this.log = env.logger;
         this.initialized = true;
-    }
-
-    protected ServiceManager getServiceManager() {
-        return cocoon.getServiceManager();
     }
 
     /**
