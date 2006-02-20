@@ -159,7 +159,7 @@ public class ApplicationContextFactory {
         if ( component != null ) {
             final String defaultComponent = component.getConfiguration().getAttribute("default", null);
             if ( defaultComponent != null ) {
-                info.roleAliased(category + "/" + defaultComponent, category + "/$default$");
+                info.setDefaultType(category, defaultComponent);
             }
         }
     }

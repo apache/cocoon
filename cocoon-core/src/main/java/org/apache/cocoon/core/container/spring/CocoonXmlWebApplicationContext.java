@@ -55,6 +55,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 /**
  * This is a Cocoon specific implementation of a Spring {@link ApplicationContext}.
  *
+ * TODO - Support for SitemapConfigurable
  * @since 2.2
  * @version $Id$
  */
