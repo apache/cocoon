@@ -15,18 +15,22 @@
  */
 package org.apache.cocoon.portlet;
 
-import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
-import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.avalon.framework.logger.Logger;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.HashMap;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.GenericPortlet;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.CocoonAccess;
 import org.apache.cocoon.ConnectionResetException;
@@ -35,34 +39,13 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.core.logging.CocoonLogKitLoggerManager;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.portlet.PortletContext;
 import org.apache.cocoon.environment.portlet.PortletEnvironment;
 import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
 import org.apache.cocoon.portlet.multipart.RequestFactory;
-
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.log.ContextMap;
-import org.apache.log.Hierarchy;
-import org.apache.pluto.core.impl.PortletContextImpl;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.GenericPortlet;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.PortletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.HashMap;
 
 /**
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
@@ -230,7 +213,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         this.workDir.mkdirs();
 
         // Init logger
-        initLogger();
+        this.log = ApplicationContextFactory.createRootLogger(this.envPortletContext, "cocoon");
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {
@@ -369,8 +352,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             uri += pathInfo;
         }
 
-        ContextMap ctxMap = null;
-
         Environment env;
         try {
             if (uri.charAt(0) == '/') {
@@ -389,17 +370,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
 
         try {
             try {
-                // Initialize a fresh log context containing the object model: it
-                // will be used by the CocoonLogFormatter
-                ctxMap = ContextMap.getCurrentContext();
-                // Add thread name (default content for empty context)
-                String threadName = Thread.currentThread().getName();
-                ctxMap.set("threadName", threadName);
-                // Add the object model
-                ctxMap.set("objectModel", env.getObjectModel());
-                // Add a unique request id (threadName + currentTime
-                ctxMap.set("request-id", threadName + System.currentTimeMillis());
-
                 if (!cocoon.process(env)) {
                     // We reach this when there is nothing in the processing change that matches
                     // the request. For example, no matcher matches.
@@ -457,10 +427,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             }
             res.setProperty("X-Cocoon-Time", timeString);
         } finally {
-            if (ctxMap != null) {
-                ctxMap.clear();
-            }
-
             if (request instanceof MultipartActionRequest) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Deleting uploaded file(s).");
@@ -512,7 +478,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
 
         String contentType = null;
-        ContextMap ctxMap = null;
 
         Environment env;
         try {
@@ -532,17 +497,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
 
         try {
             try {
-                // Initialize a fresh log context containing the object model: it
-                // will be used by the CocoonLogFormatter
-                ctxMap = ContextMap.getCurrentContext();
-                // Add thread name (default content for empty context)
-                String threadName = Thread.currentThread().getName();
-                ctxMap.set("threadName", threadName);
-                // Add the object model
-                ctxMap.set("objectModel", env.getObjectModel());
-                // Add a unique request id (threadName + currentTime
-                ctxMap.set("request-id", threadName + System.currentTimeMillis());
-
                 if (!cocoon.process(env)) {
                     // We reach this when there is nothing in the processing change that matches
                     // the request. For example, no matcher matches.
@@ -616,10 +570,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
                 }
             }
         } finally {
-            if (ctxMap != null) {
-                ctxMap.clear();
-            }
-
             /*
              * Portlet Specification 1.0, PLT.12.3.2 Output Stream and Writer Objects:
              *   The termination of the render method of the portlet indicates
@@ -844,85 +794,6 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             return defaultValue;
         }
         return Integer.parseInt(value);
-    }
-
-    protected void initLogger() {
-        final String accesslogger = getInitParameter("portlet-logger", "cocoon");
-
-        final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
-
-        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-        final String loggerManagerClass =
-            this.getInitParameter("logger-class", CocoonLogKitLoggerManager.class.getName());
-
-        // the log4j support requires currently that the log4j system is already configured elsewhere
-
-        final LoggerManager loggerManager =
-                newLoggerManager(loggerManagerClass, defaultHierarchy);
-        ContainerUtil.enableLogging(loggerManager, logger);
-
-        final DefaultContext subcontext = new DefaultContext();
-        subcontext.put(Constants.CONTEXT_WORK_DIR, workDir);
-        subcontext.put("portlet-context", this.portletContext);
-        if (this.portletContextPath == null) {
-            File logSCDir = new File(this.workDir, "log");
-            logSCDir.mkdirs();
-            if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Setting context-root for LogKit to " + logSCDir);
-            }
-            subcontext.put("context-root", logSCDir.toString());
-        } else {
-            subcontext.put("context-root", this.portletContextPath);
-        }
-        if ( this.portletContext instanceof PortletContextImpl ) {
-            subcontext.put("servlet-context", ((PortletContextImpl)this.portletContext).getServletContext());
-        }
-
-        try {
-            ContainerUtil.contextualize(loggerManager, subcontext);
-
-            if (loggerManager instanceof Configurable) {
-                //Configure the logkit management
-                String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
-
-                // test if this is a qualified url
-                InputStream is = null;
-                if (logkitConfig.indexOf(':') == -1) {
-                    is = this.portletContext.getResourceAsStream(logkitConfig);
-                    if (is == null) is = new FileInputStream(logkitConfig);
-                } else {
-                    URL logkitURL = new URL(logkitConfig);
-                    is = logkitURL.openStream();
-                }
-                final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-                final Configuration conf = builder.build(is);
-                ContainerUtil.configure(loggerManager, conf);
-            }
-
-            ContainerUtil.initialize(loggerManager);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        this.log = loggerManager.getLoggerForCategory(accesslogger);
-    }
-
-    private LoggerManager newLoggerManager(String loggerManagerClass, Hierarchy hierarchy) {
-        if (loggerManagerClass.equals(LogKitLoggerManager.class.getName())) {
-            return new CocoonLogKitLoggerManager();
-        } else if (loggerManagerClass.equals(CocoonLogKitLoggerManager.class.getName())) {
-                return new CocoonLogKitLoggerManager();
-        } else if (loggerManagerClass.equals(Log4JLoggerManager.class.getName()) ||
-                   loggerManagerClass.equalsIgnoreCase("LOG4J")) {
-            return new Log4JConfLoggerManager();
-        } else {
-            try {
-                Class clazz = Class.forName(loggerManagerClass);
-                return (LoggerManager)clazz.newInstance();
-            } catch (Exception e) {
-                return new LogKitLoggerManager(hierarchy);
-            }
-        }
     }
 
     protected Logger getLogger() {

@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log.Hierarchy;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
@@ -148,241 +147,246 @@ public class IOUtils {
         return object;
     }
 
-  /**
-   * These are java keywords as specified at the following URL (sorted alphabetically).
-   * http://java.sun.com/docs/books/jls/second_edition/html/lexical.doc.html#229308
-   */
-  static final String keywords[] =
-  {
-      "abstract",  "boolean",     "break",    "byte",         "case",
-      "catch",     "char",        "class",    "const",        "continue",
-      "default",   "do",          "double",   "else",         "extends",
-      "final",     "finally",     "float",    "for",          "goto",
-      "if",        "implements",  "import",   "instanceof",   "int",
-      "interface", "long",        "native",   "new",          "package",
-      "private",   "protected",   "public",   "return",       "short",
-      "static",    "strictfp",    "super",    "switch",       "synchronized",
-      "this",      "throw",       "throws",   "transient",    "try",
-      "void",      "volatile",    "while"
-  };
+    /**
+     * These are java keywords as specified at the following URL (sorted alphabetically).
+     * http://java.sun.com/docs/books/jls/second_edition/html/lexical.doc.html#229308
+     */
+    static final String keywords[] =
+    {
+        "abstract",  "boolean",     "break",    "byte",         "case",
+        "catch",     "char",        "class",    "const",        "continue",
+        "default",   "do",          "double",   "else",         "extends",
+        "final",     "finally",     "float",    "for",          "goto",
+        "if",        "implements",  "import",   "instanceof",   "int",
+        "interface", "long",        "native",   "new",          "package",
+        "private",   "protected",   "public",   "return",       "short",
+        "static",    "strictfp",    "super",    "switch",       "synchronized",
+        "this",      "throw",       "throws",   "transient",    "try",
+        "void",      "volatile",    "while"
+    };
 
-  /** Collator for comparing the strings */
-  static final Collator englishCollator = Collator.getInstance(Locale.ENGLISH);
+    /** Collator for comparing the strings */
+    static final Collator englishCollator = Collator.getInstance(Locale.ENGLISH);
 
-  /** Use this character as suffix */
-  static final char keywordSuffix = '_';
+    /** Use this character as suffix */
+    static final char keywordSuffix = '_';
 
-  /**
-   * checks if the input string is a valid java keyword.
-   * @return boolean true/false
-   */
-  private static boolean isJavaKeyword(String keyword) {
-    return (Arrays.binarySearch(keywords, keyword, englishCollator) >= 0);
-  }
-
-  // **********************
-  // File Methods
-  // **********************
-
-  /**
-   * Return a modified filename suitable for replicating directory
-   * structures below the store's base directory. The following
-   * conversions are performed:
-   * <ul>
-   * <li>Path separators are converted to regular directory names</li>
-   * <li>File path components are transliterated to make them valid (?)
-   *     programming language identifiers. This transformation may well
-   *     generate collisions for unusual filenames.</li>
-   * </ul>
-   * @return The transformed filename
-   */
-  public static String normalizedFilename(String filename) {
-    if ("".equals(filename)) {
-        return "";
+    /**
+     * checks if the input string is a valid java keyword.
+     * @return boolean true/false
+     */
+    private static boolean isJavaKeyword(String keyword) {
+        return (Arrays.binarySearch(keywords, keyword, englishCollator) >= 0);
     }
-    filename = (File.separatorChar == '\\') ? filename.replace('/','\\') : filename.replace('\\','/');
-    String[] path = StringUtils.split(filename, File.separator);
-    int start = (path[0].length() == 0) ? 1 : 0;
 
-    StringBuffer buffer = new StringBuffer();
-    for (int i = start; i < path.length; i++) {
+    // **********************
+    // File Methods
+    // **********************
 
-      if (i > start) {
-        buffer.append(File.separator);
-      }
-
-      if (path[i].equals("..")) {
-        int lio;
-        for (lio = buffer.length() - 2; lio >= 0; lio--) {
-          if (buffer.substring(lio).startsWith(File.separator)) {
-            break;
-          }
+    /**
+     * Return a modified filename suitable for replicating directory structures
+     * below the store's base directory. The following conversions are
+     * performed:
+     * <ul>
+     * <li>Path separators are converted to regular directory names</li>
+     * <li>File path components are transliterated to make them valid (?)
+     * programming language identifiers. This transformation may well generate
+     * collisions for unusual filenames.</li>
+     * </ul>
+     * 
+     * @return The transformed filename
+     */
+    public static String normalizedFilename(String filename) {
+        if ("".equals(filename)) {
+            return "";
         }
-        if (lio >= 0) {
-          buffer.setLength(lio);
+        filename = (File.separatorChar == '\\') ? filename.replace('/', '\\') : filename.replace(
+                '\\', '/');
+        String[] path = StringUtils.split(filename, File.separator);
+        int start = (path[0].length() == 0) ? 1 : 0;
+
+        StringBuffer buffer = new StringBuffer();
+        for (int i = start; i < path.length; i++) {
+
+            if (i > start) {
+                buffer.append(File.separator);
+            }
+
+            if (path[i].equals("..")) {
+                int lio;
+                for (lio = buffer.length() - 2; lio >= 0; lio--) {
+                    if (buffer.substring(lio).startsWith(File.separator)) {
+                        break;
+                    }
+                }
+                if (lio >= 0) {
+                    buffer.setLength(lio);
+                }
+            } else {
+                char[] chars = path[i].toCharArray();
+
+                if (chars.length < 1 || !Character.isLetter(chars[0])) {
+                    buffer.append('_');
+                }
+
+                for (int j = 0; j < chars.length; j++) {
+                    if (org.apache.cocoon.util.StringUtils.isAlphaNumeric(chars[j])) {
+                        buffer.append(chars[j]);
+                    } else {
+                        buffer.append('_');
+                    }
+                }
+
+                // Append the suffix if necessary.
+                if (isJavaKeyword(path[i]))
+                    buffer.append(keywordSuffix);
+            }
+
         }
-      } else {
-        char[] chars = path[i].toCharArray();
-
-        if (chars.length < 1 || !Character.isLetter(chars[0])) {
-          buffer.append('_');
-        }
-
-        for (int j = 0; j < chars.length; j++) {
-          if (org.apache.cocoon.util.StringUtils.isAlphaNumeric(chars[j])) {
-            buffer.append(chars[j]);
-          } else {
-            buffer.append('_');
-          }
-        }
-
-        // Append the suffix if necessary.
-        if(isJavaKeyword(path[i]))
-          buffer.append(keywordSuffix);
-      }
-
+        return buffer.toString();
     }
-    return buffer.toString();
-  }
 
-  /**
-   * Remove file information from a filename returning only its path
-   * component
-   *
-   * @param filename The filename
-   * @return The path information
-   * @deprecated To be removed in cocoon 2.3
-   */
-  public static String pathComponent(String filename) {
-    int i = filename.lastIndexOf(File.separator);
-    return (i > -1) ? filename.substring(0, i) : filename;
-  }
-
-  /**
-   * Remove path information from a filename returning only its file
-   * component
-   *
-   * @param filename The filename
-   * @return The filename sans path information
-   * @deprecated To be removed in cocoon 2.3
-   */
-  public static String fileComponent(String filename) {
-    int i = filename.lastIndexOf(File.separator);
-    return (i > -1) ? filename.substring(i + 1) : filename;
-  }
-
-  /**
-   * Strip a filename of its <i>last</i> extension (the portion
-   * immediately following the last dot character, if any)
-   *
-   * @param filename The filename
-   * @return The filename sans extension
-   * @deprecated To be removed in cocoon 2.3
-   */
-  public static String baseName(String filename) {
-    int i = filename.lastIndexOf('.');
-    return (i > -1) ? filename.substring(0, i) : filename;
-  }
-
-  /**
-   * Get the complete filename corresponding to a (typically relative)
-   * <code>File</code>.
-   * This method accounts for the possibility of an error in getting
-   * the filename's <i>canonical</i> path, returning the io/error-safe
-   * <i>absolute</i> form instead
-   *
-   * @param file The file
-   * @return The file's absolute filename
-   */
-  public static String getFullFilename(File file) {
-    try {
-      return file.getCanonicalPath();
-    } catch (Exception e) {
-      Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon").debug("IOUtils.getFullFilename", e);
-      return file.getAbsolutePath();
+    /**
+     * Remove file information from a filename returning only its path component
+     * 
+     * @param filename
+     *            The filename
+     * @return The path information
+     * @deprecated To be removed in cocoon 2.3
+     */
+    public static String pathComponent(String filename) {
+        int i = filename.lastIndexOf(File.separator);
+        return (i > -1) ? filename.substring(0, i) : filename;
     }
-  }
 
-  /**
-   * Return the path within a base directory
-   */
-  public static String getContextFilePath(String directoryPath, String filePath) {
-      try
-      {
-          File directory = new File(directoryPath);
-          File file = new File(filePath);
+    /**
+     * Remove path information from a filename returning only its file component
+     * 
+     * @param filename
+     *            The filename
+     * @return The filename sans path information
+     * @deprecated To be removed in cocoon 2.3
+     */
+    public static String fileComponent(String filename) {
+        int i = filename.lastIndexOf(File.separator);
+        return (i > -1) ? filename.substring(i + 1) : filename;
+    }
 
-          directoryPath = directory.getCanonicalPath();
-          filePath = file.getCanonicalPath();
+    /**
+     * Strip a filename of its <i>last</i> extension (the portion immediately
+     * following the last dot character, if any)
+     * 
+     * @param filename
+     *            The filename
+     * @return The filename sans extension
+     * @deprecated To be removed in cocoon 2.3
+     */
+    public static String baseName(String filename) {
+        int i = filename.lastIndexOf('.');
+        return (i > -1) ? filename.substring(0, i) : filename;
+    }
 
-          // If the context directory does not have a File.separator
-          // at the end then add one explicitly
-          if(!directoryPath.endsWith(File.separator)){
-            directoryPath += File.separator;
-          }
+    /**
+     * Get the complete filename corresponding to a (typically relative)
+     * <code>File</code>. This method accounts for the possibility of an
+     * error in getting the filename's <i>canonical</i> path, returning the
+     * io/error-safe <i>absolute</i> form instead
+     * 
+     * @param file
+     *            The file
+     * @return The file's absolute filename
+     */
+    public static String getFullFilename(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (Exception e) {
+            return file.getAbsolutePath();
+        }
+    }
 
-          // If the context dir contains both kinds of separator
-          // then standardize on using the File.separator
-          if ((directoryPath.indexOf('/') !=-1) && (directoryPath.indexOf('\\') !=-1)) {
-            directoryPath = directoryPath.replace('\\', File.separator.charAt(0));
-            directoryPath = directoryPath.replace('/', File.separator.charAt(0));
-          }
+    /**
+     * Return the path within a base directory
+     */
+    public static String getContextFilePath(String directoryPath, String filePath) {
+        try {
+            File directory = new File(directoryPath);
+            File file = new File(filePath);
 
-          // If the file path contains both kinds of separator
-          // then standardize on using the File.separator
-          if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
-            filePath = filePath.replace('\\', File.separator.charAt(0));
-            filePath = filePath.replace('/', File.separator.charAt(0));
-          }
+            directoryPath = directory.getCanonicalPath();
+            filePath = file.getCanonicalPath();
 
-          if (filePath.startsWith(directoryPath)) {
-              filePath = filePath.substring(directoryPath.length());
-          }
-      } catch (Exception e){
-          Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon").debug("IOUtils.getContextFilePath", e);
-      }
+            // If the context directory does not have a File.separator
+            // at the end then add one explicitly
+            if(!directoryPath.endsWith(File.separator)){
+                directoryPath += File.separator;
+            }
 
-      return filePath;
-  }
+            // If the context dir contains both kinds of separator
+            // then standardize on using the File.separator
+            if ((directoryPath.indexOf('/') !=-1) && (directoryPath.indexOf('\\') !=-1)) {
+                directoryPath = directoryPath.replace('\\', File.separator.charAt(0));
+                directoryPath = directoryPath.replace('/', File.separator.charAt(0));
+            }
 
-  /**
-   * Return a file with the given filename creating the necessary
-   * directories if not present.
-   *
-   * @param filename The file
-   * @return The created File instance
-   */
-  public static File createFile(File destDir, String filename) {
-    File file = new File(destDir, filename);
-    File parent = file.getParentFile();
-    if (parent != null) parent.mkdirs();
-    return file;
-  }
+            // If the file path contains both kinds of separator
+            // then standardize on using the File.separator
+            if ((filePath.indexOf('/') !=-1) && (filePath.indexOf('\\') !=-1)) {
+                filePath = filePath.replace('\\', File.separator.charAt(0));
+                filePath = filePath.replace('/', File.separator.charAt(0));
+            }
 
-  /**
-   * Returns a byte array from the given object.
-   *
-   * @param object to convert
-   * @return byte array from the object
-   * @deprecated To be removed in cocoon 2.3
-   */
-  public static byte[] objectToBytes(Object object) throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ObjectOutputStream os = new ObjectOutputStream(baos);
-    os.writeObject(object);
-    return baos.toByteArray();
-  }
+            if (filePath.startsWith(directoryPath)) {
+                filePath = filePath.substring(directoryPath.length());
+            }
+        } catch (Exception e){
+            // ignore
+        }
 
-  /**
-   * Returns a object from the given byte array.
-   *
-   * @param bytes array to convert
-   * @return object
-   * @deprecated To be removed in cocoon 2.3
-   */
-  public static Object bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
-    ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-    ObjectInputStream is = new ObjectInputStream(bais);
-    return is.readObject();
-  }
+        return filePath;
+    }
+
+    /**
+     * Return a file with the given filename creating the necessary directories
+     * if not present.
+     * 
+     * @param filename
+     *            The file
+     * @return The created File instance
+     */
+    public static File createFile(File destDir, String filename) {
+        File file = new File(destDir, filename);
+        File parent = file.getParentFile();
+        if (parent != null)
+            parent.mkdirs();
+        return file;
+    }
+
+    /**
+     * Returns a byte array from the given object.
+     * 
+     * @param object
+     *            to convert
+     * @return byte array from the object
+     * @deprecated To be removed in cocoon 2.3
+     */
+    public static byte[] objectToBytes(Object object) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(baos);
+        os.writeObject(object);
+        return baos.toByteArray();
+    }
+
+    /**
+     * Returns a object from the given byte array.
+     * 
+     * @param bytes
+     *            array to convert
+     * @return object
+     * @deprecated To be removed in cocoon 2.3
+     */
+    public static Object bytesToObject(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ObjectInputStream is = new ObjectInputStream(bais);
+        return is.readObject();
+    }
 }

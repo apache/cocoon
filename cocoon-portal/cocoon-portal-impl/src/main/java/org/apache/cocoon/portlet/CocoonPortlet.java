@@ -63,7 +63,6 @@ import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
 import org.apache.cocoon.portlet.multipart.RequestFactory;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.log.ContextMap;
 
 /**
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
@@ -342,8 +341,6 @@ public class CocoonPortlet extends GenericPortlet {
             uri += pathInfo;
         }
 
-        ContextMap ctxMap = null;
-
         Environment env;
         try {
             if (uri.charAt(0) == '/') {
@@ -362,17 +359,6 @@ public class CocoonPortlet extends GenericPortlet {
 
         try {
             try {
-                // Initialize a fresh log context containing the object model: it
-                // will be used by the CocoonLogFormatter
-                ctxMap = ContextMap.getCurrentContext();
-                // Add thread name (default content for empty context)
-                String threadName = Thread.currentThread().getName();
-                ctxMap.set("threadName", threadName);
-                // Add the object model
-                ctxMap.set("objectModel", env.getObjectModel());
-                // Add a unique request id (threadName + currentTime
-                ctxMap.set("request-id", threadName + System.currentTimeMillis());
-
                 if (!this.cocoon.process(env)) {
                     // We reach this when there is nothing in the processing change that matches
                     // the request. For example, no matcher matches.
@@ -430,10 +416,6 @@ public class CocoonPortlet extends GenericPortlet {
             }
             res.setProperty("X-Cocoon-Time", timeString);
         } finally {
-            if (ctxMap != null) {
-                ctxMap.clear();
-            }
-
             if (request instanceof MultipartActionRequest) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Deleting uploaded file(s).");
@@ -489,7 +471,6 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         String contentType = null;
-        ContextMap ctxMap = null;
 
         Environment env;
         try {
@@ -509,17 +490,6 @@ public class CocoonPortlet extends GenericPortlet {
 
         try {
             try {
-                // Initialize a fresh log context containing the object model: it
-                // will be used by the CocoonLogFormatter
-                ctxMap = ContextMap.getCurrentContext();
-                // Add thread name (default content for empty context)
-                String threadName = Thread.currentThread().getName();
-                ctxMap.set("threadName", threadName);
-                // Add the object model
-                ctxMap.set("objectModel", env.getObjectModel());
-                // Add a unique request id (threadName + currentTime
-                ctxMap.set("request-id", threadName + System.currentTimeMillis());
-
                 if (this.cocoon.process(env)) {
                     contentType = env.getContentType();
                 } else {
@@ -595,10 +565,6 @@ public class CocoonPortlet extends GenericPortlet {
                 }
             }
         } finally {
-            if (ctxMap != null) {
-                ctxMap.clear();
-            }
-
             if (request instanceof MultipartActionRequest) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Deleting uploaded file(s).");
