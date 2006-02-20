@@ -15,23 +15,13 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.core.container.DefaultServiceSelector;
 import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
-import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
 
@@ -48,31 +38,20 @@ import org.apache.cocoon.transformation.Transformer;
  * @version $Id$
  */
 public class ProcessorComponentInfo {
-    
+
+    /** The role to lookup this component. */
     public static final String ROLE = ProcessorComponentInfo.class.getName();
     
-    private static final String GENERATOR_PREFIX = Generator.ROLE + "/";
-    private static final String TRANSFORMER_PREFIX = Transformer.ROLE + "/";
-    private static final String SERIALIZER_PREFIX = Serializer.ROLE + "/";
-    private static final String READER_PREFIX = Reader.ROLE + "/";
-    private static final String PIPELINE_PREFIX = ProcessingPipeline.ROLE + "/";
-    
-    private static final Set DEFAULT_ROLES = new HashSet(Arrays.asList(new String[] {
-            Generator.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Transformer.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Serializer.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Reader.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            ProcessingPipeline.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Matcher.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Selector.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT,
-            Action.ROLE + "/" + DefaultServiceSelector.DEFAULT_HINT
-    }));
+    protected static final String GENERATOR_PREFIX = Generator.ROLE + "/";
+    protected static final String TRANSFORMER_PREFIX = Transformer.ROLE + "/";
+    protected static final String SERIALIZER_PREFIX = Serializer.ROLE + "/";
+    protected static final String READER_PREFIX = Reader.ROLE + "/";
     
     /** Component info for the parent processor */
-    ProcessorComponentInfo parent;
+    protected ProcessorComponentInfo parent;
     
     /** Lock that prevents further modification */
-    private boolean locked = false;
+    protected boolean locked = false;
     
     /**
      * Component-related data (see methods below for key names). We use a single Map
@@ -110,37 +89,7 @@ public class ProcessorComponentInfo {
         }
     }
     
-    /**
-     * Prepares the configuration for pooled sitemap components:
-     * Per default pooled components are proxied - we override this
-     * for generators, transformers, serializers, readers and pipes
-     * @param role the component's role
-     * @param clazz the component's class
-     * @param config the component's configuration
-     */
-    public void prepareConfig(String role, String clazz, Configuration config) {
-        if (role.startsWith(GENERATOR_PREFIX)
-            || role.startsWith(TRANSFORMER_PREFIX)
-            || role.startsWith(SERIALIZER_PREFIX)
-            || role.startsWith(READER_PREFIX)
-            || role.startsWith(PIPELINE_PREFIX)) {
-            
-            ((DefaultConfiguration)config).setAttribute("model", ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED);
-        }
-    }
-
-    public void roleAliased(String existingRole, String newRole) {
-        if (DEFAULT_ROLES.contains(newRole)) {
-            // A default role for a sitemap component has been added
-            int pos = existingRole.indexOf('/');
-            String role = existingRole.substring(0, pos);
-            String hint = existingRole.substring(pos+1);
-            
-            this.setDefaultType(role, hint);
-        }
-    }
-    
-    private void setupLabelAndPipelineHint(String role, Configuration config) {
+    protected void setupLabelAndPipelineHint(String role, Configuration config) {
 
         // Labels
         String label = config.getAttribute("label", null);
@@ -161,7 +110,7 @@ public class ProcessorComponentInfo {
         setPipelineHint(role, pipelineHint);
     }
 
-    private void setupMimeType(String role, Configuration config) {
+    protected void setupMimeType(String role, Configuration config) {
         setMimeType(role, config.getAttribute("mime-type", null));
     }
 
@@ -193,7 +142,7 @@ public class ProcessorComponentInfo {
         this.locked = true;
     }
     
-    private void setDefaultType(String role, String hint) {
+    public void setDefaultType(String role, String hint) {
         setData("defaultType/" + role, hint);
     }
     

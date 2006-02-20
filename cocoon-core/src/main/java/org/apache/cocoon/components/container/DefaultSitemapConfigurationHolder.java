@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
@@ -36,14 +35,14 @@ public final class DefaultSitemapConfigurationHolder
     private final String role;
     
     /** The role manager */
-    private final RoleManager roleManager;
+//    private final RoleManager roleManager;
 
     /** The prepared configurations indexed by the ChainedConfiguration */
     private Map preparedConfigurations;
     
-    public DefaultSitemapConfigurationHolder(String role, RoleManager manager) {
+    public DefaultSitemapConfigurationHolder(String role/*, RoleManager manager*/) {
         this.role = role;
-        this.roleManager = manager;
+        //this.roleManager = manager;
     }
     
     protected Map convert(Configuration[] configs, int index) {
@@ -64,7 +63,7 @@ public final class DefaultSitemapConfigurationHolder
             // and now check for new configurations
             for(int m = 0; m < childs.length; m++) {
 
-                final String r = this.roleManager.getRoleForName(childs[m].getName());
+                final String r = null;//this.roleManager.getRoleForName(childs[m].getName());
                 sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                  (ChainedConfiguration)sitemapComponentConfigurations.get(r)));
             }

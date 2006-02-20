@@ -16,17 +16,17 @@
  */
 package org.apache.cocoon.components.container;
 
-import java.util.HashMap;
-import java.util.Map;
+//import java.util.HashMap;
+//import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.components.SitemapConfigurable;
+//import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
+import org.apache.cocoon.components.treeprocessor.sitemap.ProcessorComponentInfo;
 import org.apache.cocoon.core.container.CoreServiceManager;
 
 /**
@@ -37,7 +37,7 @@ import org.apache.cocoon.core.container.CoreServiceManager;
 public class CocoonServiceManager extends CoreServiceManager {
     
     /** The {@link SitemapConfigurationHolder}s */
-    private Map sitemapConfigurationHolders = new HashMap(15);
+    //private Map sitemapConfigurationHolders = new HashMap(15);
     
     private ProcessorComponentInfo info;
 
@@ -86,6 +86,7 @@ public class CocoonServiceManager extends CoreServiceManager {
      */
     protected void initialize(String role, Object component) throws ServiceException {
         super.initialize(role, component);
+        /*
         if ( null != component && component instanceof SitemapConfigurable) {
 
             // FIXME: how can we prevent that this is called over and over again?
@@ -104,5 +105,6 @@ public class CocoonServiceManager extends CoreServiceManager {
                 throw new ServiceException(role, "Exception during setup of SitemapConfigurable.", ce);
             }
         }
+        */
     }
 }
