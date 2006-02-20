@@ -180,6 +180,17 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="RG" type="update">
+      Mark Forms block stable. Make dream team sample work with it.
+    </action>
+    <action dev="RG" type="fix">
+      Corrected problem with many ClassNotFoundExceptions occurring inside of the class loader by eliminating the
+      usage of Castor deriveByClass in portal configuations.
+    </action>
+    <action dev="RG" type="fix" issue="1742">
+      When compiling with Java 1.4 or higher, EncodeURLTransformer was modified to use JDK 1.4 regular expressions
+      instead of Jakarta regexp.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1778" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
        Cron block: NPE calling QuartzJobScheduler.fireJob if the job is a CronJob.
     </action>
