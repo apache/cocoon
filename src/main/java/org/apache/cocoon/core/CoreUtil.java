@@ -67,8 +67,6 @@ import org.xml.sax.InputSource;
 /**
  * This is an utility class to create a new Cocoon instance.
  * 
- * TODO - Remove dependencies to LogKit and Log4J
- *
  * @version $Id$
  * @since 2.2
  */
@@ -319,11 +317,6 @@ public class CoreUtil {
         // settings can't be changed anymore
         settings.makeReadOnly();
 
-        // put the core into the context - this is for internal use only
-        // The Cocoon container fetches the Core object using the context.
-        // FIXME - We shouldn't need this - check where it is used
-        this.appContext.put(Core.ROLE, core);
-
         // test the setup of the spring based container
         this.container = this.setupSpringContainer();
     }
@@ -373,13 +366,13 @@ public class CoreUtil {
     protected MutableSettings createSettings() {
         // get the running mode
         final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
-        this.env.log("Running in mode: " + mode);
+        this.servletContext.log("Running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
         // we need our own resolver
-        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.env));
+        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.servletContext));
 
         // now read all properties from the properties directory
         this.readProperties("context://WEB-INF/properties", s, resolver);
@@ -394,8 +387,8 @@ public class CoreUtil {
                 PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
                 s.fill(provider.getProperties());
             } catch (Exception ignore) {
-                env.log("Unable to get property provider for class " + className, ignore);
-                env.log("Continuing initialization.");            
+                this.servletContext.log("Unable to get property provider for class " + className, ignore);
+                this.servletContext.log("Continuing initialization.");            
             }
         }
         // fill from the environment configuration, like web.xml etc.
@@ -413,15 +406,15 @@ public class CoreUtil {
             }
         }
         if ( additionalPropertyFile != null ) {
-            env.log("Reading user settings from '" + additionalPropertyFile + "'");
+            this.servletContext.log("Reading user settings from '" + additionalPropertyFile + "'");
             final Properties p = new Properties();
             try {
                 FileInputStream fis = new FileInputStream(additionalPropertyFile);
                 p.load(fis);
                 fis.close();
             } catch (IOException ignore) {
-                env.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                env.log("Continuing initialization.");
+                this.servletContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                this.servletContext.log("Continuing initialization.");
             }
         }
         // now overwrite with system properties
@@ -506,7 +499,7 @@ public class CoreUtil {
                     final Source src = (Source) c.next();
                     if ( src.getURI().endsWith(".properties") ) {
                         final InputStream propsIS = src.getInputStream();
-                        env.log("Reading settings from '" + src.getURI() + "'.");
+                        this.servletContext.log("Reading settings from '" + src.getURI() + "'.");
                         final Properties p = new Properties();
                         p.load(propsIS);
                         propsIS.close();
@@ -515,8 +508,8 @@ public class CoreUtil {
                 }
             }
         } catch (IOException ignore) {
-            env.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
-            env.log("Continuing initialization.");            
+            this.servletContext.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
+            this.servletContext.log("Continuing initialization.");            
         } finally {
             resolver.release(directory);
         }
@@ -860,9 +853,9 @@ public class CoreUtil {
     }
 
     protected static final class LoggerWrapper implements Logger {
-        private final BootstrapEnvironment env;
+        private final ServletContext env;
 
-        public LoggerWrapper(BootstrapEnvironment env) {
+        public LoggerWrapper(ServletContext env) {
             this.env = env;
         }
 

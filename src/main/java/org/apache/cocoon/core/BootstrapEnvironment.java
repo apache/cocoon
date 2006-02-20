@@ -89,19 +89,6 @@ public interface BootstrapEnvironment {
      */
     Logger getBootstrapLogger(LogLevel logLevel);
 
-    /** Log a message during bootstrapping. This is used to log
-     * information before the logging system is setup.
-     * @param message A message.
-     */
-    void log(String message);
-
-    /** Log a message during bootstrapping. This is used to log
-     * information before the logging system is setup.
-     * @param message A message.
-     * @param error   An error.
-     */
-    void log(String message, Throwable error);
-
     /**
      * Pass the root logger back to the environment. As soon as the
      * logging system is set up, this method is called.

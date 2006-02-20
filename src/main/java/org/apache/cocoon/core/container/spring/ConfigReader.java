@@ -169,7 +169,8 @@ public class ConfigReader {
 
             if ("include".equals(componentName)) {
                 this.handleInclude(contextURI, loadedURIs, componentConfig);
-
+            } else if ( "include-beans".equals(componentName) ) {
+                this.handleBeanInclude(contextURI, componentConfig);
             } else {
                 // Component declaration
                 // Find the role
@@ -348,6 +349,69 @@ public class ConfigReader {
             uri = uri.substring(pos+1);
         }
         return WildcardHelper.match(null, uri, parsedPattern);      
+    }
+
+    protected void handleBeanInclude(final String contextURI,
+                                     final Configuration includeStatement)
+    throws ConfigurationException {
+        final String includeURI = includeStatement.getAttribute("src", null);
+        String directoryURI = null;
+        if (includeURI == null) {
+            // check for directories
+            directoryURI = includeStatement.getAttribute("dir", null);
+        }
+        if (includeURI == null && directoryURI == null) {
+            throw new ConfigurationException(
+                    "Include statement must either have a 'src' or 'dir' attribute, at "
+                            + includeStatement.getLocation());
+        }
+
+        if (includeURI != null) {
+            Source src = null;
+            try {
+                src = this.resolver.resolveURI(includeURI, contextURI, null);
+
+                this.configInfo.addImport(src.getURI());
+            } catch (Exception e) {
+                throw new ConfigurationException("Cannot load '" + includeURI + "' at "
+                        + includeStatement.getLocation(), e);
+            } finally {
+                this.resolver.release(src);
+            }
+
+        } else {
+            final String pattern = includeStatement.getAttribute("pattern", null);
+            int[] parsedPattern = null;
+            if (pattern != null) {
+                parsedPattern = WildcardHelper.compilePattern(pattern);
+            }
+            Source directory = null;
+            try {
+                directory = this.resolver.resolveURI(directoryURI, contextURI, CONTEXT_PARAMETERS);
+                if (directory instanceof TraversableSource) {
+                    final Iterator children = ((TraversableSource) directory).getChildren()
+                            .iterator();
+                    while (children.hasNext()) {
+                        final Source s = (Source) children.next();
+                        try {
+                            if (parsedPattern == null || this.match(s.getURI(), parsedPattern)) {
+                                this.configInfo.addImport(s.getURI());
+                            }
+                        } finally {
+                            this.resolver.release(s);
+                        }
+                    }
+                } else {
+                    throw new ConfigurationException("Include.dir must point to a directory, '"
+                            + directory.getURI() + "' is not a directory.'");
+                }
+            } catch (IOException ioe) {
+                throw new ConfigurationException("Unable to read configurations from "
+                        + directoryURI);
+            } finally {
+                this.resolver.release(directory);
+            }
+        }
     }
 
     /**

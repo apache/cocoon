@@ -43,14 +43,23 @@ public class XmlConfigCreator {
     protected static final String DOCTYPE =
         "<!DOCTYPE beans PUBLIC \"-//SPRING//DTD BEAN//EN\" \"http://www.springframework.org/dtd/spring-beans.dtd\">\n";
 
-    public String createConfig(Map components, boolean addCocoon) 
+    public String createConfig(ConfigurationInfo info, boolean addCocoon) 
     throws Exception {
+        final Map components = info.getComponents();
         final List pooledRoles = new ArrayList();
         final StringBuffer buffer = new StringBuffer();
         buffer.append(XMLHEADER);
         buffer.append(DOCTYPE);
         buffer.append("<beans>\n");
 
+        // first add includes
+        final Iterator includeIter = info.getImports().iterator();
+        while ( includeIter.hasNext() ) {
+            final String uri = (String)includeIter.next();
+            buffer.append("<import resource=\"");
+            buffer.append(uri);
+            buffer.append("\"/>\n");
+        }
         // start with "static" components: ServiceManager
         buffer.append("<bean");
         this.appendAttribute(buffer, "id", ServiceManager.class.getName());
@@ -183,8 +192,8 @@ public class XmlConfigCreator {
         final Iterator prI = pooledRoles.iterator();
         while ( prI.hasNext() ) {
             final String role = (String)prI.next();
-            final Object info = components.remove(role);
-            components.put(role + "Pooled", info);
+            final Object pooledInfo = components.remove(role);
+            components.put(role + "Pooled", pooledInfo);
         }
         return buffer.toString();
     }
