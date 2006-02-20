@@ -314,17 +314,23 @@ public class Form extends AbstractContainerWidget
             // Find the submit widget, if not an action
             // This has to occur after reading from the request, to handle stateless forms
             // where the submit widget is recreated when the request is read (e.g. a row-action).
-            String submitId = formContext.getRequest().getParameter(SUBMIT_ID_PARAMETER);
-            if (!StringUtils.isEmpty(submitId)) {
-                // if the form has an ID, it is used as part of the submitId too and must be removed
-                if(!StringUtils.isEmpty(this.getId())) {
-                    submitId = submitId.substring(submitId.indexOf('.')+1);
+            
+            // Note that we don't check this if the submit widget was already set, as it can cause problems
+            // if the user triggers submit with an input (which sets 'forms_submit_id'), then clicks back
+            // and submits using a regular submit button.
+            if (getSubmitWidget() == null) {
+                String submitId = formContext.getRequest().getParameter(SUBMIT_ID_PARAMETER);
+                if (!StringUtils.isEmpty(submitId)) {
+                    // if the form has an ID, it is used as part of the submitId too and must be removed
+                    if(!StringUtils.isEmpty(this.getId())) {
+                        submitId = submitId.substring(submitId.indexOf('.')+1);
+                    }
+                    Widget submit = this.lookupWidget(submitId.replace('.', '/'));
+                    if (submit == null) {
+                        throw new IllegalArgumentException("Invalid submit id (no such widget): " + submitId);
+                    }
+                    setSubmitWidget(submit);
                 }
-                Widget submit = this.lookupWidget(submitId.replace('.', '/'));
-                if (submit == null) {
-                    throw new IllegalArgumentException("Invalid submit id (no such widget): " + submitId);
-                }
-                setSubmitWidget(submit);
             }
 
             // Fire events, still buffering them: this ensures they will be handled in the same

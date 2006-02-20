@@ -73,3 +73,8 @@
 .forms-doubleList input {
     width: 40px;
 }
+
+/** Style for drag'n drop indicator */
+.forms-dropIndicator {
+	border-top: 4px solid black;
+}

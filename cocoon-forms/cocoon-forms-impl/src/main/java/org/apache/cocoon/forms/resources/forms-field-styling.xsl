@@ -27,21 +27,25 @@
                 exclude-result-prefixes="fi">
 
   <xsl:template match="head" mode="forms-field">
+    <!-- copy any pre-initialization code which can be used e.g. to setup dojo debugging with
+         <script> djConfig = {isDebug: true} </script> -->
+    <xsl:copy-of select="fi:init/node()"/>
+    <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>
+    <script src="{$resources-uri}/ajax/js/cocoon.js" type="text/javascript"/>
     <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>
-    <script src="{$resources-uri}/ajax/js/cocoon-ajax.js" type="text/javascript"/>
-    <script src="{$resources-uri}/forms/js/cforms.js" type="text/javascript"/>
+    <script type="text/javascript">
+        dojo.addOnLoad(forms_onload);
+        dojo.require("cocoon.forms.*");
+    </script>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms.css"/>
+  </xsl:template>
+  
+  <xsl:template match="fi:init">
+    <!-- ignore, was handled above -->
   </xsl:template>
 
   <xsl:template match="body" mode="forms-field">
     <xsl:copy-of select="@*"/>
-    <xsl:attribute name="onload">forms_onload();<xsl:value-of select="@onload"/></xsl:attribute>
-  </xsl:template>
-
-  <xsl:template match="body" mode="forms-afterload">
-    <script language="Javascript">
-       forms_afterLoad();
-    </script>
   </xsl:template>
 
   <!--+
@@ -378,7 +382,7 @@
       | fi:action
       +-->
   <xsl:template match="fi:action">
-    <input id="{@id}" type="submit" name="{@id}" title="{fi:hint}" onclick="forms_submitForm(this, '{@id}'); return false">
+    <input id="{@id}" type="submit" name="{@id}" title="{fi:hint}">
       <xsl:attribute name="value"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
       <xsl:apply-templates select="." mode="styling"/>
     </input>
@@ -554,12 +558,19 @@
   <xsl:template match="fi:form-template|fi:form-generated">
     <form>
       <xsl:copy-of select="@*"/>
-      <xsl:attribute name="onsubmit">forms_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
+      <xsl:choose>
+        <xsl:when test="@ajax = 'true'">
+          <xsl:attribute name="dojoType">CFormsForm</xsl:attribute>
+          <xsl:if test="@ajax = 'true'">
+            <script type="text/javascript">cocoon.forms.ajax = true;</script>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="onsubmit">forms_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
       <!-- hidden field to store the submit id -->
       <div><input type="hidden" name="forms_submit_id"/></div>
-      <xsl:if test="@ajax = 'true'">
-        <script type="text/javascript">cocoon.forms.ajax = true;</script>
-      </xsl:if>
       <xsl:apply-templates/>
 
       <!-- TODO: consider putting this in the xml stream from the generator? -->

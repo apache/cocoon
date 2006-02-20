@@ -198,21 +198,4 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             });
         }
     }
-
-    public static class MoveRowActionDefinition extends RepeaterActionDefinition {
-
-        public MoveRowActionDefinition(String repeaterName) {
-            super(repeaterName);
-            this.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent event) {
-                    RepeaterAction.Move move = (RepeaterAction.Move)event.getSource();
-                    Repeater repeater = move.getRepeater();
-                    repeater.moveRow(move.getFrom(), move.getTo());              
-                }
-            });
-        }
-        public Widget createInstance() {
-            return new RepeaterAction.Move(this);
-        }
-    }
 }
