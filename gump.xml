@@ -928,7 +928,7 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-forms" status="unstable" dir="src/blocks/forms">
+  <project name="cocoon-block-forms" status="stable" dir="src/blocks/forms">
     <package>org.apache.cocoon</package>
 
     <description>Cocoon Forms - Cocoon's implementation of form handling.</description>
