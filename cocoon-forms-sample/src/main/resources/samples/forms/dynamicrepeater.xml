@@ -24,7 +24,7 @@
 
   <fd:widgets>
   
-    <fd:repeater id="contacts">
+    <fd:repeater id="contacts" orderable="true">
       <fd:widgets>
         
         <!-- The ID is here to keep track of row creation order, which can

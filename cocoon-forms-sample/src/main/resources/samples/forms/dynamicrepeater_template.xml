@@ -23,7 +23,12 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  
+  <fi:init>
+	<script type="text/javascript">
+	  // Uncomment this to see Dojo debug
+	  // var djConfig = { isDebug: true };
+    </script>	
+  </fi:init>
   <h4 class="samplesGroup">Repeater widget</h4>
   <title>Dynamic template</title>
   <style type="text/css">
@@ -49,7 +54,7 @@
       <li>when there are some contacts, the "move up" and "move down" buttons are not shown on the first and last lines, respectively.</li>
     </ul>
       <ft:repeater id="contacts">
-        <div>
+        <div dojoType="CFormsRepeater" orderable="true">
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>
@@ -63,6 +68,7 @@
                 <th><ft:repeater-widget-label widget-id="ID"/></th>
                 <th><ft:repeater-widget-label widget-id="select"/></th>
               </tr>
+              <tbody>
                   <!-- The contents of the repeater-widget element is a template that will
                        be applied to each row in the repeater. -->
                   <ft:repeater-rows>
@@ -97,6 +103,7 @@
                       </td>
                     </tr>
                   </ft:repeater-rows>
+                </tbody>
             </table>
                 </jx:otherwise>
               </jx:choose>

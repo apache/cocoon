@@ -151,7 +151,9 @@
        </map:call>
        <map:transform type="i18n">
        </map:transform>
-       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform src="resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+       </map:transform>
        <map:transform type="i18n">
        </map:transform>
        <map:serialize/>
@@ -207,7 +209,9 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
-       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform src="resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+       </map:transform>
        <map:transform type="i18n">
        </map:transform>
        <map:serialize/>
@@ -227,7 +231,9 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
-       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform src="resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+       </map:transform>
        <map:transform type="i18n">
          <map:parameter name="locale" value="{flow-attribute:locale}"/>
        </map:transform>
@@ -457,7 +463,9 @@
          <map:parameter name="file" value="forms/htmlarea_template.xml"/>
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
-       <map:transform src="resources/forms-samples-styling.xsl"/>
+       <map:transform src="resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+       </map:transform>
        <map:serialize/>
      </map:match>
 
@@ -536,7 +544,9 @@
        <map:call resource="simple-page2html">
          <map:parameter name="file" value="forms/{1}_template.xml"/>
        </map:call>
-       <map:transform src="resources/forms-samples-styling.xsl" />
+       <map:transform src="resources/forms-samples-styling.xsl">
+         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+       </map:transform>
        <map:serialize type="html" />
      </map:match>
 
