@@ -1654,6 +1654,9 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="dojo-rsrc"/>
+
+    <library name="dojo-rsrc"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/ajax"/>
     <work nested="tools/anttasks"/>
