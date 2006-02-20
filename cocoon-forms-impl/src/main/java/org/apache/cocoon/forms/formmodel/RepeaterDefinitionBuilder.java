@@ -47,8 +47,11 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
 
         // initial size is at least the min size
         initialSize = minSize > initialSize ? minSize : initialSize;
-                
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize);
+        
+        boolean orderable = DomHelper.getAttributeAsBoolean(repeaterElement, "orderable", false);
+        boolean selectable = DomHelper.getAttributeAsBoolean(repeaterElement, "selectable", false);
+
+        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable);
         super.setupDefinition(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
 

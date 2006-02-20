@@ -426,14 +426,11 @@ public abstract class AbstractWidget implements Widget {
         // top-level widget-containers like forms will have their id set to ""
         // for those the @id should not be included.
         if (getId().length() != 0) {
-        	attrs.addCDATAAttribute("id", getRequestParameterName());
+            attrs.addCDATAAttribute("id", getRequestParameterName());
         }
 
-        // Add the "state" attribute if different from active (the default state)
-        WidgetState state = getCombinedState();
-        if (state != WidgetState.ACTIVE) {
-            attrs.addCDATAAttribute("state", getCombinedState().getName());
-        }
+        // Add the "state" attribute
+        attrs.addCDATAAttribute("state", getCombinedState().getName());
         
         // Add the "listening" attribute is the value has change listeners
         if (this instanceof ValueChangedListenerEnabled &&

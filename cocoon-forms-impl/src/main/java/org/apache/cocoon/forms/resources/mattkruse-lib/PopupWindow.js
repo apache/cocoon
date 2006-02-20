@@ -277,7 +277,11 @@ function PopupWindow_attachListener() {
 		}
 	window.popupWindowOldEventListener = document.onmouseup;
 	if (window.popupWindowOldEventListener != null) {
-		document.onmouseup = new Function("window.popupWindowOldEventListener(); PopupWindow_hidePopupWindows();");
+		document.onmouseup = function(e) {
+			window.popupWindowOldEventListener(e);
+			PopupWindow_hidePopupWindows(e);
+		    }
+		//document.onmouseup = new Function("window.popupWindowOldEventListener(); PopupWindow_hidePopupWindows();");
 		}
 	else {
 		document.onmouseup = PopupWindow_hidePopupWindows;
