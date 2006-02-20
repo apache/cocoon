@@ -727,7 +727,6 @@ public class TreeProcessor extends AbstractLogEnabled
                         treeBuilder.getBuiltProcessorClassLoader(),
                         root,
                         treeBuilder.getDisposableNodes(),
-                        treeBuilder.getComponentLocator(),
                         treeBuilder.getEnterSitemapEventListeners(),
                         treeBuilder.getLeaveSitemapEventListeners());
                 

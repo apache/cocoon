@@ -50,12 +50,10 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.servlet.CocoonServlet;
-import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapListener;
-import org.apache.cocoon.sitemap.impl.ComponentManager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
@@ -124,38 +122,25 @@ public class SitemapLanguage
         c.removeChild(config.getChild("listeners"));
 
         // setup spring container
+        // first, get the correct parent
+        CocoonXmlWebApplicationContext parentContext = this.applicationContext.getCurrentApplicationContext();
+        
         final AvalonEnvironment ae = new AvalonEnvironment();
         ae.context = context;
         ae.core = (Core)applicationContext.getBean(Core.ROLE);
         ae.logger = this.getLogger();
         ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
         ae.settings = ae.core.getSettings();
-        final ConfigurationInfo ci = ConfigReader.readConfiguration(c, this.applicationContext.getConfigurationInfo(), ae);
+        final ConfigurationInfo ci = ConfigReader.readConfiguration(c, parentContext.getConfigurationInfo(), ae);
 
         final CocoonXmlWebApplicationContext sitemapContext = 
-            ApplicationContextFactory.createApplicationContext(ae, ci, this.applicationContext, false);
+            ApplicationContextFactory.createApplicationContext(ae, ci, parentContext, false);
         newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
         Logger sitemapLogger = sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
 
-        // check for an application specific container
-        final Configuration appContainer = config.getChild("application-container", false);
-        if ( appContainer != null ) {
-            final String clazzName = appContainer.getAttribute("class");
-
-            final ComponentLocator cl = (ComponentLocator)ClassUtils.newInstance(clazzName); 
-            // Go through the component lifecycle
-            LifecycleHelper.setupComponent(cl, sitemapLogger, context, newManager, appContainer);
-
-            this.applicationContainer = cl;
-
-            newManager = new ComponentManager(newManager, cl);
-        }
-
+        this.addListener(new TreeBuilder.EventComponent(sitemapContext, false));
+        
         // and finally the listeners
-        if ( this.applicationContainer instanceof SitemapListener ) {
-            this.addListener(new TreeBuilder.EventComponent(this.applicationContainer, false));
-        }
-
         final Configuration listenersWrapper = config.getChild("listeners", false);
         if ( listenersWrapper != null ) {
             final Configuration[] listeners = listenersWrapper.getChildren("listener");                

@@ -29,9 +29,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.Interpreter;
-import org.apache.cocoon.core.container.ComponentLocatorWrapper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.sitemap.ComponentLocator;
 import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.commons.lang.NotImplementedException;
 
@@ -204,17 +202,8 @@ public class Core {
         /**
          * @see org.apache.cocoon.sitemap.Sitemap#getComponentLocator()
          */
-        public ComponentLocator getComponentLocator() {
-            final ServiceManager m = EnvironmentHelper.getSitemapServiceManager();
-            ComponentLocator l = null;
-            if ( m != null ) {
-                if ( !(m instanceof ComponentLocator) ) {
-                    l = new ComponentLocatorWrapper(m);
-                } else {
-                    l = (ComponentLocator)m;
-                }
-            }
-            return l;
+        public ServiceManager getComponentLocator() {
+            return EnvironmentHelper.getSitemapServiceManager();
         }
 
         /**

@@ -93,7 +93,7 @@ public class CocoonBean extends CocoonWrapper {
         if (this.initialized == false) {
             super.initialize();
 
-            this.sourceResolver = (SourceResolver)this.coreUtil.getCore().getCurrentSitemap().getComponentLocator().getComponent(SourceResolver.ROLE);
+            this.sourceResolver = (SourceResolver)this.coreUtil.getCore().getCurrentSitemap().getComponentLocator().lookup(SourceResolver.ROLE);
 
             initialized = true;
         }

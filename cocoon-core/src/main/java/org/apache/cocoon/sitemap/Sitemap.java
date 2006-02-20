@@ -15,12 +15,13 @@
  */
 package org.apache.cocoon.sitemap;
 
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.flow.Interpreter;
 
 /**
  * TODO WORK IN PROGRESS!!
- *
+ * FIXME - we should not use the service manager
  * This interface describes the current sitemap. The current sitemap is available using
  * {@link org.apache.cocoon.core.Core#getCurrentSitemap()}.
  *
@@ -33,7 +34,7 @@ public interface Sitemap {
      * Return the locator of the current sitemap.
      * @return The current locator.
      */
-    ComponentLocator getComponentLocator();
+    ServiceManager getComponentLocator();
 
     /**
      * Return the current processor
