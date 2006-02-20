@@ -24,12 +24,16 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private int initialSize = 0;
     private int minSize;
     private int maxSize;
+    private boolean selectable;
+    private boolean orderable;
 
-    public RepeaterDefinition(int initialSize, int minSize, int maxSize) {
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable, boolean orderable) {
         super();
         this.initialSize = initialSize;
         this.minSize = minSize;
         this.maxSize = maxSize;
+        this.selectable = selectable;
+        this.orderable = orderable;
     }
     
     /**
@@ -62,5 +66,13 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
 
     public int getMinSize() {
         return this.minSize;
+    }
+    
+    public boolean getOrderable() {
+        return this.orderable;
+    }
+
+    public boolean getSelectable() {
+        return this.selectable;
     }
 }

@@ -223,4 +223,31 @@
     </div>
   </xsl:template>
 
+  <!--+
+      | Field with in-place editing
+      +-->
+  <xsl:template match="fi:field[fi:styling/@type='inplace' and @state='active']">
+    <xsl:choose>
+      <xsl:when test="fi:value">
+        <span id="{@id}">
+          <script type="text/javascript">dojo.require("dojo.widget.InlineEditBox")</script>
+          <span dojoType="InlineEditBox" onSave="dojo.byId('{@id}:input').value = arguments[0]">
+            <xsl:attribute name="onSave">
+              <xsl:text>dojo.byId('{@id}:input').value = arguments[0];</xsl:text>
+              <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange)">
+                <xsl:text>forms_submitForm(dojo.byId('{@id}:input'))</xsl:text>
+              </xsl:if>
+            </xsl:attribute>
+            <xsl:value-of select="fi:value"/>
+          </span>
+          <input id="{@id}:input" type="hidden" name="{@id}" value="{fi:value}"/>
+        </span>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- Produce a regular input -->
+        <xsl:apply-imports/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
