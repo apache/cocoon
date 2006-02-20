@@ -135,7 +135,7 @@
  
  <group name="Dynamic repeater template and event handling">
     <sample name="Dynamic repeater template" href="dreamteam">
-      Create your Euro 2004 soccer dream team
+      <b>Currently broken!</b> Create your Euro 2004 soccer dream team
     </sample>
  </group>
 
@@ -149,13 +149,6 @@
   </group> 
  
 <!--
- <group name="Experimental Flowscript API for Cocoon Forms">
-  <note>
-    The sample below demonstrates a proposal for a new Flowscript API, including a multipage form with a back button.
-  </note>
-  <sample name="New Flowscript API example" href="v2/example">example</sample>
- </group>
-
  <group name="Pre-alpha Cocoon Forms-based xml editor">
   <note>
     This demonstrates the potential to have a Cocoon Forms-based gui for creating Cocoon apps.
