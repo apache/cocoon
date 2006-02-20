@@ -41,10 +41,12 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.ComponentContext;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.ConfigReader;
@@ -58,7 +60,9 @@ import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
+import org.apache.excalibur.source.impl.URLSource;
 import org.springframework.context.ApplicationContext;
+import org.xml.sax.InputSource;
 
 /**
  * This is an utility class to create a new Cocoon instance.
@@ -96,6 +100,9 @@ public class SpringCoreUtil {
 
     /** The container. */
     protected ApplicationContext container;
+
+    /** The configuration file */
+    protected Source configurationFile;
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
@@ -154,10 +161,15 @@ public class SpringCoreUtil {
     public SpringCoreUtil(BootstrapEnvironment environment,
                           ServletContext context)
     throws Exception {
+        try {
         this.servletContext = context;
         this.env = environment;
         this.init();
-        this.createClassloader();        
+        this.createClassloader();
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+            throw ignore;
+        }
     }
 
     protected void init()
@@ -638,7 +650,7 @@ public class SpringCoreUtil {
             boolean reload = false;
 
             if (this.processor != null) {
-                if (this.processor instanceof Modifiable && ((Modifiable)this.processor).modifiedSince(this.settings.getCreationTime())) {
+                if (this.settings.getCreationTime() < this.configurationFile.getLastModified()) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Configuration changed reload attempt");
                     }
@@ -668,7 +680,32 @@ public class SpringCoreUtil {
     }
 
     protected ApplicationContext setupSpringContainer() throws Exception {
-        System.out.println("Setting up test Spring container...");
+        if (this.log.isInfoEnabled()) {
+            this.log.info("Reading root configuration: " + this.settings.getConfiguration());
+        }
+
+        URLSource urlSource = new URLSource();
+        urlSource.init(new URL(this.settings.getConfiguration()), null);
+        this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
+                this.settings.getReloadDelay("config"));
+        final InputSource is = SourceUtil.getInputSource(this.configurationFile);
+
+        final ConfigurationBuilder builder = new ConfigurationBuilder(settings);
+        final Configuration rootConfig = builder.build(is);
+
+        if (!"cocoon".equals(rootConfig.getName())) {
+            throw new ConfigurationException("Invalid configuration file\n" + rootConfig.toString());
+        }
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("Configuration version: " + rootConfig.getAttribute("version"));
+        }
+        if (!Constants.CONF_VERSION.equals(rootConfig.getAttribute("version"))) {
+            throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
+        }
+
+        if (this.log.isInfoEnabled()) {
+            this.log.info("Setting up root Spring container.");
+        }
         AvalonEnvironment env = new AvalonEnvironment();
         env.context = this.appContext;
         env.core = this.core;
@@ -678,7 +715,7 @@ public class SpringCoreUtil {
         ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
         ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
-        System.out.println("Getting core cocoon processor context: " + mainContext.getBean(Core.ROLE));
+
         return mainContext;
     }
 
