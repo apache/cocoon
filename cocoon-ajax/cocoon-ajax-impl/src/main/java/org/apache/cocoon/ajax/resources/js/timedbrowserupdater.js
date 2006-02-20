@@ -16,6 +16,8 @@
 
 /* @version $Id$ */
 
+/* TO BE REWRITTEN WITH DOJO
+   -------------------------
 
 Cocoon.Ajax.TimedBrowserUpdater = Class.create();
 Cocoon.Ajax.TimedBrowserUpdater.prototype = Object.extend(new Ajax.Base(), {
@@ -216,3 +218,4 @@ TimedBrowserUpdaterInstance = new Cocoon.Ajax.TimedBrowserUpdater(
 		insertion: Cocoon.Ajax.Insertion.Replace
 	}
 );
+*/
