@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container;
+package org.apache.cocoon.components.treeprocessor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,15 +32,15 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.Preloadable;
-import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
-import org.apache.cocoon.core.container.handler.ComponentHandler;
-import org.apache.cocoon.util.JMXUtils;
+import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * Default component selector for Cocoon's components.
@@ -63,12 +62,6 @@ public class StandaloneServiceSelector
      */
     protected ServiceManager serviceManager;
 
-    /** The parent selector, if any */
-    protected StandaloneServiceSelector parentSelector;
-
-    /** The parent locator, if any */
-    protected ServiceManager parentLocator;
-
     /** The role of this selector. Set in <code>configure()</code>. */
     protected String roleName;
 
@@ -77,9 +70,6 @@ public class StandaloneServiceSelector
 
     /** The application context for components */
     protected Context context;
-
-    /** Static component mapping handlers. */
-    protected final Map componentMapping = Collections.synchronizedMap(new HashMap());
 
     /** Used to map roles to ComponentHandlers. */
     protected final Map componentHandlers = Collections.synchronizedMap(new HashMap());
@@ -90,30 +80,11 @@ public class StandaloneServiceSelector
     /** Is the Manager initialized? */
     protected boolean initialized;
 
-    /** RoleInfos. */
-    protected RoleManager roleManager;
-
-    /** LoggerManager. */
-    protected LoggerManager loggerManager;
-
-    protected ComponentEnvironment componentEnv;
-
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize( final Context context ) {
         this.context = context;
-    }
-
-    public void setRoleManager( final RoleManager roles ) {
-        this.roleManager = roles;
-    }
-
-    /**
-     * Configure the LoggerManager.
-     */
-    public void setLoggerManager( final LoggerManager manager ) {
-        this.loggerManager = manager;
     }
 
     /**
@@ -127,53 +98,32 @@ public class StandaloneServiceSelector
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    protected ComponentHandler getComponentHandler( final String role,
+    protected ComponentInfo getComponentHandler( final String role,
                                                     final Class componentClass,
                                                     final Configuration configuration,
-                                                    final ServiceManager serviceManager,
-                                                    final ComponentInfo  baseInfo)
+                                                    final ServiceManager serviceManager)
     throws Exception {
-        if (this.componentEnv == null) {
-            this.componentEnv = new ComponentEnvironment(null, getLogger(), this.roleManager,
-                    this.loggerManager, this.context, serviceManager);
-        }
-        // FIXME - we should always get an info here
         ComponentInfo info;
-        if ( baseInfo != null ) {
-            info = baseInfo.duplicate();
-        } else {
-            info = new ComponentInfo();
-            info.fill(configuration);
-            info.setRole(role);
-            info.setJmxDomain(JMXUtils.findJmxDomain(info.getJmxDomain(), serviceManager));
-            info.setJmxName(JMXUtils.findJmxName(info.getJmxName(), componentClass.getName()));
-        }
+        info = new ComponentInfo();
+        info.fill(configuration);
+        info.setRole(role);
         info.setConfiguration(configuration);
-        info.setServiceClassName(componentClass.getName());
-
-        return AbstractComponentHandler.getComponentHandler(role,
-                                                     this.componentEnv,
-                                                     info);
+        info.setComponentClassName(componentClass.getName());
+        info.setModel(ComponentInfo.MODEL_SINGLETON);
+        return info;
     }
 
     protected void addComponent(String className,
                                 String role,
-                                Configuration configuration,
-                                ComponentInfo info) 
+                                Configuration configuration) 
     throws ConfigurationException {
-        // check for old excalibur class names - we only test against the selector
-        // implementation
-        if ( "org.apache.cocoon.components.ExtendedComponentSelector".equals(className)) {
-            className = DefaultServiceSelector.class.getName();
-        }
-
         try {
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
             }
             // FIXME - use different classloader
             final Class clazz = this.getClass().getClassLoader().loadClass( className );
-            this.addComponent( role, clazz, configuration, info );
+            this.addComponent( role, clazz, configuration );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
                                  + role + " at " + configuration.getLocation();
@@ -225,14 +175,10 @@ public class StandaloneServiceSelector
                 "You cannot select a component from a disposed service selector." );
         }
 
-        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get( key );
+        Object component = this.componentHandlers.get( key );
 
         // Retrieve the instance of the requested component
-        if( null == handler ) {
-            // Doesn't exist here : try in parent selector
-            if ( this.parentSelector != null ) {
-                return this.parentSelector.select(key);                
-            }
+        if( null == component ) {
             final String message = this.roleName
                 + ": service selector could not find the component for key [" + key + "]";
             if( this.getLogger().isDebugEnabled() ) {
@@ -241,38 +187,6 @@ public class StandaloneServiceSelector
             throw new ServiceException( key, message );
         }
 
-        Object component = null;
-
-        try {
-            component = handler.get();
-        } catch( final ServiceException ce ) {
-            //rethrow
-            throw ce;
-        } catch( final Exception e ) {
-            final String message = this.roleName
-                + ": service selector could not access the component for key [" + key + "]";
-
-            if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( message, e );
-            }
-            throw new ServiceException( key, message, e );
-        }
-
-        if( null == component ) {
-            // Doesn't exist here : try in parent selector
-            if ( this.parentSelector != null ) {
-                component = this.parentSelector.select(key);
-            } else {
-                final String message = this.roleName
-                    + ": service selector could not find the component for key [" + key + "]";
-                if( this.getLogger().isDebugEnabled() ) {
-                    this.getLogger().debug( message );
-                }
-                throw new ServiceException( key, message );
-            }
-        }
-
-        this.componentMapping.put( component, handler );
         return component;
     }
 
@@ -293,15 +207,12 @@ public class StandaloneServiceSelector
         boolean exists = false;
 
         try {
-            ComponentHandler handler = (ComponentHandler)this.componentHandlers.get( key );
-            exists = (handler != null);
+            Object component = this.componentHandlers.get( key );
+            exists = (component != null);
         } catch( Throwable t ) {
             // We can safely ignore all exceptions
         }
 
-        if ( !exists && this.parentSelector != null ) {
-            exists = this.parentSelector.isSelectable( key );
-        }
         return exists;
     }
 
@@ -309,45 +220,7 @@ public class StandaloneServiceSelector
      * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
      */
     public void release( final Object component ) {
-        if( null == component ) {
-            return;
-        }
-
-        // Was it selected on the parent ?
-        if ( this.parentSelector != null &&
-             this.parentSelector.canRelease(component) ) {
-            this.parentSelector.release(component);
-
-        } else {
-            final ComponentHandler handler =
-                (ComponentHandler)this.componentMapping.get( component );
-
-            if( null == handler ) {
-                this.getLogger().warn( "Attempted to release a " + component.getClass().getName()
-                    + " but its handler could not be located." );
-                return;
-            }
-
-            // ThreadSafe components will always be using a ThreadSafeComponentHandler,
-            //  they will only have a single entry in the m_componentMapping map which
-            //  should not be removed until the ComponentLocator is disposed.  All
-            //  other components have an entry for each instance which should be
-            //  removed.
-            if( !handler.isSingleton() ) {
-                // Remove the component before calling put.  This is critical to avoid the
-                //  problem where another thread calls put on the same component before
-                //  remove can be called.
-                this.componentMapping.remove( component );
-            }
-
-            try {
-                handler.put( component );
-            } catch( Exception e ) {
-                if( this.getLogger().isDebugEnabled() ) {
-                    this.getLogger().debug( "Error trying to release component", e );
-                }
-            }
-        }
+        // nothing to do as we only serve singletons
     }
 
     /**
@@ -376,30 +249,16 @@ public class StandaloneServiceSelector
         for (int i = 0; i < instances.length; i++) {
 
             Configuration instance = instances[i];
-            ComponentInfo info = null;
-
             String key = instance.getAttribute("name").trim();
 
             String classAttr = instance.getAttribute(getClassAttributeName(), null);
             String className;
 
-            if (compInstanceName == null) {
-                // component-instance implicitly defined by the presence of the 'class' attribute
-                if (classAttr == null) {
-                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
-                    className = info.getServiceClassName();
-                } else {
-                    className = classAttr.trim();
-                }
-
+            // component-instances names explicitly defined
+            if (compInstanceName.equals(instance.getName())) {
+                className = (classAttr == null) ? null : classAttr.trim();
             } else {
-                // component-instances names explicitly defined
-                if (compInstanceName.equals(instance.getName())) {
-                    className = (classAttr == null) ? null : classAttr.trim();
-                } else {
-                    info = this.roleManager.getDefaultServiceInfoForKey(roleName, instance.getName());
-                    className = info.getServiceClassName();
-                }
+                className = null;
             }
 
             if (className == null) {
@@ -410,7 +269,7 @@ public class StandaloneServiceSelector
                 throw new ConfigurationException(message);
             }
 
-            this.addComponent( className, key, instance, info );
+            this.addComponent( className, key, instance );
         }
     }
 
@@ -422,55 +281,45 @@ public class StandaloneServiceSelector
         this.initialized = true;
 
         List keys = new ArrayList( this.componentHandlers.keySet() );
+        final Map components = new HashMap();
 
         for( int i = 0; i < keys.size(); i++ ) {
             final Object key = keys.get( i );
-            final ComponentHandler handler =
-                (ComponentHandler)this.componentHandlers.get( key );
+            final ComponentInfo handler =
+                (ComponentInfo)this.componentHandlers.get( key );
 
             try {
-                handler.initialize();
+                Object component = ClassUtils.newInstance(handler.getComponentClassName());
+                ContainerUtil.enableLogging(component, this.getLogger());
+                ContainerUtil.contextualize(component, this.context);
+                ContainerUtil.service(component, this.serviceManager);
+                ContainerUtil.configure(component, handler.getConfiguration());
+                if ( component instanceof Parameterizable ) {
+                    ContainerUtil.parameterize(component, Parameters.fromConfiguration(handler.getConfiguration()));
+                }
+                ContainerUtil.initialize(component);
+                components.put(key, component);
             } catch( Exception e ) {
                 if( this.getLogger().isDebugEnabled() ) {
                     this.getLogger().debug( "Caught an exception trying to initialize "
                         + "of the component handler.", e );
                 }
             }
-
         }
+        this.componentHandlers.clear();
+        this.componentHandlers.putAll(components);
     }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        Iterator keys = this.componentHandlers.keySet().iterator();
-        List keyList = new ArrayList();
-
-        while( keys.hasNext() ) {
-            Object key = keys.next();
-            ComponentHandler handler =
-                (ComponentHandler)this.componentHandlers.get( key );
-
-            handler.dispose();
-
-            keyList.add( key );
+        Iterator iter = this.componentHandlers.values().iterator();
+        while( iter.hasNext() ) {
+            final Object current = iter.next();
+            ContainerUtil.dispose(current);
         }
-
-        keys = keyList.iterator();
-
-        while( keys.hasNext() ) {
-            this.componentHandlers.remove( keys.next() );
-        }
-
-        keyList.clear();
-
-        if ( this.parentLocator != null ) {
-            this.parentLocator.release( this.parentSelector );
-            this.parentLocator = null;
-            this.parentSelector = null;
-        }
-
+        this.componentHandlers.clear();
         this.disposed = true;
     }
 
@@ -481,8 +330,7 @@ public class StandaloneServiceSelector
      */
     public void addComponent( final String key,
                               final Class component,
-                              final Configuration configuration,
-                              final ComponentInfo info)
+                              final Configuration configuration)
     throws ServiceException {
         if( this.initialized ) {
             throw new ServiceException( key,
@@ -490,13 +338,11 @@ public class StandaloneServiceSelector
         }
 
         try {
-            final ComponentHandler handler = getComponentHandler( null,
-                                                                  component,
-                                                                  configuration,
-                                                                  this.serviceManager,
-                                                                  info);
+            final ComponentInfo handler = getComponentHandler( null,
+                                                               component,
+                                                               configuration,
+                                                               this.serviceManager);
 
-            handler.initialize();
             this.componentHandlers.put( key, handler );
 
             if( this.getLogger().isDebugEnabled() ) {
@@ -527,7 +373,7 @@ public class StandaloneServiceSelector
      * @return <code>null</code>, but can be changed by subclasses
      */
     protected String getComponentInstanceName() {
-        return null;
+        return "node";
     }
 
     /**
@@ -537,7 +383,7 @@ public class StandaloneServiceSelector
      * @return "<code>class</code>", but can be changed by subclasses
      */
     protected String getClassAttributeName() {
-        return "class";
+        return "builder";
     }
 
     /**
@@ -560,80 +406,6 @@ public class StandaloneServiceSelector
      */
     protected String getRoleName(Configuration config) {
         // Get the role for this selector
-        String name = config.getAttribute("role", null);
-        if (name == null && this.roleManager != null) {
-            name = this.roleManager.getRoleForName(config.getName());
-        }
-
-        return name;
-    }
-
-    /**
-     * Set the ComponentLocatorImpl that allows access to a possible
-     * parent of this selector
-     * @param locator
-     * @throws ServiceException
-     */
-    void setParentLocator(ServiceManager locator, String role)
-    throws ServiceException {
-        if (this.parentSelector != null) {
-            throw new ServiceException(null, "Parent selector is already set");
-        }
-        this.parentLocator = locator;
-
-        if (locator != null && locator.hasService(role)) {
-            // Get the parent, unwrapping it as far as needed
-            Object parent = locator.lookup(role);
-            
-            if (parent instanceof StandaloneServiceSelector) {
-                this.parentSelector = (StandaloneServiceSelector)parent;
-            } else {
-                throw new IllegalArgumentException("Parent selector is not an extended component selector (" + parent + ")");
-            }
-        }
-    }
-
-    protected boolean canRelease(Object component) {
-        if ( this.parentSelector != null &&
-             this.parentSelector.canRelease(component) ) {
-            return true;
-        }
-        return this.componentMapping.containsKey( component );
-    }
-
-    /**
-     * A special factory that sets the RoleManager and LoggerManager after service()
-     */
-    public static class Factory extends ComponentFactory {
-
-        private final String role;
-
-        public Factory(ComponentEnvironment env, ComponentInfo info, String role) 
-        throws Exception {
-            super(env, info);
-            this.role = role;
-        }
-
-        protected void setupObject(Object obj)
-        throws Exception {
-            final StandaloneServiceSelector component = (StandaloneServiceSelector)obj;
-
-            ContainerUtil.enableLogging(component, this.environment.logger);
-            ContainerUtil.contextualize(component, this.environment.context);
-            ContainerUtil.service(component, this.environment.serviceManager);
-
-            component.setLoggerManager(this.environment.loggerManager);
-            component.setRoleManager(this.environment.roleManager);
-
-            ServiceManager manager = this.environment.serviceManager;
-            if (manager instanceof CoreServiceManager) {
-                // Can it be something else?
-                component.setParentLocator( ((CoreServiceManager)manager).parentManager, this.role);
-            }
-
-            ContainerUtil.configure(component, this.serviceInfo.getConfiguration());
-            ContainerUtil.initialize(component);
-            ContainerUtil.start(component);
-        }
+        return config.getAttribute("role", null);
     }
 }

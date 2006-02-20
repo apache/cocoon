@@ -37,7 +37,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
@@ -391,15 +390,8 @@ public class DefaultTreeBuilder
 
         // Create & initialize the NodeBuilder selector.
         {
-            StandaloneServiceSelector selector = new StandaloneServiceSelector() {
-                protected String getComponentInstanceName() {
-                    return "node";
-                }
+            StandaloneServiceSelector selector = new StandaloneServiceSelector();
 
-                protected String getClassAttributeName() {
-                    return "builder";
-                }
-            };
             // Load the builder config file
             SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
             String url = getBuilderConfigURL();
