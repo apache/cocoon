@@ -48,8 +48,8 @@ import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.servlet.CoreUtil;
-import org.apache.cocoon.core.servlet.LoggerUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
 import org.xml.sax.InputSource;
@@ -85,9 +85,7 @@ public class BlocksManager
             throw new ServletException("Could not parse " + contextURL0, e);
         }
         
-        LoggerUtil loggerUtil =
-            new LoggerUtil(this.getServletConfig(), BlockConstants.WIRING);
-        this.logger = loggerUtil.getCocoonLogger();
+        this.logger = ApplicationContextFactory.createRootLogger(this.getServletConfig().getServletContext(), "cocoon");
         this.getLogger().debug("Initializing the Blocks Manager");
         
         InputSource is = null;
