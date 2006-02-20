@@ -227,7 +227,7 @@ public class CocoonPortlet extends GenericPortlet {
         PortletBootstrapEnvironment env = new PortletBootstrapEnvironment(conf, this.portletContextPath, this.portletContextURL);
 
         try {
-            this.coreUtil = new CoreUtil(env);
+            this.coreUtil = new CoreUtil(env, env.getEnvironmentContext());
             this.environmentContext = env.getEnvironmentContext();
             this.log = env.logger;
         } catch (Exception e) {

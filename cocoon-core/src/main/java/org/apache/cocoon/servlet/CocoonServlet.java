@@ -182,7 +182,7 @@ public class CocoonServlet extends HttpServlet {
         ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.servletContextPath, this.servletContextURL);
 
         try {
-            this.coreUtil = new CoreUtil(env);
+            this.coreUtil = new CoreUtil(env, this.servletContext);
             this.environmentContext = env.getEnvironmentContext();
             this.log = env.logger;
         } catch (Exception e) {
@@ -328,7 +328,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         String contentType = null;
-        Object handle = null;
 
         Environment env;
         try{
@@ -350,8 +349,6 @@ public class CocoonServlet extends HttpServlet {
 
         try {
             try {
-                handle = this.coreUtil.initializeRequest(env);
-
                 if (this.processor.process(env)) {
                     contentType = env.getContentType();
                 } else {
@@ -435,8 +432,6 @@ public class CocoonServlet extends HttpServlet {
                 }
             }
         } finally {
-            this.coreUtil.cleanUpRequest(handle);
-
             try {
                 if (request instanceof MultipartHttpServletRequest) {
                     if (getLogger().isDebugEnabled()) {

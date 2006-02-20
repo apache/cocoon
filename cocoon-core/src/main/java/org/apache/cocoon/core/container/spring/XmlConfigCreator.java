@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.SpringCocoon;
 import org.springframework.util.StringUtils;
 
 /**
@@ -161,7 +160,7 @@ public class XmlConfigCreator {
         if ( addCocoon ) {
             buffer.append("<bean");
             this.appendAttribute(buffer, "id", Cocoon.class.getName());
-            this.appendAttribute(buffer, "class", SpringCocoon.class.getName());
+            this.appendAttribute(buffer, "class", Cocoon.class.getName());
             this.appendAttribute(buffer, "singleton", "true");
             buffer.append(">\n");
             buffer.append("  <constructor-arg ref=\"");

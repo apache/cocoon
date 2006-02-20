@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.environment.portlet;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
