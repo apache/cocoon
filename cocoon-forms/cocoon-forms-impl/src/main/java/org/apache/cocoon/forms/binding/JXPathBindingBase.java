@@ -26,6 +26,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.ri.model.beans.BeanPropertyPointer;
 import org.apache.commons.jxpath.util.TypeUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -293,7 +294,13 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
             jxpc.setLenient(true);
-            jxpc.setFactory(new BindingJXPathFactory());
+
+            AbstractFactory jxPathFactory;
+            if (commonAtts.jxPathFactory != null)
+                jxPathFactory = commonAtts.jxPathFactory;
+            else
+                jxPathFactory = new BindingJXPathFactory();
+            jxpc.setFactory(jxPathFactory);
         } else {
             jxpc = (JXPathContext) objModel;
         }

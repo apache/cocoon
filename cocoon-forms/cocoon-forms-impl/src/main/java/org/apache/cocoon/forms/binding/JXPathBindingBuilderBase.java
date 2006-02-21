@@ -21,6 +21,7 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.jxpath.AbstractFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -128,8 +129,19 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
             if (nsDeclarationMap != null && nsDeclarationMap.values().contains(null))
                 throw new BindingException("Error in binding file " + location
                                 + "\nBinding doesn't support having namespace-declarations without explicit prefixes.");
+
+            String jxPathFactoryName = bindingElm.getAttribute("jxpath-factory");
+            AbstractFactory jxPathFactory = null;
+            if (jxPathFactoryName != null && jxPathFactoryName.trim().length() > 0) {
+                try {
+                    Class jxPathFactoryClass = JXPathBindingBuilderBase.class.getClassLoader().loadClass(jxPathFactoryName);
+                    jxPathFactory = (AbstractFactory)jxPathFactoryClass.newInstance();
+                } catch (Exception e) {
+                    throw new BindingException("Error with specified jxpath factory " + jxPathFactoryName, e);
+                }
+            }
             
-            return new CommonAttributes(location, direction, leniency, nsDeclarationMap);
+            return new CommonAttributes(location, direction, leniency, nsDeclarationMap, jxPathFactory);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
@@ -155,9 +167,13 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
     	String direction = existing.direction;
     	if(extra.direction!=null) // was defined
     		direction = extra.direction;
-    	
-    	
-    	return new CommonAttributes(extra.location,direction,strLeniency,extra.nsDeclarations);
+
+        AbstractFactory jxPathFactory = existing.jxPathFactory;
+        if (extra.jxPathFactory != null)
+            jxPathFactory = extra.jxPathFactory;
+
+
+        return new CommonAttributes(extra.location,direction,strLeniency,extra.nsDeclarations, jxPathFactory);
     }
 
      /**
@@ -192,21 +208,27 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * Array of namespace-declarations (prefix-uri pairs) that need to be set on the jxpath 
          */
         final Map nsDeclarations;
+         /**
+          * The factory to be set on the JXPath Context object
+          */
+        final AbstractFactory jxPathFactory;
 
-        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null, null);
+        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null, null, null);
 
-        CommonAttributes(String location, String direction, String leniency, Map nsDeclarations){
-            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations);
+        CommonAttributes(String location, String direction, String leniency, Map nsDeclarations, AbstractFactory jxPathFactory){
+            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations, jxPathFactory);
             this.direction = direction;
         }
 
-        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency, Map nsDeclarations){
+        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency,
+                Map nsDeclarations, AbstractFactory jxPathFactory){
         	this.direction = null;
             this.location = location;
             this.loadEnabled = loadEnabled;
             this.saveEnabled = saveEnabled;
             this.leniency = leniency;
             this.nsDeclarations = nsDeclarations;
+            this.jxPathFactory = jxPathFactory;
         }
 
         /**
@@ -237,6 +259,6 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
         private static Boolean decideLeniency(String leniency) {
             return BooleanUtils.toBooleanObject(leniency);
         }
-        
+
     }
 }
