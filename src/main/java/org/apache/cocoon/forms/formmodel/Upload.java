@@ -34,6 +34,7 @@ import org.apache.cocoon.servlet.multipart.RejectedPart;
 
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.environment.Request;
 
 import org.apache.commons.lang.ObjectUtils;
 
@@ -98,7 +99,16 @@ public class Upload extends AbstractWidget
             return;
         }
 
-        Object obj = formContext.getRequest().get(getRequestParameterName());
+        Form form = getForm();
+        Request request = formContext.getRequest();
+        String fullId = getRequestParameterName();
+
+        Object obj = request.get(fullId);
+
+        if (obj != null || fullId.equals(request.getParameter(Form.SUBMIT_ID_PARAMETER))) {
+           form.setSubmitWidget(this);
+        }
+
 
         // If the request object is a Part, keep it
         if (obj instanceof Part) {
@@ -119,7 +129,7 @@ public class Upload extends AbstractWidget
 
         // If it's not a part and not null, clear any existing value
         // We also check if we're the submit widget, as a result of clicking the "..." button
-        } else if (obj != null || getForm().getSubmitWidget() == this){
+        } else if (obj != null || form.getSubmitWidget() == this){
             // Clear the part, if any
             if (this.part != null) {
                 this.part.dispose();
