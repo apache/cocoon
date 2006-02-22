@@ -63,6 +63,12 @@
                 <li><a href="?pageKey=two">pageKey=two</a>
                     (<a href="action?pageKey=two&amp;event=two">uncache with action</a>) 
                     (<a href="flow?pageKey=two&amp;event=two">uncache with flow</a>)</li>
+                <li><a href="reader?pageKey=foo">reader: pageKey=foo</a>
+                    (<a href="action?pageKey=${cocoon.parameters.KEY}&amp;event=foo">uncache with action</a>) 
+                    (<a href="flow?pageKey=${cocoon.parameters.KEY}&amp;event=foo">uncache with flow</a>)</li>
+                <li><a href="reader?pageKey=bar">reader: pageKey=bar</a>
+                    (<a href="action?pageKey=${cocoon.parameters.KEY}&amp;event=bar">uncache with action</a>) 
+                    (<a href="flow?pageKey=${cocoon.parameters.KEY}&amp;event=bar">uncache with flow</a>)</li>
             </ul>
             Note: the random numbers you see included in the url after an uncache link 
             serve two purposes in the example, making it easier to see the effect of the 
