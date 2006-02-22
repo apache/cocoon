@@ -105,7 +105,7 @@ public class Upload extends AbstractWidget
 
         Object obj = request.get(fullId);
 
-        if (obj != null || fullId.equals(request.getParameter(Form.SUBMIT_ID_PARAMETER))) {
+        if (fullId.equals(request.getParameter(Form.SUBMIT_ID_PARAMETER))) {
            form.setSubmitWidget(this);
         }
 
