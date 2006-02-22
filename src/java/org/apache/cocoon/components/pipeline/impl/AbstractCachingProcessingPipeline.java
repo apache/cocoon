@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.pipeline.impl;
 
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 
@@ -35,8 +36,10 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
+import org.apache.excalibur.store.Store;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +56,8 @@ import java.util.Date;
  */
 public abstract class AbstractCachingProcessingPipeline extends BaseCachingProcessingPipeline {
 
+	public static final String PIPELOCK_PREFIX = "PIPELOCK:";
+	
     /** The role name of the generator */
     protected String generatorRole;
 
@@ -99,6 +104,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
     /** Default setting for smart caching */
     protected boolean configuredDoSmartCaching;
+    
+    protected Store transientStore = null;
 
 
     /** Abstract method defined in subclasses */
@@ -124,6 +131,16 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         super.parameterize(params);
         this.configuredDoSmartCaching =
             params.getParameterAsBoolean("smart-caching", true);
+        
+        String storeRole = params.getParameter("store-role",Store.TRANSIENT_STORE); 
+        
+        try {
+        	transientStore = (Store) manager.lookup(storeRole);
+        } catch (ComponentException e) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Could not look up transient store, synchronizing requests will not work!",e);
+			}
+		}
     }
 
     /**
@@ -173,7 +190,107 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
+    
+    protected boolean waitForLock(Object key) {
+    	if(transientStore != null) {
+    		Object lock = null;
+    		synchronized(transientStore) {
+    			String lockKey = PIPELOCK_PREFIX+key;
+    			if(transientStore.containsKey(lockKey)) {
+                	// cache content is currently being generated, wait for other thread
+                	lock = transientStore.get(lockKey);
+    			}
+    		}
+        	if(lock != null) {
+        		try {
+        			// become owner of monitor
+        			synchronized(lock) {
+        				lock.wait();
+        			}
+        		} catch (InterruptedException e) {
+        			if(getLogger().isDebugEnabled()) {
+        				getLogger().debug("Got interrupted waiting for other pipeline to finish processing, retrying...",e);
+        			}
+        			return false;
+				}
+        		if(getLogger().isDebugEnabled()) {
+    				getLogger().debug("Other pipeline finished processing, retrying to get cached response.");
+    			}
+        		return false;
+        	}
+    	}
+    	return true;
+    }
 
+    /**
+     * makes the lock (instantiates a new object and puts it into the store)
+     */
+    protected boolean generateLock(Object key) {
+    	boolean succeeded = true;
+    
+    	if( transientStore != null && key != null ) {
+    		String lockKey = PIPELOCK_PREFIX+key;
+    		synchronized(transientStore) {
+	    		if(transientStore.containsKey(lockKey)) {
+	    			succeeded = false;
+	    			if(getLogger().isDebugEnabled()) {
+	    				getLogger().debug("Lock already present in the store!");
+	    			}
+	    		} else {
+	    			Object lock = new Object();
+	    			try {
+	    				transientStore.store(lockKey, lock);
+	    			} catch (IOException e) {
+	    				if(getLogger().isDebugEnabled()) {
+	        				getLogger().debug("Could not put lock in the store!",e);
+	        			}
+	    				succeeded = false;
+					}
+	    		}	
+	    	}
+    	}
+    	
+    	return succeeded;
+    }
+    
+    /**
+     * releases the lock (notifies it and removes it from the store)
+     */
+    protected boolean releaseLock(Object key) {
+    	boolean succeeded = true;
+    	
+    	if( transientStore != null && key != null ) {
+    		String lockKey = PIPELOCK_PREFIX+key;
+    		Object lock = null;
+    		synchronized(transientStore) {
+	    		if(!transientStore.containsKey(lockKey)) {
+	    			succeeded = false;
+	    			if(getLogger().isDebugEnabled()) {
+	    				getLogger().debug("Lock not present in the store!");
+	    			}
+	    		} else {
+	    			try {
+		    			lock = transientStore.get(lockKey);
+		    			transientStore.remove(lockKey);
+	    			} catch (Exception e) {
+	    				if(getLogger().isDebugEnabled()) {
+	        				getLogger().debug("Could not get lock from the store!",e);
+	        			}
+	    				succeeded = false;
+					}
+	    		}
+	    	}
+    		if(succeeded && lock != null) {
+    			// become monitor owner
+    			synchronized(lock) {
+    				lock.notifyAll();
+    			}
+    		}
+    	}
+    	
+    	return succeeded;
+    }
+    
     /**
      * Process the given <code>Environment</code>, producing the output.
      */
@@ -216,6 +333,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                                   "' using key " + this.toCacheKey);
             }
 
+            generateLock(this.toCacheKey);
+            
             try {
                 OutputStream os = null;
 
@@ -279,6 +398,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
             } catch (Exception e) {
                 handleException(e);
+            } finally {
+            	releaseLock(this.toCacheKey);
             }
 
             return true;
@@ -580,6 +701,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 }
             } else {
 
+            	// check if there might be one being generated
+            	if(!waitForLock(this.fromCacheKey)) {
+            		finished = false;
+                	continue;
+            	}
+            	
                 // no cached response found
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug(
@@ -666,7 +793,9 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 readerKey = new Long(((Cacheable)super.reader).generateKey());
             }
 
+            boolean finished = false;
             if (readerKey != null) {
+            	
                 // response is cacheable, build the key
                 pcKey = new PipelineCacheKey();
                 pcKey.addKey(new ComponentCacheKey(ComponentCacheKey.ComponentType_Reader,
@@ -674,129 +803,148 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                                                    readerKey)
                             );
 
-                // now we have the key to get the cached object
-                CachedResponse cachedObject = this.cache.get(pcKey);
-                if (cachedObject != null) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Found cached response for '" +
-                                          environment.getURI() + "' using key: " + pcKey);
-                    }
-
-                    SourceValidity[] validities = cachedObject.getValidityObjects();
-                    if (validities == null || validities.length != 1) {
-                        // to avoid getting here again and again, we delete it
-                        this.cache.remove(pcKey);
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Cached response for '" + environment.getURI() +
-                                              "' using key: " + pcKey + " is invalid.");
-                        }
-                        this.cachedResponse = null;
-                    } else {
-                        SourceValidity cachedValidity = validities[0];
-                        boolean isValid = false;
-                        int valid = cachedValidity.isValid();
-                        if (valid == SourceValidity.UNKNOWN) {
-                            // get reader validity and compare
-                            if (isCacheableProcessingComponent) {
-                                readerValidity = ((CacheableProcessingComponent) super.reader).getValidity();
-                            } else {
-                                CacheValidity cv = ((Cacheable) super.reader).generateValidity();
-                                if (cv != null) {
-                                    readerValidity = CacheValidityToSourceValidity.createValidity(cv);
-                                }
-                            }
-                            if (readerValidity != null) {
-                                valid = cachedValidity.isValid(readerValidity);
-                                if (valid == SourceValidity.UNKNOWN) {
-                                    readerValidity = null;
-                                } else {
-                                    isValid = (valid == SourceValidity.VALID);
-                                }
-                            }
-                        } else {
-                            isValid = (valid == SourceValidity.VALID);
-                        }
-
-                        if (isValid) {
-                            if (getLogger().isDebugEnabled()) {
-                                getLogger().debug("processReader: using valid cached content for '" +
-                                                  environment.getURI() + "'.");
-                            }
-                            byte[] response = cachedObject.getResponse();
-                            if (response.length > 0) {
-                                usedCache = true;
-                                if (cachedObject.getContentType() != null) {
-                                    environment.setContentType(cachedObject.getContentType());
-                                } else {
-                                    setMimeTypeForReader(environment);
-                                }
-                                outputStream = environment.getOutputStream(0);
-                                environment.setContentLength(response.length);
-                                outputStream.write(response);
-                            }
-                        } else {
-                            if (getLogger().isDebugEnabled()) {
-                                getLogger().debug("processReader: cached content is invalid for '" +
-                                                  environment.getURI() + "'.");
-                            }
-                            // remove invalid cached object
-                            this.cache.remove(pcKey);
-                        }
-                    }
-                }
+                while(!finished) {
+                	finished = true;
+	                // now we have the key to get the cached object
+	                CachedResponse cachedObject = this.cache.get(pcKey);
+	                if (cachedObject != null) {
+	                    if (getLogger().isDebugEnabled()) {
+	                        getLogger().debug("Found cached response for '" +
+	                                          environment.getURI() + "' using key: " + pcKey);
+	                    }
+	
+	                    SourceValidity[] validities = cachedObject.getValidityObjects();
+	                    if (validities == null || validities.length != 1) {
+	                        // to avoid getting here again and again, we delete it
+	                        this.cache.remove(pcKey);
+	                        if (getLogger().isDebugEnabled()) {
+	                            getLogger().debug("Cached response for '" + environment.getURI() +
+	                                              "' using key: " + pcKey + " is invalid.");
+	                        }
+	                        this.cachedResponse = null;
+	                    } else {
+	                        SourceValidity cachedValidity = validities[0];
+	                        boolean isValid = false;
+	                        int valid = cachedValidity.isValid();
+	                        if (valid == SourceValidity.UNKNOWN) {
+	                            // get reader validity and compare
+	                            if (isCacheableProcessingComponent) {
+	                                readerValidity = ((CacheableProcessingComponent) super.reader).getValidity();
+	                            } else {
+	                                CacheValidity cv = ((Cacheable) super.reader).generateValidity();
+	                                if (cv != null) {
+	                                    readerValidity = CacheValidityToSourceValidity.createValidity(cv);
+	                                }
+	                            }
+	                            if (readerValidity != null) {
+	                                valid = cachedValidity.isValid(readerValidity);
+	                                if (valid == SourceValidity.UNKNOWN) {
+	                                    readerValidity = null;
+	                                } else {
+	                                    isValid = (valid == SourceValidity.VALID);
+	                                }
+	                            }
+	                        } else {
+	                            isValid = (valid == SourceValidity.VALID);
+	                        }
+	
+	                        if (isValid) {
+	                            if (getLogger().isDebugEnabled()) {
+	                                getLogger().debug("processReader: using valid cached content for '" +
+	                                                  environment.getURI() + "'.");
+	                            }
+	                            byte[] response = cachedObject.getResponse();
+	                            if (response.length > 0) {
+	                                usedCache = true;
+	                                if (cachedObject.getContentType() != null) {
+	                                    environment.setContentType(cachedObject.getContentType());
+	                                } else {
+	                                    setMimeTypeForReader(environment);
+	                                }
+	                                outputStream = environment.getOutputStream(0);
+	                                environment.setContentLength(response.length);
+	                                outputStream.write(response);
+	                            }
+	                        } else {
+	                            if (getLogger().isDebugEnabled()) {
+	                                getLogger().debug("processReader: cached content is invalid for '" +
+	                                                  environment.getURI() + "'.");
+	                            }
+	                            // remove invalid cached object
+	                            this.cache.remove(pcKey);
+	                        }
+	                    }
+	                } else {
+	                	// check if something is being generated right now
+	                	if(!waitForLock(pcKey)) {
+	                		finished = false;
+	                		continue;
+	                	}
+	                }
+            	}
             }
 
             if (!usedCache) {
-                if (pcKey != null) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("processReader: caching content for further requests of '" +
-                                          environment.getURI() + "'.");
-                    }
-
-                    if (readerValidity == null) {
-                        if (isCacheableProcessingComponent) {
-                            readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
-                        } else {
-                            CacheValidity cv = ((Cacheable)super.reader).generateValidity();
-                            if ( cv != null ) {
-                                readerValidity = CacheValidityToSourceValidity.createValidity( cv );
-                            }
-                        }
-                    }
-
-                    if (readerValidity != null) {
-                        outputStream = environment.getOutputStream(this.outputBufferSize);
-                        outputStream = new CachingOutputStream(outputStream);
-                    } else {
-                        pcKey = null;
-                    }
-                }
-
-                setMimeTypeForReader(environment);
-                if (this.reader.shouldSetContentLength()) {
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    this.reader.setOutputStream(os);
-                    this.reader.generate();
-                    environment.setContentLength(os.size());
-                    if (outputStream == null) {
-                        outputStream = environment.getOutputStream(0);
-                    }
-                    os.writeTo(outputStream);
-                } else {
-                    if (outputStream == null) {
-                        outputStream = environment.getOutputStream(this.outputBufferSize);
-                    }
-                    this.reader.setOutputStream(outputStream);
-                    this.reader.generate();
-                }
-
-                // store the response
-                if (pcKey != null) {
-                    final CachedResponse res = new CachedResponse(new SourceValidity[] {readerValidity},
-                            ((CachingOutputStream)outputStream).getContent());
-                    res.setContentType(environment.getContentType());
-                    this.cache.store(pcKey, res);
-                }
+            	// make sure lock will be released
+            	try {
+	                if (pcKey != null) {
+	                    if (getLogger().isDebugEnabled()) {
+	                        getLogger().debug("processReader: caching content for further requests of '" +
+	                                          environment.getURI() + "'.");
+	                    }
+	                    generateLock(pcKey);
+	                    
+	                    if (readerValidity == null) {
+	                        if (isCacheableProcessingComponent) {
+	                            readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
+	                        } else {
+	                            CacheValidity cv = ((Cacheable)super.reader).generateValidity();
+	                            if ( cv != null ) {
+	                                readerValidity = CacheValidityToSourceValidity.createValidity( cv );
+	                            }
+	                        }
+	                    }
+	
+	                    if (readerValidity != null) {
+	                        outputStream = environment.getOutputStream(this.outputBufferSize);
+	                        outputStream = new CachingOutputStream(outputStream);
+	                    } else {
+	                        pcKey = null;
+	                    }
+	                }
+	
+	                setMimeTypeForReader(environment);
+	                if (this.reader.shouldSetContentLength()) {
+	                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+	                    this.reader.setOutputStream(os);
+	                    this.reader.generate();
+	                    environment.setContentLength(os.size());
+	                    if (outputStream == null) {
+	                        outputStream = environment.getOutputStream(0);
+	                    }
+	                    os.writeTo(outputStream);
+	                } else {
+	                    if (outputStream == null) {
+	                        outputStream = environment.getOutputStream(this.outputBufferSize);
+	                    }
+	                    this.reader.setOutputStream(outputStream);
+	                    this.reader.generate();
+	                }
+	
+	                // store the response
+	                if (pcKey != null) {
+	                    final CachedResponse res = new CachedResponse(new SourceValidity[] {readerValidity},
+	                            ((CachingOutputStream)outputStream).getContent());
+	                    res.setContentType(environment.getContentType());
+	                    this.cache.store(pcKey, res);
+	                }
+                
+            	} finally {
+            		if (pcKey != null) {
+            			releaseLock(pcKey);
+            		}
+            	}
+                
             }
         } catch (Exception e) {
             handleException(e);
