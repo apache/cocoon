@@ -104,7 +104,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Felix Knecht
  * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  * @author <a href="mailto:yuryx@mobicomk.donpac.ru">Yury Mikhienko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LDAPTransformer extends AbstractTransformer {
 
