@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1279">
+      Fix caching-point pipelines.  Remove the undocumented smart-caching parameter.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1066" due-to="Antonio Fiol" due-to-email="antonio.fiol@gmail.com">
       LDAPTransformer can optionally output the DN of every returned entry as an
       attribute.  To enable, use &lt;ldap:dn-attribute&gt;dn&lt;/ldap:dn-attribute&gt;
