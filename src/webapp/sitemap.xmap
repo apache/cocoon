@@ -421,7 +421,7 @@
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
-       <parameter name="autoCachingPoint" value="On"/>
+       <!-- parameter name="autoCachingPoint" value="On"/ -->
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
