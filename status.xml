@@ -180,6 +180,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="CZ" type="update">
+      JCR block: To build the JCR block, the jcr-api-1.0.jar has to be downloaded by the user
+                 prior to building the block. Have a look at the readme in the jcr block for
+                 more information.
+    </action>
     <action dev="RG" type="update">
       Mark Forms block stable. Make dream team sample work with it.
     </action>
