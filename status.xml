@@ -236,6 +236,9 @@
       of Effects, such as Scaling, color manipulation and coordination
       transforms, in a pluggable manner.
     </action>
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1465">
+      Add WEB-INF/classes to loader's classpath for cli and precompile
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1715">
       Allow to run Cocoon CLI by adding servlet.jar in the classpath.  Turn off cli's debug messages by default.
     </action>
