@@ -48,6 +48,7 @@ import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.servlet.CoreUtil;
 import org.apache.excalibur.source.Source;
@@ -85,7 +86,8 @@ public class BlocksManager
             throw new ServletException("Could not parse " + contextURL0, e);
         }
         
-        this.logger = ApplicationContextFactory.createRootLogger(this.getServletConfig().getServletContext(), "cocoon");
+        // FIXME - how do we get the settings object?
+        this.logger = ApplicationContextFactory.createRootLogger(this.getServletConfig().getServletContext(), new MutableSettings());
         this.getLogger().debug("Initializing the Blocks Manager");
         
         InputSource is = null;
