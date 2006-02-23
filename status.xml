@@ -180,6 +180,13 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1066" due-to="Antonio Fiol" due-to-email="antonio.fiol@gmail.com">
+      LDAPTransformer can optionally output the DN of every returned entry as an
+      attribute.  To enable, use &lt;ldap:dn-attribute&gt;dn&lt;/ldap:dn-attribute&gt;
+    </action>
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1705" due-to="Warrell Harries" due-to-email="toulouse@vodafone.net">
+      Fix handling of &lt;ldap:execute-replace&gt; causing NPE in LDAPTransformer
+    </action>
     <action dev="CZ" type="update">
       JCR block: To build the JCR block, the jcr-api-1.0.jar has to be downloaded by the user
                  prior to building the block. Have a look at the readme in the jcr block for
