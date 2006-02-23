@@ -16,9 +16,10 @@
 */
 package org.apache.cocoon.components.naming;
 
-import org.apache.avalon.framework.component.*;
-import javax.naming.directory.*;
 import java.util.Map;
+
+import javax.naming.directory.DirContext;
+
 import org.apache.cocoon.ProcessingException;
 
 
@@ -28,9 +29,10 @@ import org.apache.cocoon.ProcessingException;
  *	@author Jeremy Quinn <a href="http://apache.org/~jeremy">http://apache.org/~jeremy</a>.
  */
 
-public interface  EntryManager extends Component {
-	String ROLE = EntryManager.class.getName();
-	int ADD_ATTRIBUTE = DirContext.ADD_ATTRIBUTE; 
+public interface EntryManager {
+    String ROLE = EntryManager.class.getName();
+
+    int ADD_ATTRIBUTE = DirContext.ADD_ATTRIBUTE; 
 	int REMOVE_ATTRIBUTE = DirContext.REMOVE_ATTRIBUTE;
 	int REPLACE_ATTRIBUTE = DirContext.REPLACE_ATTRIBUTE;
 	

@@ -70,7 +70,6 @@ public class LDAPEntryManager
 	
 	/* internal state */
 	private boolean disposed = false;
-	private boolean recycled = false;
 	
 	/* internal instance variables */
 	protected DirContext context = null;
@@ -125,7 +124,6 @@ public class LDAPEntryManager
 		} finally {
 			this.context = null;
 		}
-		this.recycled = true;
 	}
 
 	/* Avalon, Dispose of this Class */
@@ -290,14 +288,15 @@ public class LDAPEntryManager
 	*/
 	private Attributes map2Attributes (Map map) {
 		Attributes attrs = new BasicAttributes (false);
-        for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
-            Map.Entry me = (Map.Entry)i.next();
-            String key = (String)me.getKey();
-            Attribute attr = new BasicAttribute(key);
-            for (Iterator vals = ((List)me.getValue()).iterator(); vals.hasNext(); ) {
-                attr.add(vals.next());
+        Iterator keys = map.keySet ().iterator ();
+        while (keys.hasNext ()) {
+            String key = (String)keys.next ();
+            Iterator vals = ((List)map.get (key)).iterator ();
+            Attribute attr = new BasicAttribute (key);
+            while (vals.hasNext ()) {
+                attr.add (vals.next ());
             }
-            attrs.put(attr);
+            attrs.put (attr);
         }
 		return attrs;
 	}
