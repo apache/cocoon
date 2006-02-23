@@ -99,7 +99,7 @@ public class CocoonWrapper {
         // FIXME - make the level configurable
         this.log = new ConsoleLogger(ConsoleLogger.LEVEL_INFO);
 
-        this.cliContext = new CommandLineContext(this.contextDir, this.log);
+        this.cliContext = new CommandLineContext(this.contextDir);
 
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");

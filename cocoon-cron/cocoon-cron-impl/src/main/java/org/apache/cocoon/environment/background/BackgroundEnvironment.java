@@ -15,22 +15,18 @@
  */
 package org.apache.cocoon.environment.background;
 
-import org.apache.avalon.framework.logger.Logger;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.CommandLineRequest;
 import org.apache.cocoon.environment.commandline.CommandLineResponse;
 import org.apache.cocoon.util.NullOutputStream;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * A simple implementation of <code>org.apache.cocoon.environment.Environment</code>
@@ -64,31 +60,6 @@ public class BackgroundEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * @param uri
-     * @param view
-     * @param context
-     * @param stream
-     * @param logger
-     */
-    public BackgroundEnvironment(String uri,
-                                 String view,
-                                 File context,
-                                 OutputStream stream,
-                                 Logger logger) {
-        super(uri, view);
-        enableLogging(logger);
-        this.outputStream = stream;
-
-        // TODO Would special Background*-objects have advantages?
-        Request request = new CommandLineRequest(this, "", uri, null, null, null);
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
-                             new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
-                             new CommandLineContext(context.getAbsolutePath(), logger));
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
     public void redirect(String newURL, boolean global, boolean permanent) throws IOException {
