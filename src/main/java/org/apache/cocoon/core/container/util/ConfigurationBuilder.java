@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.configuration;
+package org.apache.cocoon.core.container.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.container.util.PropertyHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;

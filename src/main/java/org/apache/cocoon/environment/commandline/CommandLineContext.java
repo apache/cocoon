@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
@@ -35,14 +34,10 @@ public class CommandLineContext extends AbstractContext implements Context {
     /** The context directory path. */
     private String contextDir;
 
-    /** The logger for debugging etc. */
-    protected Logger logger;
-
     /**
      * Constructs a CommandlineContext object from a ServletContext object
      */
-    public CommandLineContext(String contextDir, Logger logger) {
-        this.logger = logger;        
+    public CommandLineContext(String contextDir) {
         String contextDirPath = new File(contextDir).getAbsolutePath();
         // store contextDirPath as is don't remove trailing /.
         this.contextDir = contextDirPath;
@@ -79,9 +74,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: getAttribute=" + name);
-        }
         return super.getAttribute(name);
     }
 
@@ -89,9 +81,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: setAttribute=" + name);
-        }
         super.setAttribute(name, value);
     }
 
@@ -99,9 +88,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: removeAttribute=" + name);
-        }
         super.removeAttribute(name);
     }
 
@@ -109,9 +95,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: getAttributeNames");
-        }
         return super.getAttributeNames();
     }
 
@@ -119,9 +102,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: getResource=" + path);
-        }
         // rely on File to build correct File and URL
         File f = new File( contextDir, path );
         if (!f.exists()) return null;
@@ -132,9 +112,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getRealPath(java.lang.String)
      */
     public String getRealPath(String path) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: getRealPath=" + path);
-        }
         // rely on File to build correct File and URL
         File f = new File( this.contextDir, path );
         return f.getAbsolutePath();
@@ -144,9 +121,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getMimeType(java.lang.String)
      */
     public String getMimeType(String file) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("CommandlineContext: getMimeType=" + file);
-        }
         //return servletContext.getMimeType(file);
         return null;
     }
@@ -155,7 +129,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getInitParameter(java.lang.String)
      */
     public String getInitParameter(String name) {
-        this.logger.debug("CommandlineContext: getInitParameter=" + name);
         return super.getInitParameter(name);
     }
 
@@ -163,7 +136,6 @@ public class CommandLineContext extends AbstractContext implements Context {
      * @see org.apache.cocoon.environment.Context#getResourceAsStream(java.lang.String)
      */
     public InputStream getResourceAsStream(String path){
-        this.logger.debug("CommandlineContext: getResourceAsStream "+path);
         return super.getResourceAsStream(path);
     }
 }
