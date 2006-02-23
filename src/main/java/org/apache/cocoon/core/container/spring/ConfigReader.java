@@ -175,9 +175,11 @@ public class ConfigReader {
                 // Component declaration
                 // Find the role
                 String role = componentConfig.getAttribute("role", null);
+                String alias = null;
                 if (role == null) {
                     // Get the role from the role manager if not explicitely specified
                     role = (String)this.configInfo.getShorthands().get( componentName );
+                    alias = componentName;
                     if (role == null) {
                         // Unknown role
                         throw new ConfigurationException("Unknown component type '" + componentName +
@@ -209,6 +211,9 @@ public class ConfigReader {
                 info.fill(componentConfig);
                 info.setComponentClassName(className);
                 info.setRole(role);
+                if ( alias != null ) {
+                    info.setAlias(alias);
+                }
                 info.setConfiguration(componentConfig);
 
                 this.configInfo.addComponent(info);
@@ -454,6 +459,7 @@ public class ConfigReader {
                     info.fill(role);
                     info.setRole(roleName);
                     info.setConfiguration(role);
+                    info.setAlias(shorthand);
                     this.configInfo.getClassNames().put(roleName, info);
                 } else {
                     // Check that it's consistent with the existing info
@@ -485,6 +491,7 @@ public class ConfigReader {
                         info.setComponentClassName(className);
                         info.fill(key);
                         info.setConfiguration(key);
+                        info.setAlias(shortHand);
                         keyMap.put( shortHand, info );
                     } else {
                         // Check that it's consistent with the existing info

@@ -31,12 +31,12 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
 
     protected ServiceManager manager;
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
-        this.manager = treeBuilder.getBuiltProcessorManager();
+        this.manager = (ServiceManager)treeBuilder.getApplicationContext().getBean(ServiceManager.class.getName());
     }
 
     /**

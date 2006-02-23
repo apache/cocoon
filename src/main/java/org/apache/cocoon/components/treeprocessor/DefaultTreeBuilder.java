@@ -41,6 +41,7 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Location;
@@ -53,10 +54,9 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @version $Id$
  */
-public class DefaultTreeBuilder
-        extends AbstractLogEnabled
-        implements TreeBuilder, Contextualizable, Serviceable,
-                   Recyclable, Disposable {
+public abstract class DefaultTreeBuilder
+    extends AbstractLogEnabled
+    implements TreeBuilder, Contextualizable, Serviceable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -95,6 +95,8 @@ public class DefaultTreeBuilder
      * It is created by {@link #createServiceManager(ClassLoader, Context, Configuration)}.
      */
     private ServiceManager itsManager;
+
+    private CocoonXmlWebApplicationContext itsApplicationContext;
     
     /**
      * The classloader for the processor that we are building.
@@ -127,13 +129,6 @@ public class DefaultTreeBuilder
 
     // -------------------------------------
 
-    /**
-     * Component processor of the parent manager
-     * (can be null for the root sitemap)
-     */
-    protected ServiceManager parentProcessorManager;
-
-
     /** Nodes gone through setupNode() that implement Initializable */
     private List initializableNodes = new ArrayList();
 
@@ -150,14 +145,14 @@ public class DefaultTreeBuilder
     private Map registeredNodes = new HashMap();
 
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -172,11 +167,7 @@ public class DefaultTreeBuilder
         return "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
     }
 
-    public void setParentProcessorManager(ServiceManager manager) {
-        this.parentProcessorManager = manager;
-    }
-
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
@@ -227,28 +218,29 @@ public class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected ServiceManager createServiceManager(ClassLoader classloader, Context context, Configuration tree)
-    throws Exception {
-        return this.manager;
-    }
+    protected abstract CocoonXmlWebApplicationContext createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
+    throws Exception;
 
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setProcessor(ConcreteTreeProcessor)
      */
     public void setProcessor(ConcreteTreeProcessor processor) {
         this.processor = processor;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getProcessor()
      */
     public ConcreteTreeProcessor getProcessor() {
         return this.processor;
     }
     
-    public ServiceManager getBuiltProcessorManager() {
-        return this.itsManager;
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getApplicationContext()
+     */
+    public CocoonXmlWebApplicationContext getApplicationContext() {
+        return this.itsApplicationContext;
     }
 
     public ClassLoader getBuiltProcessorClassLoader() {
@@ -379,9 +371,9 @@ public class DefaultTreeBuilder
 //        currentThread.setContextClassLoader(this.itsClassLoader);
         this.itsClassLoader = Thread.currentThread().getContextClassLoader();
 
-        this.itsManager = createServiceManager(this.itsClassLoader, this.itsContext, componentConfig);
-        this.itsComponentInfo = (ProcessorComponentInfo)this.itsManager.lookup(ProcessorComponentInfo.ROLE);
-
+        this.itsApplicationContext = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
+        this.itsComponentInfo = (ProcessorComponentInfo)this.itsApplicationContext.getBean(ProcessorComponentInfo.ROLE);
+        this.itsManager = (ServiceManager)this.itsApplicationContext.getBean(ServiceManager.class.getName());
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(),
                                              this.itsContext,
@@ -607,7 +599,6 @@ public class DefaultTreeBuilder
         this.disposableNodes = new ArrayList(); // Must not be cleared as it's used for processor disposal
         this.initializableNodes.clear();
         this.linkedBuilders.clear();
-        this.parentProcessorManager = null; // Set in setParentProcessorManager()
         this.processor = null;          // Set in setProcessor()
 
         this.itsNamespace = null;       // Set in build()

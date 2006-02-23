@@ -103,7 +103,7 @@ public class SitemapLanguage
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ServiceManager createServiceManager(ClassLoader classloader, Context context, Configuration config)
+    protected CocoonXmlWebApplicationContext createApplicationContext(ClassLoader classloader, Context context, Configuration config)
     throws Exception {
 
         // Create the classloader, if needed.
@@ -154,7 +154,7 @@ public class SitemapLanguage
             }
         }
 
-        return newManager;
+        return sitemapContext;
     }
 
     /**

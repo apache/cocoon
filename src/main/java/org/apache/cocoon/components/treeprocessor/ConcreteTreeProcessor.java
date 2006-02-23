@@ -30,6 +30,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
@@ -93,7 +94,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** no listeners by default */ 
     private Map classpathListeners = Collections.EMPTY_MAP;
-    
+
+    /** Application Context for this sitemap. */
+    protected CocoonXmlWebApplicationContext applicationContext;
+
     /**
      * Builds a concrete processig, given the wrapping processor
      */
@@ -103,7 +107,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.wrappingProcessor = wrappingProcessor;
 
         // Get the sitemap executor - we use the same executor for each sitemap
-        this.sitemapExecutor = sitemapExecutor;        
+        this.sitemapExecutor = sitemapExecutor;
     }
 
     public void handleNotification() {
@@ -122,7 +126,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }    
     
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ServiceManager manager, 
+    public void setProcessorData(CocoonXmlWebApplicationContext appContext, 
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
@@ -132,7 +136,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
 
-        this.manager = manager;
+        this.applicationContext = appContext;
+        this.manager = (ServiceManager)this.applicationContext.getBean(ServiceManager.class.getName());
         this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
@@ -388,6 +393,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // dispose listeners
         this.disposeListeners(this.enterSitemapEventListeners);
         this.disposeListeners(this.leaveSitemapEventListeners);
+        if ( this.applicationContext != null ) {
+            this.applicationContext.destroy();
+            this.applicationContext = null;
+        }
     }
 
     protected void disposeListeners(List l) {
