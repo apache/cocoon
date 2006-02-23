@@ -1,10 +1,5 @@
-  <file>
-    <title>JCR API</title>
-    <description>
-      JCR (aka JSR-170 API)
-    </description>
-    <used-by>JCR block</used-by>
-    <lib>optional/jcr-1.0.jar</lib>
-    <homepage>http://www.jcp.org/en/jsr/detail?id=170</homepage>
-  </file>
+If you want to build the jcr block, you have to download the jcr-1.0.jar first
+from http://www.jcp.org/en/jsr/detail?id=170. But the jar into the lib/local
+directory and enable the jcr block in your local.blocks.properties file before
+building Apache Cocoon.
 
