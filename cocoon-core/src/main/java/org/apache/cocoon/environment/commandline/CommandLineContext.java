@@ -32,17 +32,47 @@ import org.apache.cocoon.environment.impl.AbstractContext;
  */
 public class CommandLineContext extends AbstractContext implements Context {
 
-    /** The context directory path*/
+    /** The context directory path. */
     private String contextDir;
+
+    /** The logger for debugging etc. */
+    protected Logger logger;
 
     /**
      * Constructs a CommandlineContext object from a ServletContext object
      */
     public CommandLineContext(String contextDir, Logger logger) {
-        super(logger);
+        this.logger = logger;        
         String contextDirPath = new File(contextDir).getAbsolutePath();
         // store contextDirPath as is don't remove trailing /.
         this.contextDir = contextDirPath;
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.Exception, java.lang.String)
+     */
+    public void log(Exception arg0, String arg1) {
+        System.out.println(arg1);
+        if ( arg0 != null ) {
+            arg0.printStackTrace(System.out);
+        }
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.String, java.lang.Throwable)
+     */
+    public void log(String arg0, Throwable arg1) {
+        System.out.println(arg0);
+        if ( arg1 != null ) {
+            arg1.printStackTrace(System.out);
+        }
+    }
+
+    /**
+     * @see javax.servlet.ServletContext#log(java.lang.String)
+     */
+    public void log(String arg0) {
+        System.out.println(arg0);
     }
 
     /**

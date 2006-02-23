@@ -155,7 +155,7 @@ public class ApplicationContextFactory {
                                        Settings       settings)
     throws Exception {
         // create a bootstrap logger
-        int logLevel;;
+        int logLevel;
         final String logLevelString = settings.getBootstrapLogLevel();
         if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
             logLevel = ServletLogger.LEVEL_DEBUG;
