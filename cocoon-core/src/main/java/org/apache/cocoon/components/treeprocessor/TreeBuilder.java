@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 
 /**
  *
@@ -40,9 +40,7 @@ public interface TreeBuilder {
         }
     }
 
-    void setParentProcessorManager(ServiceManager manager);
-    
-    ServiceManager getBuiltProcessorManager();
+    CocoonXmlWebApplicationContext getApplicationContext();
     
     ClassLoader getBuiltProcessorClassLoader();
 

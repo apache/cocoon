@@ -46,6 +46,7 @@ public final class ComponentInfo {
     private Parameters parameters;
     private String loggerCategory;
     private String role;
+    private String alias;
 
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
@@ -216,6 +217,14 @@ public final class ComponentInfo {
 
     public void setParameters(Parameters parameters) {
         this.parameters = parameters;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     /**

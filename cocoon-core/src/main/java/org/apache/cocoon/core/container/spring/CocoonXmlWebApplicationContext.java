@@ -99,10 +99,18 @@ public class CocoonXmlWebApplicationContext
         }
     }
 
+    /**
+     * Get the avalon configuration information.
+     */
     public ConfigurationInfo getConfigurationInfo() {
         return this.avalonConfiguration;
     }
 
+    /**
+     * Register a child context as a listener. This allows a child context to destroy itself
+     * when the parent is destroyed.
+     * @param childContext The child context.
+     */
     public void registerChildContext(CocoonXmlWebApplicationContext childContext) {
         this.addListener(childContext);
     }
@@ -129,6 +137,8 @@ public class CocoonXmlWebApplicationContext
     }
 
     /**
+     * Create a new bean factory and add a bean post processor to handle
+     * Avalon components.
      * @see org.springframework.context.support.AbstractRefreshableApplicationContext#createBeanFactory()
      */
     protected DefaultListableBeanFactory createBeanFactory() {
@@ -173,7 +183,7 @@ public class CocoonXmlWebApplicationContext
             return super.getResourceByPath(path);
         }
     }
-    
+
     /**
      * The default location for the context is "conf/applicationContext.xml"
      * which is searched relative to the current sitemap.
