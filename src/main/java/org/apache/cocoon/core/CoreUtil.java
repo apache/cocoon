@@ -48,6 +48,7 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
@@ -99,7 +100,7 @@ public class CoreUtil {
     protected final ServletContext servletContext;
 
     /** The container. */
-    protected ApplicationContext container;
+    protected CocoonXmlWebApplicationContext container;
 
     /** The configuration file */
     protected Source configurationFile;
@@ -669,7 +670,7 @@ public class CoreUtil {
         return this.processor;
     }
 
-    protected ApplicationContext setupSpringContainer() throws Exception {
+    protected CocoonXmlWebApplicationContext setupSpringContainer() throws Exception {
         if (this.log.isInfoEnabled()) {
             this.log.info("Reading root configuration: " + this.settings.getConfiguration());
         }
@@ -704,7 +705,7 @@ public class CoreUtil {
         env.settings = this.core.getSettings();
         ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        ApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
+        CocoonXmlWebApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
 
         return mainContext;
     }
@@ -769,8 +770,8 @@ public class CoreUtil {
      * Dispose the root processor when environment is destroyed
      */
     public void destroy() {
-        // FIXME - we have to clean up here!
         if ( this.container != null ) {
+            this.container.destroy();
             this.container = null;
         }
     }

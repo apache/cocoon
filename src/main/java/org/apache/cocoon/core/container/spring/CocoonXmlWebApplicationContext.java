@@ -48,6 +48,9 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -61,7 +64,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class CocoonXmlWebApplicationContext
     extends XmlWebApplicationContext
-    implements EnterSitemapEventListener, LeaveSitemapEventListener {
+    implements EnterSitemapEventListener, LeaveSitemapEventListener, ApplicationListener {
 
     public static final String DEFAULT_SPRING_CONFIG = "conf/applicationContext.xml";
     public static final String APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = "application-context";
@@ -73,6 +76,8 @@ public class CocoonXmlWebApplicationContext
     protected final Logger avalonLogger;
     protected final Context avalonContext;
     protected final ConfigurationInfo avalonConfiguration;
+
+    protected boolean destroyed = false;
 
     public CocoonXmlWebApplicationContext(ApplicationContext parent) {
         this(null, parent, null, null, null);
@@ -88,10 +93,28 @@ public class CocoonXmlWebApplicationContext
         this.avalonLogger = avalonLogger;
         this.avalonConfiguration = avalonConfiguration;
         this.avalonContext = avalonContext;
+        if ( parent instanceof CocoonXmlWebApplicationContext) {
+            ((CocoonXmlWebApplicationContext)parent).registerChildContext(this);
+            
+        }
     }
 
     public ConfigurationInfo getConfigurationInfo() {
         return this.avalonConfiguration;
+    }
+
+    public void registerChildContext(CocoonXmlWebApplicationContext childContext) {
+        this.addListener(childContext);
+    }
+
+    /**
+     * @see org.springframework.context.support.AbstractApplicationContext#destroy()
+     */
+    public void destroy() {
+        if ( !this.destroyed ) {
+            this.destroyed = true;
+            super.destroy();
+        }
     }
 
     /**
@@ -218,6 +241,17 @@ public class CocoonXmlWebApplicationContext
             return (CocoonXmlWebApplicationContext)request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE);
         }
         return this;
+    }
+
+    /**
+     * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+     */
+    public void onApplicationEvent(ApplicationEvent event) {
+        if ( event instanceof ContextClosedEvent ) {
+            if (((ContextClosedEvent)event).getApplicationContext().equals(this.getParent()) ) {
+                this.destroy();
+            }
+        }
     }
 
     /**
