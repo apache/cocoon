@@ -59,7 +59,7 @@ public class CocoonBeanTestCase extends TestCase {
         cocoon.setConfigFile("WEB-INF/cocoon.xconf");
         cocoon.setPrecompileOnly(false);
         cocoon.setWorkDir("build/work");
-        cocoon.setLogKit("build/webapp/WEB-INF/logkit.xconf");
+        cocoon.setLogKit("build/webapp/WEB-INF/log4j.xconf");
         cocoon.setLogger("cli-test");
         cocoon.setLogLevel("DEBUG");
         //cocoon.setAgentOptions(*something*));

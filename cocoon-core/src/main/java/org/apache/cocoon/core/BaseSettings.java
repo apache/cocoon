@@ -16,7 +16,6 @@
 package org.apache.cocoon.core;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * The settings (configuration) for the Cocoon core are described through the {@link BaseSettings}
@@ -42,11 +41,6 @@ public interface BaseSettings {
     /** The default running mode. */
     String DEFAULT_RUNNING_MODE = "dev";
 
-    /**
-     * This parameter allows to set system properties
-     */
-    String KEY_FORCE_PROPERTIES = "system.properties";
-
     /** This parameter specifies the class for the root processor */
     String KEY_PROCESSOR_CLASS = "processor";
     
@@ -67,17 +61,10 @@ public interface BaseSettings {
 
     /**
      * This parameter indicates the log level to use throughout startup of the
-     * system. As soon as the logkit.xconf the setting of the logkit.xconf
-     * configuration is used instead! Only for startup and if the logkit.xconf is
-     * not readable/available this log level is of importance.
+     * system. As soon as the logging system is setup the setting of the log4j.xconf
+     * configuration is used instead! Only for startup this log level is of importance.
      */
     String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.loglevel";
-
-    /**
-     * This parameter switches the logging system from LogKit to Log4J for Cocoon.
-     * Log4J has to be configured already.
-     */
-    String KEY_LOGGING_MANAGER_CLASS = "logging.manager.class";
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -177,22 +164,10 @@ public interface BaseSettings {
     List getExtraClasspaths();
 
     /**
-     * @return Returns the forceProperties.
-     * @see #KEY_FORCE_PROPERTIES
-     */
-    Map getForceProperties();
-
-    /**
      * @return Returns the loadClasses.
      * @see #KEY_LOAD_CLASSES
      */
     List getLoadClasses();
-
-    /**
-     * @return Returns the loggerManagerClassName.
-     * @see #KEY_LOGGING_MANAGER_CLASS
-     */
-    String getLoggerManagerClassName();
 
     /**
      * @return Returns the loggingConfiguration.

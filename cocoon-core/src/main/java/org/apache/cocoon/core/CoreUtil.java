@@ -217,7 +217,8 @@ public class CoreUtil {
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
-        this.log = ApplicationContextFactory.createRootLogger(servletContext, this.settings.getCocoonLogger());
+        this.log = ApplicationContextFactory.createRootLogger(servletContext,
+                                                              this.settings);
         this.env.setLogger(this.log);
 
         // Output some debug info
@@ -306,7 +307,7 @@ public class CoreUtil {
 
         // Set the system properties needed by Xalan2.
         // FIXME Do we still need this?
-        this.setSystemProperties();
+        //this.setSystemProperties();
 
         // dump system properties
         this.dumpSystemProperties();
@@ -609,7 +610,6 @@ public class CoreUtil {
 
         this.updateEnvironment();
         this.forceLoad();
-        this.forceProperty();
 
         try {
             if (this.log.isInfoEnabled()) {
@@ -735,33 +735,6 @@ public class CoreUtil {
                     this.log.warn("Could not load class: " + fqcn, e);
                 }
                 // Do not throw an exception, because it is not a fatal error.
-            }
-        }
-    }
-
-    /**
-     * Handle the "force-property" parameter.
-     *
-     * If you need to force more than one property to load, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
-     */
-    protected void forceProperty() {
-        if (this.settings.getForceProperties().size() > 0) {
-            final Iterator i = this.settings.getForceProperties().entrySet().iterator();
-            while (i.hasNext()) {
-                final Map.Entry current = (Map.Entry)i.next();
-                try {
-                    if (this.log.isDebugEnabled()) {
-                        this.log.debug("Setting: " + current.getKey() + "=" + current.getValue());
-                    }
-                    System.setProperty(current.getKey().toString(), current.getValue().toString());
-                } catch (Exception e) {
-                    if (this.log.isWarnEnabled()) {
-                        this.log.warn("Could not set property: " + current.getKey(), e);
-                    }
-                    // Do not throw an exception, because it is not a fatal error.
-                }
             }
         }
     }

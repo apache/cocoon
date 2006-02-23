@@ -613,13 +613,6 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
-         */
-        public Logger getBootstrapLogger(BootstrapEnvironment.LogLevel logLevel) {
-            return new ServletLogger(this.config, logLevel.getLevel());
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
          */
         public void setLogger(Logger rootLogger) {
@@ -637,7 +630,7 @@ public class CocoonServlet extends HttpServlet {
                 settings.setWorkDirectory(workDir.getAbsolutePath());
             }
             if ( settings.getLoggingConfiguration() == null ) {
-                settings.setLoggingConfiguration("/WEB-INF/logkit.xconf");
+                settings.setLoggingConfiguration("/WEB-INF/log4j.xconf");
             }
         }
 
@@ -661,13 +654,6 @@ public class CocoonServlet extends HttpServlet {
          */
         public File getContextForWriting() {
             return this.writeableContextPath;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configureLoggingContext(DefaultContext context) {
-            context.put("servlet-context", this.config.getServletContext());
         }
 
         /**

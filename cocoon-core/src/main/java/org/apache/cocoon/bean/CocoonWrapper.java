@@ -96,8 +96,8 @@ public class CocoonWrapper {
      */
     public void initialize() throws Exception {
         // Install a temporary logger so that getDir() can log if needed
-        final BootstrapEnvironment.LogLevel level = BootstrapEnvironment.LogLevel.getLogLevelForName(this.logLevel);
-        final Logger envLogger = new ConsoleLogger(level.getLevel());
+        // FIXME - make the level configurable
+        final Logger envLogger = new ConsoleLogger(ConsoleLogger.LEVEL_INFO);
         this.log = envLogger;
 
         this.context = getDir(this.contextDir, "context");
@@ -583,13 +583,6 @@ public class CocoonWrapper {
         protected String configFile;
         protected List loadClassList;
 
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
-         */
-        public Logger getBootstrapLogger(LogLevel logLevel) {
-            return new ConsoleLogger(logLevel.getLevel());
-        }
-
         public void setEnvironmentLogger(Logger log) {
             this.environmentLogger = log;
         }
@@ -650,13 +643,6 @@ public class CocoonWrapper {
                     settings.addToLoadClasses(i.next().toString());
                 }
             }
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configureLoggingContext(DefaultContext context) {
-            // nothing to add
         }
 
         /**

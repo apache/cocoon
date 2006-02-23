@@ -789,13 +789,6 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
-         */
-        public Logger getBootstrapLogger(LogLevel logLevel) {
-            return new PortletLogger(this.config.getPortletContext(), logLevel.getLevel());
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
          */
         public void setLogger(Logger rootLogger) {
@@ -834,13 +827,6 @@ public class CocoonPortlet extends GenericPortlet {
          */
         public File getContextForWriting() {
             return this.writeableContextPath;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configureLoggingContext(DefaultContext context) {
-            context.put("servlet-context", this.config.getPortletContext());
         }
 
         /**
