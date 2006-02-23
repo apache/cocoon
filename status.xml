@@ -196,14 +196,15 @@
       Mark Forms block stable. Make dream team sample work with it.
     </action>
     <action dev="RG" type="fix">
-      Corrected problem with many ClassNotFoundExceptions occurring inside of the class loader by eliminating the
-      usage of Castor deriveByClass in portal configuations.
+      Portal: Corrected problem with many ClassNotFoundExceptions occurring inside of the class loader by eliminating the
+      usage of Castor deriveByClass in portal configuations. This change significantly improves performance of the portal
+      login.
     </action>
-    <action dev="RG" type="fix" issue="1742">
+    <action dev="RG" type="fix" fixes-bug="COCOON-1742">
       When compiling with Java 1.4 or higher, EncodeURLTransformer was modified to use JDK 1.4 regular expressions
-      instead of Jakarta regexp.
+      instead of Jakarta regexp improving performance and avoiding possible stack overflows.
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1778" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1778" due-to="Eric Meyer" due-to-email="eric.meyer@quoininc.com">
        Cron block: NPE calling QuartzJobScheduler.fireJob if the job is a CronJob.
     </action>
     <action dev="JBQ" type="fix">
@@ -226,7 +227,7 @@
     <action dev="JBQ" type="fix" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
       CForms: when building the query string in AJAX mode, do not include &lt;input type="button"&gt;
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1771" due-to="Eric Meyer" due-to-mail="eric.meyer@quoininc.com">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1771" due-to="Eric Meyer" due-to-email="eric.meyer@quoininc.com">
       cocoon.ajax.Fader runtime error when style uses abreviated form #ccc in IE6.0sp2.
     </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1301" due-to="Niclas Hedhman" due-to-email="niclas@apache.org">
