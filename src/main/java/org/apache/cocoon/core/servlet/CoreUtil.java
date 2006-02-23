@@ -67,7 +67,7 @@ public class CoreUtil {
                 s.setWorkDirectory(workDir1.getAbsolutePath());
             }
             if (s.getLoggingConfiguration() == null) {
-                s.setLoggingConfiguration("/WEB-INF/logkit.xconf");
+                s.setLoggingConfiguration("/WEB-INF/log4j.xconf");
             }
             MutableSettings settings = s;
             ServletContext servletContext = servletConfig.getServletContext();
