@@ -28,7 +28,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -78,9 +77,6 @@ public class TreeProcessor extends AbstractLogEnabled
                                       Configurable, Contextualizable,
                                       Disposable, Initializable {
 
-    private static final String XCONF_URL =
-        "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
-
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
 
@@ -125,9 +121,6 @@ public class TreeProcessor extends AbstractLogEnabled
     /** The actual processor */
     protected ConcreteTreeProcessor concreteProcessor;
 
-    /** The tree builder configuration */
-    private Configuration treeBuilderConfiguration;
-
     /**
      * Create a TreeProcessor.
      */
@@ -150,7 +143,6 @@ public class TreeProcessor extends AbstractLogEnabled
         // Copy all that can be copied from the parent
         this.context = parent.context;
         this.source = sitemapSource;
-        this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
 
@@ -181,14 +173,14 @@ public class TreeProcessor extends AbstractLogEnabled
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -241,10 +233,6 @@ public class TreeProcessor extends AbstractLogEnabled
         this.checkReload = config.getAttributeAsBoolean("check-reload",
                              this.core.getSettings().isReloadingEnabled("sitemap"));
 
-        // Obtain the configuration file, or use the XCONF_URL if none
-        // is defined
-        String xconfURL = config.getAttribute("config", XCONF_URL);
-
         // Reload check delay. Default is 1 second.
         this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", this.core.getSettings().getReloadDelay("sitemap"));
 
@@ -254,21 +242,6 @@ public class TreeProcessor extends AbstractLogEnabled
             this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(fileName), lastModifiedDelay);
         } catch (Exception e) {
             throw new ConfigurationException("Cannot resolve " + fileName, e);
-        }
-
-        // Read the builtin languages definition file
-        try {
-            Source source = this.resolver.resolveURI(xconfURL);
-            try {
-                SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX(this.manager, source, null, handler);
-                this.treeBuilderConfiguration = handler.getConfiguration();
-            } finally {
-                this.resolver.release(source);
-            }
-        } catch (Exception e) {
-            String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
         }
     }
 
@@ -719,11 +692,10 @@ public class TreeProcessor extends AbstractLogEnabled
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
             try {
                 treeBuilder.setProcessor(newProcessor);
-                treeBuilder.setParentProcessorManager(this.manager);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
                 newProcessor.setProcessorData(
-                        treeBuilder.getBuiltProcessorManager(),
+                        treeBuilder.getApplicationContext(),
                         treeBuilder.getBuiltProcessorClassLoader(),
                         root,
                         treeBuilder.getDisposableNodes(),
@@ -764,7 +736,7 @@ public class TreeProcessor extends AbstractLogEnabled
         return newProcessor;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {

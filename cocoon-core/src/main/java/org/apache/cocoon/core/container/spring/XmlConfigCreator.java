@@ -33,7 +33,6 @@ import org.springframework.util.StringUtils;
  * This is a simple component that uses a {@link  ConfigurationInfo} to create
  * a Spring like configuration xml document.
  *
- * TODO: register aliases for shorthands
  * @since 2.2
  * @version $Id$
  */
@@ -163,6 +162,12 @@ public class XmlConfigCreator {
                 }
                 buffer.append("</bean>\n");
                 pooledRoles.add(role);
+            }
+            if ( current.getAlias() != null ) {
+                buffer.append("<alias");
+                this.appendAttribute(buffer, "name", this.xml(role));
+                this.appendAttribute(buffer, "alias", current.getAlias());
+                buffer.append("/>\n");
             }
         }
         // add the Cocoon object to the root
