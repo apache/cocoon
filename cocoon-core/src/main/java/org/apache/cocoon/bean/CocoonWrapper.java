@@ -97,21 +97,21 @@ public class CocoonWrapper {
     public void initialize() throws Exception {
         // Install a temporary logger so that getDir() can log if needed
         // FIXME - make the level configurable
-        final Logger envLogger = new ConsoleLogger(ConsoleLogger.LEVEL_INFO);
-        this.log = envLogger;
+        this.log = new ConsoleLogger(ConsoleLogger.LEVEL_INFO);
+
+        this.cliContext = new CommandLineContext(this.contextDir, this.log);
 
         this.context = getDir(this.contextDir, "context");
         this.work = getDir(workDir, "working");
 
         this.conf = getConfigurationFile(this.context, this.configFile);
-        cliContext = new CommandLineContext(contextDir, envLogger);
 
         // setup Cocoon core
         File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
 
         WrapperBootstrapper env = this.getBootstrapEnvironment();
         env.setContextDirectory(contextDir);
-        env.setEnvironmentLogger(envLogger);
+        env.setEnvironmentLogger(this.log);
         env.setEnvironmentContext(cliContext);
         env.setWorkingDirectory(this.work);
         env.setCachingDirectory(cacheDir);

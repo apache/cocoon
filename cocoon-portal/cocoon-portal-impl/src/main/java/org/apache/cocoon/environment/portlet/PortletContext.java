@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.environment.portlet;
 
-import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.environment.impl.AbstractContext;
 
 import java.io.InputStream;
@@ -40,7 +39,6 @@ public final class PortletContext extends AbstractContext {
      * Constructs a PortletContext object from a PortletContext object
      */
     public PortletContext(javax.portlet.PortletContext context) {
-        super(new NullLogger());
         this.context = context;
     }
 
