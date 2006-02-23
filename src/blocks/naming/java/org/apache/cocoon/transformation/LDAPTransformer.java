@@ -84,6 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;!ELEMENT searchbase (#PCDATA)&gt;+<br>
  * &lt;!ELEMENT doc-element (#PCDATA)&gt;+ (default: "doc-element")<br>
  * &lt;!ELEMENT row-element (#PCDATA)&gt;+ (default: "row-element")<br>
+ * &lt;!ELEMENT dn-attribute (#PCDATA)&gt;+ (default: "" meaning no DN attribute)<br>
  * &lt;!ELEMENT error-element (#PCDATA)&gt;+ (default: "ldap-error") (in case of error returned error tag)<br>
  * &lt;!ELEMENT sax_error (TRUE  | FALSE)&gt+; (default: FALSE) (throws SAX-Exception instead of error tag)<br>
  * &lt;!ELEMENT attribute (#PCDATA)&gt;<br>
@@ -134,6 +135,7 @@ public class LDAPTransformer extends AbstractTransformer {
     public static final String MAGIC_PORT_ELEMENT = "port";
     public static final String MAGIC_ROOT_DN_ELEMENT = "rootdn";
     public static final String MAGIC_ROW_ELEMENT = "row-element";
+    public static final String MAGIC_DN_ATTRIBUTE = "dn-attribute";
     public static final String MAGIC_SAX_ERROR = "sax-error";
     public static final String MAGIC_SCOPE_ELEMENT = "scope";
     public static final String MAGIC_SEARCHBASE_ELEMENT = "searchbase";
@@ -169,6 +171,7 @@ public class LDAPTransformer extends AbstractTransformer {
     public static final int STATE_INSIDE_SAX_ERROR_ELEMENT = 23;
     public static final int STATE_INSIDE_EXECUTE_REPLACE = 24;
     public static final int STATE_INSIDE_EXECUTE_ADD = 25;
+    public static final int STATE_INSIDE_DN_ATTRIBUTE = 26;
 
     /** Default parameters that might apply to all queries */
     protected HashMap default_properties = new HashMap();
@@ -209,6 +212,7 @@ public class LDAPTransformer extends AbstractTransformer {
         setDefaultProperty(parameters, MAGIC_SEARCHBASE_ELEMENT);     // Check the searchbase
         setDefaultProperty(parameters, MAGIC_DOC_ELEMENT);            // Check the doc-element
         setDefaultProperty(parameters, MAGIC_ROW_ELEMENT);            // Check the row-element
+        setDefaultProperty(parameters, MAGIC_DN_ATTRIBUTE);           // Check the dn-attribute
         setDefaultProperty(parameters, MAGIC_ERROR_ELEMENT);          // Check the error-element
         setDefaultProperty(parameters, MAGIC_SAX_ERROR);              // Check the sax-error
         setDefaultProperty(parameters, MAGIC_DEREF_LINK_ELEMENT);     // Check the deref-link-element
@@ -439,6 +443,17 @@ public class LDAPTransformer extends AbstractTransformer {
                 break;
             default :
                 throwIllegalStateException("Not expecting a end row-element element");
+        }
+    }
+
+    protected void endDnAttribute() {
+        switch (current_state) {
+            case LDAPTransformer.STATE_INSIDE_DN_ATTRIBUTE :
+                getCurrentQuery().dn_attribute = current_value.toString();
+                current_state = getCurrentQuery().toDo;
+                break;
+            default :
+                throwIllegalStateException("Not expecting a end dn-attribute element");
         }
     }
 
@@ -693,6 +708,8 @@ public class LDAPTransformer extends AbstractTransformer {
             startParameterElement(LDAPTransformer.STATE_INSIDE_DOC_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ROW_ELEMENT)) {
             startParameterElement(LDAPTransformer.STATE_INSIDE_ROW_ELEMENT, name);
+        } else if (name.equals(LDAPTransformer.MAGIC_DN_ATTRIBUTE)) {
+            startParameterElement(LDAPTransformer.STATE_INSIDE_DN_ATTRIBUTE, name);
         } else if (name.equals(LDAPTransformer.MAGIC_ERROR_ELEMENT)) {
             startParameterElement(LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_SAX_ERROR)) {
@@ -753,6 +770,8 @@ public class LDAPTransformer extends AbstractTransformer {
             endDocElement();
         } else if (name.equals(LDAPTransformer.MAGIC_ROW_ELEMENT)) {
             endRowElement();
+        } else if (name.equals(LDAPTransformer.MAGIC_DN_ATTRIBUTE)) {
+            endDnAttribute();
         } else if (name.equals(LDAPTransformer.MAGIC_ERROR_ELEMENT)) {
             endErrorElement();
         } else if (name.equals(LDAPTransformer.MAGIC_SAX_ERROR)) {
@@ -793,6 +812,7 @@ public class LDAPTransformer extends AbstractTransformer {
             && current_state != LDAPTransformer.STATE_INSIDE_PORT_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_DOC_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_ROW_ELEMENT
+            && current_state != LDAPTransformer.STATE_INSIDE_DN_ATTRIBUTE
             && current_state != LDAPTransformer.STATE_INSIDE_ERROR_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_SAX_ERROR_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_ROOT_DN_ELEMENT
@@ -874,8 +894,9 @@ public class LDAPTransformer extends AbstractTransformer {
         protected boolean showAttribute;
         protected String filter;
         protected String doc_element;
-        protected String exec_element;
+        protected String exec_element = "exec-element";
         protected String row_element;
+        protected String dn_attribute;
         protected String error_element;
         protected boolean sax_error;
         protected boolean deref_link; // Dereference: true -> dereference the link during search
@@ -897,6 +918,7 @@ public class LDAPTransformer extends AbstractTransformer {
             showAttribute = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_SHOW_ATTRIBUTE_ELEMENT, true);
             doc_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_DOC_ELEMENT, "doc-element");
             row_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ROW_ELEMENT, "row-element");
+            dn_attribute = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_DN_ATTRIBUTE, "");
             error_element = MapUtils.getString(transformer.default_properties, LDAPTransformer.MAGIC_ERROR_ELEMENT, "ldap-error");
             sax_error = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_SAX_ERROR);
             deref_link = MapUtils.getBooleanValue(transformer.default_properties, LDAPTransformer.MAGIC_DEREF_LINK_ELEMENT);
@@ -949,10 +971,18 @@ public class LDAPTransformer extends AbstractTransformer {
                                 NamingEnumeration ldapresults = ctx.search(searchbase, filter, constraints);
 
                                 while (ldapresults != null && ldapresults.hasMore()) {
+                                    SearchResult si = (SearchResult) ldapresults.next();
                                     if (!row_element.equals("")) {
+                                        if(!"".equals(dn_attribute)) {
+                                            String dn;
+                                            if(!"".equals(searchbase))
+                                                dn = si.getName() + ',' + searchbase;
+                                            else
+                                                dn = si.getName();
+                                            attr.addAttribute(null, dn_attribute, dn_attribute, "CDATA", dn);
+                                        }
                                         transformer.start(row_element, attr);
                                     }
-                                    SearchResult si = (SearchResult) ldapresults.next();
                                     javax.naming.directory.Attributes attrs = si.getAttributes();
                                     if (attrs != null) {
                                         NamingEnumeration ae = attrs.getAll();
@@ -1001,6 +1031,9 @@ public class LDAPTransformer extends AbstractTransformer {
                                     transformer.start(doc_element, attr);
                                 }
                                 if (!row_element.equals("")) {
+                                    if(!"".equals(dn_attribute)) {
+                                        attr.addAttribute(null, dn_attribute, dn_attribute, "CDATA", searchbase);
+                                    }
                                     transformer.start(row_element, attr);
                                 }
                                 if (attrs != null) {
