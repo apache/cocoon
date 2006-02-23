@@ -29,7 +29,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.Context;
 
 /**
@@ -40,15 +39,8 @@ import org.apache.cocoon.environment.Context;
 public abstract class AbstractContext 
     implements Context, ServletContext {
 
-    /** The logger to use. */
-    protected final Logger logger;
-
     /** Attributes. */
     protected final Map attributes = new HashMap();
-
-    public AbstractContext(Logger logger) {
-        this.logger = logger;
-    }
 
     /**
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
@@ -181,27 +173,6 @@ public abstract class AbstractContext
      */
     public Enumeration getServlets() {
         return null;
-    }
-
-    /**
-     * @see javax.servlet.ServletContext#log(java.lang.Exception, java.lang.String)
-     */
-    public void log(Exception arg0, String arg1) {
-        this.logger.info(arg1, arg0);
-    }
-
-    /**
-     * @see javax.servlet.ServletContext#log(java.lang.String, java.lang.Throwable)
-     */
-    public void log(String arg0, Throwable arg1) {
-        this.logger.info(arg0, arg1);
-    }
-
-    /**
-     * @see javax.servlet.ServletContext#log(java.lang.String)
-     */
-    public void log(String arg0) {
-        this.logger.info(arg0);
     }
 
     /**
