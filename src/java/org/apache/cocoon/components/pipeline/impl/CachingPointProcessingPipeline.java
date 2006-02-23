@@ -38,7 +38,9 @@ import java.util.Iterator;
 import java.util.ListIterator;
 
 /**
- * The CachingPointProcessingPipeline
+ * The caching-point pipeline implements an extended caching algorithm which is
+ * of particular benefit for use with those pipelines that utilise cocoon-views
+ * and/or provide drill-down functionality.
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
@@ -55,11 +57,28 @@ public class CachingPointProcessingPipeline
 
    /**
     * The <code>CachingPointProcessingPipeline</code> is configurable.
-    * The autoCachingPoint algorithm can be switced on/off
-    * in the sitemap.xmap
+    *
+    * <p>The autoCachingPoint algorithm (if enabled) will automatically cache
+    * common elements of the pipeline currently being processed - as well as the
+    * entire cacheable pipeline according to the "longest cacheable key"
+    * algorithm.  This feature is especially useful for pipelines that branch at
+    * some point (this is the case with <tt>&lt;map:select&gt;</tt> or
+    * <tt>&lt;map:act&gt;</tt>).
+    *
+    * <p>The option <tt>autoCachingPoint</tt> can be switched on/off in the
+    * sitemap.xmap (on by default).  For linear pipelines, one can switch "Off"
+    * <tt>autoCachingPoint</tt> and use attribute
+    * <tt>pipeline-hints="caching-point"</tt> to manually indicate that certain
+    * pipeline components (eg on <tt>&lt;map:generator&gt;</tt>) should be
+    * considered as cache points.  Both options (automatic at branch points and
+    * manual with pipeline hints) can coexist in the same pipeline.</p>
+    *
+    * <p>Works by requesting the pipeline processor to try shorter keys when
+    * looking for a cached content for the pipeline.</p>
     */
     public void parameterize(Parameters config) throws ParameterException {
         super.parameterize(config);
+
         this.autoCachingPointSwitch = config.getParameter("autoCachingPoint", null);
 
         if (this.getLogger().isDebugEnabled()) {
@@ -131,11 +150,14 @@ public class CachingPointProcessingPipeline
     }
 
     /**
-     * Determine if the given branch-point
-     * is a caching-point
+     * Determine if the given branch-point is a caching-point.  This is called
+     * by sitemap components when using cocoon views; it is also called by
+     * parent nodes (mainly selectors and actions).
      *
      * Please Note: this method is used by auto caching-point
      * and is of no consequence when auto caching-point is switched off
+     *
+     * @see org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode
      */
     public void informBranchPoint() {
         if (this.autoCachingPoint && this.generator != null) {
@@ -375,5 +397,19 @@ public class CachingPointProcessingPipeline
         this.xmlSerializerArray.clear();
         this.nextIsCachePoint = false;
         this.autoCachingPointSwitch=null;
+    }
+    
+    boolean setupFromCacheKey() {
+        // try a shorter key
+        if (this.fromCacheKey.size() > 1) {
+            this.fromCacheKey.removeLastKey();
+            if (!this.completeResponseIsCached) {
+                this.firstProcessedTransformerIndex--;
+            }
+            return false;
+        } else {
+            this.fromCacheKey = null;
+            return true;
+        }
     }
 }

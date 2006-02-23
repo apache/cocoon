@@ -15,10 +15,16 @@
  */
 package org.apache.cocoon.components.pipeline.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.CacheValidityToSourceValidity;
@@ -31,19 +37,11 @@ import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
-
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.store.Store;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * This is the base class for all caching pipeline implementations
@@ -98,12 +96,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     protected boolean   generatorIsCacheableProcessingComponent;
     protected boolean   serializerIsCacheableProcessingComponent;
     protected boolean[] transformerIsCacheableProcessingComponent;
-
-    /** Smart caching ? */
-    protected boolean doSmartCaching;
-
-    /** Default setting for smart caching */
-    protected boolean configuredDoSmartCaching;
     
     protected Store transientStore = null;
 
@@ -129,8 +121,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     public void parameterize(Parameters params)
     throws ParameterException {
         super.parameterize(params);
-        this.configuredDoSmartCaching =
-            params.getParameterAsBoolean("smart-caching", true);
         
         String storeRole = params.getParameter("store-role",Store.TRANSIENT_STORE); 
         
@@ -141,15 +131,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 				getLogger().debug("Could not look up transient store, synchronizing requests will not work!",e);
 			}
 		}
-    }
-
-    /**
-     * Setup this component
-     */
-    public void setup(Parameters params) {
-        super.setup(params);
-        this.doSmartCaching = params.getParameterAsBoolean("smart-caching",
-                                               this.configuredDoSmartCaching);
     }
 
     /**
@@ -715,25 +696,18 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     );
                 }
 
-                if (!this.doSmartCaching) {
-                    // try a shorter key
-                    if (this.fromCacheKey.size() > 1) {
-                        this.fromCacheKey.removeLastKey();
-                        if (!this.completeResponseIsCached) {
-                            this.firstProcessedTransformerIndex--;
-                        }
-                        finished = false;
-                    } else {
-                        this.fromCacheKey = null;
-                    }
-                } else {
-                    // stop on longest key for smart caching
-                    this.fromCacheKey = null;
-                }
+                finished = setupFromCacheKey();
+
                 this.completeResponseIsCached = false;
             }
         }
 
+    }
+    
+    boolean setupFromCacheKey() {
+        // stop on longest key for smart caching
+        this.fromCacheKey = null;
+        return true;
     }
 
     /**
