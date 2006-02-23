@@ -16,7 +16,6 @@
 package org.apache.cocoon.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +42,6 @@ public class MutableSettings implements Settings {
      * The list of properties used to configure Cocoon
      */
     protected List properties = new ArrayList();
-
-    /**
-     * This parameter allows to set system properties
-     */
-    protected Map forceProperties = new HashMap();
 
     /**
      * This parameter indicates what class to use for the root processor.
@@ -82,17 +76,9 @@ public class MutableSettings implements Settings {
     protected String cocoonLogger;
 
     /**
-     * This parameter indicates the log level to use throughout startup of the
-     * system. As soon as the logkit.xconf the setting of the logkit.xconf
-     * configuration is used instead! Only for startup and if the logkit.xconf is
-     * not readable/available this log level is of importance.
+     * @see #setBootstrapLogLevel(String)
      */
     protected String bootstrapLogLevel;
-
-    /**
-     * This parameter switches the logging system from LogKit to Log4J for Cocoon.
-     */
-    protected String loggerManagerClassName;
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
@@ -252,8 +238,6 @@ public class MutableSettings implements Settings {
                         this.cocoonLogger = value;
                     } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                         this.bootstrapLogLevel = value;
-                    } else if ( key.equals(KEY_LOGGING_MANAGER_CLASS) ) {
-                        this.loggerManagerClassName = value;
                     } else if ( key.equals(KEY_RELOADING) ) {
                         this.reloadingEnabled = BooleanUtils.toBoolean(value);
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
@@ -290,9 +274,6 @@ public class MutableSettings implements Settings {
                         this.addToExtraClasspaths(value);
                     } else if ( key.startsWith(KEY_PROPERTY_PROVIDER) ) {
                         this.addToPropertyProviders(value);
-                    } else if ( key.startsWith(KEY_FORCE_PROPERTIES) ) {
-                        key = key.substring(KEY_FORCE_PROPERTIES.length() + 1);
-                        this.addToForceProperties(key, value);
                     }
                 }
             }
@@ -371,13 +352,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @return Returns the forceProperties.
-     */
-    public Map getForceProperties() {
-        return this.forceProperties;
-    }
-
-    /**
      * @return Returns the formEncoding.
      */
     public String getFormEncoding() {
@@ -389,13 +363,6 @@ public class MutableSettings implements Settings {
      */
     public List getLoadClasses() {
         return this.loadClasses;
-    }
-
-    /**
-     * @return Returns the loggerClassName.
-     */
-    public String getLoggerManagerClassName() {
-        return this.loggerManagerClassName;
     }
 
     /**
@@ -543,8 +510,6 @@ public class MutableSettings implements Settings {
                 value = this.cocoonLogger;
             } else if ( sKey.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                 value = this.bootstrapLogLevel;
-            } else if ( sKey.equals(KEY_LOGGING_MANAGER_CLASS) ) {
-                value = this.loggerManagerClassName;
             } else if ( sKey.equals(KEY_RELOADING) ) {
                 value = String.valueOf(this.reloadingEnabled);
             } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
@@ -577,8 +542,6 @@ public class MutableSettings implements Settings {
                 value = this.toString(this.loadClasses);
             } else if ( key.equals(KEY_EXTRA_CLASSPATHS) ) {
                 this.toString(this.extraClasspaths);
-            } else if ( key.equals(KEY_FORCE_PROPERTIES) ) {
-                this.toString(this.forceProperties);
             } else if ( key.equals(KEY_PROPERTY_PROVIDER) ) {
                 this.toString(this.propertyProviders);
             }
@@ -608,12 +571,10 @@ public class MutableSettings implements Settings {
           KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
           KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
-          KEY_FORCE_PROPERTIES + " : " + this.toString(this.forceProperties) + '\n' +
           KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
           KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
           KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
           KEY_LOGGING_COCOON_LOGGER + " : " + this.cocoonLogger + '\n' +
-          KEY_LOGGING_MANAGER_CLASS + " : " + this.loggerManagerClassName + '\n' +
           KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
           KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
           KEY_UPLOADS_DIRECTORY + " : " + this.uploadDirectory + '\n' +
@@ -743,15 +704,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @param key The forceProperties to set.
-     * @param value The forceProperties value to set.
-     */
-    public void addToForceProperties(String key, String value) {
-        this.checkWriteable();
-        this.forceProperties.put(key, value);
-    }
-
-    /**
      * @param formEncoding The formEncoding to set.
      */
     public void setFormEncoding(String formEncoding) {
@@ -765,14 +717,6 @@ public class MutableSettings implements Settings {
     public void addToLoadClasses(String className) {
         this.checkWriteable();
         this.loadClasses.add(className);
-    }
-
-    /**
-     * @param loggerClassName The loggerClassName to set.
-     */
-    public void setLoggerManagerClassName(String loggerClassName) {
-        this.checkWriteable();
-        this.loggerManagerClassName = loggerClassName;
     }
 
     /**

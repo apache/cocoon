@@ -39,6 +39,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.portlet.PortletContext;
@@ -213,7 +214,8 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         this.workDir.mkdirs();
 
         // Init logger
-        this.log = ApplicationContextFactory.createRootLogger(this.envPortletContext, "cocoon");
+        // FIXME - how do we get the settings object?
+        this.log = ApplicationContextFactory.createRootLogger(this.envPortletContext, new MutableSettings());
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
         if (uploadDirParam != null) {

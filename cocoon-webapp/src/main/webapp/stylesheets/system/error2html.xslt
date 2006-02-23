@@ -83,7 +83,7 @@
           the <code>WEB-INF/logs/</code> folder of your cocoon webapp context.<br/>
           If the logs don't give you enough information, you might want to increase the
           log level by changing the Logging configuration which is by default the
-          <code>WEB-INF/logkit.xconf</code> file.
+          <code>WEB-INF/log4j.xconf</code> file.
         </p>
 
         <p>

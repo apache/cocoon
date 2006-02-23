@@ -36,60 +36,6 @@ import org.apache.avalon.framework.logger.Logger;
 public interface BootstrapEnvironment {
 
     /**
-     * Convenience class to define some constants for log levels.
-     * @see BootstrapEnvironment#getBootstrapLogger(LogLevel)
-     */
-    public static final class LogLevel {
-
-        public static final LogLevel DEBUG = new LogLevel( "DEBUG", 0 );
-        public static final LogLevel INFO = new LogLevel( "INFO", 1 );
-        public static final LogLevel WARN = new LogLevel( "WARN", 2 );
-        public static final LogLevel ERROR = new LogLevel( "ERROR", 3 );
-        public static final LogLevel FATAL_ERROR = new LogLevel( "FATAL_ERROR", 4 );
-        public static final LogLevel DISABLED = new LogLevel( "NONE", 5 );
-
-        public static LogLevel getLogLevelForName(final String name) {
-            if( DEBUG.getName().equals( name ) ) {
-                return DEBUG;
-            } else if( INFO.getName().equals( name ) ) {
-                return INFO;
-            } else if( WARN.getName().equals( name ) ) {
-                return WARN;
-            } else if( ERROR.getName().equals( name ) ) {
-                return ERROR;
-            } else if( FATAL_ERROR.getName().equals( name ) ) {
-                return FATAL_ERROR;
-            } else if( DISABLED.getName().equals( name ) ) {
-                return DISABLED;
-            } else {
-                return DEBUG;
-            }
-        }    
-
-        private final String name;
-        private final int level;
-
-        public LogLevel(String name, int level) {
-            this.name = name;
-            this.level = level;
-        }
-
-        public int getLevel() {
-            return this.level;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-    }
-
-    /**
-     * Get the bootstrap logger.
-     * @param logLevel The log level to use according to the {@link Logger} interface.
-     */
-    Logger getBootstrapLogger(LogLevel logLevel);
-
-    /**
      * Pass the root logger back to the environment. As soon as the
      * logging system is set up, this method is called.
      * @param rootLogger The root logger.
@@ -103,13 +49,6 @@ public interface BootstrapEnvironment {
      * @param settings The settings for Cocoon.
      */
     void configure(MutableSettings settings);
-
-    /**
-     * This callback can be used by the environment to add environment specific
-     * information for the logging system.
-     * @param context The context passed to the logging system.
-     */
-    void configureLoggingContext(DefaultContext context);
 
     /**
      * This callback can be used by the environment to add environment specific

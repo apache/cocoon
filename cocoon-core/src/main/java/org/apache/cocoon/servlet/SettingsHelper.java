@@ -20,7 +20,6 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.util.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
 
@@ -39,8 +38,6 @@ public class SettingsHelper {
     public static void fill(MutableSettings s, ServletConfig config) {
         String value;
 
-        handleForceProperty(getInitParameter(config, "force-property"), s);
-
         value = getInitParameter(config, "configurations");
         if ( value != null ) {
             s.setConfiguration(value);
@@ -48,16 +45,9 @@ public class SettingsHelper {
             s.setConfiguration("/WEB-INF/cocoon.xconf");
         }
 
-        // upto 2.1.x the logging configuration was named "logkit-config"
-        // we still support this, but provide a new unbiased name as well
-        value = getInitParameter(config, "logkit-config");
+        value = getInitParameter(config, "logging-config");
         if ( value != null ) {
-            s.setLoggingConfiguration("context:/" + value);
-        } else {
-            value = getInitParameter(config, "logging-config");
-            if ( value != null ) {
-                s.setLoggingConfiguration("context:/" + value);                
-            }
+            s.setLoggingConfiguration("context:/" + value);                
         }
 
         value = getInitParameter(config, "servlet-logger");
@@ -73,11 +63,6 @@ public class SettingsHelper {
         value = getInitParameter(config, "log-level");
         if ( value != null ) {
             s.setBootstrapLogLevel(value);
-        }
-
-        value = getInitParameter(config, "logger-class");
-        if ( value != null ) {
-            s.setLoggerManagerClassName(value);
         }
 
         s.setReloadingEnabled(getInitParameterAsBoolean(config, "allow-reload", s.isReloadingEnabled(null)));
@@ -157,36 +142,6 @@ public class SettingsHelper {
         while (tokenizer.hasMoreTokens()) {
             final String value = tokenizer.nextToken().trim();
             s.addToLoadClasses(value);
-        }
-    }
-
-    /**
-     * Handle the "force-property" parameter.
-     *
-     * If you need to force more than one property to load, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
-     */
-    private static void handleForceProperty(String forceSystemProperty, MutableSettings s) {
-        if (forceSystemProperty != null) {
-            StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
-
-            while (tokenizer.hasMoreTokens()) {
-                final String property = tokenizer.nextToken().trim();
-                if (property.indexOf('=') == -1) {
-                    continue;
-                }
-                try {
-                    String key = property.substring(0, property.indexOf('='));
-                    String value = property.substring(property.indexOf('=') + 1);
-                    if (value.indexOf("${") != -1) {
-                        value = StringUtils.replaceToken(value);
-                    }
-                    s.addToForceProperties(key, value);
-                } catch (Exception e) {
-                    // Do not throw an exception, because it is not a fatal error.
-                }
-            }
         }
     }
 

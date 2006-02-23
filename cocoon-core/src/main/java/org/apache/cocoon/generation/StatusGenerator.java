@@ -476,11 +476,9 @@ public class StatusGenerator extends ServiceableGenerator
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
         this.addMultilineValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
-        this.addValue(Settings.KEY_FORCE_PROPERTIES, s.getForceProperties());
         this.addValue(Settings.KEY_PROPERTY_PROVIDER, s.getPropertyProviders());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
         this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
-        this.addValue(Settings.KEY_LOGGING_MANAGER_CLASS, s.getLoggerManagerClassName());
         this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
         this.addValue(Settings.KEY_LOGGING_ENVIRONMENT_LOGGER, s.getEnvironmentLogger());
         this.addValue(Settings.KEY_LOGGING_OVERRIDE_LOGLEVEL, s.getOverrideLogLevel());
@@ -618,23 +616,6 @@ public class StatusGenerator extends ServiceableGenerator
                 first = false;
             }
             buffer.append(value.next());
-        }
-        addValue(name, buffer.toString(), null);
-    }
-
-    /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(String name, Map value) throws SAXException {
-        final StringBuffer buffer = new StringBuffer();
-        final Iterator i = value.entrySet().iterator();
-        boolean first = true;
-        while ( i.hasNext() ) {
-            if ( !first ) {
-                buffer.append(',');
-            } else {
-                first = false;
-            }
-            Map.Entry current = (Map.Entry)i.next();
-            buffer.append(current.getKey()).append('=').append(current.getValue());
         }
         addValue(name, buffer.toString(), null);
     }

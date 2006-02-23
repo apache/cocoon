@@ -21,7 +21,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.core.Settings;
 
 /**
- * This is an extension the default context implementation.
+ * This is an extension of the default context implementation.
  * It first looks into the settings object and only if the key
  * is not found there, it delegates to the parent.
  * 
@@ -34,6 +34,11 @@ public class SettingsContext extends DefaultContext {
 
     public SettingsContext(Context parentContext, Settings s) {
         super(parentContext);
+        this.settings = s;
+    }
+
+    public SettingsContext(Settings s) {
+        super();
         this.settings = s;
     }
 
