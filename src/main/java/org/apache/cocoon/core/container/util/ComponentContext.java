@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.container;
+package org.apache.cocoon.core.container.util;
 
 import java.util.Map;
 

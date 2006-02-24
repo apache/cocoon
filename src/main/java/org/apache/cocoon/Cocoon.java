@@ -20,7 +20,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
@@ -287,7 +286,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
     /**
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Configuration[] getComponentConfigurations() {
+    public Map getComponentConfigurations() {
         return null;
     }
 

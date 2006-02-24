@@ -29,6 +29,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.environment.Environment;
@@ -73,6 +74,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     private ProcessingNode rootNode;
 
     private Configuration componentConfigurations;
+
+    /** The sitemap configurations. */
+    protected Map sitemapComponentConfigurations;
 
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
@@ -148,29 +152,53 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
+        this.sitemapComponentConfigurations = null;
     }
 
     /**
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Configuration[] getComponentConfigurations() {
-        if (this.componentConfigurations == null) {
-            if (this.wrappingProcessor.parent != null) {
-                return this.wrappingProcessor.parent.getComponentConfigurations();
+    public Map getComponentConfigurations() {
+        // do we have the sitemap configurations prepared for this processor?
+        if ( null == this.sitemapComponentConfigurations ) {
+
+            synchronized (this) {
+
+                if ( this.sitemapComponentConfigurations == null ) {
+                    // do we have configurations?
+                    final Configuration[] childs = (this.componentConfigurations == null
+                                                     ? null
+                                                     : this.componentConfigurations.getChildren());
+
+                    if ( null != childs ) {
+
+                        if ( null == this.wrappingProcessor.parent ) {
+                            this.sitemapComponentConfigurations = new HashMap(12);
+                        } else {
+                            // copy all configurations from parent
+                            this.sitemapComponentConfigurations = new HashMap(
+                                        this.wrappingProcessor.parent.getComponentConfigurations());
+                        }
+
+                        // and now check for new configurations
+                        for(int m = 0; m < childs.length; m++) {
+                            final String r = this.applicationContext.getNameForAlias(childs[m].getName());
+                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
+                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
+                        }
+                    } else {
+                        // we don't have configurations
+                        if ( null == this.wrappingProcessor.parent ) {
+                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
+                        } else {
+                            // use configuration from parent
+                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations();
+                        }
+                    }
+                }
             }
-            return null;
         }
-        if (this.wrappingProcessor.parent == null) {
-            return new Configuration[]{this.componentConfigurations};
-        }
-        final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();
-        if ( parentArray != null ) {
-            final Configuration[] newArray = new Configuration[parentArray.length + 1];
-            System.arraycopy(parentArray, 0, newArray, 1, parentArray.length);
-            newArray[0] = this.componentConfigurations;
-            return newArray;
-        }
-        return new Configuration[] {this.componentConfigurations};
+        return this.sitemapComponentConfigurations;
     }
 
     /**
