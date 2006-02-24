@@ -192,11 +192,6 @@ public class MutableSettings implements Settings {
      */
     protected long configurationReloadDelay = 1000;
 
-    /**
-     * Lazy mode for component loading
-     */
-    protected boolean lazyMode = false;
-
     /** The time the cocoon instance was created. */
     protected long creationTime;
 
@@ -266,8 +261,6 @@ public class MutableSettings implements Settings {
                         this.formEncoding = value;
                     } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                         this.overrideLogLevel = value;
-                    } else if ( key.equals(KEY_LAZY_MODE) ) {
-                        this.lazyMode = BooleanUtils.toBoolean(value);
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
                         this.addToLoadClasses(value);
                     } else if ( key.startsWith(KEY_EXTRA_CLASSPATHS) ) {
@@ -478,13 +471,6 @@ public class MutableSettings implements Settings {
         return value;
     }
 
-    /**
-     * @return Returns the lazyMode.
-     */
-    public boolean isLazyMode() {
-        return this.lazyMode;
-    }
-
     public String getProperty(String name) {
         return this.getProperty(name, null);
     }
@@ -536,8 +522,6 @@ public class MutableSettings implements Settings {
                 value = this.formEncoding;
             } else if ( sKey.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                 value = this.overrideLogLevel;
-            } else if ( sKey.equals(KEY_LAZY_MODE) ) {
-                value = String.valueOf(this.lazyMode);
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
                 value = this.toString(this.loadClasses);
             } else if ( key.equals(KEY_EXTRA_CLASSPATHS) ) {
@@ -587,8 +571,7 @@ public class MutableSettings implements Settings {
           KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
           KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
-          KEY_SHOW_VERSION + " : " + this.showCocoonVersion + '\n' +
-          KEY_LAZY_MODE + " : " + this.lazyMode + '\n';
+          KEY_SHOW_VERSION + " : " + this.showCocoonVersion + '\n';
     }
 
     /**
@@ -813,14 +796,6 @@ public class MutableSettings implements Settings {
     public void setConfigurationReloadDelay(long configurationReloadDelay) {
         this.checkWriteable();
         this.configurationReloadDelay = configurationReloadDelay;
-    }
-
-    /**
-     * @param lazyMode The lazyMode to set.
-     */
-    public void setLazyMode(boolean lazyMode) {
-        this.checkWriteable();
-        this.lazyMode = lazyMode;
     }
 
     /**
