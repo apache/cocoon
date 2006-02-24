@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -43,7 +42,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreResourceNotFoundException;
 import org.apache.cocoon.core.Settings;
@@ -677,22 +675,7 @@ public class CoreServiceManager
             lazyLoad = configuration.getAttributeAsBoolean("preload");
 
         } else {
-            lazyLoad = this.settings.isLazyMode();
-
-            if (lazyLoad) {
-                // Check if the class implements Startable or Preloadable
-                Class componentClass;
-                try {
-                    componentClass = componentEnv.loadClass(className);
-                } catch (ClassNotFoundException cnfe) {
-                    throw new Exception("Cannot find class " + className + " for component at " +
-                            configuration.getLocation(), cnfe);
-                }
-                if (Startable.class.isAssignableFrom(componentClass) ||
-                    Preloadable.class.isAssignableFrom(componentClass)) {
-                    lazyLoad = false;
-                }
-            }
+            lazyLoad = false;
         }
 
         ComponentHandler handler;
