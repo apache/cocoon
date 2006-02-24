@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.components.Preloadable;
 
 /**
  * Default component selector for Cocoon's components. This selector "flattens" its declaration
@@ -38,7 +37,7 @@ import org.apache.cocoon.components.Preloadable;
  * @version $Id$
  * @since 2.2
  */
-public class DefaultServiceSelector extends AbstractLogEnabled implements ThreadSafe, Preloadable, Serviceable, Configurable, ServiceSelector {
+public class DefaultServiceSelector extends AbstractLogEnabled implements ThreadSafe, Serviceable, Configurable, ServiceSelector {
 
     /** Synthetic hint to alias the default component */
     public static final String DEFAULT_HINT = "$default$";

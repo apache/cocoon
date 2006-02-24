@@ -101,11 +101,6 @@ public interface DynamicSettings {
     String KEY_RELOAD_DELAY = "reload-delay";
 
     /**
-     * Lazy mode for component loading
-     */
-    String KEY_LAZY_MODE = "core.LazyMode";
-
-    /**
      * @return Returns the hideShowTime.
      * @see #KEY_HIDE_SHOWTIME
      */
@@ -164,12 +159,6 @@ public interface DynamicSettings {
      * @see #KEY_SHOWTIME
      */
     boolean isShowTime();
-
-    /**
-     * @return Returns the lazyMode.
-     * @see #KEY_LAZY_MODE
-     */
-    boolean isLazyMode();
 
     boolean isAllowOverwrite();
 

@@ -513,7 +513,6 @@ public class StatusGenerator extends ServiceableGenerator
         this.addValue(Settings.KEY_SHOWTIME, s.isShowTime());
         this.addValue(Settings.KEY_HIDE_SHOWTIME, s.isHideShowTime());
         this.addValue(Settings.KEY_SHOW_VERSION, s.isShowVersion());
-        this.addValue(Settings.KEY_LAZY_MODE, s.isLazyMode());
 
         this.endGroup();
     }

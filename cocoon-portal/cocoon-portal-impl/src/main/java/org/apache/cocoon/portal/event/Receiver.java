@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.components.Preloadable;
-
 /**
  * A receiver registers its interest in a class
  * of events through the {@link org.apache.cocoon.portal.event.EventManager}.
@@ -37,12 +35,9 @@ import org.apache.cocoon.components.Preloadable;
  * several inform methods each with the corresponding event class as the first
  * parameter.
  *
- * This interface extends {@link org.apache.cocoon.components.Preloadable}
- * as a receiver should subscribe itself as soon as the portal starts up.
- *
  * @version $Id$
  */
-public interface Receiver extends Preloadable {
+public interface Receiver {
 
     // THIS IS JUST A MARKER INTERFACE!
 }
