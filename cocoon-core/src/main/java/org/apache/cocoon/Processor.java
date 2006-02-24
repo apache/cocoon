@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -84,9 +86,9 @@ public interface Processor {
 
     /**
      * Get the sitemap component configurations
-     * @since 2.2
+     * @since 2.1
      */
-    Configuration[] getComponentConfigurations();
+    Map getComponentConfigurations();
 
     /**
      * Get the root processor parent of this processor.

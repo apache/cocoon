@@ -99,4 +99,12 @@ public class ConfigurationInfo {
     public List getImports() {
         return this.imports;
     }
+
+    public String getRoleForName(String alias) {
+        final String value = (String)this.shorthands.get(alias);
+        if ( value != null ) {
+            return value;
+        }
+        return alias;
+    }
 }

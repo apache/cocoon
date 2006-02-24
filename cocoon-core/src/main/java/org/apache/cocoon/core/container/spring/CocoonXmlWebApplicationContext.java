@@ -29,6 +29,8 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.SitemapConfigurable;
+import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.sitemap.EnterSitemapEvent;
@@ -52,7 +54,6 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 /**
  * This is a Cocoon specific implementation of a Spring {@link ApplicationContext}.
  *
- * TODO - Support for SitemapConfigurable
  * @since 2.2
  * @version $Id$
  */
@@ -97,6 +98,19 @@ public class CocoonXmlWebApplicationContext
         return this.avalonConfiguration;
     }
 
+    public String getNameForAlias(String alias) {
+        if ( this.avalonConfiguration != null ) {
+            final String value = this.avalonConfiguration.getRoleForName(alias);
+            if ( value != null ) {
+                return value;
+            }
+            if ( this.getParent() instanceof CocoonXmlWebApplicationContext ) {
+                return ((CocoonXmlWebApplicationContext)this.getParent()).getNameForAlias(alias);
+            }
+        }
+        // default: we just return the alias
+        return alias;
+    }
     /**
      * Register a child context as a listener. This allows a child context to destroy itself
      * when the parent is destroyed.
@@ -278,6 +292,9 @@ public class CocoonXmlWebApplicationContext
                         }
                         ContainerUtil.parameterize(bean, p);
                     }
+                }
+                if ( bean instanceof SitemapConfigurable ) {
+                    ((SitemapConfigurable)bean).configure(new DefaultSitemapConfigurationHolder(beanName));
                 }
                 ContainerUtil.initialize(bean);
             } catch (Exception e) {
