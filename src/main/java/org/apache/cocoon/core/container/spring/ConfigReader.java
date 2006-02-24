@@ -26,56 +26,39 @@ import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 
 /**
  * This component reads in Avalon style configuration files and returns all
  * contained components and their configurations.
  *
- * FIXME - Add logging statements
- *
  * @since 2.2
  * @version $Id$
  */
-public class ConfigReader {
+public class ConfigReader extends AbstractLogEnabled {
 
-    /** Parameter map for the context protocol */
+    /** Parameter map for the context protocol. */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    protected SourceResolver resolver;
+    /** Source resolver for reading configuration files. */
+    protected final SimpleSourceResolver resolver;
 
     /** The configuration info. */
-    protected ConfigurationInfo configInfo;
+    protected final ConfigurationInfo configInfo;
 
     /** Avalon environment. */
-    protected AvalonEnvironment environment;
+    protected final AvalonEnvironment environment;
 
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
-        final SimpleSourceResolver sourceResolver = new SimpleSourceResolver();
-        sourceResolver.enableLogging(env.logger);
-        sourceResolver.contextualize(env.context);
-
-        ConfigReader converter = new ConfigReader();
-        converter.resolver = sourceResolver;
-        converter.environment = env;
-        converter.configInfo = new ConfigurationInfo();
-        
+        ConfigReader converter = new ConfigReader(env, null);
         converter.convert(source);
-        final Iterator i = converter.configInfo.getClassNames().values().iterator();
-        while ( i.hasNext() ) {
-            final ComponentInfo current = (ComponentInfo)i.next();
-            converter.configInfo.addComponent(current);
-        }
-        converter.configInfo.clearClassNames();
-
         return converter.configInfo;
     }
 
@@ -83,82 +66,94 @@ public class ConfigReader {
                                                       ConfigurationInfo parentInfo,
                                                       AvalonEnvironment env)
     throws Exception {
-        final SimpleSourceResolver sourceResolver = new SimpleSourceResolver();
-        sourceResolver.enableLogging(env.logger);
-        sourceResolver.contextualize(env.context);
+        ConfigReader converter = new ConfigReader(env, parentInfo);
+        converter.convert(config, null);
+        return converter.configInfo;        
+    }
 
-        ConfigReader converter = new ConfigReader();
-        converter.resolver = sourceResolver;
-        converter.environment = env;
-        converter.configInfo = new ConfigurationInfo(parentInfo);
+    private ConfigReader(AvalonEnvironment env, ConfigurationInfo parentInfo)
+    throws Exception {
+        this.resolver = new SimpleSourceResolver();
+        this.resolver.enableLogging(env.logger);
+        this.resolver.contextualize(env.context);
+
+        this.enableLogging(env.logger);
+        this.environment = env;
+
         // now add selectors from parent
         if ( parentInfo != null ) {
+            this.configInfo = new ConfigurationInfo(parentInfo);
             final Iterator i = parentInfo.getComponents().values().iterator();
             while ( i.hasNext() ) {
                 final ComponentInfo current = (ComponentInfo)i.next();
                 if ( current.isSelector() ) {
-                    converter.configInfo.getClassNames().put(current.getRole(), current);
+                    this.configInfo.getClassNames().put(current.getRole(), current);
                 }
             }
+        } else {
+            this.configInfo = new ConfigurationInfo();
         }
-        converter.convert(config);
-        final Iterator i = converter.configInfo.getClassNames().values().iterator();
-        while ( i.hasNext() ) {
-            final ComponentInfo current = (ComponentInfo)i.next();
-            converter.configInfo.addComponent(current);
-        }
-        converter.configInfo.clearClassNames();
-
-        return converter.configInfo;        
-    }
-
-    private ConfigReader() {
-        // nothing to do
     }
 
     protected void convert(String relativePath)
     throws Exception {
+        if ( this.getLogger().isInfoEnabled() ) {
+            this.getLogger().info("Reading avalon configuration from " + relativePath);
+        }
         final Source root = this.resolver.resolveURI(relativePath);
         try {
-            ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
-            Configuration config = b.build(SourceUtil.getInputSource(root));
+            final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
+            final Configuration config = b.build(SourceUtil.getInputSource(root));
             
-            // It's possible to define a logger on a per sitemap/service manager base.
-            // This is the default logger for all components defined with this sitemap/manager.
-            this.configInfo.setRootLogger(config.getAttribute("logger", null));
+            this.convert(config, root.getURI());
 
-            // and load configuration with a empty list of loaded configurations
-            final Set loadedConfigs = new HashSet();
-            this.parseConfiguration(config, root.getURI(),loadedConfigs);
-            // test for optional user-roles attribute
-            final String userRoles = config.getAttribute("user-roles", null);
-            if (userRoles != null) {
-                final Source userRolesSource = this.resolver.resolveURI(userRoles, root.getURI(), null);
-                try {
-                    Configuration userRolesConfig = b.build(SourceUtil.getInputSource(userRolesSource));
-                    this.parseConfiguration(userRolesConfig, userRolesSource.getURI(), loadedConfigs);
-                } finally {
-                    this.resolver.release(userRolesSource);
-                }
-            }
         } finally {
             this.resolver.release(root);
         }
     }
 
-    protected void convert(Configuration config)
+    protected void convert(Configuration config, String rootUri)
     throws Exception {
+        if ( this.getLogger().isInfoEnabled() ) {
+            this.getLogger().info("Converting avalon configuration");
+        }
         // It's possible to define a logger on a per sitemap/service manager base.
         // This is the default logger for all components defined with this sitemap/manager.
         this.configInfo.setRootLogger(config.getAttribute("logger", null));
 
         // and load configuration with a empty list of loaded configurations
-        this.parseConfiguration(config, null, new HashSet());
+        final Set loadedConfigs = new HashSet();
+        this.parseConfiguration(config, null, loadedConfigs);
+
+        // test for optional user-roles attribute
+        if ( rootUri != null ) {
+            final String userRoles = config.getAttribute("user-roles", null);
+            if (userRoles != null) {
+                if ( this.getLogger().isInfoEnabled() ) {
+                    this.getLogger().info("Reading additional user roles: " + userRoles);
+                }
+                final Source userRolesSource = this.resolver.resolveURI(userRoles, rootUri, null);
+                try {
+                    final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
+                    final Configuration userRolesConfig = b.build(SourceUtil.getInputSource(userRolesSource));
+                    this.parseConfiguration(userRolesConfig, userRolesSource.getURI(), loadedConfigs);
+                } finally {
+                    this.resolver.release(userRolesSource);
+                }
+            }
+        }
+        // add roles as components
+        final Iterator i = this.configInfo.getClassNames().values().iterator();
+        while ( i.hasNext() ) {
+            final ComponentInfo current = (ComponentInfo)i.next();
+            this.configInfo.addComponent(current);
+        }
+        this.configInfo.clearClassNames();
     }
 
     protected void parseConfiguration(final Configuration configuration,
-                                      String contextURI,
-                                      Set loadedURIs) 
+                                      String              contextURI,
+                                      Set                 loadedURIs) 
     throws ConfigurationException {
         final Configuration[] configurations = configuration.getChildren();
 
@@ -226,14 +221,7 @@ public class ConfigReader {
                         classAttribute = "src";
                     } 
                     if ( classAttribute == null ) {
-                        // TODO: Unknown selector
-                        try {
-                            System.out.println("** Found unknown selector: " + className);
-                            DefaultConfigurationSerializer dcs = new DefaultConfigurationSerializer();
-                            System.out.println(dcs.serialize(info.getConfiguration()));
-                            System.out.println("----------------------------------------------------");
-                        } catch (Exception ignore) {
-                        }
+                        this.getLogger().warn("Found unknown selector type (continuing anyway: " + className);
                     } else {
                         String componentRole = role;
                         if ( componentRole.endsWith("Selector") ) {
@@ -256,8 +244,8 @@ public class ConfigReader {
         }
     }
 
-    protected void handleInclude(final String contextURI,
-                                 final Set loadedURIs,
+    protected void handleInclude(final String        contextURI,
+                                 final Set           loadedURIs,
                                  final Configuration includeStatement)
     throws ConfigurationException {
         final String includeURI = includeStatement.getAttribute("src", null);
@@ -315,14 +303,17 @@ public class ConfigReader {
         }
     }
 
-    protected void loadURI(final Source src,
-                           final Set loadedURIs,
+    protected void loadURI(final Source        src,
+                           final Set           loadedURIs,
                            final Configuration includeStatement) 
     throws ConfigurationException {
         // If already loaded: do nothing
         final String uri = src.getURI();
 
         if (!loadedURIs.contains(uri)) {
+            if ( this.getLogger().isInfoEnabled() ) {
+                this.getLogger().info("Loading configuration: " + uri);
+            }
             // load it and store it in the read set
             Configuration includeConfig = null;
             try {

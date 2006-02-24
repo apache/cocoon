@@ -17,7 +17,6 @@ package org.apache.cocoon;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
