@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.core;
 
-import java.io.File;
 import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
@@ -67,13 +66,6 @@ public interface BootstrapEnvironment {
      * Returns the URL to the application context.
      */
     String getContextURL();
-
-    /**
-     * Returns a file to the application context.
-     * @return A file pointing to the context or null if the context is not
-     *         writeable.
-     */
-    File getContextForWriting();
 
     /**
      * Set the ConfigFile for the Cocoon object.

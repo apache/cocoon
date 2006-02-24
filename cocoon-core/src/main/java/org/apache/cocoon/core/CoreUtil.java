@@ -196,20 +196,8 @@ public class CoreUtil {
         final String workDirParam = this.settings.getWorkDirectory();
         File workDir;
         if (workDirParam != null) {
-            if (this.env.getContextForWriting() == null) {
-                // No context path : consider work-directory as absolute
-                workDir = new File(workDirParam);
-            } else {
-                // Context path exists : is work-directory absolute ?
-                File workDirParamFile = new File(workDirParam);
-                if (workDirParamFile.isAbsolute()) {
-                    // Yes : keep it as is
-                    workDir = workDirParamFile;
-                } else {
-                    // No : consider it relative to context path
-                    workDir = new File(this.env.getContextForWriting(), workDirParam);
-                }
-            }
+            // No context path : consider work-directory as absolute
+            workDir = new File(workDirParam);
         } else {
             workDir = new File("cocoon-files");
         }
@@ -225,7 +213,6 @@ public class CoreUtil {
         // Output some debug info
         if (this.log.isDebugEnabled()) {
             this.log.debug("Context URL: " + this.env.getContextURL());
-            this.log.debug("Writeable Context: " + this.env.getContextForWriting());
             if (workDirParam != null) {
                 this.log.debug("Using work-directory " + workDir);
             } else {
@@ -236,19 +223,7 @@ public class CoreUtil {
         final String uploadDirParam = this.settings.getUploadDirectory();
         File uploadDir;
         if (uploadDirParam != null) {
-            if (this.env.getContextForWriting() == null) {
-                uploadDir = new File(uploadDirParam);
-            } else {
-                // Context path exists : is upload-directory absolute ?
-                File uploadDirParamFile = new File(uploadDirParam);
-                if (uploadDirParamFile.isAbsolute()) {
-                    // Yes : keep it as is
-                    uploadDir = uploadDirParamFile;
-                } else {
-                    // No : consider it relative to context path
-                    uploadDir = new File(this.env.getContextForWriting(), uploadDirParam);
-                }
-            }
+            uploadDir = new File(uploadDirParam);
             if (this.log.isDebugEnabled()) {
                 this.log.debug("Using upload-directory " + uploadDir);
             }
@@ -265,19 +240,7 @@ public class CoreUtil {
         String cacheDirParam = this.settings.getCacheDirectory();
         File cacheDir;
         if (cacheDirParam != null) {
-            if (this.env.getContextForWriting() == null) {
-                cacheDir = new File(cacheDirParam);
-            } else {
-                // Context path exists : is cache-directory absolute ?
-                File cacheDirParamFile = new File(cacheDirParam);
-                if (cacheDirParamFile.isAbsolute()) {
-                    // Yes : keep it as is
-                    cacheDir = cacheDirParamFile;
-                } else {
-                    // No : consider it relative to context path
-                    cacheDir = new File(this.env.getContextForWriting(), cacheDirParam);
-                }
-            }
+            cacheDir = new File(cacheDirParam);
             if (this.log.isDebugEnabled()) {
                 this.log.debug("Using cache-directory " + cacheDir);
             }
@@ -805,17 +768,9 @@ public class CoreUtil {
                             this.log.debug("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
                         }
                     } else {
-                        String path = null;
-                        if (this.env.getContextForWriting() != null) {
-                            path = this.env.getContextForWriting() + s;
-                            if (this.log.isDebugEnabled()) {
-                                this.log.debug("extraClassPath is not absolute pre-pending context path: " + path);
-                            }
-                        } else {
-                            path = this.settings.getWorkDirectory() + s;
-                            if (this.log.isDebugEnabled()) {
-                                this.log.debug("extraClassPath is not absolute pre-pending work-directory: " + path);
-                            }
+                        String path = this.settings.getWorkDirectory() + s;
+                        if (this.log.isDebugEnabled()) {
+                            this.log.debug("extraClassPath is not absolute pre-pending work-directory: " + path);
                         }
                         sb.append(path);
                     }
