@@ -190,7 +190,7 @@ public class ApplicationContextFactory {
                 final Configuration conf = builder.build(servletContext.getResourceAsStream(loggerConfig));
                 // override log level?
                 if (settings.getOverrideLogLevel() != null) {
-                    // TODO
+                    // TODO - override loglevel for log4j
                 }
                 loggerManager.configure(conf);
             } else {

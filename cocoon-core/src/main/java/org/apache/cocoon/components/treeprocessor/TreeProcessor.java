@@ -286,29 +286,22 @@ public class TreeProcessor extends AbstractLogEnabled
         return result;
     }
 
-//    /**
-//     * Set the sitemap component configurations
-//     */
-//    public void setComponentConfigurations(Configuration componentConfigurations) {
-//        this.concreteProcessor.setComponentConfigurations(componentConfigurations);
-//    }
-
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Configuration[] getComponentConfigurations() {
+    public Map getComponentConfigurations() {
         return this.concreteProcessor.getComponentConfigurations();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getContext()
      */
     public String getContext() {
         return this.environmentHelper.getContext();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
+    /**
+     * @see org.apache.cocoon.Processor#getSourceResolver()
      */
     public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
         return this.environmentHelper;

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,9 +18,9 @@ package org.apache.cocoon.components;
 /**
  * A {@link SitemapConfigurable} component gets the sitemap configuration
  * using this object.
- * 
+ *
  * @since 2.1
- * 
+ *
  * @version $Id$
  */
 public interface SitemapConfigurationHolder {
@@ -30,13 +30,13 @@ public interface SitemapConfigurationHolder {
      * @return The configuration
      */
     ChainedConfiguration getConfiguration();
-    
+
     /**
      * Get the prepared configuration for the current sitemap
      * @return The configuration or null if no prepared is available
      */
     Object getPreparedConfiguration();
-    
+
     /**
      * Set the prepared configuration for the current sitemap.
      * After it is set by a component, it can be get using
