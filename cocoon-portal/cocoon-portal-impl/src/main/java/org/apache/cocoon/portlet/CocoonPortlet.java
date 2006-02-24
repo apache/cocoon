@@ -223,7 +223,7 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         // initialize settings
-        PortletBootstrapEnvironment env = new PortletBootstrapEnvironment(conf, this.portletContextPath, this.portletContextURL);
+        PortletBootstrapEnvironment env = new PortletBootstrapEnvironment(conf, this.portletContextURL);
 
         try {
             this.coreUtil = new CoreUtil(env, env.getEnvironmentContext());
@@ -770,20 +770,13 @@ public class CocoonPortlet extends GenericPortlet {
     implements BootstrapEnvironment {
 
         private final PortletConfig config;
-        private final File          writeableContextPath;
         private final String        contextPath;
         public Logger logger;
         private final Context       environmentContext;
 
         public PortletBootstrapEnvironment(PortletConfig config,
-                                           String        writeablePath,
                                            String        path) {
             this.config = config;
-            if ( writeablePath == null ) {
-                this.writeableContextPath = null;
-            } else {
-                this.writeableContextPath = new File(writeablePath);
-            }
             this.contextPath = path;
             this.environmentContext = new PortletContext(this.config.getPortletContext());
         }
@@ -819,14 +812,6 @@ public class CocoonPortlet extends GenericPortlet {
          */
         public String getContextURL() {
             return this.contextPath;
-        }
-
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
-         */
-        public File getContextForWriting() {
-            return this.writeableContextPath;
         }
 
         /**
@@ -910,43 +895,28 @@ public class CocoonPortlet extends GenericPortlet {
             StringBuffer buildClassPath = new StringBuffer();
 
             File root = null;
-            if (this.getContextForWriting() != null) {
-                // Old method.  There *MUST* be a better method than this...
+            // New(ish) method for war'd deployments
+            URL classDirURL = null;
+            URL libDirURL = null;
 
-                String classDir = this.config.getPortletContext().getRealPath("/WEB-INF/classes");
-                String libDir = this.config.getPortletContext().getRealPath("/WEB-INF/lib");
+            try {
+                classDirURL = this.config.getPortletContext().getResource("/WEB-INF/classes");
+            } catch (MalformedURLException me) {
+                this.logger.warn("Unable to add WEB-INF/classes to the classpath", me);
+            }
 
-                if (libDir != null) {
-                    root = new File(libDir);
-                }
+            try {
+                libDirURL = this.config.getPortletContext().getResource("/WEB-INF/lib");
+            } catch (MalformedURLException me) {
+                this.logger.warn("Unable to add WEB-INF/lib to the classpath", me);
+            }
 
-                if (classDir != null) {
-                    buildClassPath.append(classDir);
-                }
-            } else {
-                // New(ish) method for war'd deployments
-                URL classDirURL = null;
-                URL libDirURL = null;
+            if (libDirURL != null && libDirURL.toExternalForm().startsWith("file:")) {
+                root = new File(libDirURL.toExternalForm().substring("file:".length()));
+            }
 
-                try {
-                    classDirURL = this.config.getPortletContext().getResource("/WEB-INF/classes");
-                } catch (MalformedURLException me) {
-                    this.logger.warn("Unable to add WEB-INF/classes to the classpath", me);
-                }
-
-                try {
-                    libDirURL = this.config.getPortletContext().getResource("/WEB-INF/lib");
-                } catch (MalformedURLException me) {
-                    this.logger.warn("Unable to add WEB-INF/lib to the classpath", me);
-                }
-
-                if (libDirURL != null && libDirURL.toExternalForm().startsWith("file:")) {
-                    root = new File(libDirURL.toExternalForm().substring("file:".length()));
-                }
-
-                if (classDirURL != null) {
-                    buildClassPath.append(classDirURL.toExternalForm());
-                }
+            if (classDirURL != null) {
+                buildClassPath.append(classDirURL.toExternalForm());
             }
 
             // Unable to find lib directory. Going the hard way.
