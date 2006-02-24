@@ -25,9 +25,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.util.JMXUtils;
 
 /**
