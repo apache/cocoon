@@ -35,7 +35,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.tools.helper.PortalObjects;
@@ -53,7 +52,7 @@ import org.xml.sax.SAXException;
  */
 public class PortalToolManager
     extends AbstractComponent
-    implements Parameterizable, Preloadable {
+    implements Parameterizable {
 
 	public static final String ROLE = PortalToolManager.class.getName();
 

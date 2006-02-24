@@ -38,7 +38,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.components.Preloadable;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
 import org.apache.cocoon.util.JMXUtils;
@@ -51,8 +50,7 @@ import org.apache.cocoon.util.JMXUtils;
  */
 public class StandaloneServiceSelector
     extends AbstractLogEnabled
-    implements Preloadable,
-               ServiceSelector,
+    implements ServiceSelector,
                Serviceable,
                Configurable,
                Disposable,
