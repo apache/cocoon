@@ -653,13 +653,6 @@ public class CocoonWrapper {
         }
 
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
-         */
-        public File getContextForWriting() {
-            return new File(this.contextDirectory);
-        }
-
-        /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#getContextURL()
          */
         public String getContextURL() {

@@ -178,7 +178,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // initialize settings
-        ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.servletContextPath, this.servletContextURL);
+        ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.servletContextURL);
 
         try {
             this.coreUtil = new CoreUtil(env, this.servletContext);
@@ -593,20 +593,13 @@ public class CocoonServlet extends HttpServlet {
         implements BootstrapEnvironment {
 
         private final ServletConfig config;
-        private final File writeableContextPath;
         private final String contextPath;
         public Logger logger;
         private final HttpContext environmentContext;
 
         public ServletBootstrapEnvironment(ServletConfig config, 
-                                           String writeablePath,
                                            String path) {
             this.config = config;
-            if ( writeablePath == null ) {
-                this.writeableContextPath = null;
-            } else {
-                this.writeableContextPath = new File(writeablePath);
-            }
             this.contextPath = path;
             this.environmentContext = new HttpContext(this.config.getServletContext());
         }
@@ -645,14 +638,6 @@ public class CocoonServlet extends HttpServlet {
          */
         public String getContextURL() {
             return this.contextPath;
-        }
-
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextForWriting()
-         */
-        public File getContextForWriting() {
-            return this.writeableContextPath;
         }
 
         /**

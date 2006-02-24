@@ -84,9 +84,6 @@ public class ApplicationContextFactory {
                                                                                     env.context);
         context.addBeanFactoryPostProcessor(new CocoonSettingsConfigurer(env.settings));
 
-        // TODO: Add context specific information
-        //context.setSourceResolver(this.resolver);
-        //context.setEnvironmentHelper(this.environmentHelper);
         context.setServletContext(env.servletContext);
         context.refresh();
         if ( info.rootLogger != null ) {
