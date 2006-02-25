@@ -26,12 +26,14 @@ import junit.framework.TestCase;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.TestBootstrapEnvironment;
 import org.apache.cocoon.core.TestCoreUtil;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
@@ -49,7 +51,9 @@ public class SitemapTestCase extends TestCase {
     private CoreUtil coreUtil;
     private Processor processor;
     private String classDir;
-    
+    private CocoonXmlWebApplicationContext container;
+    private ServiceManager serviceManager;
+
     protected String processorClassName = Cocoon.class.getName();
 
     protected void setUp() throws Exception {
@@ -78,6 +82,8 @@ public class SitemapTestCase extends TestCase {
 
         this.coreUtil = new TestCoreUtil(env);
         this.processor = this.coreUtil.createProcessor();
+        this.container = this.coreUtil.getContainer();
+        this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
     }
 
     protected void tearDown() throws Exception {
@@ -91,17 +97,11 @@ public class SitemapTestCase extends TestCase {
     }
     
     protected final Object lookup( final String key ) throws ServiceException {
-        if (this.processor instanceof Cocoon) {
-            return ((Cocoon)this.processor).getServiceManager().lookup( key );
-        } else {
-            throw new ServiceException(key, "The processor have no service manager");
-        }
+        return this.serviceManager.lookup(key);
     }
 
     protected final void release( final Object object ) {
-        if (this.processor instanceof Cocoon) {
-            ((Cocoon)this.processor).getServiceManager().release( object );
-        }
+        this.serviceManager.release(object);
     }
     
     protected String getConfiguration() {

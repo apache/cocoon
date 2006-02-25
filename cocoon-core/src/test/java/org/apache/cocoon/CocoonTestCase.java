@@ -16,12 +16,10 @@
 
 package org.apache.cocoon;
 
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.StandaloneServiceSelector;
 import org.apache.cocoon.core.container.ContainerTestCase;
+import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;
 import org.apache.excalibur.source.impl.SourceResolverImpl;
@@ -34,33 +32,40 @@ import org.apache.excalibur.source.impl.URLSourceFactory;
  */
 public abstract class CocoonTestCase extends ContainerTestCase {
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
+    /**
+     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext)
      */
-    protected void addComponents(CoreServiceManager manager) 
-    throws ServiceException, ConfigurationException {
-        super.addComponents(manager);
+    protected void addComponents(ConfigurationInfo info) 
+    throws Exception {
+        super.addComponents(info);
         if ( this.addSourceFactories() ) {
-            // Create configuration for source-factories
-            final DefaultConfiguration df = new DefaultConfiguration("source-factories");
-            DefaultConfiguration factory = new DefaultConfiguration("component-instance");
-            factory.setAttribute("class", ResourceSourceFactory.class.getName());
-            factory.setAttribute("name", "resource");
-            df.addChild(factory);
-            factory = new DefaultConfiguration("component-instance");
-            factory.setAttribute("class", URLSourceFactory.class.getName());
-            factory.setAttribute("name", "*");
-            df.addChild(factory);
-            manager.addComponent("org.apache.excalibur.source.SourceFactorySelector", 
-                                 StandaloneServiceSelector.class.getName(), 
-                                 df,
-                                 null);
+            ComponentInfo component;
+            // Add resource source factory
+            component = new ComponentInfo();
+            component.setComponentClassName(ResourceSourceFactory.class.getName());
+            component.setRole(SourceFactory.ROLE + "/resource");
+            info.addComponent(component);
+
+            // Add url source source factory
+            component = new ComponentInfo();
+            component.setComponentClassName(URLSourceFactory.class.getName());
+            component.setRole(SourceFactory.ROLE + "/*");
+            info.addComponent(component);
+
+            // add source factory selector
+            component = new ComponentInfo();
+            component.setModel(ComponentInfo.MODEL_SINGLETON);
+            component.setComponentClassName(SourceFactory.ROLE + "Selector");
+            component.setRole("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setAlias("source-factories");
+            component.setDefaultValue("*");
+            info.addComponent(component);
         }
         if ( this.addSourceResolver() ) {
-            manager.addComponent(SourceResolver.ROLE, 
-                    SourceResolverImpl.class.getName(), 
-                    new DefaultConfiguration("", "-"),
-                    null);
+            ComponentInfo component = new ComponentInfo();
+            component.setComponentClassName(SourceResolverImpl.class.getName());
+            component.setRole(SourceResolver.ROLE);
+            info.addComponent(component);
         }
     }
     
