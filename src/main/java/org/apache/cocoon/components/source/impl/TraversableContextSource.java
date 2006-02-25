@@ -33,14 +33,14 @@ import org.apache.excalibur.source.TraversableSource;
  * @version SVN $Id$
  */
 public class TraversableContextSource
-implements Source, TraversableSource { 
+    implements Source, TraversableSource { 
 
     final protected Source wrappedSource;
     final protected Set children;
     final protected ContextSourceFactory factory;
     final protected String path;
     final protected String scheme;
-    
+
     public TraversableContextSource(Source source, 
                                     Set children, 
                                     ContextSourceFactory factory,
@@ -53,72 +53,71 @@ implements Source, TraversableSource {
         this.scheme = scheme;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
         return this.wrappedSource.exists();
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.Source#getContentLength()
      */
     public long getContentLength() {
         return this.wrappedSource.getContentLength();
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
     public InputStream getInputStream() 
     throws IOException, SourceNotFoundException {
         return this.wrappedSource.getInputStream();
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.Source#getLastModified()
      */
     public long getLastModified() {
         return this.wrappedSource.getLastModified();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.Source#getMimeType()
      */
     public String getMimeType() {
         return this.wrappedSource.getMimeType();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.Source#getScheme()
      */
     public String getScheme() {
         return this.scheme;
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.Source#getURI()
      */
     public String getURI() {
         return this.wrappedSource.getURI();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.Source#getValidity()
      */
     public SourceValidity getValidity() {
         return this.wrappedSource.getValidity();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.source.Source#refresh()
      */
     public void refresh() {
         this.wrappedSource.refresh();
     }
-    
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.TraversableSource#getChild(java.lang.String)
      */
     public Source getChild(String name) throws SourceException {
@@ -146,8 +145,8 @@ implements Source, TraversableSource {
         }
         return null;
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.TraversableSource#getChildren()
      */
     public Collection getChildren() throws SourceException {
@@ -168,16 +167,16 @@ implements Source, TraversableSource {
         }
         return l;
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.TraversableSource#getName()
      */
     public String getName() {
         final String uri = this.wrappedSource.getURI();
         return uri.substring(uri.lastIndexOf('/')+1);
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
@@ -189,8 +188,8 @@ implements Source, TraversableSource {
             throw new SourceException("Unable to get source for: " + uri);
         }                
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.source.TraversableSource#isCollection()
      */
     public boolean isCollection() {
