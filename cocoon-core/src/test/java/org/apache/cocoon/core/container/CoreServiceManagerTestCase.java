@@ -82,7 +82,6 @@ public class CoreServiceManagerTestCase extends TestCase {
         // we setup a hierarchy of service managers
         // let's start with a core component and settings
         MutableSettings settings = new MutableSettings();
-        settings.setLazyMode(false);
         settings.makeReadOnly();
         Core core = new Core(settings, null);
 

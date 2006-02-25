@@ -87,7 +87,7 @@ public class ConfigReader extends AbstractLogEnabled {
             while ( i.hasNext() ) {
                 final ComponentInfo current = (ComponentInfo)i.next();
                 if ( current.isSelector() ) {
-                    this.configInfo.getClassNames().put(current.getRole(), current);
+                    this.configInfo.getClassNames().put(current.getRole(), current.copy());
                 }
             }
         } else {
