@@ -91,8 +91,7 @@ public class XmlConfigCreator {
                         current.setModel(ComponentInfo.MODEL_POOLED);
                     }
                 }
-                if ( current.getModel() == ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED 
-                    || current.getModel() == ComponentInfo.MODEL_POOLED ) {
+                if ( current.getModel() == ComponentInfo.MODEL_POOLED ) {
                     poolable = true;
                     singleton = false;
                 } else if ( current.getModel() != ComponentInfo.MODEL_SINGLETON ) {
@@ -119,10 +118,9 @@ public class XmlConfigCreator {
                 buffer.append("  <constructor-arg type=\"java.lang.String\"><value>");
                 buffer.append(role.substring(0, role.length()-8));
                 buffer.append("</value></constructor-arg>\n");
-                if ( current.getConfiguration() != null
-                     && current.getConfiguration().getAttribute("default", null) != null ) {
+                if ( current.getDefaultValue() != null ) {
                     buffer.append("  <property name=\"default\"><value>");
-                    buffer.append(current.getConfiguration().getAttribute("default"));
+                    buffer.append(current.getDefaultValue());
                     buffer.append("</value></property>\n");
                 }
                 buffer.append("</bean>\n");

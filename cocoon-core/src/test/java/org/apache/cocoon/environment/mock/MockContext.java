@@ -80,4 +80,13 @@ public class MockContext extends AbstractContext {
         mappings.clear();
         initparameters.clear();
     }
+
+    public void log(Exception arg0, String arg1) {
+    }
+
+    public void log(String arg0, Throwable arg1) {
+    }
+
+    public void log(String arg0) {
+    }
 }
