@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ import org.apache.excalibur.source.SourceValidity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 
 /**
  * A wrapper around a <code>Source</code> that reduces the number of calls to
@@ -31,15 +30,15 @@ import java.util.Iterator;
  * @version $Id$
  */
 public final class DelayedRefreshSourceWrapper
-    implements Source {
+    implements Source, Recyclable {
 
     private Source source;
 
     private long delay;
 
-    private long nextCheckTime = 0;
+    private long nextCheckTime;
 
-    private long lastModified = 0;
+    private long lastModified;
 
     /**
      * Creates a wrapper for a <code>Source</code> which ensures that
@@ -53,48 +52,50 @@ public final class DelayedRefreshSourceWrapper
         this.source = source;
         this.delay = delay;
     }
-    
+
     /**
      * Get the real source
      */
     public Source getSource() {
         return this.source;
     }
-    
+
+    /**
+     * @see org.apache.excalibur.source.Source#getInputStream()
+     */
     public final InputStream getInputStream()
     throws SourceException, IOException {
         return this.source.getInputStream();
     }
 
+    /**
+     * @see org.apache.excalibur.source.Source#getURI()
+     */
     public final String getURI() {
         return this.source.getURI();
     }
 
     /**
-     *  Get the Validity object. This can either wrap the last modification
-     *  date or the expires information or...
-     *  If it is currently not possible to calculate such an information
-     *  <code>null</code> is returned.
+     * @see org.apache.excalibur.source.Source#getValidity()
      */
     public SourceValidity getValidity() {
         return this.source.getValidity();
     }
 
     /**
-     * Return the protocol identifier.
+     * @see org.apache.excalibur.source.Source#getScheme()
      */
     public String getScheme() {
         return this.source.getScheme();
     }
 
     /**
-     * 
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
         return this.source.exists();
     }
-    
+
     /**
      * Get the last modification time for the wrapped <code>Source</code>. The
      * age of the returned information is guaranteed to be lower than or equal to
@@ -103,6 +104,7 @@ public final class DelayedRefreshSourceWrapper
      * This method is also thread-safe, even if the underlying Source is not.
      *
      * @return the last modification time.
+     * @see org.apache.excalibur.source.Source#getLastModified()
      */
     public final long getLastModified() {
 
@@ -119,6 +121,7 @@ public final class DelayedRefreshSourceWrapper
      * isn't over, and starts a new period.
      * <p>
      * This method is thread-safe, even if the underlying Source is not.
+     * @see org.apache.excalibur.source.Source#refresh()
      */
     public synchronized final void refresh() {
 
@@ -130,52 +133,26 @@ public final class DelayedRefreshSourceWrapper
         this.lastModified = source.getLastModified();
     }
 
+    /**
+     * @see org.apache.excalibur.source.Source#getContentLength()
+     */
     public final long getContentLength() {
         return this.source.getContentLength();
     }
 
     /**
-     * The mime-type of the content described by this object.
-     * If the source is not able to determine the mime-type by itself
-     * this can be <code>null</code>.
+     * @see org.apache.excalibur.source.Source#getMimeType()
      */
     public String getMimeType() {
         return this.source.getMimeType();
     }
 
+    /**
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
+     */
     public final void recycle() {
         if (this.source instanceof Recyclable) {
             ((Recyclable)this.source).recycle();
         }
     }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public String getParameter(String name) {
-        return null;
-    }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public long getParameterAsLong(String name) {
-        return 0;
-    }
-
-    /**
-     * Get parameter names
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public Iterator getParameterNames() {
-        return java.util.Collections.EMPTY_LIST.iterator();
-
-    }
-
-
 }
