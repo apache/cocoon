@@ -103,7 +103,7 @@ public class ApplicationContextFactory {
      * @return A new root application context.
      * @throws Exception
      */
-    public static ApplicationContext createRootApplicationContext(AvalonEnvironment  env)
+    public static CocoonXmlWebApplicationContext createRootApplicationContext(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(parent);

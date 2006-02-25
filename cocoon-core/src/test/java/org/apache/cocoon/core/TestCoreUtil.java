@@ -26,11 +26,6 @@ public class TestCoreUtil extends CoreUtil {
         this.classloader = TestCoreUtil.class.getClassLoader();
     }
 
-    // Simplified logging
-    protected void initLogger() {
-        this.log = ((TestBootstrapEnvironment)this.env).logger;
-    }
-
     // Simplified classloader handling
     protected void updateEnvironment() throws Exception {}
 }

@@ -739,6 +739,10 @@ public class CoreUtil {
         }
     }
 
+    public CocoonXmlWebApplicationContext getContainer() {
+        return this.container;
+    }
+
     /**
      * Retreives the "extra-classpath" attribute, that needs to be
      * added to the class path.
