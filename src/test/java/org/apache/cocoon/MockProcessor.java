@@ -15,7 +15,8 @@
  */
 package org.apache.cocoon;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import java.util.Map;
+
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 
@@ -37,7 +38,7 @@ public class MockProcessor implements Processor {
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
-    public Configuration[] getComponentConfigurations() {
+    public Map getComponentConfigurations() {
         return null;
     }
     

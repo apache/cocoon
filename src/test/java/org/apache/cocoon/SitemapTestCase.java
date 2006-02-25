@@ -74,7 +74,6 @@ public class SitemapTestCase extends TestCase {
             new TestBootstrapEnvironment(this.getConfiguration(),
                                          this.classDir,
                                          environmentContext,
-                                         this.logger,
                                          this.processorClassName);
 
         this.coreUtil = new TestCoreUtil(env);

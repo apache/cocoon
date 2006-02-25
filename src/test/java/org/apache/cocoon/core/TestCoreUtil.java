@@ -15,47 +15,22 @@
  */
 package org.apache.cocoon.core;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
+import org.apache.cocoon.environment.mock.MockContext;
 
 public class TestCoreUtil extends CoreUtil {
+
     public TestCoreUtil(BootstrapEnvironment env) throws Exception {
-        super(env);
+        super(env, new MockContext());
         this.classloader = TestCoreUtil.class.getClassLoader();
     }
 
     // Simplified logging
     protected void initLogger() {
         this.log = ((TestBootstrapEnvironment)this.env).logger;
-        this.loggerManager = new DefaultLoggerManager(this.log);
     }
 
     // Simplified classloader handling
     protected void updateEnvironment() throws Exception {}
-
-    /**
-     * We use this simple logger manager that sends all output to the console (logger)
-     */
-    protected static class DefaultLoggerManager implements LoggerManager {
-        
-        private Logger logger;
-        
-        public DefaultLoggerManager(Logger logger) {
-            this.logger = logger;
-        }
-        /* (non-Javadoc)
-         * @see org.apache.avalon.excalibur.logger.LoggerManager#getDefaultLogger()
-         */
-        public Logger getDefaultLogger() {
-            return this.logger;
-        }
-        /* (non-Javadoc)
-         * @see org.apache.avalon.excalibur.logger.LoggerManager#getLoggerForCategory(java.lang.String)
-         */
-        public Logger getLoggerForCategory(String arg0) {
-            return this.logger;
-        }
-    }
 }

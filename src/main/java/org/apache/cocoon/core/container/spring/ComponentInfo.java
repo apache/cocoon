@@ -19,35 +19,80 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 
 /**
- * Meta-information about a component.
+ * Meta-information about an Avalon based component.
+ * This simple bean holds most information of a component defined in the
+ * Avalon based configuration files, like the configuration for the component,
+ * it's logger etc.
+ *
+ * Avalon supports different component models:
+ * MODEL_PRIMITIVE: Each time a component of this type is requested, a new instance is
+ *                  created.
+ * MODEL_SINGLETON: Only on component of this type exists per container.
+ * MODEL_POOLED:    The container creates a pool of components for this type and serves
+ *                  a request out of this pool. If the pool exceeds, then the pool will
+ *                  create new instances which are not put into the pool, so the
+ *                  model "primitive" will be used.
  *
  * @since 2.2
  * @version $Id$
  */
 public final class ComponentInfo {
 
+    /** The model of the component is unknown. Reflection is used later on to determine the model. */
     public static final int MODEL_UNKNOWN   = -1;
+    /** New instance per lookup. */
     public static final int MODEL_PRIMITIVE = 0;
+    /** One single instance per container. */
     public static final int MODEL_SINGLETON = 1;
+    /** Several instances are pooled by the container. */
     public static final int MODEL_POOLED    = 2;
-    public static final int MODEL_NON_THREAD_SAFE_POOLED = 3;
 
-    public static final String TYPE_SINGLETON = "singleton";
-    public static final String TYPE_POOLED = "pooled";
-    public static final String TYPE_NON_THREAD_SAFE_POOLED = "non-thread-safe-pooled";
+    /** One single instance per container. */
+    private static final String TYPE_SINGLETON = "singleton";
+    /** Several instances are pooled by the container. */
+    private static final String TYPE_POOLED = "pooled";
+    /** Several instances are pooled by the container. */
+    private static final String TYPE_NON_THREAD_SAFE_POOLED = "non-thread-safe-pooled";
 
+    /** The model for this component. */
     private int model;
+
+    /** An optional method which is invoked by the container on initialization. */
     private String initMethodName;
+
+    /** An optional method which is invoked by the container on destruction. */
     private String destroyMethodName;
+
+    /** An optional method which is invoked by the container when the component is put back into the pool. */
     private String poolInMethodName;
+
+    /** An optional method which is invoked by the container when the component is fetched from the pool. */
     private String poolOutMethodName;
+
+    /** The class name of the component. */
     private String componentClassName;
+
+    /** The configuration of the component. */
     private Configuration configuration;
+
+    /** The configuration of the component as parameters. */
     private Parameters parameters;
+
+    /** The optional logger category (relative to the category of the container). */
     private String loggerCategory;
+
+    /** The role of the component (= bean name in Spring). */
     private String role;
+
+    /** An alias for the component role. */    
     private String alias;
 
+    /** The default component for selectors. */
+    private String defaultValue;
+
+    /**
+     * Create a new info.
+     */
     public ComponentInfo() {
         this.model = MODEL_PRIMITIVE;
     }
@@ -154,33 +199,38 @@ public final class ComponentInfo {
         return this.configuration.getLocation();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
         return "ServiceInfo: {class=" + this.getComponentClassName()+"}";
     }
 
-    public void fill(Configuration attr) {
+    public void fill(Configuration config) {
         // test model
-        final String model = attr.getAttribute("model", null);
+        final String model = config.getAttribute("model", null);
         if ( TYPE_POOLED.equals(model) ) {
             this.setModel(ComponentInfo.MODEL_POOLED);
-            this.setPoolInMethodName(attr.getAttribute("pool-in", null));
-            this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
+            this.setPoolInMethodName(config.getAttribute("pool-in", null));
+            this.setPoolOutMethodName(config.getAttribute("pool-out", null));
         } else if (TYPE_NON_THREAD_SAFE_POOLED.equals(model)) {
-            this.setModel(ComponentInfo.MODEL_NON_THREAD_SAFE_POOLED);
-            this.setPoolInMethodName(attr.getAttribute("pool-in", null));
-            this.setPoolOutMethodName(attr.getAttribute("pool-out", null));
+            this.setModel(ComponentInfo.MODEL_POOLED);
+            this.setPoolInMethodName(config.getAttribute("pool-in", null));
+            this.setPoolOutMethodName(config.getAttribute("pool-out", null));
         } else if ( TYPE_SINGLETON.equals(model) ) {
             this.setModel(ComponentInfo.MODEL_SINGLETON);
         }
         // init/destroy methods
-        this.setInitMethodName(attr.getAttribute("init", null));
-        this.setDestroyMethodName(attr.getAttribute("destroy", null));
+        this.setInitMethodName(config.getAttribute("init", null));
+        this.setDestroyMethodName(config.getAttribute("destroy", null));
         // logging
-        this.setLoggerCategory(attr.getAttribute("logger", null));
-        this.setRole(attr.getAttribute("role", null));
+        this.setLoggerCategory(config.getAttribute("logger", null));
+        this.setRole(config.getAttribute("role", null));
+        // default value
+        final String newDefaultValue = config.getAttribute("default", null);
+        if ( newDefaultValue != null ) {
+            this.defaultValue = newDefaultValue;
+        }
     }
 
     /**
@@ -236,5 +286,31 @@ public final class ComponentInfo {
             return true;
         }
         return false;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Create a new component info with the same configuration
+     * as the current one.
+     * @return An identical component info.
+     */
+    public ComponentInfo copy() {
+        final ComponentInfo info = new ComponentInfo();
+        info.model = this.model;
+        info.initMethodName = this.initMethodName;
+        info.destroyMethodName = this.destroyMethodName;
+        info.poolInMethodName = this.poolInMethodName;
+        info.poolOutMethodName = this.poolOutMethodName;
+        info.componentClassName = this.componentClassName;
+        info.configuration = this.configuration;
+        info.parameters = this.parameters;
+        info.loggerCategory = this.loggerCategory;
+        info.role = this.role;
+        info.alias = this.alias;
+        info.defaultValue = this.defaultValue;
+        return info;
     }
 }

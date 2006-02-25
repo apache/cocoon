@@ -15,9 +15,6 @@
  */
 package org.apache.cocoon.environment.commandline.test;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
-
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 
 import junit.framework.TestCase;
@@ -69,11 +66,7 @@ public final class CommandLineContextTestCase extends TestCase {
         commandLineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
         new File(commandLineContextDir, "foo" + File.separator + "bar").mkdirs();
 
-        String level = System.getProperty("junit.test.loglevel", "" + ConsoleLogger.LEVEL_DEBUG);
-        Logger logger = new ConsoleLogger(Integer.parseInt(level));
-
         commandLineContext = new CommandLineContext(commandLineContextDir);
-        commandLineContext.enableLogging(logger);
     }
 
     /**

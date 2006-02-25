@@ -240,10 +240,7 @@ public class ApplicationContextFactory {
                                           String                         category) {
         final ComponentInfo component = (ComponentInfo)context.getConfigurationInfo().getComponents().get(category + "Selector");
         if ( component != null ) {
-            final String defaultComponent = component.getConfiguration().getAttribute("default", null);
-            if ( defaultComponent != null ) {
-                info.setDefaultType(category, defaultComponent);
-            }
+            info.setDefaultType(category, component.getDefaultValue());
         }
     }
                                           

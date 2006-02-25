@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.core;
 
-import java.io.File;
 import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
@@ -36,37 +35,11 @@ public class TestBootstrapEnvironment
     public TestBootstrapEnvironment(String configuration,
                                     String contextPath,
                                     Context environmentContext,
-				                    Logger logger,
                                     String processorClassName) {
         this.configuration = configuration;
         this.contextPath = contextPath;
         this.environmentContext = environmentContext;
-        this.logger = logger;
         this.processorClassName = processorClassName;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.BootstrapEnvironment#getBootstrapLogger(org.apache.cocoon.core.BootstrapEnvironment.LogLevel)
-     */
-    public Logger getBootstrapLogger(LogLevel logLevel) {
-        return this.logger;
-    }
-
-    /** Log a message during bootstrapping. This is used to log
-     * information before the logging system is setup.
-     * @param message A message.
-     */
-    public void log(String message) {
-        this.logger.info(message);
-    }
-
-    /** Log a message during bootstrapping. This is used to log
-     * information before the logging system is setup.
-     * @param message A message.
-     * @param error   An error.
-     */
-    public void log(String message, Throwable error) {
-        this.logger.info(message, error);
     }
 
     /**
@@ -87,10 +60,6 @@ public class TestBootstrapEnvironment
         settings.setProcessorClassName(this.processorClassName);
     }
 
-    public void configureLoggingContext(DefaultContext context) {
-        // simply do nothing
-    }
-
     public void configure(DefaultContext context) {
     }
 
@@ -103,15 +72,6 @@ public class TestBootstrapEnvironment
      */
     public String getContextURL() {
         return this.contextPath;
-    }
-
-    /**
-     * Returns a file to the application context.
-     * @return A file pointing to the context or null if the context is not
-     *         writeable.
-     */
-    public File getContextForWriting() {
-        return null;
     }
 
     /**
