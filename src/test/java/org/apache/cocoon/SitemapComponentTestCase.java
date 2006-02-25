@@ -28,8 +28,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -40,8 +38,8 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
-import org.apache.cocoon.core.container.CoreServiceManager;
-import org.apache.cocoon.core.container.StandaloneServiceSelector;
+import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -107,7 +105,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, getContext());
     }
 
-    /* (non-Javadoc)
+    /**
      * @see junit.framework.TestCase#setUp()
      */
     public void setUp() throws Exception {
@@ -126,28 +124,31 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         redirector.reset();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.core.container.ContainerTestCase#addComponents(org.apache.cocoon.core.container.CocoonServiceManager)
+    /**
+     * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.ConfigurationInfo)
      */
-    protected void addComponents(CoreServiceManager manager) 
-    throws ServiceException, ConfigurationException {
-        super.addComponents(manager);
+    protected void addComponents(ConfigurationInfo info) 
+    throws Exception {
+        super.addComponents(info);
         final String[] o = this.getSitemapComponentInfo();
         if ( o != null ) {
             final String typeClassName = o[0];
             final String componentClassName = o[1];
             final String key = o[2];
-            
-            // Create configuration for selector
-            final DefaultConfiguration df = new DefaultConfiguration("transformers");
-            final DefaultConfiguration factory = new DefaultConfiguration("component-instance");
-            factory.setAttribute("class", componentClassName);
-            factory.setAttribute("name", key);
-            df.addChild(factory);
-            manager.addComponent(typeClassName + "Selector", 
-                                 StandaloneServiceSelector.class.getName(), 
-                                 df,
-                                 null);
+
+            // Add component
+            ComponentInfo component = new ComponentInfo();
+            component.setComponentClassName(componentClassName);
+            component.setRole(typeClassName + "/" + key);
+            info.addComponent(component);
+
+            // add selector
+            component = new ComponentInfo();
+            component.setModel(ComponentInfo.MODEL_SINGLETON);
+            component.setComponentClassName(typeClassName + "Selector");
+            component.setRole("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setDefaultValue(key);
+            info.addComponent(component);
         }
     }
 

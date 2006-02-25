@@ -292,6 +292,10 @@ public final class ComponentInfo {
         return defaultValue;
     }
 
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
     /**
      * Create a new component info with the same configuration
      * as the current one.

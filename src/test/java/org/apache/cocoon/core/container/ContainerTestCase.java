@@ -21,10 +21,8 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -38,6 +36,12 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.MutableSettings;
+import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.environment.mock.MockContext;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -129,18 +133,21 @@ public class ContainerTestCase extends TestCase {
 
     /** The context */
     private Context context;
-    
+
+    /** The root application context. */
+    private CocoonXmlWebApplicationContext rootContext;
+
     /** Return the logger */
     protected Logger getLogger() {
         return logger;
     }
 
-    /** Return the service manager */
+    /** Return the service manager. */
     protected ServiceManager getManager() {
         return this.manager;
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -196,32 +203,13 @@ public class ContainerTestCase extends TestCase {
             conf = new DefaultConfiguration("", "-");
         }
 
-        this.prepare( conf.getChild( "context" ),
-                      conf.getChild( "roles" ),
-                      conf.getChild( "components" ) );
+        // setup context
+        this.context = this.setupContext( conf.getChild( "context" ) );
+
+        this.setupManagers( conf.getChild( "components" ),  conf.getChild( "roles" ) );
     }
 
     /**
-     * Initializes the ComponentLocator
-     *
-     * @param context The configuration object for the context
-     * @param roles The configuration object for the roles
-     * @param components The configuration object for the components
-     *
-     * More detailed control over configuration can be achieved by
-     * overriding <code>prepare()</code>, construct the configuration
-     *  objects and call this method.
-     */
-    protected final void prepare( final Configuration context,
-                                  final Configuration roles,
-                                  final Configuration components )
-    throws Exception {
-        this.context = this.setupContext( context );
-
-        this.setupManagers( components, roles );
-    }
-
-    /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
@@ -233,10 +221,13 @@ public class ContainerTestCase extends TestCase {
      * Disposes the <code>ComponentLocator</code>
      */
     final private void done() {
-        if( manager != null ) {
-            ContainerUtil.dispose(manager);
-            manager = null;
+        if( this.rootContext != null ) {
+            this.rootContext.destroy();
+            this.rootContext = null;
         }
+        this.manager = null;
+        this.context = null;
+        this.logger = null;
     }
 
     /**
@@ -268,6 +259,7 @@ public class ContainerTestCase extends TestCase {
             }
         }
         this.addContext( context );
+        context.makeReadOnly();
         return context ;
     }
 
@@ -283,34 +275,32 @@ public class ContainerTestCase extends TestCase {
      * This method may be overwritten by subclasses to add aditional
      * components.
      */
-    protected void addComponents( CoreServiceManager manager) 
-    throws ServiceException, ConfigurationException {
+    protected void addComponents(ConfigurationInfo info) 
+    throws Exception {
         // subclasses can add components here
     }
     
     final private void setupManagers( final Configuration confCM,
                                       final Configuration confRM)
     throws Exception {
-        // Setup the RoleManager
-        RoleManager roleManager = new RoleManager();
-        roleManager.enableLogging( this.getLogger() );
-        roleManager.configure( confRM );
+        final AvalonEnvironment avalonEnv = new AvalonEnvironment();
+        avalonEnv.logger = this.logger;
+        avalonEnv.context = this.context;
+        avalonEnv.settings = new MutableSettings();
+        avalonEnv.core = new Core(avalonEnv.settings, avalonEnv.context);
+        avalonEnv.servletContext = new MockContext();
 
-        // Set up root manager for Core
-        Core core = new Core(new MutableSettings(), this.context);
-        ((DefaultContext)this.context).put(Core.ROLE, core);
-        SingleComponentServiceManager rsm = new SingleComponentServiceManager(null, core, Core.ROLE);
- 
-        // Set up the ComponentLocator
-        CoreServiceManager ecManager = new CoreServiceManager(rsm);
-        ecManager.enableLogging( this.getLogger() );
-        ecManager.contextualize( this.context );
-        ecManager.setRoleManager( roleManager );
-        ecManager.setLoggerManager( new DefaultLoggerManager(this.logger));
-        ecManager.configure( confCM );
-        this.addComponents( ecManager );
-        ecManager.initialize();
-        this.manager = ecManager;
+        this.rootContext = ApplicationContextFactory.createRootApplicationContext(avalonEnv);
+        // read roles
+        ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv);
+        CocoonXmlWebApplicationContext rolesContext = ApplicationContextFactory.createApplicationContext(avalonEnv, rolesInfo, rootContext, true);
+
+        // read components
+        ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv);
+        this.addComponents( componentsInfo );
+        CocoonXmlWebApplicationContext componentsContext = ApplicationContextFactory.createApplicationContext(avalonEnv, componentsInfo, rolesContext, false);
+
+        this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
     }
 
     protected final Object lookup( final String key )
@@ -363,29 +353,5 @@ public class ContainerTestCase extends TestCase {
     protected Object getComponent(String classname) 
     throws Exception {
         return this.getComponent(classname, null, null);
-    }
-
-    /**
-     * We use this simple logger manager that sends all output to the console (logger)
-     */
-    protected static class DefaultLoggerManager implements LoggerManager {
-        
-        private Logger logger;
-        
-        public DefaultLoggerManager(Logger logger) {
-            this.logger = logger;
-        }
-        /* (non-Javadoc)
-         * @see org.apache.avalon.excalibur.logger.LoggerManager#getDefaultLogger()
-         */
-        public Logger getDefaultLogger() {
-            return this.logger;
-        }
-        /* (non-Javadoc)
-         * @see org.apache.avalon.excalibur.logger.LoggerManager#getLoggerForCategory(java.lang.String)
-         */
-        public Logger getLoggerForCategory(String arg0) {
-            return this.logger;
-        }
     }
 }
