@@ -165,7 +165,6 @@ public class CoreUtil {
         this.servletContext = context;
         this.env = environment;
         this.init();
-        this.createClassloader();
     }
 
     protected void init()
@@ -267,11 +266,8 @@ public class CoreUtil {
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
         // set class loader
+        this.createClassloader();
         this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
-
-        // Set the system properties needed by Xalan2.
-        // FIXME Do we still need this?
-        //this.setSystemProperties();
 
         // dump system properties
         this.dumpSystemProperties();
@@ -408,53 +404,11 @@ public class CoreUtil {
     }
 
     /**
-     * Sets required system properties.
-     */
-    protected void setSystemProperties() {
-        try {
-            // FIXME We shouldn't have to specify the SAXParser...
-            // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
-            // to locate the SAX2 driver.
-            if (getSystemProperty("org.xml.sax.driver", null) == null) {
-                System.setProperty("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-            }
-        } catch (SecurityException e) {
-            // Ignore security exceptions
-            System.out.println("Caught a SecurityException writing the system property: " + e);
-        }
-
-        try {
-            // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
-            if (getSystemProperty("javax.xml.parsers.DocumentBuilderFactory", "").startsWith("weblogic")) {
-                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-                System.setProperty("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
-            }
-        } catch (SecurityException e) {
-            // Ignore security exceptions
-            System.out.println("Caught a SecurityException writing the system property: " + e);
-        }
-    }
-
-    /**
-     * Helper method to retrieve system property.
-     * Returns default value if SecurityException is caught.
-     */
-    protected String getSystemProperty(String property, String value) {
-        try {
-            return System.getProperty(property, value);
-        } catch (SecurityException e) {
-            System.err.println("Caught a SecurityException reading the system property '" + property + "';" +
-                               " Cocoon will default to '" + value + "' value.");
-            return value;
-        }
-    }
-
-    /**
      * Read all property files from the given directory and apply them to the settings.
      */
-    protected void readProperties(String directoryName,
+    protected void readProperties(String          directoryName,
                                   MutableSettings s,
-                                  SourceResolver resolver) {
+                                  SourceResolver  resolver) {
         Source directory = null;
         try {
             directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
