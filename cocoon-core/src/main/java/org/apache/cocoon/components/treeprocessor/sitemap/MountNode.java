@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
@@ -70,7 +71,7 @@ public class MountNode extends AbstractProcessingNode
         this.passThrough = BooleanUtils.toBooleanObject(passThrough);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
      */
     public final boolean invoke(Environment env, InvokeContext context)
@@ -145,13 +146,13 @@ public class MountNode extends AbstractProcessingNode
         return processor;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         Iterator i = this.processors.values().iterator();
         while (i.hasNext()) {
-            ((TreeProcessor) i.next()).dispose();
+            ContainerUtil.dispose(i.next());
         }
         this.processors.clear();
     }

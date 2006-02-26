@@ -36,7 +36,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
@@ -290,15 +290,15 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.core = new Core(avalonEnv.settings, avalonEnv.context);
         avalonEnv.servletContext = new MockContext();
 
-        this.rootContext = ApplicationContextFactory.createRootApplicationContext(avalonEnv);
+        this.rootContext = BeanFactoryUtil.createRootApplicationContext(avalonEnv);
         // read roles
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv);
-        ConfigurableBeanFactory rolesContext = ApplicationContextFactory.createApplicationContext(avalonEnv, rolesInfo, rootContext, true);
+        ConfigurableBeanFactory rolesContext = BeanFactoryUtil.createApplicationContext(avalonEnv, rolesInfo, rootContext, true);
 
         // read components
         ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv);
         this.addComponents( componentsInfo );
-        ConfigurableBeanFactory componentsContext = ApplicationContextFactory.createApplicationContext(avalonEnv, componentsInfo, rolesContext, false);
+        ConfigurableBeanFactory componentsContext = BeanFactoryUtil.createApplicationContext(avalonEnv, componentsInfo, rolesContext, false);
 
         this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
     }

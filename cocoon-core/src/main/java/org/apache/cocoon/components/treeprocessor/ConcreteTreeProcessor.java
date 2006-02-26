@@ -33,7 +33,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.CocoonBeanFactory;
 import org.apache.cocoon.core.container.spring.NameForAliasAware;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
@@ -53,8 +53,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.commons.jci.listeners.NotificationListener;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -64,6 +63,8 @@ import org.springframework.beans.factory.DisposableBean;
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
                                    implements Processor, Disposable, ExecutionContext, NotificationListener {
+
+    private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonBeanFactory.class.getName() + "/Stack";
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -107,7 +108,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     private Map classpathListeners = Collections.EMPTY_MAP;
 
     /** Bean Factory for this sitemap. */
-    protected BeanFactory beanFactory;
+    protected ConfigurableBeanFactory beanFactory;
 
     /**
      * Builds a concrete processig, given the wrapping processor
@@ -137,7 +138,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }    
     
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(BeanFactory beanFactory, 
+    public void setProcessorData(ConfigurableBeanFactory beanFactory, 
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
@@ -285,16 +286,16 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
      */
     protected void enteredSitemap(EnterSitemapEvent event) {
         final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Object oldContext = request.getAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+        final Object oldContext = request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         if ( oldContext != null ) {
-            Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+            Stack stack = (Stack)request.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
             if ( stack == null ) {
                 stack = new Stack();
-                request.setAttribute("ac-stack", stack, Request.REQUEST_SCOPE);
+                request.setAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, stack, Request.REQUEST_SCOPE);
             }
             stack.push(oldContext);
         }
-        request.setAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
+        request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
     }
 
     /**
@@ -302,14 +303,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
      */
     protected void leftSitemap(LeaveSitemapEvent event) {
         final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+        final Stack stack = (Stack)request.getAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         if ( stack == null ) {
-            request.removeAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+            request.removeAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         } else {
             final Object oldContext = stack.pop();
-            request.setAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
+            request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
             if ( stack.size() == 0 ) {
-                request.removeAttribute("ac-stack", Request.REQUEST_SCOPE);
+                request.removeAttribute(BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
             }
         }
     }
@@ -468,13 +469,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.disposeListeners(this.enterSitemapEventListeners);
         this.disposeListeners(this.leaveSitemapEventListeners);
         if ( this.beanFactory != null ) {
-            if (this.beanFactory instanceof DisposableBean)
-                try {
-                    ((DisposableBean)this.beanFactory).destroy();
-                } catch (Exception e) {
-                    // Not much to do
-                    this.getLogger().error("Can't destory the Spring context", e);
-                }
+            this.beanFactory.destroySingletons();
             this.beanFactory = null;
         }
     }
