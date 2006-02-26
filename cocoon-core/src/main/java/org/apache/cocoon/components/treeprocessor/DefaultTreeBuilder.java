@@ -41,7 +41,6 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Location;
@@ -49,6 +48,7 @@ import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  *
@@ -96,7 +96,7 @@ public abstract class DefaultTreeBuilder
      */
     private ServiceManager itsManager;
 
-    private CocoonXmlWebApplicationContext itsApplicationContext;
+    private BeanFactory itsApplicationContext;
     
     /**
      * The classloader for the processor that we are building.
@@ -218,7 +218,7 @@ public abstract class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected abstract CocoonXmlWebApplicationContext createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
+    protected abstract BeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
     throws Exception;
 
 
@@ -239,7 +239,7 @@ public abstract class DefaultTreeBuilder
     /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getApplicationContext()
      */
-    public CocoonXmlWebApplicationContext getApplicationContext() {
+    public BeanFactory getApplicationContext() {
         return this.itsApplicationContext;
     }
 
