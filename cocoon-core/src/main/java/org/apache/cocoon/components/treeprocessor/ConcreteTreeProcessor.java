@@ -31,7 +31,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.NameForAliasAware;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.Redirector;
@@ -48,6 +48,8 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.commons.jci.listeners.NotificationListener;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.DisposableBean;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -99,8 +101,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** no listeners by default */ 
     private Map classpathListeners = Collections.EMPTY_MAP;
 
-    /** Application Context for this sitemap. */
-    protected CocoonXmlWebApplicationContext applicationContext;
+    /** Bean Factory for this sitemap. */
+    protected BeanFactory beanFactory;
 
     /**
      * Builds a concrete processig, given the wrapping processor
@@ -130,7 +132,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }    
     
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(CocoonXmlWebApplicationContext appContext, 
+    public void setProcessorData(BeanFactory beanFactory, 
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
@@ -140,8 +142,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
 
-        this.applicationContext = appContext;
-        this.manager = (ServiceManager)this.applicationContext.getBean(ServiceManager.class.getName());
+        this.beanFactory = beanFactory;
+        this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
         this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
@@ -182,7 +184,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
-                            final String r = this.applicationContext.getNameForAlias(childs[m].getName());
+                            String r = childs[m].getName();
+                            if (this.beanFactory instanceof NameForAliasAware)
+                                r = ((NameForAliasAware)this.beanFactory).getNameForAlias(r);
                             this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                              (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
                         }
@@ -421,9 +425,15 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // dispose listeners
         this.disposeListeners(this.enterSitemapEventListeners);
         this.disposeListeners(this.leaveSitemapEventListeners);
-        if ( this.applicationContext != null ) {
-            this.applicationContext.destroy();
-            this.applicationContext = null;
+        if ( this.beanFactory != null ) {
+            if (this.beanFactory instanceof DisposableBean)
+                try {
+                    ((DisposableBean)this.beanFactory).destroy();
+                } catch (Exception e) {
+                    // Not much to do
+                    this.getLogger().error("Can't destory the Spring context", e);
+                }
+            this.beanFactory = null;
         }
     }
 
