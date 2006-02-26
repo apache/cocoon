@@ -33,12 +33,12 @@ import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.TestBootstrapEnvironment;
 import org.apache.cocoon.core.TestCoreUtil;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 public class SitemapTestCase extends TestCase {
 
@@ -51,7 +51,7 @@ public class SitemapTestCase extends TestCase {
     private CoreUtil coreUtil;
     private Processor processor;
     private String classDir;
-    private CocoonXmlWebApplicationContext container;
+    private ConfigurableBeanFactory container;
     private ServiceManager serviceManager;
 
     protected String processorClassName = Cocoon.class.getName();

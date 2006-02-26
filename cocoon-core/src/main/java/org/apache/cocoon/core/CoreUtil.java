@@ -47,7 +47,6 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ComponentContext;
@@ -62,7 +61,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.URLSource;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -100,7 +99,7 @@ public class CoreUtil {
     protected final ServletContext servletContext;
 
     /** The container. */
-    protected CocoonXmlWebApplicationContext container;
+    protected ConfigurableBeanFactory container;
 
     /** The configuration file */
     protected Source configurationFile;
@@ -587,7 +586,7 @@ public class CoreUtil {
         return this.processor;
     }
 
-    protected CocoonXmlWebApplicationContext setupSpringContainer() throws Exception {
+    protected ConfigurableBeanFactory setupSpringContainer() throws Exception {
         if (this.log.isInfoEnabled()) {
             this.log.info("Reading root configuration: " + this.settings.getConfiguration());
         }
@@ -620,9 +619,9 @@ public class CoreUtil {
         env.logger = this.log;
         env.servletContext = this.env.getEnvironmentContext();
         env.settings = this.core.getSettings();
-        ApplicationContext rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurableBeanFactory rootContext = ApplicationContextFactory.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        CocoonXmlWebApplicationContext mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
+        ConfigurableBeanFactory mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
 
         return mainContext;
     }
@@ -688,12 +687,12 @@ public class CoreUtil {
      */
     public void destroy() {
         if ( this.container != null ) {
-            this.container.destroy();
+            this.container.destroySingletons();
             this.container = null;
         }
     }
 
-    public CocoonXmlWebApplicationContext getContainer() {
+    public ConfigurableBeanFactory getContainer() {
         return this.container;
     }
 
