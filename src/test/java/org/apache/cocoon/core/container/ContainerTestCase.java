@@ -38,10 +38,10 @@ import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -135,7 +135,7 @@ public class ContainerTestCase extends TestCase {
     private Context context;
 
     /** The root application context. */
-    private CocoonXmlWebApplicationContext rootContext;
+    private ConfigurableBeanFactory rootContext;
 
     /** Return the logger */
     protected Logger getLogger() {
@@ -222,7 +222,7 @@ public class ContainerTestCase extends TestCase {
      */
     final private void done() {
         if( this.rootContext != null ) {
-            this.rootContext.destroy();
+            this.rootContext.destroySingletons();
             this.rootContext = null;
         }
         this.manager = null;
@@ -293,12 +293,12 @@ public class ContainerTestCase extends TestCase {
         this.rootContext = ApplicationContextFactory.createRootApplicationContext(avalonEnv);
         // read roles
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv);
-        CocoonXmlWebApplicationContext rolesContext = ApplicationContextFactory.createApplicationContext(avalonEnv, rolesInfo, rootContext, true);
+        ConfigurableBeanFactory rolesContext = ApplicationContextFactory.createApplicationContext(avalonEnv, rolesInfo, rootContext, true);
 
         // read components
         ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv);
         this.addComponents( componentsInfo );
-        CocoonXmlWebApplicationContext componentsContext = ApplicationContextFactory.createApplicationContext(avalonEnv, componentsInfo, rolesContext, false);
+        ConfigurableBeanFactory componentsContext = ApplicationContextFactory.createApplicationContext(avalonEnv, componentsInfo, rolesContext, false);
 
         this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
     }

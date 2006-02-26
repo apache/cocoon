@@ -42,6 +42,7 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
@@ -66,10 +67,10 @@ public class ApplicationContextFactory {
      * @return A new application context
      * @throws Exception
      */
-    public static CocoonXmlWebApplicationContext createApplicationContext(AvalonEnvironment  env,
-                                                                          ConfigurationInfo  info,
-                                                                          ApplicationContext parent,
-                                                                          boolean            addCocoon)
+    public static ConfigurableBeanFactory createApplicationContext(AvalonEnvironment  env,
+                                                                   ConfigurationInfo  info,
+                                                                   ConfigurableBeanFactory parent,
+                                                                   boolean            addCocoon)
     throws Exception {
         final String xmlConfig = (new XmlConfigCreator()).createConfig(info, addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
@@ -89,8 +90,8 @@ public class ApplicationContextFactory {
         if ( info.rootLogger != null ) {
             context.getBeanFactory().registerSingleton(Logger.class.getName(), logger);
         }
-        prepareApplicationContext(context);
-        return context;
+        prepareApplicationContext(context, info);
+        return context.getBeanFactory();
     }
 
     /**
@@ -103,7 +104,7 @@ public class ApplicationContextFactory {
      * @return A new root application context.
      * @throws Exception
      */
-    public static CocoonXmlWebApplicationContext createRootApplicationContext(AvalonEnvironment  env)
+    public static ConfigurableBeanFactory createRootApplicationContext(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(parent);
@@ -113,8 +114,7 @@ public class ApplicationContextFactory {
         factory.registerSingleton(Logger.class.getName(), env.logger);
         factory.registerSingleton(Core.class.getName(), env.core);
         factory.registerSingleton(Settings.class.getName(), env.settings);
-        prepareApplicationContext(context);
-        return context;
+        return context.getBeanFactory();
     }
 
     /**
@@ -208,37 +208,37 @@ public class ApplicationContextFactory {
         return loggerManager.getLoggerForCategory(accesslogger);
     }
 
-    protected static void prepareApplicationContext(CocoonXmlWebApplicationContext context) {
-        if ( context.getConfigurationInfo() != null ) {
-            // TODO - we should find a better way
-            // add ProcessorComponentInfo
-            ProcessorComponentInfo parentInfo = null;
-            if ( context.getParent() != null && context.getParent().containsBean(ProcessorComponentInfo.ROLE) ) {
-                parentInfo = (ProcessorComponentInfo)context.getParent().getBean(ProcessorComponentInfo.ROLE);
-            }
-            ProcessorComponentInfo info = new ProcessorComponentInfo(parentInfo);
-            final Iterator i = context.getConfigurationInfo().getComponents().values().iterator();
-            while (i.hasNext()) {
-                final ComponentInfo current = (ComponentInfo)i.next();
-                info.componentAdded(current.getRole(), current.getComponentClassName(), current.getConfiguration());
-            }
-            prepareSelector(info, context, Generator.ROLE);
-            prepareSelector(info, context, Transformer.ROLE);
-            prepareSelector(info, context, Serializer.ROLE);
-            prepareSelector(info, context, ProcessingPipeline.ROLE);
-            prepareSelector(info, context, Action.ROLE);
-            prepareSelector(info, context, Selector.ROLE);
-            prepareSelector(info, context, Matcher.ROLE);
-            prepareSelector(info, context, Reader.ROLE);
-            info.lock();
-            context.getBeanFactory().registerSingleton(ProcessorComponentInfo.ROLE, info);
+    protected static void prepareApplicationContext(CocoonXmlWebApplicationContext context,
+                                                    ConfigurationInfo              configInfo) {
+        // TODO - we should find a better way
+        // add ProcessorComponentInfo
+        ProcessorComponentInfo parentInfo = null;
+        if ( context.getParent() != null && context.getParent().containsBean(ProcessorComponentInfo.ROLE) ) {
+            parentInfo = (ProcessorComponentInfo)context.getParent().getBean(ProcessorComponentInfo.ROLE);
         }
+        ProcessorComponentInfo info = new ProcessorComponentInfo(parentInfo);
+        final Iterator i = configInfo.getComponents().values().iterator();
+        while (i.hasNext()) {
+            final ComponentInfo current = (ComponentInfo)i.next();
+            info.componentAdded(current.getRole(), current.getComponentClassName(), current.getConfiguration());
+        }
+        prepareSelector(info, context, configInfo, Generator.ROLE);
+        prepareSelector(info, context, configInfo, Transformer.ROLE);
+        prepareSelector(info, context, configInfo, Serializer.ROLE);
+        prepareSelector(info, context, configInfo, ProcessingPipeline.ROLE);
+        prepareSelector(info, context, configInfo, Action.ROLE);
+        prepareSelector(info, context, configInfo, Selector.ROLE);
+        prepareSelector(info, context, configInfo, Matcher.ROLE);
+        prepareSelector(info, context, configInfo, Reader.ROLE);
+        info.lock();
+        context.getBeanFactory().registerSingleton(ProcessorComponentInfo.ROLE, info);
     }
 
     protected static void prepareSelector(ProcessorComponentInfo         info,
                                           CocoonXmlWebApplicationContext context,
+                                          ConfigurationInfo              configInfo,
                                           String                         category) {
-        final ComponentInfo component = (ComponentInfo)context.getConfigurationInfo().getComponents().get(category + "Selector");
+        final ComponentInfo component = (ComponentInfo)configInfo.getComponents().get(category + "Selector");
         if ( component != null ) {
             info.setDefaultType(category, component.getDefaultValue());
         }

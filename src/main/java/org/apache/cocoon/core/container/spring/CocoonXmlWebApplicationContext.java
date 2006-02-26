@@ -17,7 +17,6 @@ package org.apache.cocoon.core.container.spring;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -28,19 +27,13 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.sitemap.EnterSitemapEvent;
-import org.apache.cocoon.sitemap.EnterSitemapEventListener;
-import org.apache.cocoon.sitemap.LeaveSitemapEvent;
-import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -59,7 +52,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class CocoonXmlWebApplicationContext
     extends XmlWebApplicationContext
-    implements EnterSitemapEventListener, LeaveSitemapEventListener, ApplicationListener, NameForAliasAware {
+    implements ApplicationListener, NameForAliasAware {
 
     public static final String APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = "application-context";
 
@@ -71,16 +64,18 @@ public class CocoonXmlWebApplicationContext
 
     protected boolean destroyed = false;
 
-    public CocoonXmlWebApplicationContext(ApplicationContext parent) {
+    protected final HierarchicalBeanFactory parentFactory;
+
+    public CocoonXmlWebApplicationContext(HierarchicalBeanFactory parent) {
         this(null, parent, null, null, null);
     }
 
     public CocoonXmlWebApplicationContext(Resource           avalonResource,
-                                          ApplicationContext parent,
+                                          HierarchicalBeanFactory parent,
                                           Logger             avalonLogger,
                                           ConfigurationInfo  avalonConfiguration,
                                           Context            avalonContext) {
-        this.setParent(parent);
+        this.parentFactory = parent;
         this.avalonResource = avalonResource;
         this.avalonLogger = avalonLogger;
         this.avalonConfiguration = avalonConfiguration;
@@ -89,13 +84,6 @@ public class CocoonXmlWebApplicationContext
             ((CocoonXmlWebApplicationContext)parent).registerChildContext(this);
             
         }
-    }
-
-    /**
-     * Get the avalon configuration information.
-     */
-    public ConfigurationInfo getConfigurationInfo() {
-        return this.avalonConfiguration;
     }
 
     public String getNameForAlias(String alias) {
@@ -148,12 +136,16 @@ public class CocoonXmlWebApplicationContext
      */
     protected DefaultListableBeanFactory createBeanFactory() {
         DefaultListableBeanFactory beanFactory = super.createBeanFactory();
+        if ( this.parentFactory != null ) {
+            beanFactory.setParentBeanFactory(this.parentFactory);
+        }
         if ( this.avalonConfiguration != null ) {
             AvalonPostProcessor processor = new AvalonPostProcessor(this.avalonConfiguration.getComponents(),
                                                                     this.avalonContext,
                                                                     this.avalonLogger,
                                                                     beanFactory);
             beanFactory.addBeanPostProcessor(processor);
+            beanFactory.registerSingleton(ConfigurationInfo.class.getName(), this.avalonConfiguration);
         }
         return beanFactory;
     }
@@ -166,51 +158,6 @@ public class CocoonXmlWebApplicationContext
      */
     protected String[] getDefaultConfigLocations() {
         return new String[]{};
-    }
-
-    /**
-     * @see org.apache.cocoon.sitemap.EnterSitemapEventListener#enteredSitemap(org.apache.cocoon.sitemap.EnterSitemapEvent)
-     */
-    public void enteredSitemap(EnterSitemapEvent event) {
-        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Object oldContext = request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        if ( oldContext != null ) {
-            Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
-            if ( stack == null ) {
-                stack = new Stack();
-                request.setAttribute("ac-stack", stack, Request.REQUEST_SCOPE);
-            }
-            stack.push(oldContext);
-        }
-        request.setAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, this, Request.REQUEST_SCOPE);
-    }
-
-    /**
-     * @see org.apache.cocoon.sitemap.LeaveSitemapEventListener#leftSitemap(org.apache.cocoon.sitemap.LeaveSitemapEvent)
-     */
-    public void leftSitemap(LeaveSitemapEvent event) {
-        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
-        final Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
-        if ( stack == null ) {
-            request.removeAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        } else {
-            final Object oldContext = stack.pop();
-            request.setAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
-            if ( stack.size() == 0 ) {
-                request.removeAttribute("ac-stack", Request.REQUEST_SCOPE);
-            }
-        }
-    }
-
-    public CocoonXmlWebApplicationContext getCurrentApplicationContext() {
-        final Request request = ContextHelper.getRequest(this.avalonContext);
-        if ( this.avalonContext == null ) {
-            return this;
-        }
-        if ( request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE) != null ) {
-            return (CocoonXmlWebApplicationContext)request.getAttribute(APPLICATION_CONTEXT_REQUEST_ATTRIBUTE);
-        }
-        return this;
     }
 
     /**
