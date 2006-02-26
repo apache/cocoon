@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
@@ -87,7 +88,8 @@ public class BlocksManager
         }
         
         // FIXME - how do we get the settings object?
-        this.logger = BeanFactoryUtil.createRootLogger(this.getServletConfig().getServletContext(), new MutableSettings());
+        //this.logger = BeanFactoryUtil.createRootLogger(this.getServletConfig().getServletContext(), new MutableSettings());
+        this.logger = new ServletLogger(this.getServletConfig());
         this.getLogger().debug("Initializing the Blocks Manager");
         
         InputSource is = null;
