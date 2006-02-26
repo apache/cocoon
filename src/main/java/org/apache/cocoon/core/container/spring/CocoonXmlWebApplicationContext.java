@@ -59,7 +59,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class CocoonXmlWebApplicationContext
     extends XmlWebApplicationContext
-    implements EnterSitemapEventListener, LeaveSitemapEventListener, ApplicationListener {
+    implements EnterSitemapEventListener, LeaveSitemapEventListener, ApplicationListener, NameForAliasAware {
 
     public static final String APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = "application-context";
 

@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  *
@@ -40,7 +40,7 @@ public interface TreeBuilder {
         }
     }
 
-    CocoonXmlWebApplicationContext getApplicationContext();
+    BeanFactory getApplicationContext();
     
     ClassLoader getBuiltProcessorClassLoader();
 

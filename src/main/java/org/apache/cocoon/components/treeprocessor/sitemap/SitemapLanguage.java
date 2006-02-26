@@ -59,6 +59,7 @@ import org.apache.cocoon.util.StringUtils;
 import org.apache.regexp.RE;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -103,7 +104,7 @@ public class SitemapLanguage
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected CocoonXmlWebApplicationContext createApplicationContext(ClassLoader classloader, Context context, Configuration config)
+    protected BeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration config)
     throws Exception {
 
         // Create the classloader, if needed.
