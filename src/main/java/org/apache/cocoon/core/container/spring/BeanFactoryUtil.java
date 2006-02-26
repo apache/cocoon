@@ -42,34 +42,35 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.transformation.Transformer;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * This factory creates new Spring {@link ApplicationContext} objects which support
- * the Avalon style component configuration.
+ * This utility class helps in creating new Spring {@link BeanFactory} objects which support
+ * the Avalon style component configuration. It also offers help in setting up the root
+ * logger for Cocoon.
  *
  * @since 2.2
  * @version $Id$
  */
-public class ApplicationContextFactory {
+public class BeanFactoryUtil {
 
     /**
-     * Create a new (sub) application context.
+     * Create a new (sub) bean factory.
      *
-     * @param env
-     * @param info
-     * @param parent The parent application context or null.
-     * @return A new application context
+     * @param env  The avalon environment.
+     * @param info The avalon configuration.
+     * @param parent The parent factory or null.
+     * @return A new bean factory.
      * @throws Exception
      */
     public static ConfigurableBeanFactory createApplicationContext(AvalonEnvironment  env,
                                                                    ConfigurationInfo  info,
-                                                                   ConfigurableBeanFactory parent,
+                                                                   BeanFactory        parent,
                                                                    boolean            addCocoon)
     throws Exception {
         final String xmlConfig = (new XmlConfigCreator()).createConfig(info, addCocoon);
@@ -78,43 +79,38 @@ public class ApplicationContextFactory {
         if ( info.rootLogger != null ) {
             logger = env.logger.getChildLogger(info.rootLogger);
         }
-        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(rsc, 
-                                                                                    parent,
-                                                                                    logger,
-                                                                                    info,
-                                                                                    env.context);
-        context.addBeanFactoryPostProcessor(new CocoonSettingsConfigurer(env.settings));
-
-        context.setServletContext(env.servletContext);
-        context.refresh();
+        CocoonBeanFactory context = new CocoonBeanFactory(rsc, 
+                                                          parent,
+                                                          logger,
+                                                          info,
+                                                          env.context,
+                                                          env.settings);
         if ( info.rootLogger != null ) {
-            context.getBeanFactory().registerSingleton(Logger.class.getName(), logger);
+            context.registerSingleton(Logger.class.getName(), logger);
         }
         prepareApplicationContext(context, info);
-        return context.getBeanFactory();
+        return context;
     }
 
     /**
-     * Create the root application context.
-     * This context is the root of all Cocoon based Spring application contexts. If
-     * the default Spring context is created using the Spring context listener, that
-     * default context will be the parent of this root context.
+     * Create the root bean factory.
+     * This factory is the root of all Cocoon based Spring bean factories. If
+     * the default Spring application context is created using the Spring context listener, that
+     * default context will be the parent of this factory.
      *
-     * @param env
-     * @return A new root application context.
+     * @param env The avalon environment.
+     * @return A new root application factory.
      * @throws Exception
      */
     public static ConfigurableBeanFactory createRootApplicationContext(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-        CocoonXmlWebApplicationContext context = new CocoonXmlWebApplicationContext(parent);
-        context.refresh();
-        final ConfigurableListableBeanFactory factory = context.getBeanFactory();
+        CocoonBeanFactory factory = new CocoonBeanFactory(parent);
         factory.registerSingleton(Context.class.getName(), env.context);
         factory.registerSingleton(Logger.class.getName(), env.logger);
         factory.registerSingleton(Core.class.getName(), env.core);
         factory.registerSingleton(Settings.class.getName(), env.settings);
-        return context.getBeanFactory();
+        return factory;
     }
 
     /**
@@ -208,13 +204,13 @@ public class ApplicationContextFactory {
         return loggerManager.getLoggerForCategory(accesslogger);
     }
 
-    protected static void prepareApplicationContext(CocoonXmlWebApplicationContext context,
-                                                    ConfigurationInfo              configInfo) {
+    protected static void prepareApplicationContext(CocoonBeanFactory context,
+                                                    ConfigurationInfo configInfo) {
         // TODO - we should find a better way
         // add ProcessorComponentInfo
         ProcessorComponentInfo parentInfo = null;
-        if ( context.getParent() != null && context.getParent().containsBean(ProcessorComponentInfo.ROLE) ) {
-            parentInfo = (ProcessorComponentInfo)context.getParent().getBean(ProcessorComponentInfo.ROLE);
+        if ( context.getParentBeanFactory() != null && context.getParentBeanFactory().containsBean(ProcessorComponentInfo.ROLE) ) {
+            parentInfo = (ProcessorComponentInfo)context.getParentBeanFactory().getBean(ProcessorComponentInfo.ROLE);
         }
         ProcessorComponentInfo info = new ProcessorComponentInfo(parentInfo);
         final Iterator i = configInfo.getComponents().values().iterator();
@@ -231,13 +227,13 @@ public class ApplicationContextFactory {
         prepareSelector(info, context, configInfo, Matcher.ROLE);
         prepareSelector(info, context, configInfo, Reader.ROLE);
         info.lock();
-        context.getBeanFactory().registerSingleton(ProcessorComponentInfo.ROLE, info);
+        context.registerSingleton(ProcessorComponentInfo.ROLE, info);
     }
 
-    protected static void prepareSelector(ProcessorComponentInfo         info,
-                                          CocoonXmlWebApplicationContext context,
-                                          ConfigurationInfo              configInfo,
-                                          String                         category) {
+    protected static void prepareSelector(ProcessorComponentInfo info,
+                                          CocoonBeanFactory      context,
+                                          ConfigurationInfo      configInfo,
+                                          String                 category) {
         final ComponentInfo component = (ComponentInfo)configInfo.getComponents().get(category + "Selector");
         if ( component != null ) {
             info.setDefaultType(category, component.getDefaultValue());

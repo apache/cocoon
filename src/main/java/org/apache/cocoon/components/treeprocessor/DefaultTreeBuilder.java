@@ -48,7 +48,7 @@ import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  *
@@ -96,7 +96,7 @@ public abstract class DefaultTreeBuilder
      */
     private ServiceManager itsManager;
 
-    private BeanFactory itsApplicationContext;
+    private ConfigurableBeanFactory itsBeanFactory;
     
     /**
      * The classloader for the processor that we are building.
@@ -218,7 +218,7 @@ public abstract class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected abstract BeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
+    protected abstract ConfigurableBeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
     throws Exception;
 
 
@@ -237,10 +237,10 @@ public abstract class DefaultTreeBuilder
     }
     
     /**
-     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getApplicationContext()
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getBeanFactory()
      */
-    public BeanFactory getApplicationContext() {
-        return this.itsApplicationContext;
+    public ConfigurableBeanFactory getBeanFactory() {
+        return this.itsBeanFactory;
     }
 
     public ClassLoader getBuiltProcessorClassLoader() {
@@ -371,9 +371,9 @@ public abstract class DefaultTreeBuilder
 //        currentThread.setContextClassLoader(this.itsClassLoader);
         this.itsClassLoader = Thread.currentThread().getContextClassLoader();
 
-        this.itsApplicationContext = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
-        this.itsComponentInfo = (ProcessorComponentInfo)this.itsApplicationContext.getBean(ProcessorComponentInfo.ROLE);
-        this.itsManager = (ServiceManager)this.itsApplicationContext.getBean(ServiceManager.class.getName());
+        this.itsBeanFactory = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
+        this.itsComponentInfo = (ProcessorComponentInfo)this.itsBeanFactory.getBean(ProcessorComponentInfo.ROLE);
+        this.itsManager = (ServiceManager)this.itsBeanFactory.getBean(ServiceManager.class.getName());
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(),
                                              this.itsContext,

@@ -688,7 +688,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
                 newProcessor.setProcessorData(
-                        treeBuilder.getApplicationContext(),
+                        treeBuilder.getBeanFactory(),
                         treeBuilder.getBuiltProcessorClassLoader(),
                         root,
                         treeBuilder.getDisposableNodes(),

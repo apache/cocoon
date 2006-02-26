@@ -45,7 +45,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
@@ -204,7 +204,7 @@ public class CoreUtil {
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
-        this.log = ApplicationContextFactory.createRootLogger(servletContext,
+        this.log = BeanFactoryUtil.createRootLogger(servletContext,
                                                               this.settings);
         this.env.setLogger(this.log);
 
@@ -619,9 +619,9 @@ public class CoreUtil {
         env.logger = this.log;
         env.servletContext = this.env.getEnvironmentContext();
         env.settings = this.core.getSettings();
-        ConfigurableBeanFactory rootContext = ApplicationContextFactory.createRootApplicationContext(env);
+        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        ConfigurableBeanFactory mainContext = ApplicationContextFactory.createApplicationContext(env, result, rootContext, true);
+        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createApplicationContext(env, result, rootContext, true);
 
         return mainContext;
     }
