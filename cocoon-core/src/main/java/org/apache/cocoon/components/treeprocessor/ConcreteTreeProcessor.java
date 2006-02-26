@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.container.ContainerUtil;
@@ -31,10 +33,13 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
+import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
 import org.apache.cocoon.core.container.spring.NameForAliasAware;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
@@ -276,6 +281,41 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /**
+     * @see org.apache.cocoon.sitemap.EnterSitemapEventListener#enteredSitemap(org.apache.cocoon.sitemap.EnterSitemapEvent)
+     */
+    protected void enteredSitemap(EnterSitemapEvent event) {
+        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
+        final Object oldContext = request.getAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+        if ( oldContext != null ) {
+            Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+            if ( stack == null ) {
+                stack = new Stack();
+                request.setAttribute("ac-stack", stack, Request.REQUEST_SCOPE);
+            }
+            stack.push(oldContext);
+        }
+        request.setAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
+    }
+
+    /**
+     * @see org.apache.cocoon.sitemap.LeaveSitemapEventListener#leftSitemap(org.apache.cocoon.sitemap.LeaveSitemapEvent)
+     */
+    protected void leftSitemap(LeaveSitemapEvent event) {
+        final Request request = ObjectModelHelper.getRequest(event.getEnvironment().getObjectModel());
+        final Stack stack = (Stack)request.getAttribute("ac-stack", Request.REQUEST_SCOPE);
+        if ( stack == null ) {
+            request.removeAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
+        } else {
+            final Object oldContext = stack.pop();
+            request.setAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE, oldContext, Request.REQUEST_SCOPE);
+            if ( stack.size() == 0 ) {
+                request.removeAttribute("ac-stack", Request.REQUEST_SCOPE);
+            }
+        }
+    }
+
+
+    /**
      * Do the actual processing, be it producing the response or just building the pipeline
      * @param environment
      * @param context
@@ -297,8 +337,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         try {
             // invoke listeners
             // only invoke if pipeline is not internally
-            if ( !context.isBuildingPipelineOnly() && this.enterSitemapEventListeners.size() > 0 ) {
+            if ( !context.isBuildingPipelineOnly() ) {
                 final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
+                this.enteredSitemap(enterEvent);
                 final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
                 while ( enterSEI.hasNext() ) {
                     final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)enterSEI.next();
@@ -331,8 +372,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
             // invoke listeners
             // only invoke if pipeline is not internally
-            if ( !context.isBuildingPipelineOnly() && this.leaveSitemapEventListeners.size() > 0 ) {
+            if ( !context.isBuildingPipelineOnly() ) {
                 final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
+                this.leftSitemap(leaveEvent);
                 final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
                 while ( leaveSEI.hasNext() ) {
                     final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)leaveSEI.next();
