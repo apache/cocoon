@@ -90,6 +90,14 @@ public class ConfigReader extends AbstractLogEnabled {
                     this.configInfo.getClassNames().put(current.getRole(), current.copy());
                 }
             }
+            // TODO - we should add the processor to each container
+            //        This would avoid the hacky getting of the current container in the tree processor
+            /*
+            ComponentInfo processorInfo = (ComponentInfo) parentInfo.getComponents().get(Processor.ROLE);
+            if ( processorInfo != null ) {
+                this.configInfo.getComponents().put(Processor.ROLE, processorInfo.copy());
+            }
+            */
         } else {
             this.configInfo = new ConfigurationInfo();
         }

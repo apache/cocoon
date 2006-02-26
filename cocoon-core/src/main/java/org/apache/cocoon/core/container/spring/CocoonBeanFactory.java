@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -28,21 +27,17 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.SitemapConfigurable;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.Resource;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
  * This is a Cocoon specific implementation of a Spring {@link ApplicationContext}.
@@ -50,11 +45,14 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * @since 2.2
  * @version $Id$
  */
-public class CocoonXmlWebApplicationContext
-    extends XmlWebApplicationContext
-    implements ApplicationListener, NameForAliasAware {
+public class CocoonBeanFactory
+    extends DefaultListableBeanFactory
+    implements NameForAliasAware {
 
-    public static final String APPLICATION_CONTEXT_REQUEST_ATTRIBUTE = "application-context";
+    protected final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
+
+    /** The name of the request attribute containing the current bean factory. */
+    public static final String BEAN_FACTORY_REQUEST_ATTRIBUTE = CocoonBeanFactory.class.getName();
 
     final private Resource avalonResource;
 
@@ -62,113 +60,54 @@ public class CocoonXmlWebApplicationContext
     protected final Context avalonContext;
     protected final ConfigurationInfo avalonConfiguration;
 
-    protected boolean destroyed = false;
-
-    protected final HierarchicalBeanFactory parentFactory;
-
-    public CocoonXmlWebApplicationContext(HierarchicalBeanFactory parent) {
-        this(null, parent, null, null, null);
+    public CocoonBeanFactory(BeanFactory parent) {
+        this(null, parent, null, null, null, null);
     }
 
-    public CocoonXmlWebApplicationContext(Resource           avalonResource,
-                                          HierarchicalBeanFactory parent,
-                                          Logger             avalonLogger,
-                                          ConfigurationInfo  avalonConfiguration,
-                                          Context            avalonContext) {
-        this.parentFactory = parent;
+    public CocoonBeanFactory(Resource                avalonResource,
+                             BeanFactory             parent,
+                             Logger                  avalonLogger,
+                             ConfigurationInfo       avalonConfiguration,
+                             Context                 avalonContext,
+                             Settings                settings) {
+        super(parent);
         this.avalonResource = avalonResource;
         this.avalonLogger = avalonLogger;
         this.avalonConfiguration = avalonConfiguration;
         this.avalonContext = avalonContext;
-        if ( parent instanceof CocoonXmlWebApplicationContext) {
-            ((CocoonXmlWebApplicationContext)parent).registerChildContext(this);
-            
+        
+        if ( this.avalonConfiguration != null ) {
+            AvalonPostProcessor processor = new AvalonPostProcessor(this.avalonConfiguration.getComponents(),
+                                                                    this.avalonContext,
+                                                                    this.avalonLogger,
+                                                                    this);
+            this.addBeanPostProcessor(processor);
+            this.registerSingleton(ConfigurationInfo.class.getName(), this.avalonConfiguration);
+        }
+        if ( this.avalonResource != null ) {
+            this.reader.loadBeanDefinitions(this.avalonResource);
+        }
+        // post processing
+        if ( settings != null ) {
+            (new CocoonSettingsConfigurer(settings)).postProcessBeanFactory(this);
         }
     }
 
+    /**
+     * @see org.apache.cocoon.core.container.spring.NameForAliasAware#getNameForAlias(java.lang.String)
+     */
     public String getNameForAlias(String alias) {
         if ( this.avalonConfiguration != null ) {
             final String value = this.avalonConfiguration.getRoleForName(alias);
             if ( value != null ) {
                 return value;
             }
-            if ( this.getParent() instanceof CocoonXmlWebApplicationContext ) {
-                return ((CocoonXmlWebApplicationContext)this.getParent()).getNameForAlias(alias);
+            if ( this.getParentBeanFactory() instanceof NameForAliasAware ) {
+                return ((NameForAliasAware)this.getParentBeanFactory()).getNameForAlias(alias);
             }
         }
         // default: we just return the alias
         return alias;
-    }
-    /**
-     * Register a child context as a listener. This allows a child context to destroy itself
-     * when the parent is destroyed.
-     * @param childContext The child context.
-     */
-    public void registerChildContext(CocoonXmlWebApplicationContext childContext) {
-        this.addListener(childContext);
-    }
-
-    /**
-     * @see org.springframework.context.support.AbstractApplicationContext#destroy()
-     */
-    public void destroy() {
-        if ( !this.destroyed ) {
-            this.destroyed = true;
-            super.destroy();
-        }
-    }
-
-    /**
-     * @see org.springframework.web.context.support.XmlWebApplicationContext#loadBeanDefinitions(org.springframework.beans.factory.xml.XmlBeanDefinitionReader)
-     */
-    protected void loadBeanDefinitions(XmlBeanDefinitionReader reader)
-    throws BeansException, IOException {
-        super.loadBeanDefinitions(reader);
-        if ( this.avalonResource != null ) {
-            reader.loadBeanDefinitions(this.avalonResource);
-        }
-    }
-
-    /**
-     * Create a new bean factory and add a bean post processor to handle
-     * Avalon components.
-     * @see org.springframework.context.support.AbstractRefreshableApplicationContext#createBeanFactory()
-     */
-    protected DefaultListableBeanFactory createBeanFactory() {
-        DefaultListableBeanFactory beanFactory = super.createBeanFactory();
-        if ( this.parentFactory != null ) {
-            beanFactory.setParentBeanFactory(this.parentFactory);
-        }
-        if ( this.avalonConfiguration != null ) {
-            AvalonPostProcessor processor = new AvalonPostProcessor(this.avalonConfiguration.getComponents(),
-                                                                    this.avalonContext,
-                                                                    this.avalonLogger,
-                                                                    beanFactory);
-            beanFactory.addBeanPostProcessor(processor);
-            beanFactory.registerSingleton(ConfigurationInfo.class.getName(), this.avalonConfiguration);
-        }
-        return beanFactory;
-    }
-
-    /**
-     * We don't have any default locations - this application context is a nested one
-     * which is configured through a sitemap. All possible configuration files are
-     * configured in the sitemap.
-     * @return An empty array.
-     */
-    protected String[] getDefaultConfigLocations() {
-        return new String[]{};
-    }
-
-    /**
-     * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
-     */
-    public void onApplicationEvent(ApplicationEvent event) {
-        if ( event instanceof ContextClosedEvent ) {
-            if (((ContextClosedEvent)event).getApplicationContext().equals(this.getParent()) ) {
-                this.destroy();
-            }
-        }
     }
 
     /**

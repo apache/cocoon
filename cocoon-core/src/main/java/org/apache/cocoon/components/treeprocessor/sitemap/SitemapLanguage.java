@@ -41,9 +41,9 @@ import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.core.Core;
-import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
-import org.apache.cocoon.core.container.spring.CocoonXmlWebApplicationContext;
+import org.apache.cocoon.core.container.spring.CocoonBeanFactory;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Environment;
@@ -106,7 +106,7 @@ public class SitemapLanguage
      * Build a component manager with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected BeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration config)
+    protected ConfigurableBeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration config)
     throws Exception {
 
         // Create the classloader, if needed.
@@ -128,8 +128,8 @@ public class SitemapLanguage
         // first, get the correct parent
         ConfigurableBeanFactory parentContext = this.beanFactory;
         final Request request = ContextHelper.getRequest(context);
-        if ( request.getAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE) != null ) {
-            parentContext = (ConfigurableBeanFactory)request.getAttribute(CocoonXmlWebApplicationContext.APPLICATION_CONTEXT_REQUEST_ATTRIBUTE);
+        if ( request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null ) {
+            parentContext = (ConfigurableBeanFactory)request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
         }
 
         final AvalonEnvironment ae = new AvalonEnvironment();
@@ -142,7 +142,7 @@ public class SitemapLanguage
         final ConfigurationInfo ci = ConfigReader.readConfiguration(c, parentConfigInfo, ae);
 
         final ConfigurableBeanFactory sitemapContext = 
-            ApplicationContextFactory.createApplicationContext(ae, ci, parentContext, false);
+            BeanFactoryUtil.createApplicationContext(ae, ci, parentContext, false);
         newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
         Logger sitemapLogger = sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
 

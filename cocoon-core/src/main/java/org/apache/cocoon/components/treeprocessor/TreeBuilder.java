@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  *
@@ -40,7 +40,7 @@ public interface TreeBuilder {
         }
     }
 
-    BeanFactory getApplicationContext();
+    ConfigurableBeanFactory getBeanFactory();
     
     ClassLoader getBuiltProcessorClassLoader();
 

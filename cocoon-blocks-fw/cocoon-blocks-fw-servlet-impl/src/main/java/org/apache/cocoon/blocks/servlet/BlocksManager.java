@@ -49,7 +49,7 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.container.spring.ApplicationContextFactory;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.servlet.CoreUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
@@ -87,7 +87,7 @@ public class BlocksManager
         }
         
         // FIXME - how do we get the settings object?
-        this.logger = ApplicationContextFactory.createRootLogger(this.getServletConfig().getServletContext(), new MutableSettings());
+        this.logger = BeanFactoryUtil.createRootLogger(this.getServletConfig().getServletContext(), new MutableSettings());
         this.getLogger().debug("Initializing the Blocks Manager");
         
         InputSource is = null;
