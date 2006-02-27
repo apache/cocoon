@@ -39,7 +39,7 @@ public class BlocksContext extends ServletContextWrapper {
      * @param servletContext
      */
     public BlocksContext(ServletContext servletContext, Blocks blocks) {
-        super(servletContext);
+        super.setServletContext(servletContext);
         this.blocks = blocks;
     }
 
