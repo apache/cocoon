@@ -42,6 +42,16 @@ public class XmlConfigCreator {
     protected static final String DOCTYPE =
         "<!DOCTYPE beans PUBLIC \"-//SPRING//DTD BEAN//EN\" \"http://www.springframework.org/dtd/spring-beans.dtd\">\n";
 
+    private final Logger logger;
+
+    public XmlConfigCreator() {
+        this(null);
+    }
+
+    public XmlConfigCreator(Logger log) {
+        this.logger = log;
+    }
+
     public String createConfig(ConfigurationInfo info, boolean addCocoon) 
     throws Exception {
         final Map components = info.getComponents();
@@ -197,6 +207,10 @@ public class XmlConfigCreator {
             final String role = (String)prI.next();
             final Object pooledInfo = components.remove(role);
             components.put(role + "Pooled", pooledInfo);
+        }
+        if ( this.logger != null && this.logger.isDebugEnabled() ) {
+            this.logger.debug("Created Spring xml configuration");
+            this.logger.debug(buffer.toString());
         }
         return buffer.toString();
     }

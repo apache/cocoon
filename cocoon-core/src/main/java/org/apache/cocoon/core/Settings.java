@@ -25,6 +25,9 @@ import java.util.List;
  */
 public interface Settings extends BaseSettings, DynamicSettings {
 
+    /** The role to lookup this bean. */
+    String ROLE = Settings.class.getName();
+
     /**
      * Get the value of a property.
      * @param key The name of the property.

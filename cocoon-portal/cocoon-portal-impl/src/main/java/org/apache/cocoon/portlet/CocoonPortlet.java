@@ -163,7 +163,7 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
-        this.settings = this.coreUtil.getCore().getSettings();
+        this.settings = this.coreUtil.getSettings();
         this.requestFactory = new RequestFactory(this.settings.isAutosaveUploads(),
                 new File(this.settings.getUploadDirectory()),
                 this.settings.isAllowOverwrite(),

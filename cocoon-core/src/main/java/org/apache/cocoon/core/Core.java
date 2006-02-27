@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.core;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,17 +56,13 @@ public class Core {
     /** The component context. */
     private final Context context;
 
-    private final Settings settings;
-
     /**
      * Constructor
      * The core object is created by the {@link CoreUtil} class. Never construct
      * a core object yourself (apart from testing of course)!
-     * @param s The settings
      * @param c The context
      */
-    public Core(Settings s, Context c) {
-        this.settings = s;
+    public Core(Context c) {
         this.context = c;
     }
 
@@ -116,13 +111,6 @@ public class Core {
     }
 
     /**
-     * Return the settings.
-     */
-    public Settings getSettings() {
-        return this.settings;
-    }
-
-    /**
      * Update the dynamic settings at runtime.
      * @param dynSettings
      */
@@ -148,39 +136,6 @@ public class Core {
      */
     public Map getCurrentObjectModel() {
         return ContextHelper.getObjectModel(this.context);
-    }
-
-    /**
-     * Return the work directory.
-     */
-    public File getWorkDirectory() {
-        try {
-            return (File)this.context.get(Constants.CONTEXT_WORK_DIR);
-        } catch (ContextException ce) {
-            throw new CoreResourceNotFoundException("Unable to get the working directory from the context.", ce);
-        }        
-    }
-
-    /**
-     * Return the upload directory.
-     */
-    public File getUploadDirectory() {
-        try {
-            return (File)this.context.get(Constants.CONTEXT_UPLOAD_DIR);
-        } catch (ContextException ce) {
-            throw new CoreResourceNotFoundException("Unable to get the upload directory from the context.", ce);
-        }        
-    }
-
-    /**
-     * Return the cache directory.
-     */
-    public File getCacheDirectory() {
-        try {
-            return (File)this.context.get(Constants.CONTEXT_CACHE_DIR);
-        } catch (ContextException ce) {
-            throw new CoreResourceNotFoundException("Unable to get the cache directory from the context.", ce);
-        }        
     }
 
     /**

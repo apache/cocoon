@@ -20,7 +20,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 
 /**
  *
@@ -36,12 +36,12 @@ public class MountNodeBuilder
     }
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
-        final Core core = (Core)manager.lookup(Core.ROLE);
+        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
         MountNode node = new MountNode(
             VariableResolverFactory.getResolver(config.getAttribute("uri-prefix"), manager),
             VariableResolverFactory.getResolver(config.getAttribute("src"), manager),
             this.treeBuilder.getProcessor().getWrappingProcessor(),
-            config.getAttributeAsBoolean("check-reload", core.getSettings().isReloadingEnabled("sitemap")),
+            config.getAttributeAsBoolean("check-reload", settings.isReloadingEnabled("sitemap")),
             config.getAttributeAsBoolean("pass-through", false)
         );
   
