@@ -42,9 +42,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreResourceNotFoundException;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.AliasComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
@@ -109,9 +107,6 @@ public class CoreServiceManager
 
     protected ComponentEnvironment componentEnv;
 
-    /** The settings */
-    private Settings settings;
-
     /** The location where this manager is defined */
     protected String location;
 
@@ -171,7 +166,6 @@ public class CoreServiceManager
     public void contextualize( final Context context ) 
     throws ContextException {
         this.context = context;
-        this.settings = ((Core)context.get(Core.ROLE)).getSettings();
     }
 
     /**
@@ -825,7 +819,7 @@ public class CoreServiceManager
                 // load it and store it in the read set
                 Configuration includeConfig = null;
                 try {
-                    ConfigurationBuilder builder = new ConfigurationBuilder(this.settings);
+                    ConfigurationBuilder builder = new ConfigurationBuilder(null);
                     includeConfig = builder.build(src.getInputStream(), uri);
                 } catch (Exception e) {
                     throw new ConfigurationException("Cannot load '" + uri + "' at " + includeStatement.getLocation(), e);

@@ -101,7 +101,7 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
                 false);
         
         // The Core object is needed for the Sitemap and various other Cocoon components
-        Core core = new Core(settings, newContext);
+        Core core = new Core(newContext);
         coreServicemanager.addInstance(Core.ROLE, core);
         
         // For the first block that is setup, source factories need to be setup before
