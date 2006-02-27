@@ -49,8 +49,6 @@ import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.servlet.CoreUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;

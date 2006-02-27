@@ -49,7 +49,6 @@ public class SitemapServlet
     implements Configurable, LogEnabled, Serviceable { 
 
     private String containerEncoding;
-    private String contextURL;
 
     private Logger logger;
     private ServiceManager serviceManager;
@@ -107,7 +106,6 @@ public class SitemapServlet
             sitemapPath = "/" + sitemapPath;
 
         Context context = CoreUtil.createContext(config, core.getSettings(), sitemapPath);
-        this.contextURL = CoreUtil.getContextURL(this.getServletContext(), sitemapPath);
         
         try {
             this.processor = (Processor) ClassUtils.newInstance(TreeProcessor.class.getName());
@@ -151,7 +149,6 @@ public class SitemapServlet
         }
         HttpEnvironment env =
             new HttpEnvironment(uri,
-                    this.contextURL,
                     request,
                     response,
                     this.getServletContext(),

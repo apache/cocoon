@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +38,6 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
@@ -111,17 +108,15 @@ public class CocoonWrapper {
 
         WrapperBootstrapper env = this.getBootstrapEnvironment();
         env.setContextDirectory(contextDir);
-        env.setEnvironmentLogger(this.log);
-        env.setEnvironmentContext(cliContext);
         env.setWorkingDirectory(this.work);
         env.setCachingDirectory(cacheDir);
         env.setBootstrapLogLevel(this.logLevel);
         env.setLoggingConfiguration(this.logKit);
         env.setConfigFile(this.conf);
         env.setLoadClassList(this.classList);
-        this.coreUtil = new CoreUtil(env, cliContext);
+        this.coreUtil = new CoreUtil(cliContext, env);
         this.cocoon = this.coreUtil.createCocoon();
-        this.log = env.logger;
+        this.log = this.coreUtil.getRootLogger();
         this.initialized = true;
     }
 
@@ -571,10 +566,7 @@ public class CocoonWrapper {
      */
     public static class WrapperBootstrapper implements BootstrapEnvironment {
 
-        public Logger logger;
-
         protected Logger environmentLogger;
-        protected Context environmentContext;
         protected String workingDirectory;
         protected String bootstrapLogLevel;
         protected String loggingConfiguration;
@@ -582,14 +574,6 @@ public class CocoonWrapper {
         protected String contextDirectory;
         protected String configFile;
         protected List loadClassList;
-
-        public void setEnvironmentLogger(Logger log) {
-            this.environmentLogger = log;
-        }
-
-        public void setEnvironmentContext(Context context) {
-            this.environmentContext = context;
-        }
 
         public void setWorkingDirectory(File dir) {
             this.workingDirectory = dir.getAbsolutePath();
@@ -644,37 +628,5 @@ public class CocoonWrapper {
                 }
             }
         }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
-         */
-        public URL getConfigFile(String configFileName) throws Exception {
-            return new File(configFileName).toURL();
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getContextURL()
-         */
-        public String getContextURL() {
-            try {
-                return new File(this.contextDirectory).toURL().toExternalForm();
-            } catch (MalformedURLException mue) {
-                return "file://" + this.contextDirectory;
-            }
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#getEnvironmentContext()
-         */
-        public Context getEnvironmentContext() {
-            return this.environmentContext;
-        }
-
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#setLogger(org.apache.avalon.framework.logger.Logger)
-         */
-        public void setLogger(Logger rootLogger) {
-            this.logger = rootLogger;
-        }        
     }
 }
