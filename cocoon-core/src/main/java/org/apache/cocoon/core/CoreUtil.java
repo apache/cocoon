@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
@@ -52,6 +50,7 @@ import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ComponentContext;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
@@ -95,8 +94,8 @@ public class CoreUtil {
     /** The core object. */
     protected Core core;
 
-    /** The servlet context. */
-    protected final ServletContext servletContext;
+    /** The environment context. */
+    protected final Context environmentContext;
 
     /** The container. */
     protected ConfigurableBeanFactory container;
@@ -155,13 +154,24 @@ public class CoreUtil {
     
     /**
      * Setup a new instance.
-     * @param environment The hook back to the environment.
+     * @param context     The environment context.
      * @throws Exception
      */
-    public CoreUtil(BootstrapEnvironment environment,
-                    ServletContext context)
+    public CoreUtil(Context              context)
     throws Exception {
-        this.servletContext = context;
+        this(context, null);
+    }
+
+    /**
+     * Setup a new instance.
+     * @param context     The environment context.
+     * @param environment The optional hook back to the environment.
+     * @throws Exception
+     */
+    public CoreUtil(Context              context,
+                    BootstrapEnvironment environment)
+    throws Exception {
+        this.environmentContext = context;
         this.env = environment;
         this.init();
     }
@@ -174,17 +184,19 @@ public class CoreUtil {
         // add root url
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL,
-                           new URL(this.env.getContextURL()));
+                           new URL(this.getContextUrl()));
         } catch (MalformedURLException ignore) {
             // we simply ignore this
         }
 
         // add environment context
         this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT,
-                            this.env.getEnvironmentContext());
+                            this.environmentContext);
 
         // now add environment specific information
-        this.env.configure(appContext);
+        if ( this.env != null ) {
+            this.env.configure(appContext);
+        }
 
         // create settings
         this.settings = this.createSettings();
@@ -204,13 +216,12 @@ public class CoreUtil {
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
-        this.log = BeanFactoryUtil.createRootLogger(servletContext,
-                                                              this.settings);
-        this.env.setLogger(this.log);
+        this.log = BeanFactoryUtil.createRootLogger(this.environmentContext,
+                                                    this.settings);
 
         // Output some debug info
         if (this.log.isDebugEnabled()) {
-            this.log.debug("Context URL: " + this.env.getContextURL());
+            this.log.debug("Context URL: " + this.getContextUrl());
             if (workDirParam != null) {
                 this.log.debug("Using work-directory " + workDir);
             } else {
@@ -257,7 +268,7 @@ public class CoreUtil {
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         // update configuration
-        final URL u = this.env.getConfigFile(this.settings.getConfiguration());
+        final URL u = this.getConfigFile(this.settings.getConfiguration());
         this.settings.setConfiguration(u.toExternalForm());
         this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
 
@@ -286,6 +297,10 @@ public class CoreUtil {
      */
     public Core getCore() {
         return this.core;
+    }
+
+    public Logger getRootLogger() {
+        return this.log;
     }
 
     /**
@@ -326,13 +341,13 @@ public class CoreUtil {
     protected MutableSettings createSettings() {
         // get the running mode
         final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
-        this.servletContext.log("Running in mode: " + mode);
+        this.environmentContext.log("Running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
         // we need our own resolver
-        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.servletContext));
+        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.environmentContext));
 
         // now read all properties from the properties directory
         this.readProperties("context://WEB-INF/properties", s, resolver);
@@ -347,12 +362,14 @@ public class CoreUtil {
                 PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
                 s.fill(provider.getProperties());
             } catch (Exception ignore) {
-                this.servletContext.log("Unable to get property provider for class " + className, ignore);
-                this.servletContext.log("Continuing initialization.");            
+                this.environmentContext.log("Unable to get property provider for class " + className, ignore);
+                this.environmentContext.log("Continuing initialization.");            
             }
         }
         // fill from the environment configuration, like web.xml etc.
-        env.configure(s);
+        if ( this.env != null ) {
+            env.configure(s);
+        }
 
         // read additional properties file
         String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
@@ -366,15 +383,15 @@ public class CoreUtil {
             }
         }
         if ( additionalPropertyFile != null ) {
-            this.servletContext.log("Reading user settings from '" + additionalPropertyFile + "'");
+            this.environmentContext.log("Reading user settings from '" + additionalPropertyFile + "'");
             final Properties p = new Properties();
             try {
                 FileInputStream fis = new FileInputStream(additionalPropertyFile);
                 p.load(fis);
                 fis.close();
             } catch (IOException ignore) {
-                this.servletContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                this.servletContext.log("Continuing initialization.");
+                this.environmentContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                this.environmentContext.log("Continuing initialization.");
             }
         }
         // now overwrite with system properties
@@ -417,7 +434,7 @@ public class CoreUtil {
                     final Source src = (Source) c.next();
                     if ( src.getURI().endsWith(".properties") ) {
                         final InputStream propsIS = src.getInputStream();
-                        this.servletContext.log("Reading settings from '" + src.getURI() + "'.");
+                        this.environmentContext.log("Reading settings from '" + src.getURI() + "'.");
                         final Properties p = new Properties();
                         p.load(propsIS);
                         propsIS.close();
@@ -426,8 +443,8 @@ public class CoreUtil {
                 }
             }
         } catch (IOException ignore) {
-            this.servletContext.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
-            this.servletContext.log("Continuing initialization.");            
+            this.environmentContext.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
+            this.environmentContext.log("Continuing initialization.");            
         } finally {
             resolver.release(directory);
         }
@@ -617,13 +634,100 @@ public class CoreUtil {
         env.context = this.appContext;
         env.core = this.core;
         env.logger = this.log;
-        env.servletContext = this.env.getEnvironmentContext();
+        env.servletContext = this.environmentContext;
         env.settings = this.core.getSettings();
         ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
         ConfigurableBeanFactory mainContext = BeanFactoryUtil.createApplicationContext(env, result, rootContext, true);
 
         return mainContext;
+    }
+    /**
+     * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
+     */
+    protected URL getConfigFile(final String configFileName)
+    throws Exception {
+        final String usedFileName;
+
+        if (configFileName == null) {
+            if (this.log.isWarnEnabled()) {
+                this.log.warn("No configuration for Cocoon configuration file specified, attempting to use '/WEB-INF/cocoon.xconf'");
+            }
+            usedFileName = "/WEB-INF/cocoon.xconf";
+        } else {
+            usedFileName = configFileName;
+        }
+
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("Using configuration file: " + usedFileName);
+        }
+
+        URL result;
+        try {
+            // test if this is a qualified url
+            if (usedFileName.indexOf(':') == -1) {
+                result = this.environmentContext.getResource(usedFileName);
+            } else {
+                result = new URL(usedFileName);
+            }
+        } catch (Exception mue) {
+            String msg = "Setting for 'configurations' is invalid : " + usedFileName;
+            this.log.error(msg, mue);
+            throw new CoreInitializationException(msg, mue);
+        }
+
+        if (result == null) {
+            File resultFile = new File(usedFileName);
+            if (resultFile.isFile()) {
+                try {
+                    result = resultFile.getCanonicalFile().toURL();
+                } catch (Exception e) {
+                    String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
+                    this.log.error(msg, e);
+                    throw new CoreInitializationException(msg, e);
+                }
+            }
+        }
+
+        if (result == null) {
+            String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
+            this.log.error(msg);
+            throw new CoreInitializationException(msg);
+        }
+        return result;
+    }
+
+    protected String getContextUrl() {
+        String servletContextURL;
+        String servletContextPath = this.environmentContext.getRealPath("/");
+        String path = servletContextPath;
+
+        if (path == null) {
+            // Try to figure out the path of the root from that of WEB-INF/web.xml
+            try {
+                path = this.environmentContext.getResource("/WEB-INF/web.xml").toString();
+            } catch (MalformedURLException me) {
+                throw new CoreInitializationException("Unable to get resource 'WEB-INF/web.xml'.", me);
+            }
+            path = path.substring(0, path.length() - "WEB-INF/web.xml".length());
+        }
+        try {
+            if (path.indexOf(':') > 1) {
+                servletContextURL = path;
+            } else {
+                servletContextURL = new File(path).toURL().toExternalForm();
+            }
+        } catch (MalformedURLException me) {
+            // VG: Novell has absolute file names starting with the
+            // volume name which is easily more then one letter.
+            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
+            try {
+                servletContextURL = new File(path).toURL().toExternalForm();
+            } catch (MalformedURLException ignored) {
+                throw new CoreInitializationException("Unable to determine servlet context URL.", me);
+            }
+        }
+        return servletContextURL;
     }
 
     /**
@@ -739,9 +843,9 @@ public class CoreUtil {
     }
 
     protected static final class LoggerWrapper implements Logger {
-        private final ServletContext env;
+        private final Context env;
 
-        public LoggerWrapper(ServletContext env) {
+        public LoggerWrapper(Context env) {
             this.env = env;
         }
 

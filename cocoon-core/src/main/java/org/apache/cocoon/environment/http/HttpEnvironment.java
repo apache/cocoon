@@ -52,7 +52,6 @@ public class HttpEnvironment extends AbstractEnvironment {
      * and HttpServletResponse objects
      */
     public HttpEnvironment(String uri,
-                           String root,
                            HttpServletRequest req,
                            HttpServletResponse res,
                            ServletContext servletContext,

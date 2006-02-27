@@ -15,40 +15,20 @@
  */
 package org.apache.cocoon.core;
 
-import java.net.URL;
-
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.environment.Context;
 
 public class TestBootstrapEnvironment
     implements BootstrapEnvironment {
     
     private final String configuration;
-    private final String contextPath;
-    public Logger logger;
-    private final Context environmentContext;
     private String processorClassName;
 
     public TestBootstrapEnvironment(String configuration,
-                                    String contextPath,
-                                    Context environmentContext,
                                     String processorClassName) {
         this.configuration = configuration;
-        this.contextPath = contextPath;
-        this.environmentContext = environmentContext;
         this.processorClassName = processorClassName;
-    }
-
-    /**
-     * Pass the root logger back to the environment. As soon as the
-     * logging system is set up, this method is called.
-     * @param rootLogger The root logger.
-     */
-    public void setLogger(Logger rootLogger) {
-        this.logger = rootLogger;
     }
 
     /**
@@ -62,27 +42,4 @@ public class TestBootstrapEnvironment
 
     public void configure(DefaultContext context) {
     }
-
-    public Context getEnvironmentContext() {
-        return this.environmentContext;
-    }
-    
-    /**
-     * Returns the URL to the application context.
-     */
-    public String getContextURL() {
-        return this.contextPath;
-    }
-
-    /**
-     * Set the ConfigFile for the Cocoon object.
-     *
-     * @param configFileName The file location for the cocoon.xconf
-     *
-     * @throws Exception
-     */
-    public URL getConfigFile(String configFileName) throws Exception {
-        return new URL(this.contextPath + configFileName);
-    }
-
 }
