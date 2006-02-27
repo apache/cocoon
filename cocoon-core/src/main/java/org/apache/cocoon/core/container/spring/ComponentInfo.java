@@ -94,7 +94,7 @@ public final class ComponentInfo {
      * Create a new info.
      */
     public ComponentInfo() {
-        this.model = MODEL_PRIMITIVE;
+        this.model = MODEL_UNKNOWN;
     }
 
     /**

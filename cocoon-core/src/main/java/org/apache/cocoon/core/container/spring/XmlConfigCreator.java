@@ -99,6 +99,8 @@ public class XmlConfigCreator {
                         current.setModel(ComponentInfo.MODEL_SINGLETON);
                     } else if ( Poolable.class.isAssignableFrom(serviceClass) ) {
                         current.setModel(ComponentInfo.MODEL_POOLED);
+                    } else {
+                        current.setModel(ComponentInfo.MODEL_PRIMITIVE);
                     }
                 }
                 if ( current.getModel() == ComponentInfo.MODEL_POOLED ) {
