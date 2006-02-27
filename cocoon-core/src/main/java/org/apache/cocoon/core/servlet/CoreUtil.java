@@ -232,7 +232,7 @@ public class CoreUtil {
         DefaultContext appContext = new ComponentContext();
         CoreUtil.addSourceResolverContext(appContext, servletConfig, knownFile);
         CoreUtil.addSettingsContext(appContext, settings);
-        CoreUtil.addCoreContext(appContext, new Core(settings, appContext));
+        CoreUtil.addCoreContext(appContext, new Core(appContext));
         return appContext;
     }
 

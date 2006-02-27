@@ -31,7 +31,6 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -123,9 +122,9 @@ public class StatusGenerator extends ServiceableGenerator
     protected Context context;
 
     /**
-     * The Cocoon core.
+     * The settings.
      */
-    protected Core core;
+    protected Settings settings;
 
     /**
      * The StoreJanitor used to get cache statistics
@@ -174,7 +173,7 @@ public class StatusGenerator extends ServiceableGenerator
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        this.core = (Core) this.manager.lookup(Core.ROLE);
+        this.settings = (Settings) this.manager.lookup(Settings.ROLE);
 
         if (this.manager.hasService(StoreJanitor.ROLE)) {
             this.storeJanitor = (StoreJanitor) manager.lookup(StoreJanitor.ROLE);
@@ -213,11 +212,11 @@ public class StatusGenerator extends ServiceableGenerator
      */
     public void dispose() {
         if (this.manager != null) {
-            this.manager.release(this.core);
+            this.manager.release(this.settings);
             this.manager.release(this.storePersistent);
             this.manager.release(this.storeJanitor);
             this.manager.release(this.continuationsManager);
-            this.core = null;
+            this.settings = null;
             this.storePersistent = null;
             this.storeJanitor = null;
             this.continuationsManager = null;
@@ -276,7 +275,7 @@ public class StatusGenerator extends ServiceableGenerator
         atts.addCDATAAttribute(NAMESPACE, "date", dateTime);
         atts.addCDATAAttribute(NAMESPACE, "host", localHost);
         atts.addCDATAAttribute(NAMESPACE, "cocoon-version", Constants.VERSION);
-        dateTime = DateFormat.getDateTimeInstance().format(new Date(this.core.getSettings().getCreationTime()));
+        dateTime = DateFormat.getDateTimeInstance().format(new Date(this.settings.getCreationTime()));
         atts.addCDATAAttribute(NAMESPACE, "creation-time", dateTime);
         atts.addCDATAAttribute(NAMESPACE, "build-info", Constants.BUILD_INFO);
         super.contentHandler.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
@@ -468,7 +467,7 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     private void genSettings() throws SAXException {
-        final Settings s = core.getSettings();
+        final Settings s = this.settings;
         this.startGroup("Base Settings");
 
         this.addValue("Running mode", s.getProperty(Settings.PROPERTY_RUNNING_MODE,

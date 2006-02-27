@@ -309,7 +309,7 @@ public class CoreUtil {
      * @return A new core object.
      */
     protected Core createCore() {
-        final Core c = new Core(this.settings, this.appContext);
+        final Core c = new Core(this.appContext);
         return c;
     }
 
@@ -635,7 +635,7 @@ public class CoreUtil {
         env.core = this.core;
         env.logger = this.log;
         env.servletContext = this.environmentContext;
-        env.settings = this.core.getSettings();
+        env.settings = this.settings;
         ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootApplicationContext(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
         ConfigurableBeanFactory mainContext = BeanFactoryUtil.createApplicationContext(env, result, rootContext, true);

@@ -132,7 +132,7 @@ public class CocoonServlet extends HttpServlet {
 
         this.containerEncoding = this.getInitParameter("container-encoding", "ISO-8859-1");
         this.requestFactory = new RequestFactory(coreUtil.getSettings().isAutosaveUploads(),
-                                                 new File(coreUtil.getCore().getSettings().getUploadDirectory()),
+                                                 new File(coreUtil.getSettings().getUploadDirectory()),
                                                  coreUtil.getSettings().isAllowOverwrite(),
                                                  coreUtil.getSettings().isSilentlyRename(),
                                                  coreUtil.getSettings().getMaxUploadSize(),

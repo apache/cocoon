@@ -35,7 +35,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
-import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.servlet.CoreUtil;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -85,9 +85,9 @@ public class SitemapServlet
             this.containerEncoding = "ISO-8859-1";
         }
         
-        Core core = null;
+        Settings settings = null;
         try {
-            core = (Core) this.serviceManager.lookup(Core.ROLE);
+            settings = (Settings) this.serviceManager.lookup(Settings.ROLE);
         } catch (ServiceException e) {
             throw new ServletException("Could not find a Core object from the parent service manager", e);
         }
@@ -105,7 +105,7 @@ public class SitemapServlet
         if (sitemapPath != null && sitemapPath.charAt(0) != '/')
             sitemapPath = "/" + sitemapPath;
 
-        Context context = CoreUtil.createContext(config, core.getSettings(), sitemapPath);
+        Context context = CoreUtil.createContext(config, settings, sitemapPath);
         
         try {
             this.processor = (Processor) ClassUtils.newInstance(TreeProcessor.class.getName());
