@@ -35,9 +35,9 @@ public class ServletContextWrapper implements ServletContext {
     protected ServletContext servletContext;
 
     /**
-     * @param servletContext
+     * @param servletContext The servletContext to set.
      */
-    public ServletContextWrapper(ServletContext servletContext) {
+    public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 

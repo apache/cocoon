@@ -98,7 +98,8 @@ public class BlockManager
 
         getLogger().debug("Initializing new Block Manager: " + this.blockWiring.getId());
 
-        this.blockContext = new BlockContext(this.getServletContext());
+        this.blockContext = new BlockContext();
+        this.blockContext.setServletContext(this.getServletContext());
         this.blockContext.setContextURL(this.contextURL);
         this.blockContext.setMountPath(this.blockWiring.getMountPath());
         this.blockContext.setConnections(this.blockWiring.getConnections());
