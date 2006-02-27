@@ -242,6 +242,10 @@ public abstract class DefaultTreeBuilder
     public ConfigurableBeanFactory getBeanFactory() {
         return this.itsBeanFactory;
     }
+    
+    public ServiceManager getServiceManager() {
+        return this.itsManager;
+    }
 
     public ClassLoader getBuiltProcessorClassLoader() {
         return this.itsClassLoader;
@@ -359,7 +363,7 @@ public abstract class DefaultTreeBuilder
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
             }
-            componentConfig = new DefaultConfiguration("", "");
+            //componentConfig = new DefaultConfiguration("", "");
         }
 
         // Context and manager and classloader for the sitemap we build
@@ -371,9 +375,15 @@ public abstract class DefaultTreeBuilder
 //        currentThread.setContextClassLoader(this.itsClassLoader);
         this.itsClassLoader = Thread.currentThread().getContextClassLoader();
 
-        this.itsBeanFactory = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
-        this.itsComponentInfo = (ProcessorComponentInfo)this.itsBeanFactory.getBean(ProcessorComponentInfo.ROLE);
-        this.itsManager = (ServiceManager)this.itsBeanFactory.getBean(ServiceManager.class.getName());
+        // Only create an sitemap internal component manager if there really is a configuration
+        // FIXME: Internal configurations doesn't work in a non bean factory environment
+        if (componentConfig != null) {
+            this.itsBeanFactory = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
+            this.itsManager = (ServiceManager)this.itsBeanFactory.getBean(ServiceManager.class.getName());
+        } else {
+            this.itsManager = manager;
+        }
+        this.itsComponentInfo = (ProcessorComponentInfo)this.itsManager.lookup(ProcessorComponentInfo.ROLE);
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(),
                                              this.itsContext,

@@ -138,7 +138,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }    
     
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ConfigurableBeanFactory beanFactory, 
+    public void setProcessorData(ConfigurableBeanFactory beanFactory,
+                                 ServiceManager manager,
                                  ClassLoader classloader, 
                                  ProcessingNode rootNode, 
                                  List disposableNodes,
@@ -149,7 +150,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
 
         this.beanFactory = beanFactory;
-        this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
+        this.manager = manager;
         this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
@@ -191,7 +192,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
                             String r = childs[m].getName();
-                            if (this.beanFactory instanceof NameForAliasAware)
+                            // FIXME: No alias handling in non bean context environment
+                            if (this.beanFactory != null && this.beanFactory instanceof NameForAliasAware)
                                 r = ((NameForAliasAware)this.beanFactory).getNameForAlias(r);
                             this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                              (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));

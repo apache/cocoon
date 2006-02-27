@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
@@ -41,6 +42,8 @@ public interface TreeBuilder {
     }
 
     ConfigurableBeanFactory getBeanFactory();
+    
+    ServiceManager getServiceManager();
     
     ClassLoader getBuiltProcessorClassLoader();
 
