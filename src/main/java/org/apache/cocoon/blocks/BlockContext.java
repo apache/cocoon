@@ -47,10 +47,6 @@ public class BlockContext extends ServletContextWrapper {
     private Dictionary connections;
     private Dictionary properties;
     
-    public BlockContext(ServletContext parentContext) {
-        super(parentContext);
-    }
-
     /*
      * (non-Javadoc)
      * 
