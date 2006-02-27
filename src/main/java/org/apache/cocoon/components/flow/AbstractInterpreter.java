@@ -33,7 +33,6 @@ import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Redirector;
@@ -121,9 +120,7 @@ public abstract class AbstractInterpreter
     public void service(ServiceManager sm) throws ServiceException {
         this.manager = sm;
         this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
-        final Core core = (Core)this.manager.lookup(Core.ROLE);
-        this.settings = core.getSettings();
-        this.manager.release(core);
+        this.settings = (Settings)this.manager.lookup(Settings.ROLE);
     }
 
     /**

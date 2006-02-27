@@ -23,7 +23,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.TraxErrorHandler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
@@ -157,12 +157,12 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
-        final Core core = (Core)manager.lookup(Core.ROLE);
-        String defaultEncoding  = core.getSettings().getFormEncoding();
+        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
+        String defaultEncoding  = settings.getFormEncoding();
         if (defaultEncoding != null) {
             this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);
         }
-        manager.release(core);
+        manager.release(settings);
     }
 
     /**

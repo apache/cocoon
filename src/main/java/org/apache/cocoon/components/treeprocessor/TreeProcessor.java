@@ -47,7 +47,7 @@ import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
-import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
@@ -89,8 +89,8 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     protected ServiceManager manager;
 
-    /** The core object. */
-    protected Core core;
+    /** The settings. */
+    protected Settings settings;
 
     /** Last modification time */
     protected long lastModified = 0;
@@ -150,7 +150,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
-        this.core = (Core) this.manager.lookup(Core.ROLE);
+        this.settings = (Settings) this.manager.lookup(Settings.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
@@ -187,7 +187,7 @@ public class TreeProcessor extends AbstractLogEnabled
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
-        this.core = (Core) this.manager.lookup(Core.ROLE);
+        this.settings = (Settings) this.manager.lookup(Settings.ROLE);
     }
 
     /**
@@ -231,10 +231,10 @@ public class TreeProcessor extends AbstractLogEnabled
     throws ConfigurationException {
 
         this.checkReload = config.getAttributeAsBoolean("check-reload",
-                             this.core.getSettings().isReloadingEnabled("sitemap"));
+                             this.settings.isReloadingEnabled("sitemap"));
 
         // Reload check delay. Default is 1 second.
-        this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", this.core.getSettings().getReloadDelay("sitemap"));
+        this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", this.settings.getReloadDelay("sitemap"));
 
         String fileName = config.getAttribute("file", "sitemap.xmap");
         
@@ -750,10 +750,10 @@ public class TreeProcessor extends AbstractLogEnabled
             }
             this.manager.release(this.fam);
             this.manager.release(this.resolver);
-            this.manager.release(this.core);
+            this.manager.release(this.settings);
             this.resolver = null;
             this.manager = null;
-            this.core = null;
+            this.settings = null;
         }
     }
 

@@ -287,7 +287,7 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.logger = this.logger;
         avalonEnv.context = this.context;
         avalonEnv.settings = new MutableSettings();
-        avalonEnv.core = new Core(avalonEnv.settings, avalonEnv.context);
+        avalonEnv.core = new Core(avalonEnv.context);
         avalonEnv.servletContext = new MockContext();
 
         this.rootContext = BeanFactoryUtil.createRootApplicationContext(avalonEnv);

@@ -73,7 +73,7 @@ public class BeanFactoryUtil {
                                                                    BeanFactory        parent,
                                                                    boolean            addCocoon)
     throws Exception {
-        final String xmlConfig = (new XmlConfigCreator()).createConfig(info, addCocoon);
+        final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
         Logger logger = env.logger;
         if ( info.rootLogger != null ) {
