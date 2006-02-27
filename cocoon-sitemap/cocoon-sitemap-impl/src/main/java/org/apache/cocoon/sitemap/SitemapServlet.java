@@ -89,7 +89,7 @@ public class SitemapServlet
         try {
             settings = (Settings) this.serviceManager.lookup(Settings.ROLE);
         } catch (ServiceException e) {
-            throw new ServletException("Could not find a Core object from the parent service manager", e);
+            throw new ServletException("Could not find a Settings object from the parent service manager", e);
         }
         
         String sitemapPath = null;
