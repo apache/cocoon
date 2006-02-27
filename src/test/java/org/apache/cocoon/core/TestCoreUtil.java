@@ -22,7 +22,7 @@ import org.apache.cocoon.environment.mock.MockContext;
 public class TestCoreUtil extends CoreUtil {
 
     public TestCoreUtil(BootstrapEnvironment env) throws Exception {
-        super(env, new MockContext());
+        super(new MockContext(), env);
         this.classloader = TestCoreUtil.class.getClassLoader();
     }
 

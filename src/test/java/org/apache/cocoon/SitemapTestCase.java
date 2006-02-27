@@ -76,8 +76,6 @@ public class SitemapTestCase extends TestCase {
         this.classDir = this.getClassDirURL().toExternalForm();
         BootstrapEnvironment env = 
             new TestBootstrapEnvironment(this.getConfiguration(),
-                                         this.classDir,
-                                         environmentContext,
                                          this.processorClassName);
 
         this.coreUtil = new TestCoreUtil(env);
