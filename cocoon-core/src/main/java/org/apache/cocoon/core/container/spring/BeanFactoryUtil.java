@@ -31,7 +31,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.CoreInitializationException;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
@@ -108,7 +107,6 @@ public class BeanFactoryUtil {
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);
         factory.registerSingleton(Context.class.getName(), env.context);
         factory.registerSingleton(Logger.class.getName(), env.logger);
-        factory.registerSingleton(Core.class.getName(), env.core);
         factory.registerSingleton(Settings.class.getName(), env.settings);
         return factory;
     }

@@ -33,10 +33,8 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.sitemap.Sitemap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -62,9 +60,6 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
 
     /** The base URL */
     protected URL baseURL;
-
-    /** The core */
-    protected Core core;
 
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -197,7 +192,6 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
             this.customResolver = (org.apache.excalibur.source.SourceResolver)
                      this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE+"/Cocoon");
         }
-        this.core = (Core)this.manager.lookup(Core.ROLE);
     }
 
     /**
@@ -207,8 +201,6 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
         if ( this.manager != null ) {
             this.manager.release( this.customResolver );
             this.customResolver = null;
-            this.manager.release(this.core);
-            this.core = null;
             this.manager = null;
         }
     }
@@ -217,11 +209,7 @@ implements SourceResolver, Contextualizable, Serviceable, Disposable, ThreadSafe
      * Get the component locator.
      */
     protected ServiceManager getComponentLocator() {
-        ServiceManager l = null;
-        final Sitemap sitemap = this.core.getCurrentSitemap();
-        if ( sitemap != null ) {
-            l = sitemap.getComponentLocator();
-        }
+        ServiceManager l = EnvironmentHelper.getSitemapServiceManager();
         if ( l == null ) {
             l = this.manager;
         }

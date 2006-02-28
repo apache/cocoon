@@ -26,8 +26,11 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.core.Core;
-import org.apache.cocoon.portal.*;
+import org.apache.cocoon.portal.LinkService;
+import org.apache.cocoon.portal.PortalComponentManager;
+import org.apache.cocoon.portal.PortalManager;
+import org.apache.cocoon.portal.PortalRuntimeException;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
@@ -68,9 +71,6 @@ public class DefaultPortalComponentManager
 
     protected final Context context;
 
-    /** The Cocoon core. */
-    protected Core core;
-
     /**
      * Create a new portal component manager. Each portal has a own
      * component manager that manages all central components for this
@@ -89,7 +89,6 @@ public class DefaultPortalComponentManager
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.core = (Core)this.manager.lookup(Core.ROLE);
     }
 
     /**
@@ -161,8 +160,6 @@ public class DefaultPortalComponentManager
             this.eventManager = null;
             this.manager.release(this.portalManager);
             this.portalManager = null;
-            this.manager.release(this.core);
-            this.core = null;
             this.manager = null;
         }
     }
@@ -246,12 +243,5 @@ public class DefaultPortalComponentManager
      */
     public Context getComponentContext() {
         return this.context;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getCore()
-     */
-    public Core getCore() {
-        return this.core;
     }
 }
