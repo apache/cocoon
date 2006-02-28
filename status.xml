@@ -200,7 +200,7 @@
     </action>
     <action dev="RG" type="fix">
       Portal: Corrected problem with many ClassNotFoundExceptions occurring inside of the class loader by eliminating the
-      usage of Castor deriveByClass in portal configuations. This change significantly improves performance of the portal
+      usage of Castor deriveByClass in portal configurations. This change significantly improves performance of the portal
       login.
     </action>
     <action dev="RG" type="fix" fixes-bug="COCOON-1742">
