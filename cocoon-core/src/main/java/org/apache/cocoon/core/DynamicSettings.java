@@ -19,8 +19,7 @@ package org.apache.cocoon.core;
  * The settings (configuration) for the Cocoon core are described through the {@link BaseSettings}
  * interface and the {@link DynamicSettings} interface.
  * Whereas the settings of the {@link BaseSettings} object can't be changed at runtime,
- * the settings of the {@link DynamicSettings} object are mutable. Use the {@link Core} instance
- * to update the settings.
+ * the settings of the {@link DynamicSettings} object are mutable.
  *
  * @version $Id$
  * @since 2.2

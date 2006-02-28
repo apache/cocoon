@@ -38,7 +38,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.LinkService;
@@ -380,13 +379,6 @@ public class PortalServiceImpl
      */
     public CopletFactory getCopletFactory() {
         return this.getComponentManager().getCopletFactory();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getCore()
-     */
-    public Core getCore() {
-        return this.getComponentManager().getCore();
     }
 
     /**

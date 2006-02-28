@@ -91,9 +91,6 @@ public class CoreUtil {
 
     protected ClassLoader classloader;
 
-    /** The core object. */
-    protected Core core;
-
     /** The environment context. */
     protected final Context environmentContext;
 
@@ -282,9 +279,6 @@ public class CoreUtil {
         // dump system properties
         this.dumpSystemProperties();
 
-        // create the Core object
-        this.core = this.createCore();
-
         // settings can't be changed anymore
         settings.makeReadOnly();
 
@@ -292,25 +286,8 @@ public class CoreUtil {
         this.container = this.setupSpringContainer();
     }
 
-    /**
-     * Return the core object.
-     */
-    public Core getCore() {
-        return this.core;
-    }
-
     public Logger getRootLogger() {
         return this.log;
-    }
-
-    /**
-     * Create a new core instance.
-     * This method can be overwritten in sub classes.
-     * @return A new core object.
-     */
-    protected Core createCore() {
-        final Core c = new Core(this.appContext);
-        return c;
     }
 
     /**
@@ -632,7 +609,6 @@ public class CoreUtil {
         }
         AvalonEnvironment env = new AvalonEnvironment();
         env.context = this.appContext;
-        env.core = this.core;
         env.logger = this.log;
         env.servletContext = this.environmentContext;
         env.settings = this.settings;

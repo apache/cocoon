@@ -27,7 +27,6 @@ import javax.servlet.ServletException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.ComponentContext;
@@ -232,7 +231,6 @@ public class CoreUtil {
         DefaultContext appContext = new ComponentContext();
         CoreUtil.addSourceResolverContext(appContext, servletConfig, knownFile);
         CoreUtil.addSettingsContext(appContext, settings);
-        CoreUtil.addCoreContext(appContext, new Core(appContext));
         return appContext;
     }
 
@@ -332,11 +330,5 @@ public class CoreUtil {
         // looked up
         // by other components
         appContext.put(Constants.CONTEXT_CLASSPATH, "");        
-    }
-
-    private static void addCoreContext(DefaultContext appContext, Core core) {
-        // put the core into the context - this is for internal use only
-        // The Cocoon container fetches the Core object using the context.
-        appContext.put(Core.ROLE, core);
     }
 }

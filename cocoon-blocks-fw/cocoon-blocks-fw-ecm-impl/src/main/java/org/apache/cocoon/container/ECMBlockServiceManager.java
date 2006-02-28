@@ -35,7 +35,6 @@ import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.source.impl.ContextSourceFactory;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.CoreServiceManager;
 import org.apache.cocoon.core.container.RoleManager;
@@ -100,10 +99,8 @@ implements ServiceManager, LogEnabled, Configurable, Serviceable, Initializable,
                 null,
                 false);
         
-        // The Core object is needed for the Sitemap and various other Cocoon components
-        Core core = new Core(newContext);
+        // The settings object is needed for the Sitemap and various other Cocoon components
         coreServicemanager.addInstance(Settings.ROLE, settings);
-        coreServicemanager.addInstance(Core.ROLE, core);
         
         // For the first block that is setup, source factories need to be setup before
         // starting to configure service managers that includes other configuration files
