@@ -25,7 +25,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -258,7 +257,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
             if (this.logger.isDebugEnabled()) {
                 --activeRequestCount;
             }
-            Core.cleanup();
+            ProcessorUtil.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, this.logger);
         }

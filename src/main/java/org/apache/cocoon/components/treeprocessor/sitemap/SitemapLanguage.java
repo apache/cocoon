@@ -40,7 +40,6 @@ import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
-import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
@@ -135,7 +134,6 @@ public class SitemapLanguage
 
         final AvalonEnvironment ae = new AvalonEnvironment();
         ae.context = context;
-        ae.core = (Core)this.beanFactory.getBean(Core.ROLE);
         ae.logger = this.getLogger();
         ae.servletContext = ((ServletConfig)context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
         ae.settings = (Settings)this.beanFactory.getBean(Settings.ROLE);
