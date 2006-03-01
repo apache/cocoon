@@ -18,17 +18,6 @@
 <!-- SVN $Id:$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
-  <map:components>
-    <input-modules>
-      <component-instance name="block-property"  class="org.apache.cocoon.components.modules.input.BlockPropertyModule"/>
-    </input-modules>
-
-    <map:readers default="resource">
-      <map:reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
-    </map:readers>
-  </map:components>
-
   <map:pipelines>
     <map:pipeline type="noncaching">
 
