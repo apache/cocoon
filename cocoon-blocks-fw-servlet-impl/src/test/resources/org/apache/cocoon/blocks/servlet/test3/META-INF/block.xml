@@ -29,6 +29,11 @@
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
     <sitemap file="COB-INF/block-sitemap.xmap"/>
   </servlet>
+  <components>
+    <input-modules>
+      <component-instance name="block-property"  class="org.apache.cocoon.components.modules.input.BlockPropertyModule"/>
+    </input-modules>
+  </components>
   <properties>
     <property name="bar">
       <default>gazonk</default>
