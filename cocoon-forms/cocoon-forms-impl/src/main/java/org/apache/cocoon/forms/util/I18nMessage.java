@@ -123,18 +123,21 @@ public class I18nMessage implements XMLizable {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
                 contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT, XMLUtils.EMPTY_ATTRIBUTES);
-                if (keys != null && keys[i])
+                if (keys != null && keys[i]) {
                     contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
-                contentHandler.characters(parameters[i].toCharArray(), 0, parameters[i].length());
-                if (keys != null && keys[i])
+                }
+                final String aParam = String.valueOf(parameters[i]);
+                contentHandler.characters(aParam.toCharArray(), 0, aParam.length());
+                if (keys != null && keys[i]) {
                     contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT);
+                }
                 contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_PARAM_ELEMENT, "i18n:" + I18nTransformer.I18N_PARAM_ELEMENT);
             }
             contentHandler.endElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TRANSLATE_ELEMENT, "i18n:" + I18nTransformer.I18N_TRANSLATE_ELEMENT);
         }
         contentHandler.endPrefixMapping("i18n");
     }
-    
+
     public boolean equals(Object obj) {
         if (obj instanceof I18nMessage) {
             I18nMessage other = (I18nMessage)obj;
