@@ -16,7 +16,7 @@
 -->
 <deploy xmlns="http://apache.org/cocoon/blocks/deploy/1.0">
   
-  <cocoon target-url=".target/test/validDeploy-02/myServer" 
+  <cocoon target-url="./target/test/validDeploy-02/myServer" 
     urn="org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war" exclusive="true"/>    
   
   <block id="db" urn="validBlock-04:validBlock-04:1.0" location="src/test/mocks/validBlock-06/blockRoot"/>  

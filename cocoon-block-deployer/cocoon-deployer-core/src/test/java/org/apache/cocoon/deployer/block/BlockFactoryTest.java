@@ -18,12 +18,13 @@ package org.apache.cocoon.deployer.block;
 import java.io.File;
 
 import org.apache.cocoon.deployer.AbstractDeployerTestCase;
+import org.apache.cocoon.deployer.generated.deploy.x10.Block;
 
 public class BlockFactoryTest extends AbstractDeployerTestCase {
 	
 	private static final String VALID_BLOCK_01_JAR = "validBlock-01/valid-block-1.0.jar";
 	private static final String VALID_DEPLOY_01 = "validDeploy-01/deploy.xml";
-	private static final String VALID_DEPLOY_06 = "validDeploy-06/deploy.xml";;
+	private static final String VALID_DEPLOY_06 = "validDeploy-06/deploy.xml";
 
 	/**
 	 * Test if the passed block is a file and not a directory
@@ -78,15 +79,16 @@ public class BlockFactoryTest extends AbstractDeployerTestCase {
 		assertEquals(b.getId(), "http://cocoon.apache.org/blocks/anyblock/1.0");
 
 		assertNotNull(block.getInputStream());
-		assertEquals( Block.BLOCK_NS_10, block.getNamespace());
+		assertEquals( org.apache.cocoon.deployer.block.Block.BLOCK_NS_10, block.getNamespace());
 		assertEquals("http://cocoon.apache.org/blocks/anyblock/1.0", block.getId());
 	}
 
 	public void testLocalBlockCreation() throws Exception {
-		LocalBlock block = BlockFactory.createLocalBlock(this.getDeploy(VALID_DEPLOY_06).getBlock(0), ".");
+		Block deployBlock = this.getDeploy(VALID_DEPLOY_06).getBlock(0);
+		LocalBlock block = BlockFactory.createLocalBlock(absolutizeBlockLocation(deployBlock), "");
 		assertNotNull(block);
 		assertNotNull(block.getBlockDescriptor());
-		assertEquals( Block.BLOCK_NS_10, block.getNamespace());
+		assertEquals( org.apache.cocoon.deployer.block.Block.BLOCK_NS_10, block.getNamespace());
 		assertEquals("anyblock:anyblock-06:1.0", block.getId());	
 		assertTrue(new File(block.getBaseDirectory()).exists());
 	}
