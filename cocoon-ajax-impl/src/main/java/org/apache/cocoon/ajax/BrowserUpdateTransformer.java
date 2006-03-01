@@ -180,8 +180,8 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
     }
 
     public void recycle() {
-        super.recycle();
         this.locator = null;
         this.updateTagId = null;
+        super.recycle();
     }
 }
