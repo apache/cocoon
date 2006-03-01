@@ -32,6 +32,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
 
@@ -318,30 +319,28 @@ public class BlockContext extends ServletContextWrapper {
 
         private String blockName;
         private boolean superCall = false;
-        private RequestDispatcher dispatcher;
+        private ServletContext context;
 
         private NamedDispatcher(String blockName) {
             this.blockName = blockName;
             this.superCall = Block.SUPER.equals(this.blockName);
-            String blockId =
-                (String) BlockContext.this.connections.get(this.blockName);
 
-            if (blockId != null) {
-                // Call to a named block that exists in the current context
-                this.dispatcher = BlockContext.super.servletContext.getNamedDispatcher(blockId);
-            } else {
+            // Call to a named block that exists in the current context
+            this.context = BlockContext.this.getNamedContext(this.blockName);
+            if (this.context == null) {
                 // If there is a super block, the connection might
                 // be defined there instead.
-                ServletContext superContext = BlockContext.this.getNamedContext(Block.SUPER);
+                BlockContext superContext =
+                    (BlockContext) BlockContext.this.getNamedContext(Block.SUPER);
                 if (superContext != null) {
-                    this.dispatcher = superContext.getNamedDispatcher(blockName);
+                    this.context = superContext.getNamedContext(this.blockName);
                     this.superCall = true;
                 }
             }
         }
 
         private boolean exists() {
-            return this.dispatcher != null;
+            return this.context != null;
         }
 
         /*
@@ -355,16 +354,16 @@ public class BlockContext extends ServletContextWrapper {
             // Call to named block
 
             BlockContext.this.log("Enter processing in block " + this.blockName);
-            if (this.dispatcher != null) {
+            RequestDispatcher dispatcher =
+                this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
+            if (dispatcher != null) {
                 if (!this.superCall) {
                     try {
                         // It is important to set the current block each time
                         // a new block is entered, this is used for the block
                         // protocol
-                        ServletContext context = BlockContext.this.getNamedContext(this.blockName);
-                        BlockCallStack.enterBlock(context);
-
-                        this.dispatcher.forward(request, response);
+                        BlockCallStack.enterBlock(this.context);
+                        dispatcher.forward(request, response);
                     } finally {
                         BlockCallStack.leaveBlock();
                     }
@@ -373,14 +372,13 @@ public class BlockContext extends ServletContextWrapper {
                     // the called block to get polymorphic calls resolved
                     // in the right way. Therefore no new current block is
                     // set.
-                    this.dispatcher.forward(request, response);
+                    dispatcher.forward(request, response);
                 }
             } else {
                 // Cannot happen
                 throw new IllegalStateException();
             }
-            BlockContext.this.log("Leaving processing in block "
-                    + this.blockName);
+            BlockContext.this.log("Leaving processing in block " + this.blockName);
         }
 
         /*
