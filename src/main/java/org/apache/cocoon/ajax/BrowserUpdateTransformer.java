@@ -39,7 +39,6 @@ import org.xml.sax.SAXParseException;
 public class BrowserUpdateTransformer extends AbstractTransformer {
     
     public static final String AJAXMODE_PARAM = "cocoon-ajax";
-    
     public static final String BU_NSURI = "http://apache.org/cocoon/browser-update/1.0";
     
     private boolean ajaxRequest = false;
@@ -56,7 +55,7 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
         Request request = ObjectModelHelper.getRequest(objectModel);
         this.ajaxRequest = request.getParameter(AJAXMODE_PARAM) != null;
     }
-    
+
     public void setDocumentLocator(Locator locator) {
         super.setDocumentLocator(locator);
         this.locator = locator;
@@ -176,5 +175,12 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
             super.endPrefixMapping("bu");
         }
         super.endDocument();
+    }
+
+    public void recycle() {
+        super.recycle();
+        this.replaceDepth = 0;
+        this.inUpdateTag = false;
+        this.updateTagId = null;
     }
 }
