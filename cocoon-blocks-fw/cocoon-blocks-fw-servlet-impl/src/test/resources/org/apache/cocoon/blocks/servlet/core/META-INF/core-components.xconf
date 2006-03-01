@@ -51,6 +51,10 @@
   <serializers default="xml">
     <serializer mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer" />
   </serializers>
+  
+  <readers default="resource">
+    <reader name="resource" src="org.apache.cocoon.reading.ResourceReader"/>
+  </readers>
 
   <matchers default="wildcard">
     <matcher name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
