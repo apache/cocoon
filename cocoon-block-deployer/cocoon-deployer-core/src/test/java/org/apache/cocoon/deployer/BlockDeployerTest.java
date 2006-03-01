@@ -30,8 +30,8 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 				this.getArtifactProviderInstance(),
 				new NullVariableResolver(),
 				new ConsoleLogger());
-		blockDeployer.deploy(
-			(Deploy) Deploy.unmarshal(new FileReader(this.getMockArtefact("validDeploy-04/deploy.xml"))));
+		Deploy deploy = (Deploy) Deploy.unmarshal(new FileReader(this.getMockArtefact("validDeploy-04/deploy.xml")));
+		blockDeployer.deploy(absolutizeDeploy(deploy));
 		System.out.println("x");
 		// assertions: ...
 		
