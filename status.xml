@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1786" due-to="Eric Meyer" due-to-email="eric.meyer@quoininc.com">
+       Ajax block: BrowserUpdateTransformer can get into invalid state - must override recycle()
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1279">
       Fix caching-point pipelines.  Remove the undocumented smart-caching parameter.
     </action>
