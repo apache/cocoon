@@ -54,6 +54,8 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
 
         Request request = ObjectModelHelper.getRequest(objectModel);
         this.ajaxRequest = request.getParameter(AJAXMODE_PARAM) != null;
+        this.replaceDepth = 0;
+        this.inUpdateTag = false;
     }
 
     public void setDocumentLocator(Locator locator) {
@@ -179,8 +181,7 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
 
     public void recycle() {
         super.recycle();
-        this.replaceDepth = 0;
-        this.inUpdateTag = false;
+        this.locator = null;
         this.updateTagId = null;
     }
 }
