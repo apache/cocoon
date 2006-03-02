@@ -28,9 +28,11 @@ import org.osgi.service.log.LogService;
  * @version $Id$
  */
 public class Activator {
-    
+
     private LogService log;
+
     private HttpService httpService;
+
     private ComponentContext context;
 
     protected void setLog(LogService logService) {
@@ -43,17 +45,23 @@ public class Activator {
         System.out.println("Got http service");
     }
 
-    protected void setServlet(ServiceReference reference) throws ServletException, NamespaceException {
+    protected void setServlet(ServiceReference reference)
+            throws ServletException, NamespaceException {
         String path = (String) reference.getProperty("path");
-        Servlet servlet = (Servlet) this.context.locateService("Servlet", reference);
-        this.httpService.registerServlet(path, servlet, null, null);
-        this.log.log(LogService.LOG_DEBUG, "Register Servlet at " + path);
+        if (path != null) {
+            Servlet servlet =
+                (Servlet) this.context.locateService("Servlet", reference);
+            this.httpService.registerServlet(path, servlet, null, null);
+            this.log.log(LogService.LOG_DEBUG, "Register Servlet at " + path);
+        }
     }
 
     protected void unsetServlet(ServiceReference reference) {
         String path = (String) reference.getProperty("path");
-        this.httpService.unregister(path);
-        this.log.log(LogService.LOG_DEBUG, "Unregister Servlet at " + path);
+        if (path != null) {
+            this.httpService.unregister(path);
+            this.log.log(LogService.LOG_DEBUG, "Unregister Servlet at " + path);
+        }
     }
 
     protected void activate(ComponentContext context) {
@@ -65,5 +73,5 @@ public class Activator {
     protected void deactivate(ComponentContext context) {
         System.out.println("Cocoon Stop");
         this.log.log(LogService.LOG_DEBUG, "Cocoon stop");
-    }    
+    }
 }

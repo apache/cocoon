@@ -29,7 +29,8 @@ public class TestServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
-        response.getWriter().println("Test!");
+        String attr = this.getInitParameter("attr");
+        response.getWriter().println("Test! " + attr);
     }
 
 }
