@@ -91,10 +91,6 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     </dd>
  *   </dl>
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:eric@plauditdesign.com">Eric Caron</a>
  * @version $Id$
  */
 final public class ImageReader extends ResourceReader {
@@ -248,19 +244,18 @@ final public class ImageReader extends ResourceReader {
     }
 
     protected byte[] readFully(InputStream in) throws IOException
-	{
-		byte tmpbuffer[] = new byte[4096];
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		int i;
-		while (-1!=(i = in.read(tmpbuffer)))
-			{
-			baos.write(tmpbuffer, 0, i);
-			}
-		baos.flush();
-		return baos.toByteArray();
-	}
+    {
+        byte tmpbuffer[] = new byte[4096];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int i;
+        while (-1!=(i = in.read(tmpbuffer)))
+        {
+            baos.write(tmpbuffer, 0, i);
+        }
+        baos.flush();
+        return baos.toByteArray();
+    }
 
-    
     protected void processStream(InputStream inputStream) throws IOException, ProcessingException {
         if (hasTransform()) {
             if (getLogger().isDebugEnabled()) {
@@ -292,9 +287,9 @@ final public class ImageReader extends ResourceReader {
              */
 
             try {
-            	byte content[] = readFully(inputStream);
-            	ImageIcon icon = new ImageIcon(content);
-            	BufferedImage original = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+                byte content[] = readFully(inputStream);
+                ImageIcon icon = new ImageIcon(content);
+                BufferedImage original = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
                 BufferedImage currentImage = original;
                 currentImage.getGraphics().drawImage(icon.getImage(), 0, 0, null);
 
