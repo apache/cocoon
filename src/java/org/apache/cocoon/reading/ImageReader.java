@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
+import javax.swing.ImageIcon;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -246,6 +247,20 @@ final public class ImageReader extends ResourceReader {
         return new AffineTransform(wm, 0.0d, 0.0d, hm, 0.0d, 0.0d);
     }
 
+    protected byte[] readFully(InputStream in) throws IOException
+	{
+		byte tmpbuffer[] = new byte[4096];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		int i;
+		while (-1!=(i = in.read(tmpbuffer)))
+			{
+			baos.write(tmpbuffer, 0, i);
+			}
+		baos.flush();
+		return baos.toByteArray();
+	}
+
+    
     protected void processStream(InputStream inputStream) throws IOException, ProcessingException {
         if (hasTransform()) {
             if (getLogger().isDebugEnabled()) {
@@ -277,14 +292,15 @@ final public class ImageReader extends ResourceReader {
              */
 
             try {
-                JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(inputStream);
-                BufferedImage original = decoder.decodeAsBufferedImage();
+            	byte content[] = readFully(inputStream);
+            	ImageIcon icon = new ImageIcon(content);
+            	BufferedImage original = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
                 BufferedImage currentImage = original;
+                currentImage.getGraphics().drawImage(icon.getImage(), 0, 0, null);
 
                 if (width > 0 || height > 0) {
-                    JPEGDecodeParam decodeParam = decoder.getJPEGDecodeParam();
-                    double ow = decodeParam.getWidth();
-                    double oh = decodeParam.getHeight();
+                    double ow = icon.getImage().getWidth(null);
+                    double oh = icon.getImage().getHeight(null);
 
                     if (usePercent) {
                         if (width > 0) {

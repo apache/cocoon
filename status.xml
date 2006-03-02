@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix" fixes-bug="COCOON-1371" due-to="George Georgovassilis" due-to-email="georgeg@open.gr">
+      Allow ImageReader to process other image formats than JPEG
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1785" due-to="Eric Meyer" due-to-email="eric.meyer@quoininc.com">
        Form block: I18nMessage - null parameter values causes NPE.
     </action>
