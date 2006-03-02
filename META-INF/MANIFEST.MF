@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: cocoon-blocks-fw-impl
+Bundle-SymbolicName: org.apache.cocoon.blocks
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Import-Package: javax.servlet;version="2.3.0",
+ javax.servlet.http
+Export-Package: org.apache.cocoon.blocks,
+ org.apache.cocoon.blocks.util
