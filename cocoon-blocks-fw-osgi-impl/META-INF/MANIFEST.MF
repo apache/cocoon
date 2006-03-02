@@ -7,6 +7,8 @@ Service-Component: META-INF/components.xml
 Bundle-Localization: plugin
 Import-Package: javax.servlet,
  javax.servlet.http,
+ org.apache.cocoon.blocks,
+ org.apache.cocoon.blocks.util,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.component;version="1.0.0",
  org.osgi.service.http,
