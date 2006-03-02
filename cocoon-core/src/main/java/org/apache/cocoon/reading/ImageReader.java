@@ -22,14 +22,17 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
+import javax.swing.ImageIcon;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
@@ -84,7 +87,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     <dt>&lt;quality&gt;</dt>
  *     <dd>This parameter is optional. By default, the quality uses the
  *         default for the JVM. If it is specified, the proper JPEG quality
- *         compression is used. The range is 0.0 to 1.0, if specified. 
+ *         compression is used. The range is 0.0 to 1.0, if specified.
  *     </dd>
  *   </dl>
  *
@@ -94,6 +97,9 @@ final public class ImageReader extends ResourceReader {
     private static final boolean GRAYSCALE_DEFAULT = false;
     private static final boolean ENLARGE_DEFAULT = true;
     private static final boolean FIT_DEFAULT = false;
+
+    /* See http://developer.java.sun.com/developer/bugParade/bugs/4502892.html */
+    private static final boolean JVMBugFixed = SystemUtils.isJavaVersionAtLeast(1.4f);
 
     private int width;
     private int height;
@@ -237,6 +243,19 @@ final public class ImageReader extends ResourceReader {
         return new AffineTransform(wm, 0.0d, 0.0d, hm, 0.0d, 0.0d);
     }
 
+    protected byte[] readFully(InputStream in) throws IOException
+    {
+        byte tmpbuffer[] = new byte[4096];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int i;
+        while (-1!=(i = in.read(tmpbuffer)))
+        {
+            baos.write(tmpbuffer, 0, i);
+        }
+        baos.flush();
+        return baos.toByteArray();
+    }
+
     protected void processStream(InputStream inputStream) throws IOException, ProcessingException {
         if (hasTransform()) {
             if (getLogger().isDebugEnabled()) {
@@ -245,15 +264,38 @@ final public class ImageReader extends ResourceReader {
                                   + " expires: " + expires);
             }
 
+            /*
+             * NOTE (SM):
+             * Due to Bug Id 4502892 (which is found in *all* JVM implementations from
+             * 1.2.x and 1.3.x on all OS!), we must buffer the JPEG generation to avoid
+             * that connection resetting by the peer (user pressing the stop button,
+             * for example) crashes the entire JVM (yes, dude, the bug is *that* nasty
+             * since it happens in JPEG routines which are native!)
+             * I'm perfectly aware of the huge memory problems that this causes (almost
+             * doubling memory consuption for each image and making the GC work twice
+             * as hard) but it's *far* better than restarting the JVM every 2 minutes
+             * (since this is the average experience for image-intensive web application
+             * such as an image gallery).
+             * Please, go to the <a href="http://developer.java.sun.com/developer/bugParade/bugs/4502892.html">Sun Developers Connection</a>
+             * and vote this BUG as the one you would like fixed sooner rather than
+             * later and all this hack will automagically go away.
+             * Many deep thanks to Michael Hartle <mhartle@hartle-klug.com> for tracking
+             * this down and suggesting the workaround.
+             *
+             * UPDATE (SM):
+             * This appears to be fixed on JDK 1.4
+             */
+
             try {
-                JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(inputStream);
-                BufferedImage original = decoder.decodeAsBufferedImage();
+                byte content[] = readFully(inputStream);
+                ImageIcon icon = new ImageIcon(content);
+                BufferedImage original = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
                 BufferedImage currentImage = original;
+                currentImage.getGraphics().drawImage(icon.getImage(), 0, 0, null);
 
                 if (width > 0 || height > 0) {
-                    JPEGDecodeParam decodeParam = decoder.getJPEGDecodeParam();
-                    double ow = decodeParam.getWidth();
-                    double oh = decodeParam.getHeight();
+                    double ow = icon.getImage().getWidth(null);
+                    double oh = icon.getImage().getHeight(null);
 
                     if (usePercent) {
                         if (width > 0) {
@@ -280,11 +322,22 @@ final public class ImageReader extends ResourceReader {
                     colorFilter.filter(currentImage, currentImage);
                 }
 
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-                JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
-                p.setQuality(this.quality[0], true);
-                encoder.setJPEGEncodeParam(p);
-                encoder.encode(currentImage);
+                // JVM Bug handling
+                if (JVMBugFixed) {
+                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+                    JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
+                    p.setQuality(this.quality[0], true);
+                    encoder.setJPEGEncodeParam(p);
+                    encoder.encode(currentImage);
+                } else {
+                    ByteArrayOutputStream bstream = new ByteArrayOutputStream();
+                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bstream);
+                    JPEGEncodeParam p = encoder.getDefaultJPEGEncodeParam(currentImage);
+                    p.setQuality(this.quality[0], true);
+                    encoder.setJPEGEncodeParam(p);
+                    encoder.encode(currentImage);
+                    out.write(bstream.toByteArray());
+                }
 
                 out.flush();
             } catch (ImageFormatException e) {
