@@ -141,7 +141,7 @@ public class SitemapLanguage
         final ConfigurationInfo ci = ConfigReader.readConfiguration(c, parentConfigInfo, ae);
 
         final ConfigurableBeanFactory sitemapContext = 
-            BeanFactoryUtil.createApplicationContext(ae, ci, parentContext, false);
+            BeanFactoryUtil.createBeanFactory(ae, ci, parentContext, false);
         newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
         Logger sitemapLogger = sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
 

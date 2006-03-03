@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.core.container.spring;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,14 +37,15 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.context.ApplicationContext;
+import org.springframework.core.OrderComparator;
 import org.springframework.core.io.Resource;
 
 /**
- * This is a Cocoon specific implementation of a Spring {@link ApplicationContext}.
+ * This is a Cocoon specific implementation of a Spring {@link DefaultListableBeanFactory}.
  *
  * @since 2.2
  * @version $Id$
@@ -108,6 +113,24 @@ public class CocoonBeanFactory
         }
         // default: we just return the alias
         return alias;
+    }
+
+    /**
+     * Instantiate and invoke all registered BeanPostProcessor beans,
+     * respecting explicit order if given.
+     * @see org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons()
+     */
+    public void preInstantiateSingletons() throws BeansException {
+        // Actually fetch and register the BeanPostProcessor beans.
+        // Do not initialize FactoryBeans here: We need to leave all regular beans
+        // uninitialized to let the bean post-processors apply to them!
+        final Map beanProcessorMap = this.getBeansOfType(BeanPostProcessor.class, true, false);
+        final List beanProcessors = new ArrayList(beanProcessorMap.values());
+        Collections.sort(beanProcessors, new OrderComparator());
+        for (Iterator it = beanProcessors.iterator(); it.hasNext();) {
+            this.addBeanPostProcessor((BeanPostProcessor) it.next());
+        }
+        super.preInstantiateSingletons();
     }
 
     /**
