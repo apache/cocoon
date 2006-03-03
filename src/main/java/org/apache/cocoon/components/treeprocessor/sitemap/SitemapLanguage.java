@@ -103,10 +103,12 @@ public class SitemapLanguage
 //    }
     
     /**
-     * Build a component manager with the contents of the &lt;map:components&gt; element of
-     * the tree.
+     * Build a component manager with the contents of the &lt;map:components&gt; element
+     * of the tree.
      */
-    protected ConfigurableBeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration config)
+    protected ConfigurableBeanFactory createBeanFactory(ClassLoader   classloader,
+                                                        Context       context,
+                                                        Configuration config)
     throws Exception {
 
         // Create the classloader, if needed.
@@ -120,7 +122,6 @@ public class SitemapLanguage
                                                                 config.getNamespace(),
                                                                 "");
         c.addAll(config);
-        c.removeChild(config.getChild("application-container"));
         c.removeChild(config.getChild("classpath"));
         c.removeChild(config.getChild("listeners"));
 
@@ -143,7 +144,7 @@ public class SitemapLanguage
         final ConfigurableBeanFactory sitemapContext = 
             BeanFactoryUtil.createBeanFactory(ae, ci, parentContext, false);
         newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
-        Logger sitemapLogger = sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
+        Logger sitemapLogger = (Logger)sitemapContext.getBean(Logger.class.getName());
 
         // and finally the listeners
         final Configuration listenersWrapper = config.getChild("listeners", false);

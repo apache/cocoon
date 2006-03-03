@@ -198,12 +198,6 @@ public abstract class DefaultTreeBuilder
         return this.context;
     }
 
-    protected ClassLoader createClassLoader(Configuration tree) throws Exception {
-        // Useless method as it's redefined in SitemapLanguage
-        // which is the only used incarnation.
-        return Thread.currentThread().getContextClassLoader();        
-    }
-    
     /**
      * Create a service manager that will be used for all <code>Serviceable</code>
      * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
@@ -217,7 +211,7 @@ public abstract class DefaultTreeBuilder
      *
      * @return a component manager
      */
-    protected abstract ConfigurableBeanFactory createApplicationContext(ClassLoader classloader, Context context, Configuration tree)
+    protected abstract ConfigurableBeanFactory createBeanFactory(ClassLoader classloader, Context context, Configuration tree)
     throws Exception;
 
 
@@ -377,7 +371,7 @@ public abstract class DefaultTreeBuilder
         // Only create an sitemap internal component manager if there really is a configuration
         // FIXME: Internal configurations doesn't work in a non bean factory environment
         if (componentConfig != null) {
-            this.itsBeanFactory = createApplicationContext(this.itsClassLoader, this.itsContext, componentConfig);
+            this.itsBeanFactory = createBeanFactory(this.itsClassLoader, this.itsContext, componentConfig);
             this.itsManager = (ServiceManager)this.itsBeanFactory.getBean(ServiceManager.class.getName());
         } else {
             this.itsManager = manager;
