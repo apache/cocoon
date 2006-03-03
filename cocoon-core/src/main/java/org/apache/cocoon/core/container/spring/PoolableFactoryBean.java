@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.cocoon.ProcessorUtil;
+import org.apache.cocoon.ProcessingUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -314,7 +314,7 @@ public class PoolableFactoryBean
         }
     }
 
-    protected static final class ProxyHandler implements InvocationHandler, ProcessorUtil.CleanupTask {
+    protected static final class ProxyHandler implements InvocationHandler, ProcessingUtil.CleanupTask {
         
         private final ThreadLocal componentHolder = new ThreadLocal();
         private final PoolableFactoryBean handler;
@@ -333,7 +333,7 @@ public class PoolableFactoryBean
             }
             if ( this.componentHolder.get() == null ) {
                 this.componentHolder.set(this.handler.getFromPool());
-                ProcessorUtil.addCleanupTask(this);
+                ProcessingUtil.addCleanupTask(this);
             }
             try {
                 return method.invoke(this.componentHolder.get(), args);
@@ -344,7 +344,7 @@ public class PoolableFactoryBean
         
         
         /**
-         * @see ProcessorUtil.CleanupTask#invoke()
+         * @see ProcessingUtil.CleanupTask#invoke()
          */
         public void invoke() {
             try {

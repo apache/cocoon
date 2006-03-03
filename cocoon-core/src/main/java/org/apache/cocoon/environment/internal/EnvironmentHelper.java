@@ -41,6 +41,8 @@ import org.apache.excalibur.source.Source;
  * For developing your own components/applications based on Cocoon, you shouldn't
  * really need it.
  *
+ * INTERNAL CLASS. Do not use this, can be removed without warning or deprecation cycle.
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -338,7 +340,7 @@ implements SourceResolver, Serviceable, Disposable {
     }
 
     /**
-     * INTERNAL METHOD. Do not use, can be removed without warning or deprecation cycle.
+     * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static void checkEnvironment(int depth, Logger logger)
     throws Exception {
@@ -354,7 +356,8 @@ implements SourceResolver, Serviceable, Disposable {
     }
 
     /**
-     * Return the environment
+     * Return the environment.
+     * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static Environment getCurrentEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
@@ -367,6 +370,7 @@ implements SourceResolver, Serviceable, Disposable {
 
     /**
      * Return the current processor
+     * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static Processor getCurrentProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
@@ -382,6 +386,7 @@ implements SourceResolver, Serviceable, Disposable {
      * This method return the current sitemap component manager. This
      * is the manager that holds all the components of the currently
      * processed (sub)sitemap.
+     * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     static public ServiceManager getSitemapServiceManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
@@ -394,7 +399,8 @@ implements SourceResolver, Serviceable, Disposable {
 
     /**
      * Create an environment aware xml consumer for the cocoon
-     * protocol
+     * protocol.
+     * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
     public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
