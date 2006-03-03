@@ -168,9 +168,7 @@ public class DefaultEventManager
         }
         DefaultEventAspectContext context = new DefaultEventAspectContext(this.chain);
         EventConverter converter = null;
-        PortalService service = null;
         try {
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
             converter = (EventConverter) this.manager.lookup(EventConverter.ROLE);
 
             converter.start();
@@ -178,7 +176,7 @@ public class DefaultEventManager
             // Invoke aspects
             context.setObjectModel(this.getObjectModel());
             context.setEventConverter(converter);
-            context.invokeNext( service );
+            context.invokeNext( this.portalService );
 
             converter.finish();
 
@@ -186,7 +184,6 @@ public class DefaultEventManager
             throw new ProcessingException("Unable to lookup component.", ce);
         } finally {
             this.manager.release(converter);
-            this.manager.release(service);
         }
     }
 

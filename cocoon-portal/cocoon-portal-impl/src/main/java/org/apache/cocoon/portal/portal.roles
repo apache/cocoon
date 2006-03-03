@@ -15,6 +15,11 @@
 -->
 <!-- $Id$ -->
 <role-list>
+  <!--+
+      | Spring Bean Post Processors:
+      +-->
+    <role name="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"
+          default-class="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"/>
 
   <!--+ 
       | Event Aspects
