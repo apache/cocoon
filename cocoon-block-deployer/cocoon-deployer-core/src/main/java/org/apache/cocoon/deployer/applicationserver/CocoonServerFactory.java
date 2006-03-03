@@ -27,7 +27,7 @@ public class CocoonServerFactory {
 
 	public static CocoonServer createServer(Cocoon cocoon, VariableResolver variableResolver, ArtifactProvider artifactProvider) {
 		CocoonServer cocoonServer = new CocoonServer22();
-		cocoonServer.setExclusive(cocoon.hasExclusive());
+		cocoonServer.setExclusive(cocoon.getExclusive());
 		cocoonServer.setVariableResolver(variableResolver);
 		cocoonServer.setArtifactProvider(artifactProvider);
 		
