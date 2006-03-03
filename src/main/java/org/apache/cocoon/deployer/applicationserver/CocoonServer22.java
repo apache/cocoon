@@ -86,31 +86,23 @@ public class CocoonServer22 implements CocoonServer {
 	    	File baseDirectoryFile = new File(this.baseDirectory);
 	    	
 			// install the Cocoon server if necessary
-			if(baseDirectoryFile.list().length == 0) {
+			if(baseDirectoryFile.list().length == 0 && serverArtifact != null) {
 				deployCocoonServer(frm, txId, "", serverArtifact);
-			} else {
-				// TODO logging
 			}
-			
-			// read in servers wiring.xml
-			if(!frm.resourceExists(txId, WIRING_FILE)) {
-				String msg = "There is no [server-root-dir]/" + WIRING_FILE + ".";
-				log.error(msg);
-				throw new DeploymentException(msg);
-			}
-			
-			// check wiring version
-			String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(txId, WIRING_FILE));
-			if(!WIRING_10_NAMESPACE.equals(wiringVersion)) {
-				String msg = "The deployer only supports " + WIRING_10_NAMESPACE + " files.";
-				log.error(msg);
-				throw new DeploymentException(msg);				
-			}
-			
-			// create the wiring, in exclusive mode from scratch
-			Wiring wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(txId, WIRING_FILE)));	
+
+			// create the wiring, in exclusive mode from scratch, elese take the existing one
+			Wiring wiring = null;
 			if(this.isExclusive()) {
 				wiring = new Wiring();
+			} else {
+				// check wiring version
+				String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(txId, WIRING_FILE));
+				if(!WIRING_10_NAMESPACE.equals(wiringVersion)) {
+					String msg = "The deployer only supports " + WIRING_10_NAMESPACE + " files.";
+					log.error(msg);
+					throw new DeploymentException(msg);				
+				}				
+				wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(txId, WIRING_FILE)));	
 			}
 			
 			// install all passed blocks
