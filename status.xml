@@ -180,6 +180,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="DC" type="add" fixes-bug="COCOON-1206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
+       html block: Add CleanupTransformer. Enables indent html, add relevant line-breaks,
+       and remove any namespaces that are not wanted.
+    </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1371" due-to="George Georgovassilis" due-to-email="georgeg@open.gr">
       Allow ImageReader to process other image formats than JPEG
     </action>

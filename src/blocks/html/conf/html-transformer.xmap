@@ -24,4 +24,19 @@
       logger="sitemap.transformer.html"
       src="org.apache.cocoon.transformation.HTMLTransformer"
     />
+
+    <map:transformer
+        name="htmlcleanup"
+        logger="sitemap.transformer.html"
+        src="org.apache.cocoon.transformation.CleanupTransformer">
+      <preserve-uri>*</preserve-uri>
+    </map:transformer>
+
+    <map:transformer
+        name="xhtmlcleanup"
+        logger="sitemap.transformer.html"
+        src="org.apache.cocoon.transformation.CleanupTransformer">
+      <inline-elements>a,abbr,acronym,b,br,font,i,u,img</inline-elements>
+      <preserve-uri>http://www.w3.org/1999/xhtml</preserve-uri>
+    </map:transformer>
 </xmap>
