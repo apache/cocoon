@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessorUtil;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.core.container.ComponentFactory;
 
@@ -130,7 +130,7 @@ extends NonThreadSafePoolableComponentHandler {
         return interfaces;
     }
 
-    protected static final class ProxyHandler implements InvocationHandler, ProcessorUtil.CleanupTask {
+    protected static final class ProxyHandler implements InvocationHandler, ProcessingUtil.CleanupTask {
         
         private final ThreadLocal componentHolder = new ThreadLocal();
         private final PoolableComponentHandler handler;
@@ -149,7 +149,7 @@ extends NonThreadSafePoolableComponentHandler {
             }
             if ( this.componentHolder.get() == null ) {
                 this.componentHolder.set(this.handler.getFromPool());
-                ProcessorUtil.addCleanupTask(this);
+                ProcessingUtil.addCleanupTask(this);
             }
             try {
                 return method.invoke(this.componentHolder.get(), args);

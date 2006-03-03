@@ -25,9 +25,9 @@ import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
@@ -105,9 +105,9 @@ public class BeanFactoryUtil {
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);
-        factory.registerSingleton(Context.class.getName(), env.context);
-        factory.registerSingleton(Logger.class.getName(), env.logger);
-        factory.registerSingleton(Settings.class.getName(), env.settings);
+        factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
+        factory.registerSingleton(ProcessingUtil.LOGGER_ROLE, env.logger);
+        factory.registerSingleton(ProcessingUtil.SETTINGS_ROLE, env.settings);
         return factory;
     }
 
