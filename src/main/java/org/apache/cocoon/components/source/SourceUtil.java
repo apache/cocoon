@@ -21,8 +21,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -131,7 +131,7 @@ public final class SourceUtil {
     static public void toSAX(Source source,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(EnvironmentHelper.getSitemapServiceManager(),
+        toSAX(ProcessingUtil.getSitemapServiceManager(),
               source, null, handler);
     }
 
@@ -150,7 +150,7 @@ public final class SourceUtil {
                              String mimeTypeHint,
                              ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(EnvironmentHelper.getSitemapServiceManager(),
+        toSAX(ProcessingUtil.getSitemapServiceManager(),
               source, mimeTypeHint, handler);
     }
 
@@ -573,7 +573,7 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if (null != serializerName) {
-                    ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
+                    ServiceManager manager = ProcessingUtil.getSitemapServiceManager();
 
                     ServiceSelector selector = null;
                     Serializer serializer = null;
@@ -615,7 +615,7 @@ public final class SourceUtil {
             } else {
                 String content;
                 if (null != serializerName) {
-                    ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
+                    ServiceManager manager = ProcessingUtil.getSitemapServiceManager();
 
                     ServiceSelector selector = null;
                     Serializer serializer = null;

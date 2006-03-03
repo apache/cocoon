@@ -26,6 +26,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.springframework.util.StringUtils;
 
@@ -71,7 +72,7 @@ public class XmlConfigCreator {
         }
         // start with "static" components: ServiceManager
         buffer.append("<bean");
-        this.appendAttribute(buffer, "id", ServiceManager.class.getName());
+        this.appendAttribute(buffer, "id", ProcessingUtil.SERVICE_MANAGER_ROLE);
         this.appendAttribute(buffer, "class", AvalonServiceManager.class.getName());
         this.appendAttribute(buffer, "singleton", "true");
         buffer.append("/>\n");

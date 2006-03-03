@@ -257,7 +257,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
             if (this.logger.isDebugEnabled()) {
                 --activeRequestCount;
             }
-            ProcessorUtil.cleanup();
+            ProcessingUtil.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, this.logger);
         }
