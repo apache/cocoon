@@ -20,20 +20,23 @@ package org.apache.cocoon.portal.event;
  * of events through the {@link org.apache.cocoon.portal.event.EventManager}.
  * An event is an object of the interface {@link org.apache.cocoon.portal.event.Event}
  * or a subclass/interface of it. Usually a receiver is not interested in
- * every event but only for some specific event types. These types are represented
+ * every event but only in some specific event types. These types are represented
  * by an own subclass/interface.
  * When a receiver subscribes itself at the event manager, the manager checks (using
  * reflection) for occurances of the method "inform" on the receiver. The signature
  * of the method consists of two parameters, where the first one is the event subclass
- * and the second one the PortalService.
+ * and the second one the {@link org.apache.cocoon.portal.PortalService}.
  * If for example a receiver is interested in all {@link org.apache.cocoon.portal.event.CopletInstanceEvent}s
  * then it subscribes using the event manager and should provide an inform method
  * with the following signature:
- * public void inform(CopletInstanceEvent event, PortalService).
+ * public void inform(org.apache.cocoon.portal.event.CopletInstanceEvent event, org.apache.cocoon.portal.PortalService).
  *
- * If a receiver is interested in more than one event type, then it can implement
+ * If a receiver is interested in more than one event type, it can implement
  * several inform methods each with the corresponding event class as the first
  * parameter.
+ *
+ * All configured components implementing the receiver interface are automatically
+ * registered as event subscribers.
  *
  * @version $Id$
  */

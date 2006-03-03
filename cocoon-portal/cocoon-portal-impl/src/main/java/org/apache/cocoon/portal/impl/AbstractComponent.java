@@ -26,7 +26,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.Receiver;
 
 /**
  * This class can be used as a base class for all portal related components.
@@ -34,17 +33,12 @@ import org.apache.cocoon.portal.event.Receiver;
  * the portal service in an instance variable ({@link #portalService}) and
  * the Avalon component context in another one.
  *
- * If the sub class implements the {@link org.apache.cocoon.portal.event.Receiver}
- * interface, the component is subscribed/unsubcribed to/from the {@link org.apache.cocoon.portal.event.EventManager}.
- *
  * @version $Id$
  */
 public class AbstractComponent
     extends AbstractLogEnabled
     implements Contextualizable, Serviceable, Disposable, ThreadSafe, Initializable {
     
-    // Implement Preloadable so that it automatically subscribes to events.
-
     /** The service manager. */
     protected ServiceManager manager;
 
@@ -73,9 +67,6 @@ public class AbstractComponent
      */
     public void dispose() {
         if ( this.manager != null ) {
-            if ( this instanceof Receiver && this.portalService != null ) {
-                this.portalService.getEventManager().unsubscribe((Receiver)this);
-            }
             this.manager.release(this.portalService);
             this.portalService = null;
             this.manager = null;
@@ -86,8 +77,6 @@ public class AbstractComponent
      * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
-        if ( this instanceof Receiver ) {
-            this.portalService.getEventManager().subscribe((Receiver)this);
-        }
+        // do nothing for now 
     }
 }
