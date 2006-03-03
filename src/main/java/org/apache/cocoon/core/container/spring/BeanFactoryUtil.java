@@ -49,9 +49,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * This utility class helps in creating new Spring {@link BeanFactory} objects which support
- * the Avalon style component configuration. It also offers help in setting up the root
- * logger for Cocoon.
+ * This utility class helps in creating new Spring {@link ConfigurableBeanFactory} objects
+ * which support the Avalon style component configuration. It also offers help in setting
+ * up the root logger for Cocoon.
  *
  * @since 2.2
  * @version $Id$
@@ -67,10 +67,10 @@ public class BeanFactoryUtil {
      * @return A new bean factory.
      * @throws Exception
      */
-    public static ConfigurableBeanFactory createApplicationContext(AvalonEnvironment  env,
-                                                                   ConfigurationInfo  info,
-                                                                   BeanFactory        parent,
-                                                                   boolean            addCocoon)
+    public static ConfigurableBeanFactory createBeanFactory(AvalonEnvironment env,
+                                                            ConfigurationInfo info,
+                                                            BeanFactory       parent,
+                                                            boolean           addCocoon)
     throws Exception {
         final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
@@ -78,17 +78,18 @@ public class BeanFactoryUtil {
         if ( info.rootLogger != null ) {
             logger = env.logger.getChildLogger(info.rootLogger);
         }
-        CocoonBeanFactory context = new CocoonBeanFactory(rsc, 
+        CocoonBeanFactory factory = new CocoonBeanFactory(rsc, 
                                                           parent,
                                                           logger,
                                                           info,
                                                           env.context,
                                                           env.settings);
         if ( info.rootLogger != null ) {
-            context.registerSingleton(Logger.class.getName(), logger);
+            factory.registerSingleton(Logger.class.getName(), logger);
         }
-        prepareApplicationContext(context, info);
-        return context;
+        prepareBeanFactory(factory, info);
+        factory.preInstantiateSingletons();
+        return factory;
     }
 
     /**
@@ -108,6 +109,7 @@ public class BeanFactoryUtil {
         factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
         factory.registerSingleton(ProcessingUtil.LOGGER_ROLE, env.logger);
         factory.registerSingleton(ProcessingUtil.SETTINGS_ROLE, env.settings);
+        factory.preInstantiateSingletons();
         return factory;
     }
 
@@ -137,7 +139,6 @@ public class BeanFactoryUtil {
         try {
             return initLogger(context, settings);
         } catch (Exception ce) {
-            ce.printStackTrace();
             throw new CoreInitializationException("Cannot setup log4j logging system.", ce);
         }
     }
@@ -202,13 +203,13 @@ public class BeanFactoryUtil {
         return loggerManager.getLoggerForCategory(accesslogger);
     }
 
-    protected static void prepareApplicationContext(CocoonBeanFactory context,
-                                                    ConfigurationInfo configInfo) {
+    protected static void prepareBeanFactory(CocoonBeanFactory factory,
+                                             ConfigurationInfo configInfo) {
         // TODO - we should find a better way
         // add ProcessorComponentInfo
         ProcessorComponentInfo parentInfo = null;
-        if ( context.getParentBeanFactory() != null && context.getParentBeanFactory().containsBean(ProcessorComponentInfo.ROLE) ) {
-            parentInfo = (ProcessorComponentInfo)context.getParentBeanFactory().getBean(ProcessorComponentInfo.ROLE);
+        if ( factory.getParentBeanFactory() != null && factory.getParentBeanFactory().containsBean(ProcessorComponentInfo.ROLE) ) {
+            parentInfo = (ProcessorComponentInfo)factory.getParentBeanFactory().getBean(ProcessorComponentInfo.ROLE);
         }
         ProcessorComponentInfo info = new ProcessorComponentInfo(parentInfo);
         final Iterator i = configInfo.getComponents().values().iterator();
@@ -216,20 +217,20 @@ public class BeanFactoryUtil {
             final ComponentInfo current = (ComponentInfo)i.next();
             info.componentAdded(current.getRole(), current.getComponentClassName(), current.getConfiguration());
         }
-        prepareSelector(info, context, configInfo, Generator.ROLE);
-        prepareSelector(info, context, configInfo, Transformer.ROLE);
-        prepareSelector(info, context, configInfo, Serializer.ROLE);
-        prepareSelector(info, context, configInfo, ProcessingPipeline.ROLE);
-        prepareSelector(info, context, configInfo, Action.ROLE);
-        prepareSelector(info, context, configInfo, Selector.ROLE);
-        prepareSelector(info, context, configInfo, Matcher.ROLE);
-        prepareSelector(info, context, configInfo, Reader.ROLE);
+        prepareSelector(info, factory, configInfo, Generator.ROLE);
+        prepareSelector(info, factory, configInfo, Transformer.ROLE);
+        prepareSelector(info, factory, configInfo, Serializer.ROLE);
+        prepareSelector(info, factory, configInfo, ProcessingPipeline.ROLE);
+        prepareSelector(info, factory, configInfo, Action.ROLE);
+        prepareSelector(info, factory, configInfo, Selector.ROLE);
+        prepareSelector(info, factory, configInfo, Matcher.ROLE);
+        prepareSelector(info, factory, configInfo, Reader.ROLE);
         info.lock();
-        context.registerSingleton(ProcessorComponentInfo.ROLE, info);
+        factory.registerSingleton(ProcessorComponentInfo.ROLE, info);
     }
 
     protected static void prepareSelector(ProcessorComponentInfo info,
-                                          CocoonBeanFactory      context,
+                                          CocoonBeanFactory      factory,
                                           ConfigurationInfo      configInfo,
                                           String                 category) {
         final ComponentInfo component = (ComponentInfo)configInfo.getComponents().get(category + "Selector");
