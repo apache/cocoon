@@ -27,7 +27,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.cocoon.deployer.block.Block;
-import org.apache.commons.transaction.file.FileResourceManager;
+import org.apache.cocoon.deployer.filemanager.FileManager;
+import org.apache.cocoon.deployer.filemanager.FileManagerException;
 import org.apache.commons.transaction.file.ResourceManagerException;
 
 /**
@@ -95,9 +96,10 @@ public class ZipUtils {
      * @param out - the extractionTarget
      * @throws IOException - if problems during extracting occur
      * @throws ResourceManagerException 
+     * @throws FileManagerException 
      */
-    public static void extractZip(ZipInputStream blockStream, FileResourceManager frm, String txId, String targetDir) 
-        throws IOException, ResourceManagerException {
+    public static void extractZip(ZipInputStream blockStream, FileManager frm, String targetDir) 
+        throws IOException, FileManagerException {
         ZipEntry document = null;
         try {
             do {
@@ -108,8 +110,7 @@ public class ZipUtils {
                         blockStream.closeEntry();
                         continue;
                     }
-                    OutputStream out = frm.writeResource(
-                            txId, targetDir + File.separator + document.getName());                    
+                    OutputStream out = frm.writeResource(targetDir + File.separator + document.getName());                    
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     // loop over ZIP entry stream
                     byte[] buffer = new byte[8192];
