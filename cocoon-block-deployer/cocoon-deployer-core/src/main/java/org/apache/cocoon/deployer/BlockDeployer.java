@@ -66,7 +66,7 @@ public class BlockDeployer {
 	 * @param variableResolver - if you use variables in your deployment descriptor, you have to provide an implementation that resolves them
 	 * @param log - a logger for user-orientated messages about the deployment process.
 	 */
-	public void deploy(final Deploy deploymentDescriptor) {
+	public void deploy(final Deploy deploymentDescriptor, final boolean transactional) {
 		
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -110,7 +110,7 @@ public class BlockDeployer {
 				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider);
 		Collections.reverse(blockList);
 		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), 
-				cocoonWebappUrn, libraries, this.log);
+				cocoonWebappUrn, libraries, this.log, transactional);
 		
 		stopWatch.stop();
 		this.log.info("SUCESSFULLY deployed in " + stopWatch);
