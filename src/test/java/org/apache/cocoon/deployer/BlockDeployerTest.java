@@ -16,26 +16,41 @@
 package org.apache.cocoon.deployer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
 import org.apache.cocoon.deployer.logger.ConsoleLogger;
 import org.apache.cocoon.deployer.resolver.NullVariableResolver;
 import org.easymock.MockControl;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 
 public class BlockDeployerTest extends AbstractDeployerTestCase {
 
-	public void testDeploy() throws Exception {
+	public void testDeployNonTransactional() throws Exception {
+		createBlockDeployer("validDeploy-04/deploy.xml", false);
+		// assertions: ...
+	}
+	
+	public void testDeployTransactional() throws Exception {
+		createBlockDeployer("validDeploy-04/deploy.xml", true);
+		// assertions: ...
+	}
+	
+	public void testAutoWiringResolving() {
+		// TODO
+	}	
+
+	private void createBlockDeployer(String deploymentDescriptorPath, boolean transactional) 
+		throws MarshalException, ValidationException, FileNotFoundException {
 		BlockDeployer blockDeployer = new BlockDeployer(
 				this.getArtifactProviderInstance(),
 				new NullVariableResolver(),
 				new ConsoleLogger());
-		Deploy deploy = (Deploy) Deploy.unmarshal(new FileReader(this.getMockArtefact("validDeploy-04/deploy.xml")));
-		blockDeployer.deploy(absolutizeDeploy(deploy));
-		System.out.println("x");
-		// assertions: ...
-		
-	}
+		Deploy deploy = (Deploy) Deploy.unmarshal(new FileReader(this.getMockArtefact(deploymentDescriptorPath)));
+		blockDeployer.deploy(absolutizeDeploy(deploy), transactional);
+	}	
 	
 	private ArtifactProvider getArtifactProviderInstance() {
 		MockControl aProviderCtrl = MockControl.createControl(ArtifactProvider.class);
@@ -78,8 +93,6 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		return aProvider;
 	}	
 	
-	public void testAutoWiringResolving() {
 
-	}
 	
 }

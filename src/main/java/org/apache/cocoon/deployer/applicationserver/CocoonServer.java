@@ -28,7 +28,7 @@ import org.apache.cocoon.deployer.resolver.VariableResolver;
 
 public interface CocoonServer {
 
-	public boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log);
+	public boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log, boolean transactional);
 	
 	public boolean isExclusive();
 	

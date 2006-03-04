@@ -18,18 +18,16 @@ package org.apache.cocoon.deployer.applicationserver;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URI;
-import java.util.logging.Logger;
 
 import org.apache.cocoon.deployer.AbstractDeployerTestCase;
 import org.apache.cocoon.deployer.ArtifactProvider;
 import org.apache.cocoon.deployer.block.BinaryBlock;
 import org.apache.cocoon.deployer.block.BlockFactory;
 import org.apache.cocoon.deployer.block.impl.Block10;
+import org.apache.cocoon.deployer.filemanager.FileManager;
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
 import org.apache.cocoon.deployer.generated.wiring.x10.Wiring;
-import org.apache.commons.transaction.file.FileResourceManager;
-import org.apache.commons.transaction.util.Jdk14Logger;
-import org.apache.commons.transaction.util.LoggerFacade;
+import org.apache.cocoon.deployer.util.FileUtils;
 import org.easymock.MockControl;
 
 public class CocoonServer22Test extends AbstractDeployerTestCase {
@@ -51,7 +49,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		BinaryBlock[] blocks = new Block10[1];
 		blocks[0] = createBlock10Instance("validBlock-02/valid-block-1.0.jar", "validDeploy-02/deploy.xml", 0);	
 		
-		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger());
+		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger(), true);
 		
 	    // assertions: check if setting the properties works correctly
 		Wiring wiring = (Wiring) Wiring.unmarshal(new FileReader(new File(deployPath + "/WEB-INF/wiring.xml")));
@@ -74,7 +72,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 		blocks[1] = createBlock10Instance("validBlock-03/valid-block-1.0.jar", "validDeploy-03/deploy.xml", 1);
 		blocks[2] = createBlock10Instance("validBlock-03/valid-block-1.0.jar", "validDeploy-03/deploy.xml", 2);
 		
-		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger());
+		cocoonServer.deploy(blocks, DEFAULT_WEBAPP_ARTIFACT, createLibraries(), this.getLogger(), true);
 		
 	    // assertions: names, location, connections
 		Wiring wiring = (Wiring) Wiring.unmarshal(new FileReader(new File(deployPath + "/WEB-INF/wiring.xml")));
@@ -105,30 +103,20 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	/**
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deployCocoonServer(OutputStream)'
 	 */
-	public void testDeployCocoonServer() throws Exception {
+	public void testDeployCocoonServerTransactionalMode() throws Exception {
 		CocoonServer22 cocoonServer = new CocoonServer22();
 		
 		// set the basedirectory (JUnit test output dir)
 		File outputdir = this.createOutputDir("deployServer22");
-		File workdir = this.createOutputDir("deployServer22_work");		
 		
 		cocoonServer.setArtifactProvider(getArtifactProviderInstance());
 		
 		// test whether the Cocoon server got extracted
-
-		String relativeOutputDir = "x";
-	    String txId = "deploy";	    
-	    FileResourceManager frm = null;	    
-
-	    Logger logger = Logger.getLogger(CocoonServer22.class.getName());
-	    LoggerFacade sLogger = new Jdk14Logger(logger); 	    
+		String relativeOutputDir = "x";       
+	    FileManager frm = FileUtils.createFileManager(new File(outputdir.getAbsolutePath()).toURI(), true);
 	    
-	    frm = new FileResourceManager(outputdir.getAbsolutePath(), workdir.getAbsolutePath(), false, sLogger);
-	    frm.start();
-	    frm.startTransaction(txId);
-	    
-	    cocoonServer.deployCocoonServer(frm, txId, relativeOutputDir, DEFAULT_WEBAPP_ARTIFACT);
-	    frm.commitTransaction(txId);
+	    cocoonServer.deployCocoonServer(frm, relativeOutputDir, DEFAULT_WEBAPP_ARTIFACT);
+	    frm.commitTransaction();
 	    
 	    // ASSERTIONS!!!
 		Wiring wiring = (Wiring) Wiring.unmarshal(new FileReader(new File(deployPath + "/x/WEB-INF/wiring.xml")));
