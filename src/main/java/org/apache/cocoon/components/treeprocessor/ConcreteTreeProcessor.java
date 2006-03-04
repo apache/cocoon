@@ -69,9 +69,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Our ServiceManager */
     private ServiceManager manager;
 
-    /** Our class loader */
-    private ClassLoader classloader;
-
     /** The processor that wraps us */
     private TreeProcessor wrappingProcessor;
 
@@ -104,9 +101,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
 
-    /** no listeners by default */ 
-    private Map classpathListeners = Collections.EMPTY_MAP;
-
     /** Bean Factory for this sitemap. */
     protected ConfigurableBeanFactory beanFactory;
 
@@ -129,19 +123,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         needsReload = true;
     }
     
-    public void setClasspathListeners(Map classpathListeners) {
-        this.classpathListeners = classpathListeners;
-    }
-    
-    public Map getClasspathListeners() {
-        return this.classpathListeners;
-    }    
-    
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(ConfigurableBeanFactory beanFactory,
                                  ServiceManager manager,
-                                 ClassLoader classloader, 
-                                 ProcessingNode rootNode, 
+                                 ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
                                  List leaveSitemapEventListeners) {
@@ -151,7 +136,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         this.beanFactory = beanFactory;
         this.manager = manager;
-        this.classloader = classloader;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
@@ -333,10 +317,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             requestCount++;
         }
 
-        Thread currentThread = Thread.currentThread();
-        ClassLoader oldClassLoader = currentThread.getContextClassLoader();
-        currentThread.setContextClassLoader(this.classloader);
-
         try {
             // invoke listeners
             // only invoke if pipeline is not internally
@@ -384,9 +364,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                     ((LeaveSitemapEventListener)current.component).leftSitemap(leaveEvent);
                 }
             }
-
-            // Restore classloader
-            currentThread.setContextClassLoader(oldClassLoader);
 
             // Decrement the concurrent request count
             synchronized (this) {

@@ -45,8 +45,6 @@ public interface TreeBuilder {
     
     ServiceManager getServiceManager();
     
-    ClassLoader getBuiltProcessorClassLoader();
-
     ConcreteTreeProcessor getProcessor();
 
     void setProcessor(ConcreteTreeProcessor processor);

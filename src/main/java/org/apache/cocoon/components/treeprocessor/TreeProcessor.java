@@ -15,13 +15,10 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -40,9 +37,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.classloader.ClassLoaderFactory;
-import org.apache.cocoon.components.classloader.ReloadingClassLoaderFactory;
-import org.apache.cocoon.components.fam.SitemapMonitor;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -52,16 +46,6 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
-import org.apache.commons.jci.compilers.JavaCompiler;
-import org.apache.commons.jci.compilers.eclipse.EclipseJavaCompiler;
-import org.apache.commons.jci.listeners.CompilingListener;
-import org.apache.commons.jci.listeners.FileChangeListener;
-import org.apache.commons.jci.listeners.NotifyingListener;
-import org.apache.commons.jci.listeners.ReloadingListener;
-import org.apache.commons.jci.listeners.ResourceStoringListener;
-import org.apache.commons.jci.monitor.FilesystemAlterationListener;
-import org.apache.commons.jci.stores.ResourceStore;
-import org.apache.commons.jci.stores.TransactionalResourceStore;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
@@ -103,8 +87,6 @@ public class TreeProcessor extends AbstractLogEnabled
 
     /** Check for reload? */
     protected boolean checkReload;
-    
-    protected SitemapMonitor fam;
     
     /** The source resolver */
     protected SourceResolver resolver;
@@ -149,7 +131,6 @@ public class TreeProcessor extends AbstractLogEnabled
         this.manager = parent.concreteProcessor.getServiceManager();
 
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-        this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
         this.settings = (Settings) this.manager.lookup(Settings.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
@@ -186,7 +167,6 @@ public class TreeProcessor extends AbstractLogEnabled
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-        this.fam = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
         this.settings = (Settings) this.manager.lookup(Settings.ROLE);
     }
 
@@ -274,7 +254,7 @@ public class TreeProcessor extends AbstractLogEnabled
         return this.concreteProcessor.buildPipeline(environment);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getRootProcessor()
      */
     public Processor getRootProcessor() {
@@ -360,243 +340,12 @@ public class TreeProcessor extends AbstractLogEnabled
         }
     }
     
-    private JavaCompiler createJavaCompiler(final Configuration config) {
-        // FIXME: extract compiler and compiler configuration from config
-        return new EclipseJavaCompiler();
-    }
-    
-    private ResourceStore createResourceStore(final Configuration storeConfig) throws Exception {
-        final String className = storeConfig.getAttribute("class","org.apache.commons.jci.stores.MemoryResourceStore");
-        final ResourceStore store = (ResourceStore) Class.forName(className).newInstance();
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("storing resources in " + store.getClass().getName());
-        }
-        return store;
-    }
-    
-    private FilesystemAlterationListener createCompilingListener(
-            final Configuration dirConfig
-            ) throws Exception {
-        Source src = null;
-        
-        try {
-            src = resolver.resolveURI(dirConfig.getAttribute("src"));
-            final File repository = new File(src.getURI().substring(5));
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("monitoring src dir " + dirConfig.getAttribute("src"));
-            }
-
-            return new CompilingListener(
-                repository,
-                createJavaCompiler(dirConfig.getChild("compiler")),
-                new TransactionalResourceStore(createResourceStore(dirConfig.getChild("store")))
-              );
-        } finally {
-            resolver.release(src);
-        }
-    }
-
-    private FilesystemAlterationListener createReloadingListener(final Configuration dirConfig) 
-        throws Exception {
-        
-        Source src = null;
-        
-        try {
-            src = resolver.resolveURI(dirConfig.getAttribute("src"));
-            final File repository = new File(src.getURI().substring(5));
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("monitoring class dir " + dirConfig.getAttribute("src"));
-            }
-
-            return new ReloadingListener(
-                repository,
-                createResourceStore(dirConfig.getChild("store"))
-                );
-        } finally {
-            resolver.release(src);
-        }
-    }
-
-    private FilesystemAlterationListener createFileChangeListener(
-            final Configuration dirConfig
-            ) throws Exception {
-        Source src = null;
-        
-        try {
-            src = resolver.resolveURI(dirConfig.getAttribute("src"));
-            final File repository = new File(src.getURI().substring(5));
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("monitoring lib dir " + dirConfig.getAttribute("src"));
-            }
-
-            return new FileChangeListener(repository);
-        } finally {
-            resolver.release(src);
-        }
-    }
-
-    
-    private boolean containsListener(Map map, String src, Class clazz) {
-        FilesystemAlterationListener listener = (FilesystemAlterationListener) map.get(src);
-        if (listener == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("no previous listener for " + src);
-            }
-            return false;
-        }
-        if (!listener.getClass().equals(clazz)) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("previous listener was of a different type");
-            }
-            return false;
-        }
-        
-        return true;
-    }
-    
-    private Map createClasspathListeners(Map oldListeners, Configuration classpathConfig) throws Exception {
-
-        final Configuration[] classDirConfigs = classpathConfig.getChildren("class-dir");        
-        final Configuration[] srcDirConfigs = classpathConfig.getChildren("src-dir");        
-        final Configuration[] libDirConfigs = classpathConfig.getChildren("lib-dir");    
-
-        Map newListeners = new HashMap();
-        
-        for (int i = 0; i < classDirConfigs.length; i++) {
-            final Configuration dirConfig = classDirConfigs[i];
-            final String src = dirConfig.getAttribute("src");
-            if (containsListener(oldListeners, src, ReloadingListener.class)) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("keeping ReloadingListener for " + src);
-                }
-                newListeners.put(src, oldListeners.get(src));
-                oldListeners.remove(src);
-            } else {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("new ReloadingListener for " + src);
-                }
-                newListeners.put(src, createReloadingListener(dirConfig));
-            }
-        }
-
-        for (int i = 0; i < srcDirConfigs.length; i++) {
-            final Configuration dirConfig = srcDirConfigs[i];
-            final String src = dirConfig.getAttribute("src");
-            if (containsListener(oldListeners, src, CompilingListener.class)) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("keeping CompilingListener for " + src);
-                }
-                newListeners.put(src, oldListeners.get(src));
-                oldListeners.remove(src);
-            } else {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("new CompilingListener for " + src);
-                }
-                newListeners.put(src, createCompilingListener(dirConfig));
-            }
-        }
-
-        for (int i = 0; i < libDirConfigs.length; i++) {
-            final Configuration dirConfig = libDirConfigs[i];
-            final String src = dirConfig.getAttribute("src");
-            if (containsListener(oldListeners, src, FileChangeListener.class)) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("keeping FileChangeListener for " + src);
-                }
-                newListeners.put(src, oldListeners.get(src));
-                oldListeners.remove(src);
-            } else {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("new FileChangeListener for " + src);
-                }
-                newListeners.put(src, createFileChangeListener(dirConfig));
-            }
-        }
-             
-        return newListeners;
-    }
-    
-    protected ClassLoader createClassLoader(Configuration classpathConfig)
-    throws Exception {
-        String factoryRole = classpathConfig.getAttribute("factory-role", ClassLoaderFactory.ROLE + "/ReloadingClassLoaderFactory");
-        // Create a new classloader
-        ClassLoaderFactory clFactory = (ClassLoaderFactory)this.manager.lookup(factoryRole);
-        try {
-            return clFactory.createClassLoader(
-                    Thread.currentThread().getContextClassLoader(),
-                    classpathConfig
-            );
-        } finally {
-            this.manager.release(clFactory);
-        }
-    }
-
-    
     private Configuration createSitemapProgram(Source source) throws ProcessingException, SAXException, IOException {
         NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
         AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
         SourceUtil.toSAX(source, annotationsFilter);
         return handler.getConfiguration();        
     }
-    
-    private void subscribeListeners(Map listerens, ConcreteTreeProcessor processor) {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("setting up listeners " + listerens);
-        }
-        for (final Iterator it = listerens.values().iterator(); it.hasNext();) {
-            final NotifyingListener newListener = (NotifyingListener) it.next();
-            
-            newListener.setNotificationListener(processor);
-            
-            fam.subscribe(newListener);
-        }        
-    }
-
-    private void unsubscribeListeners(Map listerens) {
-        if (listerens != null && listerens.size() > 0) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("unsubscribing " + listerens + " from fam");
-            }
-            for (final Iterator it = listerens.values().iterator(); it.hasNext();) {
-                final FilesystemAlterationListener oldListener = (FilesystemAlterationListener) it.next();
-                fam.unsubscribe(oldListener);
-            }
-        }        
-    }
-    
-    private void waitForInitialCompilation(Map listeners) throws Exception {
-        if (listeners.size() > 0) {
-            // wait for the new ones to complete for the first time                
-            for (final Iterator it = listeners.values().iterator(); it.hasNext();) {
-                final NotifyingListener newListener = (NotifyingListener) it.next();
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("waiting for initial compilation");
-                }
-                newListener.waitForFirstCheck();
-            }
-        }        
-    }
-    
-    private void provideClasses(Map listeners, ClassLoader classloader) {
-        for (final Iterator it = listeners.values().iterator(); it.hasNext();) {
-            final NotifyingListener newListener = (NotifyingListener) it.next();
-
-            if (newListener instanceof ResourceStoringListener) {
-                ResourceStoringListener l = (ResourceStoringListener)newListener;
-                if (classloader instanceof ReloadingClassLoaderFactory.DefaultClassLoader) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("adding store " + l.getStore() + " to classloader");
-                    }
-                    ReloadingClassLoaderFactory.DefaultClassLoader cl = (ReloadingClassLoaderFactory.DefaultClassLoader) classloader;
-                    cl.addResourceStore(l.getStore());
-                }
-            }                
-        }        
-    }
-
     
     /**
      * Build the concrete processor (i.e. loads the sitemap). Should be called
@@ -615,14 +364,11 @@ public class TreeProcessor extends AbstractLogEnabled
         long newLastModified;
         ConcreteTreeProcessor newProcessor;
         ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
-        Map oldListeners = Collections.EMPTY_MAP;
-        Map newListeners = Collections.EMPTY_MAP;
                 
         if (oldProcessor != null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("found a previous ConcreteTreeProcessor");
             }            
-            oldListeners = oldProcessor.getClasspathListeners();                    
         } else {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("first version of the ConcreteTreeProcessor");
@@ -650,37 +396,6 @@ public class TreeProcessor extends AbstractLogEnabled
 
             newProcessor = createConcreteTreeProcessor();
 
-            // setup sitemap specific classloader
-            // (RP) Should we really support sitemap specific classloader when the global 
-            //      BlocksClassloader is in place?
-            Configuration classpathConfig = sitemapProgram.getChild("components").getChild("classpath", false);
-            if (classpathConfig != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("ConcreteTreeProcessor has a special classpath");
-                }
-                
-                // create a reloading classloader and make it the context classloader
-                ClassLoader classloader = createClassLoader(classpathConfig);
-                Thread.currentThread().setContextClassLoader(classloader);
-                
-                // create the listeners for all classpath entries (lib, classes, src)
-                newListeners = createClasspathListeners(oldListeners, classpathConfig);
-                
-                // store the listeners in the the concreteTreeProcessor instance
-                newProcessor.setClasspathListeners(newListeners);
-                
-                // subscribe all listeners to filesystem altering monitor (FAM)
-                subscribeListeners(newListeners, newProcessor);
-                
-                // use the information about the listeners to create the classpath
-                provideClasses(newListeners, classloader);
-            }
-
-            unsubscribeListeners(oldListeners);
-            
-            waitForInitialCompilation(newListeners);
-            
-
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
             try {
@@ -690,7 +405,6 @@ public class TreeProcessor extends AbstractLogEnabled
                 newProcessor.setProcessorData(
                         treeBuilder.getBeanFactory(),
                         treeBuilder.getServiceManager(),
-                        treeBuilder.getBuiltProcessorClassLoader(),
                         root,
                         treeBuilder.getDisposableNodes(),
                         treeBuilder.getEnterSitemapEventListeners(),
@@ -749,7 +463,6 @@ public class TreeProcessor extends AbstractLogEnabled
                 this.resolver.release(this.source.getSource());
                 this.source = null;
             }
-            this.manager.release(this.fam);
             this.manager.release(this.resolver);
             this.manager.release(this.settings);
             this.resolver = null;
