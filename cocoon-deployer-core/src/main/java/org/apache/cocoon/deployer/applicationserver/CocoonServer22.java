@@ -36,6 +36,8 @@ import org.apache.cocoon.deployer.DeploymentException;
 import org.apache.cocoon.deployer.block.BinaryBlock;
 import org.apache.cocoon.deployer.block.Block;
 import org.apache.cocoon.deployer.block.LocalBlock;
+import org.apache.cocoon.deployer.filemanager.FileManager;
+import org.apache.cocoon.deployer.filemanager.FileManagerException;
 import org.apache.cocoon.deployer.generated.block.x10.Property;
 import org.apache.cocoon.deployer.generated.wiring.x10.Mount;
 import org.apache.cocoon.deployer.generated.wiring.x10.Wiring;
@@ -45,8 +47,6 @@ import org.apache.cocoon.deployer.util.FileUtils;
 import org.apache.cocoon.deployer.util.XMLUtils;
 import org.apache.cocoon.deployer.util.ZipUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.transaction.file.FileResourceManager;
-import org.apache.commons.transaction.file.ResourceManagerException;
 
 public class CocoonServer22 implements CocoonServer {
 
@@ -64,20 +64,18 @@ public class CocoonServer22 implements CocoonServer {
 	/**
 	 * Deploy an array of blocks. This operation wrapped by a filesystem transaction so that either
 	 * all or any blocks get deployed. Note that the used filesystem transaction implementation only
-	 * supports transaction within a single thread. Therefore this method is synchronized.
+	 * supports transactions within a single thread. Therefore this method is synchronized.
 	 */
 	/*
 	 * TODO exclusive mode not implemented yet
 	 * TODO variable resolver not used yet
 	 */
-	public synchronized boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log) {
+	public synchronized boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log, boolean transactional) {
 		Validate.notNull(blocks, "A blocks object (Block[]) has to be passed to this method!");
 		Validate.notNull(libraries, "A libraries object (File[]) has to passed to this method!");
 		
-		// create transaction context    
-	    String txId = "deploy";	    	    
-	    FileResourceManager frm;
-	    frm = FileUtils.createFileResourceManager(txId, this.baseDirectory);
+		// create transaction context    	    
+	    FileManager frm = FileUtils.createFileManager(this.baseDirectory, transactional);
 	    
 	    // create installed block index
 	    Map installedBlocks = new HashMap();	
@@ -87,7 +85,7 @@ public class CocoonServer22 implements CocoonServer {
 	    	
 			// install the Cocoon server if necessary
 			if(baseDirectoryFile.list().length == 0 && serverArtifact != null) {
-				deployCocoonServer(frm, txId, "", serverArtifact);
+				deployCocoonServer(frm, "", serverArtifact);
 			}
 
 			// create the wiring, in exclusive mode from scratch, elese take the existing one
@@ -96,13 +94,13 @@ public class CocoonServer22 implements CocoonServer {
 				wiring = new Wiring();
 			} else {
 				// check wiring version
-				String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(txId, WIRING_FILE));
+				String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(WIRING_FILE));
 				if(!WIRING_10_NAMESPACE.equals(wiringVersion)) {
 					String msg = "The deployer only supports " + WIRING_10_NAMESPACE + " files.";
 					log.error(msg);
 					throw new DeploymentException(msg);				
 				}				
-				wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(txId, WIRING_FILE)));	
+				wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(WIRING_FILE)));	
 			}
 			
 			// install all passed blocks
@@ -128,7 +126,7 @@ public class CocoonServer22 implements CocoonServer {
 						this.lastDir = Integer.parseInt(nextDirectory);
 						String installDirectory = BLOCKS_DIR + nextDirectory + "/";
 						wiringBlock.setLocation(installDirectory);					
-						deployBlock(binaryBlock, frm, txId, BLOCKS_DIR + nextDirectory);
+						deployBlock(binaryBlock, frm, BLOCKS_DIR + nextDirectory);
 						installedBlocks.put(block.getId(), installDirectory);
 					} else {
 						wiringBlock.setLocation((String) installedBlocks.get(block.getId()));
@@ -155,38 +153,26 @@ public class CocoonServer22 implements CocoonServer {
 				}
 				
 				if(!isBlock) {
-					FileInputStream fis = null;
-					OutputStream out = null;
-					try {
-						fis = new FileInputStream(lib);
-						String libName = lib.getName();
-						log.info("Installing library " + WEB_INF_LIBS_DIR + "/" + libName);		
-						out = frm.writeResource(txId, WEB_INF_LIBS_DIR + "/" + libName);	
-						int b;
-						while((b = fis.read()) != -1) {
-							out.write(b);
-						}					
-					} finally {
-						fis.close();
-						out.close();
-					}
+					String libName = WEB_INF_LIBS_DIR + "/" + lib.getName();
+					log.info("Installing library " + libName);		
+			        FileUtils.copy(new FileInputStream(lib), frm.writeResource(libName));						
 				}
 			}
 			
 			// write the wiring
-            OutputStream out = frm.writeResource(txId, WIRING_FILE);    
+            OutputStream out = frm.writeResource(WIRING_FILE);    
             wiring.marshal(new OutputStreamWriter(out));
             out.close();
             
             // committ transaction
-			frm.commitTransaction(txId); 
+			frm.commitTransaction(); 
 			
 	    } catch(Exception ex) {
 	    	try {
-				frm.rollbackTransaction(txId);
+				frm.rollbackTransaction(ex);
 				String msg = "Filesystem changes have been rolled back. No block has been installed!";
 				throw new DeploymentException(msg, ex);
-			} catch (ResourceManagerException e) {
+			} catch (FileManagerException e) {
 				throw new DeploymentException("A problem occurred when roling back the filesystem changes.");
 			}
 	    }
@@ -296,12 +282,12 @@ public class CocoonServer22 implements CocoonServer {
 	/**
 	 * Extract a block to the filesystem using the FileResourceManager
 	 */
-	protected void deployBlock(BinaryBlock binaryBlock, FileResourceManager frm, String txId, String relativeOutputDir) {
+	protected void deployBlock(BinaryBlock binaryBlock, FileManager frm, String relativeOutputDir) {
 		try {
-			ZipUtils.extractZip(new ZipInputStream(binaryBlock.getInputStream()), frm, txId, relativeOutputDir);
+			ZipUtils.extractZip(new ZipInputStream(binaryBlock.getInputStream()), frm, relativeOutputDir);
 		} catch (IOException e) {
 			throw new DeploymentException("A problem while extracting a block occurred");
-		} catch (ResourceManagerException e) {
+		} catch (FileManagerException e) {
 			throw new DeploymentException("A problem while extracting a block occurred");
 		}
 	}
@@ -309,15 +295,15 @@ public class CocoonServer22 implements CocoonServer {
 	/**
 	 * Extract the Cocoon server to the filesystem using the FileResourceManager
 	 */
-	protected void deployCocoonServer(FileResourceManager frm, String txId, String relativeOutputDir, String serverArtifact) {
+	protected void deployCocoonServer(FileManager frm, String relativeOutputDir, String serverArtifact) {
 		File zip = this.artifactProvider.getArtifact(serverArtifact);
 		try {
-			ZipUtils.extractZip(new ZipInputStream(new FileInputStream(zip)), frm, txId, relativeOutputDir);
+			ZipUtils.extractZip(new ZipInputStream(new FileInputStream(zip)), frm, relativeOutputDir);
 		} catch (FileNotFoundException e) {
 			throw new DeploymentException("Can't get the Cocoon server artifact.");
 		} catch (IOException e) {
 			throw new DeploymentException("A problem while extracting the Cocoon server occurred");
-		} catch (ResourceManagerException e) {
+		} catch (FileManagerException e) {
 			throw new DeploymentException("A problem while extracting the Cocoon server occured");
 		}
 	}

@@ -16,22 +16,20 @@
 package org.apache.cocoon.deployer.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Logger;
 
 import org.apache.cocoon.deployer.DeploymentException;
-import org.apache.commons.transaction.file.FileResourceManager;
-import org.apache.commons.transaction.file.ResourceManagerException;
-import org.apache.commons.transaction.file.ResourceManagerSystemException;
-import org.apache.commons.transaction.util.Jdk14Logger;
+import org.apache.cocoon.deployer.filemanager.FileManager;
+import org.apache.cocoon.deployer.filemanager.NontransactionalFileManager;
+import org.apache.cocoon.deployer.filemanager.TransactionalFileManager;
 
 /**
  * Utitily class to handle ZIP archives.
  */
 public class FileUtils {
-	
-    private static final Logger logger = Logger.getLogger(FileUtils.class.getName());		
 
 	/**
 	 * Delete a directory recursivly
@@ -50,48 +48,51 @@ public class FileUtils {
         }
         return directory.delete();
     }	
-    
+
     /**
-     * A factory method that creates a @link FileResourceManager using the passed base directory and transaction id.
-     * @return the intialized resource manager
+     * Factory method, that creates a FileManager, either a transactional or a
+     * non-transaction one.
      */
-    public static FileResourceManager createFileResourceManager(String txId, URI basedir) {
-
-    	// create the output directory
-    	File outputdir = new File(basedir);    	
-
-		if(!outputdir.exists()) {
-			if(!outputdir.mkdirs()) {
-				throw new DeploymentException("Can't create server directory: " + outputdir.getAbsolutePath());
-			}
+	public static FileManager createFileManager(URI basedir, boolean transactional) {
+		if(transactional) {
+			return new TransactionalFileManager(basedir);
 		}
-		
-		// create the workdir for the FileResourceManager
-		File workdir = null;
+		return new NontransactionalFileManager(basedir);
+	}
+
+	/**
+	 * Create the directories of a non-exisiting file.
+	 */
+	public static File createDirectory(File file) throws IOException {
+		if(file.isDirectory() || file.exists()) {
+			return file;
+		}
+		String absolutePath = file.getCanonicalPath();
+		String absolutePathDir = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
+		File absolutePathDirFile = new File(absolutePathDir);
+		if(absolutePathDirFile.exists()) {
+			return file;
+		}
+		if(!new File(absolutePathDir).mkdirs()) {
+			throw new DeploymentException("Can't create directory '" + absolutePathDir + "'");
+		}
+		return file;
+	}
+
+	/**
+	 * Copies an inputstream to an outputstream.
+	 */
+	public static void copy(InputStream fis, OutputStream out) throws IOException {
 		try {
-			workdir = new File(new URI(basedir + "_WORK"));
-		} catch (URISyntaxException ue) {
-			throw new DeploymentException("Can't create work directory", ue);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = fis.read(buf)) > 0) {
+			    out.write(buf, 0, len);
+			}
+		} finally {
+			fis.close();
+			out.close();
 		}
-		if(workdir.exists()) {
-			FileUtils.deleteDirRecursivly(workdir);
-		}
-
-		if(!workdir.mkdirs()) {
-			throw new DeploymentException("Can't create work directory");
-		}		
-		
-		// create transaction context      	    
-	    FileResourceManager frm = new FileResourceManager(outputdir.getAbsolutePath(), workdir.getAbsolutePath(), false, new Jdk14Logger(logger));
-	    try {
-			frm.start();
-		    frm.startTransaction(txId);					
-		} catch (ResourceManagerSystemException e) {
-			throw new DeploymentException("A problem while starting the filesystem transaction manager occurred.");
-		} catch (ResourceManagerException e) {
-			throw new DeploymentException("A problem while starting the filesystem transaction manager occurred.");
-		}
-		return frm;
-    }
+	}
 	
 }

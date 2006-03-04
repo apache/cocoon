@@ -190,7 +190,7 @@ public class DeployMojo extends AbstractWarMojo
                               new NullVariableResolver(),
                               new MavenLoggingWrapper(this.getLog()));
         
-        blockDeployer.deploy(deploy);
+        blockDeployer.deploy(deploy, false);
         
     }	
     
