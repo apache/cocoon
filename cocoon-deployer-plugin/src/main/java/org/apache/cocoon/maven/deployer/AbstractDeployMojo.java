@@ -35,23 +35,9 @@ import org.exolab.castor.xml.ValidationException;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
- * 
- * @goal deploy
- * @requiresProject true
- * @phase package
- * @description Create a Cocoon web application based on a block deployment descriptor.
  */
-public class DeployMojo extends AbstractWarMojo 
+abstract class AbstractDeployMojo extends AbstractWarMojo 
 {
-	
-    /**
-     * The project whose project files to create.
-     *
-     * @parameter expression="${project}"
-     * @required
-     */
-    private MavenProject project;		
-
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
      *
@@ -106,6 +92,15 @@ public class DeployMojo extends AbstractWarMojo
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // set properties: necessary because DeployMojo is not in the same package as AbstractWarMojo
+    
+    /**
+     * The project whose project files to create.
+     *
+     * @parameter expression="${project}"
+     * @required
+     */
+    private MavenProject project;	    
+    
     /**
      * The directory containing generated classes.
      *
@@ -139,7 +134,7 @@ public class DeployMojo extends AbstractWarMojo
     private String webXml;
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
 	
-    public void execute() throws MojoExecutionException 
+    protected void deployBlocks() throws MojoExecutionException 
     {
     	File webappDirectory_ = getWebappDirectory();
     	
