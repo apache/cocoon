@@ -17,16 +17,6 @@
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
   id="org.apache.cocoon:cocoon-deployer-plugin-demo:1.0-SNAPSHOT">
   
-  <name>Demo for the Cocoon block deployer</name>
-  <description href="http://cocoon.apache.org">
-    Demo for the Cocoon block deployer
-  </description>
-  <state href="http://cocoon.apache.org/blocks/anyblock/1.0/state.html" 
-         community="committed" 
-         interfaces="unstable" 
-         implementation="unstable"/>
-  <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
-  <author href="http://cocoon.apache.org">Apache Cocoon community</author>
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
     <sitemap file="COB-INF/sitemap.xmap" check-reload="true"/>
   </servlet>  
