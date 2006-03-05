@@ -17,21 +17,13 @@
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
   id="${groupId}:${artifactId}:1.0-SNAPSHOT">
   
-  <name>${artifactId}</name>
-  <description href="http://your-company.com">
-    A Cocoon block
-  </description>
-  <state href="http://company.com/${artifactId}/1.0/state.html" 
-         community="committed" 
-         interfaces="unstable" 
-         implementation="unstable"/>
-  <license href="http://company.com/licenses/">[license]</license>
-  <author href="http://company.com">[author]</author>
   <servlet class="org.apache.cocoon.sitemap.SitemapServlet">
     <sitemap file="COB-INF/sitemap.xmap" check-reload="true"/>
-  </servlet>  
+  </servlet> 
+   
   <requirements>
     <requires interface="http://cocoon.apache.org/blocks/core-components/1.0" 
       name="core" default="org.apache.cocoon:cocoon-core-components:1.0-SNAPSHOT"/>
   </requirements>
+  
 </block>
