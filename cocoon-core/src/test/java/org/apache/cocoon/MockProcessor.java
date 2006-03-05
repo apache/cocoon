@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * Mock processor
@@ -26,8 +27,14 @@ import org.apache.cocoon.environment.SourceResolver;
  * @version $Id$
  */
 public class MockProcessor implements Processor {
-    
-    /* (non-Javadoc)
+
+    private final ConfigurableListableBeanFactory beanFactory;
+
+    public MockProcessor(ConfigurableListableBeanFactory factory) {
+        this.beanFactory = factory;
+    }
+
+    /**
      * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
@@ -35,34 +42,34 @@ public class MockProcessor implements Processor {
         return null;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Map getComponentConfigurations() {
         return null;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getContext()
      */
     public String getContext() {
         return null;
     }
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getRootProcessor()
      */
     public Processor getRootProcessor() {
         return this;
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#getSourceResolver()
      */
     public SourceResolver getSourceResolver() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
      */
     public boolean process(Environment environment) throws Exception {
@@ -90,4 +97,17 @@ public class MockProcessor implements Processor {
         // nothing to do
     }
 
+    /**
+     * @see org.apache.cocoon.Processor#getParent()
+     */
+    public Processor getParent() {
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getBeanFactory()
+     */
+    public ConfigurableListableBeanFactory getBeanFactory() {
+        return this.beanFactory;
+    }
 }

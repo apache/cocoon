@@ -109,7 +109,7 @@ public class BeanFactoryUtil {
      * @return A new root application factory.
      * @throws Exception
      */
-    public static ConfigurableListableBeanFactory createRootApplicationContext(AvalonEnvironment  env)
+    public static ConfigurableListableBeanFactory createRootBeanFactory(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);

@@ -49,6 +49,7 @@ import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -343,7 +344,7 @@ public class TreeProcessor extends AbstractLogEnabled
     private Configuration createSitemapProgram(Source source) throws ProcessingException, SAXException, IOException {
         NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
         AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
-        SourceUtil.toSAX(source, annotationsFilter);
+        SourceUtil.toSAX(this.manager, source, null, annotationsFilter);
         return handler.getConfiguration();        
     }
     
@@ -387,7 +388,7 @@ public class TreeProcessor extends AbstractLogEnabled
         // If these components try to access the current processor or the
         // current service manager they must get this one - which is currently
         // in the process of initialization.
-        EnvironmentHelper.enterProcessor(this, this.manager, env);
+        EnvironmentHelper.enterProcessor(this, env);
 
         try {
 
@@ -490,5 +491,25 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     public void setAttribute(String name, Object value) {
         this.concreteProcessor.setAttribute(name, value);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getBeanFactory()
+     */
+    public ConfigurableListableBeanFactory getBeanFactory() {
+        if ( this.concreteProcessor != null ) {
+            return this.concreteProcessor.getBeanFactory();
+        }
+        if ( parent != null ) {
+            return this.parent.getBeanFactory();
+        }
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getParent()
+     */
+    public Processor getParent() {
+        return this.parent;
     }
 }

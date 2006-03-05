@@ -654,7 +654,7 @@ public class SitemapLanguage
      * element of the tree.
      */
     protected ConfigurableListableBeanFactory createBeanFactory(Context       context,
-                                                        Configuration config)
+                                                                Configuration config)
     throws Exception {
         // setup spring container
         // first, get the correct parent
