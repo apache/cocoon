@@ -32,7 +32,6 @@
   
   <xs:complexType name="cocoon">
   	<xs:attribute name="target-url" type="xs:anyURI" use="optional"/>
-    <xs:attribute name="exclusive" type="xs:boolean" use="optional" default="true"/>
   	<xs:attribute name="webapp-urn" type="xs:anyURI" use="optional"/>
   	<xs:attribute name="block-fw-urn" type="xs:anyURI" use="optional"/>
   </xs:complexType>
