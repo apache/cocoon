@@ -34,6 +34,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -59,6 +60,9 @@ public class Cocoon implements Processor, BeanFactoryAware {
 
     /** The logger. */
     protected final Logger logger;
+
+    /** The bean factory. */
+    protected ConfigurableListableBeanFactory beanFactory;
 
     /**
      * An optional component that is called before and after processing all
@@ -93,6 +97,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory factory) throws BeansException {
+        this.beanFactory = (ConfigurableListableBeanFactory)factory;
         // get the optional request listener
         if (factory.containsBean(RequestListener.ROLE)) {
             this.requestListener = (RequestListener) factory.getBean(RequestListener.ROLE);
@@ -207,7 +212,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
     public boolean process(Environment environment) throws Exception {
         environment.startingProcessing();
         final int environmentDepth = EnvironmentHelper.markEnvironment();
-        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
+        EnvironmentHelper.enterProcessor(this, environment);
         try {
             boolean result;
             if (this.logger.isDebugEnabled()) {
@@ -339,5 +344,20 @@ public class Cocoon implements Processor, BeanFactoryAware {
      */
     public void setAttribute(String name, Object value) {
         this.processorAttributes.put(name, value);
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getBeanFactory()
+     */
+    public ConfigurableListableBeanFactory getBeanFactory() {
+        return this.beanFactory;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getParent()
+     */
+    public Processor getParent() {
+        // we have no parent
+        return null;
     }
 }

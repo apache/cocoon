@@ -1062,7 +1062,7 @@ public class IncludeTransformer extends AbstractTransformer
                     }
 
                     // Setup this thread's environment
-                    EnvironmentHelper.enterProcessor(processor, manager, environment);
+                    EnvironmentHelper.enterProcessor(processor, environment);
                     try {
                         element.process(this);
 

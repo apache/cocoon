@@ -16,12 +16,16 @@
 package org.apache.cocoon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.excalibur.source.SourceResolver;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * This is an utility class for processing Cocoon requests.
@@ -41,6 +45,9 @@ public class ProcessingUtil {
 
     /** Bean name for the service manager. */
     public static String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
+
+    /** Bean name for local source resolver. (TODO) */
+    public static String LOCAL_SOURCE_RESOLVER_ROLE = SourceResolver.ROLE + "/local";
 
     /**
      * Avoid construction.
@@ -99,11 +106,45 @@ public class ProcessingUtil {
 
     /**
      * Get the current sitemap component manager.
-     * This method return the current sitemap component manager. This
+     * This method returns the current sitemap component manager. This
      * is the manager that holds all the components of the currently
      * processed (sub)sitemap.
      */
     static public ServiceManager getSitemapServiceManager() {
         return EnvironmentHelper.getSitemapServiceManager(); 
+    }
+
+    final static protected Map processors = new HashMap();
+
+    static public void register(Processor processor) {
+        ProcessorInfo pi = new ProcessorInfo();
+        if ( processor.getParent() != null ) {
+            pi.beanFactory = getBeanFactory(processor.getParent());
+        }
+        processors.put(processor, pi);
+    }
+
+    static public void unregister(Processor processor) {
+        processors.remove(processor);
+    }
+
+    static public void setBeanFactory(Processor processor, ConfigurableListableBeanFactory beanFactory) {
+        ProcessorInfo pi = (ProcessorInfo)processors.get(processor);
+        if ( pi != null ) {
+            pi.beanFactory = beanFactory;
+        }
+        throw new IllegalStateException("Processor has not been registered. " + processor);        
+    }
+
+    static public ConfigurableListableBeanFactory getBeanFactory(Processor processor) {
+        ProcessorInfo pi = (ProcessorInfo)processors.get(processor);
+        if ( pi != null ) {
+            return pi.beanFactory;
+        }
+        throw new IllegalStateException("Processor has not been registered. " + processor);
+    }
+
+    protected static final class ProcessorInfo {
+        public ConfigurableListableBeanFactory beanFactory;
     }
 }

@@ -191,8 +191,7 @@ public final class SitemapSource
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             this.environment.setOutputStream(os);
             EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
-                                            this.manager,
-                                            this.environment);
+                                             this.environment);
             try {
 
                 this.pipelineDescription.processingPipeline.process(this.environment);
@@ -269,7 +268,6 @@ public final class SitemapSource
             if (redirectURL == null) {
 
                 EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
-                                                 this.manager,
                                                  this.environment);
                 try {
                     this.pipelineDescription.processingPipeline.prepareInternal(this.environment);
@@ -340,7 +338,6 @@ public final class SitemapSource
                 // We have to add an environment changer
                 // for clean environment stack handling.
                 EnvironmentHelper.enterProcessor(this.pipelineDescription.lastProcessor,
-                                                 this.manager,
                                                  this.environment);
                 try {
                     this.pipelineDescription.processingPipeline.process(this.environment,

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.environment.internal;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 
@@ -33,16 +32,13 @@ public class EnvironmentInfo {
 
     public final Processor      processor;
     public final int            oldStackCount;
-    public final ServiceManager manager;
     public final Environment    environment;
 
-    public EnvironmentInfo(Processor processor, 
-                           int oldStackCount,
-                           ServiceManager manager,
-                           Environment    environment) {
+    public EnvironmentInfo(Processor   processor, 
+                           int         oldStackCount,
+                           Environment environment) {
         this.processor = processor;
         this.oldStackCount = oldStackCount;
-        this.manager = manager;
         this.environment = environment;
     }
 }
