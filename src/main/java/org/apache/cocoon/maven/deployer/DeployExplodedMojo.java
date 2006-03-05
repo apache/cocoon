@@ -25,8 +25,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @phase package
  * @description Create a Cocoon web application based on a block deployment descriptor.
  */
-public class DeployExplodedMojo extends AbstractDeployMojo 
-{
+public class DeployExplodedMojo extends AbstractDeployMojo {
 
 	public void execute() throws MojoExecutionException {
 		this.deployBlocks();

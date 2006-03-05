@@ -185,7 +185,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
                               new NullVariableResolver(),
                               new MavenLoggingWrapper(this.getLog()));
         
-        blockDeployer.deploy(deploy, false);
+        blockDeployer.deploy(deploy, false, true);
         
     }	
     
