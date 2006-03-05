@@ -60,15 +60,15 @@ public class BlockFactory {
 			block.setId(blockDescriptor.getId());
 		
 		} catch (FileNotFoundException e) {
-			throw new DeploymentException("The block archive file can't be found.");
+			throw new DeploymentException("The block archive file '" + blockArchive.getAbsolutePath() + "' can't be found.");
 		} catch (IOException e) {
-			throw new DeploymentException("The block archive or the block descriptor can't be read correctly.");
+			throw new DeploymentException("The block archive or the block descriptor '" + blockArchive.getAbsolutePath() + "' can't be read correctly.");
 		} catch (MarshalException e) {
-			throw new DeploymentException("The block descriptor of the archive can't be read correctly.");
+			throw new DeploymentException("The block descriptor of the archive '" + blockArchive.getAbsolutePath() + "' can't be read correctly.");
 		} catch (ValidationException e) {
-			throw new DeploymentException("The block descriptor of the archive can't be read correctly.");
+			throw new DeploymentException("The block descriptor of the archive '" + blockArchive.getAbsolutePath() + "' can't be read correctly.");
 		} catch (SAXException e) {
-			throw new DeploymentException("The block descriptor of the archive can't be read correctly.");
+			throw new DeploymentException("The block descriptor of the archive '" + blockArchive.getAbsolutePath() + "' can't be read correctly.");
 		}
 		
 		return block;
