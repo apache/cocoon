@@ -74,14 +74,6 @@ public interface BaseSettings {
     String KEY_LOAD_CLASSES = "classloader.load.classes";
 
     /**
-     * This parameter allows to specify additional directories or jars
-     * which Cocoon should put into it's own classpath.
-     * Note that absolute pathes are taken as such but relative pathes
-     * are rooted at the context root of the Cocoon servlet.
-     */
-    String KEY_EXTRA_CLASSPATHS = "extra.classpaths";
-
-    /**
      * This parameter indicates the category id of the logger from the LogKit
      * configuration used by the environment.
      */
@@ -155,12 +147,6 @@ public interface BaseSettings {
      * @see #KEY_CONFIGURATION
      */
     String getConfiguration();
-
-    /**
-     * @return Returns the extraClasspaths.
-     * @see #KEY_EXTRA_CLASSPATHS
-     */
-    List getExtraClasspaths();
 
     /**
      * @return Returns the loadClasses.

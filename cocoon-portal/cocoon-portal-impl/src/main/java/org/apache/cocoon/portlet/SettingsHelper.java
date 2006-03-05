@@ -21,7 +21,6 @@ import javax.portlet.PortletConfig;
 
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * This helper class initializes the {@link MutableSettings} object from the servlet
@@ -95,8 +94,6 @@ public class SettingsHelper {
             s.setWorkDirectory(value);
         }
 
-        handleExtraClassPath(config.getInitParameter("extra-classpath"), s);
-
         value = getInitParameter(config, "show-time");
         if ( value != null && value.equalsIgnoreCase("hide") ) {
             s.setShowTime(true);
@@ -140,20 +137,6 @@ public class SettingsHelper {
         while (tokenizer.hasMoreTokens()) {
             final String value = tokenizer.nextToken().trim();
             s.addToLoadClasses(value);
-        }
-    }
-
-    /**
-     * Retreives the "extra-classpath" attribute, that needs to be
-     * added to the class path.
-     */
-    private static void handleExtraClassPath(String extraClassPath, MutableSettings settings) {
-        if (extraClassPath != null) {
-            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
-            while (st.hasMoreTokens()) {
-                String s = st.nextToken();
-                settings.addToExtraClasspaths(s);
-            }
         }
     }
 

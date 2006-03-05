@@ -146,14 +146,6 @@ public class MutableSettings implements Settings {
     protected String workDirectory;
 
     /**
-     * This parameter allows to specify additional directories or jars
-     * which Cocoon should put into it's own classpath.
-     * Note that absolute pathes are taken as such but relative pathes
-     * are rooted at the context root of the Cocoon servlet.
-     */
-    protected List extraClasspaths = new ArrayList();
-
-    /**
      * Allow adding processing time to the response
      */
     protected boolean showTime = SHOW_TIME;
@@ -263,8 +255,6 @@ public class MutableSettings implements Settings {
                         this.overrideLogLevel = value;
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
                         this.addToLoadClasses(value);
-                    } else if ( key.startsWith(KEY_EXTRA_CLASSPATHS) ) {
-                        this.addToExtraClasspaths(value);
                     } else if ( key.startsWith(KEY_PROPERTY_PROVIDER) ) {
                         this.addToPropertyProviders(value);
                     }
@@ -335,13 +325,6 @@ public class MutableSettings implements Settings {
      */
     public boolean isEnableUploads() {
         return this.enableUploads;
-    }
-
-    /**
-     * @return Returns the extraClasspaths.
-     */
-    public List getExtraClasspaths() {
-        return this.extraClasspaths;
     }
 
     /**
@@ -524,8 +507,6 @@ public class MutableSettings implements Settings {
                 value = this.overrideLogLevel;
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
                 value = this.toString(this.loadClasses);
-            } else if ( key.equals(KEY_EXTRA_CLASSPATHS) ) {
-                this.toString(this.extraClasspaths);
             } else if ( key.equals(KEY_PROPERTY_PROVIDER) ) {
                 this.toString(this.propertyProviders);
             }
@@ -553,7 +534,6 @@ public class MutableSettings implements Settings {
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
-          KEY_EXTRA_CLASSPATHS + " : " + this.toString(this.extraClasspaths) + '\n' +
           KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
           KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
           KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
@@ -676,14 +656,6 @@ public class MutableSettings implements Settings {
     public void setEnableUploads(boolean enableUploads) {
         this.checkWriteable();
         this.enableUploads = enableUploads;
-    }
-
-    /**
-     * @param extraClasspath The extraClasspaths to set.
-     */
-    public void addToExtraClasspaths(String extraClasspath) {
-        this.checkWriteable();
-        this.extraClasspaths.add(extraClasspath);
     }
 
     /**
