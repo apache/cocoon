@@ -25,19 +25,15 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.core.CoreInitializationException;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
@@ -49,20 +45,16 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.servlet.CocoonServlet;
-import org.apache.cocoon.sitemap.EnterSitemapEventListener;
-import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
-import org.apache.cocoon.sitemap.SitemapListener;
 import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.util.ClassUtils;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * This utility class helps in creating new Spring {@link ConfigurableBeanFactory} objects
+ * This utility class helps in creating new Spring {@link ConfigurableListableBeanFactory} objects
  * which support the Avalon style component configuration. It also offers help in setting
  * up the root logger for Cocoon.
  *
@@ -82,10 +74,10 @@ public class BeanFactoryUtil {
      * @return A new bean factory.
      * @throws Exception
      */
-    public static ConfigurableBeanFactory createBeanFactory(AvalonEnvironment env,
-                                                            ConfigurationInfo info,
-                                                            BeanFactory       parent,
-                                                            boolean           addCocoon)
+    public static ConfigurableListableBeanFactory createBeanFactory(AvalonEnvironment env,
+                                                                    ConfigurationInfo info,
+                                                                    BeanFactory       parent,
+                                                                    boolean           addCocoon)
     throws Exception {
         final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
         Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
@@ -117,7 +109,7 @@ public class BeanFactoryUtil {
      * @return A new root application factory.
      * @throws Exception
      */
-    public static ConfigurableBeanFactory createRootApplicationContext(AvalonEnvironment  env)
+    public static ConfigurableListableBeanFactory createRootApplicationContext(AvalonEnvironment  env)
     throws Exception {
         final ApplicationContext parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);
@@ -258,29 +250,16 @@ public class BeanFactoryUtil {
      * Build a bean factory with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ConfigurableBeanFactory createBeanFactory(Logger        sitemapLogger,
-                                                        Configuration config,
-                                                        Context       sitemapContext)
+    protected ConfigurableListableBeanFactory createBeanFactory(Logger        sitemapLogger,
+                                                                Configuration config,
+                                                                Context       sitemapContext)
     throws Exception {
-        ServiceManager newManager;
-        
-        // before we pass the configuration we have to strip the
-        // additional configuration parts, like classpath etc. as these
-        // are not configurations for the service manager
-        final DefaultConfiguration c = new DefaultConfiguration(config.getName(), 
-                                                                config.getLocation(),
-                                                                config.getNamespace(),
-                                                                "");
-        c.addAll(config);
-        c.removeChild(config.getChild("classpath"));
-        c.removeChild(config.getChild("listeners"));
-
         // setup spring container
         // first, get the correct parent
         BeanFactory parentContext = this.beanFactory;
         final Request request = ContextHelper.getRequest(sitemapContext);
         if ( request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null ) {
-            parentContext = (ConfigurableBeanFactory)request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
+            parentContext = (ConfigurableListableBeanFactory)request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
         }
 
         final AvalonEnvironment ae = new AvalonEnvironment();
@@ -293,64 +272,11 @@ public class BeanFactoryUtil {
         ae.servletContext = ((ServletConfig)sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
         ae.settings = (Settings)parentContext.getBean(Settings.ROLE);
         final ConfigurationInfo parentConfigInfo = (ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName());
-        final ConfigurationInfo ci = ConfigReader.readConfiguration(c, parentConfigInfo, ae);
+        final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
 
-        final ConfigurableBeanFactory sitemapFactory = 
+        final ConfigurableListableBeanFactory sitemapFactory = 
             BeanFactoryUtil.createBeanFactory(ae, ci, parentContext, false);
-        newManager = (ServiceManager) sitemapFactory.getBean(ServiceManager.class.getName());
-        sitemapLogger = (Logger)sitemapFactory.getBean(Logger.class.getName());
-
-        // TODO: Add listeners configured by a class as beans to the factory
-        //       Then the factory will handle init/dispose of those components as well
-        //       and the sitemap language can lookup all handles by getting all
-        //       beans of that type.
-        // and finally the listeners
-        
-        final Configuration listenersWrapper = config.getChild("listeners", false);
-        if ( listenersWrapper != null ) {
-            final Configuration[] listeners = listenersWrapper.getChildren("listener");                
-            for(int i = 0; i < listeners.length; i++) {
-                final Configuration current = listeners[i];
-                final TreeBuilder.EventComponent listener = this.createListener(newManager, sitemapLogger, sitemapContext, current);
-                if ( !(listener.component instanceof SitemapListener) ) {
-                    throw new ConfigurationException("Listener must implement the SitemapListener interface.");
-                }
-                this.addListener(listener);
-            }
-        }
 
         return sitemapFactory;
-    }
-
-    /**
-     * Create a listener
-     */
-    protected TreeBuilder.EventComponent createListener(ServiceManager manager,
-                                                        Logger sitemapLogger,
-                                                        Context context,
-                                                        Configuration config) 
-    throws Exception {
-        // role or class?
-        final String role = config.getAttribute("role", null);
-        if ( role != null ) {
-            return new TreeBuilder.EventComponent(manager.lookup(role), true);
-        }
-        final String className = config.getAttribute("class");
-        final Object component = ClassUtils.newInstance(className);
-
-        LifecycleHelper.setupComponent(component, sitemapLogger, context, manager, config);
-
-        return new TreeBuilder.EventComponent(component, false);
-    }
-
-    /**
-     * Add a listener
-     */
-    protected void addListener(TreeBuilder.EventComponent listener) {
-        if ( listener.component instanceof EnterSitemapEventListener ) {
-            //this.enterSitemapEventListeners.add(listener);
-        } else if ( listener.component instanceof LeaveSitemapEventListener ) {
-            //this.leaveSitemapEventListeners.add(listener);
-        }
     }
 }
