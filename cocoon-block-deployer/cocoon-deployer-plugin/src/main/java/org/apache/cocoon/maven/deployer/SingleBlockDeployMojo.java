@@ -158,7 +158,7 @@ public class SingleBlockDeployMojo
                               new NullVariableResolver(),
                               new MavenLoggingWrapper(this.getLog()));
         
-        blockDeployer.deploy(deploy, false);
+        blockDeployer.deploy(deploy, false, true);
         
     }
 }
