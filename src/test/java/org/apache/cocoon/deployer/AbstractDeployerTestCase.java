@@ -28,8 +28,8 @@ import junit.framework.TestCase;
 
 public abstract class AbstractDeployerTestCase extends TestCase {
 
-	public final static String MOCKS_DIR = "src/test/mocks";
-	public final static String OUTPUT_DIR = "target/test";
+	private final static String MOCKS_DIR = "src/test/mocks";
+	private final static String OUTPUT_DIR = "target/test";
 	
 	/**
 	 * Code that is executed for each test.
@@ -46,14 +46,17 @@ public abstract class AbstractDeployerTestCase extends TestCase {
 	 * @return the artifact as <code>java.io.File</code>
 	 */
 	public File getMockArtefact(String artifact) {
+		return new File(getMockDirectory(), artifact);
+	}
+	
+	public File getMockDirectory() {
 		String basedir = System.getProperty("basedir");
 		if(basedir != null || "".equals(basedir)) {
 			basedir = basedir + File.separator;
 		} else {
 			basedir = "." + File.separator;
 		}
-		System.out.println("basedir: " + basedir + MOCKS_DIR + ", artifact=" + artifact);
-		return new File(basedir + MOCKS_DIR, artifact);
+		return new File(basedir, MOCKS_DIR);
 	}
 	
 	/**

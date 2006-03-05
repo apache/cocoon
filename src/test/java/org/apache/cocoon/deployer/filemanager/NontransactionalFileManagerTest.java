@@ -29,7 +29,7 @@ public class NontransactionalFileManagerTest extends AbstractDeployerTestCase {
 	private static final String NOT_EXISTING_RESOURCE = "lib-01/lib-01.jar_______";	
 
 	public void testWrite() throws Exception {
-		File basedir = new File(AbstractDeployerTestCase.OUTPUT_DIR, "/xyz/abc");
+		File basedir = new File(this.getMockDirectory(), "/xyz/abc");
 		String fileName = "x.txt";		
 		
 		FileManager fm = new NontransactionalFileManager(basedir.toURI());
@@ -43,14 +43,12 @@ public class NontransactionalFileManagerTest extends AbstractDeployerTestCase {
 	}	
 	
 	public void testRead() throws Exception {
-		File basedir = new File(this.MOCKS_DIR);
-		InputStream is = new NontransactionalFileManager(basedir.toURI()).readResource(EXISTING_RESOURCE);
+		InputStream is = new NontransactionalFileManager(this.getMockDirectory().toURI()).readResource(EXISTING_RESOURCE);
 	}
 	
 	public void testReadNotExistingFile() throws Exception {
-		File basedir = new File(this.MOCKS_DIR);
 		try {
-			InputStream is = new NontransactionalFileManager(basedir.toURI()).readResource(NOT_EXISTING_RESOURCE);
+			InputStream is = new NontransactionalFileManager(this.getMockDirectory().toURI()).readResource(NOT_EXISTING_RESOURCE);
 			fail("A non-existing file has to throw an exception.");
 		} catch(FileManagerException fme) {
 			// expected
