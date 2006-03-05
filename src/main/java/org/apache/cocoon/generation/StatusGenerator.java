@@ -473,7 +473,6 @@ public class StatusGenerator extends ServiceableGenerator
         this.addValue("Running mode", s.getProperty(Settings.PROPERTY_RUNNING_MODE,
                                                     Settings.DEFAULT_RUNNING_MODE));
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
-        this.addMultilineValue(Settings.KEY_EXTRA_CLASSPATHS, s.getExtraClasspaths());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
         this.addValue(Settings.KEY_PROPERTY_PROVIDER, s.getPropertyProviders());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
