@@ -125,7 +125,6 @@ public class SingleBlockDeployMojo
 
         // create the Cocoon object
         Cocoon cocoon = new Cocoon();
-        cocoon.setExclusive(true);
         cocoon.setTargetUrl("target/cocoon-webapp");
         cocoon.setWebappUrn("org.apache.cocoon:cocoon-deployer-minimal-webapp:1.0-SNAPSHOT:war");
         cocoon.setBlockFwUrn("org.apache.cocoon:cocoon-default:1.0-SNAPSHOT");
