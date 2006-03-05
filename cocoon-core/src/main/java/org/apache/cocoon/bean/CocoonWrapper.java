@@ -446,7 +446,7 @@ public class CocoonWrapper {
 
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
         Processor.InternalPipelineDescription pipeline = cocoon.buildPipeline(env);
-        EnvironmentHelper.enterProcessor(pipeline.lastProcessor, pipeline.pipelineManager, env);
+        EnvironmentHelper.enterProcessor(pipeline.lastProcessor, env);
         try {
             pipeline.processingPipeline.prepareInternal(env);
             pipeline.processingPipeline.process(env, consumer);

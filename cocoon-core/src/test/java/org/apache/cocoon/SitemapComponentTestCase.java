@@ -359,9 +359,9 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
         // enter & leave environment, as a manager is looked up using
         // the processing context stack
         MockEnvironment env = new MockEnvironment();
-        Processor processor = new MockProcessor();
+        Processor processor = new MockProcessor(this.getBeanFactory());
         
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
+        EnvironmentHelper.enterProcessor(processor, env);
 
         try {
             ServiceSelector selector = null;

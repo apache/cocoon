@@ -50,7 +50,7 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -96,7 +96,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     protected Map processorAttributes = new HashMap();
 
     /** Bean Factory for this sitemap. */
-    protected ConfigurableBeanFactory beanFactory;
+    protected ConfigurableListableBeanFactory beanFactory;
 
     /**
      * Builds a concrete processig, given the wrapping processor
@@ -111,7 +111,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ConfigurableBeanFactory beanFactory,
+    public void setProcessorData(ConfigurableListableBeanFactory beanFactory,
                                  ServiceManager manager,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
@@ -315,7 +315,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
             this.sitemapExecutor.enterSitemap(this, environment.getObjectModel(), this.wrappingProcessor.source.getURI());
             // and now process
-            EnvironmentHelper.enterProcessor(this, this.manager, environment);
+            EnvironmentHelper.enterProcessor(this, environment);
             final Redirector oldRedirector = context.getRedirector();
 
             // Build a redirector
@@ -512,4 +512,17 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         return "sitemap";
     }
 
+    /**
+     * @see org.apache.cocoon.Processor#getBeanFactory()
+     */
+    public ConfigurableListableBeanFactory getBeanFactory() {
+        return this.beanFactory;
+    }
+
+    /**
+     * @see org.apache.cocoon.Processor#getParent()
+     */
+    public Processor getParent() {
+        return this.wrappingProcessor.getParent();
+    }
 }

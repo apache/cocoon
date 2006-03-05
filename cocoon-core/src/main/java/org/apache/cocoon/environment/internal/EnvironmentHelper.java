@@ -27,6 +27,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
@@ -265,20 +266,18 @@ implements SourceResolver, Serviceable, Disposable {
      *
      * @throws ProcessingException if processor is null
      */
-    public static void enterProcessor(Processor processor,
-                                      ServiceManager manager,
+    public static void enterProcessor(Processor   processor,
                                       Environment env)
     throws ProcessingException {
         if (null == processor) {
             throw new ProcessingException("Processor is not set.");
         }
-
         EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if (stack == null) {
             stack = new EnvironmentStack();
             environmentStack.set(stack);
         }
-        stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
+        stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), env));
         stack.setOffset(stack.size() - 1);
     }
 
@@ -309,7 +308,7 @@ implements SourceResolver, Serviceable, Disposable {
             throw new ProcessingException("There must be a current processing environment.");
         }
 
-        stack.pushInfo(new EnvironmentInfo(info.processor, stack.getOffset(), info.manager, env));
+        stack.pushInfo(new EnvironmentInfo(info.processor, stack.getOffset(), env));
         stack.setOffset(stack.size() - 1);
     }
 
@@ -391,8 +390,12 @@ implements SourceResolver, Serviceable, Disposable {
     static public ServiceManager getSitemapServiceManager() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
-            final EnvironmentInfo info = stack.getCurrentInfo();
-            return info.manager;
+            EnvironmentInfo info = stack.getCurrentInfo();
+            // FIXME - Workaround!
+            if ( info.processor.getBeanFactory() == null ) {
+                info = (EnvironmentInfo)stack.get(stack.getOffset() - 1);
+            }
+            return (ServiceManager) info.processor.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         }
         return null;
     }

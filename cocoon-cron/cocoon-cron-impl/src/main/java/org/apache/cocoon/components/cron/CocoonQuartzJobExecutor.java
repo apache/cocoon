@@ -83,7 +83,7 @@ public class CocoonQuartzJobExecutor extends QuartzJobExecutor {
         m_env.startingProcessing();
         
         try {
-            EnvironmentHelper.enterProcessor(m_processor, m_manager, m_env);
+            EnvironmentHelper.enterProcessor(m_processor, m_env);
         }
         catch (ProcessingException e) {
             throw new JobExecutionException(e);

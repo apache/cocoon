@@ -40,7 +40,7 @@ import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * JUnit TestCase for Cocoon Components.
@@ -133,8 +133,8 @@ public class ContainerTestCase extends TestCase {
     /** The context */
     private Context context;
 
-    /** The root application context. */
-    private ConfigurableBeanFactory rootContext;
+    /** The root bean factory. */
+    private ConfigurableListableBeanFactory rootBeanFactory;
 
     /** Return the logger */
     protected Logger getLogger() {
@@ -144,6 +144,11 @@ public class ContainerTestCase extends TestCase {
     /** Return the service manager. */
     protected ServiceManager getManager() {
         return this.manager;
+    }
+
+    /** Return the bean factory. */
+    protected ConfigurableListableBeanFactory getBeanFactory() {
+        return this.rootBeanFactory;
     }
 
     /**
@@ -220,9 +225,9 @@ public class ContainerTestCase extends TestCase {
      * Disposes the <code>ComponentLocator</code>
      */
     final private void done() {
-        if( this.rootContext != null ) {
-            this.rootContext.destroySingletons();
-            this.rootContext = null;
+        if( this.rootBeanFactory != null ) {
+            this.rootBeanFactory.destroySingletons();
+            this.rootBeanFactory = null;
         }
         this.manager = null;
         this.context = null;
@@ -288,15 +293,15 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.settings = new MutableSettings();
         avalonEnv.servletContext = new MockContext();
 
-        this.rootContext = BeanFactoryUtil.createRootApplicationContext(avalonEnv);
+        this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv);
         // read roles
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv);
-        ConfigurableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, rootContext, true);
+        ConfigurableListableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, this.rootBeanFactory, true);
 
         // read components
         ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv);
         this.addComponents( componentsInfo );
-        ConfigurableBeanFactory componentsContext = BeanFactoryUtil.createBeanFactory(avalonEnv, componentsInfo, rolesContext, false);
+        ConfigurableListableBeanFactory componentsContext = BeanFactoryUtil.createBeanFactory(avalonEnv, componentsInfo, rolesContext, false);
 
         this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
     }
