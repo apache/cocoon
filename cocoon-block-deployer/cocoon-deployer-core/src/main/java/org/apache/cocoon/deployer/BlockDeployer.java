@@ -42,8 +42,16 @@ public class BlockDeployer {
 	private final VariableResolver variableResolver;
 	private final Logger log;
 	private final ArtifactProvider artifactProvider;
-	private final List blockList = new ArrayList();	
 	
+	/**
+	 * Creates the BlockDeployer object. Pass the artifact provider (How to get access to the binaries
+	 * and blocks?), the variable resolver (If you want to use variable resolving in deployment descriptors)
+	 * and the logger.
+	 * 
+	 * @param artifactProvider - provide your implementation how to access the block binaries
+	 * @param variableResolver - if you use variables in your deployment descriptor, you have to provide an implementation that resolves them
+	 * @param log - a logger for user-orientated messages about the deployment process.
+	 */
 	public BlockDeployer( final ArtifactProvider artifactProvider, 
 			final VariableResolver variableResolver, final Logger log) {
 		
@@ -62,20 +70,60 @@ public class BlockDeployer {
 	 * <p>If any error occurres, the unchecked @link DeploymentException is thrown.</p> 
 	 * 
 	 * @param deploymentDescriptor - the descriptor that contains all blocks that should be deployed
-	 * @param artifactProvider - provide your implementation how to access the block binaries
-	 * @param variableResolver - if you use variables in your deployment descriptor, you have to provide an implementation that resolves them
-	 * @param log - a logger for user-orientated messages about the deployment process.
+	 * @param transactional - set it 'true' if you want the deployment process being transactional (all or nothing)
+	 * @param exclusive - set it 'true' if you want to deploy a complete Cocoon application from scratch. If set to 'false', then the blocks of the descriptor are only added to the application. Currently only 'true' is supported.
 	 */
-	public void deploy(final Deploy deploymentDescriptor, final boolean transactional) {
-		
+	public void deploy(final Deploy deploymentDescriptor, final boolean transactional, final boolean exclusive) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		
+		// validations
+		if(!exclusive) {
+			throw new DeploymentException("The block deployer only supports the exclusive mode at the moment.");
+		}		
 		Validate.notNull(deploymentDescriptor, "A deployment descriptor object has to be passed.");
 
-		// read the deploy script
-		org.apache.cocoon.deployer.generated.deploy.x10.Block[] installBlocks = deploymentDescriptor.getBlock();
+		// variable resolving
+		// TODO implement resolving of variables
+		
+		// read the deploy script and get a list of all Block objects to be installed
+		List blockList = createBlockList(deploymentDescriptor);
+		
+		// auto-wiring: if a connection is not specified, use the default implementation and add the "new" blocks to the list
+		new AutoWiringResolver(this.artifactProvider, this.log).resolve(blockList);
+		
+		// validate deployment descriptor 
+		// TODO (correct dependencies, mount path only used once in exclusive mode, set only available properties)
+		
+		// get the Cocoon urn
+		String cocoonWebappUrn = deploymentDescriptor.getCocoon().getWebappUrn();
+		String cocoonBlockFwWebappUrn = deploymentDescriptor.getCocoon().getBlockFwUrn();		
+		
+		// get all dependant libraries transitivly
+		File[] libraries = artifactProvider.getArtifact( 
+				this.getAllBlockUrns(blockList, cocoonBlockFwWebappUrn));
+		
+		// deploy the blocks
+		CocoonServer cocoonServer = CocoonServerFactory.createServer(
+				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider, exclusive);
+		
+		Collections.reverse(blockList);
+		
+		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), 
+				cocoonWebappUrn, libraries, this.log, transactional);
+		
+		stopWatch.stop();
+		this.log.info("SUCESSFULLY deployed in " + stopWatch);
+	}
 
+	/**
+	 * Reads a deployment descriptor and creates a list of <code>Block</code> objects to be installed.
+	 * @param deploymentDescriptor
+	 * @return a list of <code>Block</code> objects
+	 */
+	protected List createBlockList(final Deploy deploymentDescriptor) {
+		List blockList = new ArrayList();			
+		org.apache.cocoon.deployer.generated.deploy.x10.Block[] installBlocks = deploymentDescriptor.getBlock();
 		for(int i = 0; i < installBlocks.length; i++) {
 			org.apache.cocoon.deployer.generated.deploy.x10.Block installBlock = installBlocks[i];
 			log.verbose("Block urn: " + installBlock.getUrn());			
@@ -89,38 +137,13 @@ public class BlockDeployer {
 				    deploymentDescriptor.getCocoon().getTargetUrl()));
 			}
 		}
-		
-		// auto-wiring: if a connection is not specified, use the default implementation and
-		//              add the "new" blocks to the list
-		new AutoWiringResolver(this.artifactProvider, this.log).resolve(this.blockList);
-		
-		// validate deployment descriptor (correct dependencies, mount path only used once in exclusive mode, 
-		// set only available properties)
-		
-		// get the Cocoon urn
-		String cocoonWebappUrn = deploymentDescriptor.getCocoon().getWebappUrn();
-		String cocoonBlockFwWebappUrn = deploymentDescriptor.getCocoon().getBlockFwUrn();		
-		
-		// get all dependant libraries transitivly
-		File[] libraries = artifactProvider.getArtifact( 
-				this.getAllBlockUrns(this.blockList, cocoonBlockFwWebappUrn));
-		
-		// deploy the blocks
-		CocoonServer cocoonServer = CocoonServerFactory.createServer(
-				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider);
-		Collections.reverse(blockList);
-		cocoonServer.deploy((Block[]) blockList.toArray(new Block[blockList.size()]), 
-				cocoonWebappUrn, libraries, this.log, transactional);
-		
-		stopWatch.stop();
-		this.log.info("SUCESSFULLY deployed in " + stopWatch);
-		
+		return blockList;
 	}
 	
 	/**
 	 * @return a list of all urns to be installed
 	 */
-	private String[] getAllBlockUrns(List blocks, String urn) {
+	protected String[] getAllBlockUrns(List blocks, String urn) {
 		List urnList = new ArrayList();
 		urnList.add(urn);
 		for(Iterator it = blocks.iterator(); it.hasNext();) {
