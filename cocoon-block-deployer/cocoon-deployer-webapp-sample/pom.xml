@@ -39,14 +39,6 @@
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-deployer-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <!--executions>
-          <execution>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions-->
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
