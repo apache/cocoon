@@ -52,7 +52,6 @@ import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
@@ -744,19 +743,6 @@ public class CoreUtil {
      * of this class (eg. Cocoon Context).
      */
     protected void updateEnvironment() throws Exception {
-//        // concatenate the class path and the extra class path
-//        String classPath = this.env.getClassPath(this.settings);
-//        StringBuffer buffer = new StringBuffer();
-//        if ( classPath != null && classPath.length() > 0 ) {
-//            buffer.append(classPath);
-//        }
-//        classPath = this.getExtraClassPath();
-//        if ( classPath != null && classPath.length() > 0 ) {
-//            if ( buffer.length() > 0 ) {
-//                buffer.append(File.pathSeparatorChar);
-//            }
-//            buffer.append(classPath);
-//        }
         // FIXME - for now we just set an empty string as this information is looked up
         //         by other components
         this.appContext.put(Constants.CONTEXT_CLASSPATH, "");
@@ -774,48 +760,6 @@ public class CoreUtil {
 
     public ConfigurableBeanFactory getContainer() {
         return this.container;
-    }
-
-    /**
-     * Retreives the "extra-classpath" attribute, that needs to be
-     * added to the class path.
-     */
-    protected String getExtraClassPath() {
-        if (this.settings.getExtraClasspaths().size() > 0) {
-            StringBuffer sb = new StringBuffer();
-            final Iterator iter = this.settings.getExtraClasspaths().iterator();
-            int i = 0;
-            while (iter.hasNext()) {
-                String s = (String)iter.next();
-                if (i++ > 0) {
-                    sb.append(File.pathSeparatorChar);
-                }
-                if ((s.charAt(0) == File.separatorChar) ||
-                        (s.charAt(1) == ':')) {
-                    if (this.log.isDebugEnabled()) {
-                        this.log.debug("extraClassPath is absolute: " + s);
-                    }
-                    sb.append(s);
-
-                } else {
-                    if (s.indexOf("${") != -1) {
-                        String path = StringUtils.replaceToken(s);
-                        sb.append(path);
-                        if (this.log.isDebugEnabled()) {
-                            this.log.debug("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
-                        }
-                    } else {
-                        String path = this.settings.getWorkDirectory() + s;
-                        if (this.log.isDebugEnabled()) {
-                            this.log.debug("extraClassPath is not absolute pre-pending work-directory: " + path);
-                        }
-                        sb.append(path);
-                    }
-                }
-            }
-            return sb.toString();
-        }
-        return "";
     }
 
     protected static final class LoggerWrapper implements Logger {
