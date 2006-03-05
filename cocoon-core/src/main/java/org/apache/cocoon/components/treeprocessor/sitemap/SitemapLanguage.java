@@ -34,14 +34,12 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -64,8 +62,8 @@ import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.CocoonBeanFactory;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
@@ -78,9 +76,7 @@ import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.cocoon.sitemap.SitemapListener;
 import org.apache.cocoon.sitemap.SitemapParameters;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
@@ -92,7 +88,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * The tree builder for the sitemap language.
@@ -111,7 +107,7 @@ public class SitemapLanguage
     protected Map attributes = new HashMap();
 
     /** Spring application context. */
-    protected ConfigurableBeanFactory beanFactory;
+    protected ConfigurableListableBeanFactory beanFactory;
 
 
     // ----- lifecycle-related objects ------
@@ -150,7 +146,7 @@ public class SitemapLanguage
      */
     private ServiceManager itsManager;
 
-    private ConfigurableBeanFactory itsBeanFactory;
+    private ConfigurableListableBeanFactory itsBeanFactory;
 
     /**
      * Helper object which sets up components in the context of the processor
@@ -253,7 +249,7 @@ public class SitemapLanguage
     /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getBeanFactory()
      */
-    public ConfigurableBeanFactory getBeanFactory() {
+    public ConfigurableListableBeanFactory getBeanFactory() {
         return this.itsBeanFactory;
     }
 
@@ -396,6 +392,8 @@ public class SitemapLanguage
             this.itsBeanFactory = this.createBeanFactory(this.itsContext, componentConfig);
             this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ServiceManager.class
                     .getName());
+            // only register listeners if a new bean factory is created
+            this.registerListeners();
         } else {
             this.itsManager = manager;
         }
@@ -655,25 +653,15 @@ public class SitemapLanguage
      * Build a component manager with the contents of the &lt;map:components&gt;
      * element of the tree.
      */
-    protected ConfigurableBeanFactory createBeanFactory(Context context,
+    protected ConfigurableListableBeanFactory createBeanFactory(Context       context,
                                                         Configuration config)
     throws Exception {
-        ServiceManager newManager;
-
-        // before we pass the configuration we have to strip the
-        // additional configuration parts, like listeners etc. as these
-        // are not configurations for the service manager
-        final DefaultConfiguration c = new DefaultConfiguration(config.getName(), config
-                .getLocation(), config.getNamespace(), "");
-        c.addAll(config);
-        c.removeChild(config.getChild("listeners"));
-
         // setup spring container
         // first, get the correct parent
-        ConfigurableBeanFactory parentContext = this.beanFactory;
+        ConfigurableListableBeanFactory parentContext = this.beanFactory;
         final Request request = ContextHelper.getRequest(context);
         if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null) {
-            parentContext = (ConfigurableBeanFactory) request
+            parentContext = (ConfigurableListableBeanFactory) request
                     .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
         }
 
@@ -685,58 +673,27 @@ public class SitemapLanguage
         ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
         final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentContext
                 .getBean(ConfigurationInfo.class.getName());
-        final ConfigurationInfo ci = ConfigReader.readConfiguration(c, parentConfigInfo, ae);
+        final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
 
-        final ConfigurableBeanFactory sitemapContext = BeanFactoryUtil.createBeanFactory(ae, ci,
+        final ConfigurableListableBeanFactory sitemapContext = BeanFactoryUtil.createBeanFactory(ae, ci,
                 parentContext, false);
-        newManager = (ServiceManager) sitemapContext.getBean(ServiceManager.class.getName());
-        Logger sitemapLogger = (Logger) sitemapContext.getBean(Logger.class.getName());
-
-        // and finally the listeners
-        final Configuration listenersWrapper = config.getChild("listeners", false);
-        if (listenersWrapper != null) {
-            final Configuration[] listeners = listenersWrapper.getChildren("listener");
-            for (int i = 0; i < listeners.length; i++) {
-                final Configuration current = listeners[i];
-                final TreeBuilder.EventComponent listener = this.createListener(newManager,
-                        sitemapLogger, context, current);
-                if (!(listener.component instanceof SitemapListener)) {
-                    throw new ConfigurationException(
-                            "Listener must implement the SitemapListener interface.");
-                }
-                this.addListener(listener);
-            }
-        }
 
         return sitemapContext;
     }
 
     /**
-     * Create a listener
+     * Register all registered sitemap listeners
      */
-    protected TreeBuilder.EventComponent createListener(ServiceManager manager,
-            Logger sitemapLogger, Context context, Configuration config) throws Exception {
-        // role or class?
-        final String role = config.getAttribute("role", null);
-        if (role != null) {
-            return new TreeBuilder.EventComponent(manager.lookup(role), true);
+    protected void registerListeners() {
+        String[] names = this.itsBeanFactory.getBeanNamesForType(EnterSitemapEventListener.class);
+        for(int i=0; i<names.length; i++) {
+            final String beanName = names[i];
+            this.enterSitemapEventListeners.add(this.itsBeanFactory.getBean(beanName));
         }
-        final String className = config.getAttribute("class");
-        final Object component = ClassUtils.newInstance(className);
-
-        LifecycleHelper.setupComponent(component, sitemapLogger, context, manager, config);
-
-        return new TreeBuilder.EventComponent(component, false);
-    }
-
-    /**
-     * Add a listener
-     */
-    protected void addListener(TreeBuilder.EventComponent listener) {
-        if (listener.component instanceof EnterSitemapEventListener) {
-            this.enterSitemapEventListeners.add(listener);
-        } else if (listener.component instanceof LeaveSitemapEventListener) {
-            this.leaveSitemapEventListeners.add(listener);
+        names = this.itsBeanFactory.getBeanNamesForType(LeaveSitemapEventListener.class);
+        for(int i=0; i<names.length; i++) {
+            final String beanName = names[i];
+            this.leaveSitemapEventListeners.add(this.itsBeanFactory.getBean(beanName));
         }
     }
 
@@ -1085,11 +1042,11 @@ public class SitemapLanguage
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        if (!(beanFactory instanceof ConfigurableBeanFactory)) {
+        if (!(beanFactory instanceof ConfigurableListableBeanFactory)) {
             throw new BeanCreationException(
                     "Bean factory for tree processor must be an instance of "
-                            + ConfigurableBeanFactory.class.getName());
+                            + ConfigurableListableBeanFactory.class.getName());
         }
-        this.beanFactory = (ConfigurableBeanFactory) beanFactory;
+        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
     }
 }

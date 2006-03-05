@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
@@ -52,7 +50,6 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.apache.commons.jci.listeners.NotificationListener;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
@@ -62,7 +59,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor, Disposable, ExecutionContext, NotificationListener {
+                                   implements Processor, Disposable, ExecutionContext {
 
     private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonBeanFactory.class.getName() + "/Stack";
 
@@ -90,14 +87,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     private SitemapExecutor sitemapExecutor;
 
     /** Optional event listeners for the enter sitemap event */
-    private List enterSitemapEventListeners = new ArrayList();
+    private List enterSitemapEventListeners = Collections.EMPTY_LIST;
 
     /** Optional event listeners for the leave sitemap event */
-    private List leaveSitemapEventListeners = new ArrayList();
+    private List leaveSitemapEventListeners = Collections.EMPTY_LIST;
 
-    /** Needs a reload? */
-    protected volatile boolean needsReload = false;
-    
     /** Processor attributes */
     protected Map processorAttributes = new HashMap();
 
@@ -116,13 +110,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.sitemapExecutor = sitemapExecutor;
     }
 
-    public void handleNotification() {
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(this + " got notified that a reload is required");
-        }
-        needsReload = true;
-    }
-    
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(ConfigurableBeanFactory beanFactory,
                                  ServiceManager manager,
@@ -213,10 +200,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
     }
 
-    boolean isReloadNeeded() {
-        return needsReload;
-    }
-    
     public TreeProcessor getWrappingProcessor() {
         return this.wrappingProcessor;
     }
@@ -325,8 +308,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                 this.enteredSitemap(enterEvent);
                 final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
                 while ( enterSEI.hasNext() ) {
-                    final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)enterSEI.next();
-                    ((EnterSitemapEventListener)current.component).enteredSitemap(enterEvent);
+                    final EnterSitemapEventListener current = (EnterSitemapEventListener)enterSEI.next();
+                    current.enteredSitemap(enterEvent);
                 }
             }
 
@@ -360,8 +343,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                 this.leftSitemap(leaveEvent);
                 final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
                 while ( leaveSEI.hasNext() ) {
-                    final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)leaveSEI.next();
-                    ((LeaveSitemapEventListener)current.component).leftSitemap(leaveEvent);
+                    final LeaveSitemapEventListener current = (LeaveSitemapEventListener)leaveSEI.next();
+                    current.leftSitemap(leaveEvent);
                 }
             }
 
@@ -444,26 +427,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.rootNode = null;
         this.sitemapExecutor = null;
 
-        // dispose listeners
-        this.disposeListeners(this.enterSitemapEventListeners);
-        this.disposeListeners(this.leaveSitemapEventListeners);
+        // clear listeners
+        this.enterSitemapEventListeners.clear();
+        this.leaveSitemapEventListeners.clear();
         if ( this.beanFactory != null ) {
             this.beanFactory.destroySingletons();
             this.beanFactory = null;
         }
-    }
-
-    protected void disposeListeners(List l) {
-        Iterator i = l.iterator();
-        while ( i.hasNext() ) {
-            final TreeBuilder.EventComponent current = (TreeBuilder.EventComponent)i.next();
-            if ( current.releaseUsingManager ) {
-                this.manager.release(current.component);
-            } else {
-                ContainerUtil.dispose(current.component);
-            }
-        }
-        l.clear();        
     }
 
     private class TreeProcessorRedirector extends ForwardRedirector {
