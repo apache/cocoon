@@ -16,17 +16,7 @@
 -->
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
   id="anyblock:anyblock-07:1.0">
-  <name>anyblock-07</name>
-  <description href="http://cocoon.apache.org/blocks/anyblock/1.0">
-    A test block for unit tests.
-  </description>
-  <state href="http://cocoon.apache.org/blocks/anyblock/1.0/state.html" 
-         community="committed" 
-         interfaces="unstable" 
-         implementation="stable"/>
-  <license href="http://www.apache.org/licenses/">Apache License 2.0</license>
-  <author href="http://cocoon.apache.org">Apache Cocoon community</author>
-  
+
   <implements>
     <interface id="interface-03"/>
   </implements>
