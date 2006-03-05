@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  *
@@ -30,21 +30,10 @@ public interface TreeBuilder {
 
     String ROLE = TreeBuilder.class.getName();
 
-    public static class EventComponent {
-        
-        public final Object component;
-        public final boolean releaseUsingManager;
-        
-        public EventComponent(Object c, boolean releaseUsingManager) {
-            this.component = c;
-            this.releaseUsingManager = releaseUsingManager;
-        }
-    }
+    ConfigurableListableBeanFactory getBeanFactory();
 
-    ConfigurableBeanFactory getBeanFactory();
-    
     ServiceManager getServiceManager();
-    
+
     ConcreteTreeProcessor getProcessor();
 
     void setProcessor(ConcreteTreeProcessor processor);
@@ -92,7 +81,6 @@ public interface TreeBuilder {
      */
     ProcessingNode setupNode(ProcessingNode node, Configuration config) throws Exception;
 
-
     /**
      * Get the type for a statement : it returns the 'type' attribute if present,
      * and otherwhise the default hint for the <code>ServiceSelector</code> identified by
@@ -121,13 +109,11 @@ public interface TreeBuilder {
      * @return A list of {@link EventComponent}s.
      */
     List getEnterSitemapEventListeners();
-    
+
     /**
      * Return all event listers that are registered for the
      * {@link org.apache.cocoon.sitemap.LeaveSitemapEvent}.
      * @return A list of {@link EventComponent}s.
      */
     List getLeaveSitemapEventListeners();
-    
-
 }

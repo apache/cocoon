@@ -334,7 +334,7 @@ public class TreeProcessor extends AbstractLogEnabled
             this.environmentHelper.changeContext(this.source, "");
         }
 
-        if (this.concreteProcessor == null || this.concreteProcessor.isReloadNeeded() ||
+        if (this.concreteProcessor == null ||
                 (this.checkReload && this.source.getLastModified() != this.lastModified)) {
             buildConcreteProcessor(env);
         }
@@ -355,7 +355,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         // Now that we entered the synchronized area, recheck what's already
         // been checked in process().
-        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified && !this.concreteProcessor.isReloadNeeded()) {
+        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified) {
             // Nothing changed
             return;
         }
