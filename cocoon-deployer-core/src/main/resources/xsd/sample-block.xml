@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,18 +16,6 @@
 -->
 <block xmlns="http://apache.org/cocoon/blocks/cob/1.0"
 	id="http://cocoon.apache.org/blocks/anyblock/1.0">
-	
-	<name>anyblock</name>
-	<description href="http://cocoon.apache.org/blocks/anyblock/1.0">
-		A block based on the Apache Cocoon portal
-	</description>
-	<state 
-		href="http://cocoon.apache.org/blocks/anyblock/1.0/state.html" 
-		community="committed" 
-		interfaces="unstable" 
-		implementation="stable"/>
-	<license href="http://www.apache.org/licenses/">Apache License 2.0</license>
-	<author href="http://cocoon.apache.org">Apache Cocoon community</author>
 	
 	<properties>
 		<property name="mailserver">

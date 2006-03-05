@@ -29,12 +29,12 @@ import org.exolab.castor.xml.ValidationException;
 public class BlockDeployerTest extends AbstractDeployerTestCase {
 
 	public void testDeployNonTransactional() throws Exception {
-		createBlockDeployer("validDeploy-04/deploy.xml", false);
+		createBlockDeployer("validDeploy-04/deploy.xml", false, true);
 		// assertions: ...
 	}
 	
 	public void testDeployTransactional() throws Exception {
-		createBlockDeployer("validDeploy-04/deploy.xml", true);
+		createBlockDeployer("validDeploy-04/deploy.xml", true, true);
 		// assertions: ...
 	}
 	
@@ -42,14 +42,14 @@ public class BlockDeployerTest extends AbstractDeployerTestCase {
 		// TODO
 	}	
 
-	private void createBlockDeployer(String deploymentDescriptorPath, boolean transactional) 
+	private void createBlockDeployer(String deploymentDescriptorPath, boolean transactional, boolean exclusive) 
 		throws MarshalException, ValidationException, FileNotFoundException {
 		BlockDeployer blockDeployer = new BlockDeployer(
 				this.getArtifactProviderInstance(),
 				new NullVariableResolver(),
 				new ConsoleLogger());
 		Deploy deploy = (Deploy) Deploy.unmarshal(new FileReader(this.getMockArtefact(deploymentDescriptorPath)));
-		blockDeployer.deploy(absolutizeDeploy(deploy), transactional);
+		blockDeployer.deploy(absolutizeDeploy(deploy), transactional, exclusive);
 	}	
 	
 	private ArtifactProvider getArtifactProviderInstance() {

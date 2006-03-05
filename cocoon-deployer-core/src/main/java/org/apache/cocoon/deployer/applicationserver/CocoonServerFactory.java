@@ -25,10 +25,11 @@ import org.apache.cocoon.deployer.resolver.VariableResolver;
 
 public class CocoonServerFactory {
 
-	public static CocoonServer createServer(Cocoon cocoon, VariableResolver variableResolver, ArtifactProvider artifactProvider) {
+	public static CocoonServer createServer(Cocoon cocoon, VariableResolver variableResolver, 
+		ArtifactProvider artifactProvider, boolean exclusive) {
 		
 		CocoonServer cocoonServer = new CocoonServer22();
-		cocoonServer.setExclusive(cocoon.getExclusive());
+		cocoonServer.setExclusive(exclusive);
 		cocoonServer.setVariableResolver(variableResolver);
 		cocoonServer.setArtifactProvider(artifactProvider);
 		

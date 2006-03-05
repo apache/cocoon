@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,11 +22,6 @@
   <xs:element name="block">
     <xs:complexType>
       <xs:all>
-        <xs:element name="name" type="name"/>
-        <xs:element name="description" type="href"/>
-        <xs:element name="state" type="state"/>        
-        <xs:element name="license" type="href"/>
-        <xs:element name="author" type="href"/>
         <xs:element name="properties" type="properties" minOccurs="0"/>
         <xs:element name="requirements" type="requirements" minOccurs="0"/>
         <xs:element name="implements" type="implements" minOccurs="0"/>
@@ -37,47 +32,6 @@
       <xs:attribute name="id" type="xs:anyURI" use="required"/>
     </xs:complexType>
   </xs:element>
-      
-  <!-- general meta data -->
-  <xs:complexType name="name">
-    <xs:simpleContent>
-      <xs:extension base="xs:string"/>
-    </xs:simpleContent>
-  </xs:complexType> 
-
-  <xs:complexType name="state">
-  	<xs:attribute name="href" type="xs:anyURI" use="required"/>
-  	<xs:attribute name="community" type="community" use="required"/>
-  	<xs:attribute name="interfaces" type="stability" use="required"/>
-  	<xs:attribute name="implementation" type="stability" use="required"/>
-  </xs:complexType>
-  
-  <xs:simpleType name="community">
-	  <xs:restriction base="xs:string">
-	  	<xs:pattern value="committed|supported|deprecated|core"/>
-	  </xs:restriction>  	
-  </xs:simpleType>
-
-  <xs:simpleType name="stability">
-	  <xs:restriction base="xs:string">
-	  	<xs:pattern value="stable|unstable"/>
-	  </xs:restriction>  	
-  </xs:simpleType>
-
-  <xs:complexType name="href">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute name="href" type="xs:anyURI"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType> 	
-  <xs:complexType name="src">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute name="src" type="xs:string" use="required"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>  
   
   <!-- properties -->
   <xs:complexType name="properties">

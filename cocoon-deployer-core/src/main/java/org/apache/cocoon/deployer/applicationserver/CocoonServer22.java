@@ -47,6 +47,9 @@ import org.apache.cocoon.deployer.util.FileUtils;
 import org.apache.cocoon.deployer.util.XMLUtils;
 import org.apache.cocoon.deployer.util.ZipUtils;
 import org.apache.commons.lang.Validate;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
+import org.xml.sax.SAXException;
 
 public class CocoonServer22 implements CocoonServer {
 
@@ -66,10 +69,6 @@ public class CocoonServer22 implements CocoonServer {
 	 * all or any blocks get deployed. Note that the used filesystem transaction implementation only
 	 * supports transactions within a single thread. Therefore this method is synchronized.
 	 */
-	/*
-	 * TODO exclusive mode not implemented yet
-	 * TODO variable resolver not used yet
-	 */
 	public synchronized boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log, boolean transactional) {
 		Validate.notNull(blocks, "A blocks object (Block[]) has to be passed to this method!");
 		Validate.notNull(libraries, "A libraries object (File[]) has to passed to this method!");
@@ -77,9 +76,6 @@ public class CocoonServer22 implements CocoonServer {
 		// create transaction context    	    
 	    FileManager frm = FileUtils.createFileManager(this.baseDirectory, transactional);
 	    
-	    // create installed block index
-	    Map installedBlocks = new HashMap();	
-
 	    try {
 	    	File baseDirectoryFile = new File(this.baseDirectory);
 	    	
@@ -88,81 +84,17 @@ public class CocoonServer22 implements CocoonServer {
 				deployCocoonServer(frm, "", serverArtifact);
 			}
 
-			// create the wiring, in exclusive mode from scratch, elese take the existing one
-			Wiring wiring = null;
-			if(this.isExclusive()) {
-				wiring = new Wiring();
-			} else {
-				// check wiring version
-				String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(WIRING_FILE));
-				if(!WIRING_10_NAMESPACE.equals(wiringVersion)) {
-					String msg = "The deployer only supports " + WIRING_10_NAMESPACE + " files.";
-					log.error(msg);
-					throw new DeploymentException(msg);				
-				}				
-				wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(WIRING_FILE)));	
-			}
+			// get the wiring, in exclusive mode from scratch, else take the existing one
+			Wiring wiring = getWiring(log, frm);
 			
 			// install all passed blocks
-			for(int i = 0; i < blocks.length; i++) {
-				Block block = blocks[i];
-				
-				org.apache.cocoon.deployer.generated.deploy.x10.Block deployBlock = 
-					(org.apache.cocoon.deployer.generated.deploy.x10.Block) block.getDeployDescriptor();
-				org.apache.cocoon.deployer.generated.block.x10.Block blockDesc = 
-					(org.apache.cocoon.deployer.generated.block.x10.Block) block.getBlockDescriptor();
-				
-				// create the wiring object
-				org.apache.cocoon.deployer.generated.wiring.x10.Block wiringBlock = 
-					createWiring10BlockInstance(deployBlock, blockDesc);			
-				
-				// in the case of a binary block, unpack it into the blocks directory
-				if (block instanceof BinaryBlock) {
-					BinaryBlock binaryBlock = (BinaryBlock) block;
-					// check if the block has already been unpacked
-					if(!installedBlocks.containsKey(block.getId())) {
-						String nextDirectory = intDirToStringDirConvert(
-								getNextDirectory(new File(baseDirectoryFile, BLOCKS_DIR), this.lastDir));
-						this.lastDir = Integer.parseInt(nextDirectory);
-						String installDirectory = BLOCKS_DIR + nextDirectory + "/";
-						wiringBlock.setLocation(installDirectory);					
-						deployBlock(binaryBlock, frm, BLOCKS_DIR + nextDirectory);
-						installedBlocks.put(block.getId(), installDirectory);
-					} else {
-						wiringBlock.setLocation((String) installedBlocks.get(block.getId()));
-					}
-				} 
-				else if(block instanceof LocalBlock) {
-					LocalBlock localBlock = (LocalBlock) block;
-					wiringBlock.setLocation(localBlock.getBaseDirectory());
-				}
-				wiring.addBlock(wiringBlock);
-			}
+			installBlocks(blocks, wiring, frm, baseDirectoryFile);
 			
-			// install all libraries
-			// TODO What happens if two libraries have the same filename by chance ...?
-			for(int i = 0; i < libraries.length; i++) {
-				File lib = libraries[i];
-				
-				// check if a library is a block, if yes, don't add it to WEB_INF_LIBS_DIR
-				boolean isBlock = true;
-				try {
-					ZipUtils.getBlockDescriptorIs(lib);
-				} catch(FileNotFoundException fnfe) {
-					isBlock = false;
-				}
-				
-				if(!isBlock) {
-					String libName = WEB_INF_LIBS_DIR + "/" + lib.getName();
-					log.info("Installing library " + libName);		
-			        FileUtils.copy(new FileInputStream(lib), frm.writeResource(libName));						
-				}
-			}
+			// install libraries
+			installLibraries(libraries, log, frm);
 			
 			// write the wiring
-            OutputStream out = frm.writeResource(WIRING_FILE);    
-            wiring.marshal(new OutputStreamWriter(out));
-            out.close();
+            writeWiring(wiring, frm);
             
             // committ transaction
 			frm.commitTransaction(); 
@@ -178,6 +110,106 @@ public class CocoonServer22 implements CocoonServer {
 	    }
 			
 		return false;
+	}
+
+	/**
+	 * Write the wiring by marshalling the <code>Wiring</code> object.
+	 */
+	protected void writeWiring(Wiring wiring, FileManager frm) 
+		throws FileManagerException, MarshalException, ValidationException, IOException {
+		
+		OutputStream out = frm.writeResource(WIRING_FILE);    
+		wiring.marshal(new OutputStreamWriter(out));
+		out.close();
+	}
+
+	/**
+	 * Install all blocks and adapt wiring.xml. Installing either means copying or just referencing the location
+	 * in wiring.xml.
+	 */
+	protected void installBlocks(Block[] blocks, Wiring wiring, FileManager frm, File baseDirectoryFile) {
+	    Map installedBlocks = new HashMap();			
+		
+		for(int i = 0; i < blocks.length; i++) {
+			Block block = blocks[i];
+			
+			org.apache.cocoon.deployer.generated.deploy.x10.Block deployBlock = 
+				(org.apache.cocoon.deployer.generated.deploy.x10.Block) block.getDeployDescriptor();
+			org.apache.cocoon.deployer.generated.block.x10.Block blockDesc = 
+				(org.apache.cocoon.deployer.generated.block.x10.Block) block.getBlockDescriptor();
+			
+			// create the wiring object
+			org.apache.cocoon.deployer.generated.wiring.x10.Block wiringBlock = 
+				createWiring10BlockInstance(deployBlock, blockDesc);			
+			
+			// in the case of a binary block, unpack it into the blocks directory
+			if (block instanceof BinaryBlock) {
+				BinaryBlock binaryBlock = (BinaryBlock) block;
+				// check if the block has already been unpacked
+				if(!installedBlocks.containsKey(block.getId())) {
+					String nextDirectory = intDirToStringDirConvert(
+							getNextDirectory(new File(baseDirectoryFile, BLOCKS_DIR), this.lastDir));
+					this.lastDir = Integer.parseInt(nextDirectory);
+					String installDirectory = BLOCKS_DIR + nextDirectory + "/";
+					wiringBlock.setLocation(installDirectory);					
+					deployBlock(binaryBlock, frm, BLOCKS_DIR + nextDirectory);
+					installedBlocks.put(block.getId(), installDirectory);
+				} else {
+					wiringBlock.setLocation((String) installedBlocks.get(block.getId()));
+				}
+			} 
+			else if(block instanceof LocalBlock) {
+				LocalBlock localBlock = (LocalBlock) block;
+				wiringBlock.setLocation(localBlock.getBaseDirectory());
+			}
+			wiring.addBlock(wiringBlock);
+		}
+	}
+
+	/**
+	 * Get the wiring object. Depending on the mode (exclusive/non-exclusive) either a new one is created
+	 * or the existing one is returned.
+	 */
+	protected Wiring getWiring(Logger log, FileManager frm) throws SAXException, IOException, FileManagerException, MarshalException, ValidationException {
+		Wiring wiring = null;
+		if(this.isExclusive()) {
+			wiring = new Wiring();
+		} else {
+			// check wiring version
+			String wiringVersion = XMLUtils.getDocumentNamespace(frm.readResource(WIRING_FILE));
+			if(!WIRING_10_NAMESPACE.equals(wiringVersion)) {
+				String msg = "The deployer only supports " + WIRING_10_NAMESPACE + " files.";
+				log.error(msg);
+				throw new DeploymentException(msg);				
+			}				
+			wiring = (Wiring) Wiring.unmarshal(new InputStreamReader(frm.readResource(WIRING_FILE)));	
+		}
+		return wiring;
+	}
+
+	/*
+	 * TODO What happens if two libraries have the same filename by chance ...?
+	 */
+	protected void installLibraries(File[] libraries, Logger log, FileManager frm) 
+		throws IOException, FileNotFoundException, FileManagerException {
+		
+		for(int i = 0; i < libraries.length; i++) {
+			File lib = libraries[i];
+			
+			// check if a library is a block, if yes, don't add it to WEB_INF_LIBS_DIR
+			boolean isBlock = true;
+			try {
+				ZipUtils.getBlockDescriptorIs(lib);
+			} catch(FileNotFoundException fnfe) {
+				isBlock = false;
+			}
+			
+			if(!isBlock) {
+				String libName = WEB_INF_LIBS_DIR + "/" + lib.getName();
+				log.info("Installing library " + libName);		
+		        FileUtils.copy(new FileInputStream(lib), frm.writeResource(libName));						
+			}
+		}
 	}
 
 	/**
