@@ -14,8 +14,9 @@
 
 This is some quick info about the Mavenization (m10n) of Cocoon 2.2.
 
-There's also a Daisy documentation page about this, for more "stable" information:
+There are also some Daisy documentation pages about this, for more "stable" information:
 http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
+http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
 
 HOW TO CONVERT AN EXISTING BLOCK TO MAVEN STRUCTURE
 
