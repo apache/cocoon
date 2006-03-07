@@ -40,6 +40,7 @@
         <th>lastName</th>
         <th>phone</th>
         <th>email</th>
+        <th>preferred contact</th>
       </tr>
       <jx:forEach var="item" items="${form2bean.contacts}">
         <tr>
@@ -48,6 +49,7 @@
           <td>${item.lastName}</td>
           <td>${item.phone}</td>
           <td>${item.email}</td>
+          <td><i18n:text xmlns:i18n="http://apache.org/cocoon/i18n/2.1">${item.preferred}</i18n:text></td>
         </tr>
       </jx:forEach>
     </table>
