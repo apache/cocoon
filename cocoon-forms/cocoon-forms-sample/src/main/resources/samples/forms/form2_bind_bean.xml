@@ -84,6 +84,7 @@
       <fb:value id="lastname" path="lastName"/>
       <fb:value id="phone" path="phone"/>
       <fb:value id="email" path="email"/>
+      <fb:value id="preferred" path="preferred"/>
     </fb:on-bind>
 
     <fb:on-delete-row>

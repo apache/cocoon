@@ -104,6 +104,7 @@
       <fb:value id="lastname"  path="lastname"  />
       <fb:value id="phone"     path="phone/@nr" />
       <fb:value id="email"     path="email"     />
+      <fb:value id="preferred" path="preferred"/>       
     </fb:on-bind>
 
     <fb:on-delete-row>

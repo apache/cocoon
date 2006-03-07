@@ -85,6 +85,7 @@
           <th><ft:repeater-widget-label id="contacts" widget-id="lastname"/></th>
           <th><ft:repeater-widget-label id="contacts" widget-id="phone"/></th>
           <th><ft:repeater-widget-label id="contacts" widget-id="email"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="preferred"/></th>
           <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
         </tr>
 
@@ -99,6 +100,7 @@
             <td><ft:widget id="lastname"/></td>
             <td><ft:widget id="phone"/></td>
             <td><ft:widget id="email"/></td>
+            <td><ft:widget id="preferred"/></td>
             <td><ft:widget id="select"/></td>
           </tr>
         </ft:repeater-widget>

@@ -17,4 +17,9 @@
 <catalogue>
   <message key="org.apache.cocoon.forms.samples.Sex.FEMALE">female</message>
   <message key="org.apache.cocoon.forms.samples.Sex.MALE">male</message>
+  <message key="org.apache.cocoon.forms.samples.PreferredContact.EMAIL">Email</message>
+  <message key="org.apache.cocoon.forms.samples.PreferredContact.FAX">Fax</message>
+  <message key="org.apache.cocoon.forms.samples.PreferredContact.PAGER">Pager</message>
+  <message key="org.apache.cocoon.forms.samples.PreferredContact.PHONE">Phone</message>
+  <message key="org.apache.cocoon.forms.samples.PreferredContact.POSTAL_MAIL">Postal mail</message>
 </catalogue>
