@@ -148,6 +148,15 @@
             </fd:validation>
           </fd:datatype>
         </fd:field>
+        <fd:field id="preferred">
+          <fd:label>Preferred contact</fd:label>
+          <fd:datatype base="enum">
+            <fd:convertor type="enum">
+              <fd:enum>org.apache.cocoon.forms.samples.PreferredContact</fd:enum>
+            </fd:convertor>
+          </fd:datatype>
+          <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.PreferredContact" nullable="true" null-text="Select..."/>
+        </fd:field>
         <fd:booleanfield id="select">
           <fd:label>Select</fd:label>
         </fd:booleanfield>
