@@ -26,6 +26,7 @@ public class Contact {
     private String lastName;
     private String phone;
     private String email;
+    private PreferredContact preferred;
 
     public long getId() {
         return id;
@@ -69,5 +70,13 @@ public class Contact {
 
     public String toString() {
         return "< id = " + id + ", firstName = " + firstName + ", lastName = " + lastName + ", phone = " + phone + ", email = " + email + " >";
+    }
+
+    public PreferredContact getPreferred() {
+        return preferred;
+    }
+
+    public void setPreferred(PreferredContact preferred) {
+        this.preferred = preferred;
     }
 }

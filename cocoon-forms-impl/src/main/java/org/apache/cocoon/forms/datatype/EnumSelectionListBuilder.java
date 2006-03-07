@@ -31,7 +31,8 @@ public class EnumSelectionListBuilder implements SelectionListBuilder {
         throws Exception {
         String className = DomHelper.getAttribute(selectionListElement, "class");
         boolean nullable = DomHelper.getAttributeAsBoolean(selectionListElement, "nullable", true);
-        return new EnumSelectionList(className, datatype, nullable);
+        String nulltext = DomHelper.getAttribute(selectionListElement, "null-text", null);
+        return new EnumSelectionList(className, datatype, nullable, nulltext);
     }
 
 }
