@@ -65,15 +65,18 @@ import org.xml.sax.helpers.AttributesImpl;
  * <br>
  *
  * The following DTD is valid:<br>
- * &lt;!ELEMENT execute-query (attribute+ | show-attribute? | scope? | initializer? | authentication? | error-element? | sax-error?  doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
- * &lt;!ELEMENT execute-increment (attribute | show-attribute? | scope? | initializer? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
+ * &lt;!ELEMENT execute-query (attribute+ | show-attribute? | scope? | initializer? | initial-context? | authentication? | error-element? | sax-error?  doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
+ * &lt;!ELEMENT execute-increment (attribute | show-attribute? | scope? | initializer? | initial-context? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
  * increments (+1) an integer attribute on a directory-server (ldap)<br>
- * &lt;!ELEMENT execute-replace (attribute | show-attribute? | scope? | initializer? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
+ * &lt;!ELEMENT execute-replace (attribute | show-attribute? | scope? | initializer? | initial-context? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
  * replace attribute on a directory-server (ldap)<br>
- * &lt;!ELEMENT execute-add (attribute | show-attribute? | scope? | initializer? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
+ * &lt;!ELEMENT execute-add (attribute | show-attribute? | scope? | initializer? | initial-context? | authentication? | error-element? | sax-error? | doc-element? | row-element? | version? | serverurl? | rootdn? | password? | deref-link? | count-limit? | searchbase, filter)&gt;<br>
  * add attribute on a directory-server (ldap)<br>
  * <br>
  * &lt;!ELEMENT initializer (#PCDATA)&gt;+ (default: "com.sun.jndi.ldap.LdapCtxFactory")<br>
+ * &lt;!ELEMENT initial-context (#EMPTY)&gt;<br>
+ * &lt;!ATTLIST initial-context name CDATA #REQUIRED
+                                value CDATA #REQUIRED &gt;<br>
  * &lt;!ELEMENT authentication (#PCDATA)&gt;+ (default: "simple")<br>
  * &lt;!ELEMENT version (#PCDATA)&gt;+ (default: "2")<br>
  * &lt;!ELEMENT serverurl (#PCDATA)&gt;+<br>
@@ -101,9 +104,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * + can also be defined as parameter in the sitemap.
  * <br>
  *
- * @author Felix Knecht
- * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
- * @author <a href="mailto:yuryx@mobicomk.donpac.ru">Yury Mikhienko</a>
  * @version $Id$
  */
 public class LDAPTransformer extends AbstractTransformer {
@@ -131,6 +131,9 @@ public class LDAPTransformer extends AbstractTransformer {
     public static final String MAGIC_EXECUTE_REPLACE = "execute-replace";
     public static final String MAGIC_FILTER_ELEMENT = "filter";
     public static final String MAGIC_INITIALIZER_ELEMENT = "initializer";
+    public static final String MAGIC_INITIAL_CONTEXT_ELEMENT = "initial-context";
+    public static final String MAGIC_INITIAL_CONTEXT_NAME_ATTRIBUTE = "name";
+    public static final String MAGIC_INITIAL_CONTEXT_VALUE_ATTRIBUTE = "value";
     public static final String MAGIC_PASSWORD_ELEMENT = "password";
     public static final String MAGIC_PORT_ELEMENT = "port";
     public static final String MAGIC_ROOT_DN_ELEMENT = "rootdn";
@@ -172,6 +175,7 @@ public class LDAPTransformer extends AbstractTransformer {
     public static final int STATE_INSIDE_EXECUTE_REPLACE = 24;
     public static final int STATE_INSIDE_EXECUTE_ADD = 25;
     public static final int STATE_INSIDE_DN_ATTRIBUTE = 26;
+    public static final int STATE_INSIDE_INITIAL_CONTEXT_ELEMENT = 27;
 
     /** Default parameters that might apply to all queries */
     protected HashMap default_properties = new HashMap();
@@ -579,6 +583,51 @@ public class LDAPTransformer extends AbstractTransformer {
         }
     }
 
+    protected void startInitialContextElement(Attributes attributes) {
+        switch (current_state) {
+            case STATE_INSIDE_EXECUTE_INCREMENT :
+                current_state = LDAPTransformer.STATE_INSIDE_INITIAL_CONTEXT_ELEMENT;
+                current_value.setLength(0);
+                break;
+            case STATE_INSIDE_EXECUTE_QUERY :
+            case STATE_INSIDE_EXECUTE_ADD :
+            case STATE_INSIDE_EXECUTE_REPLACE :
+                String name = null, value = null;
+
+                if (attributes != null && attributes.getLength() > 0) {
+                		name = attributes.getValue("name");
+                		value = attributes.getValue("value");
+
+                		if (name != null && value != null)
+                			getCurrentQuery().addInitialContextValue(name, value);
+                }
+                if (name == null) {
+                    this.getLogger().debug("Could not find 'name' attribute");
+                    throwIllegalStateException("Could not find 'name' attribute in initial-context element");
+                }
+                if (value == null) {
+                    this.getLogger().debug("Could not find 'value' attribute");
+                    throwIllegalStateException("Could not find 'value' attribute in initial-context element");
+                }
+
+                current_state = LDAPTransformer.STATE_INSIDE_INITIAL_CONTEXT_ELEMENT;
+                current_value.setLength(0);
+                break;
+            default :
+                throwIllegalStateException("Not expecting a start initial-context element");
+        }
+    }
+	
+	protected void endInitialContextElement() {
+        switch (current_state) {
+            case LDAPTransformer.STATE_INSIDE_INITIAL_CONTEXT_ELEMENT :
+                current_state = getCurrentQuery().toDo;
+                break;
+            default :
+                throwIllegalStateException("Not expecting a end initial-context element");
+        }
+    }
+	
     protected void endVersionElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT :
@@ -694,6 +743,8 @@ public class LDAPTransformer extends AbstractTransformer {
             startExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT)) {
             startQueryParameterElement(LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT, name);
+        } else if (name.equals(LDAPTransformer.MAGIC_INITIAL_CONTEXT_ELEMENT)) {
+            startInitialContextElement(attributes);
         } else if (name.equals(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT)) {
             startQueryParameterElement(LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT, name);
         } else if (name.equals(LDAPTransformer.MAGIC_SCOPE_ELEMENT)) {
@@ -756,6 +807,8 @@ public class LDAPTransformer extends AbstractTransformer {
             endExecuteElement(LDAPTransformer.STATE_INSIDE_EXECUTE_INCREMENT, LDAPTransformer.MAGIC_EXECUTE_INCREMENT);
         } else if (name.equals(LDAPTransformer.MAGIC_INITIALIZER_ELEMENT)) {
             endInitializerElement();
+        } else if (name.equals(LDAPTransformer.MAGIC_INITIAL_CONTEXT_ELEMENT)) {
+            endInitialContextElement();
         } else if (name.equals(LDAPTransformer.MAGIC_AUTHENTICATION_ELEMENT)) {
             endAuthenticationElement();
         } else if (name.equals(LDAPTransformer.MAGIC_SCOPE_ELEMENT)) {
@@ -805,6 +858,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
     public void characters(char ary[], int start, int length) throws SAXException {
         if (current_state != LDAPTransformer.STATE_INSIDE_INITIALIZER_ELEMENT
+            && current_state != LDAPTransformer.STATE_INSIDE_INITIAL_CONTEXT_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_AUTHENTICATION_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_SCOPE_ELEMENT
             && current_state != LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT
@@ -891,6 +945,7 @@ public class LDAPTransformer extends AbstractTransformer {
         protected List attrVale = new LinkedList();
         protected String REPLACE_MODE_DEFAULT = StringUtils.defaultString(LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_DEFAULT);
         protected String REPLACE_MODE_APPEND = StringUtils.defaultString(LDAPTransformer.MAGIC_ATTRIBUTE_ELEMENT_MODE_ATTRIBUTE_VALUE_A);
+        protected Map initialContextValues = new HashMap();
         protected boolean showAttribute;
         protected String filter;
         protected String doc_element;
@@ -1509,6 +1564,11 @@ public class LDAPTransformer extends AbstractTransformer {
             attrVale.add(val);
         }
 
+        protected void addInitialContextValue(String name, String value)
+        {
+            initialContextValues.put(name, value);
+        }
+
         protected void connect() throws NamingException {
             if (root_dn != null && password != null) {
                 env.put(Context.SECURITY_AUTHENTICATION, authentication);
@@ -1519,6 +1579,9 @@ public class LDAPTransformer extends AbstractTransformer {
             env.put("java.naming.ldap.version", version);
             env.put(Context.INITIAL_CONTEXT_FACTORY, initializer);
             env.put(Context.PROVIDER_URL, serverurl + ":" + port);
+
+            // Override existing properties or add new properties with values from initial-context
+            env.putAll(initialContextValues);
 
             try {
                 ctx = new InitialDirContext(env);
@@ -1557,6 +1620,7 @@ public class LDAPTransformer extends AbstractTransformer {
                 logger.debug("[LDAPTransformer] searchbase: " + searchbase);
                 logger.debug("[LDAPTransformer] showAttribute: " + showAttribute);
                 logger.debug("[LDAPTransformer] attribute: " + attrListe.toString());
+                logger.debug("[LDAPTransformer] initial-context: " + initialContextValues);
                 logger.debug("[LDAPTransformer] filter: " + filter);
                 logger.debug("[LDAPTransformer] doc_element: " + doc_element);
                 logger.debug("[LDAPTransformer] row_element: " + row_element);
