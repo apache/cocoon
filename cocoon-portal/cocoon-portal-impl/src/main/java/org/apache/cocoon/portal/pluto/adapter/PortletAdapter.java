@@ -171,14 +171,10 @@ public class PortletAdapter
             throw new SAXException("Unable to execute JSR-168 portlets because of missing servlet context.");
         }
         try {
-            final String portlet = (String)super.getConfiguration(coplet, "portlet");
-            if ( portlet == null ) {
-                throw new SAXException("Portlet configuration is missing.");
-            }
             // get the window
             final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
             if ( window == null ) {
-                throw new SAXException("Portlet couldn't be loaded: " + portlet);
+                throw new SAXException("Portlet couldn't be loaded: " + coplet.getId());
             }
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
@@ -186,17 +182,17 @@ public class PortletAdapter
 
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
-            final String value = res.toString();
+            final String value = this.getResponse(res);
 
             final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
             if ( usePipeline.booleanValue() ) {
                 HtmlSaxParser.parseString(value, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
-                IncludingHTMLSerializer.addPortlet(portlet, value);
+                IncludingHTMLSerializer.addPortlet(coplet.getId(), value);
                 contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
                 AttributesImpl attr = new AttributesImpl();
-                attr.addCDATAAttribute("portlet", portlet);
+                attr.addCDATAAttribute("portlet", coplet.getId());
                 contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
                                             "include", "portal:include", attr);
                 contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
@@ -389,5 +385,9 @@ public class PortletAdapter
         if (objectModel.remove("portlet-event") == null) {
             aspectContext.invokeNext(ch, parameters);
         }
+    }
+
+    protected String getResponse(HttpServletResponse response) {
+        return response.toString();
     }
 }
