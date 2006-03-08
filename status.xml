@@ -181,7 +181,8 @@
 -->
   <release version="2.1.9" date="TBD">
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1707" due-to="Sébastien Grimault" due-to-email="sgrimault@jouve.fr">
-      Allow configuration of initial context in LDAPTransformer
+      Allow configuration of initial context in LDAPTransformer.  Example:
+      &lt;ldap:initial-context name="com.sun.jndi.ldap.connect.timeout" value="5000"/&gt;
     </action>
     <action dev="DC" type="add" fixes-bug="COCOON-1206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
        html block: Add CleanupTransformer. Enables indent html, add relevant line-breaks,
