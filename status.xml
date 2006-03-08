@@ -182,7 +182,8 @@
   <release version="2.1.9" date="TBD">
     <action dev="CZ" type="fix">
       Portal Block: Fix handling of several instances of the same portlet where all instances
-                    showed the contents of the last portlet instance.
+                    showed the contents of the last portlet instance.  This only  applies to JSR-168 portlets,
+                    not to coplets.
     </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1707" due-to="Sébastien Grimault" due-to-email="sgrimault@jouve.fr">
       Allow configuration of initial context in LDAPTransformer.  Example:
