@@ -391,10 +391,6 @@ implements SourceResolver, Serviceable, Disposable {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
             EnvironmentInfo info = stack.getCurrentInfo();
-            // FIXME - Workaround!
-            if ( info.processor.getBeanFactory() == null ) {
-                info = (EnvironmentInfo)stack.get(stack.getOffset() - 1);
-            }
             return (ServiceManager) info.processor.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         }
         return null;
