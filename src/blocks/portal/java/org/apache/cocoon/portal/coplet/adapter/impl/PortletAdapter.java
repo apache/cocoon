@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,8 +77,7 @@ import org.xml.sax.SAXException;
  * This is the adapter to use JSR-168 portlets as coplets
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -173,14 +172,10 @@ public class PortletAdapter
             throw new SAXException("Unable to execute JSR-168 portlets because of missing servlet context.");
         }
         try {
-            final String portlet = (String)super.getConfiguration(coplet, "portlet");
-            if ( portlet == null ) {
-                throw new SAXException("Portlet configuration is missing.");
-            }
             // get the window
             final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
             if ( window == null ) {
-                throw new SAXException("Portlet couldn't be loaded: " + portlet);
+                throw new SAXException("Portlet couldn't be loaded: " + coplet.getId());
             }
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
@@ -195,10 +190,10 @@ public class PortletAdapter
                 HtmlSaxParser.parseString(value, HtmlSaxParser.getContentFilter(contentHandler));
             } else {
                 // stream out the include for the serializer
-                IncludingHTMLSerializer.addPortlet(portlet, value);
+                IncludingHTMLSerializer.addPortlet(coplet.getId(), value);
                 contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
                 AttributesImpl attr = new AttributesImpl();
-                attr.addCDATAAttribute("portlet", portlet);
+                attr.addCDATAAttribute("portlet", coplet.getId());
                 contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
                                             "include", "portal:include", attr);
                 contentHandler.endElement(IncludingHTMLSerializer.NAMESPACE, 
@@ -414,4 +409,7 @@ public class PortletAdapter
         }
     }
 
+    protected String getResponse(HttpServletResponse response) {
+        return response.toString();
+    }
 }
