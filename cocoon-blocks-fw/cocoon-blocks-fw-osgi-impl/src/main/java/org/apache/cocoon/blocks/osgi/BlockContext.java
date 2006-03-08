@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.osgi;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.blocks.Block;
+import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
+import org.osgi.service.component.ComponentContext;
 
 /**
  * @version $Id$
@@ -43,10 +46,9 @@ public class BlockContext extends ServletContextWrapper {
 
     private Hashtable attributes;
     private Servlet servlet;
-    private URL contextURL;
     private String mountPath;
-    private Dictionary connections;
     private Dictionary properties;
+    protected ComponentContext componentContext;
     
     /*
      * (non-Javadoc)
@@ -93,8 +95,7 @@ public class BlockContext extends ServletContextWrapper {
     public URL getResource(String path) throws MalformedURLException {
         if (path.length() == 0 || path.charAt(0) != '/')
             throw new MalformedURLException("The path must start with '/' " + path);
-        path = path.substring(1);
-        return new URL(this.contextURL, path);
+        return this.componentContext.getBundleContext().getBundle().getResource(path);
     }
 
     /*
@@ -272,21 +273,12 @@ public class BlockContext extends ServletContextWrapper {
      * Get the context of a block with a given name.
      */
     public ServletContext getNamedContext(String name) {
-        ServletContext context = null;
-        String blockId = (String) this.connections.get(name);
-        if (blockId != null)
-            context = ((BlocksContext)super.servletContext).getNamedContext(blockId);
-
-        return context;
+        BlockServlet blockServlet =
+            (BlockServlet) this.componentContext.locateService(name);
+        System.out.println("OSGIBlockContext: " + name + "=" + blockServlet);
+        return blockServlet.getBlockContext();
     }
-    
-    /**
-     * @param contextURL The contextURL to set.
-     */
-    public void setContextURL(URL contextURL) {
-        this.contextURL = contextURL;
-    }
-
+        
     /**
      * @param mountPath The mountPath to set.
      */
@@ -302,17 +294,14 @@ public class BlockContext extends ServletContextWrapper {
     }
 
     /**
-     * @param connections The connections to set.
-     */
-    public void setConnections(Dictionary connections) {
-        this.connections = connections;
-    }
-
-    /**
      * @param properties The properties to set.
      */
     public void setProperties(Dictionary properties) {
         this.properties = properties;
+    }
+
+    protected void activate(ComponentContext componentContext) {
+        this.componentContext = componentContext;
     }
 
     protected class NamedDispatcher implements RequestDispatcher {
