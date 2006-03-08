@@ -315,13 +315,13 @@ public class BlockContext extends ServletContextWrapper {
         this.properties = properties;
     }
 
-    private class NamedDispatcher implements RequestDispatcher {
+    protected class NamedDispatcher implements RequestDispatcher {
 
         private String blockName;
         private boolean superCall = false;
         private ServletContext context;
 
-        private NamedDispatcher(String blockName) {
+        public NamedDispatcher(String blockName) {
             this.blockName = blockName;
             this.superCall = Block.SUPER.equals(this.blockName);
 
@@ -339,7 +339,7 @@ public class BlockContext extends ServletContextWrapper {
             }
         }
 
-        private boolean exists() {
+        protected boolean exists() {
             return this.context != null;
         }
 
