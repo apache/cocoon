@@ -49,6 +49,9 @@ import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.xml.sax.SAXException;
 
@@ -60,7 +63,7 @@ import org.xml.sax.SAXException;
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
                                       Configurable, Contextualizable,
-                                      Disposable, Initializable {
+                                      Disposable, Initializable, BeanFactoryAware {
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
@@ -103,6 +106,9 @@ public class TreeProcessor extends AbstractLogEnabled
 
     /** The actual processor */
     protected ConcreteTreeProcessor concreteProcessor;
+
+    /** Our bean factory. */
+    protected ConfigurableListableBeanFactory beanFactory;
 
     /**
      * Create a TreeProcessor.
@@ -500,10 +506,14 @@ public class TreeProcessor extends AbstractLogEnabled
         if ( this.concreteProcessor != null ) {
             return this.concreteProcessor.getBeanFactory();
         }
-        if ( parent != null ) {
-            return this.parent.getBeanFactory();
-        }
-        return null;
+        return this.beanFactory;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        this.beanFactory = (ConfigurableListableBeanFactory) factory;
     }
 
     /**
