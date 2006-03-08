@@ -182,7 +182,7 @@ public class PortletAdapter
 
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
-            final String value = this.getResponse(res);
+            final String value = this.getResponse(coplet, res);
 
             final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
             if ( usePipeline.booleanValue() ) {
@@ -387,7 +387,7 @@ public class PortletAdapter
         }
     }
 
-    protected String getResponse(HttpServletResponse response) {
+    protected String getResponse(CopletInstanceData instance, HttpServletResponse response) {
         return response.toString();
     }
 }
