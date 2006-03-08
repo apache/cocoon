@@ -617,8 +617,8 @@ public class LDAPTransformer extends AbstractTransformer {
                 throwIllegalStateException("Not expecting a start initial-context element");
         }
     }
-	
-	protected void endInitialContextElement() {
+
+    protected void endInitialContextElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_INITIAL_CONTEXT_ELEMENT :
                 current_state = getCurrentQuery().toDo;
@@ -627,7 +627,7 @@ public class LDAPTransformer extends AbstractTransformer {
                 throwIllegalStateException("Not expecting a end initial-context element");
         }
     }
-	
+
     protected void endVersionElement() {
         switch (current_state) {
             case LDAPTransformer.STATE_INSIDE_VERSION_ELEMENT :
