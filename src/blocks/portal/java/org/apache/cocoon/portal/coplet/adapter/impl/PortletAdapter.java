@@ -74,7 +74,7 @@ import org.xml.sax.SAXException;
 
 
 /**
- * This is the adapter to use JSR-168 portlets as coplets
+ * This is the adapter to use JSR-168 portlets as coplets.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
@@ -82,10 +82,10 @@ import org.xml.sax.SAXException;
 public class PortletAdapter 
     extends AbstractCopletAdapter
     implements Contextualizable, Initializable, PortalManagerAspect, Receiver, Disposable {
-	
+
     /** The avalon context */
     protected Context context;
-    
+
     /** The servlet configuration for pluto */
     protected ServletConfig servletConfig;
 
@@ -114,8 +114,8 @@ public class PortletAdapter
             this.getLogger().warn("The JSR-168 support is disabled as the servlet context is not available.", ignore);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
      */
     public void login(CopletInstanceData coplet) {
@@ -125,12 +125,12 @@ public class PortletAdapter
             return;
         }
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
-        
+
         final String portletEntityId = (String) getConfiguration(coplet, "portlet");   
-        
+
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         PortletEntity portletEntity = ((PortletEntityListImpl)pae.getPortletEntityList()).add(pae, portletEntityId, coplet, registry);
-        
+
         if ( portletEntity.getPortletDefinition() != null ) {
             // create the window
             PortletWindow portletWindow = new PortletWindowImpl(portletEntityId);                
@@ -139,7 +139,7 @@ public class PortletAdapter
             PortletWindowList windowList = portletEntity.getPortletWindowList();        
             ((PortletWindowListCtrl)windowList).add(portletWindow);    
             coplet.setTemporaryAttribute("window", portletWindow);
-            
+
             // load the portlet
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
@@ -180,10 +180,10 @@ public class PortletAdapter
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
             final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
-            
+
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
-            final String value = res.toString();
+            final String value = this.getResponse(coplet, res);
 
             final Boolean usePipeline = (Boolean)this.getConfiguration(coplet, "use-pipeline", Boolean.FALSE);
             if ( usePipeline.booleanValue() ) {
@@ -365,12 +365,12 @@ public class PortletAdapter
     throws ProcessingException {
         // process the events
         aspectContext.invokeNext();
-        
+
         // if we aren't running in a servlet environment, just skip the JSR-168 part
         if ( this.servletConfig == null ) {
             return;
         }
-        
+
         // do we already have an environment?
         // if not, create one
         final Map objectModel = aspectContext.getObjectModel();
@@ -409,7 +409,7 @@ public class PortletAdapter
         }
     }
 
-    protected String getResponse(HttpServletResponse response) {
+    protected String getResponse(CopletInstanceData instance, HttpServletResponse response) {
         return response.toString();
     }
 }
