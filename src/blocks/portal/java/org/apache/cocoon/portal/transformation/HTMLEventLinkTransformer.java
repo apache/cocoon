@@ -68,10 +68,12 @@ extends AbstractCopletTransformer {
     throws SAXException {
         boolean processed = false;
         if ("a".equals(name) ) {
+            final AttributesImpl a = this.getMutableAttributes(attr);
+            attr = a;
             boolean convert = false;
             final boolean isRemoteAnchor = this.isRemoteAnchor(attr);
             if ( isRemoteAnchor ) {
-                convert = !this.isExternalLink(attr);
+                convert = !this.isExternalLink(a);
             }
             this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
             if ( convert ) {
@@ -79,7 +81,9 @@ extends AbstractCopletTransformer {
                 processed = true;
             }
         } else if ("form".equals(name) ) {
-            boolean convert = !this.isExternalForm(attr);
+            final AttributesImpl a = this.getMutableAttributes(attr);
+            attr = a;
+            boolean convert = !this.isExternalForm(a);
             this.stack.push(convert ? Boolean.TRUE: Boolean.FALSE);
             if ( convert ) {
                 this.createFormEvent(attr);
@@ -201,8 +205,12 @@ extends AbstractCopletTransformer {
      * @param attributes attributes of the node
      * @return true if the attribute 'external' is 'true'
      */
-    private boolean isExternalLink (Attributes attributes) {        
+    private boolean isExternalLink (AttributesImpl attributes) {        
         final String external = attributes.getValue("external");
+        // remote attribute
+        if ( external != null ) {
+            attributes.removeAttribute("external");
+        }
         // links to external documents will be not transformed to portal links
         if (external != null && external.trim().length() > 0 
             && external.trim().toLowerCase().equals ("true") ) {            
@@ -225,8 +233,12 @@ extends AbstractCopletTransformer {
      * @param attributes attributes of the node
      * @return True if the action is external.
      */
-    private boolean isExternalForm(Attributes attributes) {        
+    private boolean isExternalForm(AttributesImpl attributes) {        
         final String external = attributes.getValue("external");
+        // remote attribute
+        if ( external != null ) {
+            attributes.removeAttribute("external");
+        }
         // links to external documents will be not transformed to portal links
         if (external != null && external.trim().length() > 0 
             && external.trim().toLowerCase().equals ("true") ) {            
