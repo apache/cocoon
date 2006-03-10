@@ -181,7 +181,7 @@
 -->
   <release version="2.1.9" date="TBD">
     <action dev="AG" type="fix" fixes-bug="COCOON-1796" due-to="Freek Segers" due-to-email="freek.segers@nerocmediaware.nl">
-       TraversableGenerator calls resloveURI() twice but release() only once.
+       TraversableGenerator calls resolveURI() twice but release() only once.
     </action>
     <action dev="CZ" type="fix">
       Portal Block: Remove "external" attribute from coplet links.
