@@ -170,7 +170,7 @@
           </td>
         </tr>
       </table>
-      <script type="text/javascript"><xsl:value-of select="$browser-variable"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="fi:styling/@submit-on-change = 'true'"/>);</script>
+      <script type="text/javascript"><xsl:value-of select="$browser-variable"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="@listening = 'true' and not(fi:styling/@submit-on-change = 'false')"/>);</script>
     </div>
   </xsl:template>
 
