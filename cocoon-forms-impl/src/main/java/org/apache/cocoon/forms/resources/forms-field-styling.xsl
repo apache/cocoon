@@ -93,7 +93,7 @@
     <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
 
     <!--  Auto submit on fields which are listening -->
-    <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange)">
+      <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange) and not(fi:styling/@list-type = 'double-listbox')">
       <xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
     </xsl:if>
 
