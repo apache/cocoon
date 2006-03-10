@@ -100,7 +100,8 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
             return new RepeaterActionDefinition.DeleteRowsActionDefinition(repeater, select);
 
         } else if ("add-row".equals(actionCommand)) {
-            return new RepeaterActionDefinition.AddRowActionDefinition(repeater);
+            int insertRows = DomHelper.getAttributeAsInteger(element,"number-of-rows",1);
+            return new RepeaterActionDefinition.AddRowActionDefinition(repeater,insertRows);
 
         } else if ("insert-rows".equals(actionCommand)) {
             String select = DomHelper.getAttribute(element, "select");

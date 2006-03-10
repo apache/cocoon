@@ -167,6 +167,10 @@
       <fd:label>Add contact</fd:label>
     </fd:repeater-action>
   
+    <fd:repeater-action id="addtwocontacts" command="add-row" repeater="contacts" number-of-rows="2">
+      <fd:label>Add two contacts</fd:label>
+    </fd:repeater-action>
+  
     <fd:repeater-action id="removecontacts" command="delete-rows" repeater="contacts" select="select">
       <fd:label>Remove selected contacts</fd:label>
     </fd:repeater-action>

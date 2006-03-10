@@ -134,6 +134,7 @@
           </jx:choose>
           <tr>
             <td colspan="6">
+              <ft:widget id="addtwocontacts"/>
               <ft:widget id="addcontact"/>
               <jx:if test="${widget.getChild('contacts').getSize() > 0}">
                 <ft:widget id="removecontacts"/>
