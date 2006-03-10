@@ -107,6 +107,7 @@
 
         <tr>
           <td colspan="4" align="right">
+            <ft:widget id="addtwocontacts"/>
             <ft:widget id="addcontact"/>
             <ft:widget id="removecontacts"/>
           </td>

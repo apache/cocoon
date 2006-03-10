@@ -133,14 +133,18 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
      * The definition of a repeater action that adds a row to a sibling repeater.
      */
     public static class AddRowActionDefinition extends RepeaterActionDefinition {
-        
-        public AddRowActionDefinition(String repeaterName) {
+        private int insertRows;
+
+        public AddRowActionDefinition(String repeaterName, int insertRows) {
             super(repeaterName);
-            
+            this.insertRows = insertRows;
+
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
-                    repeater.addRow();
+                    for (int i=0; i<AddRowActionDefinition.this.insertRows; i++) {
+                        repeater.addRow(); 
+                    }
                 }
             });
         }
