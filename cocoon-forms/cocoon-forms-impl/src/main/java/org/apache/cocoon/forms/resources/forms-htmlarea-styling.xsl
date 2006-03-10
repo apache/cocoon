@@ -69,7 +69,7 @@
           handler.fieldId = "<xsl:value-of select="@id"/>";
           if(typeof(<xsl:value-of select="fi:styling/initFunction"/>)!="function") {
             alert("<xsl:value-of select="fi:styling/initFunction"/> is not a function " +
-            or not available! Can't render widget '<xsl:value-of select="@id"/>'");
+            "or not available! Can't render widget '<xsl:value-of select="@id"/>'");
           }
           handler.forms_onload = <xsl:value-of select="fi:styling/initFunction"/>;
           forms_onloadHandlers.push(handler);   
