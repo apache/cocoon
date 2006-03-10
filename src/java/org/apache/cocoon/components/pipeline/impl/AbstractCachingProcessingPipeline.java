@@ -882,8 +882,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 	                    if (readerValidity != null) {
 	                        outputStream = environment.getOutputStream(this.outputBufferSize);
 	                        outputStream = new CachingOutputStream(outputStream);
-	                    } else {
-	                        pcKey = null;
 	                    }
 	                }
 	
@@ -906,7 +904,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 	                }
 	
 	                // store the response
-	                if (pcKey != null) {
+	                if (pcKey != null && readerValidity != null) {
 	                    final CachedResponse res = new CachedResponse(new SourceValidity[] {readerValidity},
 	                            ((CachingOutputStream)outputStream).getContent());
 	                    res.setContentType(environment.getContentType());

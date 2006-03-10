@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1799" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
+       Threads waste when reading a not found resource.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1796" due-to="Freek Segers" due-to-email="freek.segers@nerocmediaware.nl">
        TraversableGenerator calls resolveURI() twice but release() only once.
     </action>
