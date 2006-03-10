@@ -313,8 +313,7 @@ public class TraversableGenerator extends ServiceableGenerator
             if (!(src instanceof TraversableSource)) {
                 throw new SourceException(this.source + " is not a traversable source");
             }
-            final TraversableSource inputSource =
-                (TraversableSource) this.resolver.resolveURI(this.source);
+            final TraversableSource inputSource = (TraversableSource) src;
 
             if (!inputSource.exists()) {
                 throw new ResourceNotFoundException(this.source + " does not exist.");
