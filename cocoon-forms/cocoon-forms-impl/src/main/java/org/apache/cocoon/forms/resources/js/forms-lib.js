@@ -120,7 +120,7 @@ function forms_createOptionTransfer(id, submitOnChange) {
     var result = new OptionTransfer(id + ".unselected", id);
     result.setAutoSort(true);
     // add to onload handlers
-    result.forms_id = id;
+    result.forms_id = id + ":input";
     result.forms_onload = function() {
         var form = forms_getForm(document.getElementById(this.forms_id));
         this.init(form);
