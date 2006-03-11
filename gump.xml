@@ -1687,6 +1687,27 @@
 
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
+
+  <project name="cocoon-block-template" status="unstable" dir="src/blocks/template">
+    <package>org.apache.cocoon</package>
+    
+    <description>Template block from Cocoon 2.2 (new JXTemplate implementation)</description>
+    
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    
+    <jar name="blocks/template-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
   <!--
     ********************************************
     ********  COCOON SUPPLIED PROJECTS  ********
