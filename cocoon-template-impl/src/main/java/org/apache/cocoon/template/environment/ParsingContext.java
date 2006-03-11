@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.template.environment;
 
-import org.apache.cocoon.template.expression.StringTemplateParser;
 import org.apache.cocoon.template.script.InstructionFactory;
+import org.apache.cocoon.template.expression.StringTemplateParser;
 
 /**
  * @version SVN $Id$
