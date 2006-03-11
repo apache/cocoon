@@ -21,7 +21,7 @@
         default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
   <role name="org.apache.cocoon.components.expression.ExpressionFactory"
         shorthand="expression-factory"
-        default-class="org.apache.cocoon.components.expression.ExpressionFactory"/>
+        default-class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
   <!-- TODO move it somewhere else! -->
   <role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" 
         shorthand="string-template-parsers" 
