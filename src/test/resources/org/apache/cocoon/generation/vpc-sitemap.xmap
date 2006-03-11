@@ -22,7 +22,7 @@
   <map:components>
     <map:generators default="file">
       <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"/>
-      <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+      <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator"/>
       <map:generator name="virtual1" src="org.apache.cocoon.generation.VirtualPipelineGenerator">
         <map:generate type="file" src="vpc-test.xml"/>
       </map:generator>
