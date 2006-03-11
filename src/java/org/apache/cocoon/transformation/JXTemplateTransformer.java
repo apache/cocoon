@@ -20,8 +20,8 @@ import org.apache.cocoon.generation.JXTemplateGenerator;
 /**
  * Transformer adapter for {@link org.apache.cocoon.generation.JXTemplateGenerator}
  * 
+ * @deprecated Replaced with the template block: {@link org.apache.cocoon.template.JXTemplateTransformer}.
  */
-
 public class JXTemplateTransformer extends JXTemplateGenerator.TransformerAdapter {
 
     /**

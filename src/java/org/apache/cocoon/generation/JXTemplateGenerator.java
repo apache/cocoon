@@ -111,6 +111,8 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @cocoon.sitemap.component.pooling.max  16
  *
+ * @deprecated Replaced with the template block: {@link org.apache.cocoon.template.JXTemplateGenerator}.
+ *
  * @version $Id$
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
