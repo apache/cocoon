@@ -25,6 +25,7 @@
     <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="default"/>
     <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
     <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
+    <component-instance class="org.apache.cocoon.components.expression.javascript.JavaScriptCompiler" name="js"/>
   </expression-compilers>
   <string-template-parsers>
     <component-instance class="org.apache.cocoon.template.expression.JXTGStringTemplateParser" name="jxtg"/>
