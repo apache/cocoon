@@ -23,7 +23,7 @@ import java.util.List;
  * @version SVN $Id: JXTGStringTemplateParser.java 325986 2005-10-17 21:35:18Z
  *          lgawron $
  */
-public class JXTGStringTemplateParser extends StringTemplateParser {
+public class JXTGStringTemplateParser extends AbstractStringTemplateParser {
     public final static String JXPATH = "jxpath";
     public final static String JEXL = "jexl";
     public final static String JAVASCRIPT = "js";

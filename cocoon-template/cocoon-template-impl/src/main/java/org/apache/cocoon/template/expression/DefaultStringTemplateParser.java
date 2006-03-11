@@ -23,7 +23,7 @@ import java.util.List;
  * @version SVN $Id: DefaultStringTemplateParser.java 325973 2005-10-17
  *          19:59:39Z lgawron $
  */
-public class DefaultStringTemplateParser extends StringTemplateParser {
+public class DefaultStringTemplateParser extends AbstractStringTemplateParser {
     public List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();
         StringBuffer buf = new StringBuffer();
