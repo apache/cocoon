@@ -41,6 +41,8 @@ public interface GeneratorFactory {
 
     /**
      * Instance of the Generator created by the GeneratorFactory
+     * 
+     * @cocoon.sitemap.component.documentation.disabled
      */
     interface Instance extends Generator {
 
