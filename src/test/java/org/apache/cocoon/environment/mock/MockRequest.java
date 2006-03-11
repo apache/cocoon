@@ -170,6 +170,10 @@ public class MockRequest extends AbstractRequest {
         return locale;
     }
     
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
     public Enumeration getLocales() {
         return Collections.enumeration(Collections.singleton(getLocale()));
     }
