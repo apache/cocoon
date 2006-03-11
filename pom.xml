@@ -43,7 +43,12 @@
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
-      <version>1.1</version>
+      <version>1.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-util</artifactId>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>icu4j</groupId>
