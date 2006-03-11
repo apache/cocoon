@@ -180,6 +180,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="BRD" type="add">
+      Added the template block from Cocoon 2.2. This block contains a refactored implementation
+      of the JXTemplate generator, which should be compatible with the existing one and is thus
+      usable as a drop-in replacement. It should provide better performance, and some new features,
+      such as Javascript expressions using @{...} syntax. It is used by having type="newjx"
+      on map:generate, or by changing the mapping of the "jx" generator type to the new
+      implementation class.
+    </action>
     <action dev="JHS" type="fix" fixes-bug="COCOON-1728" due-to="Paul Focke" due-to-email="paul@outerthought.org">
       Apples can now access components declared in mounted sitemaps.
     </action>
