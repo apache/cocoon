@@ -161,6 +161,10 @@ public class MockRequest implements Request {
         return locale;
     }
 
+    public void setLocale(Locale loc) {
+        locale = loc;
+    }
+
     public Enumeration getLocales() {
         return Collections.enumeration(Collections.singleton(getLocale()));
     }
