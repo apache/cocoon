@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JHS" type="fix" fixes-bug="COCOON-1779" due-to="Andrew Stevens" due-to-email="ats@hotmail.com">
+      JUnit tests for LocaleAction.
+    </action>
     <action dev="JHS" type="fix" fixes-bug="COCOON-1335" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
       Removed dependency of RoleFilterTransformer on buggy FilterTransformer.  
       Also thanks to Andrew Stevens for updating the patch against recent branch and Doug Bennet for the reminder. 
