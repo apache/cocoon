@@ -538,7 +538,7 @@
       on it to have a nice output, limitted to a subset of the HTML DTD
     </description>
     <used-by>Forms block</used-by>
-    <lib>optional/daisy-htmlcleaner-1.1.jar</lib>
+    <lib>optional/daisy-htmlcleaner-1.4.1.jar</lib>
     <homepage>http://cocoondev.org/daisy/</homepage>
   </file>  
 
@@ -548,7 +548,7 @@
       Java Utility classes of Daisy
     </description>
     <used-by>Forms block - HTMLCleaner</used-by>
-    <lib>optional/daisy-util-1.1.jar</lib>
+    <lib>optional/daisy-util-1.4.1.jar</lib>
     <homepage>http://cocoondev.org/daisy/</homepage>
   </file>   
   
