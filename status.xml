@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JHS" type="fix" fixes-bug="COCOON-1728" due-to="Paul Focke" due-to-email="paul@outerthought.org">
+      Apples can now access components declared in mounted sitemaps.
+    </action>
     <action dev="AG" type="update">
       Updated xercesImpl to 2.8.0 and xml-apis to 1.3.03.
     </action>
