@@ -81,6 +81,7 @@
     <fb:on-bind>
       <!-- executed on updates AND right after the insert -->
       <fb:value id="firstname" path="firstName"/>
+      <fb:value id="middleInitial" path="middleInitial"/>
       <fb:value id="lastname" path="lastName"/>
       <fb:value id="phone" path="phone"/>
       <fb:value id="email" path="email"/>
