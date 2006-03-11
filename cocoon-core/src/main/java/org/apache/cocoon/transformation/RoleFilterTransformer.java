@@ -17,9 +17,11 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -62,19 +64,22 @@ import java.util.StringTokenizer;
  *
  * @version $Id$
  */
-public class RoleFilterTransformer extends FilterTransformer {
+public class RoleFilterTransformer extends AbstractTransformer
+        implements CacheableProcessingComponent {
     private final static String URI = "http://apache.org/cocoon/role-filter/1.0";
     private final static String RESTRICT = "restricted";
     private final static String VIEW = "read-only";
+    
     Request request = null;
-
+    private int skipCounter = 0;
+    
     public RoleFilterTransformer() {
     }
 
     public final void setup(SourceResolver resolver, Map objectModel, String src, Parameters params)
     throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel, src, params);
         this.request = ObjectModelHelper.getRequest(objectModel);
+        this.skipCounter = 0;
     }
 
     /**
@@ -86,48 +91,51 @@ public class RoleFilterTransformer extends FilterTransformer {
 
     public final void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        int roleIndex = a.getIndex(RoleFilterTransformer.URI, RoleFilterTransformer.RESTRICT);
-        int viewIndex = a.getIndex(RoleFilterTransformer.URI, RoleFilterTransformer.VIEW);
-        boolean propogate = true;
-        boolean readOnly = false;
-
-        if (roleIndex >= 0) {
-            String roleRestriction = a.getValue(roleIndex);
-            StringTokenizer roles = new StringTokenizer(roleRestriction, ",", false);
-            propogate = false;
-
-            while ((! propogate) && roles.hasMoreTokens()) {
-                if (request.isUserInRole(roles.nextToken())) {
-                    propogate = true;
-                }
-            }
-        }
-
-        if (! propogate) {
-            super.elementName = loc;
+        if (this.skipCounter > 0) {
+            this.skipCounter++;
         } else {
-            if (viewIndex >= 0) {
-                String viewRestriction = a.getValue(viewIndex);
-                StringTokenizer roles = new StringTokenizer(viewRestriction, ",", false);
+            int roleIndex = a.getIndex(RoleFilterTransformer.URI, RoleFilterTransformer.RESTRICT);
+            int viewIndex = a.getIndex(RoleFilterTransformer.URI, RoleFilterTransformer.VIEW);
+            boolean propogate = true;
+            boolean readOnly = false;
 
-                while ((! readOnly) && roles.hasMoreTokens()) {
+            if (roleIndex >= 0) {
+                String roleRestriction = a.getValue(roleIndex);
+                StringTokenizer roles = new StringTokenizer(roleRestriction, ",", false);
+                propogate = false;
+
+                while ((! propogate) && roles.hasMoreTokens()) {
                     if (request.isUserInRole(roles.nextToken())) {
-                        readOnly = true;
+                        propogate = true;
                     }
                 }
             }
-        }
 
-        super.startElement(uri, loc, raw,
-                this.copyAttributes(a, roleIndex, viewIndex, readOnly));
+            if (propogate) {
+                if (viewIndex >= 0) {
+                    String viewRestriction = a.getValue(viewIndex);
+                    StringTokenizer roles = new StringTokenizer(viewRestriction, ",", false);
+
+                    while ((! readOnly) && roles.hasMoreTokens()) {
+                        if (request.isUserInRole(roles.nextToken())) {
+                            readOnly = true;
+                        }
+                    }
+                }
+                super.startElement(uri, loc, raw,
+                        this.copyAttributes(a, roleIndex, viewIndex, readOnly));
+            } else {
+                this.skipCounter = 1;
+            }
+        }
     }
 
     public final void endElement(String uri, String loc, String raw)
     throws SAXException {
-        super.endElement(uri, loc, raw);
-
-        if (! super.skip) {
-            super.elementName = "";
+        if (skipCounter > 0) {
+            skipCounter--; 
+        } else {
+            super.endElement(uri, loc, raw);
         }
     }
 
@@ -157,5 +165,51 @@ public class RoleFilterTransformer extends FilterTransformer {
     public void recycle() {
         this.request = null;
         super.recycle();
+    }
+
+    public void startEntity(String name) throws SAXException {
+        if (this.skipCounter == 0)  {
+            super.startEntity(name);
+        }
+    }
+
+    public void endEntity(String name) throws SAXException {
+        if (this.skipCounter == 0)  {
+            super.endEntity(name);
+        }
+    }
+
+    public void comment(char[] ch, int start, int len) throws SAXException {
+        if (this.skipCounter == 0)  {
+            super.comment(ch, start, len);
+        }
+    }
+
+    public void characters(char[] c, int start, int len) throws SAXException {
+        if (this.skipCounter == 0)  {
+            super.characters(c, start, len);
+        }
+    }
+
+    public void startCDATA() throws SAXException {
+        if (this.skipCounter == 0) {
+            super.startCDATA();
+        }
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+        if (this.skipCounter == 0)  {
+            super.processingInstruction(target, data);
+        }
+    }
+
+    public SourceValidity getValidity() {
+        return null;
+    }
+
+    public void endCDATA() throws SAXException {
+        if (this.skipCounter == 0) {
+            super.endCDATA();
+        }
     }
 }
