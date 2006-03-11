@@ -37,6 +37,7 @@
       <tr>
         <th>id</th>
         <th>firstName</th>
+        <th>middleInitial</th>
         <th>lastName</th>
         <th>phone</th>
         <th>email</th>
@@ -46,6 +47,7 @@
         <tr>
           <td>${item.id}</td>
           <td>${item.firstName}</td>
+          <td>${item.middleInitial}</td>
           <td>${item.lastName}</td>
           <td>${item.phone}</td>
           <td>${item.email}</td>

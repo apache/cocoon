@@ -132,6 +132,10 @@
           <fd:label>Firstname</fd:label>
           <fd:datatype base="string"/>
         </fd:field>
+        <fd:field id="middleInitial">
+          <fd:label>Middle initial</fd:label>
+          <fd:datatype base="char"/>
+        </fd:field>
         <fd:field id="lastname">
           <fd:label>Lastname</fd:label>
           <fd:datatype base="string"/>
