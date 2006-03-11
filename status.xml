@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="BRD" type="update">
+      Forms: updated Daisy HTML cleaner component to version 1.4.1 (was 1.1).
+    </action>
     <action dev="BRD" type="add">
       Added the template block from Cocoon 2.2. This block contains a refactored implementation
       of the JXTemplate generator, which should be compatible with the existing one and is thus

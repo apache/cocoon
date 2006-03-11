@@ -1845,12 +1845,12 @@
 
   <project name="daisy-htmlcleaner">
     <package>org.outerj.daisy.htmlcleaner</package>
-    <jar name="lib/optional/daisy-htmlcleaner-1.1.jar"/>
+    <jar name="lib/optional/daisy-htmlcleaner-1.4.1.jar"/>
   </project>  
   
   <project name="daisy-util">
     <package>org.outerj.daisy.xmlutil</package>
-    <jar name="lib/optional/daisy-util-1.1.jar"/>
+    <jar name="lib/optional/daisy-util-1.4.1.jar"/>
   </project>     
 
   <project name="jcr">
