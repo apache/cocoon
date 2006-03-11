@@ -17,8 +17,10 @@ package org.apache.cocoon.components.flow.apples;
 
 import java.util.List;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.WrapperComponentManager;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -64,8 +66,16 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
             appleContext.put("continuation-id", wk.getId());
         }
         
+//      Use the current sitemap's service manager for components
+        ServiceManager sitemapManager;
+        try {
+            sitemapManager = (ServiceManager)avalonContext.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
+        } catch (ContextException e) {
+            throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
+        }
+        
         LifecycleHelper.setupComponent( app, getLogger(), appleContext, 
-                                        this.serviceManager, new WrapperComponentManager(this.serviceManager),  
+                                        sitemapManager, new WrapperComponentManager(sitemapManager),  
                                         null, null, true);
         
         processApple(params, redirector, app, wk);
