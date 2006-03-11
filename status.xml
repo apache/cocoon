@@ -190,9 +190,6 @@
     <action dev="JBQ" type="add" fixes-bug="COCOON-1729" due-to="Rolf Metternich" due-to-email="rolf.metternich@ahafabrik.de">
       Allow to add multiple rows at once to a Repeater using &lt;fd:repeater-action command="add-row" number-of-rows="5" ...&gt;
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1799" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
-       Threads waste when reading a not found resource.
-    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1796" due-to="Freek Segers" due-to-email="freek.segers@nerocmediaware.nl">
        TraversableGenerator calls resolveURI() twice but release() only once.
     </action>
