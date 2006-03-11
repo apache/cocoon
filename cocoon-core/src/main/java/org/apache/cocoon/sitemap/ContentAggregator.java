@@ -22,6 +22,8 @@ import org.apache.cocoon.generation.Generator;
  * It combines several parts into one big XML document which is streamed
  * into the pipeline.
  *
+ * @cocoon.sitemap.component.documentation.disabled
+
  * @version $Id$
  */
 public interface ContentAggregator extends Generator {
