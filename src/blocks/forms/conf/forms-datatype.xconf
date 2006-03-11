@@ -81,6 +81,11 @@
           <convertor name="bean" src="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder"/>
         </convertors>
       </datatype>
+      <datatype name="char" src="org.apache.cocoon.forms.datatype.typeimpl.CharTypeBuilder">
+        <convertors default="plain" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.CharConvertorBuilder"/>
+        </convertors>
+      </datatype>
     </datatypes>
 
     <validation-rules>
