@@ -108,6 +108,22 @@ function do_dynaRepeater() {
     );
 }
 
+function do_dojoRepeater() {
+    var form = new Form("forms/dynamicrepeater.xml");
+    form.setAttribute("counter", new java.lang.Integer(0));
+    form.getChild("addcontact").performAction(); // to increment the counter
+    form.showForm("dynamicrepeater_dojo-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("contacts"));
+    form.createBinding("forms/dynamicrepeater_binding.xml");
+    
+    form.save(doc);
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Contact list", document: doc}
+    );
+}
+
 function do_datasourceChooser() {
     var form = new Form("forms/datasource_chooser.xml");
     form.showForm("datasource_chooser-display-pipeline.jx");
@@ -174,6 +190,12 @@ function do_sampleTree() {
 
 function do_suggest() {
     var form = new Form("forms/ajax_suggest_form.xml");
+    var path = form.getChild("path");
+
     form.showForm("ajax_suggest-display-pipeline.jx");
     
+    cocoon.sendPage("textresult-display-pipeline.jx",
+        {title: "Suggest results", text: "path value = " + path.value +
+              "\npath suggested label = " +  
+              (path.suggested ? path.suggestionLabel : "(none)") });
 }

@@ -36,11 +36,13 @@
         
         <fd:field id="firstname">
           <fd:label>Firstname</fd:label>
+	  <fd:hint>First name</fd:hint>
           <fd:datatype base="string"/>
         </fd:field>
         
         <fd:field id="lastname">
           <fd:label>Lastname</fd:label>
+	  <fd:hint>Last name</fd:hint>
           <fd:datatype base="string"/>
         </fd:field>
         

@@ -20,16 +20,51 @@
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
   <fd:widgets>
+    <!-- a field with a suggestion-list that explores the Cocoon samples -->
     <fd:field id="path">
-      <fd:datatype base="string"/>
-      <fd:suggestion-list>
-        <fd:item value="aaa"/>
-        <fd:item value="abb"/>
-        <fd:item value="abc"/>
-        <fd:item value="acc">
-          <fd:label>The last one</fd:label>
-        </fd:item>
-      </fd:suggestion-list>
-    </fd:field>
+	  <fd:datatype base="string"/>
+	  <fd:suggestion-list type="javascript">
+	  <![CDATA[
+	    function addSuggestion(src) {
+	        suggestions.push({
+	            value: filename + src.name,
+	            label: filename + src.name +
+	                (src.isCollection() ? "/" : " (" + src.contentLength + " bytes)")
+	        });
+	    }
+	
+	    var resolver = cocoon.getComponent(org.apache.excalibur.source.SourceResolver.ROLE);
+        var filename = filter;
+	    var src = resolver.resolveURI("context://samples/" + filename);
+	    var suggestions = [];
+	    if (src.exists() && src.isCollection()) {
+	        // A directory: list its children
+            if (filename.lastIndexOf('/') != filename.length - 1)  filename += "/";
+	        suggestions.push({value: filename});
+	        var children = src.children;
+	        for (var i = 0; i < children.size(); i++) {
+	            addSuggestion(children.get(i));
+	        }
+	    } else {
+	        // Get the parent directory and list its children whose name start with the given filter
+	        var parent = src.parent;
+	        if (filename.indexOf('/') != -1) {
+	            filename = filename.substring(0, filename.lastIndexOf('/') + 1);
+	        } else {
+	            filename = "";
+	        }
+	        var children = parent.children;
+	        for (var i = 0; i < children.size(); i++) {
+	            var child = children.get(i);
+	            if (child.name.startsWith(src.name)) {
+	                addSuggestion(child);
+                }
+	        }
+	    }
+	    return suggestions;
+	  ]]>
+	  </fd:suggestion-list>
+	</fd:field>
+    <fd:submit id="ok"><fd:label>OK</fd:label></fd:submit>
   </fd:widgets>
 </fd:form>

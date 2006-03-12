@@ -53,8 +53,10 @@
       <li>when there are no contacts, only the "Add contact" button is displayed and the table isn't shown,</li>
       <li>when there are some contacts, the "move up" and "move down" buttons are not shown on the first and last lines, respectively.</li>
     </ul>
+    <p>This sample has a <a href="do-dojoRepeater.flow">variation using Dojo</a> that allows drag-and-drop reordering
+       of rows and clicking anywhere in a row to select it.</p>
       <ft:repeater id="contacts">
-        <div dojoType="CFormsRepeater" orderable="true">
+        <div>
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
             <p><strong><em>There are no contacts to display</em></strong></p>

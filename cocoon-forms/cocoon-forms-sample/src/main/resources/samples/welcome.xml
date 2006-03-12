@@ -127,11 +127,18 @@
    </sample>
  </group>
  
- <!--group name="Advanced Ajax samples (work in progress)">
-   <sample name="Cocoon suggests" href="do-suggest.flow">
-     (Ajax) Very simple demo of the &lt;suggestion-list&gt; feature.
+ <group name="Advanced Ajax samples using Dojo widgets">
+   <sample name="Drag and drop reordering, in-place editing" href="do-dojoRepeater.flow">
+	 (Ajax) The dynamic repeater sample revisited, featuring drag and drop reordering of rows,
+	 selecting rows by clicking anywhere in the row, and in-place editing of values.
    </sample>
- </group-->
+   <sample name="Cocoon suggests" href="do-suggest.flow">
+     (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
+   </sample>
+   <sample name="Other Ajax samples" href="../ajax/">
+	 (Ajax) Don't forget to look at the samples in the Ajax block!
+   </sample>
+ </group>
  
  <group name="Dynamic repeater template and event handling">
     <sample name="Dynamic repeater template" href="dreamteam">
