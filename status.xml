@@ -180,6 +180,23 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+	<action dev="SW" type="add">
+	  Ajax: rewrote everything with Dojo, added a new "PartialLink" widget using
+	  the "target" attribute on links to partially update the page.
+	</action>
+	<action dev="SW" type="add">
+	  Forms: many Ajax-related new features.<br/>
+	  <ul>
+		<li>Rewrote almost everything using Dojo</li>
+		<li>Added a Dojo widget for repeaters, allowing drag and drop reordering of
+			rows (but not on Safari) and clicking in rows to select them.</li>
+		<li>Added a Dojo widget for inplace editing.</li>
+		<li>Added a Dojo widget for suggestion-lists. It works in relation with a new
+			&lt;fd:suggestion-list&gt; element in form definitions.</li>
+		<li>Added a new selection/suggestion-list implementation based on a JS code
+			snippet in the form definition.</li>
+	  </ul>
+	</action>
     <action dev="BRD" type="update">
       Forms: updated Daisy HTML cleaner component to version 1.4.1 (was 1.1).
     </action>
