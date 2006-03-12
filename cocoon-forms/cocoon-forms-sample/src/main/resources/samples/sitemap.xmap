@@ -189,13 +189,11 @@
      <!--
         | Show a suggestion list 
          -->
-     <map:match pattern="system_forms_suggest_*">
-        <map:generate type="suggestion-list">
-          <map:parameter name="widget-id" value="{1}"/>
-        </map:generate>
+     <map:match pattern="_cocoon/forms/suggest">
+        <map:generate type="suggestion-list"/>
         <map:transform type="i18n"/>
-        <map:transform src="suggest-list.xsl"/>
-        <map:serialize type="xml"/>
+        <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
+        <map:serialize type="text"/>
      </map:match>
      <!--
         | Show a form, using the forms transformer

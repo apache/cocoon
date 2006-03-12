@@ -23,7 +23,7 @@
   <h4 class="samplesGroup">Union widget sample (with AJAX)</h4>
   <title>Datasource chooser</title>
   <script type="text/javascript">
-     cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Fader.fade;
+     //cocoon.ajax.BrowserUpdater.highlight = cocoon.ajax.Fader.fade;
   </script>
   <content>
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
