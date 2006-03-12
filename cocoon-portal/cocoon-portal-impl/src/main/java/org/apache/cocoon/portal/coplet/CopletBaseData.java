@@ -15,8 +15,11 @@
  */
 package org.apache.cocoon.portal.coplet;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.cocoon.portal.util.PortalUtils;
 
 /**
  * A coplet base data defines a coplet type, like a pipeline based coplet,
@@ -26,7 +29,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public final class CopletBaseData { 
+public final class CopletBaseData implements Serializable { 
 
 	private Map copletConfig = new HashMap();
 
@@ -37,9 +40,13 @@ public final class CopletBaseData {
     /**
      * Create a new coplet base data object. 
      * @param id The unique id of the object.
+     * @see PortalUtils#testId(String)
      */
     public CopletBaseData(String id) {
-        // TODO - Check for valid id's
+        final String idErrorMsg = PortalUtils.testId(id);
+        if ( idErrorMsg != null ) {
+            throw new IllegalArgumentException(idErrorMsg);
+        }
         this.id = id;
     }
 
@@ -59,11 +66,16 @@ public final class CopletBaseData {
 		this.copletConfig.put(key, value);
 	}
 
+    public Object removeCopletConfig(String key) {
+        return this.copletConfig.remove(key);
+    }
+
 	public Map getCopletConfig() {
 		return this.copletConfig;
 	}
 
 	public void setCopletConfig(Map config) {
+        // TODO remove this method
 		this.copletConfig = config;
 	}
 

@@ -24,11 +24,24 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PortalUtils {
 
+    /**
+     * Tests if the string represents a correct id for any portal object.
+     */
     public static String testId(String id) {
+        if ( id == null || id.length() == 0 ) {
+            return "Id must not be null or empty.";
+        }
         if ( !StringUtils.containsOnly(id, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789 ") ) {
             return "Id contains invalid characters (only a-z,A-Z,0-9, space and '-' are allowed): " + id;
         }
-        return null;
+        final char firstChar = id.charAt(0);
+        if ( firstChar >= 'a' && firstChar <= 'z' ) {
+            return null;
+        }
+        if ( firstChar >= 'A' && firstChar <= 'Z' ) {
+            return null;
+        }
+        return "Id must start with a character : " + id;
     }
 
 }

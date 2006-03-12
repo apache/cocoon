@@ -18,12 +18,10 @@ package org.apache.cocoon.portal.layout;
 import java.util.Map;
 
 import org.apache.cocoon.portal.PortalRuntimeException;
+import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.collections.map.LinkedMap;
 
 /**
- * TODO - Convert this in an abstract class which all implementations
- * have to extend (we can use AbstractLayout for this).
- *
  * A layout describes a graphical element on the portal page. This can
  * be an element containing others ({@link CompositeLayout}) or a final
  * element, like a window for a coplet.
@@ -33,6 +31,8 @@ import org.apache.commons.collections.map.LinkedMap;
  * both key and value. While the parameters are persisted,
  * the temporary attributes have only the life-time of a
  * session, but can contain any object.
+ * As both, parameters and temporary attributes, are stored
+ * in the session, it is advisable to use serializable objects only.
  *
  * If you are implementing your own layout object make sure that your
  * class provides a two string constructor which calls {@link #Layout(String, String)}.
@@ -70,9 +70,13 @@ public abstract class Layout extends AbstractParameters {
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
      * @param name The name of the layout.
+     * @see PortalUtils#testId(String)
      */
     public Layout(String id, String name) {
-        // TODO - Check for valid id's
+        final String idErrorMsg = PortalUtils.testId(id);
+        if ( idErrorMsg != null ) {
+            throw new IllegalArgumentException(idErrorMsg);
+        }
         this.id = id;
         this.name = name;
     }

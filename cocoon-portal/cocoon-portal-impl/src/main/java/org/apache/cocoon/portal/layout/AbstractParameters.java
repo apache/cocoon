@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import org.apache.cocoon.portal.pluto.om.common.ParameterImpl;
  * @version $Id$
  */
 public abstract class AbstractParameters 
-    implements Cloneable {
+    implements Cloneable, Serializable {
 
     protected Map parameters = new LinkedMap();
 
