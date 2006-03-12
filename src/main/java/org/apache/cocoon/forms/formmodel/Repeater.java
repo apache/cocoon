@@ -16,17 +16,16 @@
 package org.apache.cocoon.forms.formmodel;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsRuntimeException;
-import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -59,7 +58,6 @@ public class Repeater extends AbstractWidget
     private final RepeaterDefinition definition;
     protected final List rows = new ArrayList();
     protected ValidationError validationError;
-    private boolean selectable = false;
     private boolean orderable = false;
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
@@ -71,7 +69,6 @@ public class Repeater extends AbstractWidget
             rows.add(new RepeaterRow(definition));
         }
         
-        this.selectable = this.definition.getSelectable();
         this.orderable = this.definition.getOrderable();
     }
 
@@ -309,25 +306,6 @@ public class Repeater extends AbstractWidget
             row.readFromRequest(formContext);
         }
         
-        // Handle selection
-        if (this.selectable) {
-            String[] selectedIds = req.getParameterValues(paramName + ".select");
-            BitSet selection = new BitSet(getSize());
-            
-            // Create selection bitmask
-            if (selectedIds != null) {
-                for (int i = 0; i < selectedIds.length; i++) {
-                    int rowId = Integer.parseInt(selectedIds[i]);
-                    selection.set(rowId);
-                }
-            }
-            
-            // And update the selected state of all rows
-            for (int i = 0; i < getSize(); i++) {
-                getRow(i).setSelected(selection.get(i));
-            }
-        }
-        
         // Handle repeater-level actions
         String action = req.getParameter(paramName + ".action");
         if (action == null) {
@@ -504,7 +482,6 @@ public class Repeater extends AbstractWidget
 
         private int cachedPosition = -100;
         private String cachedId = "--undefined--";
-        private boolean selected = false;
 
         public String getId() {
             int pos = rows.indexOf(this);
@@ -541,17 +518,6 @@ public class Repeater extends AbstractWidget
             }
         }
         
-        public boolean getSelected() {
-            return this.selected;
-        }
-        
-        public void setSelected(boolean selected) {
-            if (selected != this.selected) {
-                this.selected = selected;
-                getForm().addWidgetUpdate(this);
-            }
-        }
-
         public boolean validate() {
             // Validate only child widtgets, as the definition's validators are those of the parent repeater
             return widgets.validate();
@@ -577,5 +543,4 @@ public class Repeater extends AbstractWidget
             throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
         }
     }
-
 }

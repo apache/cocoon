@@ -31,6 +31,7 @@ public class Submit extends Action {
     }
     
     protected void handleActivate() {
+        performAction();
         if (!validateForm) {
             // End the form processing now and don't redisplay the form.
             getForm().endProcessing(false);

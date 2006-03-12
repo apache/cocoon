@@ -15,44 +15,47 @@
  */
 package org.apache.cocoon.forms.datatype;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Locale;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.Source;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
-import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
-
-import java.io.IOException;
-import java.rmi.server.UID;
-import java.util.Enumeration;
-import java.util.Locale;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * SelectionList implementation that always reads its content from the source
  * each time it is requested.
- *
- * <p>Note: the class {@link SelectionListBuilder} also interprets the same
+ * <p>
+ * This list is filterable, and if a filter is provided, the "filter" parameter
+ * is appended to the URL, e.g. <code>&lt;fd:selection-list src="cocoon://pipeline.xml"/&gt;</code>
+ * will call, given the "<code>foo</code>" filter value, the URL <code>cocoon://pipeline.xml?filter=foo</code>.
+ * <p>
+ * Note: the class {@link SelectionListBuilder} also interprets the same
  * <code>fd:selection-list</code> XML, so if anything changes here to how that
  * XML is interpreted, it also needs to change over there and vice versa.</p>
  *
  * @version $Id$
  */
-public class DynamicSelectionList implements SelectionList {
+public class DynamicSelectionList implements FilterableSelectionList {
     private String src;
     private boolean usePerRequestCache;
     private Datatype datatype;
@@ -106,12 +109,12 @@ public class DynamicSelectionList implements SelectionList {
     /*
      * This method generate SaxFragment directly from source.
      */
-    private void generateSaxFragmentFromSrc(ContentHandler contentHandler, Locale locale) throws SAXException {
+    private void generateSaxFragmentFromSrc(String url, ContentHandler contentHandler, Locale locale) throws SAXException {
         SourceResolver sourceResolver = null;
         Source source = null;
         try {
             sourceResolver = (SourceResolver)serviceManager.lookup(SourceResolver.ROLE);
-            source = sourceResolver.resolveURI(src);
+            source = sourceResolver.resolveURI(url);
             generateSaxFragment(contentHandler, locale, source);
         } catch (SAXException e) {
             throw e;
@@ -127,36 +130,40 @@ public class DynamicSelectionList implements SelectionList {
         }
     }
 
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String filter) throws SAXException {
+        
+        String url = this.src;
+        if (filter != null) {
+            if (url.indexOf('?') != -1) {
+                url += "&filter=" + URLEncoder.encode(filter);
+            } else {
+                url += "?filter=" + URLEncoder.encode(filter);
+            }
+        }
 
         if (usePerRequestCache) {
-            // Search the cacheID in request attributes
+            // Search the sax buffer in request attributes
             Request request = ContextHelper.getRequest(this.context);
-            Enumeration enumeration = request.getAttributeNames();
-            boolean cacheFound = false;
-            String name = null;
-            while (enumeration.hasMoreElements()) {
-                name = (String)enumeration.nextElement();
-                if (name.startsWith(src)) {
-                    cacheFound = true;
-                    break;
-                }
-            }
-            SaxBuffer saxBuffer;
-            if (cacheFound) {
-                saxBuffer = (SaxBuffer)request.getAttribute(name);
-            } else {
-                // Generate the usePerRequestCache and store in a request attribute.
+            String attributeName = "DynamicSelectionListCache/" + url;
+            SaxBuffer saxBuffer = (SaxBuffer)request.getAttribute(attributeName);
+            
+            if (saxBuffer == null) {
+                // Not found: generate the list and store it
                 saxBuffer = new SaxBuffer();
-                generateSaxFragmentFromSrc(saxBuffer, locale);
-                String cacheID = (new UID()).toString();
-                request.setAttribute(src + cacheID, saxBuffer);
+                generateSaxFragmentFromSrc(url, saxBuffer, locale);
+                request.setAttribute(attributeName, saxBuffer);
             }
+            
             // Output the stored saxBuffer to the contentHandler
             saxBuffer.toSAX(contentHandler);
         } else { // We don't use usePerRequestCache => re-read from the source.
-            generateSaxFragmentFromSrc(contentHandler, locale);
+            generateSaxFragmentFromSrc(url, contentHandler, locale);
         }
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // Generate with no filter
+        generateSaxFragment(contentHandler, locale, (String)null);
     }
 
     /**

@@ -274,19 +274,20 @@ function PopupWindow_hidePopupWindows(e) {
 function PopupWindow_attachListener() {
 	if (document.layers) {
 		document.captureEvents(Event.MOUSEUP);
-		}
+	}
 	window.popupWindowOldEventListener = document.onmouseup;
-	if (window.popupWindowOldEventListener != null) {
+	if (dojo) {
+		dojo.require("dojo.event");
+		dojo.event.connect(window, "onmouseup", PopupWindow_hidePopupWindows);
+	} else if (window.popupWindowOldEventListener != null) {
 		document.onmouseup = function(e) {
 			window.popupWindowOldEventListener(e);
 			PopupWindow_hidePopupWindows(e);
-		    }
-		//document.onmouseup = new Function("window.popupWindowOldEventListener(); PopupWindow_hidePopupWindows();");
 		}
-	else {
+	} else {
 		document.onmouseup = PopupWindow_hidePopupWindows;
-		}
 	}
+}
 // CONSTRUCTOR for the PopupWindow object
 // Pass it a DIV name to use a DHTML popup, otherwise will default to window popup
 function PopupWindow() {

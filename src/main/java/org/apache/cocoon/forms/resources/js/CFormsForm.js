@@ -38,7 +38,6 @@ dojo.lang.extend(cocoon.forms.CFormsForm, {
 	widgetType: "CFormsForm",
     isContainer: true,
     buildRendering: function(args, parserFragment, parentWidget) {
-	
         // Magical statement to get the dom node, stolen in DomWidget
 	    this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
 
@@ -68,7 +67,7 @@ dojo.lang.extend(cocoon.forms.CFormsForm, {
         // grabClickTarget above, but avoid browser specifics for now.
         var target = /*event.explicitOriginalTarget ||*/ this.lastClickTarget;
 
-        this.submit(target.name);
+        this.submit(target && target.name);
         // If real submit has to occur, it's taken care of in submit()
         return false;
     },
@@ -83,7 +82,7 @@ dojo.lang.extend(cocoon.forms.CFormsForm, {
      */
     submit: function(name, params) {
         var form = this.domNode;
-        
+
         var query = cocoon.forms.buildQueryString(form, name);
         if (!query) {
             if (params) alert("FIXME: handle additional params in CFormsForm.submit()");
