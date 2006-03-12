@@ -21,7 +21,7 @@
  * A typical usage scenario would be:
  * <pre>
  *   <script src="resources/dojo/dojo.js">
- *   <script src="resources/ajax/js/cocoon.js"/>
+ *   <script src="resources/ajax/cocoon.js"/>
  *   <script>
  *      dojo.require("cocoon.forms.Form");
  *      ...
@@ -61,10 +61,14 @@ dojo.provide("cocoon");
     // cocoon.foo (single JS file for a block) is loaded from "resources/foo/js/common.js"
     var orgLoadUri = dojo.hostenv.loadUri;
     dojo.hostenv.loadUri = function(uri) {
-        // match 'xxx/dojo/cocoon/yyy.js
-        var match = uri.match(/^(.*)\/dojo\/cocoon\/([^\/]*)\.js$/);
+        // match 'xxx/dojo/../yyy/js.js
+        var match = uri.match(/^(.*)\/dojo\/\.\.\/([^\/]*)\/js.js$/);
+        dojo.debug("Loading URI" + uri);
         if (match) {
-            arguments[0] = match[1] + "/cocoon/" + match[2] + "/js/common.js";
+            //dojo.debug("matched cocoon package " + uri);
+            arguments[0] = match[1] + "/" + match[2] + "/js/common.js";
+            //dojo.debug("arg " + arguments[0]);
+            
         }
         return orgLoadUri.apply(this, arguments);
     }
