@@ -19,6 +19,12 @@
   @version $Id$
   -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:generators>
+	  <!-- use the new implementation of JX -->
+	  <map:generator name="jx" src="org.apache.cocoon.template.JXTemplateGenerator"/>
+    </map:generators>
+  </map:components>
 
  <map:resources>
    <!-- this will later become a virtual transformer -->
@@ -42,6 +48,23 @@
       </map:transform>
       <map:serialize/>
      </map:match>
+
+     <map:match pattern="*.html">
+       <map:generate type="jx" src="{1}.xml"/>
+       <map:call resource="simple-page2html"/>
+       <map:serialize type="html"/>
+     </map:match>
+
+     <map:match pattern="linked-updater-content-*">
+       <map:generate type="jx" src="{0}.xml"/>
+       <map:serialize type="html"/>
+     </map:match>
+
+     <map:match pattern="display-freememory">
+       <map:generate type="jx" src="{0}.xml"/>
+       <map:serialize type="html"/>
+     </map:match>
+
 
      <!-- Generic pipeline to load resources in jars -->
      <map:match pattern="resources/*/**">
