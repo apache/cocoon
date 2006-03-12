@@ -17,39 +17,34 @@
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"  xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
    <!-- Import the macros that define CForms template elements -->
    <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-    <script type="text/javascript" src="resources/ajax/js/cocoon-ajax.js"/>
-    <style type="text/css">
-    div.auto_complete {
-      background-color:white;
-      border:1px solid #888;
-      margin:0px;
-      padding:0px;
-    }
-    div.auto_complete ul  {
-      list-style-type: none;
-      margin:0px;
-      padding:0px;
-    }
-    div.auto_complete li.selected { background-color: #ffb; }
-    </style>
+  <fi:init>
+	<script type="text/javascript">
+	  // Uncomment this to see Dojo debug
+	  // var djConfig = { isDebug: true };
+    </script>	
+  </fi:init>
   <h4 class="samplesGroup">AJAX sample</h4>
   <title>Cocoon suggests</title>
   <content>
       
-    <para><em>Work in progress!</em> This simple example illustrates the &lt;fd:suggestion-list&gt; feature.
+    <para>This simple example illustrates the &lt;fd:suggestion-list&gt; feature, that allows
+	      to provide suggestions on the fly to the user.
     </para>
-  
-  
+
     <ft:form-template action="continue" method="POST" ajax="true">
       <ft:continuation-id/>
-        Type the letter 'a' in the field below<br/>
-        <ft:widget id="path"/>
-        <div id="autocomplete" class="auto_complete"/>
-        <script type="text/javascript">
-          new Ajax.Autocompleter("path-input", "autocomplete", "system_forms_suggest_path",
-          	{ parameters: "continuation-id=${cocoon.continuation.id}" });
-        </script>
+      Choose a file in Cocoon's samples. The suggestion-list is written in JavaScript
+      (server side) and scans the samples directory with the input given.
+      <br/>
+      <ft:widget id="path" type="suggest"/>
+      <small>To view suggestions, you can either start typing, hit the down arrow on your keyboard
+      or click on the down arrow icon. To choose a suggestion, select it with the mouse, or
+      use the up/down arrow and press space. Hitting escape hides the suggestion list.</small>
+      <br/>
+      <br/>
+      <ft:widget id="ok"/>
     </ft:form-template>
+
     <p>
       <a href="./">Back to Forms samples</a>
     </p>
