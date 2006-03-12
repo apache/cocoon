@@ -17,7 +17,9 @@ dojo.hostenv.conditionalLoadModule({
         common: [
                 "cocoon.forms.common",
                 "cocoon.forms.CFormsForm",
-                "cocoon.forms.CFormsRepeater"
+                "cocoon.forms.CFormsRepeater",
+                "cocoon.forms.CFormsSuggest",
+                "dojo.widget.InlineEditBox" // also needed by advanced-field-styling
         ]
 });
 

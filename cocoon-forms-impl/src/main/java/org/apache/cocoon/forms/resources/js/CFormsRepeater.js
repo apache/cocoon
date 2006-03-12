@@ -37,7 +37,8 @@ dojo.inherits(cocoon.forms.CFormsRepeater, dojo.widget.DomWidget);
 dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 	// Properties
 	orderable: false,
-	select: "none",
+	select: "$no$", // default value used to type the property, but indicating that
+	                // no selection will occur
 	
 	// Widget definition
 	widgetType: "CFormsRepeater",
@@ -48,7 +49,6 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 	    this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
 	    
         this.id = this.domNode.getAttribute("id");
-        dojo.debug("Creating repeater " + this.id);
         if (!this.orderable && this.select == "none") {
             dojo.debug("CFormsRepeater '" + this.id + "' is not orderable nor selectable");
         }
@@ -85,14 +85,25 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
             }
         }
 
-        if (true || this.select == "single" || this.select == "multiple") {
+        if (this.select != "$no$") {
 	        var row;
 	        var widget = this;
 	        for (var idx = 0; row = dojo.byId(this.id + "." + idx); idx++) {
+	            var selectId = row.getAttribute("id") + "." + this.select + ":input";
+	            var selectInput = dojo.byId(selectId);
+	            if (!selectInput) {
+	                throw "No select input found for row '" + row.getAttribute("id") + "'";
+	            }
+
+                if (selectInput.checked) {
+                    dojo.html.prependClass(row, "forms-row-selected");
+                }
 		        (function() {
 		            var localIdx = idx; // to use it in the closure
 		            var localRow = row;
-		            dojo.event.connect(row, "onclick", function(e) { widget.selectRow(e, localRow, localIdx) })
+		            dojo.event.connect(row, "onclick", function(e) { widget.selectRow(e, localRow, localIdx) });
+		            dojo.event.connect(row, "onmouseover", function(e) { dojo.html.prependClass(localRow, "forms-row-hover") });
+		            dojo.event.connect(row, "onmouseout", function(e) { dojo.html.removeClass(localRow,  "forms-row-hover") });
 			    })()
             }
         }
@@ -134,14 +145,11 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 
     selectRow: function(e, row, idx) {
 	    if (this.isValidEvent(e)) {
-	        if (row.getAttribute("selected") == "true") {
-	            row.setAttribute("selected", "false");
-	            row.style.background = "none";
-	        } else {
-	            row.setAttribute("selected", "true");
-	            row.style.background = "green";
-	        }
-		    dojo.debug("clic " + idx); //+ " from " + elt.tagName + " onclick=" + elt.onclick);
+	        var selectInput = dojo.byId(row.getAttribute("id") + "." + this.select + ":input");
+	        // Toggle selection
+	        selectInput.checked = selectInput.checked ? false : true;
+	        // And update CSS class accordingly
+	        (selectInput.checked ? dojo.html.prependClass : dojo.html.removeClass)(row, "forms-row-selected");
 	    }
 	}
 });
