@@ -23,8 +23,10 @@
   <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
  </group>
 
- <group name="Samples? What samples?">
-  <note>The Ajax block is under development, and is a home for Ajax-related stuff that is used by other blocks.
-        You can see some Ajax-related demos in the <a href="../forms/">Forms</a> block.</note>
+ <group name="Samples">
+  <sample name="Partial updates" href="linked-updater.html">Partial update sample</sample>
+  <sample name="Cocoon Forms samples" href="../forms/">Ajax is mostly demonstrated in
+	the Forms block. Check out lots of samples there (look for the "(Ajax)" label).
+  </sample>
  </group>
 </samples>

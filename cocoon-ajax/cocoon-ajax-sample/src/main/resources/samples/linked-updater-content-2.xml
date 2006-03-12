@@ -1,0 +1,5 @@
+<div id="changeme">
+	<p>This is some different fresh content.</p>
+	<p>This has been added to your page dynamically on
+    ${java.util.Date()}</p>
+</div>

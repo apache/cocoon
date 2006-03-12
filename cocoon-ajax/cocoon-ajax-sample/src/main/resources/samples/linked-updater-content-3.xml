@@ -1,0 +1,3 @@
+<div class="insert">
+	<p>This was inserted on ${java.util.Date()}</p>
+</div>
