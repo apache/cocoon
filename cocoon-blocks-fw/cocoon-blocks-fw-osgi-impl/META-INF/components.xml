@@ -16,6 +16,19 @@
                    unbind="unsetServlet"/>
   </scr:component>
   
+  <scr:component name="cocoon.protocol.block">
+    <scr:implementation class="org.apache.cocoon.blocks.osgi.BlockProtocol"/>
+    <scr:service>
+      <scr:provide interface="org.osgi.service.url.URLStreamHandlerService"/>
+	</scr:service>
+	<scr:property name="url.handler.protocol">
+	  block
+	</scr:property>
+    <scr:reference name="LOG"
+                   interface="org.osgi.service.log.LogService"
+                   bind="setLog"/>
+  </scr:component>
+  
   <scr:component name="cocoon.blockServlet1">
     <scr:implementation class="org.apache.cocoon.blocks.osgi.BlockServlet"/>
     <scr:service>
