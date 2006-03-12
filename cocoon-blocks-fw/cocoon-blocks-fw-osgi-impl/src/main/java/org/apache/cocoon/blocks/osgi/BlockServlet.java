@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.osgi.service.component.ComponentContext;
 
@@ -75,7 +76,12 @@ public class BlockServlet extends HttpServlet {
     throws ServletException, IOException {
         RequestDispatcher dispatcher =
             this.blockContext.getRequestDispatcher(request.getPathInfo());
-        dispatcher.forward(request, response);
+        try {
+            BlockCallStack.enterBlock(this.blockContext);
+            dispatcher.forward(request, response);
+        } finally {
+            BlockCallStack.leaveBlock();
+        }
     }
 
     /**

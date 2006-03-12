@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,23 +16,29 @@
 package org.apache.cocoon.blocks.osgi;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.osgi.service.log.LogService;
+import org.osgi.service.url.AbstractURLStreamHandlerService;
 
 /**
+ * Factory for block protocol
+ * 
  * @version $Id$
  */
-public class TestServlet extends HttpServlet {
+public class BlockProtocol extends AbstractURLStreamHandlerService {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("TestServlet:");
-        
-        response.setContentType("text/plain");
-        String attr = this.getInitParameter("attr");
-        response.getWriter().println("Test! " + attr);
+    private LogService log;
+    
+    protected void setLog(LogService log) {
+        this.log = log;
+    }
+    /* (non-Javadoc)
+     * @see org.osgi.service.url.AbstractURLStreamHandlerService#openConnection(java.net.URL)
+     */
+    public URLConnection openConnection(URL url) throws IOException {
+        return new BlockConnection(url, this.log);
     }
 
 }
