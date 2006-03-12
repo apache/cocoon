@@ -85,10 +85,13 @@ forms_submitForm = function() { cocoon.forms.submitForm.apply(cocoon.forms, argu
 cocoon.forms.buildQueryString = function(form, submitId) {
     // Indicate to the server that we're in ajax mode
     var result = "cocoon-ajax=true";
-    
+
     // If the form has a forms_submit_id input, use it to avoid sending the value twice
     if (form["forms_submit_id"]) {
-        form["forms_submit_id"].value = submitId;
+        if (submitId)
+            form["forms_submit_id"].value = submitId;
+        else
+            form["forms_submit_id"].value = null;
     } else {
         if (submitId) result += "&forms_submit_id=" + submitId;
     }
@@ -96,6 +99,9 @@ cocoon.forms.buildQueryString = function(form, submitId) {
     // Iterate on all form controls
     for (var i = 0; i < form.elements.length; i++) {
         input = form.elements[i];
+        
+        if (!input.name) continue; // ignore inputs with no name
+
         if (typeof(input.type) == "undefined") {
         	    // Skip fieldset
             continue;

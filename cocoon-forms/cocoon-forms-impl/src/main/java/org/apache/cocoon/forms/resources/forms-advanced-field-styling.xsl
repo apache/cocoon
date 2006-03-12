@@ -227,27 +227,48 @@
       | Field with in-place editing
       +-->
   <xsl:template match="fi:field[fi:styling/@type='inplace' and @state='active']">
-    <xsl:choose>
-      <xsl:when test="fi:value">
-        <span id="{@id}">
-          <script type="text/javascript">dojo.require("dojo.widget.InlineEditBox")</script>
-          <span dojoType="InlineEditBox" onSave="dojo.byId('{@id}:input').value = arguments[0]">
-            <xsl:attribute name="onSave">
-              <xsl:text>dojo.byId('{@id}:input').value = arguments[0];</xsl:text>
-              <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange)">
-                <xsl:text>forms_submitForm(dojo.byId('{@id}:input'))</xsl:text>
-              </xsl:if>
-            </xsl:attribute>
+    <span id="{@id}">
+      <span dojoType="InlineEditBox" onSave="dojo.byId('{@id}:input').value = arguments[0]">
+        <xsl:attribute name="onSave">
+          <xsl:text>dojo.byId('</xsl:text>
+          <xsl:value-of select="@id"/>
+          <xsl:text>:input').value = arguments[0];</xsl:text>
+          <xsl:if test="(@listening = 'true' and not(fi:styling/@submit-on-change = 'false')) or fi:styling/@submit-on-change = 'true'">
+            <xsl:text>forms_submitForm(dojo.byId('</xsl:text>
+            <xsl:value-of select="@id"/>
+            <xsl:text>:input'))</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:choose>
+          <xsl:when test="fi:value">
             <xsl:value-of select="fi:value"/>
-          </span>
-          <input id="{@id}:input" type="hidden" name="{@id}" value="{fi:value}"/>
-        </span>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- Produce a regular input -->
-        <xsl:apply-imports/>
-      </xsl:otherwise>
-    </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="defaultText">
+              <xsl:text>[</xsl:text>
+              <xsl:value-of select="fi:hint"/>
+              <xsl:text>]</xsl:text>
+            </xsl:attribute>
+            <xsl:text> </xsl:text> <!-- some dumb text, otherwise IE bugs... -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </span>
+      <xsl:apply-templates select="." mode="common"/>
+      <input id="{@id}:input" type="hidden" name="{@id}" value="{fi:value}"/>
+    </span>
   </xsl:template>
 
+  <!--+
+      | Field with a suggestion list
+      +-->
+  <xsl:template match="fi:field[fi:styling/@type='suggest' and @state='active']">
+    <span id="{@id}">
+      <input name="{@id}" id="{@id}:input" value="{fi:value}" dojoType="CFormsSuggest">
+        <xsl:if test="fi:suggestion">
+          <xsl:attribute name="suggestion"><xsl:value-of select="fi:suggestion"/></xsl:attribute>
+        </xsl:if>
+      </input>
+      <xsl:apply-templates select="." mode="common"/>
+    </span>
+  </xsl:template>
 </xsl:stylesheet>

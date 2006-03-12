@@ -21,8 +21,24 @@
              xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
              xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
              xmlns:bu="http://apache.org/cocoon/browser-update/1.0">
+
     <!--
-        ft:form-template
+        ft:form
+    -->
+    <jx:macro name="form" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>
+      <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
+      <jx:if test="${cformsHelper.isVisible(form)}">
+        <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
+        <!-- the form is also the current widget -->
+        <jx:set var="widget" value="${form}"/>
+        <jx:evalBody/>
+        <jx:set var="cformsDummy" value="${cformsHelper.endForm()}"/>
+      </jx:if>
+    </jx:macro>
+    
+    <!--
+        ft:form-template: preferred syntax is now "ft:form" (we know we're in a template)
     -->
     <jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>

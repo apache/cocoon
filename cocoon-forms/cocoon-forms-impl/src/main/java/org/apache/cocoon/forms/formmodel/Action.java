@@ -75,17 +75,27 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
         }
 
         if (form.getSubmitWidget() == this) {
-            form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
             handleActivate();
         }
     }
+    
+    /**
+     * Performs all actions and calls on-action listeners attached to this object. Note that this
+     * does not register this object as the submit widget and doesn't stop form processing.
+     */
+    public void performAction() {
+        getForm().addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
+    }
 
     /**
-     * Handle the fact that this action was activated. The default here is to end the
-     * current form processing and redisplay the form, which means that actual behaviour
-     * should be implemented in event listeners.
+     * Handle the fact that this action was activated. The default here is to perform any
+     * action associated to this object, end the current form processing and redisplay the
+     * form.
+     * 
+     * @see #performAction()
      */
     protected void handleActivate() {
+        performAction();
         getForm().endProcessing(true);
     }
 

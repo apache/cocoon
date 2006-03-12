@@ -74,7 +74,21 @@
     width: 40px;
 }
 
-/** Style for drag'n drop indicator */
+/* Style for drag'n drop indicator */
 .forms-dropIndicator {
 	border-top: 4px solid black;
+}
+
+.forms-row-hover {
+	background-color:#F0F0F0;
+}
+
+.forms-row-selected {
+	background-color: rgb(56,117,215); /* Mac highlight color */
+	color: white;
+}
+
+.forms-row-hover.forms-row-selected {
+	background-color: rgb(86, 147, 245);
+	color: white;
 }
