@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.coplet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -31,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-public class CopletData {
+public class CopletData implements Serializable {
 
     /** The unique identifier. */
     protected final String id;
@@ -49,9 +51,13 @@ public class CopletData {
     /**
      * Constructor to instantiate a new coplet data object.
      * @param id The unique id of the object.
+     * @see PortalUtils#testId(String)
      */
     public CopletData(String id) {
-        // TODO - Check for valid id's
+        final String idErrorMsg = PortalUtils.testId(id);
+        if ( idErrorMsg != null ) {
+            throw new IllegalArgumentException(idErrorMsg);
+        }
         this.id = id;
     }
 

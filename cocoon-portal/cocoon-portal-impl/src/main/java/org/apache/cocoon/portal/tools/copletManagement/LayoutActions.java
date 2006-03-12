@@ -54,9 +54,6 @@ public class LayoutActions {
         this.cf = cf;
     }
 
-    // FIXME - where is this used?
-    public static int line = 1;
-
     /**
      * Delets the Object with the id in the layout
      * @param id 

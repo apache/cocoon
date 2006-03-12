@@ -15,11 +15,21 @@
  */
 package org.apache.cocoon.portal.coplet;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.portal.util.PortalUtils;
+
 /**
  * A coplet instance data describes an instance of a coplet.
+ *
+ * Attributes and temporary attributes
+ * An attribute is a key-value pair consisting of a string for
+ * the key and any object for the value. While the attributes are persisted,
+ * the temporary attributes have only the life-time of a
+ * session. As both, attributes and temporary attributes, are stored
+ * in the session, it is advisable to use serializable objects only.
  *
  * Sizing:
  *   A coplet can have different sizes:
@@ -33,7 +43,7 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public final class CopletInstanceData {
+public final class CopletInstanceData implements Serializable {
 
     public final static int SIZE_MINIMIZED  = 0;
     public final static int SIZE_NORMAL     = 1;
@@ -41,10 +51,11 @@ public final class CopletInstanceData {
     public final static int SIZE_FULLSCREEN = 3;
 
     protected final String id;
-    
+
+    /** The corresponding {@link CopletData}. */
 	protected CopletData copletData;
 
-    /** Persistet attributes. */
+    /** Persisted attributes. */
     protected Map attributes = new HashMap();
 
     /** Temporary attributes are not persisted. */
@@ -61,9 +72,13 @@ public final class CopletInstanceData {
      * Never create a coplet instance data object directly. Use the
      * {@link CopletFactory} instead.
      * @param id The unique id of the object.
+     * @see PortalUtils#testId(String)
 	 */
 	public CopletInstanceData(String id) {
-        // TODO - Check for valid id's
+        final String idErrorMsg = PortalUtils.testId(id);
+        if ( idErrorMsg != null ) {
+            throw new IllegalArgumentException(idErrorMsg);
+        }
         this.id = id;
 	}
 
