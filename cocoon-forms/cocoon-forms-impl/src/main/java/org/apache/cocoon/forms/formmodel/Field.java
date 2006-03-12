@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormsRuntimeException;
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.SelectionList;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
@@ -27,6 +29,7 @@ import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -45,6 +48,16 @@ import java.util.Locale;
  */
 public class Field extends AbstractWidget
                    implements ValidationErrorAware, DataWidget, SelectableWidget, ValueChangedListenerEnabled {
+
+    /**
+     * If the field was rendered as a suggestion-list and the user chose one of the suggestions,
+     * the field's value is the chosen item's value and the <code>SUGGESTED_LABEL_ATTR</code> field
+     * attribute contains the chosen item's label.
+     * 
+     * @see #isSuggested()
+     * @since 2.1.9
+     */
+    public static final String SUGGESTED_LABEL_ATTR = "suggested-label";
 
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
@@ -139,6 +152,41 @@ public class Field extends AbstractWidget
         this.required = this.fieldDefinition.isRequired();
         super.initialize();
     }
+    
+    /**
+     * If this field has a selection-list, indicates if the value comes from that list
+     * or if a new value was input by the user.
+     * 
+     * @since 2.1.9
+     * @return true if the user has chosen a suggested value
+     */
+    public boolean isSuggested() {
+        return this.getAttribute(SUGGESTED_LABEL_ATTR) != null;
+    }
+    
+    /**
+     * Set the suggestion label associated to the widget's current value. This is used to initialize
+     * a combobox's rendering. If not such label exists, the widget's value is used.
+     * 
+     * @since 2.1.9
+     */
+    public void setSuggestionLabel(String label) {
+        if (this.fieldDefinition.getSuggestionList() == null) {
+            throw new FormsRuntimeException(this + " has no suggestion list", this.getLocation());
+        }
+        this.setAttribute(SUGGESTED_LABEL_ATTR, label);
+    }
+    
+    /**
+     * If the user has chosen an item in a suggestion list, returns that item's label.
+     * 
+     * @since 2.1.9
+     * @return the item's label, or <code>null</code> if the user entered a new value or
+     *         if there's not suggestion list.
+     */
+    public String getSuggestionLabel() {
+        return (String)this.getAttribute(SUGGESTED_LABEL_ATTR);
+    }
 
     public Object getValue() {
         // if getValue() is called on this field while we're validating, then it's because a validation
@@ -217,7 +265,25 @@ public class Field extends AbstractWidget
             return;
         }
 
-        String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
+        String paramName = getRequestParameterName();
+        Request request = formContext.getRequest();
+        
+        String newEnteredValue = request.getParameter(paramName);
+
+        if (this.fieldDefinition.getSuggestionList() != null) {
+            // The Dojo ComboBox sends the typed value or the chosen item's label in the
+            // request parameter and sends an additional "*_selected" parameter containing
+            // the value of the chosen item (if any).
+            // So if *_selected exists, use 
+            String selectedValue = request.getParameter(paramName + "_selected");
+            if (StringUtils.isNotEmpty(selectedValue)) {
+                setSuggestionLabel(newEnteredValue);
+                newEnteredValue = selectedValue;
+            } else {
+                this.removeAttribute(SUGGESTED_LABEL_ATTR);
+            }
+        }
+
         // FIXME: Should we consider only non-null values?
         // Although distinguishing an empty value (input present but blank) from a null value
         // (input not present in the form) is possible, this distinction is not possible for
@@ -443,6 +509,14 @@ public class Field extends AbstractWidget
             }
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             contentHandler.endElement(FormsConstants.INSTANCE_NS, VALUE_EL, FormsConstants.INSTANCE_PREFIX_COLON + VALUE_EL);
+        }
+        
+        // Suggested label, if any
+        String suggestedLabel = getSuggestionLabel();
+        if (suggestedLabel != null) {
+            contentHandler.startElement(FormsConstants.INSTANCE_NS, "suggestion", FormsConstants.INSTANCE_PREFIX_COLON + "suggestion", XMLUtils.EMPTY_ATTRIBUTES);
+            contentHandler.characters(suggestedLabel.toCharArray(), 0, suggestedLabel.length());
+            contentHandler.endElement(FormsConstants.INSTANCE_NS, "suggestion", FormsConstants.INSTANCE_PREFIX_COLON + "suggestion");
         }
 
         // validation message element: only present if the value is not valid

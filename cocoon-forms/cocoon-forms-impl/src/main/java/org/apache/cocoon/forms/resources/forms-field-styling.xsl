@@ -31,7 +31,7 @@
          <script> djConfig = {isDebug: true} </script> -->
     <xsl:copy-of select="fi:init/node()"/>
     <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>
-    <script src="{$resources-uri}/ajax/js/cocoon.js" type="text/javascript"/>
+    <script src="{$resources-uri}/ajax/cocoon.js" type="text/javascript"/>
     <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>
     <script type="text/javascript">
         dojo.addOnLoad(forms_onload);
