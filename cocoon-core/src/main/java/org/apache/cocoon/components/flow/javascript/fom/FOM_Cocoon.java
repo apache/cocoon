@@ -206,7 +206,7 @@ public class FOM_Cocoon extends ScriptableObject {
         defineClass(scope, PageLocalImpl.class);
     }
 
-    void pushCallContext(FOM_JavaScriptInterpreter interp,
+    public void pushCallContext(FOM_JavaScriptInterpreter interp,
                          Redirector redirector,
                          ServiceManager manager,
                          Context avalonContext,
@@ -229,7 +229,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                            logger, lastContinuation);
     }
 
-    void popCallContext() {
+    public void popCallContext() {
         // Clear the scope attribute
         FOM_JavaScriptFlowHelper.setFOM_FlowScope(this.getObjectModel(), null);
 
