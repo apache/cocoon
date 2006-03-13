@@ -37,4 +37,22 @@
       <version>2.2.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- Note: the file template-instructions.xml is not in the default resources directory as
+                 the sources of the template block are shared with Cocoon 2.1. Once this is no
+                 longer the case, this file can be moved into the resources dir again and this
+                 special configuration can be removed. -->
+      <resource>
+        <targetPath>org/apache/cocoon/template</targetPath>
+        <directory>src/main/java/org/apache/cocoon/template</directory>
+        <includes>
+          <include>template-instructions.xml</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
 </project>
