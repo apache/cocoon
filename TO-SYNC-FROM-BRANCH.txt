@@ -19,5 +19,6 @@ HtmlUnit test framework is in branch only.
 
 Tour block has been updated for 2.1.8, need to be synced and tested in trunk.
 
-AbstractCachingProcessingPipeline locking feature
-
+AbstractCachingProcessingPipeline:
+  * locking feature, see http://svn.apache.org/viewcvs.cgi?rev=379792&view=rev
+  * COCOON-1279: caching point pipelines and smart caching, see http://issues.apache.org/jira/browse/COCOON-1279
