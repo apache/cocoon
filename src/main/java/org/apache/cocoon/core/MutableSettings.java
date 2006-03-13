@@ -35,18 +35,16 @@ public class MutableSettings implements Settings {
     /** Are we still mutable? */
     protected boolean readOnly = false;
 
-    /** Prefix for properties */
+    /** Prefix for properties. */
     protected static final String KEYPREFIX = "org.apache.cocoon.";
 
-    /**
-     * The list of properties used to configure Cocoon
-     */
-    protected List properties = new ArrayList();
+    /** The list of properties used to configure Cocoon. */
+    protected final List properties = new ArrayList();
 
     /**
      * This parameter indicates what class to use for the root processor.
      */
-    protected String processorClassName = DEFAULT_PROCESSOR_CLASS;
+    protected String processorClassName;
     
     /**
      * This parameter points to the main configuration file for Cocoon.
@@ -86,7 +84,7 @@ public class MutableSettings implements Settings {
      * the request parameter "cocoon-reload". It also enables that Cocoon is
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
-    protected boolean reloadingEnabled = RELOADING_ENABLED_DEFAULT;
+    protected Boolean reloadingEnabled;
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -94,13 +92,13 @@ public class MutableSettings implements Settings {
      * be named here. Additional entries may be inserted here during build
      * depending on your build properties.
      */
-    protected List loadClasses = new ArrayList();
+    protected final List loadClasses = new ArrayList();
 
     /**
      * Causes all files in multipart requests to be processed.
      * Default is false for security reasons.
      */
-    protected boolean enableUploads = ENABLE_UPLOADS;
+    protected Boolean enableUploads;
 
     /**
      * This parameter allows to specify where Cocoon should put uploaded files.
@@ -114,7 +112,7 @@ public class MutableSettings implements Settings {
      * Causes all files in multipart requests to be saved to upload-dir.
      * Default is true for security reasons.
      */
-    protected boolean autosaveUploads = SAVE_UPLOADS_TO_DISK;
+    protected Boolean autosaveUploads;
 
     /**
      * Specify handling of name conflicts when saving uploaded files to disk.
@@ -127,7 +125,7 @@ public class MutableSettings implements Settings {
     /**
      * Specify maximum allowed size of the upload. Defaults to 10 Mb.
      */
-    protected int maxUploadSize = MAX_UPLOAD_SIZE;
+    protected Integer maxUploadSize;
 
     /**
      * This parameter allows to specify where Cocoon should create its page
@@ -148,23 +146,23 @@ public class MutableSettings implements Settings {
     /**
      * Allow adding processing time to the response
      */
-    protected boolean showTime = SHOW_TIME;
+    protected Boolean showTime;
 
     /**
      * If true, processing time will be added as an HTML comment
      */
-    protected boolean hideShowTime = HIDE_SHOW_TIME;
+    protected Boolean hideShowTime;
 
     /**
      * If true, the X-Cocoon-Version response header will be included.
      */
-    protected boolean showCocoonVersion = SHOW_COCOON_VERSION;
+    protected Boolean showCocoonVersion;
 
     /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
      */
-    protected boolean manageExceptions = MANAGE_EXCEPTIONS;
+    protected Boolean manageExceptions;
 
     /**
      * Set form encoding. This will be the character set used to decode request
@@ -182,19 +180,36 @@ public class MutableSettings implements Settings {
     /**
      * Delay between reload checks for the configuration.
      */
-    protected long configurationReloadDelay = 1000;
+    protected Long configurationReloadDelay;
 
     /** The time the cocoon instance was created. */
-    protected long creationTime;
+    protected Long creationTime;
 
     /** The property providers. */
-    protected List propertyProviders = new ArrayList();
+    protected final List propertyProviders = new ArrayList();
+
+    /** The optional parent settings object. */
+    protected Settings parent;
 
     /**
-     * Create a new settings object
+     * Create a new settings object.
      */
     public MutableSettings() {
-        // nothing to do
+        // set default values
+        this.processorClassName = DEFAULT_PROCESSOR_CLASS;
+        this.reloadingEnabled = BooleanUtils.toBooleanObject(RELOADING_ENABLED_DEFAULT);
+        this.enableUploads = BooleanUtils.toBooleanObject(ENABLE_UPLOADS);
+        this.autosaveUploads = BooleanUtils.toBooleanObject(SAVE_UPLOADS_TO_DISK);
+        this.maxUploadSize = new Integer(MAX_UPLOAD_SIZE);
+        this.showTime = BooleanUtils.toBooleanObject(SHOW_TIME);
+        this.hideShowTime = BooleanUtils.toBooleanObject(HIDE_SHOW_TIME);
+        this.showCocoonVersion = BooleanUtils.toBooleanObject(SHOW_COCOON_VERSION);
+        this.manageExceptions = BooleanUtils.toBooleanObject(MANAGE_EXCEPTIONS);
+        this.configurationReloadDelay = new Long(1000);
+    }
+
+    public MutableSettings(Settings parent) {
+        this.parent = parent;
     }
 
     /**
@@ -216,7 +231,7 @@ public class MutableSettings implements Settings {
                     } else if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
                     } else if ( key.equals(KEY_RELOAD_DELAY) ) {
-                        this.configurationReloadDelay = NumberUtils.toLong(value);
+                        this.configurationReloadDelay = Long.valueOf(value);
                     } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
                         this.loggingConfiguration = value;
                     } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
@@ -226,29 +241,29 @@ public class MutableSettings implements Settings {
                     } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                         this.bootstrapLogLevel = value;
                     } else if ( key.equals(KEY_RELOADING) ) {
-                        this.reloadingEnabled = BooleanUtils.toBoolean(value);
+                        this.reloadingEnabled = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
-                        this.enableUploads = BooleanUtils.toBoolean(value);
+                        this.enableUploads = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
                         this.uploadDirectory = value;
                     } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
-                        this.autosaveUploads = BooleanUtils.toBoolean(value);
+                        this.autosaveUploads = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
                         this.overwriteUploads = value;
                     } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
-                        this.maxUploadSize = NumberUtils.toInt(value);
+                        this.maxUploadSize = Integer.valueOf(value);
                     } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                         this.cacheDirectory = value;
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                         this.workDirectory = value;
                     } else if ( key.equals(KEY_SHOWTIME) ) {
-                        this.showTime = BooleanUtils.toBoolean(value);
+                        this.showTime = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
-                        this.hideShowTime = BooleanUtils.toBoolean(value);
+                        this.hideShowTime = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_SHOW_VERSION) ) {
-                        this.showCocoonVersion = BooleanUtils.toBoolean(value);
+                        this.showCocoonVersion = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
-                        this.manageExceptions = BooleanUtils.toBoolean(value);
+                        this.manageExceptions = BooleanUtils.toBooleanObject(value);
                     } else if ( key.equals(KEY_FORM_ENCODING) ) {
                         this.formEncoding = value;
                     } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
@@ -265,163 +280,264 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @return Returns the hideShowTime.
+     * @see org.apache.cocoon.core.DynamicSettings#isHideShowTime()
      */
     public boolean isHideShowTime() {
-        return this.hideShowTime;
+        if ( this.hideShowTime == null ) {
+            if ( parent != null ) {
+                return parent.isShowTime();
+            }
+            return HIDE_SHOW_TIME;
+        }
+        return this.hideShowTime.booleanValue();
     }
 
     /**
-     * @return Returns the allowReload.
+     * @see org.apache.cocoon.core.DynamicSettings#isReloadingEnabled(java.lang.String)
      */
     public boolean isReloadingEnabled(String type) {
-        boolean result = this.reloadingEnabled;
-        if ( type != null ) {
-            String o = this.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
+        if ( type == null ) {
+            if ( this.reloadingEnabled == null ) {
+                if ( parent != null ) {
+                    return parent.isReloadingEnabled(type);
+                }
+                return RELOADING_ENABLED_DEFAULT;
+            }
+            return this.reloadingEnabled.booleanValue();
+        }
+        String o = this.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
+        if ( o != null ) {
+            return BooleanUtils.toBoolean(o);
+        }
+        if ( this.parent != null ) {
+            o = this.parent.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
             if ( o != null ) {
-                result = BooleanUtils.toBoolean(o);
+                return BooleanUtils.toBoolean(o);
             }
         }
-        return result;
+        if ( this.reloadingEnabled == null ) {
+            if ( this.parent != null ) {
+                return this.parent.isReloadingEnabled(type);
+            }
+            return RELOADING_ENABLED_DEFAULT;
+        }
+        return this.reloadingEnabled.booleanValue();
     }
 
     /**
-     * @return Returns the autosaveUploads.
+     * @see org.apache.cocoon.core.DynamicSettings#isAutosaveUploads()
      */
     public boolean isAutosaveUploads() {
-        return this.autosaveUploads;
+        if ( this.autosaveUploads == null ) {
+            if ( parent != null ) {
+                return parent.isAutosaveUploads();
+            }
+            return SAVE_UPLOADS_TO_DISK;
+        }
+        return this.autosaveUploads.booleanValue();
     }
 
     /**
-     * @return Returns the cacheDirectory.
+     * @see org.apache.cocoon.core.BaseSettings#getCacheDirectory()
      */
     public String getCacheDirectory() {
+        if ( this.cacheDirectory == null && this.parent != null ) {
+            return this.parent.getCacheDirectory();
+        }
         return this.cacheDirectory;
     }
 
     /**
-     * @return Returns the cocoonLogger.
+     * @see org.apache.cocoon.core.BaseSettings#getCocoonLogger()
      */
     public String getCocoonLogger() {
+        if ( this.cocoonLogger == null && this.parent != null ) {
+            return this.parent.getCocoonLogger();
+        }
         return this.cocoonLogger;
     }
 
     /**
-     * @return Returns the processorClassName.
+     * @see org.apache.cocoon.core.BaseSettings#getProcessorClassName()
      */
     public String getProcessorClassName() {
+        if ( this.processorClassName == null && this.parent != null ) {
+            return this.parent.getProcessorClassName();
+        }
         return this.processorClassName;
     }
 
     /**
-     * @return Returns the configuration.
+     * @see org.apache.cocoon.core.BaseSettings#getConfiguration()
      */
     public String getConfiguration() {
+        if ( this.configuration == null && this.parent != null ) {
+            return this.parent.getConfiguration();
+        }
         return this.configuration;
     }
 
     /**
-     * @return Returns the enableUploads.
+     * @see org.apache.cocoon.core.DynamicSettings#isEnableUploads()
      */
     public boolean isEnableUploads() {
-        return this.enableUploads;
+        if ( this.enableUploads == null ) {
+            if ( parent != null ) {
+                return parent.isEnableUploads();
+            }
+            return ENABLE_UPLOADS;
+        }
+        return this.enableUploads.booleanValue();
     }
 
     /**
-     * @return Returns the formEncoding.
+     * @see org.apache.cocoon.core.BaseSettings#getFormEncoding()
      */
     public String getFormEncoding() {
+        if ( this.formEncoding == null && this.parent != null ) {
+            return this.parent.getFormEncoding();
+        }
         return this.formEncoding;
     }
 
     /**
-     * @return Returns the loadClasses.
+     * @see org.apache.cocoon.core.BaseSettings#getLoadClasses()
      */
     public List getLoadClasses() {
+        // we don't ask the parent here as that one already loaded the classe
         return this.loadClasses;
     }
 
     /**
-     * @return Returns the loggingConfiguration.
+     * @see org.apache.cocoon.core.BaseSettings#getLoggingConfiguration()
      */
     public String getLoggingConfiguration() {
+        if ( this.loggingConfiguration == null && this.parent != null ) {
+            return this.parent.getLoggingConfiguration();
+        }
         return this.loggingConfiguration;
     }
 
     /**
-     * @return Returns the logLevel.
+     * @see org.apache.cocoon.core.BaseSettings#getBootstrapLogLevel()
      */
     public String getBootstrapLogLevel() {
+        if ( this.bootstrapLogLevel == null && this.parent != null ) {
+            return this.parent.getBootstrapLogLevel();
+        }
         return this.bootstrapLogLevel;
     }
 
     /**
-     * @return Returns the manageExceptions.
+     * @see org.apache.cocoon.core.BaseSettings#isManageExceptions()
      */
     public boolean isManageExceptions() {
-        return this.manageExceptions;
+        if ( this.manageExceptions == null ) {
+            if ( parent != null ) {
+                return parent.isManageExceptions();
+            }
+            return MANAGE_EXCEPTIONS;
+        }
+        return this.manageExceptions.booleanValue();
     }
 
     /**
-     * @return Returns the maxUploadSize.
+     * @see org.apache.cocoon.core.DynamicSettings#getMaxUploadSize()
      */
     public int getMaxUploadSize() {
-        return this.maxUploadSize;
+        if ( this.maxUploadSize == null ) {
+            if ( parent != null ) {
+                return parent.getMaxUploadSize();
+            }
+            return MAX_UPLOAD_SIZE;
+        }
+        return this.maxUploadSize.intValue();
     }
 
     /**
-     * @return Returns the overwriteUploads.
+     * @see org.apache.cocoon.core.DynamicSettings#getOverwriteUploads()
      */
     public String getOverwriteUploads() {
+        if ( this.overwriteUploads == null && this.parent != null ) {
+            return this.parent.getOverwriteUploads();
+        }
         return this.overwriteUploads;
     }
 
     /**
-     * @return Returns the showTime.
+     * @see org.apache.cocoon.core.DynamicSettings#isShowTime()
      */
     public boolean isShowTime() {
-        return this.showTime;
+        if ( this.showTime == null ) {
+            if ( parent != null ) {
+                return parent.isShowTime();
+            }
+            return SHOW_TIME;
+        }
+        return this.showTime.booleanValue();
     }
 
     /**
      * @return Returns the showCocoonVersion flag.
      */
     public boolean isShowVersion() {
-        return this.showCocoonVersion;
+        if ( this.showCocoonVersion == null ) {
+            if ( parent != null ) {
+                return parent.isShowVersion();
+            }
+            return SHOW_COCOON_VERSION;
+        }
+        return this.showCocoonVersion.booleanValue();
     }
 
     /**
-     * @return Returns the uploadDirectory.
+     * @see org.apache.cocoon.core.BaseSettings#getUploadDirectory()
      */
     public String getUploadDirectory() {
+        if ( this.uploadDirectory == null && this.parent != null ) {
+            return this.parent.getUploadDirectory();
+        }
         return this.uploadDirectory;
     }
 
     /**
-     * @return Returns the workDirectory.
+     * @see org.apache.cocoon.core.BaseSettings#getWorkDirectory()
      */
     public String getWorkDirectory() {
+        if ( this.workDirectory == null && this.parent != null ) {
+            return this.parent.getWorkDirectory();
+        }
         return this.workDirectory;
     }
 
     /**
-     * @return Returns the accessLogger.
+     * @see org.apache.cocoon.core.BaseSettings#getEnvironmentLogger()
      */
     public String getEnvironmentLogger() {
+        if ( this.environmentLogger == null && this.parent != null ) {
+            return this.parent.getEnvironmentLogger();
+        }
         return this.environmentLogger;
     }
 
     /**
-     * @return Returns the overrideLogLevel.
+     * @see org.apache.cocoon.core.BaseSettings#getOverrideLogLevel()
      */
     public String getOverrideLogLevel() {
+        if ( this.overrideLogLevel == null && this.parent != null ) {
+            return this.parent.getOverrideLogLevel();
+        }
         return this.overrideLogLevel;
     }
 
+    /**
+     * @see org.apache.cocoon.core.DynamicSettings#isAllowOverwrite()
+     */
     public boolean isAllowOverwrite() {
-        if ("deny".equalsIgnoreCase(this.overwriteUploads)) {
+        final String value = this.getOverwriteUploads();
+        if ("deny".equalsIgnoreCase(value)) {
             return false;
-        } else if ("allow".equalsIgnoreCase(this.overwriteUploads)) {
+        } else if ("allow".equalsIgnoreCase(value)) {
             return true;
         } else {
             // either rename is specified or unsupported value - default to rename.
@@ -429,10 +545,14 @@ public class MutableSettings implements Settings {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.core.DynamicSettings#isSilentlyRename()
+     */
     public boolean isSilentlyRename() {
-        if ("deny".equalsIgnoreCase(this.overwriteUploads)) {
+        final String value = this.getOverwriteUploads();
+        if ("deny".equalsIgnoreCase(value)) {
             return false;
-        } else if ("allow".equalsIgnoreCase(this.overwriteUploads)) {
+        } else if ("allow".equalsIgnoreCase(value)) {
             return false; // ignored in this case
         } else {
             // either rename is specified or unsupported value - default to rename.
@@ -441,23 +561,47 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @return Returns the configurationReloadDelay.
+     * @see org.apache.cocoon.core.DynamicSettings#getReloadDelay(java.lang.String)
      */
     public long getReloadDelay(String type) {
-        long value = this.configurationReloadDelay;
-        if ( type != null ) {
-            String o = this.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
+        if ( type == null ) {
+            if ( this.configurationReloadDelay == null ) {
+                if ( parent != null ) {
+                    return parent.getReloadDelay(type);
+                }
+                return 1000;
+            }
+            return this.configurationReloadDelay.longValue();
+        }
+        String o = this.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
+        if ( o != null ) {
+            return NumberUtils.toLong(o);
+        }
+        if ( this.parent != null ) {
+            o = this.parent.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
             if ( o != null ) {
-                value = NumberUtils.toLong(o);
+                return NumberUtils.toLong(o);
             }
         }
-        return value;
+        if ( this.configurationReloadDelay == null ) {
+            if ( this.parent != null ) {
+                return this.parent.getReloadDelay(type);
+            }
+            return 1000;
+        }
+        return this.configurationReloadDelay.longValue();
     }
 
+    /**
+     * @see org.apache.cocoon.core.Settings#getProperty(java.lang.String)
+     */
     public String getProperty(String name) {
         return this.getProperty(name, null);
     }
 
+    /**
+     * @see org.apache.cocoon.core.Settings#getProperty(java.lang.String, java.lang.String)
+     */
     public String getProperty(String key, String defaultValue) {
         if ( key == null ) {
             return defaultValue;
@@ -599,7 +743,7 @@ public class MutableSettings implements Settings {
      */
     public void setHideShowTime(boolean hideShowTime) {
         this.checkWriteable();
-        this.hideShowTime = hideShowTime;
+        this.hideShowTime = BooleanUtils.toBooleanObject(hideShowTime);
     }
 
     /**
@@ -607,7 +751,7 @@ public class MutableSettings implements Settings {
      */
     public void setReloadingEnabled(boolean allowReload) {
         this.checkWriteable();
-        this.reloadingEnabled = allowReload;
+        this.reloadingEnabled = BooleanUtils.toBooleanObject(allowReload);
     }
 
     /**
@@ -615,7 +759,7 @@ public class MutableSettings implements Settings {
      */
     public void setAutosaveUploads(boolean autosaveUploads) {
         this.checkWriteable();
-        this.autosaveUploads = autosaveUploads;
+        this.autosaveUploads = BooleanUtils.toBooleanObject(autosaveUploads);
     }
 
     /**
@@ -655,7 +799,7 @@ public class MutableSettings implements Settings {
      */
     public void setEnableUploads(boolean enableUploads) {
         this.checkWriteable();
-        this.enableUploads = enableUploads;
+        this.enableUploads = BooleanUtils.toBooleanObject(enableUploads);
     }
 
     /**
@@ -695,7 +839,7 @@ public class MutableSettings implements Settings {
      */
     public void setManageExceptions(boolean manageExceptions) {
         this.checkWriteable();
-        this.manageExceptions = manageExceptions;
+        this.manageExceptions = BooleanUtils.toBooleanObject(manageExceptions);
     }
 
     /**
@@ -703,7 +847,7 @@ public class MutableSettings implements Settings {
      */
     public void setMaxUploadSize(int maxUploadSize) {
         this.checkWriteable();
-        this.maxUploadSize = maxUploadSize;
+        this.maxUploadSize = new Integer(maxUploadSize);
     }
 
     /**
@@ -719,7 +863,7 @@ public class MutableSettings implements Settings {
      */
     public void setShowTime(boolean showTime) {
         this.checkWriteable();
-        this.showTime = showTime;
+        this.showTime = BooleanUtils.toBooleanObject(showTime);
     }
 
     /**
@@ -727,7 +871,7 @@ public class MutableSettings implements Settings {
      */
     public void setShowCocoonVersion(boolean showCocoonVersion) {
         this.checkWriteable();
-        this.showCocoonVersion = showCocoonVersion;
+        this.showCocoonVersion = BooleanUtils.toBooleanObject(showCocoonVersion);
     }
 
     /**
@@ -767,7 +911,7 @@ public class MutableSettings implements Settings {
      */
     public void setConfigurationReloadDelay(long configurationReloadDelay) {
         this.checkWriteable();
-        this.configurationReloadDelay = configurationReloadDelay;
+        this.configurationReloadDelay = new Long(configurationReloadDelay);
     }
 
     /**
@@ -794,7 +938,13 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getCreationTime()
      */
     public long getCreationTime() {
-        return this.creationTime;
+        if ( this.creationTime != null ) {
+            if ( this.parent != null ) {
+                return this.parent.getCreationTime();
+            }
+            return 0;
+        }
+        return this.creationTime.longValue();
     }
 
     /**
@@ -803,13 +953,14 @@ public class MutableSettings implements Settings {
     public void setCreationTime(long value) {
         // Don't check read only here as this will change if Cocoon
         // is reloaded while the settings remain the same.
-        this.creationTime = value;
+        this.creationTime = new Long(value);
     }
 
     /**
      * @see org.apache.cocoon.core.BaseSettings#getPropertyProviders()
      */
     public List getPropertyProviders() {
+        // we don't ask the parent here
         return this.propertyProviders;
     }
 
