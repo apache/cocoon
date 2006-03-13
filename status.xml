@@ -218,7 +218,7 @@
       JUnit tests for LocaleAction.
     </action>
     <action dev="JHS" type="fix" fixes-bug="COCOON-1335" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
-      Removed dependency of RoleFilterTransformer on buggy FilterTransformer.  
+      Removed dependency of RoleFilterTransformer on FilterTransformer.  
       Also thanks to Andrew Stevens for updating the patch against recent branch and Doug Bennet for the reminder. 
     </action>
     <action dev="AS" type="add" fixes-bug="COCOON-1789" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
