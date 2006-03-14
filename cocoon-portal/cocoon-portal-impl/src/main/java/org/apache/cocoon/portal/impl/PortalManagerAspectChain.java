@@ -94,7 +94,7 @@ public final class PortalManagerAspectChain {
             if ( component instanceof CopletAdapter ) {
                 adapterSelector.release(component);
             } else {
-                aspectSelector.release(i.next());
+                aspectSelector.release(component);
             }
         }
         this.aspects.clear();
