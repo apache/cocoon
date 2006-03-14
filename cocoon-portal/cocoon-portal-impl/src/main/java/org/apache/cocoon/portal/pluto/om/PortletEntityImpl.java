@@ -45,6 +45,8 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
     protected final PortalService service;
     protected final PortletPreferencesProvider prefProvider;
 
+    protected static final String ATTR_PREFERENCES = PortletEntityImpl.class.getName() + "/Preferences";
+
     /**
      * Constructor.
      */
@@ -101,7 +103,12 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntity#getPreferenceSet()
      */
     public PreferenceSet getPreferenceSet() {
-        return this.prefProvider.getPreferenceSet(this.coplet);
+        PreferenceSet prefs = (PreferenceSet)this.coplet.getTemporaryAttribute(ATTR_PREFERENCES);
+        if ( prefs == null ) {
+            prefs = this.prefProvider.getPreferenceSet(this.coplet);
+            this.coplet.setTemporaryAttribute(ATTR_PREFERENCES, prefs);
+        }
+        return prefs;
     }
 
     /**
@@ -137,7 +144,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * @see org.apache.pluto.om.entity.PortletEntityCtrl#store()
      */
     public void store() throws IOException {
-        this.prefProvider.storePreferenceSet(this.coplet);
+        this.prefProvider.storePreferenceSet(this.coplet, (PreferenceSet)this.coplet.getTemporaryAttribute(ATTR_PREFERENCES));
     }
 
 }
