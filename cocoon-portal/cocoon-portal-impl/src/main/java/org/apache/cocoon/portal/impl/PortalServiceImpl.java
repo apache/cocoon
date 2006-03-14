@@ -28,7 +28,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -77,7 +76,7 @@ public class PortalServiceImpl
     protected ServiceManager manager;
 
     /** The manager for some core portal components. */
-    protected PortalComponentManager portalComponentManager;
+    protected DefaultPortalComponentManager portalComponentManager;
 
     /** The list of skins. */
     protected List skinList = new ArrayList();
@@ -241,7 +240,9 @@ public class PortalServiceImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        ContainerUtil.dispose( this.portalComponentManager );
+        if ( this.portalComponentManager != null ) {
+            this.portalComponentManager.dispose();
+        }
         // remove the portal service from the servlet context - if available
         try {
             final ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
@@ -265,13 +266,7 @@ public class PortalServiceImpl
         SourceResolver resolver = null;
         try {
             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            PortalComponentManager c = new DefaultPortalComponentManager(this, this.context);
-            this.portalComponentManager = c;
-            ContainerUtil.enableLogging( c, this.getLogger() );
-            ContainerUtil.contextualize( c, this.context );
-            ContainerUtil.service( c, this.manager );
-            ContainerUtil.configure( c, portal );
-            ContainerUtil.initialize( c );
+            this.portalComponentManager = new DefaultPortalComponentManager(this.manager);
 
             // scan for skins
             final Configuration[] skinConfs = portal.getChild("skins").getChildren("skin");
@@ -358,13 +353,6 @@ public class PortalServiceImpl
      */
     public boolean getConfigurationAsBoolean(String key, boolean defaultValue) {
         return this.config.getChild(key).getValueAsBoolean(defaultValue);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getComponentContext()
-     */
-    public Context getComponentContext() {
-        return this.context;
     }
 
     /**

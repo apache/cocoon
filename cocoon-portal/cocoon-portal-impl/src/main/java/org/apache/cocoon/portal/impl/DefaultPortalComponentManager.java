@@ -19,18 +19,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalRuntimeException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
@@ -44,50 +38,41 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @version $Id$
  */
 public class DefaultPortalComponentManager
-    extends AbstractLogEnabled
-    implements PortalComponentManager, Serviceable, Disposable, ThreadSafe {
+    implements PortalComponentManager {
 
-    /** The avalon component manager */
+    /** The avalon component manager. */
     protected ServiceManager manager;
 
-    /** The portal service */
-    protected final PortalService portalService;
-
+    /** The profile manager. */
     protected ProfileManager profileManager;
 
+    /** The link service. */
     protected LinkService linkService;
 
+    /** The used renderers. */
     protected Map renderers = new HashMap();
 
+    /** The used coplet adapters. */
     protected Map copletAdapters = new HashMap();
 
+    /** The coplet factory. */
     protected CopletFactory copletFactory;
 
+    /** The layout factory. */
     protected LayoutFactory layoutFactory;
 
+    /** The event manager. */
     protected EventManager eventManager;
 
+    /** The portal manager. */
     protected PortalManager portalManager;
-
-    protected final Context context;
 
     /**
      * Create a new portal component manager. Each portal has a own
      * component manager that manages all central components for this
      * portal.
-     * This implementation stores the portal service (a global singleton)
-     * to pass it to the other components (TODO).
-     * @param service The portal service.
      */
-    public DefaultPortalComponentManager(final PortalService service, Context context) {
-        this.portalService = service;
-        this.context = context;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
+    public DefaultPortalComponentManager(ServiceManager manager) {
         this.manager = manager;
     }
 
@@ -236,12 +221,5 @@ public class DefaultPortalComponentManager
             }
         }
         return this.portalManager;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalComponentManager#getComponentContext()
-     */
-    public Context getComponentContext() {
-        return this.context;
     }
 }
