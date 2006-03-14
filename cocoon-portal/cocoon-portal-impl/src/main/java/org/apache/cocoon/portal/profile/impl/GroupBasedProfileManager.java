@@ -562,7 +562,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserCopletInstanceDatas(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#saveUserCopletInstanceDatas(java.lang.String)
      */
     public void saveUserCopletInstanceDatas(String layoutKey) {
         try {
@@ -588,7 +588,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserLayout(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.impl.AbstractProfileManager#saveUserLayout(java.lang.String)
      */
     public void saveUserLayout(String layoutKey) {
         try {

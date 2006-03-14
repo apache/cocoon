@@ -25,5 +25,5 @@ public interface PortletPreferencesProvider {
 
     PreferenceSet getPreferenceSet(CopletInstanceData cid);
 
-    void storePreferenceSet(CopletInstanceData cid);
+    void storePreferenceSet(CopletInstanceData cid, PreferenceSet prefs);
 }
