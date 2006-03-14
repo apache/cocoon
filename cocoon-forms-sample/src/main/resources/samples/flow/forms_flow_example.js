@@ -199,3 +199,15 @@ function do_suggest() {
               "\npath suggested label = " +  
               (path.suggested ? path.suggestionLabel : "(none)") });
 }
+
+function do_inplace() {
+    var form = new Form("forms/inplace_edit_form.xml");
+    var path = form.getChild("path");
+
+    form.showForm("inplace_edit-display-pipeline.jx");
+    
+    cocoon.sendPage("textresult-display-pipeline.jx",
+        {title: "Inplace results", text: "name: " + form.getChild("name").value +
+            "\noccupation: " + form.getChild("occupation").value +
+            "\ncomments: " + form.getChild("comments") });
+}
