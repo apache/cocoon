@@ -78,6 +78,7 @@ public interface PortalComponentManager {
     /**
      * Return the component context.
      * @since 2.1.8
+     * @deprecated Use the Avalon Contextualizable interface instead.
      */
     Context getComponentContext();
 }
