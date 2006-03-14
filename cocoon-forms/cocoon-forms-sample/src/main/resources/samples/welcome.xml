@@ -135,6 +135,9 @@
    <sample name="Cocoon suggests" href="do-suggest.flow">
      (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
    </sample>
+   <sample name="In place editing" href="do-inplace.flow">
+	 (Ajax) Various ways to use in place editing.
+   </sample>
    <sample name="Other Ajax samples" href="../ajax/">
 	 (Ajax) Don't forget to look at the samples in the Ajax block!
    </sample>
