@@ -225,8 +225,11 @@
 
   <!--+
       | Field with in-place editing
+      | Reacts to 2 different types:
+      | - 'inplace' for a single line input
+      | - 'inplace-area' for a textarea
       +-->
-  <xsl:template match="fi:field[fi:styling/@type='inplace' and @state='active']">
+  <xsl:template match="fi:field[fi:styling[@type='inplace' or @type='inplace-area'] and @state='active']">
     <span id="{@id}">
       <span dojoType="InlineEditBox" onSave="dojo.byId('{@id}:input').value = arguments[0]">
         <xsl:attribute name="onSave">
@@ -239,6 +242,11 @@
             <xsl:text>:input'))</xsl:text>
           </xsl:if>
         </xsl:attribute>
+        <xsl:if test="fi:styling/@type='inplace-area'">
+          <xsl:attribute name="mode">
+            <xsl:text>textarea</xsl:text>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:choose>
           <xsl:when test="fi:value">
             <xsl:value-of select="fi:value"/>
