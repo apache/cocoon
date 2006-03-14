@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal;
 
-import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
@@ -74,11 +73,4 @@ public interface PortalComponentManager {
      * @since 2.1.8
      */
     PortalManager getPortalManager();
-
-    /**
-     * Return the component context.
-     * @since 2.1.8
-     * @deprecated Use the core object instead.
-     */
-    Context getComponentContext();
 }
