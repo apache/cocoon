@@ -33,7 +33,12 @@ package org.apache.cocoon.portal.event;
  *
  * If a receiver is interested in more than one event type, then it can implement
  * several inform methods each with the corresponding event class as the first
- * parameter.
+ * parameter. However, it is important to notice that the current implementation
+ * of the event manager has some restrictions! A receiver should not implement to
+ * inform methods where one event is a subclass or subinterface of the other event.
+ * In that case only one method is called and it's not deterministic which one will be called
+ * (this may vary for example on the used operating system the code runs on!).
+ * This problem will be solved in 2.2.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *
