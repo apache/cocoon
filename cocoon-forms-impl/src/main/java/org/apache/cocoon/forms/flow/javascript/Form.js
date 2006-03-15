@@ -366,3 +366,29 @@ function handleForm() {
     // call the function
     func.apply(this, [form]);
 }
+
+function processForm(viewdata) {
+    viewdata = this.buildViewData(viewdata)
+
+    var formContext = new Packages.org.apache.cocoon.forms.FormContext(cocoon.request, this.locale);
+
+    // Prematurely add the viewdata as in the object model so that event listeners can use it 	 
+    // (the same is done by cocoon.sendPage()) 	 
+    // FIXME : hack needed because FOM doesn't provide access to the object model 	 
+    var objectModel = org.apache.cocoon.components.ContextHelper.getObjectModel(this.avalonContext); 	 
+    org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, viewdata); 	 
+
+    if (this.restoreHook) {
+        this.restoreHook(this);
+    }
+
+    var finished = this.form.process(formContext);
+
+    if (finished) {
+        this.isValid = this.form.isValid();
+        var widget = this.form.getSubmitWidget();
+        // Can be null on "normal" submit
+        this.submitId = widget == null ? null : widget.getId();
+    }
+    return finished;
+}
