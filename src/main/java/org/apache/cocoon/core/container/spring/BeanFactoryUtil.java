@@ -192,7 +192,7 @@ public class BeanFactoryUtil {
                 final Configuration conf = builder.build(servletContext.getResourceAsStream(loggerConfig));
                 // override log level?
                 if (settings.getOverrideLogLevel() != null) {
-                    // TODO - override loglevel for log4j
+                    changeLogLevel(conf.getChildren(), settings.getOverrideLogLevel());
                 }
                 loggerManager.configure(conf);
             } else {
@@ -208,6 +208,16 @@ public class BeanFactoryUtil {
             accesslogger = "cocoon";
         }
         return loggerManager.getLoggerForCategory(accesslogger);
+    }
+
+    protected static void changeLogLevel(Configuration[] configs, String level) {
+        for(int i=0; i<configs.length; i++) {
+            if ( configs[i].getName().equals("priority") ) {
+                // we now that this is a DefaultConfiguration
+                ((DefaultConfiguration)configs[i]).setAttribute("value", level);
+            }
+            changeLogLevel(configs[i].getChildren(), level);
+        }
     }
 
     protected static void prepareBeanFactory(CocoonBeanFactory factory,
