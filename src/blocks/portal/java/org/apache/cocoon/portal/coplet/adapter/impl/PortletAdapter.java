@@ -126,7 +126,10 @@ public class PortletAdapter
         }
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
 
-        final String portletEntityId = (String) getConfiguration(coplet, "portlet");   
+        final String portletEntityId = (String) getConfiguration(coplet, "portlet");
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Coplet " + coplet.getId() + " tries to login into portlet " + portletEntityId);
+        }
 
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         PortletEntity portletEntity = ((PortletEntityListImpl)pae.getPortletEntityList()).add(pae, portletEntityId, coplet, registry);
@@ -154,11 +157,13 @@ public class PortletAdapter
                 this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),  
                                                   res);
             } catch (Exception e) {
-                this.getLogger().error("Error loading portlet " + portletEntityId, e);
+                this.getLogger().error("Error loading portlet " + portletEntityId + " for instance " + coplet.getId(), e);
                 // remove portlet entity
                 coplet.removeTemporaryAttribute("window");
                 ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
             }
+        } else {
+            this.getLogger().error("Error finding portlet " + portletEntityId + " for instance " + coplet.getId() + " - no definition found.");
         }
     }
 
@@ -172,10 +177,11 @@ public class PortletAdapter
             throw new SAXException("Unable to execute JSR-168 portlets because of missing servlet context.");
         }
         try {
+            final String portletEntityId = (String) getConfiguration(coplet, "portlet");
             // get the window
             final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
             if ( window == null ) {
-                throw new SAXException("Portlet couldn't be loaded: " + coplet.getId());
+                throw new SAXException("Portlet couldn't be loaded: " + coplet.getId() + "(" + portletEntityId + ")");
             }
             final Map objectModel = ContextHelper.getObjectModel(this.context);
             final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
@@ -219,7 +225,7 @@ public class PortletAdapter
         if ( window != null ) {
             coplet.removeTemporaryAttribute("window");
             PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
-        
+
             PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
             ((PortletEntityListImpl)pae.getPortletEntityList()).remove(window.getPortletEntity());
         }
