@@ -207,6 +207,13 @@ public class ExpiresCachingProcessingPipeline
      * Prepare the pipeline
      */
     protected void preparePipeline(Environment environment)
+    throws ProcessingException { 
+    	// prepare pipeline only if we don't have a cached response yet
+        if( this.cachedResponse == null )
+            super.preparePipeline(environment);
+    }
+
+    protected void setupPipeline(Environment environment)
     throws ProcessingException {
         // get the key and the expires info
         // we must do this before we call super.preparePipeline,
@@ -230,9 +237,6 @@ public class ExpiresCachingProcessingPipeline
             objectModel.remove(CACHE_EXPIRES_KEY);
         }
 
-        // prepare the pipeline
-        super.preparePipeline( environment );
-
         // and now prepare the caching information
         this.cacheKey = new IdentifierCacheKey(key,
                                            this.serializer == this.lastConsumer);
@@ -255,6 +259,11 @@ public class ExpiresCachingProcessingPipeline
             Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
             res.setDateHeader("Expires", System.currentTimeMillis() + (this.cacheExpires*1000));
             res.setHeader("Cache-Control", "max-age=" + this.cacheExpires + ", public");
+        }
+        
+        // only actually set up pipeline components when there was no cached response found for the specified key
+        if(this.cachedResponse == null) {
+        	super.setupPipeline( environment );
         }
     }
 
