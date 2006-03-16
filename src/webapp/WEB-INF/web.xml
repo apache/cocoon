@@ -197,7 +197,7 @@
     -->
     <init-param>
       <param-name>enable-uploads</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
 
     <!--
