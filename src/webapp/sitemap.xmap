@@ -167,7 +167,7 @@
      <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
     </map:serializer>
 
-    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" ppool-max="64" src="org.apache.cocoon.serialization.XMLSerializer">
+    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-max="64" src="org.apache.cocoon.serialization.XMLSerializer">
       <!--+
           | You can choose from Strict, Transitional, or Frameset XHTML.
           | For Strict XHTML set doctype to:
