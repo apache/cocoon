@@ -871,6 +871,13 @@
             </xsl:for-each>
           </fileset>
         </copy>
+        <copy filtering="off" todir="${{build.webapp.lib}}">
+          <fileset dir="${{lib.local}}">
+            <xsl:for-each select="library[not(@bundle='false')]">
+              <include name="{@name}*.jar"/>
+            </xsl:for-each>
+          </fileset>
+        </copy>
       </xsl:if>
       <block-lib name="{$block-name}" dir="{@dir}"/>
     </target>
@@ -892,6 +899,11 @@
         <path refid="classpath"/>
         <xsl:if test="library">
           <fileset dir="${{lib.optional}}">
+            <xsl:for-each select="library">
+              <include name="{@name}*.jar"/>
+            </xsl:for-each>
+          </fileset>
+          <fileset dir="${{lib.local}}">
             <xsl:for-each select="library">
               <include name="{@name}*.jar"/>
             </xsl:for-each>
