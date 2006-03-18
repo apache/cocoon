@@ -145,6 +145,7 @@ public class TreeProcessor extends AbstractLogEnabled
         ContainerUtil.service(this.environmentHelper, this.manager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.sitemapExecutor = parent.sitemapExecutor;
+        this.beanFactory = parent.beanFactory;
     }
 
     /**
@@ -409,8 +410,14 @@ public class TreeProcessor extends AbstractLogEnabled
                 treeBuilder.setProcessor(newProcessor);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
+                ConfigurableListableBeanFactory factory = treeBuilder.getBeanFactory();
+                if ( factory == null ) {
+                    factory = this.beanFactory;
+                } else {
+                    this.beanFactory = factory;
+                }
                 newProcessor.setProcessorData(
-                        treeBuilder.getBeanFactory(),
+                        factory,
                         treeBuilder.getServiceManager(),
                         root,
                         treeBuilder.getDisposableNodes(),
