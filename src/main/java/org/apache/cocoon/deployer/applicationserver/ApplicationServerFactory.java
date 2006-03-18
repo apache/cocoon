@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- */
 package org.apache.cocoon.deployer.applicationserver;
 
-import java.io.File;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.cocoon.deployer.ArtifactProvider;
-import org.apache.cocoon.deployer.block.Block;
-import org.apache.cocoon.deployer.logger.Logger;
+import org.apache.cocoon.deployer.DeploymentException;
+import org.apache.cocoon.deployer.generated.deploy.x10.Cocoon;
 import org.apache.cocoon.deployer.resolver.VariableResolver;
 
-public interface CocoonServer {
+public class ApplicationServerFactory {
 
-	public boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log, boolean transactional);
-	
-	public boolean isExclusive();
-	
-	public void setExclusive(boolean exclusive);
-	
-	public void setBaseDirectory(URI uri);
-	
-	public void setVariableResolver(VariableResolver resolver);
+	public static BlocksFramework createServer(Cocoon cocoon, VariableResolver variableResolver, 
+		ArtifactProvider artifactProvider, boolean exclusive) {
+		
+		BlocksFramework cocoonServer = new BlocksFramework23();
+		cocoonServer.setExclusive(exclusive);
+		cocoonServer.setVariableResolver(variableResolver);
+		cocoonServer.setArtifactProvider(artifactProvider);
+		
+		try {
+			cocoonServer.setBaseDirectory(new URI(cocoon.getTargetUrl()));
+		} catch (URISyntaxException e) {
+			throw new DeploymentException("Invalid Cocoon server URL");
+		}
+		
+		return cocoonServer;
+	}
 
-	public void setArtifactProvider(ArtifactProvider artifactProvider);
-	
 }

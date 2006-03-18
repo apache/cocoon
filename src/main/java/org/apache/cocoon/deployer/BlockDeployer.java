@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- */
 package org.apache.cocoon.deployer;
 
 import java.io.File;
@@ -24,8 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.deployer.applicationserver.CocoonServer;
-import org.apache.cocoon.deployer.applicationserver.CocoonServerFactory;
+import org.apache.cocoon.deployer.applicationserver.BlocksFramework;
+import org.apache.cocoon.deployer.applicationserver.ApplicationServerFactory;
 import org.apache.cocoon.deployer.block.Block;
 import org.apache.cocoon.deployer.block.BlockFactory;
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
@@ -104,7 +101,7 @@ public class BlockDeployer {
 				this.getAllBlockUrns(blockList, cocoonBlockFwWebappUrn));
 		
 		// deploy the blocks
-		CocoonServer cocoonServer = CocoonServerFactory.createServer(
+		BlocksFramework cocoonServer = ApplicationServerFactory.createServer(
 				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider, exclusive);
 		
 		Collections.reverse(blockList);
@@ -118,6 +115,7 @@ public class BlockDeployer {
 
 	/**
 	 * Reads a deployment descriptor and creates a list of <code>Block</code> objects to be installed.
+	 * 
 	 * @param deploymentDescriptor
 	 * @return a list of <code>Block</code> objects
 	 */

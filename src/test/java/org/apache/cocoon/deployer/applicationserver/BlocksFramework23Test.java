@@ -30,7 +30,7 @@ import org.apache.cocoon.deployer.generated.wiring.x10.Wiring;
 import org.apache.cocoon.deployer.util.FileUtils;
 import org.easymock.MockControl;
 
-public class CocoonServer22Test extends AbstractDeployerTestCase {
+public class BlocksFramework23Test extends AbstractDeployerTestCase {
 	
 	private static final String deployPath = "target/test/deployServer22";
 	private static final String DEFAULT_WEBAPP_ARTIFACT = "org.apache.cocoon:cocoon-minimal-webapp:1.0-SNAPSHOT:war";
@@ -39,7 +39,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deploy(Block[])'
 	 */
 	public void testDeploy() throws Exception {
-		CocoonServer22 cocoonServer = new CocoonServer22();
+		BlocksFramework23 cocoonServer = new BlocksFramework23();
 		URI baseUri = new File(deployPath).toURI();
 		cocoonServer.setBaseDirectory(baseUri);
 		cocoonServer.setArtifactProvider(getArtifactProviderInstance());	
@@ -60,7 +60,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	}
 	
 	public void testDeployWithConnections() throws Exception {
-		CocoonServer22 cocoonServer = new CocoonServer22();
+		BlocksFramework23 cocoonServer = new BlocksFramework23();
 		URI baseUri = new File(deployPath).toURI();
 		cocoonServer.setBaseDirectory(baseUri);
 		cocoonServer.setArtifactProvider(getArtifactProviderInstance());	
@@ -104,7 +104,7 @@ public class CocoonServer22Test extends AbstractDeployerTestCase {
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deployCocoonServer(OutputStream)'
 	 */
 	public void testDeployCocoonServerTransactionalMode() throws Exception {
-		CocoonServer22 cocoonServer = new CocoonServer22();
+		BlocksFramework23 cocoonServer = new BlocksFramework23();
 		
 		// set the basedirectory (JUnit test output dir)
 		File outputdir = this.createOutputDir("deployServer22");
