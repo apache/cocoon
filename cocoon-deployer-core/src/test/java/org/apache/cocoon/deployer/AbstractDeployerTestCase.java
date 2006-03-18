@@ -49,6 +49,12 @@ public abstract class AbstractDeployerTestCase extends TestCase {
 		return new File(getMockDirectory(), artifact);
 	}
 	
+	/**
+	 * Get access to the mock artifacts. This method reads the 'basedir' system property
+	 * set by Maven and ensures that always the correct base directory is used. This
+	 * is a problem with Maven 2 in version >= 2.0.2
+	 * @return
+	 */
 	public File getMockDirectory() {
 		String basedir = System.getProperty("basedir");
 		if(basedir != null || "".equals(basedir)) {
