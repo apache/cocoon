@@ -51,7 +51,7 @@ import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
 import org.xml.sax.SAXException;
 
-public class CocoonServer22 implements CocoonServer {
+public class BlocksFramework23 implements BlocksFramework {
 
 	public static final String WIRING_10_NAMESPACE = "http://apache.org/cocoon/blocks/wiring/1.0";
 	public static final String WIRING_FILE = "WEB-INF/wiring.xml";
