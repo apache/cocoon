@@ -33,29 +33,43 @@
   <build>
     <plugins>
       <plugin>
+       <!-- export our test classes in a separate jar -->
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-jar-plugin</artifactId>
+       <executions>
+         <execution>
+           <goals>
+             <goal>test-jar</goal>
+           </goals>
+         </execution>
+       </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <includes>
-            <include implementation="java.lang.String">**/*TestCase.class</include>
-            <include implementation="java.lang.String">**/*Test.class</include>
+            <include>**/*TestCase.class</include>
+            <include>**/*Test.class</include>
           </includes>
           <excludes>
-            <exclude implementation="java.lang.String">**/AllTest.class</exclude>
-            <exclude implementation="java.lang.String">**/CocoonBeanTestCase.class</exclude>
-            <exclude implementation="java.lang.String">**/*$$*Test.class</exclude>
-            <exclude implementation="java.lang.String">**/Abstract*.class</exclude>
-            <exclude implementation="java.lang.String">**/SitemapComponentTestCase*</exclude>
-            <exclude implementation="java.lang.String">**/SitemapTestCase*</exclude>
-            <exclude implementation="java.lang.String">**/ContainerTestCase*</exclude>
-            <exclude implementation="java.lang.String">**/CocoonTestCase*</exclude>
-            <exclude implementation="java.lang.String">**/VirtualPipelineGeneratorTestCase*</exclude>
+            <exclude>**/AllTest.class</exclude>
+            <exclude>**/CocoonBeanTestCase.class</exclude>
+            <exclude>**/*$$*Test.class</exclude>
+            <exclude>**/Abstract*.class</exclude>
+            <exclude>**/SitemapComponentTestCase*</exclude>
+            <exclude>**/SitemapTestCase*</exclude>
+            <exclude>**/ContainerTestCase*</exclude>
+            <exclude>**/CocoonTestCase*</exclude>
+            <exclude>**/VirtualPipelineGeneratorTestCase*</exclude>
           </excludes>
+          <!-- currently triggers NPE in surefire plugin
           <systemProperties>
             <property>
               <name>junit.test.loglevel</name>
               <value>3</value>
             </property>
           </systemProperties>
+          -->
         </configuration>
       </plugin>
     </plugins>
@@ -306,7 +320,7 @@
       <version>20040329</version>
     </dependency>
     <dependency>
-      <groupId>springframework</groupId>
+      <groupId>org.springframework</groupId>
       <artifactId>spring</artifactId>
       <version>1.2.6</version>
     </dependency>
