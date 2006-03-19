@@ -16,14 +16,10 @@
 package org.apache.cocoon.deployer.applicationserver;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import org.apache.cocoon.deployer.AbstractDeployerTestCase;
 import org.apache.cocoon.deployer.logger.ConsoleLogger;
-import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.monolithic.FileAlreadyDeployedException;
-import org.apache.cocoon.deployer.monolithic.FileDeployer;
 import org.apache.cocoon.deployer.monolithic.SingleFileDeployer;
 
 public class MonoliticServerTest extends AbstractDeployerTestCase {
@@ -34,7 +30,6 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 		MonolithicServer monolithicServer = new MonolithicServer(new File(SERVER_DIR), new ConsoleLogger());
 		monolithicServer.addRule("**webdav*.xconf", new SingleFileDeployer("WEB-INF/xconf"));
 		monolithicServer.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));
-		monolithicServer.addRule("**", new NullDeployer());		
 		monolithicServer.extract(this.getMockArtefact("validMonolithicBlock-02/valid-block-1.0.jar"));
 		assertTrue(new File("target/test/monolithicServer23/WEB-INF/xconf/my-webdav-server.xconf").exists());
 		assertTrue(new File("target/test/monolithicServer23/WEB-INF/sitemap-additions/sa.xmap").exists());		
@@ -43,7 +38,6 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 	public void testNotWorkingDeploy() throws Exception {
 		MonolithicServer monolithicServer = new MonolithicServer(new File(SERVER_DIR), new ConsoleLogger());
 		monolithicServer.addRule("**webdav*.xconf", new SingleFileDeployer("WEB-INF/xconf"));
-		monolithicServer.addRule("**", new NullDeployer());		
 		monolithicServer.extract(this.getMockArtefact("validMonolithicBlock-02/valid-block-1.0.jar"));
 		try {
 			monolithicServer.extract(this.getMockArtefact("validMonolithicBlock-02/valid-block-1.0.jar"));		
@@ -51,22 +45,6 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 		} catch(FileAlreadyDeployedException fade) {
 			// expected
 		}
-	}	
-	
-	static class NullDeployer implements FileDeployer {
-
-		public OutputStream writeResource(String documentName) throws IOException {
-			return new NullOutputStream();
-		}
-
-		public void setBasedir(File file) {}
-
-		public void setLogger(Logger logger) {}
-		
-	}
-	
-	static class NullOutputStream  extends OutputStream {
-		public void write(int arg0) throws IOException {}
 	}
 	
 }
