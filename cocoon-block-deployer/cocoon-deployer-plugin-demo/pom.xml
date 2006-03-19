@@ -87,7 +87,7 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-default</artifactId>
       <version>1.0-SNAPSHOT</version>
-    </dependency>
+    </dependency>   
   </dependencies>  
   
   <pluginRepositories>

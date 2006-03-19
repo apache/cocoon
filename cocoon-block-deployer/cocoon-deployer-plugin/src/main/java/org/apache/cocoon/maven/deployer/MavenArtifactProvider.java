@@ -129,7 +129,7 @@ public final class MavenArtifactProvider
         
     	try {
 			List dependencies = new ArrayList();
-	        Set artifacts = null;		
+	        Set artifacts = null;
 
     		for(int i = 0; i < artifactIds.length; i++) {
 	    		ArtifactBean artifactBean = getArtifactBeanFor(artifactIds[i]);

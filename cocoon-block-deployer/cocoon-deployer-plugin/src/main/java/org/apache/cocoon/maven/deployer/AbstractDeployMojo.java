@@ -18,11 +18,16 @@ package org.apache.cocoon.maven.deployer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cocoon.deployer.BlockDeployer;
+import org.apache.cocoon.deployer.MonolithicCocoonDeployer;
 import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
 import org.apache.cocoon.deployer.resolver.NullVariableResolver;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -188,5 +193,26 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         blockDeployer.deploy(deploy, false, true);
         
     }	
+ 
+	/**
+	 * Deploy a monolithic Cocoon web application. This means it doesn't use
+	 * the features that the blocks-fw offers.
+	 */
+	protected void deployMonolithicCocoonApp()  throws MojoExecutionException {
+    	File webappDirectory_ = getWebappDirectory();
+    	
+    	// build the web application
+        this.buildExplodedWebapp(webappDirectory_);
+        
+        // loop over all artifacts and deploy them correctly
+        Map files = new HashMap();
+        for(Iterator it = this.project.getArtifacts().iterator(); it.hasNext(); ) {
+        	Artifact artifact = (Artifact) it.next();
+        	files.put(artifact.getGroupId() + ":" + artifact.getGroupId() + ":" + artifact.getVersion(), artifact.getFile());
+        }
+        
+        MonolithicCocoonDeployer.deploy(files, webappDirectory_, new MavenLoggingWrapper(this.getLog()));
+	}    
+    
     
 }
