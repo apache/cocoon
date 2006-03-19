@@ -25,5 +25,7 @@
       default="org.apache.cocoon:cocoon-tutorial-simple-block:1.0-SNAPSHOT"/>    
     <requires interface="http://cocoon.apache.org/blocks/core-components/1.0" 
       name="core" default="org.apache.cocoon:cocoon-core-components:1.0-SNAPSHOT"/>
+    <!--requires interface="http://cocoon.apache.org/blocks/template/1.0" 
+      name="ctemplate" default="org.apache.cocoon:cocoon-template-impl:1.0-SNAPSHOT"/-->
   </requirements>
 </block>

@@ -35,6 +35,7 @@
 		<create-mock-block target="validBlock-05"/>
 		<create-mock-block target="validBlock-06"/>
 		<create-mock-block target="validBlock-07"/>		
+		<create-mock-block target="validMonolithicBlock-02"/>				
 	</target>
 		
 </project>
