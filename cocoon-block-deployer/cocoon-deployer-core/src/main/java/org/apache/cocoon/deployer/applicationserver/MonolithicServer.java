@@ -29,7 +29,6 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.monolithic.FileDeployer;
-import org.apache.cocoon.deployer.monolithic.NoRuleFoundException;
 import org.apache.cocoon.deployer.util.WildcardHelper;
 import org.apache.commons.lang.Validate;
 
@@ -66,7 +65,12 @@ public class MonolithicServer {
                     }
                     OutputStream out = null;
 	                    try {
-	                    	out = findFileDeployer(document.getName()).writeResource(document.getName());
+	                    	FileDeployer fileDeployer = findFileDeployer(document.getName());
+	                    	if(fileDeployer == null) {
+	                    		continue;
+	                    	}
+	                    	out = fileDeployer.writeResource(document.getName());
+	                    	
 		                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		                    // loop over ZIP entry stream
 		                    byte[] buffer = new byte[8192];
@@ -105,7 +109,7 @@ public class MonolithicServer {
 				return rule.fileDeployer;
 			}
 		}
-		throw new NoRuleFoundException("You have to specify a rule for the path '" + name + "'.");
+		return null;
 	}
 
 	private static class Rule {
