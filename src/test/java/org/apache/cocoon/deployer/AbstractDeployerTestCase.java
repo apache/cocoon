@@ -131,7 +131,4 @@ public abstract class AbstractDeployerTestCase extends TestCase {
 		// just exist for Maven surfire ;-)
 	}
 
-
-
-	
 }
