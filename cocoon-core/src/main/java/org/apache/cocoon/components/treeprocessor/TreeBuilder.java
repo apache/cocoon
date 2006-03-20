@@ -106,14 +106,14 @@ public interface TreeBuilder {
     /**
      * Return all event listers that are registered for the
      * {@link org.apache.cocoon.sitemap.EnterSitemapEvent}.
-     * @return A list of {@link EventComponent}s.
+     * @return A list of components.
      */
     List getEnterSitemapEventListeners();
 
     /**
      * Return all event listers that are registered for the
      * {@link org.apache.cocoon.sitemap.LeaveSitemapEvent}.
-     * @return A list of {@link EventComponent}s.
+     * @return A list of components.
      */
     List getLeaveSitemapEventListeners();
 }

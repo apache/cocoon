@@ -938,7 +938,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getCreationTime()
      */
     public long getCreationTime() {
-        if ( this.creationTime != null ) {
+        if ( this.creationTime == null ) {
             if ( this.parent != null ) {
                 return this.parent.getCreationTime();
             }

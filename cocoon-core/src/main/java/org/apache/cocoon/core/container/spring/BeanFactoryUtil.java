@@ -28,6 +28,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
@@ -63,7 +64,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 public class BeanFactoryUtil {
 
-    protected BeanFactory beanFactory;
+    protected ConfigurableListableBeanFactory beanFactory;
 
     /**
      * Create a new (sub) bean factory.
@@ -153,8 +154,9 @@ public class BeanFactoryUtil {
     protected static Logger initLogger(ServletContext servletContext,
                                        Settings       settings)
     throws Exception {
+        return new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG);
         // create a bootstrap logger
-        int logLevel;
+     /*   int logLevel;
         final String logLevelString = settings.getBootstrapLogLevel();
         if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
             logLevel = ServletLogger.LEVEL_DEBUG;
@@ -207,7 +209,7 @@ public class BeanFactoryUtil {
         if (accesslogger == null) {
             accesslogger = "cocoon";
         }
-        return loggerManager.getLoggerForCategory(accesslogger);
+        return loggerManager.getLoggerForCategory(accesslogger);*/
     }
 
     protected static void changeLogLevel(Configuration[] configs, String level) {
@@ -266,27 +268,30 @@ public class BeanFactoryUtil {
     throws Exception {
         // setup spring container
         // first, get the correct parent
-        BeanFactory parentContext = this.beanFactory;
+        ConfigurableListableBeanFactory parentFactory = this.beanFactory;
         final Request request = ContextHelper.getRequest(sitemapContext);
-        if ( request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null ) {
-            parentContext = (ConfigurableListableBeanFactory)request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
+        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null) {
+            parentFactory = (ConfigurableListableBeanFactory) request
+                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
         }
 
-        final AvalonEnvironment ae = new AvalonEnvironment();
-        ae.context = sitemapContext;
-        if ( sitemapLogger != null ) {
-            ae.logger = sitemapLogger;
-        } else {
-            ae.logger = (Logger)parentContext.getBean(ProcessingUtil.LOGGER_ROLE);
+        if ( config != null ) {
+            final AvalonEnvironment ae = new AvalonEnvironment();
+            ae.context = sitemapContext;
+            if ( sitemapLogger != null ) {
+                ae.logger = sitemapLogger;
+            } else {
+                ae.logger = (Logger)parentFactory.getBean(ProcessingUtil.LOGGER_ROLE);
+            }
+            ae.servletContext = ((ServletConfig) sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
+                    .getServletContext();
+            ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
+            final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
+                    .getBean(ConfigurationInfo.class.getName());
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
+    
+            return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
         }
-        ae.servletContext = ((ServletConfig)sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
-        ae.settings = (Settings)parentContext.getBean(Settings.ROLE);
-        final ConfigurationInfo parentConfigInfo = (ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName());
-        final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
-
-        final ConfigurableListableBeanFactory sitemapFactory = 
-            BeanFactoryUtil.createBeanFactory(ae, ci, parentContext, false);
-
-        return sitemapFactory;
+        return parentFactory;
     }
 }

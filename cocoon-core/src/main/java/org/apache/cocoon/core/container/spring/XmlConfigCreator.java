@@ -125,9 +125,6 @@ public class XmlConfigCreator {
                 buffer.append("/>\n");
             } else {
                 buffer.append(">\n");
-                buffer.append("  <constructor-arg ref=\"");
-                buffer.append(ServiceManager.class.getName());
-                buffer.append("\"/>\n");
                 buffer.append("  <constructor-arg type=\"java.lang.String\"><value>");
                 buffer.append(role.substring(0, role.length()-8));
                 buffer.append("</value></constructor-arg>\n");
