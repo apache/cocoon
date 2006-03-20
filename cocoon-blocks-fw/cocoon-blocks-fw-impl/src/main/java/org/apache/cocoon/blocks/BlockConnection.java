@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks.osgi;
+package org.apache.cocoon.blocks;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +29,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletRequest;
 import org.apache.cocoon.blocks.util.BlockCallHttpServletResponse;
 import org.osgi.service.log.LogService;
