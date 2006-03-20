@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="update">
+      Updated commons-io to 1.2.
+    </action>
     <action dev="SW" type="add">
       Ajax: rewrote everything with Dojo, added a new "PartialLink" widget using
       the "target" attribute on links to partially update the page.
