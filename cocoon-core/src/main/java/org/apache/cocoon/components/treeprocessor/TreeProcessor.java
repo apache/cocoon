@@ -413,7 +413,6 @@ public class TreeProcessor extends AbstractLogEnabled
                 this.beanFactory = treeBuilder.getBeanFactory();
                 newProcessor.setProcessorData(
                         this.beanFactory,
-                        treeBuilder.getServiceManager(),
                         root,
                         treeBuilder.getDisposableNodes(),
                         treeBuilder.getEnterSitemapEventListeners(),

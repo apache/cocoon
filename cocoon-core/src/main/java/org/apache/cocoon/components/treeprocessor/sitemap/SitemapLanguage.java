@@ -45,6 +45,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -253,10 +254,6 @@ public class SitemapLanguage
         return this.itsBeanFactory;
     }
 
-    public ServiceManager getServiceManager() {
-        return this.itsManager;
-    }
-
     /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getEnterSitemapEventListeners()
      */
@@ -389,7 +386,7 @@ public class SitemapLanguage
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
         this.itsBeanFactory = this.createBeanFactory(this.itsContext, componentConfig);
-        this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ServiceManager.class.getName());
+        this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         if (componentConfig != null) {
             // only register listeners if a new bean factory is created
             this.registerListeners();
@@ -586,21 +583,11 @@ public class SitemapLanguage
                     + statement.getName() + "' at " + statement.getLocation());
         }
 
-        // Check that this type actually exists
-        ServiceSelector selector = null;
-        try {
-            selector = (ServiceSelector) this.itsManager.lookup(role + "Selector");
-        } catch (ServiceException e) {
-            throw new ConfigurationException("Cannot get service selector for 'map:"
-                    + statement.getName() + "' at " + statement.getLocation(), e);
-        }
-
-        if (!selector.isSelectable(type)) {
+        final String beanName = role + '/' + type;
+        if ( !this.itsBeanFactory.containsBean(beanName) ) {
             throw new ConfigurationException("Type '" + type + "' does not exist for 'map:"
                     + statement.getName() + "' at " + statement.getLocation());
         }
-
-        this.itsManager.release(selector);
 
         return type;
     }

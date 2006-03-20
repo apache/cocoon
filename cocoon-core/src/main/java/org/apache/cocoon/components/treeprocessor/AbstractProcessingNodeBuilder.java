@@ -19,6 +19,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.ProcessingUtil;
 
 /**
  *
@@ -36,7 +37,7 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
-        this.manager = treeBuilder.getServiceManager();
+        this.manager = (ServiceManager)treeBuilder.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
     }
 
     /**

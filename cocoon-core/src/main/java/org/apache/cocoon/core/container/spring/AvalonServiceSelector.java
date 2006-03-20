@@ -72,4 +72,11 @@ public class AvalonServiceSelector
     public void release(Object component) {
         // nothing to do
     }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "AvalonServiceSelector[" + super.toString() + "]: role=" + this.role + ", factory=" + this.beanFactory;
+    }
 }
