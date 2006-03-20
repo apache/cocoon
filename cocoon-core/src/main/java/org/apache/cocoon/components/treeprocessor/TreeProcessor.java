@@ -410,14 +410,9 @@ public class TreeProcessor extends AbstractLogEnabled
                 treeBuilder.setProcessor(newProcessor);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
-                ConfigurableListableBeanFactory factory = treeBuilder.getBeanFactory();
-                if ( factory == null ) {
-                    factory = this.beanFactory;
-                } else {
-                    this.beanFactory = factory;
-                }
+                this.beanFactory = treeBuilder.getBeanFactory();
                 newProcessor.setProcessorData(
-                        factory,
+                        this.beanFactory,
                         treeBuilder.getServiceManager(),
                         root,
                         treeBuilder.getDisposableNodes(),

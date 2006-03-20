@@ -264,6 +264,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
             stack.push(oldContext);
         }
+        System.out.println("Setting factory: " + this.beanFactory);
+        System.out.println("Parent:          " + this.beanFactory.getParentBeanFactory());
         request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
     }
 
@@ -301,11 +303,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
 
         try {
+            final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
+            this.enteredSitemap(enterEvent);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
-                final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
-                this.enteredSitemap(enterEvent);
                 final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
                 while ( enterSEI.hasNext() ) {
                     final EnterSitemapEventListener current = (EnterSitemapEventListener)enterSEI.next();
@@ -336,11 +338,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         } finally {
             this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
+            final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
+            this.leftSitemap(leaveEvent);
             // invoke listeners
             // only invoke if pipeline is not internally
             if ( !context.isBuildingPipelineOnly() ) {
-                final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
-                this.leftSitemap(leaveEvent);
                 final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
                 while ( leaveSEI.hasNext() ) {
                     final LeaveSitemapEventListener current = (LeaveSitemapEventListener)leaveSEI.next();

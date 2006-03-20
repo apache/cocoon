@@ -16,8 +16,10 @@
 package org.apache.cocoon.core.container.spring;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This bean acts like a Avalon {@link ServiceSelector}.
@@ -25,15 +27,21 @@ import org.apache.avalon.framework.service.ServiceSelector;
  * @since 2.2
  * @version $Id$
  */
-public class AvalonServiceSelector implements ServiceSelector {
+public class AvalonServiceSelector implements BeanFactoryAware {
 
     protected final String role;
-    protected final ServiceManager manager;
     protected String defaultKey;
+    protected BeanFactory beanFactory;
 
-    public AvalonServiceSelector(ServiceManager manager, String r) {
+    public AvalonServiceSelector(String r) {
         this.role = r + '/';
-        this.manager = manager;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory factory) throws BeansException {
+        this.beanFactory = factory;
     }
 
     public void setDefault(String value) {
@@ -47,20 +55,20 @@ public class AvalonServiceSelector implements ServiceSelector {
         if ( key == null || key.toString().length() == 0 ) {
             key = this.defaultKey;
         }
-        return this.manager.lookup(this.role + key);
+        return this.beanFactory.getBean(this.role + key);
     }
 
     /**
      * @see org.apache.avalon.framework.service.ServiceSelector#isSelectable(java.lang.Object)
      */
     public boolean isSelectable(Object key) {
-        return this.manager.hasService(this.role + key);
+        return this.beanFactory.containsBean(this.role + key);
     }
 
     /**
      * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
      */
     public void release(Object component) {
-        this.manager.release(component);
+        // nothing to do
     }
 }
