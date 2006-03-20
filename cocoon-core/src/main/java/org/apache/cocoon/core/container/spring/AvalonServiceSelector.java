@@ -27,7 +27,8 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @since 2.2
  * @version $Id$
  */
-public class AvalonServiceSelector implements BeanFactoryAware, ServiceSelector {
+public class AvalonServiceSelector
+    implements BeanFactoryAware, ServiceSelector {
 
     protected final String role;
     protected String defaultKey;

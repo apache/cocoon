@@ -59,7 +59,9 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor, Disposable, ExecutionContext {
+                                   implements Processor,
+                                              Disposable,
+                                              ExecutionContext {
 
     private static final String BEAN_FACTORY_STACK_REQUEST_ATTRIBUTE = CocoonBeanFactory.class.getName() + "/Stack";
 
