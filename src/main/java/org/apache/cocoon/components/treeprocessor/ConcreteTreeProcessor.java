@@ -264,8 +264,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
             stack.push(oldContext);
         }
-        System.out.println("Setting factory: " + this.beanFactory);
-        System.out.println("Parent:          " + this.beanFactory.getParentBeanFactory());
         request.setAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, this.beanFactory, Request.REQUEST_SCOPE);
     }
 
