@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.servlet;
+
+import org.apache.cocoon.blocks.Block;
 
 /**
  * @version $Id$

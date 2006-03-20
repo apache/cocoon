@@ -35,8 +35,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.blocks.BlockCallStack;
-import org.apache.cocoon.blocks.BlockContext;
-import org.apache.cocoon.blocks.ServiceManagerRegistry;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.util.ClassUtils;
