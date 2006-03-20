@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks.osgi;
+package org.apache.cocoon.blocks;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cocoon.blocks.BlockCallStack;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.osgi.service.component.ComponentContext;
 

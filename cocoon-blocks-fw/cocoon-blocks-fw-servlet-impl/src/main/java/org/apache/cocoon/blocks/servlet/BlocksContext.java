@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.blocks;
+package org.apache.cocoon.blocks.servlet;
 
 import java.io.IOException;
 
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.blocks.util.ServletContextWrapper;
 
 /**

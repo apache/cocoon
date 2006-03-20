@@ -27,7 +27,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.blocks.BlockConstants;
 import org.xml.sax.SAXException;
 
 /**
