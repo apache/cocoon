@@ -388,14 +388,11 @@ public class SitemapLanguage
         // a configuration
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
+        this.itsBeanFactory = this.createBeanFactory(this.itsContext, componentConfig);
+        this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ServiceManager.class.getName());
         if (componentConfig != null) {
-            this.itsBeanFactory = this.createBeanFactory(this.itsContext, componentConfig);
-            this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ServiceManager.class
-                    .getName());
             // only register listeners if a new bean factory is created
             this.registerListeners();
-        } else {
-            this.itsManager = manager;
         }
         this.itsComponentInfo = (ProcessorComponentInfo) this.itsManager
                 .lookup(ProcessorComponentInfo.ROLE);
@@ -658,27 +655,27 @@ public class SitemapLanguage
     throws Exception {
         // setup spring container
         // first, get the correct parent
-        ConfigurableListableBeanFactory parentContext = this.beanFactory;
+        ConfigurableListableBeanFactory parentFactory = this.beanFactory;
         final Request request = ContextHelper.getRequest(context);
         if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null) {
-            parentContext = (ConfigurableListableBeanFactory) request
+            parentFactory = (ConfigurableListableBeanFactory) request
                     .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
         }
 
-        final AvalonEnvironment ae = new AvalonEnvironment();
-        ae.context = context;
-        ae.logger = this.getLogger();
-        ae.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
-                .getServletContext();
-        ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
-        final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentContext
-                .getBean(ConfigurationInfo.class.getName());
-        final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
-
-        final ConfigurableListableBeanFactory sitemapContext = BeanFactoryUtil.createBeanFactory(ae, ci,
-                parentContext, false);
-
-        return sitemapContext;
+        if ( config != null ) {
+            final AvalonEnvironment ae = new AvalonEnvironment();
+            ae.context = context;
+            ae.logger = this.getLogger();
+            ae.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
+                    .getServletContext();
+            ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
+            final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
+                    .getBean(ConfigurationInfo.class.getName());
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
+    
+            return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
+        }
+        return parentFactory;
     }
 
     /**

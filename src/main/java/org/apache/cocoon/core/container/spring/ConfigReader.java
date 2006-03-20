@@ -57,7 +57,7 @@ public class ConfigReader extends AbstractLogEnabled {
 
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
-        ConfigReader converter = new ConfigReader(env, null);
+        final ConfigReader converter = new ConfigReader(env, null);
         converter.convert(source);
         return converter.configInfo;
     }
@@ -66,7 +66,7 @@ public class ConfigReader extends AbstractLogEnabled {
                                                       ConfigurationInfo parentInfo,
                                                       AvalonEnvironment env)
     throws Exception {
-        ConfigReader converter = new ConfigReader(env, parentInfo);
+        final ConfigReader converter = new ConfigReader(env, parentInfo);
         converter.convert(config, null);
         return converter.configInfo;        
     }
@@ -106,7 +106,7 @@ public class ConfigReader extends AbstractLogEnabled {
     protected void convert(String relativePath)
     throws Exception {
         if ( this.getLogger().isInfoEnabled() ) {
-            this.getLogger().info("Reading avalon configuration from " + relativePath);
+            this.getLogger().info("Reading Avalon configuration from " + relativePath);
         }
         final Source root = this.resolver.resolveURI(relativePath);
         try {
@@ -123,7 +123,7 @@ public class ConfigReader extends AbstractLogEnabled {
     protected void convert(Configuration config, String rootUri)
     throws Exception {
         if ( this.getLogger().isInfoEnabled() ) {
-            this.getLogger().info("Converting avalon configuration");
+            this.getLogger().info("Converting Avalon configuration from configuration object: " + config);
         }
         // It's possible to define a logger on a per sitemap/service manager base.
         // This is the default logger for all components defined with this sitemap/manager.
