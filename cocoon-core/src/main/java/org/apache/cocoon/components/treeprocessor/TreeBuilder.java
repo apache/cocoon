@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
@@ -31,8 +30,6 @@ public interface TreeBuilder {
     String ROLE = TreeBuilder.class.getName();
 
     ConfigurableListableBeanFactory getBeanFactory();
-
-    ServiceManager getServiceManager();
 
     ConcreteTreeProcessor getProcessor();
 

@@ -28,6 +28,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -114,7 +115,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(ConfigurableListableBeanFactory beanFactory,
-                                 ServiceManager manager,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
@@ -124,7 +124,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
 
         this.beanFactory = beanFactory;
-        this.manager = manager;
+        this.manager = (ServiceManager)this.beanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
