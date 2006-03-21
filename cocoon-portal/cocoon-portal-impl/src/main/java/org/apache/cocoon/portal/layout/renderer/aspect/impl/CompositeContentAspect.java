@@ -54,8 +54,12 @@ import org.xml.sax.SAXException;
  *
  * <h2>Parameters</h2>
  * <table><tbody>
- * <tr><th>root-tag</th><td><Enclose result in root tag?/td><td></td><td>boolean</td><td><code>true</code></td></tr>
- * <tr><th>tag-name</th><td>Name of root tag to  use.</td><td></td><td>String</td><td><code>"composite"</code></td></tr>
+ * <tr><th>root-tag</th><td>Enclose result in root tag?</td><td></td><td>boolean</td><td><code>true</code></td></tr>
+ * <tr><th>tag-name</th><td>Name of root tag to use.</td><td></td><td>String</td><td><code>"composite"</code></td></tr>
+ * <tr><th>item-tag</th><td>Enclose each item in item tag?</td><td></td><td>boolean</td><td><code>true</code></td></tr>
+ * <tr><th>item-tag-name</th><td>Name of item tag to use.</td><td></td><td>String</td><td><code>"item"</code></td></tr>
+ * <tr><th>root-tag-id</th><td>Value of optional id attribute for the root tag.</td><td></td><td>String</td><td><code>-</code></td></tr>
+ * <tr><th>root-tag-class</th><td>Value of optional class attribute for the root tag.</td><td></td><td>String</td><td><code>-</code></td></tr>
  * </tbody></table>
  *
  * @version $Id$
@@ -68,14 +72,20 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext context,
-                      Layout layout,
-                      PortalService service,
-                      ContentHandler handler)
+                      Layout                layout,
+                      PortalService         service,
+                      ContentHandler        handler)
     throws SAXException {
         PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
-
-        if ( config.rootTag ) {
-            XMLUtils.startElement(handler, config.tagName);
+        if ( config.rootTag) {
+            final AttributesImpl ai = new AttributesImpl();
+            if ( config.rootTagClass != null ) {
+                ai.addCDATAAttribute("class", config.rootTagClass);
+            }
+            if ( config.rootTagId != null ) {
+                ai.addCDATAAttribute("id", config.rootTagId);
+            }
+            XMLUtils.startElement(handler, config.tagName, ai);
         }
         super.toSAX(context, layout, service, handler);
         if ( config.rootTag ) {
@@ -86,57 +96,81 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processItem(org.apache.cocoon.portal.layout.Item, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
-	protected void processItem(Item item,
-		                         ContentHandler handler,
-		                         PortalService service)
+	protected void processItem(RendererAspectContext context,
+                               Item                  item,
+		                       ContentHandler        handler,
+		                       PortalService         service)
     throws SAXException {
+        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         Layout layout = item.getLayout();
 
-        Map parameters = item.getParameters();
-        if (parameters.size() == 0) {
-            XMLUtils.startElement(handler, ITEM_STRING);
-        } else {
-            AttributesImpl attributes = new AttributesImpl();
-
-			Map.Entry entry;
-			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-				entry = (Map.Entry) iter.next();
-				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-			}
-            XMLUtils.startElement(handler, ITEM_STRING, attributes);
+        if ( config.itemTag ) {
+            Map parameters = item.getParameters();
+            if (parameters.size() == 0) {
+                XMLUtils.startElement(handler, config.itemTagName);
+            } else {
+                AttributesImpl attributes = new AttributesImpl();
+    
+    			Map.Entry entry;
+    			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+    				entry = (Map.Entry) iter.next();
+    				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+    			}
+                XMLUtils.startElement(handler, config.itemTagName, attributes);
+            }
         }
         processLayout(layout, service, handler);
-        XMLUtils.endElement(handler, ITEM_STRING);
+        if ( config.itemTag ) {
+            XMLUtils.endElement(handler, config.itemTagName);
+        }
 	}
 
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processMaximizedItem(org.apache.cocoon.portal.layout.Item, org.apache.cocoon.portal.layout.Layout, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
-	protected void processMaximizedItem(Item item, Layout maximizedLayout, ContentHandler handler, PortalService service) throws SAXException {
+	protected void processMaximizedItem(RendererAspectContext context,
+                                        Item                  item,
+                                        Layout                maximizedLayout,
+                                        ContentHandler        handler,
+                                        PortalService         service)
+    throws SAXException {
+        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         Map parameters = item.getParameters();
-        if (parameters.size() == 0) {
-            XMLUtils.startElement(handler, ITEM_STRING);
-        } else {
-            AttributesImpl attributes = new AttributesImpl();
-
-			Map.Entry entry;
-			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
-				entry = (Map.Entry) iter.next();
-				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-			}
-            XMLUtils.startElement(handler, ITEM_STRING, attributes);
+        if ( config.itemTag ) {
+            if (parameters.size() == 0) {
+                XMLUtils.startElement(handler, config.itemTagName);
+            } else {
+                AttributesImpl attributes = new AttributesImpl();
+    
+    			Map.Entry entry;
+    			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
+    				entry = (Map.Entry) iter.next();
+    				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+    			}
+                XMLUtils.startElement(handler, config.itemTagName, attributes);
+            }
         }
         processLayout(maximizedLayout, service, handler);
-        XMLUtils.endElement(handler, ITEM_STRING);
+        if ( config.itemTag ) {
+            XMLUtils.endElement(handler, config.itemTagName);
+        }
 	}
 
 	protected class PreparedConfiguration {
         public String tagName;
         public boolean rootTag;
+        public boolean itemTag;
+        public String itemTagName;
+        public String rootTagId;
+        public String rootTagClass;
 
         public void takeValues(PreparedConfiguration from) {
             this.tagName = from.tagName;
             this.rootTag = from.rootTag;
+            this.itemTag = from.itemTag;
+            this.itemTagName = from.itemTagName;
+            this.rootTagId = from.rootTagId;
+            this.rootTagClass = from.rootTagClass;
         }
     }
 
@@ -148,6 +182,10 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.tagName = configuration.getParameter("tag-name", "composite");
         pc.rootTag = configuration.getParameterAsBoolean("root-tag", true);
+        pc.itemTag = configuration.getParameterAsBoolean("item-tag", true);
+        pc.itemTagName = configuration.getParameter("item-tag-name", ITEM_STRING);
+        pc.rootTagId = configuration.getParameter("root-tag-id", null);
+        pc.rootTagClass = configuration.getParameter("root-tag-class", null);
         return pc;
     }
 
