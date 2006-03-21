@@ -206,13 +206,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         
         // loop over all artifacts and deploy them correctly
         Map files = new HashMap();
-        for(Iterator it = this.project.getArtifacts().iterator(); it.hasNext(); ) {
+        for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
         	Artifact artifact = (Artifact) it.next();
-        	files.put(artifact.getGroupId() + ":" + artifact.getGroupId() + ":" + artifact.getVersion(), artifact.getFile());
+        	String id = artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getVersion();
+        	files.put(id, artifact.getFile());
         }
-        
+
         MonolithicCocoonDeployer.deploy(files, webappDirectory_, new MavenLoggingWrapper(this.getLog()));
-	}    
+	}   
     
     
 }

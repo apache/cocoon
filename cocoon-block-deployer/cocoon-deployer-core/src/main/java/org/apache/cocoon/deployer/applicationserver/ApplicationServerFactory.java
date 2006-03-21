@@ -25,10 +25,10 @@ import org.apache.cocoon.deployer.resolver.VariableResolver;
 
 public class ApplicationServerFactory {
 
-	public static BlocksFramework createServer(Cocoon cocoon, VariableResolver variableResolver, 
+	public static BlocksFrameworkServer createServer(Cocoon cocoon, VariableResolver variableResolver, 
 		ArtifactProvider artifactProvider, boolean exclusive) {
 		
-		BlocksFramework cocoonServer = new BlocksFramework23();
+		BlocksFrameworkServer cocoonServer = new BlocksFrameworkServer23();
 		cocoonServer.setExclusive(exclusive);
 		cocoonServer.setVariableResolver(variableResolver);
 		cocoonServer.setArtifactProvider(artifactProvider);

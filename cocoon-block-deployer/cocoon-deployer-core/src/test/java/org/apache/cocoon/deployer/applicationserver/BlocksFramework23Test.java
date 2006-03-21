@@ -39,7 +39,7 @@ public class BlocksFramework23Test extends AbstractDeployerTestCase {
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deploy(Block[])'
 	 */
 	public void testDeploy() throws Exception {
-		BlocksFramework23 cocoonServer = new BlocksFramework23();
+		BlocksFrameworkServer23 cocoonServer = new BlocksFrameworkServer23();
 		URI baseUri = new File(deployPath).toURI();
 		cocoonServer.setBaseDirectory(baseUri);
 		cocoonServer.setArtifactProvider(getArtifactProviderInstance());	
@@ -60,7 +60,7 @@ public class BlocksFramework23Test extends AbstractDeployerTestCase {
 	}
 	
 	public void testDeployWithConnections() throws Exception {
-		BlocksFramework23 cocoonServer = new BlocksFramework23();
+		BlocksFrameworkServer23 cocoonServer = new BlocksFrameworkServer23();
 		URI baseUri = new File(deployPath).toURI();
 		cocoonServer.setBaseDirectory(baseUri);
 		cocoonServer.setArtifactProvider(getArtifactProviderInstance());	
@@ -104,7 +104,7 @@ public class BlocksFramework23Test extends AbstractDeployerTestCase {
 	 * Test method for 'org.apache.cocoon.deployer.applicationserver.CocoonServer22.deployCocoonServer(OutputStream)'
 	 */
 	public void testDeployCocoonServerTransactionalMode() throws Exception {
-		BlocksFramework23 cocoonServer = new BlocksFramework23();
+		BlocksFrameworkServer23 cocoonServer = new BlocksFrameworkServer23();
 		
 		// set the basedirectory (JUnit test output dir)
 		File outputdir = this.createOutputDir("deployServer22");

@@ -62,6 +62,8 @@ public class SingleFileDeployer implements FileDeployer {
 	}
 	
 	public OutputStream writeResource(String documentName) throws IOException {
+		this.logger.info("Deploying " + getOutputDir() + "/" + documentName);
+		
 		File outDir = new File(this.getBasedir(), getOutputDir());
 		if(!outDir.exists()) {
 			outDir.mkdirs();
