@@ -32,17 +32,18 @@ import org.apache.cocoon.deployer.monolithic.FileDeployer;
 import org.apache.cocoon.deployer.util.WildcardHelper;
 import org.apache.commons.lang.Validate;
 
-public class MonolithicServer {
+public class MonolithicServer23 {
 
 	private Logger logger;
 	private File basedir;
 	private List rules = new ArrayList();
 	
-	public MonolithicServer(File basedir, Logger logger) {
+	public MonolithicServer23(File basedir, Logger logger) {
 		Validate.notNull(basedir, "The basedir of the server mustn't be null.");
 		Validate.notNull(logger, "A logger must be set.");
 		this.basedir = basedir;
 		this.logger = logger;
+		this.logger.verbose("Basedir: " + basedir.getAbsolutePath());
 	}
 
 	public void addRule(String pattern, FileDeployer fileDeployer) {
@@ -64,13 +65,13 @@ public class MonolithicServer {
                         continue;
                     }
                     OutputStream out = null;
-	                    try {
+	                    try {               	
 	                    	FileDeployer fileDeployer = findFileDeployer(document.getName());
 	                    	if(fileDeployer == null) {
 	                    		continue;
 	                    	}
-	                    	out = fileDeployer.writeResource(document.getName());
 	                    	
+	                    	out = fileDeployer.writeResource(document.getName());
 		                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		                    // loop over ZIP entry stream
 		                    byte[] buffer = new byte[8192];
