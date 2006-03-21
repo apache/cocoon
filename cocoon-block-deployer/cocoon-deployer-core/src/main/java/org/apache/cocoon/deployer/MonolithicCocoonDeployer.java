@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.deployer.applicationserver.MonolithicServer;
+import org.apache.cocoon.deployer.applicationserver.MonolithicServer23;
 import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.monolithic.SingleFileDeployer;
 
@@ -31,17 +31,15 @@ public class MonolithicCocoonDeployer {
 
 	public static void deploy(Map libraries, File basedir, Logger logger) {
 		
-        MonolithicServer zipExtractor = new MonolithicServer(basedir, logger);
-        zipExtractor.addRule("**legacy/*.xconf",  new SingleFileDeployer("WEB-INF/xconf"));
-        zipExtractor.addRule("**legacy/*.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
-        
-        for(Iterator it = libraries.entrySet().iterator(); it.hasNext();) {
-        	File lib = (File) it.next();
+        MonolithicServer23 zipExtractor = new MonolithicServer23(basedir, logger);
+        zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
+        zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
+
+        for(Iterator it = libraries.keySet().iterator(); it.hasNext();) {
+        	File lib = (File) libraries.get(it.next());  	
         	try {
         		// extract all configurations files
 				zipExtractor.extract(lib);
-				// copy lib itself to WEB-INF/lib
-				// tbd
 			} catch (IOException e) {
 				throw new DeploymentException("Can't deploy '" + lib.getAbsolutePath() + "'.", e);
 			}

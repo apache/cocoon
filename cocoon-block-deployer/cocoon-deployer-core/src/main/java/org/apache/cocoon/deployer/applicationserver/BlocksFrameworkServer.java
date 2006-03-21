@@ -26,7 +26,7 @@ import org.apache.cocoon.deployer.block.Block;
 import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.resolver.VariableResolver;
 
-public interface BlocksFramework {
+public interface BlocksFrameworkServer {
 
 	public boolean deploy(Block[] blocks, String serverArtifact, File[] libraries, Logger log, boolean transactional);
 	
