@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.deployer.applicationserver.BlocksFramework;
+import org.apache.cocoon.deployer.applicationserver.BlocksFrameworkServer;
 import org.apache.cocoon.deployer.applicationserver.ApplicationServerFactory;
 import org.apache.cocoon.deployer.block.Block;
 import org.apache.cocoon.deployer.block.BlockFactory;
@@ -101,7 +101,7 @@ public class BlockDeployer {
 				this.getAllBlockUrns(blockList, cocoonBlockFwWebappUrn));
 		
 		// deploy the blocks
-		BlocksFramework cocoonServer = ApplicationServerFactory.createServer(
+		BlocksFrameworkServer cocoonServer = ApplicationServerFactory.createServer(
 				deploymentDescriptor.getCocoon(), this.variableResolver, this.artifactProvider, exclusive);
 		
 		Collections.reverse(blockList);

@@ -23,17 +23,18 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @goal deploy
  * @requiresProject true
  * @phase package
+ * @requiresDependencyResolution runtime
  * @description Create a Cocoon web application.
  */
 public class DeployExplodedMojo extends AbstractDeployMojo {
-
+	
     /** 
-     * /@parameter expression="2.4"	
+     * @parameter expression="${targetVersion}" default-value="3.0"	
      */
-	private String version;
+	private String serverVersion;
 	
 	public void execute() throws MojoExecutionException {
-		if(this.version.equals("2.3")) {
+		if(this.serverVersion.equals("2.3")) {
 			this.deployMonolithicCocoonApp();
 		} else {
 			this.deployBlocks();
