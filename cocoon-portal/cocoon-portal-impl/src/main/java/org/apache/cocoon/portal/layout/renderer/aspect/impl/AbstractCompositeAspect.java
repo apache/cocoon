@@ -47,9 +47,9 @@ public abstract class AbstractCompositeAspect
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext context,
-                		Layout layout,
-                		PortalService service,
-                		ContentHandler handler)
+                	  Layout                layout,
+                	  PortalService         service,
+                	  ContentHandler        handler)
 	throws SAXException {
         if ( layout instanceof CompositeLayout) {
             CompositeLayout compositeLayout = (CompositeLayout)layout;
@@ -60,16 +60,16 @@ public abstract class AbstractCompositeAspect
 	            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
 	                Item item = (Item) iter.next();
 	                if ( item.equals(maximizedInfo.item) ) {
-	                    this.processMaximizedItem(item, maximizedInfo.layout, handler, service);
+	                    this.processMaximizedItem(context, item, maximizedInfo.layout, handler, service);
 	                } else if ( item.getLayout().isStatic().booleanValue() ) {
-	                    this.processItem(item, handler, service);	                	
+	                    this.processItem(context, item, handler, service);	                	
 	                }
 	            }            	
             } else {
 	        	// loop over all rows
 	            for (Iterator iter = compositeLayout.getItems().iterator(); iter.hasNext();) {
 	                Item item = (Item) iter.next();
-	                this.processItem(item, handler, service);
+	                this.processItem(context, item, handler, service);
 	            }
             }
         } else {
@@ -85,8 +85,11 @@ public abstract class AbstractCompositeAspect
      * @param service portal service providing component access
      * @throws SAXException
      */
-    protected abstract void processItem(Item item, ContentHandler handler, PortalService service)
-    throws SAXException;
+    protected abstract void processItem(RendererAspectContext context,
+                                        Item                  item,
+                                        ContentHandler        handler,
+                                        PortalService         service)
+        throws SAXException;
 
     /**
      * Process an item containing a maximized layout.
@@ -97,7 +100,7 @@ public abstract class AbstractCompositeAspect
      * @param service portal service providing component access
      * @throws SAXException
      */
-    protected abstract void processMaximizedItem(Item item, Layout maximizedLayout, ContentHandler handler, PortalService service)
+    protected abstract void processMaximizedItem(RendererAspectContext context, Item item, Layout maximizedLayout, ContentHandler handler, PortalService service)
     throws SAXException;
 
     /**
