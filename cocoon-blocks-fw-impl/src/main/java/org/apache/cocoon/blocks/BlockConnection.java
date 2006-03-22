@@ -75,7 +75,7 @@ public final class BlockConnection
 
         URI blockURI = null;
         try {
-            blockURI = parseBlockURI(url.toURI());
+            blockURI = parseBlockURI(new URI(url.toString()));
         } catch (URISyntaxException e) {
             throw new MalformedURLException("Malformed URI in block source " +
                                             e.getMessage());
