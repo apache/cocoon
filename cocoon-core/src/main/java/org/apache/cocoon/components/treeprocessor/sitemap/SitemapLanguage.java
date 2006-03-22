@@ -644,9 +644,9 @@ public class SitemapLanguage
         // first, get the correct parent
         ConfigurableListableBeanFactory parentFactory = this.beanFactory;
         final Request request = ContextHelper.getRequest(context);
-        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null) {
+        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE) != null) {
             parentFactory = (ConfigurableListableBeanFactory) request
-                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
+                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         }
 
         if ( config != null ) {
@@ -658,7 +658,7 @@ public class SitemapLanguage
             ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
-            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, this.processor.getSourceResolver());
     
             return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
         }

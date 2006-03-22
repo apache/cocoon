@@ -32,6 +32,7 @@ import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 
 /**
@@ -47,7 +48,7 @@ public class ConfigReader extends AbstractLogEnabled {
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
     /** Source resolver for reading configuration files. */
-    protected final SimpleSourceResolver resolver;
+    protected final SourceResolver resolver;
 
     /** The configuration info. */
     protected final ConfigurationInfo configInfo;
@@ -57,26 +58,32 @@ public class ConfigReader extends AbstractLogEnabled {
 
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(env, null);
+        final ConfigReader converter = new ConfigReader(env, null, null);
         converter.convert(source);
         return converter.configInfo;
     }
 
-    public static ConfigurationInfo readConfiguration(Configuration config,
+    public static ConfigurationInfo readConfiguration(Configuration     config,
                                                       ConfigurationInfo parentInfo,
-                                                      AvalonEnvironment env)
+                                                      AvalonEnvironment env,
+                                                      SourceResolver    resolver)
     throws Exception {
-        final ConfigReader converter = new ConfigReader(env, parentInfo);
+        final ConfigReader converter = new ConfigReader(env, parentInfo, resolver);
         converter.convert(config, null);
         return converter.configInfo;        
     }
 
-    private ConfigReader(AvalonEnvironment env, ConfigurationInfo parentInfo)
+    private ConfigReader(AvalonEnvironment env,
+                         ConfigurationInfo parentInfo,
+                         SourceResolver    resolver)
     throws Exception {
-        this.resolver = new SimpleSourceResolver();
-        this.resolver.enableLogging(env.logger);
-        this.resolver.contextualize(env.context);
-
+        if ( resolver != null ) {
+            this.resolver = resolver;
+        } else {
+            this.resolver = new SimpleSourceResolver();
+            ((SimpleSourceResolver)this.resolver).enableLogging(env.logger);
+            ((SimpleSourceResolver)this.resolver).contextualize(env.context);
+        }
         this.enableLogging(env.logger);
         this.environment = env;
 
