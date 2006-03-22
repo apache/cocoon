@@ -109,29 +109,26 @@ public class DefaultContentAggregator extends ContentHandlerWrapper
         this.contentHandler.startDocument();
         startElem(this.rootElement);
 
-        try {
-            for (int i = 0; i < this.parts.size(); i++) {
-                final Part part = (Part) this.parts.get(i);
-                this.rootElementIndex = part.stripRootElement ? -1 : 0;
-                if (part.element != null) {
-                    this.currentElement = part.element;
-                    startElem(part.element);
-                } else {
-                    this.currentElement = this.rootElement;
-                }
-
-                try {
-                    SourceUtil.parse(this.manager, part.source, this);
-                } finally {
-                    if (part.element != null) {
-                        endElem(part.element);
-                    }
-                }
+        for (int i = 0; i < this.parts.size(); i++) {
+            final Part part = (Part) this.parts.get(i);
+            this.rootElementIndex = part.stripRootElement ? -1 : 0;
+            if (part.element != null) {
+                this.currentElement = part.element;
+                startElem(part.element);
+            } else {
+                this.currentElement = this.rootElement;
             }
-        } finally {
-            endElem(this.rootElement);
-            this.contentHandler.endDocument();
+
+            SourceUtil.parse(this.manager, part.source, this);
+            
+            if (part.element != null) {
+                endElem(part.element);
+            }
         }
+
+        endElem(this.rootElement);
+        this.contentHandler.endDocument();
+            
         getLogger().debug("Finished aggregating content");
     }
 
