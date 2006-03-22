@@ -28,7 +28,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
@@ -154,9 +153,8 @@ public class BeanFactoryUtil {
     protected static Logger initLogger(ServletContext servletContext,
                                        Settings       settings)
     throws Exception {
-        return new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG);
         // create a bootstrap logger
-     /*   int logLevel;
+        int logLevel;
         final String logLevelString = settings.getBootstrapLogLevel();
         if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
             logLevel = ServletLogger.LEVEL_DEBUG;
@@ -209,7 +207,7 @@ public class BeanFactoryUtil {
         if (accesslogger == null) {
             accesslogger = "cocoon";
         }
-        return loggerManager.getLoggerForCategory(accesslogger);*/
+        return loggerManager.getLoggerForCategory(accesslogger);
     }
 
     protected static void changeLogLevel(Configuration[] configs, String level) {
@@ -288,7 +286,7 @@ public class BeanFactoryUtil {
             ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
-            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae);
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, null);
     
             return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
         }
