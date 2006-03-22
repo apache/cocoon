@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.portal.coplet.CopletData;
@@ -149,6 +150,9 @@ public abstract class AbstractCopletAdapter
             } catch (Exception exception ) {
                 error = exception;
                 this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
+            } catch (Throwable t ) {
+                error = new ProcessingException("Unable to get content of coplet: " + coplet.getId(), t);
+                this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), t);                
             }
 
             if ( read ) {
