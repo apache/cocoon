@@ -20,12 +20,12 @@
 <beans>
 
 	<bean id="spring-test" 
-	      class="org.apache.cocoon.spring.samples.SpringTest"
+	      class="org.apache.cocoon.core.container.spring.TestBean"
 	      abstract="false"
 	      singleton="true"
 	      lazy-init="default">
-      <property name="core"><ref bean="org.apache.cocoon.core.Core"/></property>
-	    <property name="javaVersion" value="${java.specification.version}"/>
+      <property name="settings"><ref bean="org.apache.cocoon.core.Settings"/></property>
+	  <property name="javaVersion" value="${java.specification.version}"/>
 	</bean>
 
 </beans>

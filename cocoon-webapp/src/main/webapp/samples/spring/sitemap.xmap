@@ -18,7 +18,10 @@
 <!-- @version $Id$ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
+  <map:components>
+    <!-- Include spring config -->
+	<map:include-beans src="conf/applicationContext.xml"/>
+  </map:components>
   <map:flow language="javascript">
     <map:script src="flow.js"/>
   </map:flow>

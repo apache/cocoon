@@ -20,11 +20,11 @@
 function test() {
 
     var component = cocoon.getComponent("spring-test");
-    var core = cocoon.getComponent("org.apache.cocoon.core.Core");
+    var settings = cocoon.getComponent("org.apache.cocoon.core.Settings");
     
     cocoon.sendPage("test", { "message" : component.getMessage(),
-                              "configuration" : core.getSettings().getConfiguration(),
-                              "coreinjection" : component.getCore().getSettings().getWorkDirectory(),
+                              "configuration" : settings.getConfiguration(),
+                              "coreinjection" : component.getSettings().getWorkDirectory(),
                               "javaVersion" : component.getJavaVersion()
                              }
                     );
