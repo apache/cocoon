@@ -76,6 +76,10 @@
           </fd:patterns>
         </fd:convertor>
       </fd:datatype>
+      <fd:validation>
+          <fd:java class="org.apache.cocoon.forms.samples.CustomBirthDateValidator"/>
+      </fd:validation>
+          
     </fd:field>
   
     <fd:field id="number" required="true">
