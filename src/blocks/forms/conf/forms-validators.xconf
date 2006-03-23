@@ -32,6 +32,7 @@
     <validator name="mod10" class="org.apache.cocoon.forms.validation.impl.Mod10ValidatorBuilder"/>
     <validator name="regexp" class="org.apache.cocoon.forms.validation.impl.RegExpValidatorBuilder"/>
     <validator name="captcha" class="org.apache.cocoon.forms.validation.impl.CaptchaValidatorBuilder"/>
+    <validator name="java" class="org.apache.cocoon.forms.validation.impl.JavaClassValidatorBuilder"/>
   </forms-validators>
 
 </xconf>

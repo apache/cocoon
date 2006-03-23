@@ -180,6 +180,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="BRD" type="add" fixes-bug="COCOON-1806" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
+      CForms: added an fd:java validator to make it easy to implement custom
+      WidgetValidator's in Java (for use in the form definition).
+    </action>
     <action dev="AG" type="update">
       Updated commons-io to 1.2.
     </action>
