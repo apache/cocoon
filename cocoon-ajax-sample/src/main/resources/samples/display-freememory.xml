@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <span>
   ${java.lang.Runtime.getRuntime().freeMemory()} bytes
 </span>
