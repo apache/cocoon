@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <div class="insert">
 	<p>This was inserted on ${java.util.Date()}</p>
 </div>
