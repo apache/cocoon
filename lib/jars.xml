@@ -341,7 +341,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/groovy-1.0-jsr-04.jar</lib>
+    <lib>optional/groovy-1.0-jsr-05.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
@@ -354,7 +354,7 @@
 	  before they are loaded into the Java Virtual Machine.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/asm-2.1.jar</lib>
+    <lib>optional/asm-2.2.1.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
@@ -365,7 +365,7 @@
       class visitors that can be useful for programming and debugging purposes.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/asm-util-2.1.jar</lib>
+    <lib>optional/asm-util-2.2.1.jar</lib>
     <homepage>http://asm.objectweb.org/</homepage>
   </file>
 
@@ -596,7 +596,7 @@
     <description>Servlet API Version 2.2</description>
     <used-by>Cocoon</used-by>
     <lib>core/servlet_2_2.jar</lib>
-    <homepage>http://jakarta.apache.org/tomcat/</homepage>
+    <homepage>http://tomcat.apache.org/</homepage>
   </file>
 
   <file>
@@ -1189,7 +1189,7 @@
     </description>
     <used-by>Faces block</used-by>
     <lib>optional/jsp-api-2.0.jar</lib>
-    <homepage>http://jakarta.apache.org/tomcat/</homepage>
+    <homepage>http://tomcat.apache.org/</homepage>
   </file>
 
   <file>
@@ -1199,7 +1199,7 @@
     </description>
     <used-by>JCR block</used-by>
     <lib>optional/jackrabbit-commons-1.0-dev-r292737.jar</lib>
-    <homepage>http://incubator.apache.org/jackrabbit/</homepage>
+    <homepage>http://jackrabbit.apache.org/</homepage>
   </file>
 
   <file>
@@ -1209,7 +1209,7 @@
     </description>
     <used-by>JCR block</used-by>
     <lib>optional/jackrabbit-1.0-dev-r292737.jar</lib>
-    <homepage>http://incubator.apache.org/jackrabbit/</homepage>
+    <homepage>http://jackrabbit.apache.org/</homepage>
   </file>
 
   <file>
