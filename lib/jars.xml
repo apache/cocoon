@@ -966,7 +966,7 @@
       translators from grammatical descriptions containing Java, C#, or C++ actions
     </description>
     <used-by>OJB</used-by>
-    <lib>optional/antlr-2.7.5.jar</lib>
+    <lib>optional/antlr-2.7.6.jar</lib>
     <homepage>http://www.antlr.org/</homepage>
   </file>
 
