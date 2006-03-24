@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="update">
+      Updated asm to 2.2.1, asm-util to 2.2.1 and groovy to 1.0-jsr-05.
+    </action>
     <action dev="BRD" type="add" fixes-bug="COCOON-1806" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
       CForms: added an fd:java validator to make it easy to implement custom
       WidgetValidator's in Java (for use in the form definition).
