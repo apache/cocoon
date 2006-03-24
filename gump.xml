@@ -74,6 +74,7 @@
 
     <depend project="commons-cli"/>
     <depend project="commons-httpclient"/>
+    <depend project="commons-io"/>
     <depend project="commons-collections"/>
     <depend project="commons-jexl"/>
     <depend project="commons-jxpath"/>
@@ -861,13 +862,13 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-asciiart"/>
+    <depend project="geronimo-spec-activation"/>
+    <depend project="geronimo-spec-javamail"/>
     <depend project="javamail"/>
     <depend project="jaf"/>
 
     <library name="geronimo-spec-activation"/>
     <library name="geronimo-spec-javamail"/>
-    <library name="javamail"/>
-    <library name="jaf"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1564,8 +1565,8 @@
     </ant>
 
     <depend project="cocoon" inherit="all"/>
+    <depend project="jcr"/>
 
-    <library name="jcr"/>
     <library name="jackrabbit"/>
     <library name="lucene"/>
 
