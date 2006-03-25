@@ -24,10 +24,11 @@ According to http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=114329748805779&w=
 0. checkout complete trunk and
   $ mvn clean install -Dmaven.test.skip=true
 
-  Call this as long as you get "BUILD SUCCESSFUL".
+  Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
+  repositories are temporarily unaccessible and cause the build to fail.
 
 1. go to cocoon-webapp
-  $ mvn cocoo:deploy
+  $ mvn cocoon:deploy
   $ mvn jetty6:run
 
 2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
