@@ -32,10 +32,15 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
      * @parameter expression="${targetVersion}" default-value="3.0"	
      */
 	private String serverVersion;
+
+    /** 
+     * @parameter expression="${blocksDirectory}" default-value="apps"	
+     */
+	private String blocksdir;	
 	
 	public void execute() throws MojoExecutionException {
 		if(this.serverVersion.equals("2.3")) {
-			this.deployMonolithicCocoonApp();
+			this.deployMonolithicCocoonApp(blocksdir);
 		} else {
 			this.deployBlocks();
 		}
