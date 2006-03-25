@@ -580,7 +580,7 @@
     <action dev="VG" type="add">
       Moved support for zip: sources from scratchpad into the core.
     </action>
-    <action dev="SW" type="add" due-to="Jean-Chrisophe Kermagoret" due-to-email="jck@bluexml.org">
+    <action dev="SW" type="add" due-to="Jean-Christophe Kermagoret" due-to-email="jck@bluexml.org">
       CForms: Small change to the calendar styling which now shows dropdowns
       to choose the time when the date format includes time also.
     </action>
