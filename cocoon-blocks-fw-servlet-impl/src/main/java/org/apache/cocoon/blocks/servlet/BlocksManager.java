@@ -39,7 +39,6 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.blocks.Block;
 import org.apache.cocoon.blocks.util.ServletConfigurationWrapper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;

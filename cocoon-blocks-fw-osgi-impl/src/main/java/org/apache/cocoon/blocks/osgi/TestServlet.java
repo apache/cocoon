@@ -16,6 +16,7 @@
 package org.apache.cocoon.blocks.osgi;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,11 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 public class TestServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("TestServlet:");
-        
         response.setContentType("text/plain");
         String attr = this.getInitParameter("attr");
-        response.getWriter().println("Test! " + attr);
+        PrintWriter writer = response.getWriter();
+        writer.println("Test! " + attr);
+        writer.close();
     }
 
 }
