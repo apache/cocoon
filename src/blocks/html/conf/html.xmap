@@ -31,8 +31,8 @@
                    logger="sitemap.generator.html"
                    src="org.apache.cocoon.generation.NekoHTMLGenerator"
                    label="content">
-      <!-- Tidy configuration file.
-      <neko-config>???</neko-config>
+      <!-- NekoHTML configuration file.
+      <neko-config>context://WEB-INF/neko.properties</neko-config>
       -->
     </map:generator>
 </xmap>
