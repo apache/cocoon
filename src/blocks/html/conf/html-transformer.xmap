@@ -22,8 +22,19 @@
     <map:transformer
       name="html"
       logger="sitemap.transformer.html"
-      src="org.apache.cocoon.transformation.HTMLTransformer"
-    />
+      src="org.apache.cocoon.transformation.HTMLTransformer">
+      <!-- Tidy configuration file.
+      <jtidy-config>context://WEB-INF/tidy.properties</jtidy-config>
+      -->
+    </map:transformer>
+    <map:transformer
+      name="nekohtml"
+      logger="sitemap.transformer.html"
+      src="org.apache.cocoon.transformation.NekoHTMLTransformer">
+      <!-- NekoHTML configuration file.
+      <neko-config>context://WEB-INF/neko.properties</neko-config>
+      -->
+    </map:transformer>
 
     <map:transformer
         name="htmlcleanup"

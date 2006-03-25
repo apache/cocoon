@@ -316,7 +316,11 @@ implements Configurable, CacheableProcessingComponent, Disposable {
             if (properties != null) {
                 for (Iterator i = properties.keySet().iterator();i.hasNext();) {
                     String name = (String) i.next();
-                    config.setProperty(name, properties.getProperty(name));
+                    if (name.indexOf("/features/") > -1) {
+                        config.setFeature(name, Boolean.getBoolean(properties.getProperty(name)));
+                    } else if (name.indexOf("/properties/") > -1) {
+                        config.setProperty(name, properties.getProperty(name));
+                    }
                 }
             }
             return config;

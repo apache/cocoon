@@ -26,13 +26,15 @@
 
   <group name="HTMLGenerator">
     <sample name="Cocoon News Website" href="apache">
-      Shows how to get remote resource and convert it to valid XHTML using HTMLGenerator.
+      Shows how to get remote resource and convert it to valid XHTML using HTMLGenerator.  Tidy produces content in the
+      XHTML namespace.
     </sample>
   </group>
   
   <group name="NekoHTMLGenerator">
     <sample name="Cocoon News Website" href="apache-neko">
-      Shows how to get remote resource and convert it to valid XML using NekoHTMLGenerator.
+      Shows how to get remote resource and convert it to valid XML using NekoHTMLGenerator.  Neko produces content
+      without namespace.
     </sample>
   </group>
 
@@ -42,6 +44,17 @@
       as strings inside elements (as often found in RSS feeds)
     </sample>
     <sample name="Parsed output" href="HTMLTransformer/parsed.xml">
+      HTMLTransformer applied to input.xml: escaped
+      HTML markup is converted to XHTML
+    </sample>
+  </group>
+
+  <group name="NekoHTMLTransformer">
+    <sample name="XML input" href="NekoHTMLTransformer/input.xml">
+      XML document containing escaped HTML, blocks of HTML code written
+      as strings inside elements (as often found in RSS feeds)
+    </sample>
+    <sample name="Parsed output" href="NekoHTMLTransformer/parsed.xml">
       HTMLTransformer applied to input.xml: escaped
       HTML markup is converted to XHTML
     </sample>

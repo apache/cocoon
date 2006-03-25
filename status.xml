@@ -180,6 +180,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="add" fixes-bug="COCOON-1639" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
+      Added the NekoHTMLTransformer.  Updated the NekoHTMLGenerator's setup bits to allow for setting parser features as
+      well as properties, and provided a sample neko.properties configuration file.
+    </action>
     <action dev="AG" type="update">
       Updated asm to 2.2.1, asm-util to 2.2.1 groovy to 1.0-jsr-05 and antlr to 2.7.6.
     </action>
