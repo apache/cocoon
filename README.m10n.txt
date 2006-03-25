@@ -58,12 +58,6 @@ http://maven.apache.org/plugins/maven-eclipse-plugin/
 HOW TO START THE COCOON WEBAPP
 
 1. go to cocoon-webapp
-  $ mvn war:inplace
+  $ mvn cocoo:deploy
   $ mvn jetty6:run
-2. point your browser to http://localhost:8888/cocoon-webapp/
-
-FIXME: The above doesn't work yet. The jetty plugin require the precence of the directory
-target/classes, which isn't added by any of the above goals so it has to be added manually.
-Cocoon fails during startup.
-
-2b. Use ./cocoon.sh instead.
+2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
