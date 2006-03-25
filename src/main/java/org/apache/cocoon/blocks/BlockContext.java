@@ -41,6 +41,8 @@ import org.osgi.service.component.ComponentContext;
  * @version $Id$
  */
 public class BlockContext extends ServletContextWrapper {
+    
+    public static final String SUPER = "super";
 
     private Hashtable attributes;
     private Servlet servlet;
@@ -116,7 +118,7 @@ public class BlockContext extends ServletContextWrapper {
         String value = (String) this.properties.get(name);
         // Ask the super block for the property
         if (value == null) {
-            ServletContext superContext = this.getNamedContext(Block.SUPER);
+            ServletContext superContext = this.getNamedContext(SUPER);
             if (superContext != null)
                 value = superContext.getInitParameter(name);
         }
@@ -310,7 +312,7 @@ public class BlockContext extends ServletContextWrapper {
 
         public NamedDispatcher(String blockName) {
             this.blockName = blockName;
-            this.superCall = Block.SUPER.equals(this.blockName);
+            this.superCall = SUPER.equals(this.blockName);
 
             // Call to a named block that exists in the current context
             this.context = BlockContext.this.getNamedContext(this.blockName);
@@ -318,7 +320,7 @@ public class BlockContext extends ServletContextWrapper {
                 // If there is a super block, the connection might
                 // be defined there instead.
                 BlockContext superContext =
-                    (BlockContext) BlockContext.this.getNamedContext(Block.SUPER);
+                    (BlockContext) BlockContext.this.getNamedContext(SUPER);
                 if (superContext != null) {
                     this.context = superContext.getNamedContext(this.blockName);
                     this.superCall = true;
