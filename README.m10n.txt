@@ -18,21 +18,6 @@ There are also some Daisy documentation pages about this, for more "stable" info
 http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
 http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
 
-HOW TO RUN THE TRUNK
-According to http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=114329748805779&w=2
-
-0. checkout complete trunk and
-  $ mvn clean install -Dmaven.test.skip=true
-
-  Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
-  repositories are temporarily unaccessible and cause the build to fail.
-
-1. go to cocoon-webapp
-  $ mvn cocoon:deploy
-  $ mvn jetty6:run
-
-2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
-
 HOW TO CONVERT AN EXISTING BLOCK TO MAVEN STRUCTURE
 
 1. use archetype plugin to create template block structure in the repo root  
@@ -72,7 +57,14 @@ http://maven.apache.org/plugins/maven-eclipse-plugin/
 
 HOW TO START THE COCOON WEBAPP
 
+0. checkout complete trunk and
+  $ mvn clean install -Dmaven.test.skip=true
+
+  Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
+  repositories are temporarily unaccessible and cause the build to fail.
+
 1. go to cocoon-webapp
-  $ mvn cocoo:deploy
+  $ mvn cocoon:deploy
   $ mvn jetty6:run
+
 2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
