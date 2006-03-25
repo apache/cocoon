@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.blocks.servlet;
 
-import org.apache.cocoon.blocks.Block;
 
 /**
  * @version $Id$

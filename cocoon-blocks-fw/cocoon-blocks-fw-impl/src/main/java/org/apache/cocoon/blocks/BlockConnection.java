@@ -110,9 +110,6 @@ public final class BlockConnection
             this.response.flushBuffer();
             
             byte[] out = os.toByteArray();
-            System.out.print("BlockConnection:" + out.length + "[");
-            System.out.write(out, 0, out.length);
-            System.out.println("]");
             
             return new ByteArrayInputStream(out);
         } catch (ServletException e) {

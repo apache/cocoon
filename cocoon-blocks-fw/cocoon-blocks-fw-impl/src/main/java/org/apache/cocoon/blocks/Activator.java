@@ -37,12 +37,10 @@ public class Activator {
 
     protected void setLog(LogService logService) {
         this.log = logService;
-        System.out.println("Got log");
     }
 
     protected void setHttpService(HttpService httpService) {
         this.httpService = httpService;
-        System.out.println("Got http service");
     }
 
     protected void setServlet(ServiceReference reference)
@@ -66,12 +64,10 @@ public class Activator {
 
     protected void activate(ComponentContext context) {
         this.context = context;
-        System.out.println("Cocoon Start");
         this.log.log(LogService.LOG_DEBUG, "Cocoon start");
     }
 
     protected void deactivate(ComponentContext context) {
-        System.out.println("Cocoon Stop");
         this.log.log(LogService.LOG_DEBUG, "Cocoon stop");
     }
 }
