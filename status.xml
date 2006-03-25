@@ -377,9 +377,9 @@
       Updated log4j to 1.2.13, quartz to 1.5.1.
     </action>
     <action dev="JBQ" type="add">
-      CForms: Added the sendForm() function to Form.js, same as showForm() but
-      without creating a continuation.  Added the sendFormAndWait() function,
-      alias for showForm()
+      CForms: Added the sendForm(uri, viewData) function to Form.js, useful to display a form without the need to create
+      a continuation.  Useful along with the new processForm(viewData) function that updates the form values from the
+      current request.
     </action>
     <action dev="JBQ" type="fix" fixes-bug="COCOON-1720">
        Fix a bug in CForms: Form.js overwriting the CFormsInstance attribute in viewData
