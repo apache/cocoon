@@ -30,9 +30,12 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 		MonolithicServer23 monolithicServer = new MonolithicServer23(new File(SERVER_DIR), new ConsoleLogger());
 		monolithicServer.addRule("**webdav*.xconf", new SingleFileDeployer("WEB-INF/xconf"));
 		monolithicServer.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));
+		monolithicServer.addRule("COB-INF**", new SingleFileDeployer("app/block1", true));  
+        
 		monolithicServer.extract(this.getMockArtefact("validMonolithicBlock-02/valid-block-1.0.jar"));
 		assertTrue(new File("target/test/monolithicServer23/WEB-INF/xconf/my-webdav-server.xconf").exists());
 		assertTrue(new File("target/test/monolithicServer23/WEB-INF/sitemap-additions/sa.xmap").exists());		
+		assertTrue(new File("target/test/monolithicServer23/app/block1/block-sitemap.xmap").exists());		
 	}
 	
 	public void testNotWorkingDeploy() throws Exception {

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.cocoon.deployer.logger.Logger;
+import org.apache.cocoon.deployer.util.FileUtils;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -31,12 +32,18 @@ public class SingleFileDeployer implements FileDeployer {
 	private File basedir;
 	private Logger logger;
 	private String outputDir;
+	private boolean skipRootDirectory;
 	
-	public SingleFileDeployer(String outputDir) {
+	public SingleFileDeployer(final String outputDir, final boolean skipRootDirectory) {
 		Validate.notNull(outputDir, "An outputDir has to be set.");
 		this.outputDir = outputDir;
+		this.skipRootDirectory = skipRootDirectory;
 	}
 
+	public SingleFileDeployer(final String outputDir) {
+		this(outputDir, false);
+	}	
+	
 	public void setBasedir(final File basedir) {
 		this.basedir = basedir;
 	}
@@ -53,7 +60,7 @@ public class SingleFileDeployer implements FileDeployer {
 		return this.logger;
 	}
 	
-	protected String getFileName(String documentName) { 
+	protected String getFileName(final String documentName) { 
 		return documentName.substring(documentName.lastIndexOf('/') + 1);
 	}
 
@@ -61,18 +68,33 @@ public class SingleFileDeployer implements FileDeployer {
 		return this.outputDir;
 	}
 	
-	public OutputStream writeResource(String documentName) throws IOException {
-		this.logger.info("Deploying " + getOutputDir() + "/" + documentName);
-		
+	public OutputStream writeResource(final String documentName) throws IOException {	
 		File outDir = new File(this.getBasedir(), getOutputDir());
 		if(!outDir.exists()) {
 			outDir.mkdirs();
 		}
-		File targetFile = new File(outDir, this.getFileName(documentName));
+		
+		String outputDocumentName = documentName;
+		// if the root directory is has to be skipped, the remaining path will be used
+		if(this.skipRootDirectory) {
+			outputDocumentName = removeRootDirectory(documentName);
+			this.logger.verbose("Changing output document name from '" + documentName + "', to '" + outputDocumentName + "'.");			
+		} 
+		// only take the filename
+		else {
+			outputDocumentName = this.getFileName(documentName);
+		}
+		File targetFile = new File(outDir, outputDocumentName);
 		if(targetFile.exists()) {
 			throw new FileAlreadyDeployedException("File '" + targetFile + "' already exists!");
 		}
-		return new FileOutputStream(targetFile);
+
+		this.logger.info("Deploying to " + getOutputDir() + "/" + outputDocumentName);		
+		return new FileOutputStream(FileUtils.createDirectory(targetFile));
+	}
+	
+	protected String removeRootDirectory(final String documentName) {
+		return documentName.substring(documentName.indexOf('/') + 1);
 	}
 	
 }
