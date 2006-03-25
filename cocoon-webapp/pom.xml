@@ -62,6 +62,8 @@
               <maxIdleTime>30000</maxIdleTime>
             </connector>
           </connectors>
+          <webAppSourceDirectory>./target/cocoon-webapp</webAppSourceDirectory>
+          <contextPath>/</contextPath>
           <systemProperties>
             <systemProperty>
               <name>org.apache.commons.logging.Log</name>
@@ -71,6 +73,7 @@
         </configuration>
       </plugin>
     </plugins>
+    <finalName>cocoon-webapp</finalName>
   </build>
   
   <dependencies>
@@ -79,11 +82,11 @@
       <artifactId>cocoon-core</artifactId>
       <version>2.2.0-SNAPSHOT</version>
     </dependency>
-    <dependency>
+    <!--dependency> cocoon-session-fw-sample doesn't work because of old-style xconf/roles-files
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-session-fw-sample</artifactId>
       <version>1.0-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-deployer-plugin-demo</artifactId>
