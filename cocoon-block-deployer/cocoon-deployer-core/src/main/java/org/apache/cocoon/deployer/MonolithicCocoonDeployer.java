@@ -29,15 +29,17 @@ import org.apache.cocoon.deployer.monolithic.SingleFileDeployer;
  */
 public class MonolithicCocoonDeployer {
 
-	public static void deploy(Map libraries, File basedir, Logger logger) {
-		
-        MonolithicServer23 zipExtractor = new MonolithicServer23(basedir, logger);
-        zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
-        zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
+	public static void deploy(final Map libraries, final File basedir, final String blocksdir, final Logger logger) {
 
         for(Iterator it = libraries.keySet().iterator(); it.hasNext();) {
-        	File lib = (File) libraries.get(it.next());  	
+        	Object id = it.next();
+        	File lib = (File) libraries.get(id);  	
         	try {
+        		
+        		MonolithicServer23 zipExtractor = new MonolithicServer23(basedir, logger);
+                zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
+                zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
+                zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);
 			} catch (IOException e) {

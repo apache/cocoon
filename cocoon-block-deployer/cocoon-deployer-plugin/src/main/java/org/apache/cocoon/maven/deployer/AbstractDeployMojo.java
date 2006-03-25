@@ -198,7 +198,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
 	 * Deploy a monolithic Cocoon web application. This means it doesn't use
 	 * the features that the blocks-fw offers.
 	 */
-	protected void deployMonolithicCocoonApp()  throws MojoExecutionException {
+	protected void deployMonolithicCocoonApp(final String blocksdir)  throws MojoExecutionException {
     	File webappDirectory_ = getWebappDirectory();
     	
     	// build the web application
@@ -208,11 +208,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         Map files = new HashMap();
         for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
         	Artifact artifact = (Artifact) it.next();
-        	String id = artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getVersion();
+        	String id = artifact.getArtifactId();
+        	if(files.containsKey(id)) {
+        		throw new MojoExecutionException("There are at least two artifacts with the ID '" + id + "'.");
+        	}
         	files.put(id, artifact.getFile());
         }
 
-        MonolithicCocoonDeployer.deploy(files, webappDirectory_, new MavenLoggingWrapper(this.getLog()));
+        MonolithicCocoonDeployer.deploy(files, webappDirectory_, blocksdir, new MavenLoggingWrapper(this.getLog()));
 	}   
     
     
