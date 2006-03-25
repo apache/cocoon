@@ -275,7 +275,6 @@ public class BlockContext extends ServletContextWrapper {
     public ServletContext getNamedContext(String name) {
         BlockServlet blockServlet =
             (BlockServlet) this.componentContext.locateService(name);
-        System.out.println("OSGIBlockContext: " + name + "=" + blockServlet);
         return blockServlet.getBlockContext();
     }
         
