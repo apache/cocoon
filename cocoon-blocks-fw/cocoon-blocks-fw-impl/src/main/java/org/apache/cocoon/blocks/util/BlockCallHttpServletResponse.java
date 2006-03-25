@@ -29,13 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Creates a HttpServletResponse object that is usable for internal block calls.
  * 
- * @version $Id:$
+ * @version $Id$
  */
 public class BlockCallHttpServletResponse implements HttpServletResponse {
 
     private OutputStream outputStream;
     private ServletOutputStream servletStream;
-    private OutputStreamWriter writer;
+    private PrintWriter writer;
     private boolean committed;
     private Locale locale;
 
@@ -50,21 +50,21 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#addDateHeader(java.lang.String, long)
+     * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
      */
     public void addDateHeader(String name, long date) {
         // Ignore
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#addHeader(java.lang.String, java.lang.String)
+     * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
      */
     public void addHeader(String name, String value) {
         // Ignore
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#addIntHeader(java.lang.String, int)
+     * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
      */
     public void addIntHeader(String name, int value) {
         // Ignore
@@ -109,13 +109,13 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
         return null;
     }
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#flushBuffer()
+     * @see javax.servlet.ServletResponse#flushBuffer()
      */
     public void flushBuffer() throws IOException {
         this.committed = true;
     }
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#getBufferSize()
+     * @see javax.servlet.ServletResponse#getBufferSize()
      */
     public int getBufferSize() {
         return 0;
@@ -136,49 +136,58 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#getOutputStream()
+     * @see javax.servlet.ServletResponse#getOutputStream()
      */
     public ServletOutputStream getOutputStream() throws IOException {
         if (this.writer != null)
             throw new IllegalStateException( "Tried to create output stream; writer already exists" );
 
-        return new ServletOutputStream() {
+        if (this.servletStream == null) {
+            this.servletStream = new ServletOutputStream() {
 
-            /* (non-Javadoc)
-             * @see java.io.OutputStream#write(int)
-             */
-            public void write(int b) throws IOException {
-                BlockCallHttpServletResponse.this.outputStream.write(b);
-            }
-        };
+                /* (non-Javadoc)
+                 * @see java.io.OutputStream#write(int)
+                 */
+                public void write(int b) throws IOException {
+                    BlockCallHttpServletResponse.this.outputStream.write(b);
+                }
+            };
+        }
+ 
+        return this.servletStream;
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#getWriter()
+     * @see javax.servlet.ServletResponse#getWriter()
      */
     public PrintWriter getWriter() throws IOException {
         if (this.servletStream != null)
             throw new IllegalStateException( "Tried to create writer; output stream already exists" );
 
-        return new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
+        if (this.writer == null) {
+            this.writer =
+                new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
+        }
+
+        return this.writer;
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#isCommitted()
+     * @see javax.servlet.ServletResponse#isCommitted()
      */
     public boolean isCommitted() {
         return this.committed;
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#reset()
+     * @see javax.servlet.ServletResponse#reset()
      */
     public void reset() {
         this.resetBuffer();
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#resetBuffer()
+     * @see javax.servlet.ServletResponse#resetBuffer()
      */
     public void resetBuffer() {
         if (this.committed)
@@ -213,14 +222,14 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#setBufferSize(int)
+     * @see javax.servlet.ServletResponse#setBufferSize(int)
      */
     public void setBufferSize(int size) {
         // TODO Implement buffering, for the moment ignore.
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#setContentLength(int)
+     * @see javax.servlet.ServletResponse#setContentLength(int)
      */
     public void setContentLength(int len) {
         // Ignore
@@ -234,21 +243,21 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     }
     
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#setDateHeader(java.lang.String, long)
+     * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
      */
     public void setDateHeader(String name, long date) {
         // Ignore
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#setHeader(java.lang.String, java.lang.String)
+     * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
      */
     public void setHeader(String name, String value) {
         // Ignore
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#setIntHeader(java.lang.String, int)
+     * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
      */
     public void setIntHeader(String name, int value) {
         // Ignore
@@ -265,14 +274,14 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
         this.outputStream = outputStream;        }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#setStatus(int)
+     * @see javax.servlet.http.HttpServletResponse#setStatus(int)
      */
     public void setStatus(int sc) {
         // Ignore
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpServletResponseWrapper#setStatus(int, java.lang.String)
+     * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
      */
     public void setStatus(int sc, String sm) {
         // Ignore

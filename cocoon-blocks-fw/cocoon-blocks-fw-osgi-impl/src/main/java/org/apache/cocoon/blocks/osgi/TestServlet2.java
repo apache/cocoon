@@ -18,6 +18,7 @@ package org.apache.cocoon.blocks.osgi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -35,16 +36,14 @@ public class TestServlet2 extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo();
         
-        System.out.println("TestServlet2: " + path);
         if ("/test1".equals(path)) {
             response.setContentType("text/plain");
             String attr = this.getInitParameter("attr");
-            response.getWriter().println("Test! " + attr);
-            response.getWriter().flush();
+            PrintWriter writer = response.getWriter();
+            writer.println("Test! " + attr);
+            writer.close();
         } else if ("/test2".equals(path)) {
-            System.out.println("TestServlet2: context=" + this.getServletContext());
             RequestDispatcher block1 = this.getServletContext().getNamedDispatcher("block1");
-            System.out.println("TestServlet2: dispatcher=" + block1);
             block1.forward(request, response);
         } else if ("/test3".equals(path)) {
             URL url = new URL("block:/test1");
@@ -55,6 +54,8 @@ public class TestServlet2 extends HttpServlet {
             OutputStream os = response.getOutputStream();
             
             copy(is, os);
+            is.close();
+            os.close();
         } else if ("/test4".equals(path)) {
             URL url = new URL("block:block1:/any");
             URLConnection conn = url.openConnection();
@@ -64,6 +65,8 @@ public class TestServlet2 extends HttpServlet {
             OutputStream os = response.getOutputStream();
             
             copy(is, os);
+            is.close();
+            os.close();
         } else {
             throw new ServletException("Unknown path " + path);
         }
@@ -72,13 +75,7 @@ public class TestServlet2 extends HttpServlet {
     private static void copy(InputStream is, OutputStream os) throws IOException {
         int bytesRead = 0;
         byte buffer[] = new byte[512];
-        System.out.print('[');
-        while ((bytesRead = is.read(buffer)) != -1) {
-            System.out.write(buffer, 0, bytesRead);
+        while ((bytesRead = is.read(buffer)) != -1)
             os.write(buffer, 0, bytesRead);
-        }
-        System.out.println(']');
-
-        is.close();
     }
 }
