@@ -15,6 +15,10 @@
  */
 package org.apache.cocoon.blocks;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
@@ -30,9 +34,8 @@ import org.osgi.service.log.LogService;
 public class Activator {
 
     private LogService log;
-
     private HttpService httpService;
-
+    private HashMap servlets = new HashMap();
     private ComponentContext context;
 
     protected void setLog(LogService logService) {
@@ -47,27 +50,45 @@ public class Activator {
             throws ServletException, NamespaceException {
         String path = (String) reference.getProperty("path");
         if (path != null) {
-            Servlet servlet =
-                (Servlet) this.context.locateService("Servlet", reference);
-            this.httpService.registerServlet(path, servlet, null, null);
-            this.log.log(LogService.LOG_DEBUG, "Register Servlet at " + path);
+            this.servlets.put(path, reference);
+            // If there are servlets that allready are registred when this class
+            // is activated, this method will be called before the activate method.
+            if (this.context != null)
+                this.registerServlet(path, reference);
         }
     }
 
     protected void unsetServlet(ServiceReference reference) {
         String path = (String) reference.getProperty("path");
         if (path != null) {
-            this.httpService.unregister(path);
-            this.log.log(LogService.LOG_DEBUG, "Unregister Servlet at " + path);
+            this.servlets.remove(path);
+            this.unregisterServlet(path);
         }
     }
 
-    protected void activate(ComponentContext context) {
+    protected void activate(ComponentContext context)
+        throws ServletException, NamespaceException {
         this.context = context;
         this.log.log(LogService.LOG_DEBUG, "Cocoon start");
+        Iterator entries = this.servlets.entrySet().iterator();
+        while (entries.hasNext()) {
+            Entry e = (Entry) entries.next();
+            this.registerServlet((String) e.getKey(), (ServiceReference) e.getValue());
+        }
     }
 
     protected void deactivate(ComponentContext context) {
-        this.log.log(LogService.LOG_DEBUG, "Cocoon stop");
+    }
+    
+    private void registerServlet(String path, ServiceReference reference)
+        throws ServletException, NamespaceException {
+        Servlet servlet = (Servlet) this.context.locateService("Servlet", reference);
+        this.httpService.registerServlet(path, servlet, null, null);
+        this.log.log(LogService.LOG_DEBUG, "Register Servlet at " + path);    
+    }
+
+    private void unregisterServlet(String path) {
+        this.httpService.unregister(path);
+        this.log.log(LogService.LOG_DEBUG, "Unregister Servlet at " + path);
     }
 }
