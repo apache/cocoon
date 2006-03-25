@@ -46,6 +46,7 @@ import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -260,17 +261,18 @@ public class BeanFactoryUtil {
      * Build a bean factory with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    protected ConfigurableListableBeanFactory createBeanFactory(Logger        sitemapLogger,
-                                                                Configuration config,
-                                                                Context       sitemapContext)
+    public ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
+                                                             Configuration  config,
+                                                             Context        sitemapContext,
+                                                             SourceResolver resolver)
     throws Exception {
         // setup spring container
         // first, get the correct parent
         ConfigurableListableBeanFactory parentFactory = this.beanFactory;
         final Request request = ContextHelper.getRequest(sitemapContext);
-        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE) != null) {
+        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE) != null) {
             parentFactory = (ConfigurableListableBeanFactory) request
-                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE);
+                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         }
 
         if ( config != null ) {
@@ -286,7 +288,7 @@ public class BeanFactoryUtil {
             ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
-            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, null);
+            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, resolver);
     
             return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
         }
