@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -37,6 +39,7 @@ public class MonolithicServer23 {
 	private Logger logger;
 	private File basedir;
 	private List rules = new ArrayList();
+	private Set alreadyDeployedFilesSet =  new HashSet();
 	
 	public MonolithicServer23(File basedir, Logger logger) {
 		Validate.notNull(basedir, "The basedir of the server mustn't be null.");
@@ -49,6 +52,7 @@ public class MonolithicServer23 {
 	public void addRule(String pattern, FileDeployer fileDeployer) {
 		fileDeployer.setBasedir(this.basedir);
 		fileDeployer.setLogger(this.logger);
+		fileDeployer.setAlreadyDeployedFilesSet(alreadyDeployedFilesSet);
 		rules.add(new Rule(pattern, fileDeployer));
 	}
 	

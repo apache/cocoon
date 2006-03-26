@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 
 import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.util.FileUtils;
@@ -33,6 +34,7 @@ public class SingleFileDeployer implements FileDeployer {
 	private Logger logger;
 	private String outputDir;
 	private boolean skipRootDirectory;
+	private Set alreadyDeployedFilesSet;
 	
 	public SingleFileDeployer(final String outputDir, final boolean skipRootDirectory) {
 		Validate.notNull(outputDir, "An outputDir has to be set.");
@@ -60,6 +62,10 @@ public class SingleFileDeployer implements FileDeployer {
 		return this.logger;
 	}
 	
+	public void setAlreadyDeployedFilesSet(Set alreadyDeployedFilesSet) {
+		this.alreadyDeployedFilesSet = alreadyDeployedFilesSet;
+	}	
+	
 	protected String getFileName(final String documentName) { 
 		return documentName.substring(documentName.lastIndexOf('/') + 1);
 	}
@@ -84,17 +90,23 @@ public class SingleFileDeployer implements FileDeployer {
 		else {
 			outputDocumentName = this.getFileName(documentName);
 		}
-		File targetFile = new File(outDir, outputDocumentName);
-		if(targetFile.exists()) {
+		
+		File targetFile = FileUtils.createDirectory(new File(outDir, outputDocumentName));
+		
+		if(this.alreadyDeployedFilesSet.contains(targetFile.getCanonicalFile())) {
 			throw new FileAlreadyDeployedException("File '" + targetFile + "' already exists!");
 		}
-
-		this.logger.info("Deploying to " + getOutputDir() + "/" + outputDocumentName);		
+		
+		this.alreadyDeployedFilesSet.add(targetFile.getCanonicalFile());
+		
+		this.logger.info("Deploying to " + getOutputDir() + "/" + outputDocumentName);
+		
 		return new FileOutputStream(FileUtils.createDirectory(targetFile));
 	}
 	
 	protected String removeRootDirectory(final String documentName) {
 		return documentName.substring(documentName.indexOf('/') + 1);
 	}
-	
+
+
 }
