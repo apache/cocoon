@@ -613,7 +613,7 @@ public class CoreUtil {
         env.settings = this.settings;
         ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(env);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, rootContext, true);
+        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext, true);
 
         return mainContext;
     }

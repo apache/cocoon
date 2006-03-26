@@ -197,9 +197,6 @@ public final class Constants {
     public static final String CONTEXT_CLASSPATH = "classpath";
 
 
-    /** Application <code>Context</code> key for the current environment URI */
-    public static final String CONTEXT_ENV_URI = "env-uri";
-
     /** Application <code>Context</code> key for the current environment prefix */
     public static final String CONTEXT_ENV_PREFIX = "env-prefix";
 
