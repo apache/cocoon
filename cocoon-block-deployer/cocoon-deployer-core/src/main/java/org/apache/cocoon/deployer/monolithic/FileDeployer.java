@@ -18,6 +18,7 @@ package org.apache.cocoon.deployer.monolithic;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 
 import org.apache.cocoon.deployer.logger.Logger;
 
@@ -34,5 +35,7 @@ public interface FileDeployer {
 	public void setBasedir(File file);
 
 	public void setLogger(Logger logger);
+
+	public void setAlreadyDeployedFilesSet(Set alreadyDeployedFilesSet);
 	
 }
