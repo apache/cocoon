@@ -71,7 +71,7 @@ public class CocoonSettingsConfigurer
         public CocoonSettingsResolvingBeanDefinitionVisitor(Settings settings) {
             this.props = new Properties();
 
-            List propsList = settings.getProperties();
+            List propsList = settings.getPropertyNames();
             for (int i = 0; i < propsList.size(); i++) {
                 String propName = (String) propsList.get(i);
                 props.put(propName, settings.getProperty(propName));

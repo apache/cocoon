@@ -492,13 +492,13 @@ public class StatusGenerator extends ServiceableGenerator
 
         this.addValue(Settings.KEY_RELOADING, s.isReloadingEnabled(null));
         this.addValue(Settings.KEY_RELOAD_DELAY, s.getReloadDelay(null));
-        Iterator i = s.getProperties("org.apache.cocoon." + Settings.KEY_RELOADING + '.').iterator();
+        Iterator i = s.getPropertyNames("org.apache.cocoon." + Settings.KEY_RELOADING + '.').iterator();
         while ( i.hasNext() ) {
             final String key = (String)i.next();
             final String value = s.getProperty(key);
             this.addValue(key.substring(18), value);
         }
-        i = s.getProperties("org.apache.cocoon." + Settings.KEY_RELOAD_DELAY + '.').iterator();
+        i = s.getPropertyNames("org.apache.cocoon." + Settings.KEY_RELOAD_DELAY + '.').iterator();
         while ( i.hasNext() ) {
             final String key = (String)i.next();
             final String value = s.getProperty(key);

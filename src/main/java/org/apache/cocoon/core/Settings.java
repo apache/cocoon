@@ -45,16 +45,16 @@ public interface Settings extends BaseSettings, DynamicSettings {
     String getProperty(String key, String defaultValue);
 
     /**
-     * Return all available properties starting with the prefix.
+     * Return all available property names starting with the prefix.
      * @param keyPrefix The prefix each property name must have.
      * @return A list of property names (including the prefix) or
      *         an empty list.
      */
-    List getProperties(String keyPrefix);
+    List getPropertyNames(String keyPrefix);
     
     /**
-     * Return all available properties
+     * Return all available property names.
      * @return A list of all property names or an empty list.
      */
-    List getProperties();
+    List getPropertyNames();
 }
