@@ -610,49 +610,49 @@ public class MutableSettings implements Settings {
         if ( key.startsWith(KEYPREFIX) ) {
             final String sKey = key.substring(KEYPREFIX.length());
             if ( sKey.equals(KEY_PROCESSOR_CLASS) ) {
-                value = this.processorClassName;
+                value = this.getProcessorClassName();
             } else if ( sKey.equals(KEY_CONFIGURATION) ) {
-                value = this.configuration;
+                value = this.getConfiguration();
             } else if ( sKey.equals(KEY_RELOAD_DELAY) ) {
-                value = String.valueOf(this.configurationReloadDelay);
+                value = String.valueOf(this.getReloadDelay(null));
             } else if ( sKey.equals(KEY_LOGGING_CONFIGURATION) ) {
-                value = this.loggingConfiguration;
+                value = this.getLoggingConfiguration();
             } else if ( sKey.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
-                value = this.environmentLogger;
+                value = this.getEnvironmentLogger();
             } else if ( sKey.equals(KEY_LOGGING_COCOON_LOGGER) ) {
-                value = this.cocoonLogger;
+                value = this.getCocoonLogger();
             } else if ( sKey.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
-                value = this.bootstrapLogLevel;
+                value = this.getBootstrapLogLevel();
             } else if ( sKey.equals(KEY_RELOADING) ) {
-                value = String.valueOf(this.reloadingEnabled);
+                value = String.valueOf(this.isReloadingEnabled(null));
             } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
-                value = String.valueOf(this.enableUploads);
+                value = String.valueOf(this.isEnableUploads());
             } else if ( sKey.equals(KEY_UPLOADS_DIRECTORY) ) {
-                value = this.uploadDirectory = value;
+                value = this.getUploadDirectory();
             } else if ( sKey.equals(KEY_UPLOADS_AUTOSAVE) ) {
-                value = String.valueOf(this.autosaveUploads);
+                value = String.valueOf(this.isAutosaveUploads());
             } else if ( sKey.equals(KEY_UPLOADS_OVERWRITE) ) {
-                value = this.overwriteUploads;
+                value = this.getOverwriteUploads();
             } else if ( sKey.equals(KEY_UPLOADS_MAXSIZE) ) {
-                value = String.valueOf(this.maxUploadSize);
+                value = String.valueOf(this.getMaxUploadSize());
             } else if ( sKey.equals(KEY_CACHE_DIRECTORY) ) {
-                value = this.cacheDirectory;
+                value = this.getCacheDirectory();
             } else if ( sKey.equals(KEY_WORK_DIRECTORY) ) {
-                value = this.workDirectory;
+                value = this.getWorkDirectory();
             } else if ( sKey.equals(KEY_SHOWTIME) ) {
-                value = String.valueOf(this.showTime);
+                value = String.valueOf(this.isShowTime());
             } else if ( sKey.equals(KEY_HIDE_SHOWTIME) ) {
-                value = String.valueOf(this.hideShowTime);
+                value = String.valueOf(this.isHideShowTime());
             } else if ( sKey.equals(KEY_MANAGE_EXCEPTIONS) ) {
-                value = String.valueOf(this.manageExceptions);
+                value = String.valueOf(this.isManageExceptions());
             } else if ( sKey.equals(KEY_FORM_ENCODING) ) {
-                value = this.formEncoding;
+                value = this.getFormEncoding();
             } else if ( sKey.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
-                value = this.overrideLogLevel;
+                value = this.getOverrideLogLevel();
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
-                value = this.toString(this.loadClasses);
+                value = this.toString(this.getLoadClasses());
             } else if ( key.equals(KEY_PROPERTY_PROVIDER) ) {
-                this.toString(this.propertyProviders);
+                value = this.toString(this.getPropertyProviders());
             }
         }
 
@@ -663,7 +663,11 @@ public class MutableSettings implements Settings {
         }
 
         if ( value == null ) {
-            value = defaultValue;
+            if ( this.parent != null ) {
+                value = this.parent.getProperty(key, defaultValue);
+            } else {
+                value = defaultValue;
+            }
         }
         return value;
     }
@@ -713,28 +717,6 @@ public class MutableSettings implements Settings {
             }
             buffer.append(i.next());
         }
-        return buffer.toString();        
-    }
-
-    /**
-     * Helper method to make a string out of a map of objects.
-     */
-    protected String toString(Map a) {
-        final StringBuffer buffer = new StringBuffer("{");
-        final Iterator i = a.entrySet().iterator();
-        boolean first = true;
-        while ( i.hasNext() ) {
-            if ( first ) {
-                first = false;
-            } else {
-                buffer.append(", ");
-            }
-            final Map.Entry current = (Map.Entry)i.next();
-            buffer.append(current.getKey());
-            buffer.append("=");
-            buffer.append(current.getValue());
-        }
-        buffer.append("}");
         return buffer.toString();        
     }
 
@@ -973,9 +955,9 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.Settings#getProperties(java.lang.String)
+     * @see org.apache.cocoon.core.Settings#getPropertyNames(java.lang.String)
      */
-    public List getProperties(String keyPrefix) {
+    public List getPropertyNames(String keyPrefix) {
         final List props = new ArrayList();
         for(int i=0; i < this.properties.size(); i++) {
             final Properties p = (Properties)this.properties.get(i);
@@ -987,13 +969,23 @@ public class MutableSettings implements Settings {
                 }
             }
         }
+        if ( this.parent != null ) {
+            final List parentList = this.parent.getPropertyNames(keyPrefix);
+            final Iterator i = parentList.iterator();
+            while ( i.hasNext() ) {
+                final String name = (String)i.next();
+                if ( !props.contains(name) ) {
+                    props.add(name);
+                }
+            }
+        }
         return props;
     }
     
     /**
-     * @see org.apache.cocoon.core.Settings#getProperties()
+     * @see org.apache.cocoon.core.Settings#getPropertyNames()
      */
-    public List getProperties() {
+    public List getPropertyNames() {
         final List props = new ArrayList();
         for(int i=0; i < this.properties.size(); i++) {
             final Properties p = (Properties)this.properties.get(i);
@@ -1001,6 +993,16 @@ public class MutableSettings implements Settings {
             while ( kI.hasNext() ) {
                 final String name = (String)kI.next();
                 if (!props.contains(name) ) {
+                    props.add(name);
+                }
+            }
+        }
+        if ( this.parent != null ) {
+            final List parentList = this.parent.getPropertyNames();
+            final Iterator i = parentList.iterator();
+            while ( i.hasNext() ) {
+                final String name = (String)i.next();
+                if ( !props.contains(name) ) {
                     props.add(name);
                 }
             }

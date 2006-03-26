@@ -162,7 +162,8 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
             // better be done in a constructor for the info.
             SitemapSourceInfo vpcEnvironmentInfo = new SitemapSourceInfo();
             vpcEnvironmentInfo.prefix = (String) this.context.get(Constants.CONTEXT_ENV_PREFIX);
-            vpcEnvironmentInfo.uri = (String) this.context.get(Constants.CONTEXT_ENV_URI);
+            // FIXME - What should the value of uri be?
+            vpcEnvironmentInfo.uri = "fixme";
             vpcEnvironmentInfo.requestURI = vpcEnvironmentInfo.prefix + vpcEnvironmentInfo.uri;
             vpcEnvironmentInfo.rawMode = false;
 

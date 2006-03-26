@@ -19,32 +19,27 @@ import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.excalibur.logger.Log4JConfLoggerManager;
 import org.apache.avalon.excalibur.logger.ServletLogger;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
 import org.apache.cocoon.core.CoreInitializationException;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SettingsContext;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
@@ -77,6 +72,7 @@ public class BeanFactoryUtil {
      */
     public static ConfigurableListableBeanFactory createBeanFactory(AvalonEnvironment env,
                                                                     ConfigurationInfo info,
+                                                                    SourceResolver    resolver,
                                                                     BeanFactory       parent,
                                                                     boolean           addCocoon)
     throws Exception {
@@ -95,6 +91,10 @@ public class BeanFactoryUtil {
         if ( info.rootLogger != null ) {
             factory.registerSingleton(Logger.class.getName(), logger);
         }
+        // add local resolver
+        if ( resolver != null ) {
+            factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
+        }            
         prepareBeanFactory(factory, info);
         factory.preInstantiateSingletons();
         return factory;
@@ -255,43 +255,5 @@ public class BeanFactoryUtil {
         if ( component != null ) {
             info.setDefaultType(category, component.getDefaultValue());
         }
-    }
-
-    /**
-     * Build a bean factory with the contents of the &lt;map:components&gt; element of
-     * the tree.
-     */
-    public ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
-                                                             Configuration  config,
-                                                             Context        sitemapContext,
-                                                             SourceResolver resolver)
-    throws Exception {
-        // setup spring container
-        // first, get the correct parent
-        ConfigurableListableBeanFactory parentFactory = this.beanFactory;
-        final Request request = ContextHelper.getRequest(sitemapContext);
-        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE) != null) {
-            parentFactory = (ConfigurableListableBeanFactory) request
-                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        }
-
-        if ( config != null ) {
-            final AvalonEnvironment ae = new AvalonEnvironment();
-            ae.context = sitemapContext;
-            if ( sitemapLogger != null ) {
-                ae.logger = sitemapLogger;
-            } else {
-                ae.logger = (Logger)parentFactory.getBean(ProcessingUtil.LOGGER_ROLE);
-            }
-            ae.servletContext = ((ServletConfig) sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
-                    .getServletContext();
-            ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
-            final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
-                    .getBean(ConfigurationInfo.class.getName());
-            final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, resolver);
-    
-            return BeanFactoryUtil.createBeanFactory(ae, ci, parentFactory, false);
-        }
-        return parentFactory;
     }
 }
