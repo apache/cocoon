@@ -180,6 +180,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="RG" type="add">
+      Configuration values can now be set externally. The properties that can be modified can be identified by
+      looking at the property files in WEB-INF/properties. The properties can be overriden by specifying them as
+      system properties when invoking Cocoon or by placing them in a property file and identifying its location via
+      the "org.apache.cocoon.settings" system property. The default Cocoon script sets this to ./cocoon.properties.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1814" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
       Deprecated method o.a.c.environment.Environment.getOutputStream() still used internally.
     </action>
@@ -241,7 +247,7 @@
     </action>
     <action dev="AS" type="add" fixes-bug="COCOON-1789" due-to="Simone Gianni" due-to-email="s.gianni@thebug.it">
       Add Char datatype to forms.
-    </action> 
+    </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1729" due-to="Rolf Metternich" due-to-email="rolf.metternich@ahafabrik.de">
       Allow to add multiple rows at once to a Repeater using &lt;fd:repeater-action command="add-row" number-of-rows="5" ...&gt;
     </action>
@@ -421,11 +427,11 @@
     </action>
    <action dev="CZ" type="add">
       Portal Block: Provide user name to portlets.
-    </action> 
+    </action>
    <action dev="CZ" type="fix">
       Portal Block: Make wsrp event adapter thread safe, fix error in disposing wsrp
                     producer and update portals bridges to 1.0.
-    </action> 
+    </action>
    <action dev="AG" type="update">
      Replace deprecated library excalibur-io 1.1 with commons-io 1.1.
      The file excalibur-io-1.1.jar is no longer part of the cocoon distribution.
@@ -434,7 +440,7 @@
    </action>
    <action dev="AG" type="update">
       Updated asm to 2.1, asm-util to 2.1 and groovy to 1.0-jsr-04.
-    </action> 
+    </action>
     <action dev="AN" type="fix">
       XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
       logicsheets.  (Suggestion by Vadim Gritsenko).
@@ -576,7 +582,7 @@
       CForms block: new Tree widget, heavily inspired by Swing's JTree. Features Ajax, selection listeners,
       and a lightweight data model with two implementations: a generic one, and a source-based one to build
       file explorers.
-    </action>     
+    </action>
     <action dev="JHS" type="add" fixes-bug="36781" due-to="Thomas Lutz" due-to-email="mattom@gmx.at">
       CForms: The repeater widget now supports min and max-size attributes.
     </action>

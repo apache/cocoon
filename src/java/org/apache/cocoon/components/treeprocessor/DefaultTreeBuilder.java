@@ -38,6 +38,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.components.PropertyAwareNamespacedSAXConfigurationHandler;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
@@ -45,6 +46,8 @@ import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
+import org.apache.cocoon.util.Settings;
+import org.apache.cocoon.util.SettingsHelper;
 import org.apache.excalibur.source.Source;
 
 import java.util.ArrayList;
@@ -356,7 +359,9 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
 
         try {
             // Build a namespace-aware configuration object
-            NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
+            Settings settings = SettingsHelper.getSettings(this.context);
+            NamespacedSAXConfigurationHandler handler =
+                    new PropertyAwareNamespacedSAXConfigurationHandler(settings, getLogger());
             AnnotationsFilter annotationsFilter = new AnnotationsFilter(handler);
             SourceUtil.toSAX( source, annotationsFilter );
             Configuration treeConfig = handler.getConfiguration();

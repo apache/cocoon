@@ -35,9 +35,12 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.util.Settings;
+import org.apache.cocoon.util.SettingsHelper;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
+import org.apache.cocoon.components.PropertyAwareSAXConfigurationHandler;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -204,7 +207,8 @@ public class TreeProcessor
         try {
             Source source = this.resolver.resolveURI(xconfURL);
             try {
-                SAXConfigurationHandler handler = new SAXConfigurationHandler();
+                Settings settings = SettingsHelper.getSettings(this.context);
+                SAXConfigurationHandler handler = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
                 SourceUtil.toSAX( this.manager, source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {

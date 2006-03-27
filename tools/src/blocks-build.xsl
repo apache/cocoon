@@ -325,6 +325,7 @@
                 <fileset dir="@{{dir}}/samples">
                   <exclude name="**/*.gif"/>
                   <exclude name="**/*.jpg"/>
+                  <exclude name="WEB-INF/**"/>
                 </fileset>
                 <fileset dir="@{{dir}}/conf" includes="*.xsamples"/>
               </copy>
@@ -338,6 +339,17 @@
               <copy todir="${{build.webapp.classes}}" filtering="off">
                 <fileset dir="${{build.blocks}}/@{{name}}/samples"/>
               </copy>
+              <!-- Test if this block has sample WEB-INF files -->
+              <if>
+                <available type="dir" file="@{{dir}}/samples/WEB-INF/"/>
+                <then>
+                  <copy filtering="on" todir="${{build.webapp.webinf}}">
+                    <fileset dir="@{{dir}}/samples/WEB-INF/">
+                      <include name="**"/>
+                    </fileset>
+                  </copy>
+                </then>
+              </if>
             </then>
           </if>
         </sequential>

@@ -65,15 +65,15 @@
       | All components follow this scheme.
       +-->
   <map:generators default="file">
-    <map:generator label="content" logger="sitemap.generator.file" name="file" pool-max="32" src="org.apache.cocoon.generation.FileGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.directory" name="directory" pool-max="16" src="org.apache.cocoon.generation.DirectoryGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.file" name="file" pool-max="${file-generator.pool-max}" src="org.apache.cocoon.generation.FileGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.directory" name="directory" pool-max="${directory-generator.pool-max}" src="org.apache.cocoon.generation.DirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.xpathdirectory" name="xpathdirectory" src="org.apache.cocoon.generation.XPathDirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.imagedirectory" name="imagedirectory" src="org.apache.cocoon.generation.ImageDirectoryGenerator"/>
     <map:generator label="content" logger="sitemap.generator.mp3directory" name="mp3directory" src="org.apache.cocoon.generation.MP3DirectoryGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.request" name="request" pool-max="16" src="org.apache.cocoon.generation.RequestGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-max="16" src="org.apache.cocoon.generation.StreamGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.status" name="status" pool-max="16" src="org.apache.cocoon.generation.StatusGenerator"/>
-    <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-max="16" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.request" name="request" pool-max="${request-generator.pool-max}" src="org.apache.cocoon.generation.RequestGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-max="${stream-generator.pool-max}" src="org.apache.cocoon.generation.StreamGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.status" name="status" pool-max="${status-generator.pool-max}" src="org.apache.cocoon.generation.StatusGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-max="${jx-generator.pool-max}" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
     <!-- The notifying generator can only be used in a <handle-errors> section -->
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
     <!-- The exception generator can only be used in a <handle-errors> section : it produces an XML
@@ -93,7 +93,7 @@
   <map:transformers default="xslt">
 
     <!-- NOTE: This is the default XSLT processor. -->
-    <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+    <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-max="${xslt-transformer.pool-max}" src="org.apache.cocoon.transformation.TraxTransformer">
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
@@ -102,7 +102,7 @@
     </map:transformer>
 
     <!-- NOTE: This is the same as the default processor but with a different name (for compatibility) -->
-    <map:transformer logger="sitemap.transformer.xalan" name="xalan" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+    <map:transformer logger="sitemap.transformer.xalan" name="xalan" pool-max="${xalan-transformer.pool-max}" src="org.apache.cocoon.transformation.TraxTransformer">
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
@@ -111,7 +111,7 @@
     </map:transformer>
 
     <!-- NOTE: You can also try XSLTC as the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
-    <map:transformer logger="sitemap.transformer.xsltc" name="xsltc" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+    <map:transformer logger="sitemap.transformer.xsltc" name="xsltc" pool-max="${xsltc-transformer.pool-max}" src="org.apache.cocoon.transformation.TraxTransformer">
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
@@ -119,17 +119,17 @@
       <check-includes>true</check-includes>
     </map:transformer>
 
-    <map:transformer logger="sitemap.transformer.include" name="include" pool-max="16" src="org.apache.cocoon.transformation.IncludeTransformer"/>
-    <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-max="16" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
-    <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-max="16" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
+    <map:transformer logger="sitemap.transformer.include" name="include" pool-max="${include-transformer.pool-max}" src="org.apache.cocoon.transformation.IncludeTransformer"/>
+    <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-max="${xinclude-transformer.pool-max}" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
+    <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-max="${cinclude-transformer.pool-max}" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
     <map:transformer logger="sitemap.transformer.write-source" name="write-source" src="org.apache.cocoon.transformation.SourceWritingTransformer"/>
     <map:transformer logger="sitemap.transformer.jpath" name="jpath" src="org.apache.cocoon.transformation.JPathTransformer"/>
     <map:transformer logger="sitemap.transformer.filter" name="filter" src="org.apache.cocoon.transformation.FilterTransformer"/>
     <map:transformer logger="sitemap.transformer.writeDOMsession" name="writeDOMsession" src="org.apache.cocoon.transformation.WriteDOMSessionTransformer"/>
     <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
-    <map:transformer logger="sitemap.transformer.log" name="log" pool-max="16" src="org.apache.cocoon.transformation.LogTransformer"/>
-    <map:transformer logger="sitemap.transformer.jx" name="jx" pool-max="16" src="org.apache.cocoon.transformation.JXTemplateTransformer"/>
+    <map:transformer logger="sitemap.transformer.log" name="log" pool-max="${log-transformer.pool-max}" src="org.apache.cocoon.transformation.LogTransformer"/>
+    <map:transformer logger="sitemap.transformer.jx" name="jx" pool-max="${jx-transformer.pool-max}" src="org.apache.cocoon.transformation.JXTemplateTransformer"/>
     <map:transformer logger="sitemap.transformer.paginate" name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
   </map:transformers>
 
@@ -142,7 +142,7 @@
     <map:serializer logger="sitemap.serializer.links" name="links" src="org.apache.cocoon.serialization.LinkSerializer"/>
     <map:serializer logger="sitemap.serializer.xml" mime-type="text/xml" name="xml" src="org.apache.cocoon.serialization.XMLSerializer"/>
 
-    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-max="32" src="org.apache.cocoon.serialization.HTMLSerializer">
+    <map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-max="${html-serializer.pool-max}" src="org.apache.cocoon.serialization.HTMLSerializer">
       <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
     </map:serializer>
@@ -167,7 +167,7 @@
      <doctype-system>http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</doctype-system>
     </map:serializer>
 
-    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-max="64" src="org.apache.cocoon.serialization.XMLSerializer">
+    <map:serializer logger="sitemap.serializer.xhtml" mime-type="text/html" name="xhtml" pool-max="${xhtml-serializer.pool-max}" src="org.apache.cocoon.serialization.XMLSerializer">
       <!--+
           | You can choose from Strict, Transitional, or Frameset XHTML.
           | For Strict XHTML set doctype to:
@@ -188,7 +188,7 @@
       <encoding>UTF-8</encoding>
     </map:serializer>
 
-    <map:serializer logger="sitemap.serializer.xhtml" mime-type="application/xhtml+xml" name="xhtml11" pool-max="64"  src="org.apache.cocoon.serialization.XMLSerializer">
+    <map:serializer logger="sitemap.serializer.xhtml" mime-type="application/xhtml+xml" name="xhtml11" pool-max="${xhtml11-serializer.pool-max}"  src="org.apache.cocoon.serialization.XMLSerializer">
       <doctype-public>-//W3C//DTD XHTML 1.1//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</doctype-system>
       <encoding>UTF-8</encoding>
@@ -211,7 +211,7 @@
       | reader. They are useful for delivering binary content like images.
       +-->
   <map:readers default="resource">
-    <map:reader logger="sitemap.reader.resource" name="resource" pool-max="32" src="org.apache.cocoon.reading.ResourceReader">
+    <map:reader logger="sitemap.reader.resource" name="resource" pool-max="${resource-reader.pool-max}" src="org.apache.cocoon.reading.ResourceReader">
       <!--+
           | Resource reader has these configuration parameters:
       <expires>-1</expires>
@@ -432,7 +432,7 @@
          | period of time (expires). The cache key is the current uri.
          +-->
      <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
-       <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
+       <parameter name="cache-expires" value="${expires-pipeline.cache-expires}"/> <!-- Expires in secondes -->
      </map:pipe>
    </map:pipes>
 
