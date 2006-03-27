@@ -40,6 +40,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ComponentContext;
+import org.apache.cocoon.components.PropertyAwareSAXConfigurationHandler;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -49,6 +50,10 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
+import org.apache.cocoon.util.SimpleSourceResolver;
+import org.apache.cocoon.util.Settings;
+import org.apache.cocoon.util.PropertySettings;
+import org.apache.cocoon.util.SettingsHelper;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
@@ -226,6 +231,7 @@ public class Cocoon
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
             this.context = new ComponentContext(context);
+            SettingsHelper.createSettings((DefaultContext)this.context, getLogger());
             ((DefaultContext) this.context).makeReadOnly();
 
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
@@ -384,11 +390,12 @@ public class Cocoon
      */
     public void configure(ExcaliburComponentManager startupManager) throws ConfigurationException, ContextException {
         SAXParser p = null;
+        Settings settings = SettingsHelper.getSettings(this.context);
 
         Configuration roles = null;
         try {
             p = (SAXParser) startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new SAXConfigurationHandler();
+            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
             URL url = ClassUtils.getResource("org/apache/cocoon/cocoon.roles");
             InputSource is = new InputSource(url.openStream());
             is.setSystemId(url.toString());
@@ -408,7 +415,7 @@ public class Cocoon
         try {
             this.configurationFile.refresh();
             p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-            SAXConfigurationHandler b = new SAXConfigurationHandler();
+            SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
             InputSource is = SourceUtil.getInputSource(this.configurationFile);
             p.parse(is, b);
             this.configuration = b.getConfiguration();
@@ -436,7 +443,7 @@ public class Cocoon
         if (!"".equals(userRoles)) {
             try {
                 p = (SAXParser)startupManager.lookup(SAXParser.ROLE);
-                SAXConfigurationHandler b = new SAXConfigurationHandler();
+                SAXConfigurationHandler b = new PropertyAwareSAXConfigurationHandler(settings, getLogger());
                 org.apache.cocoon.environment.Context context =
                     (org.apache.cocoon.environment.Context) this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
                 URL url = context.getResource(userRoles);
@@ -786,5 +793,21 @@ public class Cocoon
 
     public ExcaliburComponentManager getComponentManager() {
         return this.componentManager;
+    }
+
+        /**
+     * Create a simple source resolver.
+     */
+    protected SourceResolver createSourceResolver(Logger logger) throws ContextException {
+        // Create our own resolver
+        final SimpleSourceResolver resolver = new SimpleSourceResolver();
+        resolver.enableLogging(logger);
+        try {
+            resolver.contextualize(this.context);
+        } catch (ContextException ce) {
+            throw new ContextException(
+                    "Cannot setup source resolver.", ce);
+        }
+        return resolver;
     }
 }

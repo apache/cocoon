@@ -48,6 +48,7 @@
         <include name="entities/**"/>
         <include name="classes/**"/>
         <include name="*.x*"/>
+        <include name="properties/**"/>
       </fileset>
     </copy>
 

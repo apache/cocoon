@@ -91,7 +91,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 if [ "$JAVA_OPTIONS" = "" ] ; then
-  JAVA_OPTIONS='-Xms32M -Xmx512M'
+  JAVA_OPTIONS='-Xms32M -Xmx512M -Dorg.apache.cocoon.settings=cocoon.properties'
 fi
 
 if [ "$COCOON_HOME" = "" ] ; then

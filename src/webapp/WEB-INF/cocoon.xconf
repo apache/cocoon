@@ -91,8 +91,8 @@
     <!-- FOM (Flow Object Model) -->
     <component-instance name="javascript" class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
       <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
-      <reload-scripts>true</reload-scripts>
-      <check-time>4000</check-time>
+      <reload-scripts>${javascript.reload-scripts}</reload-scripts>
+      <check-time>${javascript.check-time}</check-time>
       <!--  <debugger>enabled</debugger> -->  <!-- JavaScript Debugger support -->
     </component-instance>
   </flow-interpreters>
@@ -124,12 +124,12 @@
       | Enable this feature for web applications by setting
       | 'session-bound-continuations' to true.
       +-->
-  <continuations-manager logger="flow.manager" time-to-live="3600000"
+  <continuations-manager logger="flow.manager" time-to-live="${continuations-manager.time-to-live}"
                          session-bound-continuations="false"
                          continuation-sharing-bug-compatible="false">
     <expirations-check type="periodic">
-      <offset>180000</offset>
-      <period>180000</period>
+      <offset>${continuations-manager.expirations-check.offset}</offset>
+      <period>${continuations-manager.expirations-check.period}</period>
     </expirations-check>
   </continuations-manager>
 
@@ -346,7 +346,7 @@
       |     would appear in the serialized output again.
       +-->
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser"
-              logger="core.xml-parser" pool-max="32">
+              logger="core.xml-parser" pool-max="${xml-parser.pool-max}">
     <parameter name="validate" value="false"/>
     <parameter name="namespace-prefixes" value="false"/>
     <parameter name="stop-on-warning" value="true"/>
@@ -436,7 +436,7 @@
       |    in the cache will be thrown out.
       +-->
   <transient-store logger="core.store.transient">
-    <parameter name="maxobjects" value="1000"/>
+    <parameter name="maxobjects" value="${transient-store.maxobjects}"/>
   </transient-store>
 
   <!--+
@@ -451,7 +451,7 @@
       |    in the cache will be thrown out.
       +-->
   <store logger="core.store">
-    <parameter name="maxobjects" value="1000"/>
+    <parameter name="maxobjects" value="${store.maxobjects}"/>
     <parameter name="use-cache-directory" value="true"/>
   </store>
 
@@ -482,19 +482,19 @@
         | How much free memory shall be available in the jvm?
         | If not specified, defaults to 1Mb.
         +-->
-    <parameter name="freememory" value="2048000"/>
+    <parameter name="freememory" value="${store-janitor.freememory}"/>
     <!--+
         | How much memory at max jvm can consume?
         | The default max heapsize for Sun's JVM is (almost) 64Mb,
         | can be increased by specifying -Xmx command line parameter.
         | If not specified, defaults to 66600000 bytes.
         +-->
-    <parameter name="heapsize" value="66600000"/>
+    <parameter name="heapsize" value="${store-janitor.heapsize}"/>
     <!--+
         | How often shall the cleanup thread check memory?
         | If not specified, defaults to 10 seconds.
         +-->
-    <parameter name="cleanupthreadinterval" value="10"/>
+    <parameter name="cleanupthreadinterval" value="${store-janitor.cleanup-thread-interval}"/>
     <!--+
         | Experimental adaptive algorithm for cleanup interval
     <parameter name="adaptivethreadinterval" value="true"/>
@@ -503,7 +503,7 @@
         | What percent of the store elements shall be dropped on low memory?
         | If not specified, defaults to 10%
         +-->
-    <parameter name="percent_to_free" value="10"/>
+    <parameter name="percent_to_free" value="${store-janitor.percent-to-free}"/>
     <!--+
         | Shall garbage collector be invoked on low memory?
         | If not specified, defaults to false.
@@ -571,7 +571,7 @@
         | Reload check delay. Default 60000 (1 minute), 0 means no delay
         | (check always), -1 means no reload.
         +-->
-    <reload-interval>60000</reload-interval>
+    <reload-interval>${i18n-bundles.reload-interval}</reload-interval>
     <!--+
         | Location of the default message catalogue. Optional.
         +-->
@@ -594,8 +594,8 @@
       | the intermediate results of the pipeline stages reducing the overhead
       | of xml parsing/serialization.
       +-->
-  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml.serializer" pool-max="32"/>
-  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml.deserializer" pool-max="32"/>
+  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml.serializer" pool-max="${xml-serializer.pool-max}"/>
+  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml.deserializer" pool-max="${xml-deserializer.pool-max}"/>
 
   <!--+
       | The Cache Manager is a component that can be used to cache content.
