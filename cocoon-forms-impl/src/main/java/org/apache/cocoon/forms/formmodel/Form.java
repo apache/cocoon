@@ -72,6 +72,8 @@ public class Form extends AbstractContainerWidget
     // Widgets that have at least one descendant that has to be updated
     private Set childUpdatedWidgets;
 
+    // Optional id which overrides the value from the form definition
+    private String id;
 
     public Form(FormDefinition definition) {
         super(definition);
@@ -431,5 +433,23 @@ public class Form extends AbstractContainerWidget
 
     public String getXMLElementName() {
         return FORM_EL;
+    }
+
+    /**
+     * @see org.apache.cocoon.forms.formmodel.AbstractWidget#getId()
+     */
+    public String getId() {
+        if ( this.id != null ) {
+            return this.id;
+        }
+        return super.getId();
+    }
+
+    /**
+     * Set the optional id.
+     * @param value A new id.
+     */
+    public void setId(String value) {
+        this.id = value;
     }
 }
