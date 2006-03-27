@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: FileSavingEnvironment.java,v 1.6 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version $Id$
  */
 public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
 

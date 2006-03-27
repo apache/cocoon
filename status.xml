@@ -180,6 +180,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1814" due-to="Mark Lundquist" due-to-email="mlundquist2@comcast.net">
+      Deprecated method o.a.c.environment.Environment.getOutputStream() still used internally.
+    </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1639" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
       Added the NekoHTMLTransformer.  Updated the NekoHTMLGenerator's setup bits to allow for setting parser features as
       well as properties, and provided a sample neko.properties configuration file.

@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -466,7 +466,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         Deprecation.logger.warn("The method Environment.getOutputStream() " +
                               "is deprecated. Use getOutputStream(-1) instead.");
         // by default we use the complete buffering output stream
-        return this.getOutputStream(-1);
+        return getOutputStream(-1);
     }
 
     /**

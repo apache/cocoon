@@ -25,6 +25,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.treeprocessor.sitemap.MountNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Source;
+import org.apache.cocoon.util.Deprecation;
 import org.xml.sax.SAXException;
 
 /**
@@ -39,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @see org.apache.cocoon.components.source.impl.SitemapSource
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -172,11 +173,15 @@ public class MutableEnvironmentFacade implements Environment {
         env.setStatus(statusCode);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Environment#getOutputStream()
+     * @deprecated Use {@link #getOutputStream(int)} instead.
      */
     public OutputStream getOutputStream() throws IOException {
-        return env.getOutputStream();
+        Deprecation.logger.warn("The method Environment.getOutputStream() " +
+        "is deprecated. Use getOutputStream(-1) instead.");
+        // by default we use the complete buffering output stream
+        return getOutputStream(-1);
     }
 
     /* (non-Javadoc)

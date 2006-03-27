@@ -36,7 +36,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public abstract class AbstractCommandLineEnvironment
