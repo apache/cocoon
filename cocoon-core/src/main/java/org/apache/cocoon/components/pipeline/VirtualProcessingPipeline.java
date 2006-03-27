@@ -21,13 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
@@ -104,14 +102,14 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     protected Processor processor;
 
 
-    public VirtualProcessingPipeline(Context context) throws Exception {
-        this.resolver = (EnvironmentHelper) context.get(Constants.CONTEXT_ENV_HELPER);
+    public VirtualProcessingPipeline() {
     }
 
     public void service(ServiceManager manager)
     throws ServiceException {
         this.manager = manager;
         this.newManager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE + "/Local");
     }
 
     /**

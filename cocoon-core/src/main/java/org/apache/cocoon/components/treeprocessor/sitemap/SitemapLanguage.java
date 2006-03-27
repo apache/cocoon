@@ -650,9 +650,6 @@ public class SitemapLanguage
         DefaultContext newContext = new DefaultContext(this.context);
         Environment env = EnvironmentHelper.getCurrentEnvironment();
         newContext.put(Constants.CONTEXT_ENV_PREFIX, env.getURIPrefix());
-        // FIXME How to get rid of EnvironmentHelper?
-        newContext.put(Constants.CONTEXT_ENV_HELPER, getProcessor().getWrappingProcessor()
-                .getEnvironmentHelper());
 
         return newContext;
     }
