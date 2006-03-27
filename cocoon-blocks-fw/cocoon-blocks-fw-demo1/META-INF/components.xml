@@ -1,51 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
-  <scr:component name="cocoon.blockServlet1">
+  <scr:component name="org.apache.cocoon.blocks.demo1.block">
     <scr:implementation class="org.apache.cocoon.blocks.BlockServlet"/>
     <scr:service>
       <scr:provide interface="javax.servlet.Servlet"/>
 	</scr:service>
 	<scr:property name="path" value="/test1"/>
-	<scr:property name="attr" value="foo"/>
+	<scr:property name="foo" value="baz"/>
     <scr:reference name="blockServlet"
                    interface="javax.servlet.Servlet"
-                   target="(component.name=cocoon.servlet1)"/>
-  </scr:component>
-  
-  <scr:component name="cocoon.blockServlet2">
-    <scr:implementation class="org.apache.cocoon.blocks.BlockServlet"/>
-    <scr:service>
-      <scr:provide interface="javax.servlet.Servlet"/>
-	</scr:service>
-	<scr:property name="path" value="/test2"/>
-	<scr:property name="attr" value="bar"/>
-    <scr:reference name="blockServlet"
+                   target="(component.name=org.apache.cocoon.blocks.demo1.servlet)"/>
+    <scr:reference name="demo2"
                    interface="javax.servlet.Servlet"
-                   target="(component.name=cocoon.servlet2)"/>
-    <scr:reference name="block1"
-                   interface="javax.servlet.Servlet"
-                   target="(component.name=cocoon.blockServlet1)"/>
+                   target="(component.name=org.apache.cocoon.blocks.demo2.block)"/>
   </scr:component>
   
-  <scr:component name="cocoon.servlet1">
-    <scr:implementation class="org.apache.cocoon.blocks.demo1.TestServlet"/>
-    <scr:service>
-      <scr:provide interface="javax.servlet.Servlet"/>
-	</scr:service>
-  </scr:component>
-  
-  <scr:component name="cocoon.servlet2">
+  <scr:component name="org.apache.cocoon.blocks.demo1.servlet">
     <scr:implementation class="org.apache.cocoon.blocks.demo1.TestServlet2"/>
     <scr:service>
       <scr:provide interface="javax.servlet.Servlet"/>
 	</scr:service>
-  </scr:component>
-  
-  <scr:component name="cocoon.servlet3">
-    <scr:implementation class="org.apache.cocoon.blocks.demo1.TestServlet"/>
-    <scr:service>
-      <scr:provide interface="javax.servlet.Servlet"/>
-	</scr:service>
-	<scr:property name="path" value="/test3"/>
   </scr:component>
 </components>
