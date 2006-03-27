@@ -180,6 +180,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="CZ" type="add">
+      CForms: add dynamic id to Form object. This allows to use the same form model several times on
+              the same page, for example if the form is used in a portal.
+    </action>
     <action dev="RG" type="add">
       Configuration values can now be set externally. The properties that can be modified can be identified by
       looking at the property files in WEB-INF/properties. The properties can be overriden by specifying them as
