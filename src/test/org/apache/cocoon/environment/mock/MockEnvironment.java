@@ -33,6 +33,7 @@ import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+/* @version $Id$ */
 public class MockEnvironment implements Environment {
 
     private SourceResolver resolver;
@@ -114,9 +115,12 @@ public class MockEnvironment implements Environment {
         return status;
     }
 
+    /**
+     * Get the output stream where to write the generated resource.
+     * @deprecated Use {@link #getOutputStream(int)} instead.
+     */
     public OutputStream getOutputStream() throws IOException {
-        outputstream = new ByteArrayOutputStream();
-        return outputstream;
+        return getOutputStream(-1);
     }
 
     public OutputStream getOutputStream(int bufferSize) throws IOException {
@@ -229,4 +233,3 @@ public class MockEnvironment implements Environment {
         return false;
     }
 }
-

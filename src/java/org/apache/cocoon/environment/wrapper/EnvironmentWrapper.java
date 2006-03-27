@@ -41,7 +41,7 @@ import org.apache.cocoon.util.Deprecation;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnvironmentWrapper extends AbstractEnvironment {
 
@@ -298,9 +298,8 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     throws IOException {
         Deprecation.logger.warn("The method Environment.getOutputStream() " +
         "is deprecated. Use getOutputStream(-1) instead.");
-        return this.outputStream == null
-            ? this.environment.getOutputStream()
-            : this.outputStream;
+        // by default we use the complete buffering output stream
+        return getOutputStream(-1);
     }
 
     /**
@@ -328,28 +327,26 @@ public class EnvironmentWrapper extends AbstractEnvironment {
      *
      * @return true if the response was successfully reset
     */
-    public boolean tryResetResponse()
-    throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).clearBuffer();
+    public boolean tryResetResponse() throws IOException {
+        final OutputStream outputStream = getOutputStream(-1);
+        if (outputStream != null && outputStream instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)outputStream).clearBuffer();
             return true;
-        }
-        else
+        } else {
           return super.tryResetResponse();
+        }
     }
 
     /**
      * Commit the response
      */
-    public void commitResponse() 
-    throws IOException {
-        if (getOutputStream() != null
-            && getOutputStream() instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)getOutputStream()).realFlush();
-        }
-        else
+    public void commitResponse() throws IOException {
+        final OutputStream outputStream = getOutputStream(-1);
+        if (outputStream != null && outputStream instanceof BufferedOutputStream) {
+            ((BufferedOutputStream)outputStream).realFlush();
+        } else {
           super.commitResponse();
+        }
     }
 
     /**
