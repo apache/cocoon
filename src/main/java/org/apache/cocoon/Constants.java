@@ -200,9 +200,6 @@ public final class Constants {
     /** Application <code>Context</code> key for the current environment prefix */
     public static final String CONTEXT_ENV_PREFIX = "env-prefix";
 
-    /** Application <code>Context</code> key for the current environment helper */
-    public static final String CONTEXT_ENV_HELPER = "env-helper";
-
     /** Application <code>Context</code> key prefix for the current sitemap virtual components */
     public static final String CONTEXT_VPC_PREFIX = "vpc-";
 

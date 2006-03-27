@@ -21,7 +21,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -73,14 +72,14 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
     // An environment with the URI and URI prefix of the sitemap where the VPC is defined
     private EnvironmentWrapper vpcEnvironment;
 
-    protected DefaultContext context;
+    protected Context context;
     protected SourceResolver resolver;
     protected ServiceManager manager;
 
     private class MyInvokeContext extends InvokeContext {
         public MyInvokeContext(Logger logger) throws Exception {
             super(true);
-            super.processingPipeline = new VirtualProcessingPipeline(AbstractVirtualSitemapComponent.this.context);
+            super.processingPipeline = new VirtualProcessingPipeline();
             ((VirtualProcessingPipeline)super.processingPipeline).enableLogging(logger);
         }
     }
@@ -91,7 +90,7 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
-        this.context = (DefaultContext)context;
+        this.context = context;
     }
 
     /**
