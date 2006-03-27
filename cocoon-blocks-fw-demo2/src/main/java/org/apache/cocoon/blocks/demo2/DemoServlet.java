@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @version $Id: TestServlet.java 388756 2006-03-25 13:43:42Z danielf $
+ * @version $Id$
  */
 public class DemoServlet extends HttpServlet {
 
