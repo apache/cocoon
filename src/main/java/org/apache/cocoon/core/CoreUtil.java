@@ -419,7 +419,7 @@ public class CoreUtil {
                 }
             }
         } catch (IOException ignore) {
-            this.environmentContext.log("Unable to read from directory 'WEB-INF/properties'.", ignore);
+            this.environmentContext.log("Unable to read from directory " + directoryName, ignore);
             this.environmentContext.log("Continuing initialization.");            
         } finally {
             resolver.release(directory);
