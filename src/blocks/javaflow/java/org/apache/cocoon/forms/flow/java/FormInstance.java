@@ -16,12 +16,17 @@
 
 package org.apache.cocoon.forms.flow.java;
 
+import java.io.IOException;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.Continuation;
 import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormManager;
 import org.apache.cocoon.forms.binding.Binding;
@@ -177,14 +182,35 @@ public class FormInstance extends AbstractContinuable {
         do {
             sendPageAndWait(uri, bizData);
         
-            FormContext formContext = new FormContext(getRequest(), locale);
-
-            // Prematurely add the bizData as a request attribute so that event listeners can use it
-            // (the same is done by cocoon.sendPage())
-            FlowHelper.setContextObject(this.getObjectModel(), bizData);
-
-            finished = this.form.process(formContext);
-        
+            if (getRequest().getParameter("cocoon-ajax-continue") == null) { 
+	            FormContext formContext = new FormContext(getRequest(), locale);
+	
+	            // Prematurely add the bizData as a request attribute so that event listeners can use it
+	            // (the same is done by cocoon.sendPage())
+	            FlowHelper.setContextObject(this.getObjectModel(), bizData);
+	
+	            finished = this.form.process(formContext);
+	
+	            // See  /cocoon-2.1.X/src/blocks/forms/java/org/apache/cocoon/forms/flow/javascript/Form.js  line 176-201
+	            if (finished && getRequest().getParameter("cocoon-ajax") != null) {
+	                HttpServletResponse httpResponse = (HttpServletResponse) getObjectModel().get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+	                sendStatus(200);
+	                httpResponse.setContentType("text/xml");
+	                String text = "<?xml version='1.0'?><bu:document xmlns:bu='" +
+	                    org.apache.cocoon.ajax.BrowserUpdateTransformer.BU_NSURI +
+	                    "'><bu:continue/></bu:document>";
+	                httpResponse.setContentLength(text.length());
+	                try {
+	                    httpResponse.getWriter().print(text);
+	                } catch (IOException e) {
+	                    // Do nothing
+	                }
+	                Continuation.suspend();
+	            }
+            } else {
+                finished = true;
+            }
+            
         } while(!finished);
     }
     /*
