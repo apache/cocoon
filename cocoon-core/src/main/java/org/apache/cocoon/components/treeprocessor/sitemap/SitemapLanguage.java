@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -32,6 +35,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -59,7 +63,11 @@ import org.apache.cocoon.components.treeprocessor.StandaloneServiceSelector;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.core.MutableSettings;
+import org.apache.cocoon.core.PropertyProvider;
+import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.BeanFactoryFactoryImpl;
+import org.apache.cocoon.core.container.util.PropertyHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
@@ -68,12 +76,14 @@ import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.regexp.RE;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
@@ -124,12 +134,6 @@ public class SitemapLanguage
      * The namespace of configuration for the processor that we are building.
      */
     protected String itsNamespace;
-
-    /**
-     * The context for the processor that we are building It is created by
-     * {@link #createContext(Configuration)}.
-     */
-    private Context itsContext;
 
     /**
      * The service manager for the processor that we are building. It is created
@@ -365,20 +369,28 @@ public class SitemapLanguage
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
             }
-            // componentConfig = new DefaultConfiguration("", "");
+        }
+        // Context and manager and classloader for the sitemap we build
+        final Context itsContext = createContext(tree);
+
+        // TODO Get factory from spring
+        final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
+        factory.setBeanFactory(this.beanFactory);
+
+        // check for sitemap local properties
+        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(ProcessingUtil.SETTINGS_ROLE);
+        if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
+            final String propertyDir = componentConfig.getAttribute("property-dir");
+            settings = this.createSettings(settings, propertyDir);
+        }
+        // replace properties?
+        if ( componentConfig == null || componentConfig.getAttributeAsBoolean("replace-properties", true) ) {
+            tree = this.replaceProperties(tree, settings);
         }
 
-        // Context and manager and classloader for the sitemap we build
-        this.itsContext = createContext(tree);
-
-        // Only create an sitemap internal component manager if there really is
-        // a configuration
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
-        // TODO Get factory from spring
-        BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
-        factory.setBeanFactory(this.beanFactory);
-        this.itsBeanFactory = factory.createBeanFactory(this.getLogger(), componentConfig, this.itsContext, this.processor.getSourceResolver());
+        this.itsBeanFactory = factory.createBeanFactory(this.getLogger(), componentConfig, itsContext, this.processor.getSourceResolver(), settings);
         this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         if (componentConfig != null) {
             // only register listeners if a new bean factory is created
@@ -387,7 +399,7 @@ public class SitemapLanguage
         this.itsComponentInfo = (ProcessorComponentInfo) this.itsManager
                 .lookup(ProcessorComponentInfo.ROLE);
         // Create a helper object to setup components
-        this.itsLifecycle = new LifecycleHelper(getLogger(), this.itsContext, this.itsManager, null /* configuration */);
+        this.itsLifecycle = new LifecycleHelper(getLogger(), itsContext, this.itsManager, null /* configuration */);
 
         // Create & initialize the NodeBuilder selector.
         {
@@ -412,7 +424,7 @@ public class SitemapLanguage
             } finally {
                 this.manager.release(resolver);
             }
-            LifecycleHelper.setupComponent(selector, getLogger(), this.itsContext, this.itsManager,
+            LifecycleHelper.setupComponent(selector, getLogger(), itsContext, this.itsManager,
                     config.getChild("nodes", false), true);
             this.itsBuilders = selector;
         }
@@ -440,6 +452,32 @@ public class SitemapLanguage
         return result;
     }
 
+    /**
+     * Replace all properties
+     */
+    protected Configuration replaceProperties(Configuration tree, Settings settings)
+    throws ConfigurationException {
+        final DefaultConfiguration root = new DefaultConfiguration(tree, true);
+        this.convert(root, settings);
+        return tree;
+    }
+
+    protected void convert(DefaultConfiguration config, Settings settings)
+    throws ConfigurationException {
+        final String[] names = config.getAttributeNames();
+        for(int i=0; i<names.length; i++) {
+            final String value = config.getAttribute(names[i]);
+            config.setAttribute(names[i], PropertyHelper.replace(value, settings));
+        }
+        final String value = config.getValue(null);
+        if ( value != null ) {
+            config.setValue(PropertyHelper.replace(value, settings));
+        }
+        final Configuration[] children = config.getChildren();
+        for(int m=0; m<children.length; m++) {
+            convert((DefaultConfiguration)children[m], settings);
+        }
+    }
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that
      * are <code>Disposable</code>. Care should be taken to properly dispose
@@ -607,7 +645,6 @@ public class SitemapLanguage
         this.itsBuilders = null; // Set in build()
         this.itsLifecycle = null; // Set in build()
         this.itsManager = null; // Set in build()
-        this.itsContext = null; // Set in build()
 
         this.registeredNodes.clear();
         this.initializableNodes.clear();
@@ -989,5 +1026,82 @@ public class SitemapLanguage
                             + ConfigurableListableBeanFactory.class.getName());
         }
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
+    }
+
+    /**
+     * Get the settings for Cocoon.
+     * This method reads several property files and merges the result. If there
+     * is more than one definition for a property, the last one wins.
+     * The property files are read in the following order:
+     * 1) PROPERTYDIR/*.properties
+     *    Default values for the core and each block - the order in which the files are read is not guaranteed.
+     * 2) PROPERTYDIR/[RUNNING_MODE]/*.properties
+     *    Default values for the running mode - the order in which the files are read is not guaranteed.
+     * 3) Property providers (ToBeDocumented)
+     *
+     * @return A new Settings object
+     */
+    protected MutableSettings createSettings(Settings parent, String directory) {
+        // get the running mode
+        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
+
+        // create an empty settings objects
+        final MutableSettings s = new MutableSettings(parent);
+
+        // now read all properties from the properties directory
+        this.readProperties(directory, s);
+        // read all properties from the mode dependent directory
+        this.readProperties(directory + '/' + mode, s);
+
+        // Next look for custom property providers
+        Iterator i = s.getPropertyProviders().iterator();
+        while ( i.hasNext() ) {
+            final String className = (String)i.next();
+            try {
+                PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
+                s.fill(provider.getProperties());
+            } catch (Exception ignore) {
+                this.getLogger().warn("Unable to get property provider for class " + className, ignore);
+                this.getLogger().warn("Continuing initialization.");            
+            }
+        }
+
+        return s;
+    }
+
+    /** Parameter map for the context protocol */
+    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
+
+    /**
+     * Read all property files from the given directory and apply them to the settings.
+     */
+    protected void readProperties(String          directoryName,
+                                  MutableSettings s) {
+        final SourceResolver resolver = this.processor.getSourceResolver();
+        Source directory = null;
+        try {
+            directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
+            if (directory.exists() && directory instanceof TraversableSource) {
+                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
+                while (c.hasNext()) {
+                    final Source src = (Source) c.next();
+                    if ( src.getURI().endsWith(".properties") ) {
+                        final InputStream propsIS = src.getInputStream();
+                        if ( this.getLogger().isDebugEnabled() ) {
+                            this.getLogger().debug("Reading settings from '" + src.getURI() + "'.");
+                        }
+                        final Properties p = new Properties();
+                        p.load(propsIS);
+                        propsIS.close();
+                        s.fill(p);
+                    }
+                }
+            }
+        } catch (IOException ignore) {
+            this.getLogger().warn("Unable to read from directory " + directoryName, ignore);
+            this.getLogger().warn("Continuing initialization.");            
+        } finally {
+            resolver.release(directory);
+        }
     }
 }

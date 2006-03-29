@@ -27,7 +27,7 @@ import org.apache.cocoon.core.Settings;
  */
 public class PropertyHelper {
 
-        /**
+    /**
      * Replace all property references in the string with the current value
      * and return it.
      */

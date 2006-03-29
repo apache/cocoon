@@ -50,21 +50,17 @@ public class BeanFactoryFactoryImpl
     }
 
     /**
-     * @see org.apache.cocoon.core.container.spring.BeanFactoryFactory#createBeanFactory(org.apache.avalon.framework.logger.Logger, org.apache.avalon.framework.configuration.Configuration, org.apache.avalon.framework.context.Context, org.apache.excalibur.source.SourceResolver)
+     * @see org.apache.cocoon.core.container.spring.BeanFactoryFactory#createBeanFactory(org.apache.avalon.framework.logger.Logger, org.apache.avalon.framework.configuration.Configuration, org.apache.avalon.framework.context.Context, org.apache.excalibur.source.SourceResolver, org.apache.cocoon.core.Settings)
      */
     public ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
                                                              Configuration  config,
                                                              Context        sitemapContext,
-                                                             SourceResolver resolver)
+                                                             SourceResolver resolver,
+                                                             Settings       settings)
     throws Exception {
         // setup spring container
         // first, get the correct parent
-        ConfigurableListableBeanFactory parentFactory = this.beanFactory;
-        final Request request = ContextHelper.getRequest(sitemapContext);
-        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE) != null) {
-            parentFactory = (ConfigurableListableBeanFactory) request
-                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
-        }
+        final ConfigurableListableBeanFactory parentFactory = this.getCurrentBeanFactory(sitemapContext);
 
         if ( config != null ) {
             final AvalonEnvironment ae = new AvalonEnvironment();
@@ -76,11 +72,21 @@ public class BeanFactoryFactoryImpl
             }
             ae.servletContext = ((ServletConfig) sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
                     .getServletContext();
-            ae.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
+            ae.settings = settings;
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
             final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, resolver);
             return BeanFactoryUtil.createBeanFactory(ae, ci, resolver, parentFactory, false);
+        }
+        return parentFactory;
+    }
+
+    public ConfigurableListableBeanFactory getCurrentBeanFactory(Context sitemapContext) {
+        ConfigurableListableBeanFactory parentFactory = this.beanFactory;
+        final Request request = ContextHelper.getRequest(sitemapContext);
+        if (request.getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE) != null) {
+            parentFactory = (ConfigurableListableBeanFactory) request
+                    .getAttribute(CocoonBeanFactory.BEAN_FACTORY_REQUEST_ATTRIBUTE, Request.REQUEST_SCOPE);
         }
         return parentFactory;
     }
