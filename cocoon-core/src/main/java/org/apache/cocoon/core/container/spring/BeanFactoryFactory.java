@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container.spring;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.core.Settings;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
@@ -36,6 +37,12 @@ public interface BeanFactoryFactory {
     ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
                                                       Configuration  config,
                                                       Context        sitemapContext,
-                                                      SourceResolver resolver)
+                                                      SourceResolver resolver,
+                                                      Settings       settings)
     throws Exception;
+
+    /**
+     * Get the current bean factory.
+     */
+    ConfigurableListableBeanFactory getCurrentBeanFactory(Context sitemapContext);
 }
