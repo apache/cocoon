@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Apples Block Samples">
+
+ <group name="Back">
+  <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+  <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  <note>
+    Apples is a new flow implementation for Cocoon that allows you to write your
+    deciding flow components (business logic) in pure OO Java.
+    Apples is currently still alpha software and under active development. Your
+    feedback is very much welcome on the Cocoon mailing lists.
+  </note>
+  <sample name="Apples Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=Apples">
+    Currently there is no documentation available (not even on the Cocoon Wiki).</sample>
+ </group>
+
+ <group name="Apples Samples">
+  <sample name="Cocoon Forms XML Binding." href="form2xml.flow">An Apple controlling a form for just editing an XML file.</sample>
+  <sample name="Calculation."              href="calc.flow">Simplistic calculator implementation.</sample>
+  <sample name="Number Guessing."          href="guess.flow">Number Guessing game.</sample>
+  <sample name="Tower of Hanoi puzzle."    href="hanoi.flow">The popular mind puzzle.</sample>
+ </group>
+
+</samples>
