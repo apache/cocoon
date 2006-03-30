@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Use JXTemplateTransformer to generate a page out of our data -->
+
+<page id="page" xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
+
+    <title>#{title}</title>
+
+    <content>
+
+        <h2>Task info</h2>
+
+        <table>
+            <tr>
+                <td class="legend">Task ID</td>
+                <td>#{task/id}</td>
+            </tr>
+            <tr>
+                <td class="legend">Task name</td>
+                <td class="titleCell">#{task/taskName}</td>
+            </tr>
+            <tr>
+                <td class="legend">Assigned to</td>
+                <td>#{task/assignedTo}</td>
+            </tr>
+
+        </table>
+
+        <p>
+            <a href="../edit/singleTask?taskId=#{task/id}">Edit this task</a>
+        </p>
+
+        <h2>Comments</h2>
+        <table>
+            <tr>
+                <c:forEach select="#{task/comments}">
+                    <tr class="listRow">
+                        <td><c:formatDate value="#{date}" dateStyle="medium"/></td>
+                        <td>#{comment}</td>
+                    </tr>
+                </c:forEach>
+            </tr>
+
+        </table>
+
+        <p class="footer">
+            <a href="../view/allTasks">Back to the list of tasks</a>
+        </p>
+
+    </content>
+</page>
+
+
+
+
