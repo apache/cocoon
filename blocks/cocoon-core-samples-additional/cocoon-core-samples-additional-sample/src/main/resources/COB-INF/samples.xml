@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Main samples page
+    |
+    | CVS $Id: samples.xml 216123 2005-07-13 07:18:17Z cziegeler $
+    +-->
+
+<samples name="Additional Cocoon Core Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="The Power of XML">
+    <sample name="XML-ized web sites" href="sites/">
+      A couple of existing web sites have been xml-ized to show you
+      how easier it is to handle pure-content markup.
+    </sample>   
+    <sample name="Presentation Slides" href="slides/slides">
+      An example of more complex use of XSLT for navigation and content filtering.
+    </sample>   
+    <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
+      Separation of content and style allows not only to serve your content
+      in different ways, but also to syndicate, aggregate or otherwise include
+      and transform content provided by other web sites.
+    </sample>
+    <sample name="Catalog Entity Resolver" href="catalog/">
+      XML is handy but also very complex. Cocoon integrates a number of 
+      facilities to help you during your journey through XML-land. One of these
+      is the centralized handling of resolving network resources 
+      (e.g. DTDs, symbols, character entity sets, images) to local copies
+      through the use of catalogs. Also explains how to use DocBook DTDs.
+    </sample>
+  </group>
+
+  <group name="More Core Samples">
+    <sample href="modules/" name="The Power of Sitemap: Input Modules">
+      This example shows the usage of Input Modules in sitemap attribute expressions.
+    </sample>
+    <sample href="sources/" name="The Power of Sitemap: Sources">
+      This example shows the usage of sources in the sitemap.
+    </sample>    
+    <sample href="errorhandling/" name="Error Handling">
+      An example page producing exceptions and handling them. Demonstrates the 
+      handler hierarchy and the exception selectors.
+    </sample>
+    <sample href="components" name="Core Components">
+      Some samples of various components that are included with the core,
+      e.g. Stream Generators, Paginator Transformers, Image Readers.
+    </sample>
+    <sample href="misc" name="Miscellaneous samples">
+      Some stuff that does not fit into the other groups of samples.
+    </sample>
+  </group>
+
+</samples>

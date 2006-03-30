@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+  <title>Form Validation And Pre-Population</title>
+
+  <h1>Receipt</h1>
+  <content>
+    <para>
+      The entered data successfully passed the validation stage.
+    </para>
+
+    <form name="car" method="post">
+      <para>
+        A <input type="text" name="type" readonly="true"/> car which seats
+        <input type="text" name="persons" readonly="true"/> has been reserved for you.
+        Please leave the deposit of EUR <input type="text" name="deposit" readonly="true"/>
+        at the reception desk. The invoice will be sent to <textarea name="address"/>
+        and a confirmation email will arrive to
+        <input type="text" readonly="true" name="email"/> shortly. Enjoy your car.
+      </para>
+
+      <para>Allowed drivers are</para>
+      <ol>
+        <repeat on="driver">
+          <li><input type="text" name="driver" readonly="true"/></li>
+        </repeat>
+      </ol>
+
+      <para>Thank you for choosing Cocoon demo for your car reservation needs.</para>
+    </form>
+  </content>
+</page>
