@@ -19,12 +19,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-tobeconverted-modules</artifactId>
+    <artifactId>cocoon-blocks-fw</artifactId>
     <version>x-SNAPSHOT</version>
   </parent>  
   <packaging>jar</packaging>
   
-  <name>cocoon-default</name>
+  <name>Cocoon default (all blocks to run blocks-fw)</name>
     
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-default</artifactId>

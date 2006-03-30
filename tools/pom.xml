@@ -15,32 +15,29 @@
   limitations under the License.
 -->
 <!--+
-    | @version $Id: pom.xml 367957 2006-01-11 07:18:15Z giacomo $
-    |
+    | @version $Id$
     +-->
-<project>
-
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>  
+  
+  <packaging>pom</packaging>  
+  
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-tools-modules</artifactId>
+    <artifactId>cocoon</artifactId>
     <version>x-SNAPSHOT</version>
   </parent>
-  
-  <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-deployer</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <artifactId>cocoon-tools-modules</artifactId>
     
-  <packaging>pom</packaging>
-  <name>Cocoon Deployer [modules]</name>
+  <name>Cocoon Tools [modules]</name>
 
   <modules>
-    <module>cocoon-deployer-core</module>  
-    <module>cocoon-deployer-minimal-webapp</module>     
-    <module>cocoon-deployer-plugin</module>
-    <module>cocoon-deployer-plugin-demo</module>
-    <module>cocoon-tutorial-simple-block</module>             
-  </modules>
-  
+		<module>cocoon-block-deployer</module>
+	</modules>
 </project>
