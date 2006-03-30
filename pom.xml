@@ -29,8 +29,10 @@
   <packaging>pom</packaging>
   <name>Blocks Framework</name>
   <modules>
-    <!--
     <module>cocoon-blocks-fw-impl</module>
+    <module>cocoon-blocks-fw-demo1</module>
+    <module>cocoon-blocks-fw-demo2</module>
+    <!--
     <module>cocoon-blocks-fw-ecm-impl</module>
     <module>cocoon-blocks-fw-servlet-impl</module>
     <module>cocoon-blocks-fw-sample</module>
