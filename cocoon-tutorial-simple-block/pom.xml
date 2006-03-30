@@ -24,7 +24,7 @@
     </parent>  
   <packaging>jar</packaging>
   
-  <name>cocoon-tutorial-simple-block</name>
+  <name>Cocoon Deployer: Blocks tutorial sample</name>
     
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-tutorial-simple-block</artifactId>
