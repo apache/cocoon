@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2006 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. 
+-->
+<deploy xmlns="http://apache.org/cocoon/blocks/deploy/1.0">
+  
+  <cocoon block-fw-urn="org.apache.cocoon:cocoon-default:1.0-SNAPSHOT"/>
+  
+  <block id="plugin-demo1" urn="org.apache.cocoon:cocoon-deployer-plugin-demo:1.0-SNAPSHOT">
+    <mount path="/p1"/>
+  </block>      
+
+  <block id="plugin-demo2" urn="org.apache.cocoon:cocoon-deployer-plugin-demo:1.0-SNAPSHOT">
+    <mount path="/p2"/>
+  </block> 
+  
+</deploy>
