@@ -20,19 +20,21 @@
     +-->
 <project>
   <parent>
-    <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>2.2.0-SNAPSHOT</version>
+    <artifactId>cocoon-core-modules</artifactId>
+    <version>x-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-blocks-fw</artifactId>
   <packaging>pom</packaging>
   <name>Blocks Framework</name>
-  <version>1.0-SNAPSHOT</version>
   <modules>
+    <!--
     <module>cocoon-blocks-fw-impl</module>
     <module>cocoon-blocks-fw-ecm-impl</module>
     <module>cocoon-blocks-fw-servlet-impl</module>
     <module>cocoon-blocks-fw-sample</module>
+    -->
+    <module>cocoon-default</module>
   </modules>
 </project>
