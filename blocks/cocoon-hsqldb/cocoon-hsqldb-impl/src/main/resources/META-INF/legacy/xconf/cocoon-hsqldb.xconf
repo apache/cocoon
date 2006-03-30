@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    |
+    | SVN $Id$
+    +-->
+<components>
+  <!-- Include roles -->
+  <include src="resource://org/apache/cocoon/components/database/database.roles"/>
+  <include src="resource://org/apache/cocoon/components/hsqldb/hsqldb.roles"/>
+
+  <!--+
+      | HSQLDB Server for samples:
+      |
+      |  port   : number      port where the server is listening
+      |  silent : true/false  display all queries
+      |  trace  : true/false  display JDBC trace messages
+      |  name   : string      name of the HSQL-DB
+      |  path   : string      path to the database - context-protocol is resolved
+      +-->
+  <hsqldb-server class="org.apache.cocoon.components.hsqldb.ServerImpl"
+                 logger="core.hsqldb-server">
+     <parameter name="port" value="${org.apache.cocoon.hsqldb.server-port}"/>
+     <parameter name="silent" value="true"/>
+     <parameter name="trace" value="false"/>
+     <parameter name="thread-pool-name" value="daemon"/>
+     <parameter name="name" value="cocoondb"/>
+     <parameter name="path" value="context://WEB-INF/db"/>
+  </hsqldb-server>
+
+  <datasources>
+    <jdbc logger="core.datasources.personnel" name="personnel">
+      <!--
+          If you have an Oracle database, and are using the the
+      pool-controller below, you should add the attribute
+      "oradb" and set it to true.
+
+      <pool-controller min="5" max="10" oradb="true"/>
+
+      That way the test to see if the server has disconnected
+      the JdbcConnection will function properly.
+      -->
+      <pool-controller max="10" min="5"/>
+      <!--
+          If you need to ensure an autocommit is set to true or
+      false, then create the "auto-commit" element below.
+
+      <auto-commit>false</auto-commit>
+
+      The default is true.
+      -->
+      <dburl>jdbc:hsqldb:hsql://localhost:${org.apache.cocoon.hsqldb.server-port}</dburl>
+      <user>sa</user>
+      <password></password>
+    </jdbc>
+  </datasources>
+</components>
