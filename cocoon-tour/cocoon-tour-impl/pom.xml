@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
-  Copyright 2006 The Apache Software Foundation
+  Copyright 2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,24 +16,26 @@
 -->
 <!--+
     | @version $Id:$
+    |
     +-->
-<project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <artifactId>cocoon-tour</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-blocks</artifactId>
-  <packaging>pom</packaging>
-  <name>Cocoon Blocks</name>
+  <artifactId>cocoon-tour-impl</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <description></description>
-  <modules>
-    <module>cocoon-xsp</module>
-  </modules>
+  <packaging>jar</packaging>
+  <name>tour Block Implementation</name>
+  <description/>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <version>2.2.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>
