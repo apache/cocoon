@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xsp:page
+  language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:jpath="http://apache.org/xsp/jpath/1.0"
+  >
+
+    <site view="xsp">
+        <xsp:attribute name="signOn"><jpath:value-of select="accountForm/signOn"/></xsp:attribute>
+        <backpointer name="Main Menu" do="index.do" />
+        <message>Please confirm the information below and then press continue...</message>
+        <panel>
+            <xsp:attribute name="header">Order</xsp:attribute>
+            <xsp:attribute name="subheader"><jpath:value-of select="order/orderDate" /></xsp:attribute>
+            
+            <panel label="Payment Details">
+                <field label="Card Type"><jpath:value-of select="order/cardType" /></field>
+                <field label="Card Number"><jpath:value-of select="order/creditCard" /></field>
+                <field label="Expiry Date (MM/YYYY)"><jpath:value-of select="order/expiryDate" /></field>
+            </panel>
+            <panel label="Billing Address">
+                <field label="First name"><jpath:value-of select="order/billToFirstName"/></field>
+                <field label="Last name" ><jpath:value-of select="order/billToLastName"/></field>
+                <field label="Address 1" ><jpath:value-of select="order/billAddress1"/></field>
+                <field label="Address 2" ><jpath:value-of select="order/billAddress2"/></field>
+                <field label="City" ><jpath:value-of select="order/billCity"/></field>
+                <field label="State" ><jpath:value-of select="order/billState"/></field>
+                <field label="Zip" ><jpath:value-of select="order/billZip"/></field>
+                <field label="Country" ><jpath:value-of select="order/billCountry"/></field>
+            </panel>
+            <panel label="Shipping Address">
+                <field label="First name"><jpath:value-of select="order/shipToFirstName"/></field>
+                <field label="Last name" ><jpath:value-of select="order/shipToLastName"/></field>
+                <field label="Address 1" ><jpath:value-of select="order/shipAddress1"/></field>
+                <field label="Address 2" ><jpath:value-of select="order/shipAddress2"/></field>
+                <field label="City" ><jpath:value-of select="order/shipCity"/></field>
+                <field label="State" ><jpath:value-of select="order/shipState"/></field>
+                <field label="Zip" ><jpath:value-of select="order/shipZip"/></field>
+                <field label="Country" ><jpath:value-of select="order/shipCountry"/></field>
+            </panel>
+        </panel>
+        <nextpointer img="images/button_continue.gif">
+            <xsp:attribute name="do"><jpath:continuation/>.kont?confirmed=true</xsp:attribute>
+        </nextpointer>
+    </site>
+
+</xsp:page>
+
+
+
+
