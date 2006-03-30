@@ -45,8 +45,8 @@
 		<module>cocoon-core-components</module>
 		<module>cocoon-cron</module>
 		<module>cocoon-databases</module>
+		-->		
 		<module>cocoon-default</module>
-		-->
 		<module>cocoon-forms</module>
 		<!--module>cocoon-jcr</module>
 		<module>cocoon-mocks</module>
