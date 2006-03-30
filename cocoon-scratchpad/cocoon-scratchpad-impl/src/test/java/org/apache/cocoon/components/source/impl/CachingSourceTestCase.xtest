@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<!--
+ Copyright 1999-2004 The Apache Software Foundation.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<testcase>
+ <roles>
+
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"
+  />
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"
+  />
+
+  <role name="org.apache.excalibur.store.Store"
+       shorthand="store"
+       default-class="org.apache.excalibur.store.impl.MRUMemoryStore"
+  />
+  
+  <role name="org.apache.excalibur.store.StoreJanitor"
+       shorthand="store-janitor"
+       default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"
+  />
+  
+  <role name="org.apache.cocoon.caching.Cache"
+        shorthand="cache"
+        default-class="org.apache.cocoon.caching.impl.CacheImpl"
+  />
+  
+  <role name="org.apache.cocoon.components.source.impl.Refresher"
+        shorthand="delay-refresher"
+        default-class="org.apache.cocoon.components.source.impl.DelayRefresher"
+  />
+  
+  <role name="org.apache.cocoon.components.cron.JobScheduler"
+        shorthand="job-scheduler"
+        default-class="org.apache.cocoon.components.cron.QuartzJobScheduler"
+  />
+
+  <role name="org.apache.cocoon.components.cron.CronJob/UpdateTarget"
+        shorthand="update-target"
+        default-class="org.apache.cocoon.components.source.impl.UpdateTarget"
+  />
+  
+  <role name="org.apache.cocoon.components.sax.XMLSerializer"
+        shorthand="xml-serializer"
+        default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"
+  />
+
+  <role name="org.apache.cocoon.components.sax.XMLDeserializer"
+        shorthand="xml-deserializer"
+        default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"
+  />
+  
+  <role name="org.apache.excalibur.xml.sax.SAXParser"
+        shorthand="xml-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"
+  />
+  
+  <role name="org.apache.excalibur.xmlizer.XMLizer"
+        shorthand="xmlizer"
+        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"
+  />
+
+  <role name="org.apache.cocoon.components.thread.RunnableManager"
+        shorthand="runnable-manager"
+        default-class="org.apache.cocoon.components.thread.DefaultRunnableManager"/>
+
+ </roles>
+
+ <components>
+  
+  <source-factories>
+   <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="caching" logger="core.cachingsource"/>
+   <component-instance class="org.apache.cocoon.components.source.impl.CachingSourceFactory" name="async-caching" logger="core.asynchcachingsource">
+     <parameter name="async" value="true"/>
+   </component-instance>
+   <component-instance class="org.apache.cocoon.components.source.impl.XMLizableSourceFactory" name="xml" logger="core.xmlsource"/>
+   <!--component-instance class="org.apache.cocoon.components.source.impl.WebDAVSourceFactory" name="webdav" logger="core.webdavsource"/-->
+   <component-instance class="org.apache.excalibur.source.impl.FileSourceFactory" name="file" logger="core.filesource"/>
+   <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource" logger="core.resourcesource"/>
+   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+  </source-factories>
+  
+  <store logger="core.persistentstore">
+    <parameter name="directory" value="cachingsourcetest"/>
+  </store>
+  
+  <cache logger="core.cache"/>
+  
+  <delay-refresher logger="core.refresher">
+    <parameter name="write-interval" value="10"/>
+    <parameter name="scheduler-target" value="org.apache.cocoon.components.cron.CronJob/update"/>
+  </delay-refresher>
+  
+  <update-target logger="core.updatetarget"/>
+  
+  <xmlizer logger="core.xmlizer">
+      <parser mime-type="text/xml" role="org.apache.excalibur.xml.sax.SAXParser"/>
+  </xmlizer>
+  
+ </components>
+</testcase>
