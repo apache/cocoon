@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- $Id: messages.xml 54581 2004-10-11 13:30:17Z jeremy $ -->
+<catalogue>
+
+	<!-- these keys are bound to your Index Field names -->
+	<!-- these keys are used for the Field Menu -->
+  <message key="field.abstract.label">Resumen del Documento</message>
+  <message key="field.answer.label">Respuesta de preguntas frecuentes</message>
+  <message key="field.any.label">Cualquier campo del documento</message>
+  <message key="field.code.label">Código del documento</message>
+  <message key="field.link.label">Enlace del documento</message>
+  <message key="field.p.label">Párrafo del documento</message>
+  <message key="field.person@name.label">Nombre del autor</message>
+  <message key="field.question.label">Pregunta Frecuente</message>
+  <message key="field.s1@title.label">Título de sección nivel 1</message>
+  <message key="field.s2@title.label">Título de sección nivel 2</message>
+  <message key="field.source.label">Código fuente del ejemplo</message>
+  <message key="field.title.label">Título del documento</message>
+
+	<!-- these keys are bound to your Index Field names -->
+	<!-- these keys are used to describe the queries -->
+  <message key="search.abstract.field">Resumen del documento</message>
+  <message key="search.answer.field">faq respuesta</message>
+  <message key="search.any.field">cualquier campo</message>
+  <message key="search.code.field">código del documento</message>
+  <message key="search.link.field">enlace del documento</message>
+  <message key="search.p.field">párrafo del documento</message>
+  <message key="search.person@name.field">nombre del autor</message>
+  <message key="search.question.field">faq pregunta</message>
+  <message key="search.s1@title.field">título de sección 1</message>
+  <message key="search.s2@title.field">título de sección 2</message>
+  <message key="search.source.field">fuente de ejemplo</message>
+  <message key="search.title.field">título del documento</message>
+
+  <!-- advanced query -->
+  <message key="advanced.criterion.label">Criterio</message>
+  <message key="advanced.page.note">Puede editar y guardar esta consulta para usarla después.</message>
+  <message key="advanced.page.title">Una consulta avanzada</message>
+  <message key="advanced.query.label">Consulta</message>
+	<!-- cancel button -->
+  <message key="cancel.hint">Cancelar esta edición</message>
+  <message key="cancel.label">Cancelar</message>
+	<!-- editing criteria -->
+  <message key="criterion.add.hint">Agregar un criterio nuevo</message>
+  <message key="criterion.add.label">Agregar criterio</message>
+  <message key="criterion.delete.hint">Borrar este criterio</message>
+  <message key="criterion.delete.label">Borrar</message>
+  <message key="criterion.field.hint">Cuales campos se deben buscar en</message>
+  <message key="criterion.field.label">Campo de búsqueda</message>
+  <message key="criterion.match.hint">La forma en que sus términos de búsqueda se cumplen</message>
+  <message key="criterion.match.label">Cumple</message>
+  <message key="criterion.term.hint">La palabra o palabras que busca</message>
+  <message key="criterion.term.label">Palabra o palabras</message>
+	<!-- displaying history -->
+  <message key="history.date.label">Tiempo</message>
+  <message key="history.edit.hint">Editar esta consulta</message>
+  <message key="history.edit.label">Editar</message>
+  <message key="history.hits.label">Aciertos</message>
+  <message key="history.none">Sin historia</message>
+  <message key="history.page.title">Haba de Consulta : Historia</message>
+  <message key="history.queries.title">Consultas</message>
+  <message key="history.query.label">Consulta</message>
+  <message key="history.search.hint">Re-buscar esta consulta</message>
+  <message key="history.search.label">Buscar</message>
+  <message key="history.title.label">Títulos</message>
+  <message key="history.cleared.note">Su historia de búsquedas esta limpia.</message>
+  <message key="history.save.label">Guardar</message>
+  <message key="history.save.hint">Guarde esta búsqueda en sus favoritos.</message>
+  <!-- displaying favourites -->
+  <message key="favourites.page.title">Consultas favoritas</message>
+  <message key="favourites.queries.title">Consultas</message>
+  <message key="favourites.date.label">Fecha</message>
+  <message key="favourites.query.label">Consulta</message>
+  <message key="favourites.title.label">Título</message>
+  <message key="favourites.search.label">Búsqueda</message>
+  <message key="favourites.search.hint">Buscar utilizando este favorito.</message>
+  <message key="favourites.delete.label">Borrar</message>
+  <message key="favourites.delete.hint">Borre permanentemente este favorito.</message>
+  <message key="cancel.save.note">Guardar esta búsqueda fué cancelado.</message>
+  <message key="history.title.label">Título</message>
+  <message key="search.fave.hint">Una de sus búsquedas favoritas.</message>  
+	<!-- linking -->
+  <message key="link.home.hint">Página principal de los ejemplo de haba de consulta</message>
+  <message key="link.home.label">Hogar</message>
+	<!-- new queries -->
+  <message key="new.advanced.hint">ejecute búsquedas complejas de multiples criterios</message>
+  <message key="new.advanced.label">Nueva consulta avanzada</message>
+  <message key="new.simple.hint">ejecute búsqueda simple de un solo criterio</message>
+  <message key="new.simple.label">Nueva consulta simple</message>
+	<!-- query paging -->
+  <message key="paging.page.hint">la página desde la cual se inicia</message>
+  <message key="paging.page.label">Página</message>
+  <message key="paging.size.hint">cuantos aciertos por página</message>
+  <message key="paging.size.label">Aciertos</message>
+  <message key="paging.total.hint">cuantos aciertos tuvo esta consulta la última vez que fue usada</message>
+  <message key="paging.total.label">Resultados</message>
+	<!-- bool field -->
+  <message key="query.bool.hint">la forma en que sus criterios se cumplen</message>
+  <message key="query.bool.label">Criterios de Búsqueda</message>
+  <!-- name field -->
+  <message key="query.name.hint">el nombre que esta consulta tendrá en la historia</message>
+  <message key="query.name.label">Nombre de la Consulta</message>
+	<!-- these keys are bound to values in the SimpleLuceneQuery -->
+  <message key="search..bool">que cumple</message>
+  <message key="search.and.bool">que cumple todo de </message>
+  <message key="search.or.bool">que cumple algo de</message>
+	<!-- titles -->
+  <message key="search.advanced.title">Consulta avanzada</message>
+  <message key="search.edit.title">Editar esta consulta</message>
+  <message key="search.favourites.title">Favoritos</message>
+  <message key="search.history.title">Historia</message>
+  <message key="search.clearhistory.title">Limpiar Historia</message>
+  <message key="search.new.title">Nueva Consulta</message>
+  <message key="search.page.title">Haba de Consulta</message>
+  <message key="search.query.title">Consulta</message>
+  <message key="search.section.title">Documentos</message>
+  <message key="search.simple.title">Consulta Simple</message>
+  <message key="search.subject.title">Documentos</message>
+	<!-- these keys are bound to values in the SimpleLuceneCriterion -->
+  <message key="search.all.match">contiene todas las palabras en</message>
+  <message key="search.any.match">contiene cualquier palabra en</message>
+  <message key="search.like.match">es parecido a</message>
+  <message key="search.not.match">no contiene</message>
+  <message key="search.phrase.match">contiene la frase</message>
+	<!-- labels -->
+  <message key="search.criteria.label">estos criterios</message>
+  <message key="search.criterion.label">este criterio</message>
+  <message key="search.next.label">siguiente</message>
+  <message key="search.pagecount.label">Número de páginas</message>
+  <message key="search.pagenumber.label">Página</message>
+  <message key="search.pagesize.label">Aciertos por páginas</message>
+  <message key="search.previous.label">anterior</message>
+  <message key="search.rank.label">Fila</message>
+  <message key="search.recordcount.label">Total de aciertos</message>
+  <message key="search.score.label">Puntaje</message>
+  <message key="search.title.label">Título</message>
+  <message key="search.uri.label">URI</message>
+	<!-- hints -->
+  <message key="search.edit.hint">puede editar esta consulta o guardarla para usarla luego</message>
+  <message key="search.favourites.hint">ver y editar sus consultas favoritas</message>
+  <message key="search.history.hint">ver su historia de consultas</message>
+  <message key="search.new.hint">crear una consulta nueva de este mismo tipo</message>
+	<!-- notes -->
+  <message key="search.norecords.note">sin resultados, favor trate de nuevo</message>
+  <message key="simple.page.note">Ingrese algunas palabras y pulse enviar.</message>
+  <message key="simple.page.title">una consulta simple</message>
+	<message key="required.note">* requerido</message>
+	<message key="cancel.note">canceló su edición</message>
+	<!-- tips -->
+	<message key="query.tip.title">Consejos para las consultas</message>
+	<message key="query.tip.high">
+		<p>Para disminuir el número de aciertos, intente:
+			<ul>
+				<li>Agregar uno o más criterios que cumplan usando "no contiene", para eliminar los aciertos no deseados.</li>
+				<li>Buscar en campos específicos en lugar de todos los campos.</li>
+				<li>Requieriendo que todas sus criterios de búsqueda sean encontrados, en lugar de solo algunos de ellos.</li>
+				<li>Aumentando el número de criterios requeridos.</li>
+				<li>Use "contiene la frase" o "contiene todas las palabras en".</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.low">
+		<p>Para aumentar el número de aciertos, intente:
+			<ul>
+				<li>Buscar en todos los campos en lugar de buscar en un campo especifico.</li>
+				<li>Buscar sus palabras usando "es como" o "contiene cualquier palabra en".</li>
+				<li>Permitir a la consulta cumplir solo algunos de sus criterios en lugar de todos.</li>
+				<li>Aumentando el número de criterios no requeridos.</li>
+			</ul>
+		</p>
+	</message>
+	<message key="query.tip.prohibited">
+		<p>Todos sus criterios usan "no contiene", la consulta no funcionará hasta que agrege al menos un criterio que positivamente encuentre algo, luego los criterios que prohiben podrán filtrar los aciertos de esta.</p>
+	</message>
+	<!-- errors -->
+  <message key="search.error.noquery">No habia una consulta</message>
+  <message key="search.error.nohistory">No tiene historia por el momento</message>
+  <message key="search.error.noindex">Debe hacer un índice de Lucene primero (pulse <a href="create.html">aqui</a> para hacer uno)</message>
+  <message key="error.invalid.content">El contenido que deseaba indexar no existe, este ejemplo indexa 'docs/xdocs', asegúrese de haber construido la documentación de Cocoon.</message>
+
+	<!-- submit button -->
+  <message key="submit.hint">guardar cambios y buscar</message>
+  <message key="submit.label">Enviar</message>
+</catalogue>
