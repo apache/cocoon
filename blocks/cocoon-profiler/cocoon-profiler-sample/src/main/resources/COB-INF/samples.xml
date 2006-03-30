@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Profiler Block Samples">
+
+ <group name="Back">
+  <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+  <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+ </group>
+
+ <group name="Test">
+  <sample name="Caching test site" href="caching-testsite.html">A simple test side perform the profiling. Is show
+   the current sitemap.</sample>
+
+  <sample name="Non Caching test site" href="noncaching-testsite.html">The same site, but this will not be cached.</sample>
+ </group>
+
+ <group name="Profiler">
+    <note>
+      Run the test a few times first, then view the results.
+    </note>
+  <sample name="Profiler Result" href="profile.html">Shows the result of the profiler.</sample>
+
+  <sample name="Profiler Result 2" href="profile2.html">Another view of the results.</sample>
+
+  <sample name="XML Output" href="profile.xml?cocoon-view=pretty-content">Show source xml code of the profiler generator.</sample>
+ </group>
+
+</samples>
+
