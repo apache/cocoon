@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<root>
+  <x>X</x>
+  <a>A</a>
+  <a b="c">d</a>
+  <a href="x?JSESSIONID=MockSession">x</a>
+  <img src="img/src must not be encoded"/>
+  <a href="href must be encoded?JSESSIONID=MockSession"/>
+  <form action="action must be encoded?JSESSIONID=MockSession"/>
+</root>
