@@ -25,8 +25,8 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <artifactId>cocoon-core-modules</artifactId>
+    <version>x-SNAPSHOT</version>    
   </parent>
   
   <artifactId>cocoon-webapp</artifactId>
@@ -38,7 +38,7 @@
       <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-deployer-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <configuration>
           <serverVersion>2.3</serverVersion>
         </configuration>
@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-deployer-plugin-demo</artifactId>
-      <version>1.0-SNAPSHOT</version>      
+      <version>1.0.0-SNAPSHOT</version>      
     </dependency>    
   </dependencies>
   
