@@ -15,25 +15,73 @@
   limitations under the License.
 -->
 <!--+
-    | @version $Id:$
+    | @version $Id$
     +-->
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>  
+  
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>2.2.0-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-blocks</artifactId>
+  <version>1.0-SNAPSHOT</version>
+    
   <packaging>pom</packaging>
   <name>Cocoon Blocks</name>
-  <version>1.0-SNAPSHOT</version>
-  <description></description>
+
   <modules>
-    <module>cocoon-xsp</module>
-  </modules>
+		<module>cocoon-apples</module>
+		<module>cocoon-asciiart</module>
+		<module>cocoon-axis</module>
+		<module>cocoon-batik</module>
+		<module>cocoon-bsf</module>
+		<module>cocoon-chaperon</module>
+		<module>cocoon-core-samples-additional</module>
+		<module>cocoon-core-samples-main</module>
+		<module>cocoon-deli</module>
+		<module>cocoon-eventcache</module>
+		<module>cocoon-faces</module>
+		<module>cocoon-fop</module>
+		<module>cocoon-hsqldb</module>
+		<module>cocoon-html</module>
+		<module>cocoon-itext</module>
+		<module>cocoon-javaflow</module>
+		<module>cocoon-jfor</module>
+		<module>cocoon-jms</module>
+		<module>cocoon-jsp</module>
+		<module>cocoon-linkrewriter</module>
+		<module>cocoon-lucene</module>
+		<module>cocoon-mail</module>
+		<module>cocoon-midi</module>
+		<module>cocoon-naming</module>
+		<module>cocoon-ojb</module>
+		<module>cocoon-paranoid</module>
+		<module>cocoon-petstore</module>
+		<module>cocoon-poi</module>
+		<module>cocoon-profiler</module>
+		<module>cocoon-proxy</module>
+		<module>cocoon-python</module>
+		<module>cocoon-qdox</module>
+		<module>cocoon-querybean</module>
+		<module>cocoon-repository</module>
+		<module>cocoon-scratchpad</module>
+		<module>cocoon-serializers</module>
+		<module>cocoon-slide</module>
+		<module>cocoon-slop</module>
+		<module>cocoon-stx</module>
+		<module>cocoon-taglib</module>
+		<module>cocoon-tour</module>
+		<module>cocoon-velocity</module>
+		<module>cocoon-web3</module>
+		<module>cocoon-webdav</module>
+		<module>cocoon-xsp</module>
+	</modules>
 </project>
