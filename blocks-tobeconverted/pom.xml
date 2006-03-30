@@ -22,24 +22,37 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
+  <modelVersion>4.0.0</modelVersion>  
+  
+  <packaging>pom</packaging>  
+  
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-modules</artifactId>
+    <artifactId>cocoon</artifactId>
     <version>x-SNAPSHOT</version>
   </parent>
-  
-  <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-apples</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <artifactId>cocoon-blocks-tobeconverted-modules</artifactId>
     
-  <packaging>pom</packaging>
-  
-  <name>Cocoon Apples Block</name>
-  
+  <name>Cocoon Blocks (not converted yet!) [modules]</name>
+
   <modules>
-    <module>cocoon-apples-impl</module>
-    <module>cocoon-apples-sample</module>
-  </modules>
+		<module>cocoon-ajax</module>
+		<!--
+		<module>cocoon-authentication-fw</module>
+		<module>cocoon-captcha</module>
+		<module>cocoon-core-components</module>
+		<module>cocoon-cron</module>
+		<module>cocoon-databases</module>
+		<module>cocoon-default</module>
+		-->
+		<module>cocoon-forms</module>
+		<!--module>cocoon-jcr</module>
+		<module>cocoon-mocks</module>
+		<module>cocoon-portal</module>
+		<module>cocoon-template</module>
+		<module>cocoon-validation</module>
+		<module>cocoon-xmldb</module-->
+	</modules>
 </project>
