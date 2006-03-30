@@ -24,22 +24,22 @@
   
   <modelVersion>4.0.0</modelVersion>  
   
+  <packaging>pom</packaging>  
+  
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>x-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-blocks</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>cocoon-blocks-modules</artifactId>
     
-  <packaging>pom</packaging>
-  <name>Cocoon Blocks</name>
+  <name>Cocoon Blocks [modules]</name>
 
   <modules>
-		<module>cocoon-apples</module>
-		<module>cocoon-asciiart</module>
+		<!--module>cocoon-apples</module-->
+		<!--module>cocoon-asciiart</module>
 		<module>cocoon-axis</module>
 		<module>cocoon-batik</module>
 		<module>cocoon-bsf</module>
@@ -82,6 +82,6 @@
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
-		<module>cocoon-xsp</module>
+		<module>cocoon-xsp</module-->
 	</modules>
 </project>

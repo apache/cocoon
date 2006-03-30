@@ -15,15 +15,22 @@
   limitations under the License.
 -->
 <!--+
-    | This is the main Maven file
+    | This is the main Maven file that contains all global settings, *management and information.
     | @version $Id$
     +-->
-<project>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
   <modelVersion>4.0.0</modelVersion>
+  
+  <packaging>pom</packaging>  
+  
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <packaging>pom</packaging>
-  <version>2.2.0-SNAPSHOT</version>
+  <version>x-SNAPSHOT</version>
+  
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
   <licenses>
@@ -33,29 +40,15 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
   <modules>
-    <module>cocoon-archetypes</module>
-    <module>cocoon-core</module>
-    <module>cocoon-block-deployer</module>
-    <module>cocoon-blocks-fw</module>
-    <module>cocoon-default</module>    
-    <module>cocoon-mocks</module>
-    <!--  Blocks  -->
-    <module>cocoon-ajax</module>
-    <module>cocoon-authentication-fw</module>
-    <module>cocoon-captcha</module>
-    <module>cocoon-cron</module>
-    <module>cocoon-databases</module>
-    <module>cocoon-forms</module>
-    <module>cocoon-core-components</module>    
-    <!--module>cocoon-jcr</module> -->
-    <module>cocoon-portal</module>
-    <module>cocoon-session-fw</module>
-    <module>cocoon-sitemap</module>
-    <module>cocoon-template</module>
-    <module>cocoon-validation</module>
-    <!--module>cocoon-xmldb</module-->
-    <module>cocoon-webapp</module>
+    <module>blocks</module>
+    <module>blocks-tobeconverted</module>    
+    <!--
+    <module>commons</module-->
+    <module>core</module>
+    <!--module>tools</module-->
+    
   </modules>
   <repositories>
     <repository>
@@ -75,8 +68,7 @@
       <url>http://snapshots.maven.codehaus.org/maven2/</url>
     </repository>
   </repositories>
-  <!--
-    Activate this element if you want to use snapshot versions of plugins
+  <!-- Activate this element if you want to use snapshot versions of plugins
   <pluginRepositories>
     <pluginRepository>
       <id>snapshots</id>

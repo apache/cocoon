@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <!--+
-    | @version $Id:$
+    | @version $Id$
     +-->
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
@@ -27,12 +27,12 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-apples</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-apples-sample</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
     
   <packaging>jar</packaging>
   <name>apples Block Samples</name>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-apples-impl</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
