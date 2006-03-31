@@ -29,10 +29,9 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>x-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-tools-modules</artifactId>
     
   <name>Cocoon Tools [modules]</name>
