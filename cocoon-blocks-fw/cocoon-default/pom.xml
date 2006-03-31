@@ -20,13 +20,12 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-fw</artifactId>
-    <version>x-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>  
   <packaging>jar</packaging>
   
   <name>Cocoon default (all blocks to run blocks-fw)</name>
     
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-default</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
