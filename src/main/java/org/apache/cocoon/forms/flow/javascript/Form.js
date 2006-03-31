@@ -105,7 +105,7 @@ Form.prototype.lookupWidget = function(path) {
  * @parameter ttl the time to live of the continuation used to display the form
  */
 Form.prototype.showForm = function(uri, viewdata, ttl) {
-    this.sendFormAndWait(uri, viewdata, ttl)
+    return this.sendFormAndWait(uri, viewdata, ttl);
 }
 
 Form.prototype.sendForm = function(uri, viewdata) {
