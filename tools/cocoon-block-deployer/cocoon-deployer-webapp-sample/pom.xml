@@ -22,11 +22,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-deployer</artifactId>    
-    <version>1.0-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>  
 
   <artifactId>cocoon-deployer-webapp-sample</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>Demo Cocoon web application</name>
@@ -38,7 +38,7 @@
       <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-deployer-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-default</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>     
 

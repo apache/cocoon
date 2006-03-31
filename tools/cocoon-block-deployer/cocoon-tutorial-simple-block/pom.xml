@@ -20,13 +20,12 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-deployer</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
     </parent>  
   <packaging>jar</packaging>
   
   <name>Cocoon Deployer: Blocks tutorial sample</name>
     
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-tutorial-simple-block</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   

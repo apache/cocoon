@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>x-SNAPSHOT</version>    
+    <version>1-SNAPSHOT</version>    
   </parent>
   
   <artifactId>cocoon-webapp</artifactId>

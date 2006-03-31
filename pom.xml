@@ -29,7 +29,7 @@
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>x-SNAPSHOT</version>
+  <version>1-SNAPSHOT</version>
   
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
