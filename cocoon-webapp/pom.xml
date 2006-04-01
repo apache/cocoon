@@ -85,12 +85,17 @@
     <!--dependency> cocoon-session-fw-sample doesn't work because of old-style xconf/roles-files
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-session-fw-sample</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency-->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-deployer-plugin-demo</artifactId>
       <version>1.0.0-SNAPSHOT</version>      
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-fop-sample</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>    
   </dependencies>
   
