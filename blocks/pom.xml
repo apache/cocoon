@@ -38,8 +38,8 @@
   <name>Cocoon Blocks [modules]</name>
 
   <modules>
-		<!--module>cocoon-apples</module-->
-		<!--module>cocoon-asciiart</module>
+		<!--module>cocoon-apples</module
+		<module>cocoon-asciiart</module>
 		<module>cocoon-axis</module>
 		<module>cocoon-batik</module>
 		<module>cocoon-bsf</module>
@@ -48,9 +48,9 @@
 		<module>cocoon-core-samples-main</module>
 		<module>cocoon-deli</module>
 		<module>cocoon-eventcache</module>
-		<module>cocoon-faces</module>
+		<module>cocoon-faces</module-->
 		<module>cocoon-fop</module>
-		<module>cocoon-hsqldb</module>
+		<!--module>cocoon-hsqldb</module>
 		<module>cocoon-html</module>
 		<module>cocoon-itext</module>
 		<module>cocoon-javaflow</module>
