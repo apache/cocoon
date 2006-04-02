@@ -65,7 +65,11 @@
             <exclude>**/SitemapTestCase*</exclude>
             <exclude>**/ContainerTestCase*</exclude>
             <exclude>**/CocoonTestCase*</exclude>
-            <exclude>**/VirtualPipelineGeneratorTestCase*</exclude>
+            <exclude>**/Virtual*TestCase*</exclude>
+            <exclude>**/CIncludeTransformerTestCase*</exclude>
+            <exclude>**/I18NTransformerTestCase*</exclude>
+            <exclude>**/TraxTransformerTestCase*</exclude>
+            <exclude>**/XIncludeTransformerTestCase*</exclude>
           </excludes>
           <!-- currently triggers NPE in surefire plugin
           <systemProperties>
