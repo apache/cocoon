@@ -55,8 +55,8 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             // add source factory selector
             component = new ComponentInfo();
             component.setModel(ComponentInfo.MODEL_SINGLETON);
-            component.setComponentClassName(SourceFactory.ROLE + "Selector");
-            component.setRole("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setComponentClassName("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setRole(SourceFactory.ROLE + "Selector");
             component.setAlias("source-factories");
             component.setDefaultValue("*");
             info.addComponent(component);
