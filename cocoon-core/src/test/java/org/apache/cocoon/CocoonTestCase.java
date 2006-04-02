@@ -25,6 +25,8 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;
 import org.apache.excalibur.source.impl.SourceResolverImpl;
 import org.apache.excalibur.source.impl.URLSourceFactory;
+import org.apache.excalibur.xml.impl.JaxpParser;
+import org.apache.excalibur.xml.sax.SAXParser;
 
 /**
  * Testcase for Cocoon. 
@@ -72,6 +74,13 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
         }
+        if ( this.addSAXParser() ) {
+            ComponentInfo component = new ComponentInfo();
+            component.setComponentClassName(JaxpParser.class.getName());
+            component.setRole(SAXParser.ROLE);
+            component.setConfiguration(new DefaultConfiguration("-"));
+            info.addComponent(component);            
+        }
     }
     
     /**
@@ -89,6 +98,15 @@ public abstract class CocoonTestCase extends ContainerTestCase {
      * default is true.
      */
     protected boolean addSourceResolver() {
+        return true;
+    }
+
+    /**
+     * This method should return true if the sax parser should
+     * be added automatically. Can be overwritten by subclasses. The
+     * default is true.
+     */
+    protected boolean addSAXParser() {
         return true;
     }
 }
