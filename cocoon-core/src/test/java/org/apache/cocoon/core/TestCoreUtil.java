@@ -28,4 +28,8 @@ public class TestCoreUtil extends CoreUtil {
 
     // Simplified classloader handling
     protected void updateEnvironment() throws Exception {}
+
+    // No own classloader
+    protected void createClassloader() throws Exception {
+    }
 }
