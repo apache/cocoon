@@ -104,7 +104,8 @@ public class SitemapTestCase extends TestCase {
     
     protected String getConfiguration() {
         String className = this.getClass().getName();
-        return className.substring(className.lastIndexOf('.') + 1) + ".xconf";
+        String dir = className.replace('.', '/');
+        return dir + ".xconf";
     }
     
     /**

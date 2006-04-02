@@ -617,8 +617,9 @@ public class CoreUtil {
 
         return mainContext;
     }
+
     /**
-     * @see org.apache.cocoon.core.BootstrapEnvironment#getConfigFile(java.lang.String)
+     * Get the URL of the main Cocoon configuration file.
      */
     protected URL getConfigFile(final String configFileName)
     throws Exception {
@@ -646,7 +647,7 @@ public class CoreUtil {
                 result = new URL(usedFileName);
             }
         } catch (Exception mue) {
-            String msg = "Setting for 'configurations' is invalid : " + usedFileName;
+            String msg = "Setting for 'configuration' is invalid : " + usedFileName;
             this.log.error(msg, mue);
             throw new CoreInitializationException(msg, mue);
         }
@@ -657,7 +658,7 @@ public class CoreUtil {
                 try {
                     result = resultFile.getCanonicalFile().toURL();
                 } catch (Exception e) {
-                    String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
+                    String msg = "Setting for 'configuration' is invalid : " + usedFileName;
                     this.log.error(msg, e);
                     throw new CoreInitializationException(msg, e);
                 }
@@ -665,7 +666,7 @@ public class CoreUtil {
         }
 
         if (result == null) {
-            String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
+            String msg = "Setting for 'configuration' doesn't name an existing resource : " + usedFileName;
             this.log.error(msg);
             throw new CoreInitializationException(msg);
         }
