@@ -138,7 +138,12 @@ public class ConfigReader extends AbstractLogEnabled {
 
         // and load configuration with a empty list of loaded configurations
         final Set loadedConfigs = new HashSet();
-        this.parseConfiguration(config, null, loadedConfigs);
+        // what is it?
+        if ( "role-list".equals(config.getName()) || "roles".equals(config.getName())) {
+            this.configureRoles(config);
+        } else {
+            this.parseConfiguration(config, null, loadedConfigs);
+        }
 
         // test for optional user-roles attribute
         if ( rootUri != null ) {

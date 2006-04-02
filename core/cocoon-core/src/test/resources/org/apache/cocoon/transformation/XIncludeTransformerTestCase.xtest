@@ -20,54 +20,8 @@
  </context>
 
  <roles>
-  <role name="org.apache.excalibur.xml.dom.DOMParser"
-        shorthand="dom-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
-
-  <role name="org.apache.excalibur.xmlizer.XMLizer"
-        shorthand="xmlizer"
-        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
-
-  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
-        shorthand="xslt-processor"
-        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
-        
-  <role name="org.apache.excalibur.xml.xpath.XPathProcessor"
-        shorthand="xpath-processor"
-        default-class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
-
-  <role name="org.apache.excalibur.store.Store/TransientStore"
-        shorthand="transient-store"
-        default-class="org.apache.excalibur.store.impl.MemoryStore"/>
-
-  <role name="org.apache.excalibur.store.Store"
-       shorthand="persistent-store"
-       default-class="org.apache.excalibur.store.impl.MemoryStore"/>
  </roles>
 
- <components>
-  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
-   <parameter name="validate" value="false"/>
-   <parameter name="namespace-prefixes" value="false"/>
-   <parameter name="stop-on-warning" value="true"/>
-   <parameter name="stop-on-recoverable-error" value="true"/>
-   <parameter name="reuse-parsers" value="false"/>
-  </xml-parser>
-
-  <xmlizer/>
-
-  <transient-store/>
-
-  <persistent-store/>
-
-  <xslt-processor logger="core.xslt-processor">
-   <parameter name="use-store" value="true"/>
-   <parameter name="incremental-processing" value="true"/>
-  </xslt-processor>
-
- </components>
+ <components/>
 
 </testcase>

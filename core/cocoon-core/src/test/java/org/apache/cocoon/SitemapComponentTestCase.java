@@ -145,8 +145,8 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             // add selector
             component = new ComponentInfo();
             component.setModel(ComponentInfo.MODEL_SINGLETON);
-            component.setComponentClassName(typeClassName + "Selector");
-            component.setRole("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setComponentClassName("org.apache.cocoon.core.container.DefaultServiceSelector");
+            component.setRole(typeClassName + "Selector");
             component.setDefaultValue(key);
             info.addComponent(component);
         }

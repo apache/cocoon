@@ -84,7 +84,7 @@
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components.pool</groupId>
-      <artifactId>excalibur-pool-impl</artifactId>
+      <artifactId>excalibur-pool-api</artifactId>
       <version>2.1</version>
     </dependency>
     <dependency>
@@ -95,11 +95,6 @@
     <dependency>
       <groupId>org.apache.excalibur.containerkit.logger</groupId>
       <artifactId>excalibur-logger</artifactId>
-      <version>2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.components.pool</groupId>
-      <artifactId>excalibur-pool-instrumented</artifactId>
       <version>2.1</version>
     </dependency>
     <dependency>
@@ -122,16 +117,6 @@
       <artifactId>avalon-framework-impl</artifactId>
       <version>4.3</version>
     </dependency>
-    <dependency>
-      <groupId>excalibur-naming</groupId>
-      <artifactId>excalibur-naming</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>excalibur-i18n</groupId>
-      <artifactId>excalibur-i18n</artifactId>
-      <version>1.1</version>
-    </dependency>
 
     <!-- commons -->
     <dependency>
@@ -143,11 +128,6 @@
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-javaflow</groupId>
-      <artifactId>commons-javaflow</artifactId>
-      <version>r306555</version>
     </dependency>
     <dependency>
       <groupId>commons-jxpath</groupId>
@@ -210,11 +190,6 @@
       <groupId>commons-jexl</groupId>
       <artifactId>commons-jexl</artifactId>
       <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-      <version>2.0.2</version>
     </dependency>
 
     <!--  test dependencies  -->
