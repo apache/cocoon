@@ -296,7 +296,7 @@ public class ContainerTestCase extends TestCase {
         this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv);
         // read roles
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv, null);
-        ConfigurableListableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, true);
+        ConfigurableListableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, false);
 
         // read components
         ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv, null);

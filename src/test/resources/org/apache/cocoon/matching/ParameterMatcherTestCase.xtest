@@ -18,7 +18,7 @@
  <roles>
   <role name="org.apache.cocoon.matching.MatcherSelector"
         shorthand="matchers"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
  </roles>
 
  <components>

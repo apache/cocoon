@@ -16,27 +16,12 @@
 -->
 <testcase>
  <roles>
-  <role name="org.apache.excalibur.source.SourceFactorySelector"
-        shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
-
-  <role name="org.apache.excalibur.source.SourceResolver"
-        shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
-
   <role name="org.apache.cocoon.acting.ActionSelector"
         shorthand="actions"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
  </roles>
 
  <components>
-  <source-factories>
-   <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
-   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
-  </source-factories>
-
-  <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
-
   <actions logger="test">
    <component-instance name="locale0" class="org.apache.cocoon.acting.LocaleAction"/>
    <component-instance name="locale1" class="org.apache.cocoon.acting.LocaleAction">
