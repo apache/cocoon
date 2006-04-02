@@ -18,7 +18,7 @@
  <roles>
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
  </roles>
 
  <components>

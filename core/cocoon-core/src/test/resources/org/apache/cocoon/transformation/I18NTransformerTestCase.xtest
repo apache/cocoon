@@ -41,7 +41,7 @@
 
   <role name="org.apache.cocoon.transformation.TransformerSelector"
         shorthand="transformers"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
