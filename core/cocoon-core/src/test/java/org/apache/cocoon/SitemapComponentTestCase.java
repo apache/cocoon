@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -139,6 +140,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             // Add component
             ComponentInfo component = new ComponentInfo();
             component.setComponentClassName(componentClassName);
+            component.setConfiguration(new DefaultConfiguration("-"));
             component.setRole(typeClassName + "/" + key);
             info.addComponent(component);
 
@@ -147,6 +149,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
             component.setModel(ComponentInfo.MODEL_SINGLETON);
             component.setComponentClassName("org.apache.cocoon.core.container.DefaultServiceSelector");
             component.setRole(typeClassName + "Selector");
+            component.setConfiguration(new DefaultConfiguration("-"));
             component.setDefaultValue(key);
             info.addComponent(component);
         }

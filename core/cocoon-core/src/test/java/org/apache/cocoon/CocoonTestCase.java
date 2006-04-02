@@ -16,6 +16,7 @@
 
 package org.apache.cocoon;
 
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
@@ -44,12 +45,14 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             component = new ComponentInfo();
             component.setComponentClassName(ResourceSourceFactory.class.getName());
             component.setRole(SourceFactory.ROLE + "/resource");
+            component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
 
             // Add url source source factory
             component = new ComponentInfo();
             component.setComponentClassName(URLSourceFactory.class.getName());
             component.setRole(SourceFactory.ROLE + "/*");
+            component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
 
             // add source factory selector
@@ -59,12 +62,14 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             component.setRole(SourceFactory.ROLE + "Selector");
             component.setAlias("source-factories");
             component.setDefaultValue("*");
+            component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
         }
         if ( this.addSourceResolver() ) {
             ComponentInfo component = new ComponentInfo();
             component.setComponentClassName(SourceResolverImpl.class.getName());
             component.setRole(SourceResolver.ROLE);
+            component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
         }
     }
