@@ -183,7 +183,7 @@ public class BeanFactoryUtil {
 
         // Configure the log4j manager
         String loggerConfig = settings.getLoggingConfiguration();
-        if ( !loggerConfig.startsWith("/") ) {
+        if ( loggerConfig != null && !loggerConfig.startsWith("/") ) {
             loggerConfig = '/' + loggerConfig;
         }
         if ( loggerConfig != null ) {
