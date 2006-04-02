@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
@@ -178,21 +182,8 @@ public class CoreUtil {
         // the simple source resolver work
 
         // add root url
-        try {
-            appContext.put(ContextHelper.CONTEXT_ROOT_URL,
-                           new URL(this.getContextUrl()));
-        } catch (MalformedURLException ignore) {
-            // we simply ignore this
-        }
-
-        // add environment context
-        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT,
-                            this.environmentContext);
-
-        // now add environment specific information
-        if ( this.env != null ) {
-            this.env.configure(appContext);
-        }
+        String contextUrl = this.getContextUrl();
+        CoreUtil.addSourceResolverContext(this.appContext, this.environmentContext, this.env, contextUrl);
 
         // create settings
         this.settings = this.createSettings();
@@ -208,7 +199,6 @@ public class CoreUtil {
             workDir = new File("cocoon-files");
         }
         workDir.mkdirs();
-        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
@@ -217,7 +207,7 @@ public class CoreUtil {
 
         // Output some debug info
         if (this.log.isDebugEnabled()) {
-            this.log.debug("Context URL: " + this.getContextUrl());
+            this.log.debug("Context URL: " + contextUrl);
             if (workDirParam != null) {
                 this.log.debug("Using work-directory " + workDir);
             } else {
@@ -239,7 +229,6 @@ public class CoreUtil {
             }
         }
         uploadDir.mkdirs();
-        appContext.put(Constants.CONTEXT_UPLOAD_DIR, uploadDir);
         this.settings.setUploadDirectory(uploadDir.getAbsolutePath());
 
         String cacheDirParam = this.settings.getCacheDirectory();
@@ -260,29 +249,73 @@ public class CoreUtil {
             }
         }
         cacheDir.mkdirs();
-        appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         // update configuration
         final URL u = this.getConfigFile(this.settings.getConfiguration());
         this.settings.setConfiguration(u.toExternalForm());
-        this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
-
-        // set encoding
-        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
-
-        // set class loader
-        this.createClassloader();
-        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.classloader);
 
         // dump system properties
         this.dumpSystemProperties();
 
         // settings can't be changed anymore
-        settings.makeReadOnly();
+        this.settings.makeReadOnly();
+
+        this.createClassloader();
+        // add the Avalon context attributes that are contained in the settings
+        CoreUtil.addSettingsContext(this.appContext, this.settings, this.classloader);
 
         // test the setup of the spring based container
         this.container = this.setupSpringContainer();
+    }
+
+    public static DefaultContext createContext(Settings settings, Context environmentContext,
+            String contextUrl, ClassLoader classLoader, BootstrapEnvironment env)
+        throws ServletException, MalformedURLException {
+        DefaultContext appContext = new ComponentContext();
+        CoreUtil.addSourceResolverContext(appContext, environmentContext, env, contextUrl);
+        CoreUtil.addSettingsContext(appContext, settings, classLoader);
+        return appContext;
+    }
+
+    /**
+     * Adding the Avalon context content needed for setting up the <code>SimpleSourceResolver</code>
+     * @param appContext the Avalon context
+     * @param environmentContext the Cocoon context
+     * @param env optional bootstrap context
+     * @param contextUrl URL for the context
+     */
+    private static void addSourceResolverContext(DefaultContext appContext, Context environmentContext, BootstrapEnvironment env, String contextUrl) {
+        try {
+            appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
+        } catch (MalformedURLException ignore) {
+            // we simply ignore this
+        }
+    
+        // add environment context
+        appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, environmentContext);
+    
+        // now add environment specific information
+        if ( env != null ) {
+            env.configure(appContext);
+        }
+    }
+
+    /**
+     * Add the Avalon context attributes that are contained in the settings
+     * @param appContext 
+     * @param settings
+     * @param classloader 
+     * @throws MalformedURLException
+     */
+    private static void addSettingsContext(DefaultContext appContext, Settings settings, ClassLoader classloader)
+    throws MalformedURLException {
+        appContext.put(Constants.CONTEXT_WORK_DIR, new File(settings.getWorkDirectory()));
+        appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(settings.getUploadDirectory()));
+        appContext.put(Constants.CONTEXT_CACHE_DIR, new File(settings.getCacheDirectory()));
+        appContext.put(Constants.CONTEXT_CONFIG_URL, new URL(settings.getConfiguration()));
+        appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
+        appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
     }
 
     public Logger getRootLogger() {
@@ -674,18 +707,35 @@ public class CoreUtil {
     }
 
     protected String getContextUrl() {
+        return CoreUtil.getContextUrl(this.environmentContext, "/WEB-INF/web.xml");
+    }
+
+    /**
+     * @param environmentContext
+     * @return
+     */
+    public static String getWritableContextPath(ServletContext environmentContext) {
+        return environmentContext.getRealPath("/");
+    }
+
+    /**
+     * @param knownFile 
+     * @param context 
+     * @return
+     */
+    public static String getContextUrl(ServletContext environmentContext, String knownFile) {
         String servletContextURL;
-        String servletContextPath = this.environmentContext.getRealPath("/");
+        String servletContextPath = CoreUtil.getWritableContextPath(environmentContext);
         String path = servletContextPath;
 
         if (path == null) {
-            // Try to figure out the path of the root from that of WEB-INF/web.xml
+            // Try to figure out the path of the root from that of a known file in the context
             try {
-                path = this.environmentContext.getResource("/WEB-INF/web.xml").toString();
+                path = environmentContext.getResource(knownFile).toString();
             } catch (MalformedURLException me) {
-                throw new CoreInitializationException("Unable to get resource 'WEB-INF/web.xml'.", me);
+                throw new CoreInitializationException("Unable to get resource '" + knownFile + "'.", me);
             }
-            path = path.substring(0, path.length() - "WEB-INF/web.xml".length());
+            path = path.substring(0, path.length() - (knownFile.length() - 1));
         }
         try {
             if (path.indexOf(':') > 1) {
