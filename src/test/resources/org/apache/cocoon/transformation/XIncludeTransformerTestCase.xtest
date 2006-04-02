@@ -20,6 +20,9 @@
  </context>
 
  <roles>
+  <role name="org.apache.excalibur.xml.sax.SAXParser"
+        shorthand="xml-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
  </roles>
 
  <components/>
