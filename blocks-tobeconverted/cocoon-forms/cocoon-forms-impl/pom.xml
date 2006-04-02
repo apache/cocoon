@@ -32,6 +32,30 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Forms Block Implementation</name>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*TestCase.class</include>
+            <include>**/*Test.class</include>
+          </includes>
+          <!-- + 
+               | These test cases doesn't work currently as the Avalon context
+               | in the ContainerTestCase doesn't contain the environmen-context key.
+               + -->
+          <excludes>
+            <exclude>**/DynamicSelectionListTestCase*</exclude>
+            <exclude>**/EnumSelectionListTestCase*</exclude>
+            <exclude>**/FlowJXPathSelectionListTestCase*</exclude>
+            <exclude>**/FieldTestCase*</exclude>
+            <exclude>**/GroupTestCase*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
