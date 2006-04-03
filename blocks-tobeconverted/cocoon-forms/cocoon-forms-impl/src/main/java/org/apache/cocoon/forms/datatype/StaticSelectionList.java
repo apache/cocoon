@@ -84,13 +84,41 @@ public class StaticSelectionList implements SelectionList {
         this.items.add(new SelectionListItem(value, label));
     }
 
+    /**
+     * Adds a new item to this selection list.
+     * @param value a value of the correct type (i.e. the type with which this selectionlist is associated)
+     * @param label a String label, can be null
+     */
+    public void addItem(Object value, String label) {
+        this.items.add(new SelectionListItem(value, label));
+    }
+
+    /**
+     * Adds a new item to this selection list, where the label is set to the toString()
+     * result of the value.
+     * @param value a value of the correct type (i.e. the type with which this selectionlist is associated)
+     */
+    public void addItem(Object value) {
+        this.items.add(new SelectionListItem(value));
+    }
+
     public final class SelectionListItem {
         private final Object value;
-        private final XMLizable label;
+        private final Object label;
 
         public SelectionListItem(Object value, XMLizable label) {
             this.value = value;
             this.label = label;
+        }
+
+        public SelectionListItem(Object value, String label) {
+            this.value = value;
+            this.label = label;
+        }
+
+        public SelectionListItem(Object value) {
+            this.value = value;
+            this.label = null;
         }
 
         public Object getValue() {
@@ -111,10 +139,13 @@ public class StaticSelectionList implements SelectionList {
             attrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(FormsConstants.INSTANCE_NS, ITEM_EL, FormsConstants.INSTANCE_PREFIX_COLON + ITEM_EL, attrs);
             contentHandler.startElement(FormsConstants.INSTANCE_NS, LABEL_EL, FormsConstants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
-            if (this.label != null) {
-                this.label.toSAX(contentHandler);
-            } else {
+            if (this.label == null) {
                 contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
+            } else if (this.label instanceof XMLizable) {
+                ((XMLizable) this.label).toSAX(contentHandler);
+            } else {
+                String stringLabel = (String) this.label;
+                contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
             }
             contentHandler.endElement(FormsConstants.INSTANCE_NS, LABEL_EL, FormsConstants.INSTANCE_PREFIX_COLON + LABEL_EL);
             contentHandler.endElement(FormsConstants.INSTANCE_NS, ITEM_EL, FormsConstants.INSTANCE_PREFIX_COLON + ITEM_EL);
