@@ -181,6 +181,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="add" fixes-bug="COCOON-1809" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
+      CForms: Added event handling for group of type "choice" (allow formsOnShow attribute)
+    </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1808" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
       CForms: Added method StaticSelectionList.addItem(Object value, String label)
     </action>
