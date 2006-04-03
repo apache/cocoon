@@ -101,26 +101,10 @@
     </div>
     <!-- The tabbed elements can have an attribute formsOnShow containing some javascript to be executed
          when a tab gets shown. -->
-    <script type="text/javascript">
-      if (window.onTabShownHandlers == undefined)
-        window.onTabShownHandlers = new Object();
-      var currentHandlers = new Object();
-      var initialHandler = null;
-      window.onTabShownHandlers["<xsl:value-of select="$id"/>"] = currentHandlers;
-      <xsl:for-each select="fi:items/fi:*">
-        <xsl:variable name="pos" select="position() - 1"/>
-          <xsl:if test="@formsOnShow">
-            currentHandlers["<xsl:value-of select="concat($id, '_items_', $pos)"/>"] = "<xsl:value-of select="@formsOnShow"/>";
-            <xsl:if test="$active = $pos">
-               initialHandler = "<xsl:value-of select="@formsOnShow"/>";
-            </xsl:if>
-          </xsl:if>
-      </xsl:for-each>
-      if (initialHandler != null) {
-        eval(initialHandler);
-        initialHandler = null;
-      }
-    </script>
+    <xsl:call-template name="formsOnShow">
+      <xsl:with-param name="id" select="$id"/>
+      <xsl:with-param name="active" select="$active"/>
+    </xsl:call-template>
   </xsl:template>
 
   <!--
@@ -189,6 +173,35 @@
         </div>
       </xsl:for-each>
     </fieldset>
+    <xsl:call-template name="formsOnShow">
+      <xsl:with-param name="id" select="$id"/>
+      <xsl:with-param name="active" select="$active"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="formsOnShow">
+    <xsl:param name="id"/>
+    <xsl:param name="active"/>
+    <script type="text/javascript">
+      if (window.onTabShownHandlers == undefined)
+        window.onTabShownHandlers = new Object();
+      var currentHandlers = new Object();
+      var initialHandler = null;
+      window.onTabShownHandlers["<xsl:value-of select="$id"/>"] = currentHandlers;
+      <xsl:for-each select="fi:items/fi:*">
+        <xsl:variable name="pos" select="position() - 1"/>
+          <xsl:if test="@formsOnShow">
+            currentHandlers["<xsl:value-of select="concat($id, '_items_', $pos)"/>"] = "<xsl:value-of select="@formsOnShow"/>";
+            <xsl:if test="$active = $pos">
+               initialHandler = "<xsl:value-of select="@formsOnShow"/>";
+            </xsl:if>
+          </xsl:if>
+      </xsl:for-each>
+      if (initialHandler != null) {
+        eval(initialHandler);
+        initialHandler = null;
+      }
+    </script>
   </xsl:template>
 
   <!--
