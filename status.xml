@@ -181,6 +181,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="add" fixes-bug="COCOON-1808" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
+      CForms: Added method StaticSelectionList.addItem(Object value, String label)
+    </action>
     <action dev="CZ" type="add">
       CForms: add dynamic id to Form object. This allows to use the same form model several times on
               the same page, for example if the form is used in a portal.
