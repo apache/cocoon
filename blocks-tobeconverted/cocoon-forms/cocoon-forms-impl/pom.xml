@@ -75,13 +75,8 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>daisy</groupId>
+      <groupId>org.outerj.daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
-      <version>1.4.1</version>
-    </dependency>
-    <dependency>
-      <groupId>daisy</groupId>
-      <artifactId>daisy-util</artifactId>
       <version>1.4.1</version>
     </dependency>
     <dependency>
@@ -100,9 +95,9 @@
       <version>1.4</version>
     </dependency>
     <dependency>
-      <groupId>xreporter</groupId>
+      <groupId>org.outerj.xreporter</groupId>
       <artifactId>xreporter-expression</artifactId>
-      <version>20040701</version>
+      <version>1.2.1</version>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>
