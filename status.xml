@@ -181,6 +181,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.9" date="TBD">
+    <action dev="JBQ" type="fix">
+      Fix caching problems in ImageReader: image was not regenerated when allow-enlarging or fit-uniform sitemap
+      parameters were changed
+    </action>
     <action dev="JBQ" type="add" fixes-bug="COCOON-1809" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
       CForms: Added event handling for group of type "choice" (allow formsOnShow attribute)
     </action>
