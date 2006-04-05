@@ -93,7 +93,7 @@ public class DefaultCopletFactory
     throws PortalException {
         if (id == null ) {
             synchronized (this) {
-                id = copletBaseData.getId() + '-' + idCounter;
+                id = copletBaseData.getId() + '_' + idCounter;
                 idCounter += 1;
             }
         }

@@ -236,7 +236,7 @@ public class DefaultLayoutFactory
 
         if ( layoutDescription.createId() && id == null ) {
             synchronized (this) {
-                id = layoutName + '-' + idCounter;
+                id = layoutName + '_' + idCounter;
                 idCounter += 1;
             }
         }

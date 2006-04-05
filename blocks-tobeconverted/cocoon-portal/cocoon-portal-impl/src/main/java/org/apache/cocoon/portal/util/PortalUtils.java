@@ -26,13 +26,16 @@ public class PortalUtils {
 
     /**
      * Tests if the string represents a correct id for any portal object.
+     * The id of an object follows very strict rules: only characters, an underscore and numbers are allowed
+     * and the id has to start with a character. This allows to use the id as an identifier
+     * for ajax/javascript based portlets.
      */
     public static String testId(String id) {
         if ( id == null || id.length() == 0 ) {
             return "Id must not be null or empty.";
         }
-        if ( !StringUtils.containsOnly(id, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789 ") ) {
-            return "Id contains invalid characters (only a-z,A-Z,0-9, space and '-' are allowed): " + id;
+        if ( !StringUtils.containsOnly(id, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_") ) {
+            return "Id contains invalid characters (only a-z,A-Z, 0-9 and '_' are allowed): " + id;
         }
         final char firstChar = id.charAt(0);
         if ( firstChar >= 'a' && firstChar <= 'z' ) {
