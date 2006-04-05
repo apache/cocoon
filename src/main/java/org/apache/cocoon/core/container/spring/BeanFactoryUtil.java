@@ -150,13 +150,16 @@ public class BeanFactoryUtil {
             throw new CoreInitializationException("Cannot setup log4j logging system.", ce);
         }
     }
-
-    protected static Logger initLogger(ServletContext servletContext,
-                                       Settings       settings)
-    throws Exception {
+    
+    /**
+     * Create a bootstrap logger that uses the servlet context
+     * @param servletContext
+     * @param logLevelString
+     * @return the logger
+     */
+    public static Logger createBootstrapLogger(ServletContext servletContext, String logLevelString) {
         // create a bootstrap logger
         int logLevel;
-        final String logLevelString = settings.getBootstrapLogLevel();
         if ( "DEBUG".equalsIgnoreCase(logLevelString) ) {
             logLevel = ServletLogger.LEVEL_DEBUG;
         } else if ( "WARN".equalsIgnoreCase(logLevelString) ) {
@@ -166,7 +169,15 @@ public class BeanFactoryUtil {
         } else {
             logLevel = ServletLogger.LEVEL_INFO;
         }
-        final Logger bootstrapLogger = new ServletLogger(servletContext, "Cocoon", logLevel);
+        return new ServletLogger(servletContext, "Cocoon", logLevel);
+    }
+
+    protected static Logger initLogger(ServletContext servletContext,
+                                       Settings       settings)
+    throws Exception {
+        // create a bootstrap logger
+        final String logLevelString = settings.getBootstrapLogLevel();
+        final Logger bootstrapLogger = BeanFactoryUtil.createBootstrapLogger(servletContext, logLevelString);
 
 
         // create an own context for the logger manager
