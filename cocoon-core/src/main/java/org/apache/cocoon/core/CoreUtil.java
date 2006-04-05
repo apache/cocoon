@@ -188,68 +188,14 @@ public class CoreUtil {
         // create settings
         this.settings = this.createSettings();
 
-        // first init the work-directory for the logger.
-        // this is required if we are running inside a war file!
-        final String workDirParam = this.settings.getWorkDirectory();
-        File workDir;
-        if (workDirParam != null) {
-            // No context path : consider work-directory as absolute
-            workDir = new File(workDirParam);
-        } else {
-            workDir = new File("cocoon-files");
-        }
-        workDir.mkdirs();
-        this.settings.setWorkDirectory(workDir.getAbsolutePath());
+        // Create bootstrap logger
+        this.log = BeanFactoryUtil.createBootstrapLogger(this.environmentContext, settings.getBootstrapLogLevel());
 
-        // Init logger
-        this.log = BeanFactoryUtil.createRootLogger(this.environmentContext,
-                                                    this.settings);
-
-        // Output some debug info
-        if (this.log.isDebugEnabled()) {
+        if (this.log.isDebugEnabled())
             this.log.debug("Context URL: " + contextUrl);
-            if (workDirParam != null) {
-                this.log.debug("Using work-directory " + workDir);
-            } else {
-                this.log.debug("Using default work-directory " + workDir);
-            }
-        }
 
-        final String uploadDirParam = this.settings.getUploadDirectory();
-        File uploadDir;
-        if (uploadDirParam != null) {
-            uploadDir = new File(uploadDirParam);
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Using upload-directory " + uploadDir);
-            }
-        } else {
-            uploadDir = new File(workDir, "upload-dir" + File.separator);
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Using default upload-directory " + uploadDir);
-            }
-        }
-        uploadDir.mkdirs();
-        this.settings.setUploadDirectory(uploadDir.getAbsolutePath());
-
-        String cacheDirParam = this.settings.getCacheDirectory();
-        File cacheDir;
-        if (cacheDirParam != null) {
-            cacheDir = new File(cacheDirParam);
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Using cache-directory " + cacheDir);
-            }
-        } else {
-            cacheDir = new File(workDir, "cache-dir" + File.separator);
-            File parent = cacheDir.getParentFile();
-            if (parent != null) {
-                parent.mkdirs();
-            }
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("cache-directory was not set - defaulting to " + cacheDir);
-            }
-        }
-        cacheDir.mkdirs();
-        this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
+        // initialize some directories
+        CoreUtil.initSettingsFiles(this.settings, this.log);
 
         // update configuration
         final URL u = this.getConfigFile(this.settings.getConfiguration());
@@ -261,12 +207,81 @@ public class CoreUtil {
         // settings can't be changed anymore
         this.settings.makeReadOnly();
 
+        // Init logger
+        this.log = BeanFactoryUtil.createRootLogger(this.environmentContext,
+                                                    this.settings);
+
         this.createClassloader();
         // add the Avalon context attributes that are contained in the settings
         CoreUtil.addSettingsContext(this.appContext, this.settings, this.classloader);
 
         // test the setup of the spring based container
         this.container = this.setupSpringContainer();
+    }
+
+    /**
+     * Init work, upload and cache directory
+     * @param settings 
+     * @param log 
+     */
+    public static void initSettingsFiles(MutableSettings settings, Logger log) {
+        // first init the work-directory for the logger.
+        // this is required if we are running inside a war file!
+        final String workDirParam = settings.getWorkDirectory();
+        File workDir;
+        if (workDirParam != null) {
+            // No context path : consider work-directory as absolute
+            workDir = new File(workDirParam);
+        } else {
+            workDir = new File("cocoon-files");
+        }
+        workDir.mkdirs();
+        settings.setWorkDirectory(workDir.getAbsolutePath());
+
+        // Output some debug info
+        if (log.isDebugEnabled()) {
+            if (workDirParam != null) {
+                log.debug("Using work-directory " + workDir);
+            } else {
+                log.debug("Using default work-directory " + workDir);
+            }
+        }
+
+        final String uploadDirParam = settings.getUploadDirectory();
+        File uploadDir;
+        if (uploadDirParam != null) {
+            uploadDir = new File(uploadDirParam);
+            if (log.isDebugEnabled()) {
+                log.debug("Using upload-directory " + uploadDir);
+            }
+        } else {
+            uploadDir = new File(workDir, "upload-dir" + File.separator);
+            if (log.isDebugEnabled()) {
+                log.debug("Using default upload-directory " + uploadDir);
+            }
+        }
+        uploadDir.mkdirs();
+        settings.setUploadDirectory(uploadDir.getAbsolutePath());
+
+        String cacheDirParam = settings.getCacheDirectory();
+        File cacheDir;
+        if (cacheDirParam != null) {
+            cacheDir = new File(cacheDirParam);
+            if (log.isDebugEnabled()) {
+                log.debug("Using cache-directory " + cacheDir);
+            }
+        } else {
+            cacheDir = new File(workDir, "cache-dir" + File.separator);
+            File parent = cacheDir.getParentFile();
+            if (parent != null) {
+                parent.mkdirs();
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("cache-directory was not set - defaulting to " + cacheDir);
+            }
+        }
+        cacheDir.mkdirs();
+        settings.setCacheDirectory(cacheDir.getAbsolutePath());
     }
 
     public static DefaultContext createContext(Settings settings, Context environmentContext,
