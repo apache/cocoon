@@ -319,7 +319,7 @@ public class DefaultLayoutFactory
         String id = null;
         if ( layoutDescription.createId() ) {
             synchronized (this) {
-                id = layoutName + '-' + idCounter;
+                id = layoutName + '_' + idCounter;
                 idCounter += 1;
             }
         }
