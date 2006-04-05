@@ -131,7 +131,7 @@ public class DefaultCopletFactory
         String id = null;
         if ( copletDescription.createId() ) {
             synchronized (this) {
-                id = copletData.getId() + '-' + idCounter;
+                id = copletData.getId() + '_' + idCounter;
                 idCounter += 1;
             }
         }
