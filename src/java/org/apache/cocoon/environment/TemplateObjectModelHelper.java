@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
@@ -55,7 +56,7 @@ public class TemplateObjectModelHelper {
             try {
                 scope = ctx.newObject(rootScope);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new CascadingRuntimeException("Exception", e);
             }
             scope.setPrototype(rootScope);
             scope.setParentScope(null);
