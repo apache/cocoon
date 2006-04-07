@@ -172,13 +172,25 @@
           <patternset refid="unprocessed.sources"/>
         </fileset>
       </copy>
-
       <copy filtering="off" todir="${{build.blocks}}/@{{name}}/dest">
         <fileset dir="@{{dir}}/java">
           <include name="**/Manifest.mf"/>
           <include name="META-INF/**"/>
         </fileset>
       </copy>
+      <!--  Test for resources of blocks that are mounted from trunk -->
+      <if>
+        <available file="@{{dir}}/resources"/>
+        <then>
+          <copy filtering="on" todir="${{build.blocks}}/@{{name}}/dest">
+            <fileset dir="@{{dir}}/resources">
+              <exclude name="META-INF/**"/>
+              <exclude name="WEB-INF/**"/>
+            </fileset>
+          </copy>
+        </then>
+      </if>
+      <!-- Create the jar -->
       <jar jarfile="${{build.blocks}}/@{{name}}-block.jar" index="true">
         <fileset dir="${{build.blocks}}/@{{name}}/dest">
           <include name="@{{package}}/**"/>
@@ -402,6 +414,18 @@
               <copy todir="${{build.blocks}}/@{{name}}/test" filtering="on">
                 <fileset dir="@{{dir}}/test" excludes="**/*.java"/>
               </copy>
+              <!--  Test for resources of blocks that are mounted from trunk -->
+              <if>
+                <available file="@{{dir}}/test-resources"/>
+                <then>
+                  <copy filtering="on" todir="${{build.blocks}}/@{{name}}/test">
+                    <fileset dir="@{{dir}}/test-resources">
+                      <exclude name="META-INF/**"/>
+                      <exclude name="WEB-INF/**"/>
+                    </fileset>
+                  </copy>
+                </then>
+              </if>
 
               <javac destdir="${{build.blocks}}/@{{name}}/test"
                      debug="${{compiler.debug}}"
