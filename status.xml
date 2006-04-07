@@ -180,6 +180,9 @@
 <!-- FIXME: is this needed for anything else? Replaced with hard-coded values
   <release version="@version@" date="@date@">
 -->
+  <release version="2.1.10" date="TBD">
+    <action dev="NN" type="add">DUMMY</action>
+  </release>
   <release version="2.1.9" date="April 7 2006">
     <action dev="JBQ" type="fix">
       Fix caching problems in ImageReader: image was not regenerated when allow-enlarging or fit-uniform sitemap
