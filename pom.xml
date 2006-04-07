@@ -46,6 +46,7 @@
 		<module>cocoon-chaperon</module>
 		<module>cocoon-core-samples-additional</module>
 		<module>cocoon-core-samples-main</module>
+		<module>cocoon-cron</module>
 		<module>cocoon-deli</module>
 		<module>cocoon-eventcache</module>
 		<module>cocoon-faces</module-->
