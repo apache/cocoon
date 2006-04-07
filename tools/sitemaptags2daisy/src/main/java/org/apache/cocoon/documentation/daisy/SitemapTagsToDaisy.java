@@ -92,7 +92,7 @@ public class SitemapTagsToDaisy {
 
         String rootPath = prompt("Enter the path to the Cocoon source directory:");
         File rootDir = new File(rootPath);
-        File cocoonCoreDir = new File(rootDir, "cocoon-core");
+        File cocoonCoreDir = new File(new File(rootDir, "core"), "cocoon-core");
         if (!cocoonCoreDir.exists()) {
             System.out.println("This is not a valid Cocoon source directory, did not find the following path: " + cocoonCoreDir.getPath());
             System.exit(1);
@@ -234,6 +234,16 @@ public class SitemapTagsToDaisy {
         String subPath = path.substring(rootPath.length());
         if (subPath.startsWith("/"))
             subPath = subPath.substring(1);
+
+        if (subPath.startsWith("blocks/"))
+            subPath = subPath.substring("blocks/".length());
+        else if (subPath.startsWith("blocks-tobeconverted/"))
+            subPath = subPath.substring("blocks-tobeconverted/".length());
+        else if (subPath.startsWith("core/"))
+            subPath = subPath.substring("core/".length());
+        else
+            return null;
+
         if (!subPath.startsWith("cocoon-"))
             return null;
 
@@ -291,6 +301,16 @@ public class SitemapTagsToDaisy {
                 return false;
             else
                 return value1.equals(value2);
+        }
+
+        public void dump() {
+            System.out.println("blockName: " + blockName);
+            System.out.println("className: " + className);
+            System.out.println("componentType: " + componentType);
+            System.out.println("componentName: " + componentName);
+            System.out.println("documentation: " + documentation);
+            System.out.println("cacheInfo: " + cacheInfo);
+            System.out.println("deprecated: " + deprecated);
         }
     }
 
