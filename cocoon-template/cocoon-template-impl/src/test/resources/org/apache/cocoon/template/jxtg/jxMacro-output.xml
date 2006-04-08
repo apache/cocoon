@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<root>
+	<m>
+		<macroTest a="foo">
+			<content b="3"/>
+		</macroTest>
+	</m>
+	<n>
+		<macroTest a="bar">
+			<content b="5"/>
+		</macroTest>
+		<macroTest a="bar1">
+			<content b="6"/>
+		</macroTest>
+	</n>
+	<o>
+		<containerValue>foobar</containerValue>
+		<containerValue>foobar</containerValue>
+	</o>
+</root>

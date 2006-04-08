@@ -59,6 +59,7 @@
 		<module>cocoon-html</module>
 		<module>cocoon-itext</module>
 		<module>cocoon-javaflow</module>
+		<module>cocoon-jcr</module>
 		<module>cocoon-jfor</module>
 		<module>cocoon-jms</module>
 		<module>cocoon-jsp</module>
@@ -83,6 +84,7 @@
 		<module>cocoon-slop</module>
 		<module>cocoon-stx</module>
 		<module>cocoon-taglib</module>
+		<module>cocoon-template</module>
 		<module>cocoon-tour</module>
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
