@@ -40,13 +40,10 @@
   <modules>
 		<!--
 		<module>cocoon-core-components</module>
-		<module>cocoon-cron</module>
 		<module>cocoon-databases</module>
 		-->
-		<!--module>cocoon-jcr</module>
-		<module>cocoon-mocks</module>
+		<!--module>cocoon-mocks</module>
 		<module>cocoon-portal</module>
-		<module>cocoon-template</module>
 		<module>cocoon-validation</module>
 		<module>cocoon-xmldb</module-->
 	</modules>

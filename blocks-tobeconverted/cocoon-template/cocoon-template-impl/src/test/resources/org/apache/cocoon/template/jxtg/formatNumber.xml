@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-	<number locale="pl_PL"><jx:formatNumber value="${value}" locale="pl_PL"/></number>
-	<number locale="en_US"><jx:formatNumber value="${value}" locale="en_US"/></number>
-</root>
