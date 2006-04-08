@@ -41,6 +41,7 @@
         <module>cocoon-ajax</module>
 		<!--module>cocoon-apples</module
 		<module>cocoon-asciiart</module>
+		<module>cocoon-authentication-fw</module>
 		<module>cocoon-axis</module>
 		<module>cocoon-batik</module>
 		<module>cocoon-bsf</module -->
