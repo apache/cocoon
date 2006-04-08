@@ -195,6 +195,18 @@
       <artifactId>commons-jexl</artifactId>
       <version>1.0</version>
     </dependency>
+    
+    <!-- OSGi -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi_R4_core</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi_R4_compendium</artifactId>
+      <version>1.0</version>
+    </dependency>    
 
     <!--  test dependencies  -->
     <dependency>
