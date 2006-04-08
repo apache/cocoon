@@ -1,0 +1,257 @@
+<!--
+  Copyright 2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<role-list>
+  <!--+
+      | Spring Bean Post Processors:
+      +-->
+    <role name="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"
+          default-class="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"/>
+
+  <!--+ 
+      | Event Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspectSelector"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+    
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/action-counter"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
+
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/request-parameter"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
+
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/frame"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
+
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/link"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect"/>
+
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/page-label"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.PageLabelEventAspect"/>
+
+    <!--+
+        | This aspect sets headers on the response telling the client to not cache
+        | the response.
+        +-->
+    <role name="org.apache.cocoon.portal.event.aspect.EventAspect/no-client-caching"
+          default-class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
+
+
+  <!--+
+      | Portal Manager Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <role name="org.apache.cocoon.portal.PortalManagerAspectSelector"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+
+  <!--+
+      | Renderer Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/composite-content"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/tab-content"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/window"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
+
+    <!--+
+        | This aspect can be used to render the minimize/maximize buttons.
+        +-->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-sizing"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
+
+    <!--+
+        | This aspect can be used to render the remove button.
+        +-->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-removing"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"/>
+
+    <!--+
+        | This aspect can be used to render cinclude statements that will be used to include
+        | the coplet content, use the coplet aspect below to directly stream the content.
+        +-->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-cinclude"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"/>
+
+    <!--+
+        | This aspect creates a history of all layout aspect datas,
+        | coplet aspect datas and coplet attributes. It can be used by
+        | the bookmark action to browse the history.
+        +-->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/history"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.HistoryAspect"/>
+    
+    <!--+
+        | This aspect can be used to render the content of the coplet.
+        +-->
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/frame"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/xslt"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
+
+    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/parameter"
+          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect"/>
+
+
+  <!--+
+      | Components.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.profile.ProfileLS"
+          default-class="org.apache.cocoon.portal.profile.impl.MapProfileLS"/>
+
+  <!--+
+      | Coplet Adapters
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+    <!--+
+        | This is the pipeline/uri based adapter.
+        +-->
+    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
+          default-class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"/>
+
+    <!--+
+        | This is an extension of the uri adapter supporting caching the content.
+        +-->
+    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/caching-uri"
+          default-class="org.apache.cocoon.portal.coplet.adapter.impl.CachingURICopletAdapter"/>
+
+    <!--+
+        |  This is the application adapter.
+        +-->
+    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/application"
+          default-class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"/>
+
+
+  <!--+
+      | Coplet and Layout Source.
+      |
+      +-->
+    <role name="org.apache.excalibur.source.SourceFactory/coplet"
+          default-class="org.apache.cocoon.portal.source.CopletSourceFactory"/>
+    <role name="org.apache.excalibur.source.SourceFactory/layout"
+          default-class="org.apache.cocoon.portal.source.LayoutSourceFactory"/>
+
+
+  <!--+
+      | Input Modules.
+      |
+      +-->
+    <role name="org.apache.cocoon.components.modules.input.InputModule/coplet"
+          default-class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
+    <role name="org.apache.cocoon.components.modules.input.InputModule/portal-layout"
+          default-class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
+    <role name="org.apache.cocoon.components.modules.input.InputModule/portal-skin"
+          default-class="org.apache.cocoon.portal.components.modules.input.SkinModule"/>
+
+  <!--+
+      | Portal Service.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.PortalService"
+          default-class="org.apache.cocoon.portal.impl.PortalServiceImpl"
+          shorthand="portal-service"/>
+
+  <!--+
+      | Portal Manager.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.PortalManager"
+          default-class="org.apache.cocoon.portal.impl.PortalManagerImpl"
+          shorthand="portal-manager"/>
+
+  <!--+
+      | Event Manager.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.event.EventManager"
+          default-class="org.apache.cocoon.portal.event.impl.DefaultEventManager"
+          shorthand="portal-event-manager"/>
+
+  <!--+
+      | Event Converter.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.event.EventConverter"
+          default-class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
+          shorthand="portal-event-converter"/>
+
+  <!--+
+      | Page Label Manager.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.impl.PageLabelManager"
+          default-class="org.apache.cocoon.portal.impl.PageLabelManager"
+          shorthand="page-label-manager"/>
+
+  <!--+
+      | Portal Link Service.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.LinkService"
+          default-class="org.apache.cocoon.portal.impl.DefaultLinkService"
+          shorthand="portal-link-service"/>
+
+  <!--+
+      | Layout Factory.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.layout.LayoutFactory"
+          default-class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+          shorthand="portal-layout-factory"/>
+
+  <!--+
+      | Coplet Factory.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.coplet.CopletFactory"
+          default-class="org.apache.cocoon.portal.coplet.impl.DefaultCopletFactory"
+          shorthand="portal-coplet-factory"/>
+
+  <!--+
+      | Profile Manager.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.profile.ProfileManager"
+          shorthand="portal-profile-manager"/>
+
+  <!--+
+      | Deployment Manager
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.deployment.DeploymentManager"
+          shorthand="portal-deployment-manager"
+          default-class="org.apache.cocoon.portal.deployment.impl.DefaultDeploymentManager"/>
+</role-list>
