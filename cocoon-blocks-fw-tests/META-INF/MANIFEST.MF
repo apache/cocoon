@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: cocoon_blocks_fw_tests
+Bundle-SymbolicName: cocoon_blocks_fw_tests
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Service-Component: META-INF/components.xml
+Import-Package: junit.framework,
+ junit.textui,
+ org.apache.avalon.framework.logger,
+ org.apache.cocoon.core,
+ org.osgi.service.component
