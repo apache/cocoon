@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">  
+  
+  <scr:component name="org.apache.cocoon.osgitests.OSGiSettingsTest">
+    <scr:implementation class="org.apache.cocoon.osgitests.OSGiSettingsTest"/>  
+    <scr:reference name="settings"
+      interface="org.apache.cocoon.core.Settings"
+      bind="setSettings"/>  
+  </scr:component>    
+  
+  <scr:component name="org.apache.cocoon.osgitests.OSGiLoggerTest">
+    <scr:implementation class="org.apache.cocoon.osgitests.OSGiLoggerTest"/>  
+    <scr:reference name="logger"
+      interface="org.apache.avalon.framework.logger.Logger"
+      bind="setLogger"/>  
+  </scr:component>
+  
+  <scr:component name="org.apache.cocoon.osgitests.allOSGiTests">
+    <scr:implementation class="org.apache.cocoon.osgitests.AllOSGiTests"/>  
+  </scr:component>  
+
+</components>
