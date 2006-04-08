@@ -17,16 +17,15 @@
     position: absolute;
     visibility: hidden;
     background-color: white;
-    layer-background-color: white;
     z-index: 10000;
 }
 
 .forms_cpYearNavigation, .forms_cpMonthNavigation {
-    background-color:#C0C0C0;
+    background-color:#c0c0c0;
     text-align:center;
-    vertical-align:center;
+    vertical-align:middle;
     text-decoration:none;
-    color:#000000;
+    color:black;
     font-weight:bold;
 }
   
@@ -37,8 +36,8 @@
   
 TD.forms_cpDayColumnHeader {
     text-align:right;
-    border:solid thin #C0C0C0;
-    border-width:0 0 19 0;
+    border:solid thin #c0c0c0;
+    border-width:0 0 19px 0;
 }
   
 .forms_cpCurrentMonthDate, .forms_cpOtherMonthDate, .forms_cpCurrentDate  {
@@ -53,7 +52,7 @@ TD.forms_cpDayColumnHeader {
 }
   
 .forms_cpCurrentMonthDate, .forms_cpCurrentDate {
-    color:#000000;
+    color:black;
 }
   
 .forms_cpOtherMonthDate {
@@ -62,18 +61,18 @@ TD.forms_cpDayColumnHeader {
   
 TD.forms_cpCurrentDate {
     color:white; background-color: #C0C0C0;
-    border-width:1;
+    border-width:1px;
     border:solid thin #800000;
 }
   
 TD.forms_cpCurrentDateDisabled {
-    border-width:1;
+    border-width:1px;
     border:solid thin #FFAAAA;
 }
   
 TD.forms_cpTodayText, TD.forms_cpTodayTextDisabled {
     border:solid thin #C0C0C0;
-    border-width:1 0 0 0;
+    border-width:1px 0 0 0;
 }
   
 A.forms_cpTodayText, SPAN.forms_cpTodayTextDisabled {
