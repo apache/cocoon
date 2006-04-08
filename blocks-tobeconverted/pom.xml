@@ -38,15 +38,12 @@
   <name>Cocoon Blocks (not converted yet!) [modules]</name>
 
   <modules>
-		<module>cocoon-ajax</module>
 		<!--
 		<module>cocoon-authentication-fw</module>
-		<module>cocoon-captcha</module>
 		<module>cocoon-core-components</module>
 		<module>cocoon-cron</module>
 		<module>cocoon-databases</module>
 		-->
-		<module>cocoon-forms</module>
 		<!--module>cocoon-jcr</module>
 		<module>cocoon-mocks</module>
 		<module>cocoon-portal</module>
