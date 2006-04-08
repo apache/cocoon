@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE status [
+<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT developers (person+)>
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+  name CDATA #REQUIRED
+  email CDATA #REQUIRED
+  id CDATA #REQUIRED
+>
+<!ELEMENT todo (actions+)>
+<!ELEMENT actions (action+)>
+<!ATTLIST actions
+  priority (high | medium | low) #REQUIRED
+>
+<!ELEMENT changes (release+)>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+  version CDATA #REQUIRED
+  date CDATA #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
+<!ATTLIST action
+  context (build | code | docs) #IMPLIED
+  assigned-to CDATA #IMPLIED
+  dev CDATA #IMPLIED
+  type (add | fix | remove | update) #IMPLIED
+  fixes-bug CDATA #IMPLIED
+  due-to CDATA #IMPLIED
+  due-to-email CDATA #IMPLIED
+>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT br EMPTY>
+<!ELEMENT strong (#PCDATA)>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link
+  href CDATA #REQUIRED
+>
+<!ELEMENT ul (li)+>
+<!ELEMENT li (#PCDATA | link | br | code | ul)*>
+<!ENTITY eacute           "&#x000E9;">
+<!ENTITY ouml             "&#x000F6;">
+<!ENTITY uuml             "&#x000FC;">
+<!ENTITY ccedil           "&#x000E7;">
+]>
+
+<!-- SVN $Id$ -->
+
+<status>
+ <!-- The following list contains the changes since the latest 2.1.x version. -->
+ <changes>
+  <release version="@version@" date="@date@">
+    <action dev="AN" type="fix">
+      XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
+      logicsheets.  (Suggestion by Vadim Gritsenko).
+    </action>
+    <action dev="AN" type="add">
+      XSP block: Instrument {#expr} interpolation to produce Cocoon stacktrace for parse errors.
+    </action>
+    <action dev="AN" type="fix" fixes-bug="COCOON-1691" due-to="Feliciano Borrego" due-to-email="felibv@gmail.com">
+      XSP block: Renaming AttributeImpl xspAttr to _xspAttr was not applied to ESQL logicsheet.
+      That caused compilation errors in all XSPs using it.
+    </action>
+    <action dev="JH" type="fix" fixes-bug="35162" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      EclipseJavaCompiler chokes on warnings. Changed to errors.
+    </action>
+    <action dev="AN" type="fix">
+      Move AttributeImpl in xsp.xsl to class scope.
+      That allows top-level xsp:logic to define markup generating methods.
+      Variable xspAttr renamed to _xspAttr to be avoid breaking existing
+      XSPs which already use that trick.
+    </action>
+    <action dev="AN" type="fix">
+      Add xsp:expr and various other contexts where text must be
+      passed through XSLTExtension:escape in order to preserve non-ASCII
+      characters in Java string constants independently of the XSP source file
+      and compiler expected encodings.
+    </action>
+    <action dev="AN" type="add">
+      Extend {#expr} interpolation parser to understand {}, "}", '}'
+      as not being the closing brace.
+      The previously implemented mechanism #} to escape braces within the
+      statement is no longer supported.
+    </action>
+    <action dev="AN" type="add">
+      Implement {#expr} interpolation also for logicsheets.
+    </action>
+    <action dev="AN" type="add" fixes-bug="35228" due-to="Jochen Kuhnle" due-to-email="werbung@kuhnle.net">
+      Added short-cut notation {#expr} for interpolation of
+      XSP expressions in attribute values and text nodes.
+      Removed wrapping of all text nodes from XSP source into &lt;xsp:text&gt;
+      elements before passing them to logicsheets.
+      (This feature was not used by the standard logicsheets but check your
+      custom logicsheets whether they depend on it.)
+    </action>
+    <action dev="AN" type="fix" fixes-bug="32935">
+      Double check and attempt again to load program object from cache.
+      This avoids that simultaneous requests recompile the same XSP over and over again.
+    </action>
+  </release>
+ </changes>
+
+</status>
+
