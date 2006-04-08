@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+  <jx:set var="tags" value="${java.util.HashMap()}"/>
+
+  <jx:macro name="dynamic-tag">
+    <jx:parameter name="id"/>
+    <jx:set var="ignored" value="${tags.put(id, macro.body)}"/>
+  </jx:macro>
+
+  <dynamic-tag id="example">
+    <em>This tag was invoked dynamically</em>
+  </dynamic-tag>
+
+  <p>I'm about to invoke a dynamic tag:</p>
+  <jx:eval select="${tags.example}"/> 
+
+</root>
