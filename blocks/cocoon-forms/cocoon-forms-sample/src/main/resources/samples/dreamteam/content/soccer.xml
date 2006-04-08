@@ -1,0 +1,1859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<players>
+   <!-- Information copied from the www.euro2004.com website -->
+   <player>
+      <name>David JAMES</name>
+      <position>GK</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Gary NEVILLE</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Ashley COLE</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Steven GERRARD</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>John TERRY</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Sol CAMPBELL</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>David BECKHAM</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Paul SCHOLES</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Wayne ROONEY</name>
+      <position>FW</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Michael OWEN</name>
+      <position>FW</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Frank LAMPARD</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Wayne BRIDGE</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Paul ROBINSON</name>
+      <position>GK</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Phil NEVILLE</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Ledley KING</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Jamie CARRAGHER</name>
+      <position>DF</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Nicky BUTT</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Owen HARGREAVES</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Joe COLE</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Kieron DYER</name>
+      <position>MD</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Emile HESKEY</name>
+      <position>FW</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Ian WALKER</name>
+      <position>GK</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Darius VASSELL</name>
+      <position>FW</position>
+      <country>EN</country>
+   </player>
+   <player>
+      <name>Edwin VAN DER SAR</name>
+      <position>GK</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Michael REIZIGER</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Jaap STAM</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Wilfred BOUMA</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Giovanni VAN BRONCKHORST</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Phillip COCU</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Andy VAN DER MEYDE</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Edgar DAVIDS</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Patrick KLUIVERT</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Ruud VAN NISTELROOIJ</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Rafael VAN DER VAART</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Roy MAKAAY</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Sander WESTERVELD</name>
+      <position>GK</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Wesley SNEIJDER</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Frank DE BOER</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Marc OVERMARS</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Pierre VAN HOOIJDONK</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>John HEITINGA</name>
+      <position>DF</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Arjen ROBBEN</name>
+      <position>FW</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Clarence SEEDORF</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Paul BOSVELT</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Boudewijn ZENDEN</name>
+      <position>MD</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Ronald WATERREUS</name>
+      <position>GK</position>
+      <country>NL</country>
+   </player>
+   <player>
+      <name>Thomas SØRENSEN</name>
+      <position>GK</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Kasper BØGELUND</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>René HENRIKSEN</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Martin LAURSEN</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Niclas JENSEN</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Thomas HELVEG</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Thomas GRAVESEN</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Jesper GRØNKJÆR</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Jon Dahl TOMASSON</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Martin JØRGENSEN</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Ebbe SAND</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Thomas KAHLENBERG</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Per KRØLDRUP</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Claus JENSEN</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Daniel JENSEN</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Peter SKOV-JENSEN</name>
+      <position>GK</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Christian POULSEN</name>
+      <position>MD</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Brian PRISKE</name>
+      <position>DF</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Dennis ROMMEDAHL</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Kenneth PEREZ</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Peter MADSEN</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Stephan ANDERSEN</name>
+      <position>GK</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Peter LOVENKRANDS</name>
+      <position>FW</position>
+      <country>DK</country>
+   </player>
+   <player>
+      <name>Oliver KAHN</name>
+      <position>GK</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Andreas HINKEL</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Arne FRIEDRICH</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Christian WÖRNS</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Jens NOWOTNY</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Frank BAUMANN</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Bastian SCHWEINSTEIGER</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Dietmar HAMANN</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Fredi BOBIC</name>
+      <position>FW</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Kevin KURANYI</name>
+      <position>FW</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Miroslav KLOSE</name>
+      <position>FW</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Jens LEHMANN</name>
+      <position>GK</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Michael BALLACK</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Thomas BRDARIC</name>
+      <position>FW</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Sebastian KEHL</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Jens JEREMIES</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Christian ZIEGE</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Fabian ERNST</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Bernd SCHNEIDER</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Lukas PODOLSKI</name>
+      <position>FW</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Philipp LAHM</name>
+      <position>DF</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Torsten FRINGS</name>
+      <position>MD</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Timo HILDEBRAND</name>
+      <position>GK</position>
+      <country>DE</country>
+   </player>
+   <player>
+      <name>Andreas ISAKSSON</name>
+      <position>GK</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Teddy LUCIC</name>
+      <position>DF</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Olof MELLBERG</name>
+      <position>DF</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Johan MJÄLLBY</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Erik EDMAN</name>
+      <position>DF</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Tobias LINDEROTH</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Mikael NILSSON</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Anders SVENSSON</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Fredrik LJUNGBERG</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Zlatan IBRAHIMOVIC</name>
+      <position>FW</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Henrik LARSSON</name>
+      <position>FW</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Magnus HEDMAN</name>
+      <position>GK</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Petter HANSSON</name>
+      <position>DF</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Alexander ÖSTLUND</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Andreas JAKOBSSON</name>
+      <position>DF</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Kim KÄLLSTRÖM</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Anders ANDERSSON</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Mattias JONSON</name>
+      <position>FW</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Pontus FARNERUD</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Marcus ALLBÄCK</name>
+      <position>FW</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Christian WILHELMSSON</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Erik WAHLSTEDT</name>
+      <position>MD</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Magnus KIHLSTEDT</name>
+      <position>GK</position>
+      <country>SE</country>
+   </player>
+   <player>
+      <name>Aleksandrs KOLINKO</name>
+      <position>GK</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Igors STEPANOVS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Vitalis ASTAFJEVS</name>
+      <position>MD</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Mihails ZEMLINSKIS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Jurijs LAIZANS</name>
+      <position>MD</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Olegs BLAGONADEZDINS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Aleksandrs ISAKOVS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Imants BLEIDELIS</name>
+      <position>MD</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Maris VERPAKOVSKIS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Andrejs RUBINS</name>
+      <position>MD</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Andrejs PROHORENKOVS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Andrejs PIEDELS</name>
+      <position>GK</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Jurgis PUCINSKIS</name>
+      <position>MD</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Valentins LOBANOVS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Maris SMIRNOVS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Dzintars ZIRNIS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Marians PAHARS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Igors KORABLOVS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Andrejs ŠTOLCERS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Andrejs PAVLOVS</name>
+      <position>GK</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Mihails MIHOLAPS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Arturs ZAKRESEVSKIS</name>
+      <position>DF</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Vits RIMKUS</name>
+      <position>FW</position>
+      <country>LV</country>
+   </player>
+   <player>
+      <name>Petr CECH</name>
+      <position>GK</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Zdenek GRYGERA</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Pavel MAREŠ</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Tomáš GALÁSEK</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>René BOLF</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Marek JANKULOVSKI</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Vladimír ŠMICER</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Karel POBORSKÝ</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Jan KOLLER</name>
+      <position>FW</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Tomáš ROSICKÝ</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Pavel NEDVED</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Vratislav LOKVENC</name>
+      <position>FW</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Martin JIRÁNEK</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Štepán VACHOUŠEK</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Milan BAROŠ</name>
+      <position>FW</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Jaromír BLAZEK</name>
+      <position>GK</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Tomáš HÜBSCHMAN</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Marek HEINZ</name>
+      <position>FW</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Roman TÝCE</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Jaroslav PLAŠIL</name>
+      <position>MD</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Tomáš UJFALUŠI</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>David ROZEHNAL</name>
+      <position>DF</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Antonín KINSKÝ</name>
+      <position>GK</position>
+      <country>CZ</country>
+   </player>
+   <player>
+      <name>Sergei OVCHINNIKOV</name>
+      <position>GK</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Vladislav RADIMOV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri SYCHEV</name>
+      <position>FW</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Aleksei SMERTIN</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Andrei KARIAKA</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Igor SEMSHOV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Marat IZMAILOV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Rolan GUSEV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri BULYKIN</name>
+      <position>FW</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Aleksandr MOSTOVOI</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Aleksandr KERZHAKOV</name>
+      <position>FW</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Viacheslav MALAFEEV</name>
+      <position>GK</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Roman SHARONOV</name>
+      <position>DF</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Aleksandr ANYUKOV</name>
+      <position>DF</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri ALENICHEV</name>
+      <position>FW</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Vadim EVSEEV</name>
+      <position>DF</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri SENNIKOV</name>
+      <position>DF</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri KIRICHENKO</name>
+      <position>FW</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Vladimir BYSTROV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Dmitri LOSKOV</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Aleksei BUGAYEV</name>
+      <position>DF</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Evgeni ALDONIN</name>
+      <position>MD</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Igor AKINFEEV</name>
+      <position>GK</position>
+      <country>RU</country>
+   </player>
+   <player>
+      <name>Zdravko ZDRAVKOV</name>
+      <position>GK</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Vladimir IVANOV</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Rosen KIRILOV</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Ivailo PETKOV</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Zlatomir ZAGORCIC</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Kiril KOTEV</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Daniel BORIMIROV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Milen PETKOV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Dimitar BERBATOV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Velizar DIMITROV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Zdravko LAZAROV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Stoian KOLEV</name>
+      <position>GK</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Georgi PEEV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Georgi CHILIKOV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Marian HRISTOV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Vladimir MANCHEV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Martin PETROV</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Predrag PAZIN</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Stilian PETROV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Valeri BOJINOV</name>
+      <position>MD</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Zoran JANKOVIC</name>
+      <position>FW</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Ilian STOIANOV</name>
+      <position>DF</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Dimitar IVANKOV</name>
+      <position>GK</position>
+      <country>BG</country>
+   </player>
+   <player>
+      <name>Antonios NIKOPOLIDIS</name>
+      <position>GK</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Giourkas SEITARIDIS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Stylianos VENETIDIS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Nikolaos DABIZAS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Traianos DELLAS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Angelos BASINAS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Theodoros ZAGORAKIS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Stylianos GIANNAKOPOULOS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Angelos CHARISTEAS</name>
+      <position>FW</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Vassilios TSIARTAS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Themistoklis NIKOLAIDIS</name>
+      <position>FW</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Konstantinos CHALKIAS</name>
+      <position>GK</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Theofanis KATERGIANNAKIS</name>
+      <position>GK</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Panagiotis FYSSAS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Zisis VRYZAS</name>
+      <position>FW</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Pantelis KAFES</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Georgios GEORGIADIS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Ioannis GOUMAS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Mihalis KAPSIS</name>
+      <position>DF</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Georgios KARAGOUNIS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Konstantinos KATSOURANIS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Dimitrios PAPADOPOULOS</name>
+      <position>FW</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Vassilios LAKIS</name>
+      <position>MD</position>
+      <country>GR</country>
+   </player>
+   <player>
+      <name>Vladimir VASILJ</name>
+      <position>GK</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Mario TOKIC</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Josip ŠIMUNIC</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Stjepan TOMAS</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Igor TUDOR</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Boris ŽIVKOVIC</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Milan RAPAIC</name>
+      <position>FW</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Darijo SRNA</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Dado PRŠO</name>
+      <position>FW</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Niko KOVAC</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Tomislav ŠOKOTA</name>
+      <position>FW</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Tomislav BUTINA</name>
+      <position>GK</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Dario ŠIMIC</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Mato NERETLJAK</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Jerko LEKO</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Marko BABIC</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Ivan KLASNIC</name>
+      <position>FW</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Ivica OLIC</name>
+      <position>FW</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Ivica MORNAR</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Giovani ROSSO</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Robert KOVAC</name>
+      <position>DF</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Nenad BJELICA</name>
+      <position>MD</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Joseph DIDULICA</name>
+      <position>GK</position>
+      <country>HR</country>
+   </player>
+   <player>
+      <name>Jörg STIEL</name>
+      <position>GK</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Bernt HAAS</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Bruno BERNER</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Stéphane HENCHOZ</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Murat YAKIN</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Johann VOGEL</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Ricardo CABANAS</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Raphael WICKY</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Alexander FREI</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Hakan YAKIN</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Stéphane CHAPUISAT</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Pascal ZUBERBÜHLER</name>
+      <position>GK</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Marco ZWYSSIG</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Ludovic MAGNIN</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Daniel GYGAX</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Fabio CELESTINI</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Christoph SPYCHER</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Benjamin HUGGEL</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Tranquillo BARNETTA</name>
+      <position>MD</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Patrick MÜLLER</name>
+      <position>DF</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Milaim RAMA</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Johan VONLANTHEN</name>
+      <position>FW</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Sébastien ROTH</name>
+      <position>GK</position>
+      <country>CH</country>
+   </player>
+   <player>
+      <name>Gianluigi BUFFON</name>
+      <position>GK</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Christian PANUCCI</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Massimo ODDO</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Cristiano ZANETTI</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Fabio CANNAVARO</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Matteo FERRARI</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Alessandro DEL PIERO</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Gennaro GATTUSO</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Christian VIERI</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Francesco TOTTI</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Bernardo CORRADI</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Francesco TOLDO</name>
+      <position>GK</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Alessandro NESTA</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Stefano FIORE</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Giuseppe FAVALLI</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Mauro CAMORANESI</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Marco DI VAIO</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Antonio CASSANO</name>
+      <position>FW</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Gianluca ZAMBROTTA</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Simone PERROTTA</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Andrea PIRLO</name>
+      <position>MD</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Angelo PERUZZI</name>
+      <position>GK</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Marco MATERAZZI</name>
+      <position>DF</position>
+      <country>IT</country>
+   </player>
+   <player>
+      <name>Santiago CAÑIZARES</name>
+      <position>GK</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Joan CAPDEVILA</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Carlos MARCHENA</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>David ALBELDA</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Carles PUYOL</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Iván HELGUERA</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>RAÚL González</name>
+      <position>FW</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Rubén BARAJA</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Fernando TORRES</name>
+      <position>FW</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Fernando MORIENTES</name>
+      <position>FW</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Albert LUQUE</name>
+      <position>FW</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>García GABRI</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Daniel ARANZUBIA</name>
+      <position>GK</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>VICENTE Rodríguez</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>RAÚL BRAVO</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>XABI ALONSO</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Joseba ETXEBERRIA</name>
+      <position>FW</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>CÉSAR Martín</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>SÁNCHEZ Joaquín</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Hernández XAVI</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Juan Carlos VALERÓN</name>
+      <position>MD</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Gutiérrez JUANITO</name>
+      <position>DF</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Iker CASILLAS</name>
+      <position>GK</position>
+      <country>ES</country>
+   </player>
+   <player>
+      <name>Mickaël LANDREAU</name>
+      <position>GK</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Jean-Alain BOUMSONG</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Bixente LIZARAZU</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Patrick VIEIRA</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>William GALLAS</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Claude MAKELELE</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Robert PIRES</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Marcel DESAILLY</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Louis SAHA</name>
+      <position>FW</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Zinédine ZIDANE</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Sylvain WILTORD</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Thierry HENRY</name>
+      <position>FW</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Mikaël SILVESTRE</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Jérôme ROTHEN</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Lilian THURAM</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Fabien BARTHEZ</name>
+      <position>GK</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Olivier DACOURT</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Benoît PEDRETTI</name>
+      <position>MD</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Willy SAGNOL</name>
+      <position>DF</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>David TREZEGUET</name>
+      <position>FW</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Steve MARLET</name>
+      <position>FW</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Sidney GOVOU</name>
+      <position>FW</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name>Grégory COUPET</name>
+      <position>GK</position>
+      <country>FR</country>
+   </player>
+   <player>
+      <name> RICARDO </name>
+      <position>GK</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>PAULO FERREIRA</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>RUI JORGE</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>JORGE ANDRADE</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>Fernando COUTO</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>COSTINHA </name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>LUÍS FIGO</name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>PETIT</name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>PAULETA </name>
+      <position>FW</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>RUI COSTA</name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>Sabrosa SIMÃO</name>
+      <position>FW</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>QUIM </name>
+      <position>GK</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>MIGUEL </name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>NUNO VALENTE</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>BETO</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>RICARDO CARVALHO</name>
+      <position>DF</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>Cristiano RONALDO</name>
+      <position>FW</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>MANICHE</name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>TIAGO </name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>DECO </name>
+      <position>MD</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>NUNO GOMES</name>
+      <position>FW</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>MOREIRA</name>
+      <position>GK</position>
+      <country>PT</country>
+   </player>
+   <player>
+      <name>Hélder POSTIGA</name>
+      <position>FW</position>
+      <country>PT</country>
+   </player>
+</players>

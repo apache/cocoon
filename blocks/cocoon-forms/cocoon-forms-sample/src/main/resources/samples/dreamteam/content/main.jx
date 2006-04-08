@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0" 
+>
+<html>
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<link href="local-resources/dreamteam.css" type="text/css" rel="stylesheet"/>
+    <title>The Dream Team Home Page</title>
+    </head>
+	<body>
+        <h1>The Dream Team</h1>
+        <p>Welcome to the Dream Team Chooser.</p>
+        <p>Did you watch the European Soccer Championship in the summer of 2004? Where you jumping up 
+           and down for joy over the successes or biting your nails out of frustration? Here is your
+           chance to select the ultimate team of champions.
+           <br/>
+           Start this application and choose your dream team of soccer players.
+        </p>
+        <p>Have fun!</p>
+
+        <p><a href="buildteam.html">Select team</a></p>
+        <p class="developer-header">
+           Developer Notes
+        </p>
+        <h2>Introduction</h2>
+        <p class="developer-note">
+           This sample shows how to build a Cocoon Form with a repeater widget
+           that is bound to JavaBeans. The fields in a repeater row
+           are dependent. More specific: the choice in the first selection list
+           updates the selection list in the second field. Finally, a choice
+           in the second selection list, changes the third field.
+           <br/>
+            Flowscripts are used to build the forms and handle the result.
+        </p>
+        <p class="developer-note">
+            This sample assumes you have a basic knowledge of Cocoon Forms and Javascript. 
+            If your knowledge of Cocoon Forms is limited, please have a look at the <a 
+            href="http://cocoon.apache.org/2.1/userdocs/forms/index.html">Cocoon Forms documentation</a> and 
+            the <a href="http://wiki.apache.org/cocoon/Forms">Wiki</a> pages.
+        </p>
+        <p class="developer-note">
+            Flowscript or flow, is considered to be the glue between pipelines and forms. It is a special
+            kind of Javascript that runs on the server.
+            <br/>
+            More information on the Flowscript can be found through the links in the Flowscript section
+            of Chapter 7 of the <a href="http://wiki.apache.org/cocoon/Cocoon215TOC">Cocoon215TOC</a> 
+            Wiki page.
+        </p>
+        
+        <p class="developer-note">
+            Also have a look at the Supersonic Tour Sample which is a live tutorial with a 
+            quick overview of Cocoon. Cocoon Forms and flow are explained there and you can see some 
+            samples in action.
+        </p>
+        <h2>The start</h2>
+        <p class="developer-note">
+            This page is started from a flowscript that reads in <b>soccer.xml</b> and
+            passes it onto a Manager. This Java class represents a simple Java-based
+            connection to a datasource.
+            <br/>
+            Normally you would handle all interaction with the data through Java classes, not in
+            flow, but for the sake of simplicity and to demonstrate the communication between flow and
+            your business layer, we used a function <i>loadDocument</i> to read in the XML file and pass
+            it on to the Manager class.
+        </p>
+	    <p>
+	        <a href="../">Back to Forms samples</a>
+	    </p>            
+	</body>
+</html>
+</jx:template>
