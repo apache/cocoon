@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <body>
+    <h4 class="samplesGroup">JXPath binding result: java beans</h4>
+    Email: ${form2bean.email}
+    <br/>
+    Phone: +${form2bean.phoneCountry}-${form2bean.phoneZone}-${form2bean.phoneNumber}
+    <br/>
+    IP Address: ${form2bean.ipAddress}
+    <br/>
+    birthday: ${form2bean.birthday}
+    <br/>
+    number: ${form2bean.aNumber}
+    <br/>
+    I choose: ${form2bean.choose}
+    <br/>
+    Enable: ${form2bean.enable}
+    <br/>
+    Sex: <i18n:text xmlns:i18n="http://apache.org/cocoon/i18n/2.1">${form2bean.sex}</i18n:text>
+
+    <table border="1">
+      <tr>
+        <th>id</th>
+        <th>firstName</th>
+        <th>middleInitial</th>
+        <th>lastName</th>
+        <th>phone</th>
+        <th>email</th>
+        <th>preferred contact</th>
+      </tr>
+      <jx:forEach var="item" items="${form2bean.contacts}">
+        <tr>
+          <td>${item.id}</td>
+          <td>${item.firstName}</td>
+          <td>${item.middleInitial}</td>
+          <td>${item.lastName}</td>
+          <td>${item.phone}</td>
+          <td>${item.email}</td>
+          <td><i18n:text xmlns:i18n="http://apache.org/cocoon/i18n/2.1">${item.preferred}</i18n:text></td>
+        </tr>
+      </jx:forEach>
+    </table>
+
+    <table border="1">
+      <tr>
+        <th>drinks</th>
+      </tr>
+      <jx:forEach var="item" items="${form2bean.drinks}">
+        <tr>
+          <td>${item}</td>
+        </tr>
+      </jx:forEach>
+    </table>
+
+    <br/>
+    <a href="form2bean.flow">Do it again</a> - <a href="./">Back to Forms samples</a>
+  </body>
+</html>

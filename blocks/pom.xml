@@ -38,12 +38,14 @@
   <name>Cocoon Blocks [modules]</name>
 
   <modules>
+        <module>cocoon-ajax</module>
 		<!--module>cocoon-apples</module
 		<module>cocoon-asciiart</module>
 		<module>cocoon-axis</module>
 		<module>cocoon-batik</module>
-		<module>cocoon-bsf</module>
-		<module>cocoon-chaperon</module>
+		<module>cocoon-bsf</module -->
+		<module>cocoon-captcha</module>
+		<!--module>cocoon-chaperon</module>
 		<module>cocoon-core-samples-additional</module>
 		<module>cocoon-core-samples-main</module>
 		<module>cocoon-cron</module>
@@ -51,6 +53,7 @@
 		<module>cocoon-eventcache</module>
 		<module>cocoon-faces</module-->
 		<module>cocoon-fop</module>
+        <module>cocoon-forms</module>
 		<!--module>cocoon-hsqldb</module>
 		<module>cocoon-html</module>
 		<module>cocoon-itext</module>
