@@ -72,6 +72,7 @@
 		<module>cocoon-paranoid</module>
 		<module>cocoon-petstore</module>
 		<module>cocoon-poi</module>
+		<module>cocoon-portal</module>
 		<module>cocoon-profiler</module>
 		<module>cocoon-proxy</module>
 		<module>cocoon-python</module>

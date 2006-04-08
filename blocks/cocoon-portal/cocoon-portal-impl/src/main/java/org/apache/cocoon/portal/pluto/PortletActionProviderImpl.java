@@ -1,0 +1,91 @@
+/*
+ * Copyright 2004-2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.cocoon.portal.pluto;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.portlet.PortletMode;
+import javax.portlet.WindowState;
+
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
+import org.apache.pluto.om.window.PortletWindow;
+import org.apache.pluto.services.information.PortletActionProvider;
+
+/**
+ *
+ *
+ * @version $Id$
+ */
+public class PortletActionProviderImpl implements PortletActionProvider {
+
+    /** The target. */
+    protected final PortletWindow portletWindow;
+
+    /** The portal service. */
+    protected final PortalService portalService;
+
+    /**
+     * Constructor.
+     */
+    public PortletActionProviderImpl(PortletWindow portletWindow, PortalService service) {
+        this.portletWindow = portletWindow;
+        this.portalService = service;
+    }
+
+    /**
+     * @see org.apache.pluto.services.information.PortletActionProvider#changePortletMode(javax.portlet.PortletMode)
+     */
+    public void changePortletMode(PortletMode mode) {
+        if ( mode != null ) {
+            final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+            cid.setTemporaryAttribute("portlet-mode", mode.toString());
+        }
+    }
+
+    /**
+     * @see org.apache.pluto.services.information.PortletActionProvider#changePortletWindowState(javax.portlet.WindowState)
+     */
+    public void changePortletWindowState(WindowState state) {
+        if ( state != null ) {
+            final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+            cid.setTemporaryAttribute("window-state", state.toString());
+            int size = CopletInstanceData.SIZE_NORMAL;
+            if ( state.equals(WindowState.MAXIMIZED) ) {
+                size = CopletInstanceData.SIZE_MAXIMIZED;
+            } else if ( state.equals(WindowState.MINIMIZED) ) {
+                size = CopletInstanceData.SIZE_MINIMIZED;
+            }
+            if ( size != cid.getSize() ) {
+                final Event e = new CopletInstanceSizingEvent(cid, size);
+                this.portalService.getEventManager().send(e);
+            }
+        }
+    }
+
+    public void changeRenderParameters(Map parameters) {
+        final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+        if ( parameters == null ) {
+            cid.removeTemporaryAttribute("render-parameters");
+        } else {
+            cid.setTemporaryAttribute("render-parameters", new HashMap(parameters));
+        }
+    }
+}
