@@ -43,7 +43,6 @@
 		<module>cocoon-databases</module>
 		-->
 		<!--module>cocoon-mocks</module>
-		<module>cocoon-portal</module>
 		<module>cocoon-validation</module>
 		<module>cocoon-xmldb</module-->
 	</modules>
