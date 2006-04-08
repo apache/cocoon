@@ -39,7 +39,6 @@
 
   <modules>
 		<!--
-		<module>cocoon-authentication-fw</module>
 		<module>cocoon-core-components</module>
 		<module>cocoon-cron</module>
 		<module>cocoon-databases</module>
