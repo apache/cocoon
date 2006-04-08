@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+    <script language="Javascript">
+<![CDATA[
+var xmlhttp;
+/*@cc_on @*/
+/*@if (@_jscript_version >= 5)
+// JScript gives us Conditional compilation, we can cope with old IE versions.
+// and security blocked creation of the objects.
+ try {
+  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+ } catch (e) {
+  try {
+   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch (E) {
+   xmlhttp = false;
+  }
+ }
+@else
+ xmlhttp = false;
+@end @*/
+if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+  xmlhttp = new XMLHttpRequest();
+} else {
+  xmlhttp = false;
+}
+
+function repopulateSelection(id, xmlhttp) {
+  var select = document.getElementById(id);
+  while (select.length > 0) {
+    select.remove(0);
+  }
+  var xml = xmlhttp.responseXML;
+  var newSelect = xml.documentElement;
+  var options = newSelect.getElementsByTagName("option");
+  for (var i = 0 ; i < options.length ; ++i) {
+    var option = document.createElement("option");
+    option.setAttribute("value", options.item(i).getAttribute("value"));
+    if (options.item(i).firstChild) {
+      var text = document.createTextNode(options.item(i).firstChild.nodeValue);
+      option.appendChild(text);
+    } else {
+      var text = document.createTextNode(option.getAttribute("value"));
+      option.appendChild(text);
+    }
+    select.appendChild(option);
+  }
+}
+
+function changeMake(make, model) {
+  xmlhttp.open("GET", "xhr_cars/" + make.value, true);
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4) {
+      repopulateSelection("type", xmlhttp);
+      while (model.length > 0) {
+        model.remove(0);
+      }
+    }
+  }
+  xmlhttp.send(null)  
+}
+
+function changeType(make, type) {
+  xmlhttp.open("GET", "xhr_cars/" + make.value + "/" + type.value, true);
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4) {
+      repopulateSelection("model", xmlhttp);
+    }
+  }
+  xmlhttp.send(null)  
+}
+]]>      
+    </script>
+  <title>Car selector with XMLHTTPRequest</title>
+  <content>
+    <para>
+        This experimental sample demonstrates the use of XMLHttpRequest to update
+        fields without refreshing the page. It is currently broken: the form
+        cannot be successfully submitted, as the form model does not contain the
+        values of the type and model selection lists. After selecting a value in
+        the "model" field, the "type" and "model" fields are reset to their initial
+        values, instead of submitting the form. See also bugzilla 34077.
+    </para>
+
+    <ft:form-template action="xhr_carselector" method="POST">
+      <ft:continuation-id/>
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="make">
+            <fi:styling submit-on-change="false" onchange="changeMake(this, document.getElementById('model')); return false;"/>
+          </ft:widget>
+          <ft:widget id="type">
+            <fi:styling submit-on-change="false" onchange="changeType(document.getElementById('make'), this); return false;"/>
+          </ft:widget>
+          <ft:widget id="model"/>
+          <ft:widget id="message"/>
+          <input type="submit" value="Buy it!"/>
+        </fi:items>
+      </fi:group>
+    </ft:form-template>
+    <p>
+      <a href="../">Back to samples</a>
+    </p>
+    
+  </content>
+</page>
