@@ -41,6 +41,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.util.LocalConfiguration;
 import org.exolab.castor.xml.IDResolver;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
@@ -135,6 +136,9 @@ public class CastorSourceConverter
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
+        // configure castor - so we don't need a properties file
+        LocalConfiguration.getInstance().getProperties().setProperty("org.exolab.castor.parser.namespaces", "true");
+
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
         this.mappingSources.put("layout", prefix + "layout.xml");
