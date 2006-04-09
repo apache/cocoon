@@ -17,6 +17,7 @@ package org.apache.cocoon.core.osgi;
 
 import java.beans.PropertyEditor;
 import java.net.URL;
+import java.util.Map;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
@@ -24,17 +25,22 @@ import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
+import org.apache.cocoon.core.container.spring.ConfigReader;
+import org.apache.cocoon.core.container.spring.ConfigurationInfo;
+import org.apache.cocoon.environment.Context;
+import org.apache.excalibur.store.Store;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * @version $Id$
  */
-public class OSGiSpringECMFactory implements ConfigurableBeanFactory {
+public class OSGiSpringECMFactory implements ConfigurableListableBeanFactory, CocoonSpringBeanRegistry {
 	
 	private static final String MANIFEST_FILE = "/META-INF/MANIFEST.MF";
 
@@ -42,7 +48,7 @@ public class OSGiSpringECMFactory implements ConfigurableBeanFactory {
 	
     private Logger logger;
 	private Settings settings;
-	private ConfigurableBeanFactory beanFactory;
+	private ConfigurableListableBeanFactory beanFactory;
 
 	protected Settings getSettings() {
 		return this.settings;
@@ -60,16 +66,28 @@ public class OSGiSpringECMFactory implements ConfigurableBeanFactory {
 		this.logger = logger;
 	}
 	
+	/*
+	 * TODO (DF/RP) move activation into a seperate thread
+	 */
 	protected void activate(ComponentContext componentContext) throws Exception {
-		URL manifestUrl = componentContext.getBundleContext().getBundle().getResource(MANIFEST_FILE);
+		URL manifestUrl = componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
 		String contextPath = manifestUrl.toString();
-		contextPath = manifestUrl.toString().substring(0, contextPath.length() - MANIFEST_FILE.length());
+		contextPath = manifestUrl.toString().substring(0, contextPath.length() - (MANIFEST_FILE.length() - 1));
 		
-		DefaultContext avalonContext = CoreUtil.createContext(this.settings, null, contextPath, null, null);
+		this.logger.debug("Context path: " + contextPath);
+
+		// create a minimal OSGi servlet context
+		Context osgiServletContext = new OSGiServletContext(this.logger, componentContext);		
 		
+		// create a minimal Avalon Context
+		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath, null, null);
+		
+		// create an Avalon environment (it's some kind of container for Avalon related information)
 		AvalonEnvironment avalonEnvironment = new AvalonEnvironment();
 		avalonEnvironment.context = avalonContext;
-		avalonEnvironment.logger = this.logger;		
+		avalonEnvironment.logger = this.logger;	
+		avalonEnvironment.settings = this.settings;
+		avalonEnvironment.servletContext = osgiServletContext;
 		
 		// get the configuration file property
 		String configFile= (String) componentContext.getProperties().get(CONFIG_FILE);
@@ -77,71 +95,259 @@ public class OSGiSpringECMFactory implements ConfigurableBeanFactory {
 			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
 		}
 		
-		this.beanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
-//		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(source, env)
+		ConfigurableListableBeanFactory rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
+		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
+		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
+				null, rootBeanFactory, true);
+		Store store = (Store) beanFactory.getBean(Store.ROLE);
+		this.logger.debug("Store: " + store);
     }
-
-	// ~~~~~~~~~~~~~~~ delegating ... ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
-	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
-		this.beanFactory.addBeanPostProcessor(beanPostProcessor);
+	// ~~~~~~~~~~~~~~~ delegating to this.beanFactory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
+
+	/**	
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#addBeanPostProcessor(org.springframework.beans.factory.config.BeanPostProcessor)
+	 */
+	public void addBeanPostProcessor(BeanPostProcessor arg0) {
+		this.beanFactory.addBeanPostProcessor(arg0);
 	}
 
-	public boolean containsSingleton(String arg0) {
-		return this.beanFactory.containsSingleton(arg0);
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#applyBeanPostProcessorsAfterInitialization(java.lang.Object, java.lang.String)
+	 */
+	public Object applyBeanPostProcessorsAfterInitialization(Object arg0, String arg1) throws BeansException {
+		return this.beanFactory.applyBeanPostProcessorsAfterInitialization(arg0, arg1);
 	}
 
-	public void destroySingletons() {
-		this.beanFactory.destroySingletons();
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#applyBeanPostProcessorsBeforeInitialization(java.lang.Object, java.lang.String)
+	 */
+	public Object applyBeanPostProcessorsBeforeInitialization(Object arg0, String arg1) throws BeansException {
+		return this.beanFactory.applyBeanPostProcessorsBeforeInitialization(arg0, arg1);
 	}
 
-	public int getBeanPostProcessorCount() {
-		return this.beanFactory.getBeanPostProcessorCount();
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#applyBeanPropertyValues(java.lang.Object, java.lang.String)
+	 */
+	public void applyBeanPropertyValues(Object arg0, String arg1) throws BeansException {
+		this.beanFactory.applyBeanPropertyValues(arg0, arg1);
 	}
 
-	public void registerAlias(String arg0, String arg1) throws BeansException {
-		this.beanFactory.registerAlias(arg0, arg1);
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#autowire(java.lang.Class, int, boolean)
+	 */
+	public Object autowire(Class arg0, int arg1, boolean arg2) throws BeansException {
+		return this.beanFactory.autowire(arg0, arg1, arg2);
 	}
 
-	public void registerCustomEditor(Class arg0, PropertyEditor arg1) {
-		this.beanFactory.registerCustomEditor(arg0, arg1);
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#autowireBeanProperties(java.lang.Object, int, boolean)
+	 */
+	public void autowireBeanProperties(Object arg0, int arg1, boolean arg2) throws BeansException {
+		this.beanFactory.autowireBeanProperties(arg0, arg1, arg2);
 	}
 
-	public void registerSingleton(String arg0, Object arg1) throws BeansException {
-		this.beanFactory.registerSingleton(arg0, arg1);
-	}
-
-	public void setParentBeanFactory(BeanFactory arg0) {
-		this.beanFactory.setParentBeanFactory(arg0);
-	}
-
-	public BeanFactory getParentBeanFactory() {
-		return this.beanFactory.getParentBeanFactory();
-	}
-
+	/**
+	 * @see org.springframework.beans.factory.BeanFactory#containsBean(java.lang.String)
+	 */
 	public boolean containsBean(String arg0) {
 		return this.beanFactory.containsBean(arg0);
 	}
 
+	/**
+	 * @see org.springframework.beans.factory.ListableBeanFactory#containsBeanDefinition(java.lang.String)
+	 */
+	public boolean containsBeanDefinition(String arg0) {
+		return this.beanFactory.containsBeanDefinition(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#containsSingleton(java.lang.String)
+	 */
+	public boolean containsSingleton(String arg0) {
+		return this.beanFactory.containsSingleton(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#destroySingletons()
+	 */
+	public void destroySingletons() {
+		this.beanFactory.destroySingletons();
+	}
+
+	/**
+	 * @throws NoSuchBeanDefinitionException
+	 * @see org.springframework.beans.factory.BeanFactory#getAliases(java.lang.String)
+	 */
 	public String[] getAliases(String arg0) throws NoSuchBeanDefinitionException {
 		return this.beanFactory.getAliases(arg0);
 	}
 
-	public Object getBean(String arg0) throws BeansException {
-		return this.beanFactory.getBean(arg0);
-	}
-
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String, java.lang.Class)
+	 */
 	public Object getBean(String arg0, Class arg1) throws BeansException {
 		return this.beanFactory.getBean(arg0, arg1);
 	}
 
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String)
+	 */
+	public Object getBean(String arg0) throws BeansException {
+		return this.beanFactory.getBean(arg0);
+	}
+
+	/**
+	 * @throws NoSuchBeanDefinitionException
+	 * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory#getBeanDefinition(java.lang.String)
+	 */
+	public BeanDefinition getBeanDefinition(String arg0) throws NoSuchBeanDefinitionException {
+		return this.beanFactory.getBeanDefinition(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionCount()
+	 */
+	public int getBeanDefinitionCount() {
+		return this.beanFactory.getBeanDefinitionCount();
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames()
+	 */
+	public String[] getBeanDefinitionNames() {
+		return this.beanFactory.getBeanDefinitionNames();
+	}
+
+	/**
+	 * @deprecated
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames(java.lang.Class)
+	 */
+	public String[] getBeanDefinitionNames(Class arg0) {
+		return this.beanFactory.getBeanDefinitionNames(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanNamesForType(java.lang.Class, boolean, boolean)
+	 */
+	public String[] getBeanNamesForType(Class arg0, boolean arg1, boolean arg2) {
+		return this.beanFactory.getBeanNamesForType(arg0, arg1, arg2);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanNamesForType(java.lang.Class)
+	 */
+	public String[] getBeanNamesForType(Class arg0) {
+		return this.beanFactory.getBeanNamesForType(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getBeanPostProcessorCount()
+	 */
+	public int getBeanPostProcessorCount() {
+		return this.beanFactory.getBeanPostProcessorCount();
+	}
+
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class, boolean, boolean)
+	 */
+	public Map getBeansOfType(Class arg0, boolean arg1, boolean arg2) throws BeansException {
+		return this.beanFactory.getBeansOfType(arg0, arg1, arg2);
+	}
+
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
+	 */
+	public Map getBeansOfType(Class arg0) throws BeansException {
+		return this.beanFactory.getBeansOfType(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory()
+	 */
+	public BeanFactory getParentBeanFactory() {
+		return this.beanFactory.getParentBeanFactory();
+	}
+
+	/**
+	 * @throws NoSuchBeanDefinitionException
+	 * @see org.springframework.beans.factory.BeanFactory#getType(java.lang.String)
+	 */
 	public Class getType(String arg0) throws NoSuchBeanDefinitionException {
 		return this.beanFactory.getType(arg0);
 	}
 
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory#ignoreDependencyInterface(java.lang.Class)
+	 */
+	public void ignoreDependencyInterface(Class arg0) {
+		this.beanFactory.ignoreDependencyInterface(arg0);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory#ignoreDependencyType(java.lang.Class)
+	 */
+	public void ignoreDependencyType(Class arg0) {
+		this.beanFactory.ignoreDependencyType(arg0);
+	}
+
+	/**
+	 * @throws NoSuchBeanDefinitionException
+	 * @see org.springframework.beans.factory.BeanFactory#isSingleton(java.lang.String)
+	 */
 	public boolean isSingleton(String arg0) throws NoSuchBeanDefinitionException {
 		return this.beanFactory.isSingleton(arg0);
 	}
-	
+
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory#preInstantiateSingletons()
+	 */
+	public void preInstantiateSingletons() throws BeansException {
+		this.beanFactory.preInstantiateSingletons();
+	}
+
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#registerAlias(java.lang.String, java.lang.String)
+	 */
+	public void registerAlias(String arg0, String arg1) throws BeansException {
+		this.beanFactory.registerAlias(arg0, arg1);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#registerCustomEditor(java.lang.Class, java.beans.PropertyEditor)
+	 */
+	public void registerCustomEditor(Class arg0, PropertyEditor arg1) {
+		this.beanFactory.registerCustomEditor(arg0, arg1);
+	}
+
+	/**
+	 * @throws BeansException
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#registerSingleton(java.lang.String, java.lang.Object)
+	 */
+	public void registerSingleton(String arg0, Object arg1) throws BeansException {
+		this.beanFactory.registerSingleton(arg0, arg1);
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory(org.springframework.beans.factory.BeanFactory)
+	 */
+	public void setParentBeanFactory(BeanFactory arg0) {
+		this.beanFactory.setParentBeanFactory(arg0);
+	}
+
+	public Object getBeanFromReinhard(String name) {
+		return this.getBean(name);
+	}
 
 }

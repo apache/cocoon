@@ -81,7 +81,7 @@ implements SourceFactory,
      */
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException {
-        this.envContext = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        this.envContext = (Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
         try {
             this.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
         } catch (ContextException ignore) {

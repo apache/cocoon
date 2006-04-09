@@ -15,8 +15,11 @@
       bind="setLogger"/>  
   </scr:component>
   
-  <scr:component name="org.apache.cocoon.osgitests.allOSGiTests">
-    <scr:implementation class="org.apache.cocoon.osgitests.AllOSGiTests"/>  
+  <scr:component name="org.apache.cocoon.osgitests.OSGiSpringECMFactoryTest">
+    <scr:implementation class="org.apache.cocoon.osgitests.OSGiSpringECMFactoryTest"/>  
+    <scr:reference name="beanFactory"
+      interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      bind="setBeanFactory"/>  
   </scr:component>  
 
 </components>
