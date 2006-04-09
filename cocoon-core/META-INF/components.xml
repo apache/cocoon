@@ -22,11 +22,11 @@
       bind="setLogger"/>    
   </scr:component>
   
-  <scr:component name="org.apache.cocoon.osgi.springEcmFactory">
-    <scr:implementation class="org.apache.cocoon.core.osgi.SpringECMFactory"/>
-    <scr:property name="configFile" value="/META-INF/cocoon.xconf"/>
+  <scr:component name="org.apache.cocoon.core.osgi.springEcmFactory">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
+    <scr:property name="configFile" value="/META-INF/xconf/cocoon.xconf"/>
     <scr:service>
-      <scr:provide interface="org.springframework.beans.factory.config.ConfigureableListableBeanFactory"/>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
     </scr:service>    
     <scr:reference name="logger"
       interface="org.apache.avalon.framework.logger.Logger"

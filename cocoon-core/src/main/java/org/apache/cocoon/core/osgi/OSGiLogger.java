@@ -93,6 +93,7 @@ public class OSGiLogger implements Logger {
             result = new OSGiLogger();
             ((OSGiLogger) result).setCategory(category);
             ((OSGiLogger) result).setLogLevel(this.logLevel);
+            ((OSGiLogger) result).setLogService(this.logService);            
             loggers.put(category, result);
         }
         return result;

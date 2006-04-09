@@ -30,6 +30,7 @@ public class OSGiSettings extends MutableSettings {
 	protected void activate(ComponentContext componentContext) {
     	CoreUtil.initSettingsFiles(this, this.logger);
         // componentContext.getBundleContext().getDataFile("cocoon-files");
+//    	this.setConfiguration("/META-INF/xconf/cocoon.xconf"); // TODO (DF/RP) probably not used by the OSGi framework!
     	this.makeReadOnly();
     }
 

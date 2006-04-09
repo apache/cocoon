@@ -327,7 +327,9 @@ public class CoreUtil {
         appContext.put(Constants.CONTEXT_WORK_DIR, new File(settings.getWorkDirectory()));
         appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(settings.getUploadDirectory()));
         appContext.put(Constants.CONTEXT_CACHE_DIR, new File(settings.getCacheDirectory()));
-        appContext.put(Constants.CONTEXT_CONFIG_URL, new URL(settings.getConfiguration()));
+        if(settings.getConfiguration() != null) {
+        	appContext.put(Constants.CONTEXT_CONFIG_URL, new URL(settings.getConfiguration()));
+        }
         appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
         appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
     }

@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.osgitests;
+package org.apache.cocoon.core.osgi;
 
-import junit.framework.TestCase;
-import junit.textui.TestRunner;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
-import org.osgi.service.component.ComponentContext;
+/**
+ * Another interface needed to be introduced because Equinox hat some problems with
+ * the name @link {@link ConfigurableListableBeanFactory} because of some introspection
+ * done on all classes that end on "Factory".
+ * 
+ * @version $Id$
+ */
+public interface CocoonSpringBeanRegistry extends ConfigurableListableBeanFactory {
 
-public class AllOSGiTests extends TestCase {
-
-    protected void activate(ComponentContext componentContext) {
-//    	TestRunner.run(OSGiLoggerTest.class);
-//    	TestRunner.run(OSGiSettingsTest.class);
-    }
-	
 }

@@ -15,11 +15,15 @@
  */
 package org.apache.cocoon.osgitests;
 
-import junit.framework.TestCase;
+import junit.textui.TestRunner;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.osgi.service.component.ComponentContext;
 
-public class OSGiLoggerTest extends TestCase {
+/**
+ * @version $Id$
+ */
+public class OSGiLoggerTest extends AbstractOSGiTestCase {
 
 	private static Logger logger;
 
@@ -28,11 +32,14 @@ public class OSGiLoggerTest extends TestCase {
 	}
 
 	protected void setLogger(Logger logger) {
-		this.logger = logger;
+		OSGiLoggerTest.logger = logger;
 	}
 	
 	public void testIsServiceAvailable() {
 		logger.debug("testIsServiceAvailable");
 	}
 	
+    protected void activate(ComponentContext componentContext) {
+    	TestRunner.run(OSGiLoggerTest.class);
+    }	
 }
