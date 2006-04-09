@@ -31,7 +31,6 @@ import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
-import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter.ThreadScope;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
@@ -118,7 +117,7 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
             oldScope = FOM_JavaScriptFlowHelper.getFOM_FlowScope(objectModel);
             
             Continuation k = (Continuation)wk.getContinuation();
-            Scriptable kScope = (ThreadScope)k.getParentScope();
+            Scriptable kScope = k.getParentScope();
             // Register the current scope for scripts indirectly called from this function
             FOM_JavaScriptFlowHelper.setFOM_FlowScope(objectModel, kScope);
             cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
