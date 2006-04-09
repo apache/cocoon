@@ -16,18 +16,14 @@
 package org.apache.cocoon.core.osgi;
 
 import java.beans.PropertyEditor;
-import java.io.FileNotFoundException;
 import java.net.URL;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
-import org.apache.cocoon.core.container.spring.ConfigReader;
-import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
