@@ -36,4 +36,16 @@
       bind="setSettings"/>      
   </scr:component>  
   
+  <scr:component name="org.apache.cocoon.core.sitemap.SitemapServlet">
+    <scr:implementation class="org.apache.cocoon.sitemap.SitemapServlet"/>  
+    <scr:service>
+      <scr:provide interface="javax.servlet.Servlet"/>
+    </scr:service>    
+    <scr:property name="path" value="/sitemap-test"/>
+    <scr:property name="sitemapPath" value="/COB-INF/sitemap.xmap"/>            
+    <scr:reference name="beanFactory"
+      interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      bind="setBeanFactory"/>         
+  </scr:component>  
+  
 </components>
