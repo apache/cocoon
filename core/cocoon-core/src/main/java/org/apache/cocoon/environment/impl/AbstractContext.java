@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.environment.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -127,9 +128,25 @@ public abstract class AbstractContext
     }
 
     /**
+     * Get access to the resource as @link {@link InputStream}. If there is any problem,
+     * <code>null</code> is returned.
+     * 
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
-    public InputStream getResourceAsStream(String arg0) {
+    public InputStream getResourceAsStream(String path) {
+    	URL resourceURL = null;
+		try {
+			resourceURL = this.getResource(path);
+		} catch (MalformedURLException e) {
+			return null;
+		}
+    	if(resourceURL != null) {
+    		try {
+				return resourceURL.openStream();
+			} catch (IOException e) {
+				return null;
+			}
+    	}
         return null;
     }
 

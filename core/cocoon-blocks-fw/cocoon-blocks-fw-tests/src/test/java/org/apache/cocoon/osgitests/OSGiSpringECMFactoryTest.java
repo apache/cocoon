@@ -15,16 +15,40 @@
  */
 package org.apache.cocoon.osgitests;
 
-import junit.framework.TestCase;
 import junit.textui.TestRunner;
 
+import org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry;
+import org.apache.excalibur.store.Store;
 import org.osgi.service.component.ComponentContext;
 
-public class AllOSGiTests extends TestCase {
+/**
+ * @version $Id$
+ */
+public class OSGiSpringECMFactoryTest extends AbstractOSGiTestCase {
 
+	private static CocoonSpringBeanRegistry beanFactory;
+
+	public void testIfBeansAreAvailable() {
+		Store store = (Store) beanFactory.getBean(Store.ROLE);
+		assertNotNull(store);
+	}
+	
+	/**
+	 * @return the beanFactory
+	 */
+	protected CocoonSpringBeanRegistry getBeanFactory() {
+		return beanFactory;
+	}
+
+	/**
+	 * @param beanFactory the beanFactory to set
+	 */
+	protected void setBeanFactory(CocoonSpringBeanRegistry beanFactory) {
+		OSGiSpringECMFactoryTest.beanFactory = beanFactory;
+	}
+	
     protected void activate(ComponentContext componentContext) {
-//    	TestRunner.run(OSGiLoggerTest.class);
-//    	TestRunner.run(OSGiSettingsTest.class);
-    }
+    	TestRunner.run(OSGiSpringECMFactoryTest.class);
+    }		
 	
 }

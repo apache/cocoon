@@ -16,15 +16,10 @@
 package org.apache.cocoon.osgitests;
 
 import junit.framework.TestCase;
-import junit.textui.TestRunner;
 
-import org.osgi.service.component.ComponentContext;
+/**
+ * @version $Id$
+ */
+abstract class AbstractOSGiTestCase extends TestCase {
 
-public class AllOSGiTests extends TestCase {
-
-    protected void activate(ComponentContext componentContext) {
-//    	TestRunner.run(OSGiLoggerTest.class);
-//    	TestRunner.run(OSGiSettingsTest.class);
-    }
-	
 }

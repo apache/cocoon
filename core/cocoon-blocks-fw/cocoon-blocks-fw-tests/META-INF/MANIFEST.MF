@@ -8,5 +8,11 @@ Service-Component: META-INF/components.xml
 Import-Package: junit.framework,
  junit.textui,
  org.apache.avalon.framework.logger,
+ org.apache.cocoon.components.thread,
  org.apache.cocoon.core,
- org.osgi.service.component
+ org.apache.cocoon.core.osgi,
+ org.apache.excalibur.store,
+ org.osgi.service.component,
+ org.springframework.beans,
+ org.springframework.beans.factory,
+ org.springframework.beans.factory.config

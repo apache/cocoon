@@ -15,11 +15,15 @@
  */
 package org.apache.cocoon.osgitests;
 
-import junit.framework.TestCase;
+import junit.textui.TestRunner;
 
 import org.apache.cocoon.core.Settings;
+import org.osgi.service.component.ComponentContext;
 
-public class OSGiSettingsTest extends TestCase {
+/**
+ * @version $Id$
+ */
+public class OSGiSettingsTest extends AbstractOSGiTestCase {
 
 	private static Settings settings;
 
@@ -32,7 +36,11 @@ public class OSGiSettingsTest extends TestCase {
 	}
 
 	public void testIsServiceAvailable() {
-//		assertNotNull(settings);
+		assertNotNull(settings);
 	}
+	
+    protected void activate(ComponentContext componentContext) {
+    	TestRunner.run(OSGiSettingsTest.class);
+    }	
 	
 }
