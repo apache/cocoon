@@ -321,21 +321,4 @@
       <version>1.2.6</version>
     </dependency>
   </dependencies>
-  <profiles>
-    <profile>
-      <id>jdk14</id>
-      <activation>
-        <jdk>1.4</jdk>
-      </activation>
-      <dependencies>
-        <!-- this dependency is only needed on JDK 1.4 (our oldest supported JDK version) 
-             as later versions include the javax.management classes -->
-        <dependency>
-          <groupId>mx4j</groupId>
-          <artifactId>mx4j</artifactId>
-          <version>3.0.1</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 </project>
