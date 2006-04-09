@@ -16,7 +16,7 @@
 package org.apache.cocoon.forms.datatype;
 
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import org.apache.avalon.framework.context.Context;
@@ -29,6 +29,7 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.SaxBuffer;
@@ -135,9 +136,17 @@ public class DynamicSelectionList implements FilterableSelectionList {
         String url = this.src;
         if (filter != null) {
             if (url.indexOf('?') != -1) {
-                url += "&filter=" + URLEncoder.encode(filter);
+                try {
+                    url += "&filter=" + NetUtils.encode(filter, "utf-8");
+                } catch (UnsupportedEncodingException ignore) {
+                    // utf-8 is always supported
+                }
             } else {
-                url += "?filter=" + URLEncoder.encode(filter);
+                try {
+                    url += "?filter=" + NetUtils.encode(filter, "utf-8");
+                } catch (UnsupportedEncodingException ignore) {
+                    // utf-8 is always supported
+                }
             }
         }
 
