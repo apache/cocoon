@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- this declaration file can be compared to our former block.xml. It describes
+     the dependencies (= references) of this block (bundle). -->
 <components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
   <scr:component name="org.apache.cocoon.blocks.demo1.block">
     <scr:implementation class="org.apache.cocoon.blocks.BlockServlet"/>
     <scr:service>
       <scr:provide interface="javax.servlet.Servlet"/>
 	</scr:service>
+	
+	<!-- some properties: the path is used to mount the blocks -->
 	<scr:property name="path" value="/test1"/>
 	<scr:property name="foo" value="baz"/>
+	
+	<!-- point to a block internal servlet: see the component below -->
     <scr:reference name="blockServlet"
                    interface="javax.servlet.Servlet"
                    target="(component.name=org.apache.cocoon.blocks.demo1.servlet)"/>
+    
+    <!-- points to another block -->
     <scr:reference name="demo2"
                    interface="javax.servlet.Servlet"
                    target="(component.name=org.apache.cocoon.blocks.demo2.block)"/>
   </scr:component>
   
+  <!-- the block internal servlet.
+       (Note: This can also be a reference to a SitemapServlet that connects to
+              Cocoon. -->
   <scr:component name="org.apache.cocoon.blocks.demo1.servlet">
     <scr:implementation class="org.apache.cocoon.blocks.demo1.TestServlet2"/>
     <scr:service>
