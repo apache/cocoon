@@ -75,11 +75,11 @@
 		<module>cocoon-portal</module>
 		<module>cocoon-profiler</module>
 		<module>cocoon-proxy</module>
-		<module>cocoon-python</module>
+		<!-- module>cocoon-python</module -->
 		<module>cocoon-qdox</module>
 		<module>cocoon-querybean</module>
 		<module>cocoon-repository</module>
-		<module>cocoon-scratchpad</module>
+		<!-- module>cocoon-scratchpad</module -->
 		<module>cocoon-serializers</module>
 		<module>cocoon-session-fw</module>
 		<module>cocoon-slide</module>
@@ -91,6 +91,6 @@
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
-		<module>cocoon-xsp</module>
+		<!-- module>cocoon-xsp</module -->
 	</modules>
 </project>
