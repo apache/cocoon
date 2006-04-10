@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <!--+
-    | @version $Id:$
+    | @version $Id$
     +-->
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
@@ -24,15 +24,15 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <version>1-SNAPSHOT</version>
   </parent>
   
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-velocity</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1-SNAPSHOT</version>
     
   <packaging>pom</packaging>
   

@@ -27,7 +27,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.Preloadable;
 import org.apache.ojb.broker.accesslayer.ConnectionFactory;
 import org.apache.ojb.broker.accesslayer.LookupException;
 import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
@@ -57,7 +56,7 @@ import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
  * @version $Id$
  */
 public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable, Disposable,
-                                              ConnectionFactory, Preloadable {
+                                              ConnectionFactory {
 
     // Preloadable to ensure that static attributes are properly setup at startup.
 
