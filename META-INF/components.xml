@@ -22,7 +22,7 @@
       bind="setLogger"/>    
   </scr:component>
   
-  <scr:component name="org.apache.cocoon.core.osgi.springEcmFactory">
+  <scr:component name="org.apache.cocoon.core.osgi.SpringEcmFactory">
     <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
     <scr:property name="configFile" value="/META-INF/xconf/cocoon.xconf"/>
     <scr:service>
@@ -47,5 +47,12 @@
       interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
       bind="setBeanFactory"/>         
   </scr:component>  
+  
+  <!--scr:component name="org.apache.cocoon.core.osgi.SpringBridge">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringBridge"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
+    </scr:service>    
+  </scr:component-->      
   
 </components>
