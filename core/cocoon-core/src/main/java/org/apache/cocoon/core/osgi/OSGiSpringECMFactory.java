@@ -38,9 +38,14 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
+ * The @link {@link OSGiSpringECMFactory} gives access to all Spring beans via the 
+ * {@link CocoonSpringBeanRegistry} interface which extends the @link {@link ConfigurableListableBeanFactory}. 
+ * 
+ * Additionally it exposes all beans as OSGi services.
+ * 
  * @version $Id$
  */
-public class OSGiSpringECMFactory implements ConfigurableListableBeanFactory, CocoonSpringBeanRegistry {
+public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 	
 	private static final String MANIFEST_FILE = "/META-INF/MANIFEST.MF";
 
