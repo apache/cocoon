@@ -41,6 +41,9 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.osgi.service.component.ComponentContext;
 
 /**
+ * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
+ * all requests to it.
+ * 
  * @version $Id$
  */
 public class SitemapServlet extends HttpServlet {
@@ -56,6 +59,9 @@ public class SitemapServlet extends HttpServlet {
 	private Processor processor;	
 	private Settings settings;
 
+	/**
+	 * Initialize the servlet. The main purpose of this method is creating a configured @link {@link TreeProcessor}.
+	 */
     public void init(ServletConfig config) throws ServletException {
     	super.init(config);
     	
@@ -72,11 +78,11 @@ public class SitemapServlet extends HttpServlet {
         org.apache.avalon.framework.context.Context avalonContext = (org.apache.avalon.framework.context.Context) 
         	this.beanFactory.getBean(ProcessingUtil.CONTEXT_ROLE);
         
-        // create the processor
+        // create the tree processor
         try {
-			TreeProcessor treeProcessor = (TreeProcessor) 
-				this.getClass().getClassLoader().loadClass(TreeProcessor.class.getName()).newInstance();
+			TreeProcessor treeProcessor =  new TreeProcessor();
             treeProcessor.setBeanFactory(this.beanFactory);			
+            // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all. 
             this.processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
                     this.logger,
                     avalonContext,
@@ -87,18 +93,10 @@ public class SitemapServlet extends HttpServlet {
 		}
 		
     }
-
-	private Configuration createTreeProcessorConfiguration() {
-		DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
-        treeProcessorConf.setAttribute("check-reload", true);
-        treeProcessorConf.setAttribute("file", this.sitemapPath);
-        
-//        DefaultConfiguration sitemapFileConf = new DefaultConfiguration("file");
-//        sitemapFileConf.setValue(this.sitemapPath);
-//        treeProcessorConf.addChild(sitemapFileConf);
-		return treeProcessorConf;
-	}	
     
+    /**
+     * Process the incoming request using the Cocoon tree processor.
+     */
 	protected void service(HttpServletRequest request, HttpServletResponse response) 
 		throws ServletException, IOException {
 		
@@ -113,6 +111,10 @@ public class SitemapServlet extends HttpServlet {
 	    } 
 	}    
 	
+	/**
+	 * This method takes the servlet request and response and creates a Cocoon 
+	 * environment (@link {@link Environment}) out of it.
+	 */
     protected Environment createCocoonEnvironment(HttpServletRequest req, 
     		HttpServletResponse res) throws IOException  {
     	
@@ -128,15 +130,36 @@ public class SitemapServlet extends HttpServlet {
 		env.enableLogging(this.logger);
 		return env;
 	}
+    
+    /**
+     * Create an Avalon Configuration @link {@link Configuration} that configures the tree processor.
+     */
+	private Configuration createTreeProcessorConfiguration() {
+		DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
+        treeProcessorConf.setAttribute("check-reload", true);
+        treeProcessorConf.setAttribute("file", this.sitemapPath);
+		return treeProcessorConf;
+	}	    
 
+	/**
+	 * Get a Spring BeanFactory injected by OSGi declarative services.
+	 */
 	protected void setBeanFactory(CocoonSpringBeanRegistry beanFactory) {
 		this.beanFactory = beanFactory;
 	}
 	
+	/**
+	 * Set the path of the sitemap
+	 */
 	public void setSitemapPath(String sitemapPath) {
 		this.sitemapPath = sitemapPath;
 	}	
 
+	/**
+	 * This Method is used in an OSGi environment to activate this servlet as bundle.
+	 * 
+	 * @param componentContext - The component context is made available and gives access to OSGi framework information
+	 */
 	protected void activate(ComponentContext componentContext) throws Exception {
 		this.setSitemapPath((String) componentContext.getProperties().get(SITEMAP_PATH_PROPERTY));			
 	}
