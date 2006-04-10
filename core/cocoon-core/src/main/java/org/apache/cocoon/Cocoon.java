@@ -349,7 +349,7 @@ public class Cocoon implements Processor, BeanFactoryAware {
     /**
      * @see org.apache.cocoon.Processor#getBeanFactory()
      */
-    public ConfigurableListableBeanFactory getBeanFactory() {
+    public BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 

@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
@@ -107,7 +108,7 @@ public class MockProcessor implements Processor {
     /**
      * @see org.apache.cocoon.Processor#getBeanFactory()
      */
-    public ConfigurableListableBeanFactory getBeanFactory() {
+    public BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 }
