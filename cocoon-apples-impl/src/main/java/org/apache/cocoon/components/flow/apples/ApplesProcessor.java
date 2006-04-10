@@ -19,12 +19,9 @@ import java.util.List;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.WrapperComponentManager;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
@@ -39,11 +36,9 @@ import org.apache.cocoon.environment.Response;
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' 
  * flow implementation. 
  */
-public class ApplesProcessor extends AbstractInterpreter implements Serviceable, ContinuationsDisposer {
-
-
-    private ServiceManager serviceManager;
-
+public class ApplesProcessor
+    extends AbstractInterpreter
+    implements ContinuationsDisposer {
 
     public void callFunction(
         String className,
@@ -74,9 +69,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
             throw new CascadingRuntimeException("Cannot get sitemap service manager", e);
         }
 
-        LifecycleHelper.setupComponent( app, getLogger(), appleContext,
-                                        sitemapManager, new WrapperComponentManager(sitemapManager),
-                                        null, null, true);
+        LifecycleHelper.setupComponent( app, getLogger(), appleContext, sitemapManager, null, true);
         
         processApple(params, redirector, app, wk);
     }
@@ -171,12 +164,4 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
         }
 
     }
-
-
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        super.service(serviceManager);
-        this.serviceManager = serviceManager;
-    }
-
-
 }
