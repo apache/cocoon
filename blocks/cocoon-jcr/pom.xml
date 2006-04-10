@@ -20,16 +20,16 @@
     +-->
 <project>
   <parent>
-    <artifactId>cocoon</artifactId>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-jcr</artifactId>
   <packaging>pom</packaging>
   <name>JCR Block</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-jcr-impl</module>
     <module>cocoon-jcr-sample</module>

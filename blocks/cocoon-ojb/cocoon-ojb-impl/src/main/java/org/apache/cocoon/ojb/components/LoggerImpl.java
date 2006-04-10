@@ -20,7 +20,6 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.Preloadable;
 import org.apache.ojb.broker.util.configuration.Configuration;
 import org.apache.ojb.broker.util.configuration.ConfigurationException;
 import org.apache.ojb.broker.util.logging.Logger;
@@ -50,7 +49,7 @@ import org.apache.ojb.broker.util.logging.LoggingConfiguration;
  */
 public class LoggerImpl extends AbstractLogEnabled
                         implements Component, ThreadSafe, Initializable,
-                                   Logger, Preloadable {
+                                   Logger {
 
     // Preloadable to ensure that static attributes are properly setup at startup.
 

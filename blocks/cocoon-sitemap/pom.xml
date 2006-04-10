@@ -20,15 +20,15 @@
     +-->
 <project>
   <parent>
-    <artifactId>cocoon</artifactId>
+    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-sitemap</artifactId>
   <packaging>pom</packaging>
   <name>Cocoon Sitemap</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-sitemap-impl</module>
   </modules>
