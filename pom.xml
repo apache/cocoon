@@ -37,6 +37,9 @@
   <name>Cocoon Tools [modules]</name>
 
   <modules>
-		<module>cocoon-block-deployer</module>
-	</modules>
+    <module>cocoon-block-deployer</module>
+  </modules>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
+  </scm>
 </project>
