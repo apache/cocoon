@@ -39,14 +39,14 @@
 
   <modules>
         <module>cocoon-ajax</module>
-		<!--module>cocoon-apples</module
+		<module>cocoon-apples</module>
 		<module>cocoon-asciiart</module>
 		<module>cocoon-authentication-fw</module>
 		<module>cocoon-axis</module>
-		<module>cocoon-batik</module>
+		<!-- module>cocoon-batik</module>
 		<module>cocoon-bsf</module -->
 		<module>cocoon-captcha</module>
-		<!--module>cocoon-chaperon</module>
+		<!-- module>cocoon-chaperon</module>
 		<module>cocoon-core-samples-additional</module>
 		<module>cocoon-core-samples-main</module>
 		<module>cocoon-cron</module>
@@ -55,7 +55,7 @@
 		<module>cocoon-faces</module-->
 		<module>cocoon-fop</module>
         <module>cocoon-forms</module>
-		<!--module>cocoon-hsqldb</module>
+		<!-- module>cocoon-hsqldb</module>
 		<module>cocoon-html</module>
 		<module>cocoon-itext</module>
 		<module>cocoon-javaflow</module>
@@ -80,8 +80,9 @@
 		<module>cocoon-querybean</module>
 		<module>cocoon-repository</module>
 		<module>cocoon-scratchpad</module>
-		<module>cocoon-serializers</module>
-		<module>cocoon-slide</module>
+		<module>cocoon-serializers</module -->
+		<module>cocoon-session-fw</module>
+		<!-- module>cocoon-slide</module>
 		<module>cocoon-slop</module>
 		<module>cocoon-stx</module>
 		<module>cocoon-taglib</module>
@@ -90,6 +91,6 @@
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
-		<module>cocoon-xsp</module-->
+		<module>cocoon-xsp</module -->
 	</modules>
 </project>
