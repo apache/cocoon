@@ -108,7 +108,7 @@ public class TreeProcessor extends AbstractLogEnabled
     protected ConcreteTreeProcessor concreteProcessor;
 
     /** Our bean factory. */
-    protected ConfigurableListableBeanFactory beanFactory;
+    protected BeanFactory beanFactory;
 
     /**
      * Create a TreeProcessor.
@@ -503,7 +503,7 @@ public class TreeProcessor extends AbstractLogEnabled
     /**
      * @see org.apache.cocoon.Processor#getBeanFactory()
      */
-    public ConfigurableListableBeanFactory getBeanFactory() {
+    public BeanFactory getBeanFactory() {
         if ( this.concreteProcessor != null ) {
             return this.concreteProcessor.getBeanFactory();
         }
@@ -514,7 +514,7 @@ public class TreeProcessor extends AbstractLogEnabled
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory factory) throws BeansException {
-        this.beanFactory = (ConfigurableListableBeanFactory) factory;
+        this.beanFactory = factory;
     }
 
     /**
