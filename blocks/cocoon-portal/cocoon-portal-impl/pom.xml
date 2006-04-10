@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-portal</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-portal-impl</artifactId>
@@ -53,7 +53,7 @@
     <dependency>
       <groupId>axis</groupId>
       <artifactId>axis</artifactId>
-      <version>1.2.1</version>
+      <version>1.3</version>
       <exclusions>
         <exclusion>
           <artifactId>mail</artifactId>
@@ -68,12 +68,12 @@
     <dependency>
       <groupId>axis</groupId>
       <artifactId>axis-saaj</artifactId>
-      <version>1.2.1</version>
+      <version>1.3</version>
     </dependency>
     <dependency>
       <groupId>axis</groupId>
       <artifactId>axis-jaxrpc</artifactId>
-      <version>1.2.1</version>
+      <version>1.3</version>
     </dependency>
     <dependency>
       <groupId>axis</groupId>

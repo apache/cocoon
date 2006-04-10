@@ -43,16 +43,16 @@
 		<module>cocoon-asciiart</module>
 		<module>cocoon-authentication-fw</module>
 		<module>cocoon-axis</module>
-		<!-- module>cocoon-batik</module>
-		<module>cocoon-bsf</module -->
+		<module>cocoon-batik</module>
+		<module>cocoon-bsf</module>
 		<module>cocoon-captcha</module>
-		<!-- module>cocoon-chaperon</module>
-		<module>cocoon-core-samples-additional</module>
-		<module>cocoon-core-samples-main</module>
+		<module>cocoon-chaperon</module>
+		<!-- module>cocoon-core-samples-additional</module>
+		<module>cocoon-core-samples-main</module -->
 		<module>cocoon-cron</module>
 		<module>cocoon-deli</module>
 		<module>cocoon-eventcache</module>
-		<module>cocoon-faces</module-->
+		<module>cocoon-faces</module>
 		<module>cocoon-fop</module>
         <module>cocoon-forms</module>
 		<!-- module>cocoon-hsqldb</module>
@@ -60,9 +60,9 @@
 		<module>cocoon-itext</module>
 		<module>cocoon-javaflow</module>
 		<module>cocoon-jcr</module>
-		<module>cocoon-jfor</module>
+		<module>cocoon-jfor</module -->
 		<module>cocoon-jms</module>
-		<module>cocoon-jsp</module>
+		<!-- module>cocoon-jsp</module>
 		<module>cocoon-linkrewriter</module>
 		<module>cocoon-lucene</module>
 		<module>cocoon-mail</module>
@@ -71,9 +71,9 @@
 		<module>cocoon-ojb</module>
 		<module>cocoon-paranoid</module>
 		<module>cocoon-petstore</module>
-		<module>cocoon-poi</module>
+		<module>cocoon-poi</module -->
 		<module>cocoon-portal</module>
-		<module>cocoon-profiler</module>
+		<!--  module>cocoon-profiler</module>
 		<module>cocoon-proxy</module>
 		<module>cocoon-python</module>
 		<module>cocoon-qdox</module>
@@ -84,10 +84,10 @@
 		<module>cocoon-session-fw</module>
 		<!-- module>cocoon-slide</module>
 		<module>cocoon-slop</module>
-		<module>cocoon-stx</module>
+		<module>cocoon-stx</module -->
 		<module>cocoon-taglib</module>
 		<module>cocoon-template</module>
-		<module>cocoon-tour</module>
+		<!-- >module>cocoon-tour</module>
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
