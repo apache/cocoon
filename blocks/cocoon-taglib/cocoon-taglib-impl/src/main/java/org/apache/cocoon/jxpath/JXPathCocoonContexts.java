@@ -502,18 +502,15 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
         }
 
         public void log(Exception arg0, String arg1) {
-            // TODO Auto-generated method stub
-            
+            this.delegate.log(arg0, arg1);
         }
 
         public void log(String arg0, Throwable arg1) {
-            // TODO Auto-generated method stub
-            
+            this.delegate.log(arg0, arg1);
         }
 
         public void log(String arg0) {
-            // TODO Auto-generated method stub
-            
+            this.delegate.log(arg0);
         }
     }
 }
