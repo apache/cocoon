@@ -43,7 +43,6 @@
   
   <modules>
     <module>blocks</module>
-    <module>blocks-tobeconverted</module>    
     <!--
     <module>commons</module-->
     <module>core</module>
