@@ -43,6 +43,5 @@
   <modules>
     <module>cocoon-scratchpad-impl</module>
     <module>cocoon-scratchpad-sample</module>
-    <module>cocoon-scratchpad-mocks</module>
   </modules>
 </project>
