@@ -46,6 +46,12 @@
       <groupId>excalibur-datasource</groupId>
       <artifactId>excalibur-datasource</artifactId>
       <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>d-haven-managed-pool</artifactId>
+          <groupId>d-haven-managed-pool</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
