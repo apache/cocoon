@@ -43,6 +43,5 @@
   <modules>
     <module>cocoon-xsp-impl</module>
     <module>cocoon-xsp-sample</module>
-    <module>cocoon-xsp-mocks</module>
   </modules>
 </project>
