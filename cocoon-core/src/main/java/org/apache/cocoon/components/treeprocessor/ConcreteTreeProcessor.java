@@ -51,7 +51,8 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -99,7 +100,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     protected Map processorAttributes = new HashMap();
 
     /** Bean Factory for this sitemap. */
-    protected ConfigurableListableBeanFactory beanFactory;
+    protected BeanFactory beanFactory;
 
     /**
      * Builds a concrete processig, given the wrapping processor
@@ -114,7 +115,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     }
 
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ConfigurableListableBeanFactory beanFactory,
+    public void setProcessorData(BeanFactory beanFactory,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
@@ -432,8 +433,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // clear listeners
         this.enterSitemapEventListeners.clear();
         this.leaveSitemapEventListeners.clear();
-        if ( this.beanFactory != null ) {
-            this.beanFactory.destroySingletons();
+        if ( this.beanFactory != null && this.beanFactory instanceof ConfigurableBeanFactory) {
+        	((ConfigurableBeanFactory) this.beanFactory).destroySingletons();
             this.beanFactory = null;
         }
     }
@@ -517,7 +518,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /**
      * @see org.apache.cocoon.Processor#getBeanFactory()
      */
-    public ConfigurableListableBeanFactory getBeanFactory() {
+    public BeanFactory getBeanFactory() {
         return this.beanFactory;
     }
 

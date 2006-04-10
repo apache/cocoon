@@ -22,6 +22,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
@@ -127,7 +128,7 @@ public interface Processor {
     Object removeAttribute(String name);
 
     /** FIXME - Remove this and use ProcessingUtil. */
-    ConfigurableListableBeanFactory getBeanFactory();
+    BeanFactory getBeanFactory();
 
     Processor getParent();
 }
