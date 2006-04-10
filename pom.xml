@@ -39,7 +39,10 @@
 
   <modules>
     <module>cocoon-blocks-fw</module>
-		<module>cocoon-core</module>
-		<module>cocoon-webapp</module>
-	</modules>
+    <module>cocoon-core</module>
+    <module>cocoon-webapp</module>
+  </modules>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/core</connection>
+  </scm>
 </project>
