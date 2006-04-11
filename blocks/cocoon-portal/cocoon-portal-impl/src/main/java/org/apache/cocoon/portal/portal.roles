@@ -60,6 +60,8 @@
     <role name="org.apache.cocoon.portal.PortalManagerAspectSelector"
           default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
+    <role name="org.apache.cocoon.portal.PortalManagerAspect/preload"
+          default-class="org.apache.cocoon.portal.impl.PreloadPortalManagerAspect"/>
 
   <!--+
       | Renderer Aspects
@@ -141,12 +143,6 @@
         +-->
     <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
           default-class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"/>
-
-    <!--+
-        | This is an extension of the uri adapter supporting caching the content.
-        +-->
-    <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/caching-uri"
-          default-class="org.apache.cocoon.portal.coplet.adapter.impl.CachingURICopletAdapter"/>
 
     <!--+
         |  This is the application adapter.

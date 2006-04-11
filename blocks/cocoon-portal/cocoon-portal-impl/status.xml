@@ -66,6 +66,10 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Unify coplet adapters: Caching is now supported by all adapters including
+      the portlet and wsrp adapters. Therefore the caching-uri adapter has been removed.
+    </action>
+    <action dev="CZ" type="add">
       Implement (hot)deployment for JSR 168 portlets.
     </action>
     <action dev="CZ" type="add">
