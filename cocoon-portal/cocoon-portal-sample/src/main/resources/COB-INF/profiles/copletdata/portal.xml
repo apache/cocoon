@@ -140,7 +140,7 @@
    </coplet-data>
    <coplet-data id="Portal-Demo">
       <title>Introduction</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
          <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-demo.html</value>
@@ -212,7 +212,7 @@
      -->
    <coplet-data id="Gallery">
       <title>Picture Gallery</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
         <name>buffer</name>
         <value xsi:type="java:java.lang.Boolean">true</value>
@@ -244,7 +244,7 @@
    </coplet-data>
    <coplet-data id="GalleryViewer">
       <title>Gallery Viewer</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
         <name>buffer</name>
         <value xsi:type="java:java.lang.Boolean">true</value>
@@ -345,7 +345,7 @@
    </coplet-data>
    <coplet-data id="BasketSampleCopletWithInputProcess">
       <title>Coplet with Input Processing</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>group</name>
          <value xsi:type="java:java.lang.String">notepad</value>
@@ -381,7 +381,7 @@
    </coplet-data>
    <coplet-data id="BasketSampleCopletWithApp">
       <title>Coplet with Application</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>group</name>
          <value xsi:type="java:java.lang.String">request</value>
@@ -405,7 +405,7 @@
    </coplet-data>
    <coplet-data id="BasketSampleCopletList">
       <title>Coplet List</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>group</name>
          <value xsi:type="java:java.lang.String">request</value>
@@ -479,7 +479,7 @@
      -->
    <coplet-data id="app-test-one">
       <title>Application Test</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>buffer</name>
          <value xsi:type="java:java.lang.Boolean">true</value>
@@ -499,7 +499,7 @@
    </coplet-data>
    <coplet-data id="app-test-two">
       <title>Application Test</title>
-      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>buffer</name>
          <value xsi:type="java:java.lang.Boolean">true</value>
