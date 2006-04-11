@@ -42,5 +42,11 @@
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.2</version>
     </dependency>
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>
