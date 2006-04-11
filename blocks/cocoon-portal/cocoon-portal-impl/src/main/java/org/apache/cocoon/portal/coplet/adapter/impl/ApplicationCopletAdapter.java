@@ -23,6 +23,7 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LinkService;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
@@ -36,9 +37,10 @@ import org.xml.sax.SAXException;
  * This coplet adapter is used to connect to external applications that are 
  * plugged into the portal.
  *
+ * TODO: Decide if we still need this adapter.
  * @version $Id$
  */
-public class ApplicationCopletAdapter extends CachingURICopletAdapter {
+public class ApplicationCopletAdapter extends URICopletAdapter {
 
     /**
      * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, java.lang.String, org.xml.sax.ContentHandler)
@@ -64,8 +66,8 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      * There is a special CopletLinkEvent with the uri "createNewCopletInstance", which is the
      * trigger to create a new instance of the one that is the target of the event.
      */
-    public void handleCopletInstanceEvent(CopletInstanceEvent e) {
-        super.handleCopletInstanceEvent(e);
+    public void inform(CopletInstanceEvent e, PortalService service) {
+        super.inform(e, service);
 
         if ( e instanceof CopletLinkEvent ) {
             CopletLinkEvent event = (CopletLinkEvent) e;

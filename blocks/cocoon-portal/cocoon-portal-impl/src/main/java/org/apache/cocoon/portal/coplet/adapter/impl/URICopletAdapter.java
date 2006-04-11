@@ -29,7 +29,6 @@ import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
 import org.apache.excalibur.source.Source;
@@ -68,16 +67,13 @@ public class URICopletAdapter
         this.streamContent( coplet, uri, contentHandler);
     }
 
-    public void streamContent(final CopletInstanceData coplet, 
-                              final String uri,
-                              final ContentHandler contentHandler)
+    protected void streamContent(final CopletInstanceData coplet, 
+                                 final String uri,
+                                 final ContentHandler contentHandler)
     throws SAXException {
 		Source copletSource = null;
-		PortalService portalService = null;
 		try {
 			if (uri.startsWith("cocoon:")) {
-                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-
                 Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters", Boolean.FALSE);
 
                 String sourceUri = uri;
@@ -98,7 +94,7 @@ public class URICopletAdapter
                 }
 
 				HashMap par = new HashMap();
-				par.put(Constants.PORTAL_NAME_KEY, portalService.getPortalName());
+				par.put(Constants.PORTAL_NAME_KEY, this.portalService.getPortalName());
 				par.put(Constants.COPLET_ID_KEY, coplet.getId());
 
 				copletSource = this.resolver.resolveURI(sourceUri, null, par);
@@ -110,11 +106,8 @@ public class URICopletAdapter
 			throw new SAXException("IOException", ioe);
 		} catch (ProcessingException pe) {
 			throw new SAXException("ProcessingException", pe);
-		} catch (ServiceException ce) {
-			throw new SAXException("ServiceException", ce);
 		} finally {
 			this.resolver.release(copletSource);
-			this.manager.release(portalService);
 		}
     }
 
