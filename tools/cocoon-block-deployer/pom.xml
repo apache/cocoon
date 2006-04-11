@@ -41,5 +41,7 @@
     <module>cocoon-deployer-plugin-demo</module>
     <module>cocoon-tutorial-simple-block</module>             
   </modules>
-  
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-block-deployer</connection>
+  </scm>
 </project>
