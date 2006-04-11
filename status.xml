@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2005 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -182,6 +182,11 @@
 -->
   <release version="2.1.10" date="TBD">
     <action dev="NN" type="add">DUMMY</action>
+    <action dev="AN" type="add">
+      XSP block: Use private methods to call start/endElement in xsp.xsl.
+      That generates smaller bytecode allowing to compiler larger XSPs before hitting the
+      64k limit for the size of the generate() method.
+    </action>
   </release>
   <release version="2.1.9" date="April 7 2006">
     <action dev="JBQ" type="fix">
