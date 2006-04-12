@@ -653,3 +653,124 @@ EQIACQUCQNKOqwIbDAAKCRA39o/1AVr8ikVrAKDMUsQGX1u8ZLsuUs6d8wsFdFwq
 uACcDJAVc3KuTVrTWNn0Bdptwn2QKvI=
 =K6aG
 -----END PGP PUBLIC KEY BLOCK-----
+pub   1024D/98E35590 2002-11-11
+uid                  Giacomo Pati <giacomo@otego.com>
+sig          DFEAC4B9 2002-11-20  David N. Welton <davidw@dedasys.com>
+sig 3        98E35590 2005-07-24  Giacomo Pati <giacomo@otego.com>
+sig 3        EC140B81 2005-07-20  Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig 3        FC243F3C 2005-07-21  Henk P. Penning <penning@cs.uu.nl>
+sig 3        7C200941 2005-07-21  Torsten Curdt <tcurdt@apache.org>
+sig 3        E41EDC7E 2005-07-24  Carsten Ziegeler <cziegeler@apache.org>
+sig          152924AF 2005-07-29  Sander Temme <sander@temme.net>
+sig 3        98E35590 2002-11-11  Giacomo Pati <giacomo@otego.com>
+sig 3        23CB7A2A 2005-08-02  David Crossley <crossley@apache.org>
+sig          1D3CA871 2005-08-19  Felix Knecht <felix@otego.com>
+uid                  Giacomo Pati <giacomo@apache.org>
+sig 3        98E35590 2002-11-11  Giacomo Pati <giacomo@otego.com>
+sig          DFEAC4B9 2002-11-20  David N. Welton <davidw@dedasys.com>
+sig 3        EC140B81 2005-07-20  Dirk-Willem van Gulik (http://www.anywi.com/ - Senior partner) <dirkx@anywi.com>
+sig 3        FC243F3C 2005-07-21  Henk P. Penning <penning@cs.uu.nl>
+sig 3        7C200941 2005-07-21  Torsten Curdt <tcurdt@apache.org>
+sig 3        E41EDC7E 2005-07-24  Carsten Ziegeler <cziegeler@apache.org>
+sig          152924AF 2005-07-29  Sander Temme <sander@temme.net>
+sig 3        23CB7A2A 2005-08-02  David Crossley <crossley@apache.org>
+sig          1D3CA871 2005-08-19  Felix Knecht <felix@otego.com>
+uid                  Giacomo Pati <giacomo@pati.ch>
+sig 3        98E35590 2005-07-24  Giacomo Pati <giacomo@otego.com>
+sub   1024g/7799CFA4 2002-11-11
+sig          98E35590 2002-11-11  Giacomo Pati <giacomo@otego.com>
+
+pub   1024D/BA4A9F94 2002-11-12 [revoked: 2002-11-13]
+rev          BA4A9F94 2002-11-13  Giacomo Pati <giacomo.pati@otego.com>
+uid                  Giacomo Pati <giacomo.pati@otego.com>
+sig 3        BA4A9F94 2002-12-06  Giacomo Pati <giacomo.pati@otego.com>
+uid                  Giacomo Pati <giacomo@otego.com>
+sig 3        BA4A9F94 2002-11-12  Giacomo Pati <giacomo.pati@otego.com>
+sig 3        98E35590 2002-11-27  Giacomo Pati <giacomo@otego.com>
+sig 3        BA4A9F94 2002-11-12  Giacomo Pati <giacomo.pati@otego.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+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
+=y1m2
+-----END PGP PUBLIC KEY BLOCK-----
