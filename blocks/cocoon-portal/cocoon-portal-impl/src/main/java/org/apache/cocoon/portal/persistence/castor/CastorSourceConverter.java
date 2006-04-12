@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.avalon.framework.activity.Initializable;
@@ -137,7 +138,14 @@ public class CastorSourceConverter
      */
     public void configure(Configuration config) throws ConfigurationException {
         // configure castor - so we don't need a properties file
-        LocalConfiguration.getInstance().getProperties().setProperty("org.exolab.castor.parser.namespaces", "true");
+        final Properties castorProperties = LocalConfiguration.getInstance().getProperties();
+        castorProperties.setProperty("org.exolab.castor.parser.namespaces", "true");
+        final Configuration[] properties = config.getChild("castor-properties").getChildren("property");
+        for(int i=0; i<properties.length; i++) {
+            final String propName = properties[i].getAttribute("name");
+            final String propValue = properties[i].getAttribute("value");
+            castorProperties.setProperty(propName, propValue);
+        }
 
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";

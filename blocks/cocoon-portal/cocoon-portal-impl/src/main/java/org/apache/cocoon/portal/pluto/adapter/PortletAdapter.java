@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.adapter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,6 +40,7 @@ import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
@@ -59,6 +61,7 @@ import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.PortletContainerImpl;
 import org.apache.pluto.om.entity.PortletApplicationEntity;
 import org.apache.pluto.om.entity.PortletEntity;
+import org.apache.pluto.om.portlet.PortletDefinition;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.om.window.PortletWindowCtrl;
 import org.apache.pluto.om.window.PortletWindowList;
@@ -78,7 +81,7 @@ import org.xml.sax.SAXException;
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
-    implements PortalManagerAspect, Receiver, Parameterizable {
+    implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
     /** The servlet configuration for pluto. */
     protected ServletConfig servletConfig;
@@ -395,5 +398,44 @@ public class PortletAdapter
 
     protected String getResponse(CopletInstanceData instance, HttpServletResponse response) {
         return response.toString();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes()
+     */
+    public List getPossibleCopletModes() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates()
+     */
+    public List getPossibleWindowStates() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
+    public String getTitle(CopletInstanceData copletInstanceData) {
+        String title = null;
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
+        if ( window != null ) {
+            title = (String) copletInstanceData.getTemporaryAttribute("dynamic-title");
+            if ( title == null ) {
+                final PortletDefinition def = window.getPortletEntity().getPortletDefinition();
+                try {
+                    title = def.getDisplayName(def.getLanguageSet().getDefaultLocale()).getDisplayName();
+                } catch (Exception ignore)  {
+                    // we ignore this
+                }
+            }
+        }
+        if ( title == null ) {
+            title = copletInstanceData.getTitle();
+        }
+        return title;
     }
 }
