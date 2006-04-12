@@ -117,6 +117,15 @@
         // Internally used list of attributes for SAX events.  Being on
         // class scope allows xsp:logic to define markup generating methods.
         private final AttributesImpl _xspAttr = new AttributesImpl();
+      
+        private void _startElem(String namespace, String localname, String name) throws SAXException {
+            this.contentHandler.startElement(namespace, localname, name, _xspAttr);
+            _xspAttr.clear();
+        }
+
+        private void _endElem(String namespace, String localname, String name) throws SAXException {
+            this.contentHandler.endElement(namespace, localname, name);
+        }
 
         /* Built-in parameters available for use */
         // context    - org.apache.cocoon.environment.Context
@@ -128,7 +137,7 @@
 
         /* User Class Declarations */
         <xsl:apply-templates select="xsp:logic"/>
-
+      
         /**
          * Generate XML data.
          */
@@ -457,20 +466,18 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
     <xsl:apply-templates select="xsp:attribute | xsp:logic[xsp:attribute]"/>
 
-    this.contentHandler.startElement(
+    _startElem(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
-      "<xsl:value-of select="name(.)"/>",
-      _xspAttr
+      "<xsl:value-of select="name(.)"/>"
     );
-    _xspAttr.clear();
 
     <xsl:apply-templates select="node()[not(
         (namespace-uri(.) = $xsp-uri and local-name(.) = 'attribute') or
         (namespace-uri(.) = $xsp-uri and local-name(.) = 'logic' and ./xsp:attribute)
       )]"/>
 
-    this.contentHandler.endElement(
+    _endElem(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
       "<xsl:value-of select="name(.)"/>"
