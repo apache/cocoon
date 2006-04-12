@@ -18,11 +18,13 @@ package org.apache.cocoon.portal.wsrp.adapter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
 import oasis.names.tc.wsrp.v1.types.BlockingInteractionResponse;
+import oasis.names.tc.wsrp.v1.types.LocalizedString;
 import oasis.names.tc.wsrp.v1.types.MarkupContext;
 import oasis.names.tc.wsrp.v1.types.MarkupResponse;
 import oasis.names.tc.wsrp.v1.types.MarkupType;
@@ -52,6 +54,7 @@ import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
@@ -112,6 +115,7 @@ import org.xml.sax.ext.LexicalHandler;
 public class WSRPAdapter 
     extends AbstractCopletAdapter
     implements PortalManagerAspect,
+               CopletDecorationProvider,
                Parameterizable,
                Receiver {
 
@@ -849,5 +853,40 @@ public class WSRPAdapter
         ContainerUtil.initialize(component);
 
         return component;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes()
+     */
+    public List getPossibleCopletModes() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates()
+     */
+    public List getPossibleWindowStates() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     */
+    public String getTitle(CopletInstanceData copletInstanceData) {
+        String title = null;
+        final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
+
+        if ( portletKey != null ) {
+            LocalizedString localizedTitle = (LocalizedString)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_TITLE);
+            if ( localizedTitle != null ) {
+                title = localizedTitle.getValue();
+            }
+        }
+        if ( title == null ) {
+            title = copletInstanceData.getTitle();
+        }
+        return title;
     }
 }
