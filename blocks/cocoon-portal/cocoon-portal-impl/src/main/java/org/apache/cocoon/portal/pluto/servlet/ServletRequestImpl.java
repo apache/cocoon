@@ -151,9 +151,8 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                 }
             } else {
                 // provider is null or different window, use stored render parameters
-                // check for NP - FIXME we should ensure that the layout is always set
-                if ( window != null && ((PortletWindowImpl)this.window).getLayout() != null) {
-                    final CopletInstanceData cid = ((PortletWindowImpl)this.window).getLayout().getCopletInstanceData();
+                if ( window != null ) {
+                    final CopletInstanceData cid = ((PortletWindowImpl)this.window).getCopletInstanceData();
                     this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
                 }
             }

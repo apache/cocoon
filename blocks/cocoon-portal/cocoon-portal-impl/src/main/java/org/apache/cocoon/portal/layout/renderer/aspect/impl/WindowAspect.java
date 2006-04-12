@@ -19,6 +19,8 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -57,9 +59,9 @@ public final class WindowAspect extends AbstractAspect {
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(RendererAspectContext context,
-                      Layout layout,
-                      PortalService service,
-                      ContentHandler contenthandler)
+                      Layout                layout,
+                      PortalService         service,
+                      ContentHandler        contenthandler)
     throws SAXException {
         final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
@@ -67,7 +69,15 @@ public final class WindowAspect extends AbstractAspect {
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        XMLUtils.createElement(contenthandler, "title", copletInstanceData.getTitle());
+        final CopletAdapter adapter = service.getCopletAdapter(copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName());
+        String title = null;
+        if ( adapter instanceof CopletDecorationProvider ) {
+            title = ((CopletDecorationProvider)adapter).getTitle(copletInstanceData);
+        }
+        if ( title == null ) {
+            title = copletInstanceData.getTitle();
+        }
+        XMLUtils.createElement(contenthandler, "title", title);
         XMLUtils.createElement(contenthandler, "instance-id", copletInstanceData.getId());
 
         context.invokeNext( layout, service, contenthandler );

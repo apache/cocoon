@@ -15,34 +15,24 @@
  */
 package org.apache.cocoon.portal.coplet.adapter;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.cocoon.portal.event.Event;
-
 /**
  * @version $Id$
  */
 public final class DecorationAction {
 
     protected String name;
-    protected List   events;
+    protected String url;
 
-    public DecorationAction(String name, List events) {
+    public DecorationAction(String name, String url) {
         this.name = name;
-        this.events = events;
-    }
-
-    public DecorationAction(String name, Event event) {
-        this.name = name;
-        this.events = Collections.singletonList(event);
+        this.url = url;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public List getEvents() {
-        return this.events;
+    public String getUrl() {
+        return this.url;
     }
 }

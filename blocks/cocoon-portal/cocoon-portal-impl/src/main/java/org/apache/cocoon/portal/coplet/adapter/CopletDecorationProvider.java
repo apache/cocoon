@@ -30,11 +30,11 @@ public interface CopletDecorationProvider extends CopletAdapter {
      * Returns a list of {@link DecorationAction}.
      * @return List of possible window states, might be empty.
      */
-    List getPossibleWindowStates();
+    List getPossibleWindowStates(CopletInstanceData coplet);
 
     /**
      * Returns a list of {@link DecorationAction}.
      * @return List of possible coplet modes, might be empty.
      */
-    List getPossibleCopletModes();
+    List getPossibleCopletModes(CopletInstanceData coplet);
 }

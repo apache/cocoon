@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -41,6 +42,7 @@ import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
+import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
@@ -138,7 +140,7 @@ public class PortletAdapter
 
         if ( portletEntity.getPortletDefinition() != null ) {
             // create the window
-            PortletWindow portletWindow = new PortletWindowImpl(portletEntityId);                
+            PortletWindow portletWindow = new PortletWindowImpl(coplet, portletEntityId);                
             ((PortletWindowCtrl)portletWindow).setId(coplet.getId());
             ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
             PortletWindowList windowList = portletEntity.getPortletWindowList();        
@@ -401,19 +403,88 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes()
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstanceData)
      */
-    public List getPossibleCopletModes() {
-        // TODO Auto-generated method stub
-        return null;
+    public List getPossibleCopletModes(CopletInstanceData copletInstanceData) {
+        final List modes = new ArrayList();
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
+        if ( window != null && this.portletContainerEnvironment != null) {
+            InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
+            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
+
+            // portlet modes
+            final String pmString = (String)copletInstanceData.getTemporaryAttribute("portlet-mode");
+            final PortletMode pm; 
+            if ( pmString == null ) {
+                pm = PortletMode.VIEW;
+            } else {
+                pm = new PortletMode(pmString);
+            }
+            if ( !pm.equals(PortletMode.EDIT) ) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setPortletMode(PortletMode.EDIT);
+                modes.add(new DecorationAction("edit", url.toString()));
+            }
+            if ( !pm.equals(PortletMode.HELP) ) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setPortletMode(PortletMode.HELP);
+                modes.add(new DecorationAction("help", url.toString()));
+            }                
+            if ( !pm.equals(PortletMode.VIEW) ) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setPortletMode(PortletMode.VIEW);
+                modes.add(new DecorationAction("view", url.toString()));
+            }                
+        }
+
+        return modes;
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates()
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstanceData)
      */
-    public List getPossibleWindowStates() {
-        // TODO Auto-generated method stub
-        return null;
+    public List getPossibleWindowStates(CopletInstanceData copletInstanceData) {
+        final List states = new ArrayList();
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
+        if ( window != null && this.portletContainerEnvironment != null) {
+            InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
+            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
+
+            // Sizing
+            final String wsString = (String)copletInstanceData.getTemporaryAttribute("window-state");
+            final WindowState ws; 
+            if ( wsString == null ) {
+                ws = WindowState.NORMAL;
+            } else {
+                ws = new WindowState(wsString);
+            }
+
+            if ( !ws.equals(WindowState.MINIMIZED) && !ws.equals(WindowState.MAXIMIZED)) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setWindowState(WindowState.MINIMIZED);
+                states.add(new DecorationAction("minimize", url.toString()));
+            }
+
+            if ( !ws.equals(WindowState.NORMAL)) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setWindowState(WindowState.NORMAL);
+                states.add(new DecorationAction("normal", url.toString()));
+            }
+
+            if ( !ws.equals(WindowState.MAXIMIZED)) {
+                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                url.clearParameters();
+                url.setWindowState(WindowState.MAXIMIZED);
+                states.add(new DecorationAction("maximize", url.toString()));
+            }
+        }
+
+        return states;
     }
 
     /**

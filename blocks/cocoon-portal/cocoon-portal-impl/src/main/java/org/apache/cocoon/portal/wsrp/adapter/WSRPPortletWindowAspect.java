@@ -130,7 +130,6 @@ extends AbstractAspect {
             // no portlet window, so use a default behaviour
             XMLUtils.createElement(contenthandler, "title", copletInstanceData.getTitle());
         } else {
-            copletInstanceData.setTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_LAYOUT, layout);
             LocalizedString localizedTitle = (LocalizedString)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_TITLE);
             String title;
             if ( localizedTitle == null ) {
