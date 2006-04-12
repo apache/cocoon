@@ -102,6 +102,7 @@ do
        echo "   Settings:"
        echo "      LOCAL_PATH:       $LOCAL_PATH"
        echo "      SVN_BASE_URL:     $SVN_BASE_URL"
+       echo "      REMOTE_HOST:      $REMOTE_HOST"
        echo "      REMOTE_PATH:      $REMOTE_PATH"
        echo "      HEAD_SUB_URL:     $HEAD_SUB_URL"
        echo "      REVISION_SUB_URL: $REVISION_SUB_URL"
@@ -218,7 +219,7 @@ if [ $RC -ne 0 ]; then
 fi
 
 # copy all the jars produced over to the web server space
-VERSION=`ls build | grep cocoon | sed s/cocoon-//`
+VERSION=2.1.9
 if [ "$REVISION_SUB_URL" == "$HEAD_SUB_URL" ]; then 
   TVERSION=`date "+%Y%m%d.%H%M%S"` 
 else
@@ -229,7 +230,7 @@ if [ $NOJARS = 0 ]; then
   # create the target directory if they do not exists and make them group writable
   ssh $REMOTE_HOST "mkdir -p $REMOTE_PATH/jars 2>/dev/null >/dev/null; \
                  chmod -R g+w $REMOTE_PATH/jars"
-  JARS=`find build/cocoon-$VERSION -name "*.jar"`
+  JARS=`find build/cocoon -name "*.jar"`
   for i in $JARS; do
     FILE=`echo $i | sed 's/.*[/]//' | sed s/[.]jar//`
     isBlock=`echo $FILE|grep block`
