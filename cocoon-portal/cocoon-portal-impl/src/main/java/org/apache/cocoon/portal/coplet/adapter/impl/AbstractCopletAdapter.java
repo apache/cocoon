@@ -54,6 +54,11 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  * implementation. It already provides several base features which can
  * be used by sub classes.
  *
+ * This adapter adds a caching mechanism. The result of the called coplet is cached until a 
+ * {@link org.apache.cocoon.portal.event.CopletInstanceEvent} for that coplet instance
+ * is received. The content can eiter be cached in the user session or globally. The default
+ * is the user session.
+ *
  * <h2>Configuration</h2>
  * <table><tbody>
  * <tr>
@@ -66,7 +71,7 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  *   <td>boolean</td>
  *   <td><code>false</code></td>
  *  </tr>
- * <tr>
+ *  <tr>
  *   <th>timeout</th>
  *   <td>Max time in seconds content delivery may take. After a timeout,
  *       a not availability notice is delivered. Setting a timeout automatically
@@ -74,6 +79,53 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  *   <td></td>
  *   <td>int</td>
  *   <td><code>null</code></td>
+ *  </tr>
+ *  <tr>
+ *   <th>cache-enabled</th>
+ *   <td>Enable/disable the caching of the coplet.</td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>true</code></td>
+ *  </tr>
+ *  <tr>
+ *   <th>ignore-sizing-events</th>
+ *   <td>
+ *     The cached content of a coplet is invalidated if an event for this coplet is received.
+ *     If sizing events should be ignored, turn on this configuration. 
+ *   </td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>true</code></td>
+ *  </tr>
+ *  <tr>
+ *   <th>ignore-simple-sizing-events</th>
+ *   <td>
+ *     This configuration has only an effect if ignore-sizing-events is turned on. If this
+ *     configuration is set to true, then only sizing events for minimizing and setting
+ *     the coplet state to back to normal are ignored. This allows the coplet to provide
+ *     different contents for maximized or full screen.
+ *   </td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>false</code></td>
+ *  </tr>
+ *  <tr>
+ *   <th>cache-global</th>
+ *   <td>With global caching the result of a coplet is cached independently of the user. If
+ *       global caching is not used, the contents is cached on a per user base.</td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>false</code></td>
+ *  </tr>
+ *  <tr>
+ *   <th>cache-global-use-attributes</th>
+ *   <td>If global caching is used, the contents is cached per coplet data definition. If you
+ *     turn on this configuration the contents is cached taking the current values of the
+ *     attributes of a coplet instance data into account.
+ *   </td>
+ *   <td></td>
+ *   <td>boolean</td>
+ *   <td><code>false</code></td>
  *  </tr>
  * </tbody></table>
  *
