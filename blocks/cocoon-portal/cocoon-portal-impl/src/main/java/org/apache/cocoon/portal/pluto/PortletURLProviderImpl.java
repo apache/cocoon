@@ -31,7 +31,6 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.pluto.om.window.PortletWindow;
@@ -237,11 +236,7 @@ public class PortletURLProviderImpl
     public String asString() {
 
         final PortletWindowImpl impl = (PortletWindowImpl) this.portletWindow;
-        final CopletLayout cl = impl.getLayout();
-        if (cl == null) {
-            return "";
-        }
-        final CopletInstanceData cid = cl.getCopletInstanceData();
+        final CopletInstanceData cid = impl.getCopletInstanceData();
         PortletURLConverter urlConverter = new PortletURLConverter(cid);
 
         if (this.mode != null) {

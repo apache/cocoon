@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.wsrp.adapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,9 @@ import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
+import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
@@ -81,6 +84,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.wsrp4j.consumer.GroupSession;
@@ -89,6 +93,7 @@ import org.apache.wsrp4j.consumer.PortletKey;
 import org.apache.wsrp4j.consumer.PortletSession;
 import org.apache.wsrp4j.consumer.Producer;
 import org.apache.wsrp4j.consumer.SessionHandler;
+import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.consumer.User;
 import org.apache.wsrp4j.consumer.UserSession;
 import org.apache.wsrp4j.consumer.WSRPPortlet;
@@ -99,6 +104,7 @@ import org.apache.wsrp4j.exception.ErrorCodes;
 import org.apache.wsrp4j.exception.WSRPException;
 import org.apache.wsrp4j.log.LogManager;
 import org.apache.wsrp4j.util.Constants;
+import org.apache.wsrp4j.util.Modes;
 import org.apache.wsrp4j.util.WindowStates;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -130,9 +136,6 @@ public class WSRPAdapter
 
     /** Key to store the wsrp user into the coplet instance data object as a temporary attribute. */
     public static final String ATTRIBUTE_NAME_USER = "wsrp-user";
-
-    /** Key to store the layout for the wsrp portlet into the coplet instance data object as a temporary attribute. */
-    public static final String ATTRIBUTE_NAME_LAYOUT = "wsrp-layout";
 
     /** Key to store the wsrp title into the coplet instance data object as a temporary attribute. */
     public static final String ATTRIBUTE_NAME_PORTLET_TITLE = "wsrp-title";
@@ -636,8 +639,9 @@ public class WSRPAdapter
             }
             if (windowState != null) {
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
-                    final Layout layout = (Layout)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_LAYOUT);
+                    
                     final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
+                    final Layout layout = CopletInstanceDataFeatures.searchLayout(coplet.getId(), rootLayout);
                     final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )
@@ -856,19 +860,124 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes()
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstanceData)
      */
-    public List getPossibleCopletModes() {
-        // TODO Auto-generated method stub
-        return null;
+    public List getPossibleCopletModes(CopletInstanceData copletInstanceData) {
+        final List modes = new ArrayList();
+        final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
+
+        if ( portletKey != null && this.consumerEnvironment != null ) {
+            final String portletInstanceKey = (String)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
+            final User user = (User)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
+
+            final WSRPPortlet portlet = this.consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
+            try {
+                SimplePortletWindowSession windowSession = this.getSimplePortletWindowSession(portlet, portletInstanceKey, user);
+                if (  windowSession != null ) {
+                    this.setCurrentCopletInstanceData(copletInstanceData);
+                    final URLGenerator urlGenerator = this.consumerEnvironment.getURLGenerator();
+
+                    final String[] supportedModes = (String[])copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_MODES);
+                    String pm = windowSession.getMode();
+                    if ( pm == null ) {
+                        pm = Modes._view;
+                    }
+                    if ( !pm.equals(Modes._edit) 
+                         && ArrayUtils.contains(supportedModes, Modes._edit) ) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.PORTLET_MODE, Modes._edit);
+
+                        final String link = urlGenerator.getRenderURL(p);
+                        modes.add(new DecorationAction("edit", link));
+                    }
+                    if ( !pm.equals(Modes._help)
+                        && ArrayUtils.contains(supportedModes, Modes._help) ) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.PORTLET_MODE, Modes._help);
+
+                        final String link = urlGenerator.getRenderURL(p);                        
+                        modes.add(new DecorationAction("help", link));
+                    }                
+                    if ( !pm.equals(Modes._view)
+                        && ArrayUtils.contains(supportedModes, Modes._view) ) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.PORTLET_MODE, Modes._view);
+
+                        final String link = urlGenerator.getRenderURL(p);                        
+                        modes.add(new DecorationAction("view", link));
+                    } 
+                }
+            } catch (WSRPException ignore) {
+                // we ignore this
+            } finally {
+                this.setCurrentCopletInstanceData(null);                
+            }
+        }
+        return modes;
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates()
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstanceData)
      */
-    public List getPossibleWindowStates() {
-        // TODO Auto-generated method stub
-        return null;
+    public List getPossibleWindowStates(CopletInstanceData copletInstanceData) {
+        final List states = new ArrayList();
+        final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
+
+        if ( portletKey != null && this.consumerEnvironment != null ) {
+            final String portletInstanceKey = (String)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
+            final User user = (User)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
+
+            final WSRPPortlet portlet = this.consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
+            try {
+                SimplePortletWindowSession windowSession = this.getSimplePortletWindowSession(portlet, portletInstanceKey, user);
+                if (  windowSession != null ) {
+                    this.setCurrentCopletInstanceData(copletInstanceData);
+                    final URLGenerator urlGenerator = this.consumerEnvironment.getURLGenerator();
+
+                    final String[] supportedWindowStates = (String[])copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_WINDOWSTATES);
+                    String ws = windowSession.getWindowState();
+                    if ( ws == null ) {
+                        ws = WindowStates._normal;
+                    }
+
+                    if ( !ws.equals(WindowStates._minimized) 
+                         && ArrayUtils.contains(supportedWindowStates, WindowStates._minimized)) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.WINDOW_STATE, WindowStates._minimized);
+
+                        final String link = urlGenerator.getRenderURL(p);
+                        states.add(new DecorationAction("minimize", link));
+                    }
+                    if ( !ws.equals(WindowStates._normal)
+                          && ArrayUtils.contains(supportedWindowStates, WindowStates._normal)) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.WINDOW_STATE, WindowStates._normal);
+
+                        final String link = urlGenerator.getRenderURL(p);
+                        states.add(new DecorationAction("normal", link));
+                    } 
+                    if ( !ws.equals(WindowStates._maximized)
+                          && ArrayUtils.contains(supportedWindowStates, WindowStates._maximized)) {
+                        final Map p = new HashMap();
+                        p.put(Constants.URL_TYPE, Constants.URL_TYPE_RENDER);
+                        p.put(Constants.WINDOW_STATE, WindowStates._maximized);
+
+                        final String link = urlGenerator.getRenderURL(p);                    
+                        states.add(new DecorationAction("maximize", link));
+                    }
+                }
+            } catch (WSRPException ignore) {
+                // we ignore this
+            } finally {
+                this.setCurrentCopletInstanceData(null);                
+            }
+        }
+        return states;
     }
 
     /**

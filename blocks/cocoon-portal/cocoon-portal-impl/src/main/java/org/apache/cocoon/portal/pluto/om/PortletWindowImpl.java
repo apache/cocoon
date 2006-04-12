@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto.om;
 
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.pluto.om.common.ObjectID;
 import org.apache.pluto.om.entity.PortletEntity;
 import org.apache.pluto.om.window.PortletWindow;
@@ -30,10 +30,11 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
     private ObjectID objectId;
     private String id;
     private PortletEntity portletEntity;
-    private CopletLayout layout;
+    private final CopletInstanceData coplet;
 
-    public PortletWindowImpl(String id) {
+    public PortletWindowImpl(CopletInstanceData coplet, String id) {
         this.id = id;
+        this.coplet = coplet;
     }
 
     // PortletWindow implementation.
@@ -79,11 +80,7 @@ public class PortletWindowImpl implements PortletWindow, PortletWindowCtrl {
         this.portletEntity = portletEntity;
     }
 
-    public CopletLayout getLayout() {
-        return this.layout;
-    }
-
-    public void setLayout(CopletLayout layout) {
-        this.layout = layout;
+    public CopletInstanceData getCopletInstanceData() {
+        return this.coplet;
     }
 }

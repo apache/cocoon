@@ -29,7 +29,6 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
-import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.pluto.om.portlet.PortletDefinition;
 import org.apache.pluto.om.window.PortletWindow;
@@ -125,10 +124,6 @@ public final class PortletWindowAspect
                 XMLUtils.createElement(contenthandler, "title", copletInstanceData.getTitle());
             }
         } else {
-            if ( ((PortletWindowImpl)window).getLayout() == null ) {
-                ((PortletWindowImpl)window).setLayout((CopletLayout)layout);
-            }
-
             String title = (String) copletInstanceData.getTemporaryAttribute("dynamic-title");
             if ( title == null ) {
                 final PortletDefinition def = window.getPortletEntity().getPortletDefinition();
