@@ -66,6 +66,15 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Add CopletDecorationProvider which provides the information for the
+      title bar of a coplet. A coplet adapter can optinally implement
+      this interface.
+    </action>
+    <action dev="CZ" type="add">
+      Castor source converter can be configured using xconf instead of adding
+      a castor.properties file to the classpath.
+    </action>
+    <action dev="CZ" type="add">
       Unify coplet adapters: Caching is now supported by all adapters including
       the portlet and wsrp adapters. Therefore the caching-uri adapter has been removed.
     </action>
