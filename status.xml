@@ -181,7 +181,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
-    <action dev="NN" type="add">DUMMY</action>
+    <action dev="CZ" type="add" fixes-bug="COCOON-1820">
+      CForms: Add id, state and listening attributes to the transformed form-template element (jx macros
+              and forms transformer).
+    </action>
     <action dev="AN" type="add">
       XSP block: Use private methods to call start/endElement in xsp.xsl.
       That generates smaller bytecode allowing to compiler larger XSPs before hitting the
