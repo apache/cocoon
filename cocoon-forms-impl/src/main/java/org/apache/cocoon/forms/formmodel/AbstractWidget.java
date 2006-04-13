@@ -423,7 +423,7 @@ public abstract class AbstractWidget implements Widget {
      */
     protected AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = new AttributesImpl();
-        // top-level widget-containers like forms will have their id set to ""
+        // top-level widget-containers like forms might have their id set to ""
         // for those the @id should not be included.
         if (getId().length() != 0) {
             attrs.addCDATAAttribute("id", getRequestParameterName());
