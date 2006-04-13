@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.transformation;
 
 import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.DataWidget;
 import org.apache.cocoon.forms.formmodel.Group;
@@ -27,6 +28,7 @@ import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
 
@@ -35,7 +37,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -391,6 +392,25 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             // ====> Check if form visible (and skip it if it's not)
             if (!isVisible(contextWidget)) {
                 return hNull;
+            }
+
+            // set some general attributes
+            // top-level widget-containers like forms might have their id set to ""
+            // for those the @id should not be included.
+            if (contextWidget.getId().length() != 0 && newAttrs.getValue("id") == null ) {
+                newAttrs.addCDATAAttribute("id", contextWidget.getRequestParameterName());
+            }
+
+            // Add the "state" attribute
+            if ( newAttrs.getValue("state") == null ) {
+                newAttrs.addCDATAAttribute("state", contextWidget.getCombinedState().getName());
+            }
+            
+            // Add the "listening" attribute is the value has change listeners
+            if (contextWidget instanceof ValueChangedListenerEnabled &&
+                ((ValueChangedListenerEnabled)contextWidget).hasValueChangedListeners() &&
+                newAttrs.getValue("listening") == null ) {
+                newAttrs.addCDATAAttribute("listening", "true");
             }
 
             // ====> Determine the Locale
