@@ -181,6 +181,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="JBQ" type="fix">
+      CForms: Fix inplace editing samples
+    </action>
     <action dev="CZ" type="add" fixes-bug="COCOON-1820">
       CForms: Add id, state and listening attributes to the transformed form-template element (jx macros
               and forms transformer).
