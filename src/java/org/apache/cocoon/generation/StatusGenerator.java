@@ -430,7 +430,7 @@ public class StatusGenerator extends ServiceableGenerator
                 try {
                     for (Iterator i = kids.iterator(); i.hasNext(); ) {
                         final Source lib = (Source) i.next();
-                        final String name = lib.getURI().substring(lib.getURI().lastIndexOf('/'));
+                        final String name = lib.getURI().substring(lib.getURI().lastIndexOf('/') + 1);
                         files.add(name);
                     }
                 } finally {
