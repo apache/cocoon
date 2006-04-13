@@ -27,6 +27,7 @@ import org.apache.cocoon.ajax.BrowserUpdateTransformer;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsRuntimeException;
+import org.apache.cocoon.forms.event.ValueChangedListenerEnabled;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
@@ -98,10 +99,29 @@ public class JXMacrosHelper {
         
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
+        // top-level widget-containers like forms might have their id set to ""
+        // for those the @id should not be included.
+        if (form.getId().length() != 0) {
+            attrs.addCDATAAttribute("id", form.getRequestParameterName());
+        }
+
+        // Add the "state" attribute
+        attrs.addCDATAAttribute("state", form.getCombinedState().getName());
+        
+        // Add the "listening" attribute is the value has change listeners
+        if (form instanceof ValueChangedListenerEnabled &&
+            ((ValueChangedListenerEnabled)form).hasValueChangedListeners()) {
+            attrs.addCDATAAttribute("listening", "true");
+        }
         Iterator iter = attributes.entrySet().iterator();
         while(iter.hasNext()) {
             Map.Entry entry = (Map.Entry)iter.next();
-            attrs.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+            final String attrName = (String)entry.getKey();
+            // check if the attribute has already been defined
+            if ( attrs.getValue(attrName) != null ) {
+                attrs.removeAttribute(attrName);
+            }
+            attrs.addCDATAAttribute(attrName, (String)entry.getValue());
         }
         
         this.ajaxTemplate = "true".equals(attributes.get("ajax"));
