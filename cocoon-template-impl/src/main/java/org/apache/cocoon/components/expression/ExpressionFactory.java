@@ -16,7 +16,8 @@
 package org.apache.cocoon.components.expression;
 
 public interface ExpressionFactory {
-    public static String ROLE = ExpressionFactory.class.getName();
+
+    String ROLE = ExpressionFactory.class.getName();
 
     Expression getExpression(String language, String expression) throws ExpressionException;
 
