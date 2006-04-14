@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright 2002-2004 The Apache Software Foundation
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed  under the  License is distributed on an "AS IS" BASIS,
  * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
  * implied.
- * 
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -18,6 +18,8 @@ package org.apache.cocoon.core.container;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -123,10 +125,10 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * @version $Id$
  */
 public class ContainerTestCase extends TestCase {
-    
+
     /** The default logger */
     private Logger logger;
-    
+
     /** The service manager to use */
     private ServiceManager manager;
 
@@ -161,7 +163,7 @@ public class ContainerTestCase extends TestCase {
         this.logger = new ConsoleLogger(Integer.parseInt(level));
         this.prepare();
     }
-    
+
     /**
      * Initializes the ComponentLocator
      *
@@ -283,7 +285,7 @@ public class ContainerTestCase extends TestCase {
     throws Exception {
         // subclasses can add components here
     }
-    
+
     final private void setupManagers( final Configuration confCM,
                                       final Configuration confRM)
     throws Exception {
@@ -296,11 +298,11 @@ public class ContainerTestCase extends TestCase {
         this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv);
         // read roles
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv, null);
+        this.addComponents( rolesInfo );
         ConfigurableListableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, false);
 
         // read components
         ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv, null);
-        this.addComponents( componentsInfo );
         ConfigurableListableBeanFactory componentsContext = BeanFactoryUtil.createBeanFactory(avalonEnv, componentsInfo, null, rolesContext, false);
 
         this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
@@ -314,7 +316,7 @@ public class ContainerTestCase extends TestCase {
     protected final void release( final Object object ) {
         manager.release( object );
     }
-    
+
     private Object getComponent(String classname,
                                 Configuration conf,
                                 Parameters p) 
@@ -340,7 +342,7 @@ public class ContainerTestCase extends TestCase {
         ContainerUtil.initialize(instance);
         return instance;
     }
-    
+
     protected Object getComponent(String classname,
                                   Configuration conf) 
     throws Exception {
@@ -352,7 +354,7 @@ public class ContainerTestCase extends TestCase {
     throws Exception {
         return this.getComponent(classname, null, p);
     }
-    
+
     protected Object getComponent(String classname) 
     throws Exception {
         return this.getComponent(classname, null, null);
