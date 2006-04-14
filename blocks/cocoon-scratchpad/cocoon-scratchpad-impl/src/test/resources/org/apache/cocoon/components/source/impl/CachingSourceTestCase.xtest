@@ -19,8 +19,7 @@
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"
-  />
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"
@@ -55,16 +54,6 @@
   <role name="org.apache.cocoon.components.cron.CronJob/UpdateTarget"
         shorthand="update-target"
         default-class="org.apache.cocoon.components.source.impl.UpdateTarget"
-  />
-  
-  <role name="org.apache.cocoon.components.sax.XMLSerializer"
-        shorthand="xml-serializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"
-  />
-
-  <role name="org.apache.cocoon.components.sax.XMLDeserializer"
-        shorthand="xml-deserializer"
-        default-class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter"
   />
   
   <role name="org.apache.excalibur.xml.sax.SAXParser"
