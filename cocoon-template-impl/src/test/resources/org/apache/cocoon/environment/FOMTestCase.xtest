@@ -20,12 +20,11 @@
     <role name="org.apache.cocoon.components.expression.ExpressionCompilerSelector"
           shorthand="expression-compilers"
           default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-    <role name="org.apache.cocoon.components.expression.ExpressionFactory"
-          shorthand="expression-factory"
-          default-class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
   </roles>
  
   <components>
+    <component role="org.apache.cocoon.components.expression.ExpressionFactory"
+               class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
     <expression-compilers>
       <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
       <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
