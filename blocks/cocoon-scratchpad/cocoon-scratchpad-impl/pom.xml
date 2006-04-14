@@ -63,6 +63,11 @@
       <version>0.6</version>
     </dependency>
     <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
       <groupId>commons-jelly</groupId>
       <artifactId>commons-jelly</artifactId>
       <version>1.0</version>
@@ -83,6 +88,11 @@
       <artifactId>castor</artifactId>
       <version>0.9.7</version>
     </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>1.3.02</version>
+    </dependency>
 <!-- 
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -91,4 +101,20 @@
     </dependency>
  -->
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*TestCase.class</include>
+            <include>**/*Test.class</include>
+          </includes>
+          <excludes>
+            <exclude>**/CachingSourceTestCase.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

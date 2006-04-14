@@ -79,7 +79,7 @@
 		<module>cocoon-qdox</module>
 		<module>cocoon-querybean</module>
 		<module>cocoon-repository</module>
-		<!-- module>cocoon-scratchpad</module -->
+		<module>cocoon-scratchpad</module>
 		<module>cocoon-serializers</module>
 		<module>cocoon-session-fw</module>
 		<module>cocoon-slide</module>

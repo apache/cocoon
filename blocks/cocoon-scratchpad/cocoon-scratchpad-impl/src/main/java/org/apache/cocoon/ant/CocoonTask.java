@@ -23,13 +23,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -38,7 +35,6 @@ import org.apache.avalon.framework.context.DefaultContext;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.Cocoon;
@@ -47,9 +43,6 @@ import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
-
-import org.apache.log.Hierarchy;
-import org.apache.log.Priority;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -540,7 +533,6 @@ public class CocoonTask extends Task {
     public static class CocoonFactory extends AbstractLogEnabled
              implements Contextualizable, Configurable {
 
-        private LogKitLoggerManager logKitLoggerManager;
         private Logger logger;
         private DefaultContext ctx;
 
@@ -576,7 +568,6 @@ public class CocoonTask extends Task {
             File workDir = (File) this.ctx.get(Constants.CONTEXT_WORK_DIR);
 
             CommandLineContext clContext = new CommandLineContext(contextDir.toString());
-            clContext.enableLogging(getLogger());
             this.ctx.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, clContext);
             this.ctx.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));
 
@@ -603,39 +594,8 @@ public class CocoonTask extends Task {
                 logLevel = "WARN";
             }
 
-            // configure the logKitLoggerManager,
-            // either by using a logkit.xconf file or by a logger
-            final Priority priority = Priority.getPriorityForName(logLevel);
-            Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
-            this.logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
-
-            child = configuration.getChild("logKit", false);
-            if (child != null) {
-                String logKit = child.getValue();
-                String logKitLogCategory = child.getAttribute("category", "cocoon");
-
-                if (logKit != null) {
-                    try {
-                        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-                        final Configuration logKitConf = builder.buildFromFile(logKit);
-                        this.logKitLoggerManager = new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
-
-                        final DefaultContext subcontext = new DefaultContext(this.ctx);
-                        this.logKitLoggerManager.contextualize(subcontext);
-                        this.logKitLoggerManager.configure(logKitConf);
-                        logger = this.logKitLoggerManager.getLoggerForCategory(logKitLogCategory);
-                    } catch (Exception e) {
-                        getLogger().error("Cannot initialize log-kit-manager from logkit-xconf " + String.valueOf(logKit));
-                        // clean logKitLoggerManager, try init it without the logkit-xconf
-                        this.logKitLoggerManager = null;
-                    }
-                }
-            }
-
-            if (this.logKitLoggerManager == null) {
-                this.logKitLoggerManager = new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
-                this.logKitLoggerManager.enableLogging(logger);
-            }
+            // FIXME - Use different logger or level?
+            this.logger = new ConsoleLogger();
         }
 
 
@@ -648,11 +608,7 @@ public class CocoonTask extends Task {
          * @exception  Exception               thrown if initializing of Cocoon instance fails
          */
         public Cocoon createCocoon() throws Exception, ContextException, ConfigurationException {
-            Cocoon cocoon = new Cocoon();
-            cocoon.enableLogging(logger);
-            cocoon.contextualize(this.ctx);
-            cocoon.setLoggerManager(logKitLoggerManager);
-            cocoon.initialize();
+            Cocoon cocoon = new Cocoon(null, null, this.ctx, this.logger);
             return cocoon;
         }
 
@@ -665,9 +621,6 @@ public class CocoonTask extends Task {
          * @param  cocoon  the Cocoon instance
          */
         public void disposeCocoon(Cocoon cocoon) {
-            if (cocoon != null) {
-                cocoon.dispose();
-            }
         }
 
 
