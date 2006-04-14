@@ -18,8 +18,6 @@ package org.apache.cocoon.core.container;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -36,6 +34,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
@@ -264,6 +263,7 @@ public class ContainerTestCase extends TestCase {
                 }
             }
         }
+        context.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new MockContext());
         this.addContext( context );
         context.makeReadOnly();
         return context ;
