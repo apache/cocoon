@@ -137,6 +137,9 @@ public class ContainerTestCase extends TestCase {
     /** The root bean factory. */
     private ConfigurableListableBeanFactory rootBeanFactory;
 
+    /** The bean factory containing the avalon components. */
+    private ConfigurableListableBeanFactory beanFactory;
+
     /** Return the logger */
     protected Logger getLogger() {
         return logger;
@@ -149,7 +152,7 @@ public class ContainerTestCase extends TestCase {
 
     /** Return the bean factory. */
     protected ConfigurableListableBeanFactory getBeanFactory() {
-        return this.rootBeanFactory;
+        return this.beanFactory;
     }
 
     /**
@@ -211,7 +214,7 @@ public class ContainerTestCase extends TestCase {
         // setup context
         this.context = this.setupContext( conf.getChild( "context" ) );
 
-        this.setupManagers( conf.getChild( "components" ),  conf.getChild( "roles" ) );
+        this.setupBeanFactories( conf.getChild( "components" ),  conf.getChild( "roles" ) );
     }
 
     /**
@@ -286,8 +289,8 @@ public class ContainerTestCase extends TestCase {
         // subclasses can add components here
     }
 
-    final private void setupManagers( final Configuration confCM,
-                                      final Configuration confRM)
+    final private void setupBeanFactories( final Configuration confCM,
+                                           final Configuration confRM)
     throws Exception {
         final AvalonEnvironment avalonEnv = new AvalonEnvironment();
         avalonEnv.logger = this.logger;
@@ -296,16 +299,12 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.servletContext = new MockContext();
 
         this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv);
-        // read roles
-        ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, null, avalonEnv, null);
+        // read roles and components
+        ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
         this.addComponents( rolesInfo );
-        ConfigurableListableBeanFactory rolesContext = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, false);
+        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, false);
 
-        // read components
-        ConfigurationInfo componentsInfo = ConfigReader.readConfiguration(confCM, rolesInfo, avalonEnv, null);
-        ConfigurableListableBeanFactory componentsContext = BeanFactoryUtil.createBeanFactory(avalonEnv, componentsInfo, null, rolesContext, false);
-
-        this.manager = (ServiceManager)componentsContext.getBean(ServiceManager.class.getName());
+        this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
     }
 
     protected final Object lookup( final String key )

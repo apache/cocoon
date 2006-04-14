@@ -16,21 +16,13 @@
 -->
 <testcase>
  <roles>
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
-
-  <role name="org.apache.excalibur.xmlizer.XMLizer"
-        shorthand="xmlizer"
-        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
-
   <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
         shorthand="xslt-processor"
         default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
 
   <role name="org.apache.cocoon.transformation.TransformerSelector"
         shorthand="transformers"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
@@ -42,20 +34,6 @@
  </roles>
 
  <components>
-  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
-   <parameter name="validate" value="false"/>
-   <parameter name="namespace-prefixes" value="false"/>
-   <parameter name="stop-on-warning" value="true"/>
-   <parameter name="stop-on-recoverable-error" value="true"/>
-   <parameter name="reuse-parsers" value="false"/>
-  </xml-parser>
-
-  <xmlizer/>
-
-  <transient-store/>
-
-  <persistent-store/>
-
   <xslt-processor logger="core.xslt-processor">
    <parameter name="use-store" value="true"/>
    <parameter name="incremental-processing" value="true"/>

@@ -68,8 +68,17 @@ public class ConfigReader extends AbstractLogEnabled {
                                                       AvalonEnvironment env,
                                                       SourceResolver    resolver)
     throws Exception {
+        return readConfiguration(config, null, parentInfo, env, resolver);
+    }
+
+    public static ConfigurationInfo readConfiguration(Configuration     rolesConfig,
+                                                      Configuration     componentConfig,
+                                                      ConfigurationInfo parentInfo,
+                                                      AvalonEnvironment env,
+                                                      SourceResolver    resolver)
+    throws Exception {
         final ConfigReader converter = new ConfigReader(env, parentInfo, resolver);
-        converter.convert(config, null);
+        converter.convert(rolesConfig, componentConfig, null);
         return converter.configInfo;        
     }
 
@@ -120,14 +129,14 @@ public class ConfigReader extends AbstractLogEnabled {
             final ConfigurationBuilder b = new ConfigurationBuilder(this.environment.settings);
             final Configuration config = b.build(SourceUtil.getInputSource(root));
             
-            this.convert(config, root.getURI());
+            this.convert(config, null, root.getURI());
 
         } finally {
             this.resolver.release(root);
         }
     }
 
-    protected void convert(Configuration config, String rootUri)
+    protected void convert(Configuration config, Configuration additionalConfig, String rootUri)
     throws Exception {
         if ( this.getLogger().isInfoEnabled() ) {
             this.getLogger().info("Converting Avalon configuration from configuration object: " + config);
@@ -162,6 +171,14 @@ public class ConfigReader extends AbstractLogEnabled {
                 }
             }
         }
+        if ( additionalConfig != null ) {
+            if ( "role-list".equals(additionalConfig.getName()) || "roles".equals(additionalConfig.getName())) {
+                this.configureRoles(additionalConfig);
+            } else {
+                this.parseConfiguration(additionalConfig, null, loadedConfigs);
+            }
+        }
+
         // add roles as components
         final Iterator i = this.configInfo.getClassNames().values().iterator();
         while ( i.hasNext() ) {
