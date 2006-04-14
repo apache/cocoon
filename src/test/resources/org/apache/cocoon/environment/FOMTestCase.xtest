@@ -22,7 +22,7 @@
           default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
     <role name="org.apache.cocoon.components.expression.ExpressionFactory"
           shorthand="expression-factory"
-          default-class="org.apache.cocoon.components.expression.ExpressionFactory"/>
+          default-class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
   </roles>
  
   <components>
