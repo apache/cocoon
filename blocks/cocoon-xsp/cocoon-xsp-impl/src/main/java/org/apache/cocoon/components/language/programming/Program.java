@@ -19,7 +19,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.core.container.handler.ComponentHandler;
+import org.apache.cocoon.xsp.handler.ComponentHandler;
 
 /**
  * This interface states the functionality of a program.
