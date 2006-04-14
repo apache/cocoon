@@ -20,8 +20,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -31,7 +29,6 @@ import org.apache.cocoon.components.flow.FlowHelper;
  *          14:00:24Z lgawron $
  */
 public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
-    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
     String docBase = "resource://org/apache/cocoon/template/jxtg/";
     String JX = "jx";
     Map flowContext = new HashMap();
@@ -61,10 +58,6 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
 
     public Map getFlowContext() {
         return this.flowContext;
-    }
-
-    protected Logger getLogger() {
-        return this.logger;
     }
 
     public void testGenerate() throws Exception {

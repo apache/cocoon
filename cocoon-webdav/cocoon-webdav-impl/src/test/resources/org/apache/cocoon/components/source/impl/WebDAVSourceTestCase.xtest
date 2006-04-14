@@ -19,7 +19,7 @@
  <roles>
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"
   />
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"

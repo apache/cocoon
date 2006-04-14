@@ -17,24 +17,12 @@
 
 <testcase>
  <roles>
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
-
   <role name="org.apache.cocoon.generation.GeneratorSelector"
         shorthand="generators"
-        default-class="org.apache.cocoon.core.container.StandaloneServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
  </roles>
 
  <components>
-  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
-   <parameter name="validate" value="false"/>
-   <parameter name="namespace-prefixes" value="false"/>
-   <parameter name="stop-on-warning" value="true"/>
-   <parameter name="stop-on-recoverable-error" value="true"/>
-   <parameter name="reuse-parsers" value="false"/>
-  </xml-parser>
-
   <generators logger="test">
    <component-instance class="org.apache.cocoon.generation.XMidiGenerator" name="midi"/>
   </generators>

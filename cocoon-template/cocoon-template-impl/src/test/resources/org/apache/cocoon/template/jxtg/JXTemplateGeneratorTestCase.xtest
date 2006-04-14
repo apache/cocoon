@@ -19,10 +19,11 @@
         <role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
         <role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/>
         <role name="org.apache.cocoon.components.expression.ExpressionCompilerSelector" shorthand="expression-compilers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
-        <role name="org.apache.cocoon.components.expression.ExpressionFactory" shorthand="expression-factory" default-class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
         <role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" shorthand="string-template-parsers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
     </roles>
     <components>
+        <component role="org.apache.cocoon.components.expression.ExpressionFactory" 
+                   class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
         <generators logger="test">
             <component-instance class="org.apache.cocoon.template.JXTemplateGenerator" name="jx"/>
         </generators>

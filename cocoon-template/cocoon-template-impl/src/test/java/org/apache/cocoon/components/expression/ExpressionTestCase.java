@@ -15,17 +15,10 @@
  */
 package org.apache.cocoon.components.expression;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.CocoonTestCase;
 
 public class ExpressionTestCase extends CocoonTestCase {
-    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
-
-    protected Logger getLogger() {
-        return this.logger;
-    }
 
     public void testContext() {
         ExpressionContext parentContext = new ExpressionContext();
