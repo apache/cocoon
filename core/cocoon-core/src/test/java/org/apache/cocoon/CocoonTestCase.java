@@ -25,8 +25,11 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;
 import org.apache.excalibur.source.impl.SourceResolverImpl;
 import org.apache.excalibur.source.impl.URLSourceFactory;
+import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.excalibur.xml.impl.JaxpParser;
 import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xmlizer.DefaultXMLizer;
+import org.apache.excalibur.xmlizer.XMLizer;
 
 /**
  * Testcase for Cocoon. 
@@ -66,6 +69,7 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             component.setDefaultValue("*");
             component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);
+            info.getShorthands().put("source-factories", SourceFactory.ROLE + "Selector");
         }
         if ( this.addSourceResolver() ) {
             ComponentInfo component = new ComponentInfo();
@@ -78,6 +82,20 @@ public abstract class CocoonTestCase extends ContainerTestCase {
             ComponentInfo component = new ComponentInfo();
             component.setComponentClassName(JaxpParser.class.getName());
             component.setRole(SAXParser.ROLE);
+            component.setConfiguration(new DefaultConfiguration("-"));
+            info.addComponent(component);            
+        }
+        if ( this.addDOMParser() ) {
+            ComponentInfo component = new ComponentInfo();
+            component.setComponentClassName(JaxpParser.class.getName());
+            component.setRole(DOMParser.ROLE);
+            component.setConfiguration(new DefaultConfiguration("-"));
+            info.addComponent(component);            
+        }
+        if ( this.addXMLizer() ) {
+            ComponentInfo component = new ComponentInfo();
+            component.setComponentClassName(DefaultXMLizer.class.getName());
+            component.setRole(XMLizer.ROLE);
             component.setConfiguration(new DefaultConfiguration("-"));
             info.addComponent(component);            
         }
@@ -107,6 +125,24 @@ public abstract class CocoonTestCase extends ContainerTestCase {
      * default is true.
      */
     protected boolean addSAXParser() {
+        return true;
+    }
+
+    /**
+     * This method should return true if the dom parser should
+     * be added automatically. Can be overwritten by subclasses. The
+     * default is true.
+     */
+    protected boolean addDOMParser() {
+        return true;
+    }
+
+    /**
+     * This method should return true if the xmlizer should
+     * be added automatically. Can be overwritten by subclasses. The
+     * default is true.
+     */
+    protected boolean addXMLizer() {
         return true;
     }
 }

@@ -17,8 +17,6 @@ package org.apache.cocoon.components.accessor;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.SitemapComponentTestCase;
@@ -28,11 +26,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 
 public class AccessorTestCase extends SitemapComponentTestCase {
-    private Logger logger = new ConsoleLogger(ConsoleLogger.LEVEL_WARN);
-
-    protected Logger getLogger() {
-        return this.logger;
-    }
 
     public void testRequestAccessor() throws ServiceException {
         ServiceSelector accessorSelector =
