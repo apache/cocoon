@@ -440,10 +440,9 @@ public class ConfigReader extends AbstractLogEnabled {
     protected final void configureRoles( final Configuration configuration )
     throws ConfigurationException {
         final Configuration[] roles = configuration.getChildren();
-
         for( int i = 0; i < roles.length; i++ ) {
-            Configuration role = roles[i];
-            
+            final Configuration role = roles[i];
+
             if (!"role".equals(role.getName())) {
                 throw new ConfigurationException("Unexpected '" + role.getName() + "' element at " + role.getLocation());
             }
