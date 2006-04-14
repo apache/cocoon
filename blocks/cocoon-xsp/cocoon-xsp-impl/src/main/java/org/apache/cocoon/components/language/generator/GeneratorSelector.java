@@ -33,8 +33,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
-import org.apache.cocoon.core.container.handler.ComponentHandler;
+import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
+import org.apache.cocoon.xsp.handler.ComponentHandler;
 
 /**
  * This interface is the common base of all Compiled Components.  This

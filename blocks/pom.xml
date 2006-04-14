@@ -75,7 +75,7 @@
 		<module>cocoon-portal</module>
 		<module>cocoon-profiler</module>
 		<module>cocoon-proxy</module>
-		<!-- module>cocoon-python</module -->
+		<module>cocoon-python</module>
 		<module>cocoon-qdox</module>
 		<module>cocoon-querybean</module>
 		<module>cocoon-repository</module>
@@ -91,7 +91,7 @@
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
-		<!-- module>cocoon-xsp</module -->
+		<module>cocoon-xsp</module>
 	</modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>

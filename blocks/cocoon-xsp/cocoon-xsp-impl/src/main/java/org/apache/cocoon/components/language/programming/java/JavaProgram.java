@@ -20,11 +20,11 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
-import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
-import org.apache.cocoon.core.container.handler.ComponentHandler;
+import org.apache.cocoon.core.container.spring.ComponentInfo;
+import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
+import org.apache.cocoon.xsp.handler.ComponentHandler;
 
 /**
  * This represents program in Java language.
@@ -42,7 +42,7 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
         this.program = program;
         this.config = new DefaultConfiguration("", "GeneratorSelector");
         // Instruct the core to avoid proxying this class
-        this.config.setAttribute("model", ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED);
+        config.setAttribute("model", ComponentInfo.MODEL_POOLED);
     }
 
     public String getName() {

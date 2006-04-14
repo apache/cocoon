@@ -27,14 +27,14 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamFragment;
-import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
-import org.apache.cocoon.core.container.handler.ComponentHandler;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServerPagesGenerator;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
+import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
+import org.apache.cocoon.xsp.handler.ComponentHandler;
 
 /**
  * Allows actions to be written in XSP. This allows to use XSP to produce

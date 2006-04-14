@@ -49,6 +49,11 @@
       <version>3.1.0</version>
     </dependency>
     <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+    <dependency>
       <groupId>excalibur-datasource</groupId>
       <artifactId>excalibur-datasource</artifactId>
       <version>2.1</version>
@@ -58,6 +63,13 @@
           <groupId>d-haven-managed-pool</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>sun.jdk</groupId>
+      <artifactId>tools</artifactId>
+      <version>1.4.0</version>
+      <scope>system</scope>
+      <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
   </dependencies>
 </project>
