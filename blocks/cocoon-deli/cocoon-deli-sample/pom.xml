@@ -35,7 +35,7 @@
   <version>1.0-SNAPSHOT</version>
     
   <packaging>jar</packaging>
-  <name>deli Block Samples</name>
+  <name>Deli Block Samples</name>
   <description></description>
   
   <dependencies>
@@ -45,5 +45,4 @@
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
-
 </project>
