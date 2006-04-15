@@ -18,7 +18,7 @@
     | @version $Id$
     |
     +-->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-jms</artifactId>
@@ -47,10 +47,8 @@
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.2</version>
     </dependency>
-    <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-jms</artifactId>
-      <version>1.1-rc3</version>
-    </dependency>
+    <groupId>org.apache.geronimo.specs</groupId>
+    <artifactId>geronimo-jms_1.1_spec</artifactId>
+    <version>1.0</version>
   </dependencies>
 </project>

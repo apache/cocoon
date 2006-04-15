@@ -18,7 +18,7 @@
     | @version $Id$
     |
     +-->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-poi</artifactId>
@@ -40,7 +40,7 @@
     <dependency>
       <groupId>poi</groupId>
       <artifactId>poi</artifactId>
-      <version>2.5.1</version>
+      <version>2.5.1-final-20040804</version>
     </dependency>
   </dependencies>
 </project>
