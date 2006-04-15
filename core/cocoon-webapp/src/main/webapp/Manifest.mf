@@ -4,6 +4,7 @@ Created-By: 1.4.2_06-b03 (Sun Microsystems Inc.)
 Bundle-Name: cocoon_webapp
 Bundle-SymbolicName: org.apache.cocoon:cocoon_webapp:1.0.0
 Bundle-Version: 1.0.0
+Service-Component: META-INF/components.xml
 Bundle-Description: Cocoon webapp
 Bundle-Vendor: Apache
 Bundle-DocURL: http://cocoon.apache.org
