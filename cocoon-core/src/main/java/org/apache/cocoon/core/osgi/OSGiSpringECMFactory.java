@@ -17,10 +17,14 @@ package org.apache.cocoon.core.osgi;
 
 import java.beans.PropertyEditor;
 import java.net.URL;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
@@ -29,13 +33,19 @@ import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.Context;
 import org.apache.excalibur.store.Store;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 
 /**
  * The @link {@link OSGiSpringECMFactory} gives access to all Spring beans via the 
@@ -54,6 +64,7 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
     private Logger logger;
 	private Settings settings;
 	private ConfigurableListableBeanFactory beanFactory;
+    private ComponentContext componentContext;
 
 	protected Settings getSettings() {
 		return this.settings;
@@ -75,6 +86,7 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 	 * TODO (DF/RP) move activation into a seperate thread
 	 */
 	protected void activate(ComponentContext componentContext) throws Exception {
+        this.componentContext = componentContext;
 		URL manifestUrl = componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
 		String contextPath = manifestUrl.toString();
 		contextPath = manifestUrl.toString().substring(0, contextPath.length() - (MANIFEST_FILE.length() - 1));
@@ -103,11 +115,142 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 		ConfigurableListableBeanFactory rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
 		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
 		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
-				null, rootBeanFactory, true);
+				null, rootBeanFactory, false, false);
+        this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
+        this.beanFactory.preInstantiateSingletons();
 		Store store = (Store) beanFactory.getBean(Store.ROLE);
 		this.logger.debug("Store: " + store);
     }
-	
+    
+    protected void deactivate(ComponentContext componentContext) {
+        this.beanFactory.destroySingletons();
+    }
+    
+    public static String getServiceInterface(String role) {
+        int pos = role.indexOf('/');
+        
+        return pos == -1 ? role : role.substring(0, pos);
+    }
+    
+    public static String getServiceHint(String role) {
+        int pos = role.indexOf('/');
+        return pos == -1 ? null : role.substring(pos+1);
+    }
+    
+    private class ServiceRegistrationPostProcessor implements DestructionAwareBeanPostProcessor {
+        private static final String HINT_PROPERTY = "component.hint";
+        private BundleContext bundleContext =
+            OSGiSpringECMFactory.this.componentContext.getBundleContext();
+        /** Mapping from service instance to ServiceReference */
+        private Map serviceRegistrations = new HashMap();
+        
+        public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
+            if (isServiceSelector(bean)) {
+                info("ServiceSelector destruction: ", bean, beanName);                
+            } else if (isSingleton(beanName)) {
+                synchronized (this) {
+                    ServiceRegistration registration =
+                        (ServiceRegistration) this.serviceRegistrations.remove(beanName);
+                    if (registration != null)
+                        registration.unregister();
+                }
+                info("Singleton destruction: ", bean, beanName);
+            } else if (isFactoryBean(bean)) {
+                synchronized (this) {
+                    ServiceRegistration registration =
+                        (ServiceRegistration) this.serviceRegistrations.remove(beanName);
+                    if (registration != null)
+                        registration.unregister();
+                }
+                info("Factory bean destruction: ", bean, beanName);
+            } else {
+                info("========= destruction: ", bean, beanName);                
+            }
+        }
+
+        public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+            String itfName = getServiceInterface(beanName);
+            String hint = getServiceHint(beanName);
+            Dictionary properties = null;
+            if (hint != null) {
+                properties = new Hashtable();
+                properties.put(HINT_PROPERTY, hint);
+            }
+            if (isServiceSelector(bean)) {
+                // TODO implement
+                info("ServiceSelector initialization: ", bean, beanName);                
+            } else if (isSingleton(beanName)) {
+                // register the bean into the OSGi service registry
+                logger.debug("Register interface=" + itfName + " hint=" + hint + " service=" + bean);
+                ServiceRegistration registration =
+                    this.bundleContext.registerService(itfName, bean, properties);
+                synchronized (this) {
+                    // keep track on registred services
+                    this.serviceRegistrations.put(beanName, registration);
+                }
+                info("Singleton initialization: ", bean, beanName);
+            } else if (isFactoryBean(bean)) {
+                Object service = new FactoryBeanServiceFactory((FactoryBean) bean);
+                ServiceRegistration registration =
+                    this.bundleContext.registerService(beanName, service, properties);
+                synchronized (this) {
+                    // keep track on registred services
+                    this.serviceRegistrations.put(beanName, registration);
+                }
+                info("Factory bean initialization: ", bean, beanName);
+            } else {
+                // TODO some kind of proxy or factory is needed for components that
+                // are not singletons
+                info("========= initialization: ", bean, beanName);                
+            }
+            return bean;
+        }
+
+        public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+            return bean;
+        }
+        
+        public boolean isFactoryBean(Object bean) {
+            return bean instanceof FactoryBean;
+        }
+        
+        public boolean isServiceSelector(Object bean) {
+            return bean instanceof ServiceSelector;
+        }
+        
+        private void info(String info, Object bean, String beanName) {
+            Class beanClass = getType(beanName);
+            logger.debug(info + beanName +
+                    " singleton=" + isSingleton(beanName) +
+                    " beanFactory=" + isFactoryBean(bean) +
+                    " class=" + beanClass);
+        }
+        
+        // Embed a Spring FactoryBean as an OSGi ServiceFactory 
+        public class FactoryBeanServiceFactory implements ServiceFactory {
+            private FactoryBean factoryBean;
+            
+            public FactoryBeanServiceFactory(FactoryBean factoryBean) {
+                this.factoryBean = factoryBean;
+            }
+
+            public Object getService(Bundle bundle, ServiceRegistration registration) {
+                try {
+                    // FIXME the OSGi contracts require IIUC, that the returned object is
+                    // a singleton that can be cached, don't know if this is fullfilled.
+                    return this.factoryBean.getObject();
+                } catch (Exception e) {
+                    throw new RuntimeException("Cannot get service", e);
+                }
+            }
+
+            // The FactoryBean have no method for returning the bean to the manager
+            public void ungetService(Bundle bundle, ServiceRegistration registration, Object service) {
+                
+            }
+        }
+    }
+    
 	// ~~~~~~~~~~~~~~~ delegating to this.beanFactory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 
 	/**	
