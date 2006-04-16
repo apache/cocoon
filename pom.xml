@@ -235,7 +235,7 @@
         <configuration>
           <address>dev@cocoon.apache.org</address>
         </configuration>
-      <notifier>
+      </notifier>
     </notifiers>
   </ciManagement>
   <mailingLists>
