@@ -219,16 +219,23 @@
   </issueManagement>
   <ciManagement>
     <system>continuum</system>
-    <url>http://cocoon.zones.apache.org:8080/continuum/servlet/continuum</url>
+    <url>http://cocoon.zones.apache.org:12000/continuum/servlet/continuum</url>
     <notifiers>
       <notifier>
         <type>irc</type>
         <configuration>
+          <!-- make sure channel has /mode -n for this to work -->
           <host>irc.freenode.net</host>
           <port>6667</port>
           <channel>#cocoon-ci</channel>
         </configuration>
       </notifier>
+      <notifier>
+        <type>mail</type>
+        <configuration>
+          <address>dev@cocoon.apache.org</address>
+        </configuration>
+      <notifier>
     </notifiers>
   </ciManagement>
   <mailingLists>
