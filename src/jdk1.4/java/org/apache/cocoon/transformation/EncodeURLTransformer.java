@@ -31,7 +31,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -108,13 +107,13 @@ public class EncodeURLTransformer
      * Configuration default exclude pattern,
      * ie img/@src
      */
-    public final static String EXCLUDE_NAME_DEFAULT = "img/@src";
+    public final static String EXCLUDE_NAME_DEFAULT = "img/@src=.*";
 
     /**
      * Configuration default exclude pattern,
      * ie .*\/@href|.*\/@action|frame/@src
      */
-    public final static String INCLUDE_NAME_DEFAULT = ".*/@href|.*/@action|frame/@src";
+    public final static String INCLUDE_NAME_DEFAULT = ".*/@href=.*|.*/@action=.*|frame/@src=.*";
 
     private String includeNameConfigure = INCLUDE_NAME_DEFAULT;
     private String excludeNameConfigure = EXCLUDE_NAME_DEFAULT;
