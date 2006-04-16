@@ -27,19 +27,12 @@
     <artifactId>cocoon-blocks-modules</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
-  
   <modelVersion>4.0.0</modelVersion>
-  
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-scratchpad</artifactId>
-  <version>1-SNAPSHOT</version>
-    
   <packaging>pom</packaging>
-  
-  <name>scratchpad Block</name>
-
-  <description></description>
-  
+  <name>Scratchpad Block</name>
+  <version>1-SNAPSHOT</version>
   <modules>
     <module>cocoon-scratchpad-impl</module>
     <module>cocoon-scratchpad-sample</module>
