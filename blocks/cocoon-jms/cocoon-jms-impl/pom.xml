@@ -29,7 +29,7 @@
   <artifactId>cocoon-jms-impl</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Jms Block</name>
+  <name>Jms Block Implementation</name>
   <description/>
   <dependencies>
     <dependency>
@@ -47,8 +47,10 @@
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.2</version>
     </dependency>
-    <groupId>org.apache.geronimo.specs</groupId>
-    <artifactId>geronimo-jms_1.1_spec</artifactId>
-    <version>1.0</version>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jms_1.1_spec</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
 </project>
