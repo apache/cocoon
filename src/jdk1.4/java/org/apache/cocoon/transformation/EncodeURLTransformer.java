@@ -107,13 +107,13 @@ public class EncodeURLTransformer
      * Configuration default exclude pattern,
      * ie img/@src
      */
-    public final static String EXCLUDE_NAME_DEFAULT = "img/@src=.*";
+    public final static String EXCLUDE_NAME_DEFAULT = "img/@src=";
 
     /**
      * Configuration default exclude pattern,
      * ie .*\/@href|.*\/@action|frame/@src
      */
-    public final static String INCLUDE_NAME_DEFAULT = ".*/@href=.*|.*/@action=.*|frame/@src=.*";
+    public final static String INCLUDE_NAME_DEFAULT = ".*/@href=|.*/@action=|frame/@src=";
 
     private String includeNameConfigure = INCLUDE_NAME_DEFAULT;
     private String excludeNameConfigure = EXCLUDE_NAME_DEFAULT;
@@ -395,7 +395,7 @@ public class EncodeURLTransformer
          *   false.
          */
         private boolean matchesExcludesElementAttribute(String element_attr_name) {
-            boolean match = excludeNameRE.matcher(element_attr_name).matches();
+            boolean match = excludeNameRE.matcher(element_attr_name).lookingAt();
             return match;
         }
 
@@ -408,7 +408,7 @@ public class EncodeURLTransformer
          *   false.
          */
         private boolean matchesIncludesElementAttribute(String element_attr_name) {
-            boolean match = includeNameRE.matcher(element_attr_name).matches();
+            boolean match = includeNameRE.matcher(element_attr_name).lookingAt();
             return match;
         }
     }
