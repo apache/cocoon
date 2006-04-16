@@ -47,8 +47,16 @@
       <version>2.1</version>
       <exclusions>
         <exclusion>
-          <artifactId>d-haven-managed-pool</artifactId>
           <groupId>d-haven-managed-pool</groupId>
+          <artifactId>d-haven-managed-pool</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-javamail</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-jms</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
