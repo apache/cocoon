@@ -73,7 +73,12 @@ public final class HttpContext extends AbstractContext {
             if (value == null) {
                 // Try to figure out the path of the root from that of WEB-INF
                 try {
-                value = this.servletContext.getResource("/WEB-INF/web.xml").toString();
+                    URL webXml = this.servletContext.getResource("/WEB-INF/web.xml");
+                    // In some contexts there might not be any web.xml, then we stop
+                    // guessing an just return null, which follows the servlet specification
+                    if (webXml == null)
+                        return null;
+                    value = webXml.toString();
                 } catch (MalformedURLException mue) {
                     throw new ContextURLException("Cannot determine the base URL for " + path, mue);
                 }
