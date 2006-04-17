@@ -32,7 +32,7 @@
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-lucene-sample</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
     
   <packaging>jar</packaging>
   <name>lucene Block Samples</name>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-lucene-impl</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
