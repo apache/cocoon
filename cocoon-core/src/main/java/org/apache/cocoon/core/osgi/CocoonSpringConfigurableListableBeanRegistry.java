@@ -15,15 +15,16 @@
  */
 package org.apache.cocoon.core.osgi;
 
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * Another interface needed to be introduced because Equinox hat some problems with
- * the name @link {@link BeanFactory} because of some introspection
+ * the name @link {@link ConfigurableListableBeanFactory} because of some introspection
  * done on all classes that end on "Factory".
  * 
  * @version $Id$
  */
-public interface CocoonSpringBeanRegistry extends BeanFactory {
+public interface CocoonSpringConfigurableListableBeanRegistry
+extends CocoonSpringBeanRegistry, ConfigurableListableBeanFactory {
 
 }

@@ -16,15 +16,19 @@
 package org.apache.cocoon.core.osgi;
 
 import java.beans.PropertyEditor;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
@@ -49,13 +53,14 @@ import org.springframework.beans.factory.config.DestructionAwareBeanPostProcesso
 
 /**
  * The @link {@link OSGiSpringECMFactory} gives access to all Spring beans via the 
- * {@link CocoonSpringBeanRegistry} interface which extends the @link {@link ConfigurableListableBeanFactory}. 
+ * {@link CocoonSpringConfigurableListableBeanRegistry} interface which extends 
+ * the @link {@link ConfigurableListableBeanFactory}. 
  * 
  * Additionally it exposes all beans as OSGi services.
  * 
  * @version $Id$
  */
-public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
+public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBeanRegistry {
 	
 	private static final String MANIFEST_FILE = "/META-INF/MANIFEST.MF";
 
@@ -65,6 +70,9 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 	private Settings settings;
 	private ConfigurableListableBeanFactory beanFactory;
     private ComponentContext componentContext;
+    // FIXME there should not be any need for a parentBeanFactory in this class as
+    // the wrapped class contains it
+    private BeanFactory parentBeanfactory;
 
 	protected Settings getSettings() {
 		return this.settings;
@@ -82,12 +90,54 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 		this.logger = logger;
 	}
 	
-	/*
+    // FIXME Added as there is a problem using methods with argument type ending with
+    // Factory in Equinox DS
+    public void setParentBeanFactory(CocoonSpringBeanRegistry factory) {
+        this.parentBeanfactory = factory;
+    }
+
+    /*
 	 * TODO (DF/RP) move activation into a seperate thread
 	 */
 	protected void activate(ComponentContext componentContext) throws Exception {
         this.componentContext = componentContext;
-		URL manifestUrl = componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
+        
+        // if the logger and setter hasn't been injected look for them in the
+        // parent bean factory if there is one
+        if (this.logger == null && this.parentBeanfactory != null) {
+            this.logger = (Logger) this.parentBeanfactory.getBean(ProcessingUtil.LOGGER_ROLE);
+        }
+        if (this.settings == null && this.parentBeanfactory != null) {
+            this.settings = (Settings) this.parentBeanfactory.getBean(ProcessingUtil.SETTINGS_ROLE);
+        }
+        
+		AvalonEnvironment avalonEnvironment = this.createAvalonEnvironment();
+		
+		// get the configuration file property
+		String configFile= (String) this.componentContext.getProperties().get(CONFIG_FILE);
+		if(configFile == null) {
+			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
+		}
+		if (this.parentBeanfactory == null)
+		    this.parentBeanfactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
+		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
+		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
+				null, this.parentBeanfactory, false, false);
+        this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
+        this.beanFactory.preInstantiateSingletons();
+        // What is this for?
+		//Store store = (Store) beanFactory.getBean(Store.ROLE);
+		//this.logger.debug("Store: " + store);
+    }
+
+    /**
+     * create an Avalon environment (it's some kind of container for Avalon related information)
+     * @return the Avalon environment
+     * @throws ServletException
+     * @throws MalformedURLException
+     */
+    private AvalonEnvironment createAvalonEnvironment() throws ServletException, MalformedURLException {
+        URL manifestUrl = this.componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
 		String contextPath = manifestUrl.toString();
 		contextPath = manifestUrl.toString().substring(0, contextPath.length() - (MANIFEST_FILE.length() - 1));
 		
@@ -105,40 +155,14 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 		avalonEnvironment.logger = this.logger;	
 		avalonEnvironment.settings = this.settings;
 		avalonEnvironment.servletContext = osgiServletContext;
-		
-		// get the configuration file property
-		String configFile= (String) componentContext.getProperties().get(CONFIG_FILE);
-		if(configFile == null) {
-			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
-		}
-		
-		ConfigurableListableBeanFactory rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
-		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
-		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
-				null, rootBeanFactory, false, false);
-        this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
-        this.beanFactory.preInstantiateSingletons();
-		Store store = (Store) beanFactory.getBean(Store.ROLE);
-		this.logger.debug("Store: " + store);
+        return avalonEnvironment;
     }
     
     protected void deactivate(ComponentContext componentContext) {
         this.beanFactory.destroySingletons();
     }
     
-    public static String getServiceInterface(String role) {
-        int pos = role.indexOf('/');
-        
-        return pos == -1 ? role : role.substring(0, pos);
-    }
-    
-    public static String getServiceHint(String role) {
-        int pos = role.indexOf('/');
-        return pos == -1 ? null : role.substring(pos+1);
-    }
-    
     private class ServiceRegistrationPostProcessor implements DestructionAwareBeanPostProcessor {
-        private static final String HINT_PROPERTY = "component.hint";
         private BundleContext bundleContext =
             OSGiSpringECMFactory.this.componentContext.getBundleContext();
         /** Mapping from service instance to ServiceReference */
@@ -169,12 +193,12 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
         }
 
         public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-            String itfName = getServiceInterface(beanName);
-            String hint = getServiceHint(beanName);
+            String itfName = OSGiSpringBridge.getServiceInterface(beanName);
+            String hint = OSGiSpringBridge.getServiceHint(beanName);
             Dictionary properties = null;
             if (hint != null) {
                 properties = new Hashtable();
-                properties.put(HINT_PROPERTY, hint);
+                properties.put(OSGiSpringBridge.HINT_PROPERTY, hint);
             }
             if (isServiceSelector(bean)) {
                 // TODO implement
@@ -202,6 +226,14 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
                 // TODO some kind of proxy or factory is needed for components that
                 // are not singletons
                 info("========= initialization: ", bean, beanName);                
+            }
+            String[] aliases = getAliases(beanName);
+            if (aliases.length > 0) {
+                System.out.print("ALIAS " + beanName + "[ ");
+                for (int i = 0; i < aliases.length; i++) {
+                    System.out.print(aliases[i] + " ");
+                }
+                System.out.println("]");
             }
             return bean;
         }
@@ -493,9 +525,4 @@ public class OSGiSpringECMFactory implements CocoonSpringBeanRegistry {
 	public void setParentBeanFactory(BeanFactory arg0) {
 		this.beanFactory.setParentBeanFactory(arg0);
 	}
-
-	public Object getBeanFromReinhard(String name) {
-		return this.getBean(name);
-	}
-
 }
