@@ -22,7 +22,7 @@
       bind="setLogger"/>    
   </scr:component>
   
-  <scr:component name="org.apache.cocoon.core.osgi.SpringEcmFactory">
+  <scr:component name="org.apache.cocoon.core.osgi.SpringEcmFactory" immediate="true">
     <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
     <scr:property name="configFile" value="/META-INF/xconf/cocoon.xconf"/>
     <scr:service>
@@ -45,6 +45,7 @@
     <scr:property name="sitemapPath" value="/COB-INF/sitemap.xmap"/>            
     <scr:reference name="beanFactory"
       interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      target="(component.name=org.apache.cocoon.core.osgi.SpringEcmFactory)"
       bind="setBeanFactory"/>         
   </scr:component>  
   
