@@ -15,15 +15,21 @@
  */
 package org.apache.cocoon.blocks;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.service.log.LogService;
@@ -80,10 +86,27 @@ public class Activator {
     protected void deactivate(ComponentContext context) {
     }
     
-    private void registerServlet(String path, ServiceReference reference)
+    private void registerServlet(String path, final ServiceReference reference)
         throws ServletException, NamespaceException {
         Servlet servlet = (Servlet) this.context.locateService("Servlet", reference);
-        this.httpService.registerServlet(path, servlet, null, null);
+        
+        // Create a context that resolves resources in the bundle context where
+        // the servlet origins from
+        HttpContext httpContext = new HttpContext() {
+            private Bundle bundle = reference.getBundle();
+            public boolean handleSecurity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+                return true;
+            }
+
+            public URL getResource(String name) {
+                return this.bundle.getEntry(name);
+            }
+
+            public String getMimeType(String name) {
+                return null;
+            }
+        };
+        this.httpService.registerServlet(path, servlet, null, httpContext);
         this.log.log(LogService.LOG_DEBUG, "Register Servlet at " + path);    
     }
 
