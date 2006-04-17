@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2006 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+
+  <!-- A parent BeanFactory that provides services from other bundles as beans -->
+  <scr:component name="org.apache.cocoon.webapp.SpringBridge">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringBridge"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
+    </scr:service>    
+  </scr:component>
+  
+  <!-- A BeanFactory that manages the beans of this bundle and provide them as services -->
+  <scr:component name="org.apache.cocoon.webapp.SpringEcmFactory">
+    <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
+    <scr:property name="configFile" value="/META-INF/xconf/webapp.xconf"/>
+    <scr:service>
+      <scr:provide interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"/>
+    </scr:service>    
+    <scr:reference name="parent"
+      interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      target="(component.name=org.apache.cocoon.webapp.SpringBridge)"
+      bind="setParentBeanFactory"/>      
+  </scr:component>  
+
+  <!-- The SitemapServlet of this bundle -->
+  <scr:component name="org.apache.cocoon.webapp.SitemapServlet">
+    <scr:implementation class="org.apache.cocoon.sitemap.SitemapServlet"/>  
+    <scr:service>
+      <scr:provide interface="javax.servlet.Servlet"/>
+    </scr:service>    
+    <scr:property name="path" value="/cocoon-webapp"/>
+    <scr:property name="sitemapPath" value="/src/main/webapp/sitemap.xmap"/>            
+    <scr:reference name="beanFactory"
+      interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
+      target="(component.name=org.apache.cocoon.webapp.SpringEcmFactory)"
+      bind="setBeanFactory"/>         
+  </scr:component>  
+
+</components>
