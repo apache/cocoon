@@ -43,8 +43,7 @@
   
   <modules>
     <module>blocks</module>
-    <!--
-    <module>commons</module-->
+    <module>commons</module>
     <module>core</module>
     <module>tools</module>
     
