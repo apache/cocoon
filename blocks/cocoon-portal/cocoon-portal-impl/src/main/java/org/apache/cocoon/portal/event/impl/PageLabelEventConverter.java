@@ -115,11 +115,4 @@ public class PageLabelEventConverter extends AbstractLogEnabled
             map.remove(encode);
         }
     }
-
-    /**
-     * @see org.apache.cocoon.portal.event.EventConverter#finish()
-     */
-    public void finish() {
-        // nothing to do         
-    }
 }

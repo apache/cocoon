@@ -34,6 +34,10 @@ public class LayoutFeatures {
      * about maximized layouts. */
     protected static final String ATTRIBUTE_MAXMIZEDINFO = LayoutFeatures.class.getName() + "/maximized-info";
 
+    /** This is the name of the temporary layout attribute containing the information
+     * about the selected tab (as index or name). */
+    public static final String ATTRIBUTE_TAB = "tab";
+
     public static final class RenderInfo {
         public final Layout layout;
         public final Item   item;

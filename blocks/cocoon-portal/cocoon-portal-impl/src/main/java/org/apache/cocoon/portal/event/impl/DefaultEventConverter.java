@@ -19,12 +19,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEvent;
@@ -39,6 +41,9 @@ import org.apache.cocoon.util.HashUtil;
  * support the {@link org.apache.cocoon.portal.event.ConvertableEvent} interface) in
  * the current user session. Each event is then converted to a string just containing
  * the index of the event in this list. This list is cleared when the session is closed.
+ *
+ * In addition, this component can be configured with additional event converters
+ * that convert a specific event.
  *
  * TODO - What happens if two event classes have the same hash?
  *
@@ -61,6 +66,9 @@ public class DefaultEventConverter
      */
     protected Map factories = new HashMap();
 
+    /** All configured event converters. */
+    protected Map converters = new HashMap();
+
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -75,8 +83,41 @@ public class DefaultEventConverter
             final String hashKey = Long.toString(hash);
             this.factories.put(hashKey, key);
             this.factories.put(key, c);
-            
         }
+        Configuration[] helpers = config.getChild("converters").getChildren("converter");
+        for( int i=0; i<helpers.length; i++) {
+            final Configuration current = helpers[i];
+            final String role = current.getAttribute("role");
+            final String eventClass = current.getAttribute("event-class");
+            final String name = current.getAttribute("name", null);
+            try {
+                final EventConverter converter = (EventConverter)this.manager.lookup(role);
+                final long hash = HashUtil.hash(eventClass);
+                final String hashKey = Long.toString(hash);
+                if ( name != null ) {
+                    this.factories.put(name, converter);
+                    this.factories.put(hashKey, name);                    
+                } else {
+                    this.factories.put(hashKey, converter);                    
+                }
+                this.converters.put(eventClass, converter);
+            } catch (ServiceException e) {
+                throw new ConfigurationException("Unable to lookup event converter: " + role, e);
+            }
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.impl.AbstractComponent#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            final Iterator i = this.converters.values().iterator();
+            while ( i.hasNext() ) {
+                this.manager.release(i.next());
+            }
+        }
+        super.dispose();
     }
 
     protected Constructor getConstructor(String factory) {
@@ -94,26 +135,34 @@ public class DefaultEventConverter
      * @see org.apache.cocoon.portal.event.EventConverter#encode(org.apache.cocoon.portal.event.Event)
      */
     public String encode(Event event) {
+        final String eventClassName = event.getClass().getName();
+        String data = null;
+        // first check if we have a converter registered for this event
+        EventConverter registeredConverter = (EventConverter)this.converters.get(eventClassName);
+        if ( registeredConverter != null ) {
+            data = registeredConverter.encode(event);
+        }
         // if this is a convertable event just return
         // the used factory and the data.
-        if ( event instanceof ConvertableEvent ) {
-            final String data = ((ConvertableEvent)event).asString();
-            // check if *this* event is convertable
-            if ( data != null ) {
-                final String factory = event.getClass().getName();
-                final long hash = HashUtil.hash(factory);
-                final String hashKey = Long.toString(hash);
-                Object o = this.factories.get(hashKey);
-                if ( o == null ) {
-                    final Constructor c = this.getConstructor(factory);
-                    this.factories.put(hashKey, c);
-                    o = c;
-                }
-                if ( o instanceof Constructor ) {
-                    return hashKey + ':' + data;
-                }
-                return o.toString() + ':' + data;
+        if ( data == null && event instanceof ConvertableEvent ) {
+            data = ((ConvertableEvent)event).asString();
+        }
+        // check if *this* event is convertable
+        if ( data != null ) {
+            final long hash = HashUtil.hash(eventClassName);
+            final String hashKey = Long.toString(hash);
+            Object o = this.factories.get(hashKey);
+            if ( o == null ) {
+                final Constructor c = this.getConstructor(eventClassName);
+                this.factories.put(hashKey, c);
+                o = c;
             }
+            if ( o instanceof Constructor ) {
+                return hashKey + ':' + data;
+            } else if ( o instanceof EventConverter ) {
+                return hashKey + ':' + data;
+            }
+            return o.toString() + ':' + data;
         }
         List list = (List)this.portalService.getAttribute(EVENT_LIST);
         if ( null == list ) {
@@ -139,16 +188,14 @@ public class DefaultEventConverter
                 final String hashKey = value.substring(0, pos);
                 final String data = value.substring(pos+1);
                 Object o = this.factories.get(hashKey);
-                Constructor c;
-                // if the value is a constructor we simply use it
+                // if the value is a constructor or an event converter we simply use it
                 // if the value is a string we simply use this string
-                // to lookup the constructor (another lookup in the map).
-                if ( o instanceof Constructor) {
-                    c = (Constructor)o;
-                } else {
-                   c = (Constructor)this.factories.get(o);
+                // to lookup the constructor/event converter (another lookup in the map).
+                if ( o instanceof String ) {
+                    o = this.factories.get(o);
                 }
-                if ( c != null ) {
+                if ( o instanceof Constructor) {
+                    Constructor c = (Constructor)o;
                     try {
                         return (Event)c.newInstance(new Object[] {this.portalService, data});
                     } catch (InstantiationException ie) {
@@ -161,6 +208,9 @@ public class DefaultEventConverter
                         iae.printStackTrace();
                         // we ignore this                    
                     }
+                } else if ( o instanceof EventConverter ) {
+                    EventConverter converter = (EventConverter)o;
+                    return converter.decode(data);
                 }
             }
             List list = (List)this.portalService.getAttribute(EVENT_LIST);
@@ -172,19 +222,5 @@ public class DefaultEventConverter
             }
         }
         return null;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.event.EventConverter#start()
-     */
-    public void start() {
-        // nothing to do
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.event.EventConverter#finish()
-     */
-    public void finish() {
-        // nothing to do
     }
 }

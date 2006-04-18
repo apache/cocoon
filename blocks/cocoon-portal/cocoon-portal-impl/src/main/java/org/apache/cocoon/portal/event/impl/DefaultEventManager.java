@@ -171,14 +171,10 @@ public class DefaultEventManager
         try {
             converter = (EventConverter) this.manager.lookup(EventConverter.ROLE);
 
-            converter.start();
-
             // Invoke aspects
             context.setObjectModel(this.getObjectModel());
             context.setEventConverter(converter);
             context.invokeNext( this.portalService );
-
-            converter.finish();
 
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup component.", ce);

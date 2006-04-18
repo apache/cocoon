@@ -42,14 +42,4 @@ public interface EventConverter {
      * @return The event or null 
      */
     Event decode(String value);
-
-    /**
-     * This notifies the converter that a new event processing phase starts.
-     */
-    void start();
-
-    /**
-     * This notifies the converter that an event processing phase ends.
-     */
-    void finish();
 }
