@@ -18,6 +18,7 @@ package org.apache.cocoon.components.accessor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -104,7 +105,7 @@ public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadS
                 return accessor.getObject();
             } catch (ServiceException e) {
                 // FIXME: Don't know if this is the appropriate action
-                throw new RuntimeException("Trying to access non existing acessor: " +
+                throw new CascadingRuntimeException("Trying to access non existing acessor: " +
                                            accessorName, e);
             } finally {
                 accessorSelector.release(accessor);
