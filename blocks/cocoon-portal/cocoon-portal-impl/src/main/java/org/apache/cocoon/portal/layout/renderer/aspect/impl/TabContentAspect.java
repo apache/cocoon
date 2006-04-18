@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -107,8 +108,6 @@ import org.xml.sax.SAXException;
 public class TabContentAspect 
     extends CompositeContentAspect {
 
-    public static final String TAB_TEMPORARY_ATTRIBUTE_NAME = "tab";
-
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
@@ -127,11 +126,11 @@ public class TabContentAspect
                 XMLUtils.startElement(handler, config.tagName);
             }
 
-            AttributesImpl attributes = new AttributesImpl();
-            CompositeLayout tabLayout = (CompositeLayout) layout;
+            final AttributesImpl attributes = new AttributesImpl();
+            final CompositeLayout tabLayout = (CompositeLayout) layout;
 
             // selected tab
-            String selectedTabName = (String)layout.getTemporaryAttribute(TAB_TEMPORARY_ATTRIBUTE_NAME);
+            String selectedTabName = (String)layout.getTemporaryAttribute(LayoutFeatures.ATTRIBUTE_TAB);
             int selectedTabIndex = 0;
             if ( selectedTabName != null && !config.useNames) {
                 selectedTabIndex = Integer.valueOf(selectedTabName).intValue();
@@ -161,13 +160,8 @@ public class TabContentAspect
                 if ( selected ) {
                     attributes.addCDATAAttribute("selected", "true");
                 }
-                final String eventData;
-                if ( config.useNames ) {
-                    eventData = ((NamedItem)tab).getName();
-                } else {
-                    eventData = String.valueOf(j);
-                }
-                final LayoutChangeParameterEvent event = new LayoutChangeParameterEvent(tabLayout, TAB_TEMPORARY_ATTRIBUTE_NAME, eventData, true);
+                final LayoutChangeParameterEvent event;
+                event = new ChangeTabEvent(tab, config.useNames);
                 attributes.addCDATAAttribute("parameter", service.getLinkService().getLinkURI(event)); 
 
                 // add parameters
@@ -242,17 +236,8 @@ public class TabContentAspect
                         subNav = true;
                     }
                     attributes.addCDATAAttribute("name", ((NamedItem) tab).getName());
-                    final String eventData;
-                    if ( config.useNames ) {
-                        eventData = ((NamedItem) tab).getName();
-                    } else {
-                        eventData = String.valueOf(j);
-                    }
-                    final LayoutChangeParameterEvent event = 
-                                      new LayoutChangeParameterEvent(tabLayout,
-                                                                     TAB_TEMPORARY_ATTRIBUTE_NAME,
-                                                                     eventData,
-                                                                     true);
+                    final LayoutChangeParameterEvent event;
+                    event = new ChangeTabEvent(tab, config.useNames);
                     List events = new ArrayList(parentEvents);
                     events.add(event);
 
