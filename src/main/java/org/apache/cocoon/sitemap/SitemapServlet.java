@@ -128,6 +128,11 @@ public class SitemapServlet extends HttpServlet {
     		HttpServletResponse res) throws IOException  {
     	
 		String uri = req.getPathInfo();
+		if(uri != null) {
+			uri = uri.substring(1);
+		} else {
+			uri = "";
+		}
 
 		String formEncoding = req.getParameter("cocoon-form-encoding");
 		if (formEncoding == null) {
