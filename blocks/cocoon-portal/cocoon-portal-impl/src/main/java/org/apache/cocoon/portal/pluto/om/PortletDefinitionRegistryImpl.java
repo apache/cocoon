@@ -76,6 +76,7 @@ public class PortletDefinitionRegistryImpl
 
     private static final String WEB_XML = "WEB-INF/web.xml";
     private static final String PORTLET_XML = "WEB-INF/portlet.xml";
+    private static final String COPLET_XML = "WEB-INF/coplet.xml";
 
     /** The mapping */
     public static final String PORTLET_MAPPING = "resource://org/apache/cocoon/portal/pluto/om/portletdefinitionmapping.xml";
@@ -97,9 +98,12 @@ public class PortletDefinitionRegistryImpl
     protected String contextName;
 
     /** The entity resolver */
-    protected EntityResolver resolver;
+    protected EntityResolver entityResolver;
 
+    /** Path to the webapp directory containing all web apps. This is used to find already
+     * deployed portlets and to deploy new portlets. */
     protected String  webAppDir;
+
     protected String  localAppDir  = "conf/portlets";
     protected boolean stripLoggers = false;
 
@@ -137,7 +141,7 @@ public class PortletDefinitionRegistryImpl
     public void service(ServiceManager manager) 
     throws ServiceException {
         super.service(manager);
-        this.resolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
+        this.entityResolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
     }
 
     /**
@@ -158,8 +162,8 @@ public class PortletDefinitionRegistryImpl
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release(this.resolver);
-            this.resolver = null;
+            this.manager.release(this.entityResolver);
+            this.entityResolver = null;
         }
         super.dispose();
     }
@@ -336,17 +340,16 @@ public class PortletDefinitionRegistryImpl
             portletSource.setSystemId(url.toExternalForm());
 
             url = servletContext.getResource("/" + WEB_XML);
-            InputSource webSource = null;
-            if (url != null) {
-                webSource = new InputSource(url.openStream());
-                webSource.setSystemId(url.toExternalForm());
-            }
-            else {
-                webSource = new InputSource();
-                webSource.setSystemId("no web.xml!");
-            }
+            final InputSource webSource = new InputSource(url.openStream());
+            webSource.setSystemId(url.toExternalForm());
 
-            this.load(portletSource, webSource, this.contextName);
+            url = servletContext.getResource("/" + COPLET_XML);
+            InputSource copletSource = null;
+            if ( url != null ) {
+                copletSource = new InputSource(url.openStream());
+                copletSource.setSystemId(url.toExternalForm());                
+            }
+            this.load(portletSource, webSource, copletSource, this.contextName);
         }
     }
 
@@ -355,23 +358,28 @@ public class PortletDefinitionRegistryImpl
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Searching war " + warFile.getName());
         }
-        InputSource portletSource;
-        InputSource webSource;
         try {
             ZipFile war = new ZipFile(warFile);
             ZipEntry entry = war.getEntry(PORTLET_XML);
+            // no portlet.xml -> not a portlet web application
             if (entry != null) {
-                portletSource = new InputSource(war.getInputStream(entry));
+                final InputSource portletSource = new InputSource(war.getInputStream(entry));
                 portletSource.setSystemId("/" + PORTLET_XML);
                 entry = war.getEntry(WEB_XML);
-                if (entry != null) {
-                    webSource = new InputSource(war.getInputStream(entry));
-                    webSource.setSystemId("/" + WEB_XML);
-                } else {
-                    webSource = new InputSource();
-                    webSource.setSystemId("no web.xml!");
+                // no web.xml -> not a web application
+                if (entry == null) {
+                    return;
                 }
-                this.load(portletSource, webSource, webModule);
+                final InputSource webSource = new InputSource(war.getInputStream(entry));
+                webSource.setSystemId("/" + WEB_XML);
+
+                InputSource copletSource = null;
+                entry = war.getEntry(COPLET_XML);
+                if ( entry != null ) {
+                    copletSource = new InputSource(war.getInputStream(entry));
+                    copletSource.setSystemId("/" + COPLET_XML);                    
+                }
+                this.load(portletSource, webSource, copletSource, webModule);
             }
         } catch (Exception e) {
             if (this.getLogger().isDebugEnabled()) {
@@ -383,17 +391,16 @@ public class PortletDefinitionRegistryImpl
 
     protected void loadWebApp(String baseDir, String webModule)
     throws Exception {
-        String directory = baseDir + File.separatorChar + webModule + File.separatorChar + "WEB-INF" + File.separatorChar;
+        final String directory = baseDir + File.separatorChar + webModule + File.separatorChar + "WEB-INF";
         if (this.getLogger().isInfoEnabled()) {
             this.getLogger().info("Searching for portlet application in directory: " + directory);
         }
 
-        File portletXml = new File(directory + "portlet.xml");
-        File webXml = new File(directory + "web.xml");
-
-        // check for the porlet.xml. If there is no portlet.xml this is not a
-        // portlet application web module
-        if (portletXml.exists()) { // && (webXml.exists())) {
+        // check for the portlet.xml and web.xml. If there is no portlet.xml this is not a
+        // portlet application web module. If there is no web.xml this is not a web app.
+        final File portletXml = new File(directory + File.separatorChar + "portlet.xml");
+        final File webXml = new File(directory + File.separatorChar + "web.xml");
+        if (portletXml.exists()&& webXml.exists()) {
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Loading the following Portlet Applications XML files..." +
                     portletXml +
@@ -401,20 +408,32 @@ public class PortletDefinitionRegistryImpl
                     webXml);
             }
 
-            InputSource portletSource = new InputSource(new FileInputStream(portletXml));
+            final InputSource portletSource = new InputSource(new FileInputStream(portletXml));
             portletSource.setSystemId(portletXml.toURL().toExternalForm());
-            InputSource webSource = null;
 
+            // web.xml is optional
+            InputSource webSource = null;
             if (webXml.exists()) {
                 webSource = new InputSource(new FileInputStream(webXml));
                 webSource.setSystemId(webXml.toURL().toExternalForm());
             }
 
-            this.load(portletSource, webSource, webModule);
+            // coplet.xml is optional
+            final File copletXml = new File(directory + File.separatorChar + "coplet.xml");
+            InputSource copletSource = null;
+            if ( copletXml.exists() ) {
+                copletSource = new InputSource(new FileInputStream(copletXml));
+                copletSource.setSystemId(copletXml.toURL().toExternalForm());    
+            }
+
+            this.load(portletSource, webSource, copletSource, webModule);
         }
     }
 
-    protected void load(InputSource portletXml, InputSource webXml, String webModule)
+    protected void load(InputSource portletXml,
+                        InputSource webXml,
+                        InputSource copletXml,
+                        String      webModule)
     throws Exception {
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Loading the following Portlet Applications XML files..." +
@@ -425,7 +444,7 @@ public class PortletDefinitionRegistryImpl
 
         Unmarshaller unmarshaller = new Unmarshaller(this.mappingPortletXml);
         unmarshaller.setIgnoreExtraElements(true);
-        unmarshaller.setEntityResolver(this.resolver);
+        unmarshaller.setEntityResolver(this.entityResolver);
         unmarshaller.setValidation(false);
         PortletApplicationDefinitionImpl portletApp =
             (PortletApplicationDefinitionImpl) unmarshaller.unmarshal(portletXml);
@@ -436,7 +455,7 @@ public class PortletDefinitionRegistryImpl
             this.getLogger().info("Loading web.xml...");
             unmarshaller = new Unmarshaller(this.mappingWebXml);
             unmarshaller.setIgnoreExtraElements(true);
-            unmarshaller.setEntityResolver(this.resolver);
+            unmarshaller.setEntityResolver(this.entityResolver);
             unmarshaller.setValidation(false);
             webApp = (WebApplicationDefinitionImpl) unmarshaller.unmarshal(webXml);
 
@@ -492,7 +511,9 @@ public class PortletDefinitionRegistryImpl
                 this.getLogger().info("Adding portlet '" + portlet.getId() + "'.");
             }
             if ( this.createCoplets ) {
+                // TODO - parse coplet.xml if available
                 final CopletBaseData cbd = pcm.getProfileManager().getCopletBaseData(this.copletBaseDataName);
+                // TODO - check portletId for invalid characters!
                 final CopletData cd = pcm.getCopletFactory().newInstance(cbd, portlet.getId().toString());
                 cd.setAttribute("portlet", portlet.getId().toString());
                 cd.setAttribute("buffer", Boolean.TRUE);

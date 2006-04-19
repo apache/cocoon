@@ -21,6 +21,7 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
 import org.apache.cocoon.portal.layout.Item;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
 
 /**
@@ -38,11 +39,10 @@ public class NewPageLabelEventConverter
      */
     public String encode(Event event) {
         if ( event instanceof ChangeTabEvent ) {
-            // TODO - populate tabs
             final Item item = ((ChangeTabEvent)event).getItem();
             final boolean useName = ((ChangeTabEvent)event).isUseName();
             if ( useName ) {
-                return ((NamedItem)item).getName();
+                return this.getPageLabel((NamedItem)item);
             } else {
                 return String.valueOf(item.getParent().getItems().indexOf(item));
             }
@@ -58,5 +58,26 @@ public class NewPageLabelEventConverter
             // TODO
         }
         return null;
+    }
+
+    protected String getPageLabel(NamedItem item) {
+        // first search parent
+        Layout layout = item.getParent();
+        NamedItem parent = null;
+        while ( parent == null && layout != null ) {
+            if ( layout.getParent() != null ) {
+                if ( layout.getParent() instanceof NamedItem ) {
+                    parent = (NamedItem)layout.getParent();
+                } else {
+                    layout = layout.getParent().getParent();
+                }
+            } else {
+                layout = null;
+            }
+        }
+        if ( parent != null ) {
+            return this.getPageLabel(parent) + '.' + item.getName();
+        }
+        return item.getName();
     }
 }
