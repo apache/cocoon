@@ -15,30 +15,19 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import java.util.Collections;
-import java.util.Enumeration;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.cocoon.CocoonTestCase;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
-import org.apache.cocoon.environment.mock.MockContext;
+import org.apache.cocoon.portal.AbstractPortalTestCase;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.impl.PortalServiceImpl;
-import org.apache.cocoon.servlet.CocoonServlet;
 
 /**
  * $Id$ 
  */
-public class DefaultEventManagerTestCase extends CocoonTestCase {
+public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
 
     protected DefaultEventManager eventManager;
 
@@ -50,57 +39,11 @@ public class DefaultEventManagerTestCase extends CocoonTestCase {
         this.eventManager = (DefaultEventManager)this.getBeanFactory().getBean(EventManager.ROLE);
     }
 
-    protected ServletConfig getServletConfig() {
-        return new ServletConfig() {
-
-            public String getInitParameter(String arg0) {
-                return null;
-            }
-
-            public Enumeration getInitParameterNames() {
-                return Collections.enumeration(Collections.EMPTY_LIST);
-            }
-
-            public ServletContext getServletContext() {
-                return new MockContext();
-            }
-
-            public String getServletName() {
-                return "cocoon";
-            }
-            
-        };
-    }
-
-    protected Configuration getPortalServiceConfig() {
-        DefaultConfiguration rootConfig = new DefaultConfiguration("component");
-        DefaultConfiguration portalConfig = new DefaultConfiguration("portal");
-        portalConfig.setAttribute("name", "portaltest");
-        rootConfig.addChild(portalConfig);
-        rootConfig.makeReadOnly();
-        return rootConfig;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.container.ContainerTestCase#addContext(org.apache.avalon.framework.context.DefaultContext)
-     */
-    protected void addContext(DefaultContext context) {
-        super.addContext(context);
-        context.put(CocoonServlet.CONTEXT_SERVLET_CONFIG, this.getServletConfig());
-    }
-
     /**
      * @see org.apache.cocoon.CocoonTestCase#addComponents(org.apache.cocoon.core.container.spring.ConfigurationInfo)
      */
     protected void addComponents(ConfigurationInfo info) throws Exception {
         super.addComponents(info);
-        // Add portal service
-        final ComponentInfo portalServiceInfo = new ComponentInfo();
-        portalServiceInfo.setComponentClassName(PortalServiceImpl.class.getName());
-        portalServiceInfo.setRole(PortalService.ROLE);
-        portalServiceInfo.setConfiguration(this.getPortalServiceConfig());
-        info.addComponent(portalServiceInfo);
-
         // Add event manager
         final ComponentInfo component = new ComponentInfo();
         component.setComponentClassName(DefaultEventManager.class.getName());
@@ -110,16 +53,145 @@ public class DefaultEventManagerTestCase extends CocoonTestCase {
     }
 
     public void testEventReceiver() throws Exception {
-        EventReceiver1 receiver = new EventReceiver1();
+        EventReceiver receiver = new EventReceiver();
         this.eventManager.subscribe(receiver);
         assertEquals(0, receiver.receiveCount);
         this.eventManager.send(new Event1());
         assertEquals(1, receiver.receiveCount);
         this.eventManager.send(new Event1());
         assertEquals(2, receiver.receiveCount);
+        this.eventManager.send(new Event2());
+        assertEquals(3, receiver.receiveCount);
+        this.eventManager.send(new Event3());
+        assertEquals(4, receiver.receiveCount);
     }
 
-    public static final class EventReceiver1 implements Receiver {
+    public void testMultipleEventReceivers() throws Exception {
+        EventReceiver receiver = new EventReceiver();
+        EventReceiver1 receiver1 = new EventReceiver1();
+        EventReceiver2 receiver2 = new EventReceiver2();
+        EventReceiver3 receiver3 = new EventReceiver3();
+        this.eventManager.subscribe(receiver);
+        this.eventManager.subscribe(receiver1);
+        this.eventManager.subscribe(receiver2);
+        this.eventManager.subscribe(receiver3);
+        assertEquals(0, receiver.receiveCount);
+        assertEquals(0, receiver1.receiveCount);
+        assertEquals(0, receiver2.receiveCount);
+        assertEquals(0, receiver3.receiveCount);
+
+        // each time we send an event we check all four receivers
+        this.eventManager.send(new Event1());
+        assertEquals(1, receiver.receiveCount);
+        assertEquals(1, receiver1.receiveCount);
+        assertEquals(0, receiver2.receiveCount);
+        assertEquals(0, receiver3.receiveCount);
+
+        this.eventManager.send(new Event1());
+        assertEquals(2, receiver.receiveCount);
+        assertEquals(2, receiver1.receiveCount);
+        assertEquals(0, receiver2.receiveCount);
+        assertEquals(0, receiver3.receiveCount);
+
+        this.eventManager.send(new Event2());
+        assertEquals(3, receiver.receiveCount);
+        assertEquals(2, receiver1.receiveCount);
+        assertEquals(1, receiver2.receiveCount);
+        assertEquals(0, receiver3.receiveCount);
+
+        this.eventManager.send(new Event3());
+        assertEquals(4, receiver.receiveCount);
+        assertEquals(2, receiver1.receiveCount);
+        assertEquals(1, receiver2.receiveCount);
+        assertEquals(1, receiver3.receiveCount);
+
+        this.eventManager.send(new Event11());
+        assertEquals(5, receiver.receiveCount);
+        assertEquals(3, receiver1.receiveCount);
+        assertEquals(1, receiver2.receiveCount);
+        assertEquals(1, receiver3.receiveCount);
+
+        this.eventManager.send(new Event12());
+        assertEquals(6, receiver.receiveCount);
+        assertEquals(4, receiver1.receiveCount);
+        assertEquals(1, receiver2.receiveCount);
+        assertEquals(1, receiver3.receiveCount);
+    }
+
+    public void testSimpleHierarchicalEventReceiver() throws Exception {
+        EventReceiver10 receiver = new EventReceiver10();
+        this.eventManager.subscribe(receiver);
+        assertEquals(0, receiver.receiveCount11 + receiver.receiveCount12);
+
+        this.eventManager.send(new Event1());
+        assertEquals(0, receiver.receiveCount11 + receiver.receiveCount12);
+
+        this.eventManager.send(new Event2());
+        assertEquals(0, receiver.receiveCount11 + receiver.receiveCount12);
+
+        this.eventManager.send(new Event3());
+        assertEquals(0, receiver.receiveCount11 + receiver.receiveCount12);
+
+        this.eventManager.send(new Event11());
+        assertEquals(1, receiver.receiveCount11);
+        assertEquals(0, receiver.receiveCount12);
+
+        this.eventManager.send(new Event12());
+        assertEquals(1, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+
+        this.eventManager.send(new Event11());
+        assertEquals(2, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+
+        this.eventManager.send(new Event1());
+        assertEquals(2, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+    }
+
+    public void testHierarchicalEventReceiver() throws Exception {
+        EventReceiver10Full receiver = new EventReceiver10Full();
+        this.eventManager.subscribe(receiver);
+        assertEquals(0, receiver.receiveCount11 + receiver.receiveCount12);
+        assertEquals(0, receiver.receiveCount);
+
+        this.eventManager.send(new Event1());
+        assertEquals(1, receiver.receiveCount);
+        assertEquals(0, receiver.receiveCount11);
+        assertEquals(0, receiver.receiveCount12);
+
+        this.eventManager.send(new Event2());
+        assertEquals(2, receiver.receiveCount);
+        assertEquals(0, receiver.receiveCount11);
+        assertEquals(0, receiver.receiveCount12);
+
+        this.eventManager.send(new Event3());
+        assertEquals(3, receiver.receiveCount);
+        assertEquals(0, receiver.receiveCount11);
+        assertEquals(0, receiver.receiveCount12);
+
+        this.eventManager.send(new Event11());
+        assertEquals(4, receiver.receiveCount);
+        assertEquals(1, receiver.receiveCount11);
+        assertEquals(0, receiver.receiveCount12);
+
+        this.eventManager.send(new Event12());
+        assertEquals(5, receiver.receiveCount);
+        assertEquals(1, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+
+        this.eventManager.send(new Event11());
+        assertEquals(6, receiver.receiveCount);
+        assertEquals(2, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+
+        this.eventManager.send(new Event1());
+        assertEquals(7, receiver.receiveCount);
+        assertEquals(2, receiver.receiveCount11);
+        assertEquals(1, receiver.receiveCount12);
+    }
+
+    public static final class EventReceiver implements Receiver {
 
         public int receiveCount;
 
@@ -128,7 +200,83 @@ public class DefaultEventManagerTestCase extends CocoonTestCase {
         }
     }
 
+    public static final class EventReceiver1 implements Receiver {
+
+        public int receiveCount;
+
+        public void inform(Event1 event, PortalService service) {
+            receiveCount++;
+        }
+    }
+
+    public static final class EventReceiver2 implements Receiver {
+
+        public int receiveCount;
+
+        public void inform(Event2 event, PortalService service) {
+            receiveCount++;
+        }
+    }
+
+    public static final class EventReceiver3 implements Receiver {
+
+        public int receiveCount;
+
+        public void inform(Event3 event, PortalService service) {
+            receiveCount++;
+        }
+    }
+
+    public static final class EventReceiver10 implements Receiver {
+
+        public int receiveCount11;
+        public int receiveCount12;
+
+        public void inform(Event11 event, PortalService service) {
+            receiveCount11++;
+        }
+
+        public void inform(Event12 event, PortalService service) {
+            receiveCount12++;
+        }
+    }
+
+    public static final class EventReceiver10Full implements Receiver {
+
+        public int receiveCount;
+        public int receiveCount11;
+        public int receiveCount12;
+
+        public void inform(Event event, PortalService service) {
+            receiveCount++;
+        }
+
+        public void inform(Event11 event, PortalService service) {
+            receiveCount11++;
+        }
+
+        public void inform(Event12 event, PortalService service) {
+            receiveCount12++;
+        }
+    }
+
     public static class Event1 implements Event {
+        // dummy event
+    }
+
+    public static class Event2 implements Event {
+        // dummy event
+    }
+
+    public static class Event3 implements Event {
+        // dummy event
+    }
+
+    public static class Event11 extends Event1 {
+        // dummy event
+    }
+
+    public static class Event12 extends Event1 {
         // dummy event
     }
 }
