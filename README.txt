@@ -51,7 +51,7 @@ HOW TO START THE COCOON WEBAPP
   Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
   repositories are temporarily unaccessible and cause the build to fail.
 
-1. go to cocoon-webapp
+1. go to core/cocoon-webapp
   $ mvn cocoon:deploy
   $ mvn jetty6:run
 
