@@ -23,7 +23,6 @@ import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  *
@@ -130,5 +129,10 @@ public interface Processor {
     /** FIXME - Remove this and use ProcessingUtil. */
     BeanFactory getBeanFactory();
 
+    /**
+     * Get the parent processor (if any).
+     * @return The parent processor or null.
+     * @since 2.2
+     */
     Processor getParent();
 }
