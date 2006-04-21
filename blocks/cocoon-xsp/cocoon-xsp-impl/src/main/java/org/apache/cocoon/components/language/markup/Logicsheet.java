@@ -59,7 +59,7 @@ public class Logicsheet extends AbstractLogEnabled
     /**
      * the template namespace's list
      */
-    protected Map namespaceURIs = new HashMap();
+    protected Map namespaceURIs = null;
 
     /**
      * The ServiceManager of this instance.
@@ -71,30 +71,14 @@ public class Logicsheet extends AbstractLogEnabled
      */
     private LogicsheetFilter filter;
 
-    public Logicsheet(Source source, ServiceManager manager,
-                      SourceResolver resolver, LogicsheetFilter filter)
-        throws SAXException, IOException, ProcessingException
-    {
-        this.resolver = resolver;
-        this.systemId = source.getURI();
-        this.manager = manager;
-        this.filter = filter;
-    }
-
     public Logicsheet(String systemId, ServiceManager manager,
                       SourceResolver resolver, LogicsheetFilter filter)
         throws SAXException, IOException, SourceException, ProcessingException
     {
-        this.resolver = resolver;
+        this.systemId = systemId;
         this.manager = manager;
+        this.resolver = resolver;
         this.filter = filter;
-        Source source = null;
-        try {
-            source = this.resolver.resolveURI( systemId );
-            this.systemId = source.getURI();
-        } finally {
-            this.resolver.release( source );
-        }
     }
 
     /**
@@ -129,14 +113,21 @@ public class Logicsheet extends AbstractLogEnabled
     }
 
     /**
-     * This will return the list of namespaces in this logicsheet.
+     * This will return the list of namespaces in this logicsheet,
+     * or null, if fillNamespaceURIs has not been called yet.
      */
-    public Map getNamespaceURIs() throws ProcessingException
+    public Map getNamespaceURIs()
     {
-        // Force the parsing of the Source or, if nothing changed,
-        // return the old content of namespaces.
-        getTransformerHandler();
         return namespaceURIs;
+    }
+
+    /**
+     * Fill the list of namespaces in this logicsheet.
+     */
+    public void fillNamespaceURIs() throws ProcessingException
+    {
+        // Force the parsing of the Source which fills namespaceURIs.
+        getTransformerHandler();
     }
 
     /**
@@ -157,6 +148,8 @@ public class Logicsheet extends AbstractLogEnabled
             // getTransformerHandler() of XSLTProcessor will simply return
             // the old template object. If the Source is unchanged, the
             // namespaces are not modified either.
+            if (namespaceURIs == null)
+                namespaceURIs = new HashMap();
             filter.setNamespaceMap(namespaceURIs);
             return xsltProcessor.getTransformerHandler(source, filter);
 

@@ -176,11 +176,6 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
-    <action dev="AN" type="add">
-      XSP block: Use private methods to call start/endElement in xsp.xsl.
-      That generates smaller bytecode allowing to compiler larger XSPs before hitting the
-      64k limit for the size of the generate() method.
-    </action>
     <action dev="CZ" type="update">
       Removed obsolete support for JCS.
     </action>
