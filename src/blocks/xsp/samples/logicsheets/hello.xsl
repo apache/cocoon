@@ -26,8 +26,13 @@
   version="1.0"
   xmlns:xsp="http://apache.org/xsp"
   xmlns:xsp-hello="http://apache.org/xsp/hello/1.0"
+  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:template match="xsp-hello:get-name">
+    <xsp-request:get-parameter name="name"/>
+  </xsl:template>
+	
   <xsl:template match="xsp-hello:greeting">
     <xsl:variable name="name">
       <xsl:choose>

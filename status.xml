@@ -182,6 +182,16 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AN" type="fix">
+      XSP block: Fix regression introduced in 2.1.8 that under specific circumstances logicsheets
+      were not applied, leading to compilation errors.  This manifested itself only if
+      a) two XSPs referred to the same custom logicsheet by a relative location path,
+      b) the custom logicsheet used another logicsheet, and
+      c) the built-in logicsheet's namespace was not mentioned in xsp:page.
+      The compilation errors occurred always when calling the second XSP for the first time.
+      Fix also race condition which could lead to similar XSP compilation errors under high load
+      when accessing the same logicsheet for the first time.
+    </action>
     <action dev="CZ" type="fix">
       Template block: Make the template block usable with JDK 1.3+ and enable it by default.
     </action>
