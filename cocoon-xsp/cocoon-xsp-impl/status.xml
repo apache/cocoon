@@ -66,6 +66,21 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="AN" type="fix">
+      XSP block: Fix regression introduced in 2.1.8 that under specific circumstances logicsheets
+      were not applied, leading to compilation errors.  This manifested itself only if
+      a) two XSPs referred to the same custom logicsheet by a relative location path,
+      b) the custom logicsheet used another logicsheet, and
+      c) the built-in logicsheet's namespace was not mentioned in xsp:page.
+      The compilation errors occurred always when calling the second XSP for the first time.
+      Fix also race condition which could lead to similar XSP compilation errors under high load
+      when accessing the same logicsheet for the first time.
+    </action>
+    <action dev="AN" type="add">
+      XSP block: Use private methods to call start/endElement in xsp.xsl.
+      That generates smaller bytecode allowing to compiler larger XSPs before hitting the
+      64k limit for the size of the generate() method.
+    </action>
+    <action dev="AN" type="fix">
       XSP block: Reintroduce locally scoped xspAttr in xsp.xsl to improve backwards compatibility for pre-2.1.9
       logicsheets.  (Suggestion by Vadim Gritsenko).
     </action>
