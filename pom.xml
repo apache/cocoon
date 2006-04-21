@@ -157,6 +157,17 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>anathaniel</id>
+      <name>Alfred Nathaniel</name>
+      <email>anathaniel@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>giacomo</id>
       <name>Giacomo Pati</name>
       <email>giacomo@apache.org</email>

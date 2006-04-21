@@ -429,29 +429,49 @@ public abstract class AbstractMarkupLanguage
                                        String logicsheetLocation)
         throws IOException, SAXException, ProcessingException
     {
-        Logicsheet logicsheet = (Logicsheet)logicsheetCache.get(CACHE_PREFIX + logicsheetLocation);
-        if (logicsheet == null) {
-            Source inputSource = null;
-            try {
-                // Logicsheet is reusable (across multiple XSPs) object,
-                // and it is resolved via urlResolver, and not via per-request
-                // temporary resolver.
-                inputSource = this.resolver.resolveURI(logicsheetLocation);
+        Source inputSource = null;
+        String logicsheetName;
+        try {
+            // Logicsheet is reusable (across multiple XSPs) object,
+            // and it is resolved via urlResolver, and not via per-request
+            // temporary resolver.
+            // Resolve logicsheet location relative to sitemap from where it is used.
+            inputSource = this.resolver.resolveURI(logicsheetLocation);
+            logicsheetName = inputSource.getURI();
+        } catch (SourceException se) {
+            throw SourceUtil.handle(se);
+        } finally {
+            this.resolver.release( inputSource );
+        }
 
+        // Logicsheets are chained by looking at the namespaces on the xsl:stylesheet
+        // root node.  To get at these namespaces, the stylesheet must be parsed.
+        // Stylesheets are cached that we have only one chance to fill the namespaces.
+        // To avoid a race condition, we have to lock the critical section.
+        // For maximum concurrency we lock the cache, store if necessary the new,
+        // unparsed logicsheet, and then lock the logicsheet for the long-running
+        // parse operation.
+        
+        Logicsheet logicsheet;
+        synchronized (logicsheetCache) {
+            String cacheKey = CACHE_PREFIX + logicsheetName;
+            logicsheet = (Logicsheet)logicsheetCache.get(cacheKey);
+            if (logicsheet == null) {
                 // Resolver (local) could not be used as it is temporary
                 // (per-request) object, yet Logicsheet is being cached and reused
                 // across multiple requests. "Global" url-factory-based resolver
                 // passed to the Logicsheet.
-                logicsheet = new Logicsheet(inputSource, manager,
+                logicsheet = new Logicsheet(logicsheetName, manager,
                                             resolver, getLogicsheetFilter());
-                logicsheetCache.store(CACHE_PREFIX + logicsheet.getSystemId(), logicsheet);
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } finally {
-                this.resolver.release( inputSource );
+                logicsheetCache.store(cacheKey, logicsheet);
             }
         }
-        String logicsheetName = logicsheet.getSystemId();
+        
+        synchronized (logicsheet) {
+            Map namespaces = logicsheet.getNamespaceURIs();
+            if (namespaces == null)
+                logicsheet.fillNamespaceURIs();
+        }
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("addLogicsheetToList: "
@@ -471,7 +491,7 @@ public abstract class AbstractMarkupLanguage
 
         Map namespaces = logicsheet.getNamespaceURIs();
         if(!logicsheetLocation.equals(language.getLogicsheet())) {
-            if(namespaces != null && namespaces.size() > 0) {
+            if(namespaces.size() > 0) {
                 Iterator iter = namespaces.keySet().iterator();
                 while(iter.hasNext()) {
                     String namespace = (String) iter.next();

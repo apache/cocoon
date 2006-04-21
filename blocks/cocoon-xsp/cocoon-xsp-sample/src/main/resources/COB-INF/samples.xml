@@ -31,6 +31,9 @@
    <sample name="Logicsheet" href="java/logicsheet">
     Greetings page with logic separated into logicsheet.
    </sample>
+   <sample name="Logicsheet2" href="java/logicsheet2">
+    Different XSP using same logicsheet.
+   </sample>
    <sample name="Cacheable" href="java/cacheable">
     Cacheable XSP page.
    </sample>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,12 +17,9 @@
 
 <!-- CVS $Id$ -->
 
-<!-- XSP can be assotiated with the logicsheet using processing
-     instruction xml-logicsheet or the xsp:logicsheet element.
-     Do not use both methods!
-
-<?xml-logicsheet href="logicsheets/hello.xsl"?>
-
+<!-- Testcase for caching bug in 2.1.9:  same logicsheet used by different XSPs
+     and logicsheet call another logicsheet (here xsp-request) whose namespace
+     does not appear in the XSPs.
 -->
 
 <xsp:page language="java"
@@ -30,14 +27,6 @@
           xmlns:xsp-hello="http://apache.org/xsp/hello/1.0">
 
   <xsp:logicsheet location="logicsheets/hello.xsl"/>
-
-  <!-- Context URL also can be used:
-
-  <xsp:logicsheet location="context://samples/xsp/logicsheets/hello.xsl"/>
-
-     URL relative to the current sitemap CAN NOT be used, as 
-     logicsheet is the global object, shared between all sitemaps.
-  -->
 
   <page>
     <title>Greetings Page</title>
