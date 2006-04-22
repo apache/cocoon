@@ -52,22 +52,26 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
- *  This class is a utility class for miscellaneous DOM functions, like
- *  getting and setting values of nodes.
- *
+ * This class is a utility class for miscellaneous DOM functions, like getting
+ * and setting values of nodes.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @version $Id$
-*/
+ */
 public final class DOMUtil {
 
+    private static final String NULL_XPATH_IS_INVALID = "XPath is required.";
+
     /**
-     * Get the owner of the DOM document belonging to the node.
-     * This works even if the node is the document itself.
-     *
-     * @param node The node.
-     * @return     The corresponding document.
+     * Get the owner of the DOM document belonging to the node. This works even
+     * if the node is the document itself.
+     * 
+     * @param node
+     *            The node.
+     * @return The corresponding document.
      */
     public static Document getOwnerDocument(Node node) {
         if (node.getNodeType() == Node.DOCUMENT_NODE) {
@@ -78,18 +82,19 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node does not exist <CODE>null</CODE>
-     * is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @return     The value of the node or <CODE>null</CODE>
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node does not exist <CODE>null</CODE> is
+     * returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @return The value of the node or <CODE>null</CODE>
      */
-    public static String getValueOfNode(XPathProcessor processor, Node root, String path)
-        throws ProcessingException {
+    public static String getValueOfNode(XPathProcessor processor, Node root, String path) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException("Not a valid XPath: " + path);
+            throw new ProcessingException(NULL_XPATH_IS_INVALID);
         }
         if (root != null) {
             path = StringUtils.strip(path, "/");
@@ -98,25 +103,24 @@ public final class DOMUtil {
                 return getValueOfNode(node);
             }
         }
-       return null;
+        return null;
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node is not found
-     * the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue The default value if the node does not exist.
-     * @return     The value of the node or <CODE>defaultValue</CODE>
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node is not found the <CODE>defaultValue</CODE>
+     * is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            The default value if the node does not exist.
+     * @return The value of the node or <CODE>defaultValue</CODE>
      */
-    public static String getValueOfNode(
-        XPathProcessor processor,
-        Node root,
-        String path,
-        String defaultValue)
-        throws ProcessingException {
+    public static String getValueOfNode(XPathProcessor processor, Node root, String path, String defaultValue)
+            throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value == null)
             value = defaultValue;
@@ -125,18 +129,21 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @return     The boolean value of the node.
-     * @throws ProcessingException If the node is not found.
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @return The boolean value of the node.
+     * @throws ProcessingException
+     *             If the node is not found.
      */
     public static boolean getValueOfNodeAsBoolean(XPathProcessor processor, Node root, String path)
-        throws ProcessingException {
+            throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value == null) {
             throw new ProcessingException("No such node: " + path);
@@ -145,22 +152,22 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     * If the node does not exist, the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue Default boolean value.
-     * @return     The value of the node or <CODE>defaultValue</CODE>
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values. If the node does not exist,
+     * the <CODE>defaultValue</CODE> is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            Default boolean value.
+     * @return The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueOfNodeAsBoolean(XPathProcessor processor,
-                                                  Node root,
-                                                  String path,
-                                                  boolean defaultValue)
-    throws ProcessingException {
+    public static boolean getValueOfNodeAsBoolean(XPathProcessor processor, Node root, String path, boolean defaultValue)
+            throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
         if (value != null) {
             return BooleanUtils.toBoolean(value);
@@ -169,9 +176,9 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the value of the DOM node.
-     * The value of a node is the content of the first text node.
-     * If the node has no text nodes, <code>null</code> is returned.
+     * Get the value of the DOM node. The value of a node is the content of the
+     * first text node. If the node has no text nodes, <code>null</code> is
+     * returned.
      */
     public static String getValueOfNode(Node node) {
         if (node != null) {
@@ -195,25 +202,23 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the value of the node.
-     * The value of the node is the content of the first text node.
-     * If the node has no text nodes the <CODE>defaultValue</CODE> is
-     * returned.
+     * Get the value of the node. The value of the node is the content of the
+     * first text node. If the node has no text nodes the <CODE>defaultValue</CODE>
+     * is returned.
      */
     public static String getValueOfNode(Node node, String defaultValue) {
         return StringUtils.defaultString(getValueOfNode(node), defaultValue);
     }
 
     /**
-     * Set the value of the DOM node.
-     * All current children of the node are removed and a new text node
-     * with the value is appended.
+     * Set the value of the DOM node. All current children of the node are
+     * removed and a new text node with the value is appended.
      */
     public static void setValueOfNode(Node node, String value) {
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             node.setNodeValue(value);
         } else {
-            while (node.hasChildNodes() == true) {
+            while (node.hasChildNodes()) {
                 node.removeChild(node.getFirstChild());
             }
             node.appendChild(node.getOwnerDocument().createTextNode(value));
@@ -222,16 +227,16 @@ public final class DOMUtil {
 
     /** XML definition for a document */
     private static final String XML_DEFINITION = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
+
     private static final String XML_ROOT_DEFINITION = XML_DEFINITION + "<root>";
 
     /**
-     * Get a document fragment from a <code>Reader</code>.
-     * The reader must provide valid XML, but it is allowed that the XML
-     * has more than one root node. This xml is parsed by the
-     * specified parser instance and a DOM DocumentFragment is created.
+     * Get a document fragment from a <code>Reader</code>. The reader must
+     * provide valid XML, but it is allowed that the XML has more than one root
+     * node. This xml is parsed by the specified parser instance and a DOM
+     * DocumentFragment is created.
      */
-    public static DocumentFragment getDocumentFragment(SAXParser parser, Reader stream)
-        throws ProcessingException {
+    public static DocumentFragment getDocumentFragment(SAXParser parser, Reader stream) throws ProcessingException {
         DocumentFragment frag = null;
 
         Writer writer;
@@ -258,7 +263,7 @@ public final class DOMUtil {
             // now test if xml input start with <?xml
             String xml = writer.toString();
             String searchString = XML_ROOT_DEFINITION + "<?xml ";
-            if (xml.startsWith(searchString) == true) {
+            if (xml.startsWith(searchString)) {
                 // now remove the surrounding root element
                 xml = xml.substring(XML_ROOT_DEFINITION.length(), xml.length() - 7);
                 removeRoot = false;
@@ -288,7 +293,7 @@ public final class DOMUtil {
                 frag.appendChild(root);
             } else {
                 Node child;
-                while (root.hasChildNodes() == true) {
+                while (root.hasChildNodes()) {
                     child = root.getFirstChild();
                     root.removeChild(child);
                     frag.appendChild(child);
@@ -303,13 +308,11 @@ public final class DOMUtil {
     }
 
     /**
-     * Create a parameter object from xml.
-     * The xml is flat and consists of elements which all have exactly one text node:
-     * <parone>value_one<parone>
-     * <partwo>value_two<partwo>
-     * A parameter can occur more than once with different values.
-     * If <CODE>source</CODE> is not specified a new paramter object is created
-     * otherwise the parameters are added to source.
+     * Create a parameter object from xml. The xml is flat and consists of
+     * elements which all have exactly one text node: <parone>value_one<parone>
+     * <partwo>value_two<partwo> A parameter can occur more than once with
+     * different values. If <CODE>source</CODE> is not specified a new
+     * parameter object is created otherwise the parameters are added to source.
      */
     public static SourceParameters createParameters(Node fragment, SourceParameters source) {
         SourceParameters par = (source == null ? new SourceParameters() : source);
@@ -350,8 +353,8 @@ public final class DOMUtil {
     }
 
     /**
-     * Create a string from a DOM document fragment.
-     * Only the top level text nodes are chained together to build the text.
+     * Create a string from a DOM document fragment. Only the top level text
+     * nodes are chained together to build the text.
      */
     public static String createText(DocumentFragment fragment) {
         StringBuffer value = new StringBuffer();
@@ -376,10 +379,9 @@ public final class DOMUtil {
     }
 
     /**
-     * Compare all attributes of two elements.
-     * This method returns true only if both nodes have the same number of
-     * attributes and the same attributes with equal values.
-     * Namespace definition nodes are ignored
+     * Compare all attributes of two elements. This method returns true only if
+     * both nodes have the same number of attributes and the same attributes
+     * with equal values. Namespace definition nodes are ignored
      */
     public static boolean compareAttributes(Element first, Element second) {
         NamedNodeMap attr1 = first.getAttributes();
@@ -393,14 +395,14 @@ public final class DOMUtil {
         if (attr1Len > 0) {
             int l = attr1.getLength();
             for (int i = 0; i < l; i++) {
-                if (attr1.item(i).getNodeName().startsWith("xmlns:") == true)
+                if (attr1.item(i).getNodeName().startsWith("xmlns:"))
                     attr1Len--;
             }
         }
         if (attr2Len > 0) {
             int l = attr2.getLength();
             for (int i = 0; i < l; i++) {
-                if (attr2.item(i).getNodeName().startsWith("xmlns:") == true)
+                if (attr2.item(i).getNodeName().startsWith("xmlns:"))
                     attr2Len--;
             }
         }
@@ -413,13 +415,13 @@ public final class DOMUtil {
         l2 = attr2.getLength();
         boolean ok = true;
         // each attribute of first must be in second with the same value
-        while (i < l && ok == true) {
+        while (i < l && ok) {
             value = attr1.item(i).getNodeName();
             if (value.startsWith("xmlns:") == false) {
                 ok = false;
                 m = 0;
                 while (m < l2 && ok == false) {
-                    if (attr2.item(m).getNodeName().equals(value) == true) {
+                    if (attr2.item(m).getNodeName().equals(value)) {
                         // same name, same value?
                         ok = attr1.item(i).getNodeValue().equals(attr2.item(m).getNodeValue());
                     }
@@ -433,11 +435,13 @@ public final class DOMUtil {
     }
 
     /**
-     * Implementation for <code>String</code> :
-     * outputs characters representing the value.
-     *
-     * @param parent The node getting the value
-     * @param text   the value
+     * Implementation for <code>String</code> : outputs characters
+     * representing the value.
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param text
+     *            the value
      */
     public static void valueOf(Node parent, String text) throws ProcessingException {
         if (text != null) {
@@ -446,11 +450,13 @@ public final class DOMUtil {
     }
 
     /**
-     * Implementation for <code>XMLizable</code> :
-     * outputs the value by calling <code>v.toSax(contentHandler)</code>.
-     *
-     * @param parent The node getting the value
-     * @param v the XML fragment
+     * Implementation for <code>XMLizable</code> : outputs the value by
+     * calling <code>v.toSax(contentHandler)</code>.
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param v
+     *            the XML fragment
      */
     public static void valueOf(Node parent, XMLizable v) throws ProcessingException {
         if (v != null) {
@@ -464,11 +470,13 @@ public final class DOMUtil {
     }
 
     /**
-     * Implementation for <code>org.w3c.dom.Node</code> :
-     * converts the Node to a SAX event stream.
-     *
-     * @param parent The node getting the value
-     * @param v the value
+     * Implementation for <code>org.w3c.dom.Node</code> : converts the Node to
+     * a SAX event stream.
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param v
+     *            the value
      */
     public static void valueOf(Node parent, Node v) throws ProcessingException {
         if (v != null) {
@@ -477,12 +485,14 @@ public final class DOMUtil {
     }
 
     /**
-     * Implementation for <code>java.util.Collection</code> :
-     * outputs the value by calling {@link #valueOf(Node, Object)} on each element of the
+     * Implementation for <code>java.util.Collection</code> : outputs the
+     * value by calling {@link #valueOf(Node, Object)} on each element of the
      * collection.
-     *
-     * @param parent The node getting the value
-     * @param v the XML fragment
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param v
+     *            the XML fragment
      */
     public static void valueOf(Node parent, Collection v) throws ProcessingException {
         if (v != null) {
@@ -494,20 +504,22 @@ public final class DOMUtil {
     }
 
     /**
-     * Implementation for <code>java.util.Map</code> :
-     * For each entry an element is created with the childs key and value
-     * Outputs the value and the key by calling {@link #valueOf(Node, Object)}
-     * on each value and key of the Map.
-     *
-     * @param parent The node getting the value
-     * @param v      the Map
+     * Implementation for <code>java.util.Map</code> : For each entry an
+     * element is created with the childs key and value Outputs the value and
+     * the key by calling {@link #valueOf(Node, Object)} on each value and key
+     * of the Map.
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param v
+     *            the Map
      */
     public static void valueOf(Node parent, Map v) throws ProcessingException {
         if (v != null) {
             Node mapNode = parent.getOwnerDocument().createElementNS(null, "java.util.map");
             parent.appendChild(mapNode);
-            for (Iterator iter = v.entrySet().iterator(); iter.hasNext(); ) {
-                Map.Entry me = (Map.Entry)iter.next();
+            for (Iterator iter = v.entrySet().iterator(); iter.hasNext();) {
+                Map.Entry me = (Map.Entry) iter.next();
 
                 Node entryNode = mapNode.getOwnerDocument().createElementNS(null, "entry");
                 mapNode.appendChild(entryNode);
@@ -526,13 +538,17 @@ public final class DOMUtil {
     /**
      * Implementation for <code>Object</code> depending on its class :
      * <ul>
-     * <li>if it's an array, call {@link #valueOf(Node, Object)} on all its elements,</li>
-     * <li>if it's class has a specific {@link #valueOf(Node, Object)} implementation, use it,</li>
+     * <li>if it's an array, call {@link #valueOf(Node, Object)} on all its
+     * elements,</li>
+     * <li>if it's class has a specific {@link #valueOf(Node, Object)}
+     * implementation, use it,</li>
      * <li>else, output it's string representation.</li>
      * </ul>
-     *
-     * @param parent The node getting the value
-     * @param v the value
+     * 
+     * @param parent
+     *            The node getting the value
+     * @param v
+     *            the value
      */
     public static void valueOf(Node parent, Object v) throws ProcessingException {
         if (v == null) {
@@ -580,20 +596,22 @@ public final class DOMUtil {
     }
 
     /**
-     * Use an XPath string to select a single node. XPath namespace
-     * prefixes are resolved from the context node, which may not
-     * be what you want (see the next method).
-     *
-     * @param contextNode The node to start searching from.
-     * @param str A valid XPath string.
-     * @param processor The XPath processor to use
+     * Use an XPath string to select a single node. XPath namespace prefixes are
+     * resolved from the context node, which may not be what you want (see the
+     * next method).
+     * 
+     * @param contextNode
+     *            The node to start searching from.
+     * @param str
+     *            A valid XPath string.
+     * @param processor
+     *            The XPath processor to use
      * @return The first node found that matches the XPath, or null.
-     *
+     * 
      * @throws TransformerException
      */
-    public static Node getSingleNode(Node contextNode, String str,
-                                     XPathProcessor processor)
-    throws TransformerException {
+    public static Node getSingleNode(Node contextNode, String str, XPathProcessor processor)
+            throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents == null) {
             return processor.selectSingleNode(contextNode, str);
@@ -603,16 +621,18 @@ public final class DOMUtil {
     }
 
     /**
-     * Use an XPath string to select a single node. XPath namespace
-     * prefixes are resolved from the context node, which may not
-     * be what you want (see the next method).
-     *
-     * @param contextNode The node to start searching from.
-     * @param str A valid XPath string.
+     * Use an XPath string to select a single node. XPath namespace prefixes are
+     * resolved from the context node, which may not be what you want (see the
+     * next method).
+     * 
+     * @param contextNode
+     *            The node to start searching from.
+     * @param str
+     *            A valid XPath string.
      * @return The first node found that matches the XPath, or null.
-     *
+     * 
      * @throws TransformerException
-     * @deprecated
+     * @deprecated. To be removed in 2.2.
      */
     public static Node getSingleNode(Node contextNode, String str) throws TransformerException {
         String[] pathComponents = buildPathArray(str);
@@ -625,38 +645,40 @@ public final class DOMUtil {
 
     /**
      * Return the <CODE>Node</CODE> from the DOM Node <CODE>rootNode</CODE>
-     * using the XPath expression <CODE>path</CODE>.
-     * If the node does not exist, it is created and then returned.
-     * This is a very simple method for creating new nodes. If the
-     * XPath contains selectors ([,,,]) or "*" it is of course not
-     * possible to create the new node. So if you use such XPaths
-     * the node must exist beforehand.
-     * An simple exception is if the expression contains attribute
-     * test to values (e.g. [@id = 'du' and @number = 'you'],
-     * the attributes with the given values are added. The attributes
-     * must be separated with 'and'.
-     * Another problem are namespaces: XPath requires sometimes selectors for
-     * namespaces, e.g. : /*[namespace-uri()="uri" and local-name()="name"]
-     * Creating such a node with a namespace is not possible right now as we use
-     * a very simple XPath parser which is not able to parse all kinds of selectors
-     * correctly.
-     *
-     * @param rootNode The node to start the search.
-     * @param path     XPath expression for searching the node.
-     * @return         The node specified by the path.
-     * @throws ProcessingException If no path is specified or the XPath engine fails.
-     * @deprecated
+     * using the XPath expression <CODE>path</CODE>. If the node does not
+     * exist, it is created and then returned. This is a very simple method for
+     * creating new nodes. If the XPath contains selectors ([,,,]) or "*" it is
+     * of course not possible to create the new node. So if you use such XPaths
+     * the node must exist beforehand. An simple exception is if the expression
+     * contains attribute test to values (e.g. [@id = 'du' and
+     * 
+     * @number = 'you'], the attributes with the given values are added. The
+     *         attributes must be separated with 'and'. Another problem are
+     *         namespaces: XPath requires sometimes selectors for namespaces,
+     *         e.g. : /*[namespace-uri()="uri" and local-name()="name"] Creating
+     *         such a node with a namespace is not possible right now as we use
+     *         a very simple XPath parser which is not able to parse all kinds
+     *         of selectors correctly.
+     * 
+     * @param rootNode
+     *            The node to start the search.
+     * @param path
+     *            XPath expression for searching the node.
+     * @return The node specified by the path.
+     * @throws ProcessingException
+     *             If no path is specified or the XPath engine fails.
+     * @deprecated To be removed in 2.2.
      */
     public static Node selectSingleNode(Node rootNode, String path) throws ProcessingException {
         // Now we have to parse the string
-        // First test:  path? rootNode?
+        // First test: path? rootNode?
         if (path == null) {
-            throw new ProcessingException("XPath is required.");
+            throw new ProcessingException(NULL_XPATH_IS_INVALID);
         }
         if (rootNode == null)
             return rootNode;
 
-        if (path.length() == 0 || path.equals("/") == true)
+        if (path.length() == 0 || path.equals("/"))
             return rootNode;
 
         // now the first "quick" test is if the node exists using the
@@ -666,12 +688,8 @@ public final class DOMUtil {
             if (testNode != null)
                 return testNode;
         } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException(
-                "Transforming exception during selectSingleNode with path: '"
-                    + path
-                    + "'. Exception: "
-                    + local,
-                local);
+            throw new ProcessingException("Transforming exception during selectSingleNode with path: '" + path
+                    + "'. Exception: " + local, local);
         }
         // Remove leading "/" on both ends
         path = StringUtils.strip(path, "/");
@@ -698,7 +716,7 @@ public final class DOMUtil {
             }
 
             // test for attribute spec
-            if (nodeName.startsWith("@") == true) {
+            if (nodeName.startsWith("@")) {
                 isAttribute = true;
             }
 
@@ -706,9 +724,8 @@ public final class DOMUtil {
             try {
                 singleNode = getSingleNode(parent, nodeName);
             } catch (javax.xml.transform.TransformerException localException) {
-                throw new ProcessingException(
-                    "XPathUtil.selectSingleNode: " + localException.getMessage(),
-                    localException);
+                throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(),
+                        localException);
             }
 
             // create node if necessary
@@ -721,26 +738,19 @@ public final class DOMUtil {
                     XPathExp = nodeName.substring(posSelect + 1, nodeName.length() - 1);
                     nodeName = nodeName.substring(0, posSelect);
                 }
-                if (isAttribute == true) {
+                if (isAttribute) {
                     try {
-                        newNode =
-                            getOwnerDocument(rootNode).createAttributeNS(
-                                null,
-                                nodeName.substring(1));
+                        newNode = getOwnerDocument(rootNode).createAttributeNS(null, nodeName.substring(1));
                         ((Element) parent).setAttributeNodeNS((org.w3c.dom.Attr) newNode);
                         parent = newNode;
                     } catch (DOMException local) {
-                        throw new ProcessingException(
-                            "Unable to create new DOM node: '" + nodeName + "'.",
-                            local);
+                        throw new ProcessingException("Unable to create new DOM node: '" + nodeName + "'.", local);
                     }
                 } else {
                     try {
                         newNode = getOwnerDocument(rootNode).createElementNS(null, nodeName);
                     } catch (DOMException local) {
-                        throw new ProcessingException(
-                            "Unable to create new DOM node: '" + nodeName + "'.",
-                            local);
+                        throw new ProcessingException("Unable to create new DOM node: '" + nodeName + "'.", local);
                     }
                     if (XPathExp != null) {
                         java.util.List attrValuePairs = new java.util.ArrayList(4);
@@ -749,12 +759,11 @@ public final class DOMUtil {
                         String attr;
                         String value;
                         // scan for attributes
-                        java.util.StringTokenizer tokenizer =
-                            new java.util.StringTokenizer(XPathExp, "= ");
-                        while (tokenizer.hasMoreTokens() == true) {
+                        StringTokenizer tokenizer = new StringTokenizer(XPathExp, "= ");
+                        while (tokenizer.hasMoreTokens()) {
                             attr = tokenizer.nextToken();
-                            if (attr.startsWith("@") == true) {
-                                if (tokenizer.hasMoreTokens() == true) {
+                            if (attr.startsWith("@")) {
+                                if (tokenizer.hasMoreTokens()) {
                                     value = tokenizer.nextToken();
                                     if (value.startsWith("'") && value.endsWith("'"))
                                         value = value.substring(1, value.length() - 1);
@@ -769,12 +778,10 @@ public final class DOMUtil {
                                 noError = false;
                             }
                         }
-                        if (noError == true) {
+                        if (noError) {
                             for (int l = 0; l < attrValuePairs.size(); l = l + 2) {
-                                ((Element) newNode).setAttributeNS(
-                                    null,
-                                    (String) attrValuePairs.get(l),
-                                    (String) attrValuePairs.get(l + 1));
+                                ((Element) newNode).setAttributeNS(null, (String) attrValuePairs.get(l),
+                                        (String) attrValuePairs.get(l + 1));
                             }
                         }
                     }
@@ -784,46 +791,48 @@ public final class DOMUtil {
             } else {
                 parent = singleNode;
             }
-        }
-        while (pos != -1);
+        } while (pos != -1);
         return parent;
     }
 
     /**
      * Return the <CODE>Node</CODE> from the DOM Node <CODE>rootNode</CODE>
-     * using the XPath expression <CODE>path</CODE>.
-     * If the node does not exist, it is created and then returned.
-     * This is a very simple method for creating new nodes. If the
-     * XPath contains selectors ([,,,]) or "*" it is of course not
-     * possible to create the new node. So if you use such XPaths
-     * the node must exist beforehand.
-     * An simple exception is if the expression contains attribute
-     * test to values (e.g. [@id = 'du' and @number = 'you'],
-     * the attributes with the given values are added. The attributes
-     * must be separated with 'and'.
-     * Another problem are namespaces: XPath requires sometimes selectors for
-     * namespaces, e.g. : /*[namespace-uri()="uri" and local-name()="name"]
-     * Creating such a node with a namespace is not possible right now as we use
-     * a very simple XPath parser which is not able to parse all kinds of selectors
-     * correctly.
-     *
-     * @param rootNode  The node to start the search.
-     * @param path      XPath expression for searching the node.
-     * @param processor The XPath processor to use
-     * @return          The node specified by the path.
-     * @throws ProcessingException If no path is specified or the XPath engine fails.
+     * using the XPath expression <CODE>path</CODE>. If the node does not
+     * exist, it is created and then returned. This is a very simple method for
+     * creating new nodes. If the XPath contains selectors ([,,,]) or "*" it is
+     * of course not possible to create the new node. So if you use such XPaths
+     * the node must exist beforehand. An simple exception is if the expression
+     * contains attribute test to values (e.g. [@id = 'du' and
+     * 
+     * @number = 'you'], the attributes with the given values are added. The
+     *         attributes must be separated with 'and'. Another problem are
+     *         namespaces: XPath requires sometimes selectors for namespaces,
+     *         e.g. : /*[namespace-uri()="uri" and local-name()="name"] Creating
+     *         such a node with a namespace is not possible right now as we use
+     *         a very simple XPath parser which is not able to parse all kinds
+     *         of selectors correctly.
+     * 
+     * @param rootNode
+     *            The node to start the search.
+     * @param path
+     *            XPath expression for searching the node.
+     * @param processor
+     *            The XPath processor to use
+     * @return The node specified by the path.
+     * @throws ProcessingException
+     *             If no path is specified or the XPath engine fails.
      */
     public static Node selectSingleNode(Node rootNode, String path, XPathProcessor processor)
-    throws ProcessingException {
+            throws ProcessingException {
         // Now we have to parse the string
-        // First test:  path? rootNode?
+        // First test: path? rootNode?
         if (path == null) {
-            throw new ProcessingException("XPath is required.");
+            throw new ProcessingException(NULL_XPATH_IS_INVALID);
         }
         if (rootNode == null)
             return rootNode;
 
-        if (path.length() == 0 || path.equals("/") == true)
+        if (path.length() == 0 || path.equals("/"))
             return rootNode;
 
         // now the first "quick" test is if the node exists using the
@@ -833,12 +842,8 @@ public final class DOMUtil {
             if (testNode != null)
                 return testNode;
         } catch (javax.xml.transform.TransformerException local) {
-            throw new ProcessingException(
-                "Transforming exception during selectSingleNode with path: '"
-                    + path
-                    + "'. Exception: "
-                    + local,
-                local);
+            throw new ProcessingException("Transforming exception during selectSingleNode with path: '" + path
+                    + "'. Exception: " + local, local);
         }
 
         // remove leading "/" oon both ends
@@ -866,7 +871,7 @@ public final class DOMUtil {
             }
 
             // test for attribute spec
-            if (nodeName.startsWith("@") == true) {
+            if (nodeName.startsWith("@")) {
                 isAttribute = true;
             }
 
@@ -874,9 +879,8 @@ public final class DOMUtil {
             try {
                 singleNode = getSingleNode(parent, nodeName, processor);
             } catch (javax.xml.transform.TransformerException localException) {
-                throw new ProcessingException(
-                    "XPathUtil.selectSingleNode: " + localException.getMessage(),
-                    localException);
+                throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(),
+                        localException);
             }
 
             // create node if necessary
@@ -889,26 +893,19 @@ public final class DOMUtil {
                     XPathExp = nodeName.substring(posSelect + 1, nodeName.length() - 1);
                     nodeName = nodeName.substring(0, posSelect);
                 }
-                if (isAttribute == true) {
+                if (isAttribute) {
                     try {
-                        newNode =
-                            getOwnerDocument(rootNode).createAttributeNS(
-                                null,
-                                nodeName.substring(1));
+                        newNode = getOwnerDocument(rootNode).createAttributeNS(null, nodeName.substring(1));
                         ((Element) parent).setAttributeNodeNS((org.w3c.dom.Attr) newNode);
                         parent = newNode;
                     } catch (DOMException local) {
-                        throw new ProcessingException(
-                            "Unable to create new DOM node: '" + nodeName + "'.",
-                            local);
+                        throw new ProcessingException("Unable to create new DOM node: '" + nodeName + "'.", local);
                     }
                 } else {
                     try {
                         newNode = getOwnerDocument(rootNode).createElementNS(null, nodeName);
                     } catch (DOMException local) {
-                        throw new ProcessingException(
-                            "Unable to create new DOM node: '" + nodeName + "'.",
-                            local);
+                        throw new ProcessingException("Unable to create new DOM node: '" + nodeName + "'.", local);
                     }
                     if (XPathExp != null) {
                         java.util.List attrValuePairs = new java.util.ArrayList(4);
@@ -917,12 +914,11 @@ public final class DOMUtil {
                         String attr;
                         String value;
                         // scan for attributes
-                        java.util.StringTokenizer tokenizer =
-                            new java.util.StringTokenizer(XPathExp, "= ");
-                        while (tokenizer.hasMoreTokens() == true) {
+                        java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(XPathExp, "= ");
+                        while (tokenizer.hasMoreTokens()) {
                             attr = tokenizer.nextToken();
-                            if (attr.startsWith("@") == true) {
-                                if (tokenizer.hasMoreTokens() == true) {
+                            if (attr.startsWith("@")) {
+                                if (tokenizer.hasMoreTokens()) {
                                     value = tokenizer.nextToken();
                                     if (value.startsWith("'") && value.endsWith("'"))
                                         value = value.substring(1, value.length() - 1);
@@ -937,12 +933,10 @@ public final class DOMUtil {
                                 noError = false;
                             }
                         }
-                        if (noError == true) {
+                        if (noError) {
                             for (int l = 0; l < attrValuePairs.size(); l = l + 2) {
-                                ((Element) newNode).setAttributeNS(
-                                    null,
-                                    (String) attrValuePairs.get(l),
-                                    (String) attrValuePairs.get(l + 1));
+                                ((Element) newNode).setAttributeNS(null, (String) attrValuePairs.get(l),
+                                        (String) attrValuePairs.get(l + 1));
                             }
                         }
                     }
@@ -952,24 +946,25 @@ public final class DOMUtil {
             } else {
                 parent = singleNode;
             }
-        }
-        while (pos != -1);
+        } while (pos != -1);
         return parent;
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node does not exist <CODE>null</CODE>
-     * is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @return     The value of the node or <CODE>null</CODE>
-     * @deprecated
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node does not exist <CODE>null</CODE> is
+     * returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @return The value of the node or <CODE>null</CODE>
+     * @deprecated To be removed in 2.2.
      */
     public static String getValueOf(Node root, String path) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException("Not a valid XPath: " + path);
+            throw new ProcessingException(NULL_XPATH_IS_INVALID);
         }
         if (root == null)
             return null;
@@ -981,27 +976,27 @@ public final class DOMUtil {
                 return getValueOfNode(node);
             }
         } catch (javax.xml.transform.TransformerException localException) {
-            throw new ProcessingException(
-                "XPathUtil.selectSingleNode: " + localException.getMessage(),
-                localException);
+            throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
         }
         return null;
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node does not exist <CODE>null</CODE>
-     * is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param processor The XPath processor to use
-     * @return     The value of the node or <CODE>null</CODE>
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node does not exist <CODE>null</CODE> is
+     * returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param processor
+     *            The XPath processor to use
+     * @return The value of the node or <CODE>null</CODE>
      */
-    public static String getValueOf(Node root, String path,
-                                    XPathProcessor processor) throws ProcessingException {
+    public static String getValueOf(Node root, String path, XPathProcessor processor) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException("Not a valid XPath: " + path);
+            throw new ProcessingException(NULL_XPATH_IS_INVALID);
         }
         if (root == null)
             return null;
@@ -1013,26 +1008,26 @@ public final class DOMUtil {
                 return getValueOfNode(node);
             }
         } catch (javax.xml.transform.TransformerException localException) {
-            throw new ProcessingException(
-                "XPathUtil.selectSingleNode: " + localException.getMessage(),
-                localException);
+            throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
         }
         return null;
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node is not found
-     * the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue The default value if the node does not exist.
-     * @return     The value of the node or <CODE>defaultValue</CODE>
-     * @deprecated
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node is not found the <CODE>defaultValue</CODE>
+     * is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            The default value if the node does not exist.
+     * @return The value of the node or <CODE>defaultValue</CODE>
+     * @deprecated To be removed in 2.2.
      */
-    public static String getValueOf(Node root, String path, String defaultValue)
-        throws ProcessingException {
+    public static String getValueOf(Node root, String path, String defaultValue) throws ProcessingException {
         String value = getValueOf(root, path);
         if (value == null) {
             value = defaultValue;
@@ -1041,19 +1036,22 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node is not found
-     * the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue The default value if the node does not exist.
-     * @param processor The XPath Processor
-     * @return     The value of the node or <CODE>defaultValue</CODE>
+     * Get the value of the node specified by the XPath. This works similar to
+     * &lt;xsl:value-of&gt;. If the node is not found the <CODE>defaultValue</CODE>
+     * is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            The default value if the node does not exist.
+     * @param processor
+     *            The XPath Processor
+     * @return The value of the node or <CODE>defaultValue</CODE>
      */
-    public static String getValueOf(Node root, String path, String defaultValue,
-                                    XPathProcessor processor)
-    throws ProcessingException {
+    public static String getValueOf(Node root, String path, String defaultValue, XPathProcessor processor)
+            throws ProcessingException {
         String value = getValueOf(root, path, processor);
         if (value == null) {
             value = defaultValue;
@@ -1062,16 +1060,19 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @return     The boolean value of the node.
-     * @throws ProcessingException If the node is not found.
-     * @deprecated
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @return The boolean value of the node.
+     * @throws ProcessingException
+     *             If the node is not found.
+     * @deprecated To be removed in 2.2.
      */
     public static boolean getValueAsBooleanOf(Node root, String path) throws ProcessingException {
         String value = getValueOf(root, path);
@@ -1083,20 +1084,23 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param processor The XPath Processor
-     * @return     The boolean value of the node.
-     * @throws ProcessingException If the node is not found.
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param processor
+     *            The XPath Processor
+     * @return The boolean value of the node.
+     * @throws ProcessingException
+     *             If the node is not found.
      */
-    public static boolean getValueAsBooleanOf(Node root, String path,
-                                              XPathProcessor processor)
-    throws ProcessingException {
+    public static boolean getValueAsBooleanOf(Node root, String path, XPathProcessor processor)
+            throws ProcessingException {
         String value = getValueOf(root, path, processor);
         if (value == null) {
             throw new ProcessingException("No such node: " + path);
@@ -1105,20 +1109,22 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     * If the node does not exist, the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue Default boolean value.
-     * @return     The value of the node or <CODE>defaultValue</CODE>
-     * @deprecated
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values. If the node does not exist,
+     * the <CODE>defaultValue</CODE> is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            Default boolean value.
+     * @return The value of the node or <CODE>defaultValue</CODE>
+     * @deprecated To be removed in 2.2.
      */
-    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue)
-        throws ProcessingException {
+    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue) throws ProcessingException {
         String value = getValueOf(root, path);
         if (value != null) {
             return Boolean.valueOf(value).booleanValue();
@@ -1127,21 +1133,24 @@ public final class DOMUtil {
     }
 
     /**
-     * Get the boolean value of the node specified by the XPath.
-     * This works similar to xsl:value-of. If the node exists and has a value
-     * this value is converted to a boolean, e.g. "true" or "false" as value
-     * will result into the corresponding boolean values.
-     * If the node does not exist, the <CODE>defaultValue</CODE> is returned.
-     *
-     * @param root The node to start the search.
-     * @param path XPath search expression.
-     * @param defaultValue Default boolean value.
-     * @param processor The XPath Processor
-     * @return     The value of the node or <CODE>defaultValue</CODE>
+     * Get the boolean value of the node specified by the XPath. This works
+     * similar to &lt;xsl:value-of&gt;. If the node exists and has a value this
+     * value is converted to a boolean, e.g. "true" or "false" as value will
+     * result into the corresponding boolean values. If the node does not exist,
+     * the <CODE>defaultValue</CODE> is returned.
+     * 
+     * @param root
+     *            The node to start the search.
+     * @param path
+     *            XPath search expression.
+     * @param defaultValue
+     *            Default boolean value.
+     * @param processor
+     *            The XPath Processor
+     * @return The value of the node or <CODE>defaultValue</CODE>
      */
-    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue,
-                                              XPathProcessor processor)
-    throws ProcessingException {
+    public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue, XPathProcessor processor)
+            throws ProcessingException {
         String value = getValueOf(root, path, processor);
         if (value != null) {
             return Boolean.valueOf(value).booleanValue();
@@ -1165,18 +1174,19 @@ public final class DOMUtil {
     }
 
     /**
-     *  Use an XPath string to select a nodelist.
-     *  XPath namespace prefixes are resolved from the contextNode.
-     *
-     *  @param contextNode The node to start searching from.
-     *  @param str A valid XPath string.
-     *  @return A NodeIterator, should never be null.
-     *
+     * Use an XPath string to select a nodelist. XPath namespace prefixes are
+     * resolved from the contextNode.
+     * 
+     * @param contextNode
+     *            The node to start searching from.
+     * @param str
+     *            A valid XPath string.
+     * @return A NodeIterator, should never be null.
+     * 
      * @throws TransformerException
-     * @deprecated
+     * @deprecated To be removed in 2.2.
      */
-    public static NodeList selectNodeList(Node contextNode, String str)
-        throws TransformerException {
+    public static NodeList selectNodeList(Node contextNode, String str) throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents != null) {
             return getNodeListFromPath(contextNode, pathComponents);
@@ -1185,29 +1195,31 @@ public final class DOMUtil {
     }
 
     /**
-     *  Use an XPath string to select a nodelist.
-     *  XPath namespace prefixes are resolved from the contextNode.
-     *
-     *  @param contextNode The node to start searching from.
-     *  @param str A valid XPath string.
-     *  @param processor The XPath Processor
-     *  @return A NodeIterator, should never be null.
-     *
+     * Use an XPath string to select a nodelist. XPath namespace prefixes are
+     * resolved from the contextNode.
+     * 
+     * @param contextNode
+     *            The node to start searching from.
+     * @param str
+     *            A valid XPath string.
+     * @param processor
+     *            The XPath Processor
+     * @return A NodeIterator, should never be null.
+     * 
      * @throws TransformerException
      */
     public static NodeList selectNodeList(Node contextNode, String str, XPathProcessor processor)
-    throws TransformerException {
+            throws TransformerException {
         String[] pathComponents = buildPathArray(str);
         if (pathComponents != null) {
             return getNodeListFromPath(contextNode, pathComponents);
         }
-       return processor.selectNodeList(contextNode, str);
+        return processor.selectNodeList(contextNode, str);
     }
 
     /**
-     * Build the input for the get...FromPath methods. If the XPath
-     * expression cannot be handled by the methods, <code>null</code>
-     * is returned.
+     * Build the input for the get...FromPath methods. If the XPath expression
+     * cannot be handled by the methods, <code>null</code> is returned.
      */
     public static String[] buildPathArray(String xpath) {
         String[] result = null;
@@ -1220,25 +1232,25 @@ public final class DOMUtil {
             i = 0;
             while (i < l && found == false) {
                 switch (xpath.charAt(i)) {
-                    case '[' :
-                        found = true;
-                        break;
-                    case '(' :
-                        found = true;
-                        break;
-                    case '*' :
-                        found = true;
-                        break;
-                    case '@' :
-                        found = true;
-                        break;
-                    case ':' :
-                        found = true;
-                        break;
-                    case '/' :
-                        components++;
-                    default :
-                        i++;
+                case '[':
+                    found = true;
+                    break;
+                case '(':
+                    found = true;
+                    break;
+                case '*':
+                    found = true;
+                    break;
+                case '@':
+                    found = true;
+                    break;
+                case ':':
+                    found = true;
+                    break;
+                case '/':
+                    components++;
+                default:
+                    i++;
                 }
             }
             if (found == false) {
@@ -1265,24 +1277,25 @@ public final class DOMUtil {
     }
 
     /**
-     * Use a path to select the first occurence of a node. The namespace
-     * of a node is ignored!
-     * @param contextNode The node starting the search.
-     * @param path        The path to search the node. The
-     *                    contextNode is searched for a child named path[0],
-     *                    this node is searched for a child named path[1]...
-     * @param create      If a child with the corresponding name is not found
-     *                    and create is set, this node will be created.
-    */
-    public static Node getFirstNodeFromPath(
-        Node contextNode,
-        final String[] path,
-        final boolean create) {
+     * Use a path to select the first occurence of a node. The namespace of a
+     * node is ignored!
+     * 
+     * @param contextNode
+     *            The node starting the search.
+     * @param path
+     *            The path to search the node. The contextNode is searched for a
+     *            child named path[0], this node is searched for a child named
+     *            path[1]...
+     * @param create
+     *            If a child with the corresponding name is not found and create
+     *            is set, this node will be created.
+     */
+    public static Node getFirstNodeFromPath(Node contextNode, final String[] path, final boolean create) {
         if (contextNode == null || path == null || path.length == 0)
             return contextNode;
         // first test if the node exists
         Node item = getFirstNodeFromPath(contextNode, path, 0);
-        if (item == null && create == true) {
+        if (item == null && create) {
             int i = 0;
             NodeList childs;
             boolean found;
@@ -1295,8 +1308,7 @@ public final class DOMUtil {
                     l = childs.getLength();
                     while (found == false && m < l) {
                         item = childs.item(m);
-                        if (item.getNodeType() == Node.ELEMENT_NODE
-                            && item.getLocalName().equals(path[i]) == true) {
+                        if (item.getNodeType() == Node.ELEMENT_NODE && item.getLocalName().equals(path[i])) {
                             found = true;
                             contextNode = item;
                         }
@@ -1318,10 +1330,7 @@ public final class DOMUtil {
     /**
      * Private helper method for getFirstNodeFromPath()
      */
-    private static Node getFirstNodeFromPath(
-        final Node contextNode,
-        final String[] path,
-        final int startIndex) {
+    private static Node getFirstNodeFromPath(final Node contextNode, final String[] path, final int startIndex) {
         int i = 0;
         NodeList childs;
         boolean found;
@@ -1336,9 +1345,8 @@ public final class DOMUtil {
             while (found == false && i < l) {
                 item = childs.item(i);
                 if (item.getNodeType() == Node.ELEMENT_NODE
-                    && path[startIndex].equals(
-                        item.getLocalName() != null ? item.getLocalName() : item.getNodeName())
-                        == true) {
+                        && path[startIndex].equals(item.getLocalName() != null ? item.getLocalName() : item
+                                .getNodeName())) {
                     if (startIndex == path.length - 1) {
                         found = true;
                     } else {
@@ -1359,12 +1367,15 @@ public final class DOMUtil {
     }
 
     /**
-     * Use a path to select all occurences of a node. The namespace
-     * of a node is ignored!
-     * @param contextNode The node starting the search.
-     * @param path        The path to search the node. The
-     *                    contextNode is searched for a child named path[0],
-     *                    this node is searched for a child named path[1]...
+     * Use a path to select all occurences of a node. The namespace of a node is
+     * ignored!
+     * 
+     * @param contextNode
+     *            The node starting the search.
+     * @param path
+     *            The path to search the node. The contextNode is searched for a
+     *            child named path[0], this node is searched for a child named
+     *            path[1]...
      */
     public static NodeList getNodeListFromPath(Node contextNode, String[] path) {
         if (contextNode == null)
@@ -1378,8 +1389,7 @@ public final class DOMUtil {
         } catch (NullPointerException npe) {
             // this NPE is thrown because the parser is not configured
             // to use DOM Level 2
-            throw new NullPointerException(
-                "XMLUtil.getNodeListFromPath() did catch a NullPointerException."
+            throw new NullPointerException("XMLUtil.getNodeListFromPath() did catch a NullPointerException."
                     + "This might be due to a missconfigured XML parser which does not use DOM Level 2."
                     + "Make sure that you use the XML parser shipped with Cocoon.");
         }
@@ -1389,11 +1399,8 @@ public final class DOMUtil {
     /**
      * Helper method for getNodeListFromPath()
      */
-    private static void getNodesFromPath(
-        final NodeListImpl result,
-        final Node contextNode,
-        final String[] path,
-        final int startIndex) {
+    private static void getNodesFromPath(final NodeListImpl result, final Node contextNode, final String[] path,
+            final int startIndex) {
         final NodeList childs = contextNode.getChildNodes();
         int m, l;
         Node item;
@@ -1404,13 +1411,10 @@ public final class DOMUtil {
                 while (m < l) {
                     item = childs.item(m);
                     if (item.getNodeType() == Node.ELEMENT_NODE) {
-                        // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
-                        if (path[startIndex]
-                            .equals(
-                                item.getLocalName() != null
-                                    ? item.getLocalName()
-                                    : item.getNodeName())
-                            == true) {
+                        // Work around: org.apache.xerces.dom.ElementImpl
+                        // doesn't handle getLocalName() correct
+                        if (path[startIndex].equals(item.getLocalName() != null ? item.getLocalName() : item
+                                .getNodeName())) {
                             result.addNode(item);
                         }
                     }
@@ -1424,13 +1428,10 @@ public final class DOMUtil {
                 while (m < l) {
                     item = childs.item(m);
                     if (item.getNodeType() == Node.ELEMENT_NODE) {
-                        // Work around: org.apache.xerces.dom.ElementImpl doesn't handle getLocalName() correct
-                        if (path[startIndex]
-                            .equals(
-                                item.getLocalName() != null
-                                    ? item.getLocalName()
-                                    : item.getNodeName())
-                            == true) {
+                        // Work around: org.apache.xerces.dom.ElementImpl
+                        // doesn't handle getLocalName() correct
+                        if (path[startIndex].equals(item.getLocalName() != null ? item.getLocalName() : item
+                                .getNodeName())) {
                             getNodesFromPath(result, item, path, startIndex + 1);
                         }
                     }
@@ -1441,12 +1442,15 @@ public final class DOMUtil {
     }
 
     /**
-     * Converts a org.w3c.dom.Node to a String. Uses {@link javax.xml.transform.Transformer}
-     * to convert from a Node to a String.
-     *
-     * @param node a <code>org.w3c.dom.Node</code> value
+     * Converts a org.w3c.dom.Node to a String. Uses
+     * {@link javax.xml.transform.Transformer} to convert from a Node to a
+     * String.
+     * 
+     * @param node
+     *            a <code>org.w3c.dom.Node</code> value
      * @return String representation of the document
-     * @deprecated Use {@link XMLUtils#serializeNodeToXML(Node)} instead.
+     * @deprecated Use {@link XMLUtils#serializeNodeToXML(Node)} instead. To be
+     *             removed in 2.2.
      */
     public static String node2String(Node node) {
         try {
@@ -1458,12 +1462,16 @@ public final class DOMUtil {
     }
 
     /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @param pretty a <code>boolean</code> value whether to format the XML
+     * Create a string representation of a org.w3c.dom.Node and any (most)
+     * subtypes.
+     * 
+     * @param node
+     *            a <code>org.w3c.dom.Node</code> value
+     * @param pretty
+     *            a <code>boolean</code> value whether to format the XML
      * @return a <code>String</code> value
-     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
+     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)}
+     *             instead. To be removed in 2.2.
      */
     public static String node2String(Node node, boolean pretty) {
         try {
@@ -1480,25 +1488,33 @@ public final class DOMUtil {
     }
 
     /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
+     * Create a string representation of a org.w3c.dom.Node and any (most)
+     * subtypes.
+     * 
+     * @param node
+     *            a <code>org.w3c.dom.Node</code> value
      * @return a <code>StringBuffer</code> value
      * @deprecated Please use {@link XMLUtils#serializeNodeToXML(Node)} instead.
+     *             To be removed in 2.2.
      */
     public static StringBuffer node2StringBuffer(Node node) {
         return new StringBuffer(node2String(node));
     }
 
     /**
-     * Create a string representation of a org.w3c.dom.Node and any
-     * (most) subtypes.
-     * @param node a <code>org.w3c.dom.Node</code> value
-     * @param pretty a <code>boolean</code> value whether to format the XML
-     * @param indent a <code>String</code> value containing spaces as
-     * initial indent, if null defaults to empty string.
+     * Create a string representation of a org.w3c.dom.Node and any (most)
+     * subtypes.
+     * 
+     * @param node
+     *            a <code>org.w3c.dom.Node</code> value
+     * @param pretty
+     *            a <code>boolean</code> value whether to format the XML
+     * @param indent
+     *            a <code>String</code> value containing spaces as initial
+     *            indent, if null defaults to empty string.
      * @return a <code>StringBuffer</code> value
-     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)} instead.
+     * @deprecated Please use {@link XMLUtils#serializeNode(Node, Properties)}
+     *             instead. To be removed in 2.2.
      */
     public static StringBuffer node2StringBuffer(Node node, boolean pretty, String indent) {
         return new StringBuffer(node2String(node, pretty));
