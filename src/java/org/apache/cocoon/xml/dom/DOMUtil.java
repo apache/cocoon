@@ -63,7 +63,7 @@ import java.util.StringTokenizer;
  */
 public final class DOMUtil {
 
-    private static final String NULL_XPATH_IS_INVALID = "XPath is required.";
+    private static final String XPATH_IS_REQUIRED = "XPath is required.";
 
     /**
      * Get the owner of the DOM document belonging to the node. This works even
@@ -94,7 +94,7 @@ public final class DOMUtil {
      */
     public static String getValueOfNode(XPathProcessor processor, Node root, String path) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException(NULL_XPATH_IS_INVALID);
+            throw new ProcessingException(XPATH_IS_REQUIRED);
         }
         if (root != null) {
             path = StringUtils.strip(path, "/");
@@ -673,7 +673,7 @@ public final class DOMUtil {
         // Now we have to parse the string
         // First test: path? rootNode?
         if (path == null) {
-            throw new ProcessingException(NULL_XPATH_IS_INVALID);
+            throw new ProcessingException(XPATH_IS_REQUIRED);
         }
         if (rootNode == null)
             return rootNode;
@@ -687,7 +687,7 @@ public final class DOMUtil {
             Node testNode = getSingleNode(rootNode, path);
             if (testNode != null)
                 return testNode;
-        } catch (javax.xml.transform.TransformerException local) {
+        } catch (TransformerException local) {
             throw new ProcessingException("Transforming exception during selectSingleNode with path: '" + path
                     + "'. Exception: " + local, local);
         }
@@ -723,7 +723,7 @@ public final class DOMUtil {
             Node singleNode;
             try {
                 singleNode = getSingleNode(parent, nodeName);
-            } catch (javax.xml.transform.TransformerException localException) {
+            } catch (TransformerException localException) {
                 throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(),
                         localException);
             }
@@ -827,7 +827,7 @@ public final class DOMUtil {
         // Now we have to parse the string
         // First test: path? rootNode?
         if (path == null) {
-            throw new ProcessingException(NULL_XPATH_IS_INVALID);
+            throw new ProcessingException(XPATH_IS_REQUIRED);
         }
         if (rootNode == null)
             return rootNode;
@@ -841,7 +841,7 @@ public final class DOMUtil {
             Node testNode = getSingleNode(rootNode, path, processor);
             if (testNode != null)
                 return testNode;
-        } catch (javax.xml.transform.TransformerException local) {
+        } catch (TransformerException local) {
             throw new ProcessingException("Transforming exception during selectSingleNode with path: '" + path
                     + "'. Exception: " + local, local);
         }
@@ -878,7 +878,7 @@ public final class DOMUtil {
             Node singleNode;
             try {
                 singleNode = getSingleNode(parent, nodeName, processor);
-            } catch (javax.xml.transform.TransformerException localException) {
+            } catch (TransformerException localException) {
                 throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(),
                         localException);
             }
@@ -914,7 +914,7 @@ public final class DOMUtil {
                         String attr;
                         String value;
                         // scan for attributes
-                        java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(XPathExp, "= ");
+                        StringTokenizer tokenizer = new StringTokenizer(XPathExp, "= ");
                         while (tokenizer.hasMoreTokens()) {
                             attr = tokenizer.nextToken();
                             if (attr.startsWith("@")) {
@@ -964,7 +964,7 @@ public final class DOMUtil {
      */
     public static String getValueOf(Node root, String path) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException(NULL_XPATH_IS_INVALID);
+            throw new ProcessingException(XPATH_IS_REQUIRED);
         }
         if (root == null)
             return null;
@@ -975,7 +975,7 @@ public final class DOMUtil {
             if (node != null) {
                 return getValueOfNode(node);
             }
-        } catch (javax.xml.transform.TransformerException localException) {
+        } catch (TransformerException localException) {
             throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
         }
         return null;
@@ -996,7 +996,7 @@ public final class DOMUtil {
      */
     public static String getValueOf(Node root, String path, XPathProcessor processor) throws ProcessingException {
         if (path == null) {
-            throw new ProcessingException(NULL_XPATH_IS_INVALID);
+            throw new ProcessingException(XPATH_IS_REQUIRED);
         }
         if (root == null)
             return null;
@@ -1007,7 +1007,7 @@ public final class DOMUtil {
             if (node != null) {
                 return getValueOfNode(node);
             }
-        } catch (javax.xml.transform.TransformerException localException) {
+        } catch (TransformerException localException) {
             throw new ProcessingException("XPathUtil.selectSingleNode: " + localException.getMessage(), localException);
         }
         return null;
