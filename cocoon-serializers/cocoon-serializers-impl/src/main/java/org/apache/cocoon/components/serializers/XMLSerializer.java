@@ -284,11 +284,11 @@ public class XMLSerializer extends EncodingSerializer {
      */
     protected boolean closeElement(boolean end_element)
     throws SAXException {
-        if (!hanging_element) return(false);
+        if (!hanging_element) return false;
         if (end_element) this.write(S_ELEMENT_3); // [ />]
         else this.write(C_GT); // [>]
         this.hanging_element = false;
-        return(true);
+        return true;
     }
 
     /**
