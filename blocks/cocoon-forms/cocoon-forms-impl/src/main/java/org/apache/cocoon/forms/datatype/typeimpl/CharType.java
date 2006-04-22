@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.forms.datatype.typeimpl;
 
-import org.apache.cocoon.forms.datatype.DatatypeBuilder;
-import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.typeimpl.AbstractDatatype;
 
 /**
@@ -35,14 +33,5 @@ public class CharType extends AbstractDatatype {
     }
     public String getDescriptiveName() {
         return "char";
-    }
-    protected void setArrayType(boolean arrayType) {
-        super.setArrayType(arrayType);
-    }
-    public void setConvertor(Convertor convertor)  {
-        super.setConvertor(convertor);
-    }
-    protected void setBuilder(DatatypeBuilder builder)  {
-        super.setBuilder(builder);
     }
 }
