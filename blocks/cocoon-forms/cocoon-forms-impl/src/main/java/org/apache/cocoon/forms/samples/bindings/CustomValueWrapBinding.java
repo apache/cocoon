@@ -31,7 +31,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
     private static final char DEFAULT_DELIMITER = '*';
     private final String prefix;
     private final String suffix;
-    
+
     public CustomValueWrapBinding() {
         this(DEFAULT_DELIMITER);
     }
@@ -39,9 +39,9 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
     public CustomValueWrapBinding(char delimiter) {
         this(delimiter, delimiter);
     }
-    
+
     public CustomValueWrapBinding(char prefix, char suffix) {
-        this.prefix = ""+ prefix + prefix;
+        this.prefix = "" + prefix + prefix;
         this.suffix = "" + suffix + suffix;
     }
 
@@ -73,8 +73,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
         Object formValue = frmModel.getValue();       
         jxpc.setValue(getXpath(), "" + this.prefix + formValue + this.suffix);        
     }
-    
-    
+
     /** 
      * Builds the actual binding class based on its XML config.
      * 
@@ -83,7 +82,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      * @throws BindingException when the creation fails
      */
     public static Binding createBinding(Element config) throws BindingException{
-        
+
         try {
             String pfx = DomHelper.getAttribute(config, "prefixchar", null);
             String sfx = DomHelper.getAttribute(config, "suffixchar", null);
@@ -96,5 +95,4 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
             throw new BindingException("Could not create instance of CustomValueWrapBinding." ,e);
         }
     }
-   
 }
