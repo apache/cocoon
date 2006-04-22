@@ -55,17 +55,17 @@ public abstract class AbstractCustomBinding implements Binding {
     }
     //TODO: end of stuff to clean out over time
     //below is the real useful stuff...
-    
+
     public boolean isValid() {
     	return false; // pessimistic
     }
-    
+
     // needed for the Binding interface, should never need to be used in a subclass
     public Library getEnclosingLibrary() {
     	return null;
     }
     public void setEnclosingLibrary(Library lib) {}
-    
+
     /**
      * Binding service method called upon loading.
      * This will delegate to the overloaded version specific for this base-class.
@@ -99,7 +99,7 @@ public abstract class AbstractCustomBinding implements Binding {
             throw new BindingException("Error executing custom binding", e);
         }
     }
-    
+
     /**
      * 
      * @param frmModel
