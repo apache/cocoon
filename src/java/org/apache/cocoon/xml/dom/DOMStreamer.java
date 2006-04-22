@@ -277,11 +277,8 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                     }
                     break;
                 case Node.DOCUMENT_FRAGMENT_NODE:
-
                     // ??;
-                    break;
                 case Node.DOCUMENT_NODE:
-
                     break;
                 case Node.ELEMENT_NODE:
                     NamedNodeMap atts = node.getAttributes();
@@ -325,10 +322,10 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                         if (StringUtils.equals(uri, namespaceURI)) {
                             // System.out.println("namespace is declared");
                             // prefix is declared correctly, do nothing
-                        } else if (uri != null) {
+                            //} else if (uri != null) {
                             // System.out.println("prefix is declared with other namespace, overwriting it");
                             // prefix exists but is bound to another namespace, overwrite it
-                            currentElementInfo.put(prefix, namespaceURI);
+                            // currentElementInfo.put(prefix, namespaceURI);
                         } else {
                             // System.out.println("prefix is not yet declared, declaring it now");
                             currentElementInfo.put(prefix, namespaceURI);
@@ -551,7 +548,6 @@ public class DOMStreamer implements XMLProducer, Recyclable {
             return new String[] {prefix, localName};
         }
 
-
         /**
          * End processing of given node
          *
@@ -560,9 +556,6 @@ public class DOMStreamer implements XMLProducer, Recyclable {
         protected void endNode(Node node) throws org.xml.sax.SAXException {
 
             switch (node.getNodeType()) {
-                case Node.DOCUMENT_NODE:
-                    break;
-
                 case Node.ELEMENT_NODE:
                     contentHandler.endElement(currentElementInfo.namespaceURI,
                             currentElementInfo.localName, currentElementInfo.qName);
@@ -576,9 +569,8 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                             //System.out.println("ending prefix mapping " + (String) entry.getKey());
                         }
                     }
-
                     currentElementInfo = currentElementInfo.parent;
-                    break;
+                case Node.DOCUMENT_NODE:
                 case Node.CDATA_SECTION_NODE:
                     break;
                 case Node.ENTITY_REFERENCE_NODE:
