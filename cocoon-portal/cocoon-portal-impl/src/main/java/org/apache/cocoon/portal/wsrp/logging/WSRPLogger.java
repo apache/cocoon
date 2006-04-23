@@ -117,7 +117,7 @@ public class WSRPLogger implements Logger {
      * @see org.apache.wsrp4j.log.Logger#exit(int, java.lang.String, boolean)
      */
     public void exit(int logLevel, String loggingMethod, boolean retValue) {
-        this.exit(logLevel, loggingMethod, new Boolean(retValue));
+        this.exit(logLevel, loggingMethod, Boolean.valueOf(retValue));
     }
 
     /**
