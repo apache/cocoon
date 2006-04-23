@@ -18,7 +18,6 @@ package org.apache.cocoon.components.language.markup.xsp;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.generation.AbstractServerPage;
 import org.xml.sax.SAXException;
 
@@ -27,9 +26,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class XSPGenerator 
-extends AbstractServerPage
-implements CompiledComponent, Contextualizable {
+public abstract class XSPGenerator extends AbstractServerPage implements Contextualizable {
     
     protected Context avalonContext;
 
@@ -67,5 +64,4 @@ implements CompiledComponent, Contextualizable {
     public void xspExpr(Object v) throws SAXException {
         XSPObjectHelper.xspExpr(this.contentHandler, v);
     }
-
 }

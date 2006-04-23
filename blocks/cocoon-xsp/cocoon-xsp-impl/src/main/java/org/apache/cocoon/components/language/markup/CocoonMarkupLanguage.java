@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.ProcessingException;
@@ -153,7 +152,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      *
      * @see org.xml.sax.ContentHandler
      */
-    public class PreProcessFilter extends AbstractXMLPipe implements LogEnabled {
+    public class PreProcessFilter extends AbstractXMLPipe {
         protected Logger log;
 
         protected AbstractXMLPipe filter;
@@ -269,8 +268,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * @see org.xml.sax.ContentHandler
      */
     public class CocoonTransformerChainBuilderFilter
-            extends TransformerChainBuilderFilter
-            implements LogEnabled {
+            extends TransformerChainBuilderFilter {
 
         protected Logger log;
 
