@@ -129,7 +129,7 @@ public class CachingPointProcessingPipeline
 
         // add caching point flag
         // default value is false
-        this.isCachePoint.add(new Boolean(this.nextIsCachePoint));
+        this.isCachePoint.add(Boolean.valueOf(this.nextIsCachePoint));
         this.nextIsCachePoint = false;
 
         // if this transformer is manually set to "caching-point" (via pipeline-hint)
