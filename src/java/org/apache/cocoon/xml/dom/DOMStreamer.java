@@ -513,7 +513,7 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                 String declname = (prefix.length() == 0) ? "xmlns" : "xmlns:" + prefix;
 
                 // Scan until we run out of Elements or have resolved the namespace
-                while ((null != parent) && (null == namespace)
+                while ((null != parent)
                    && (((type = parent.getNodeType()) == Node.ELEMENT_NODE)
                        || (type == Node.ENTITY_REFERENCE_NODE))) {
                     if (type == Node.ELEMENT_NODE) {
@@ -570,6 +570,7 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                         }
                     }
                     currentElementInfo = currentElementInfo.parent;
+                    break;
                 case Node.DOCUMENT_NODE:
                 case Node.CDATA_SECTION_NODE:
                     break;
