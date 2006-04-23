@@ -64,7 +64,7 @@ import java.util.Map;
 public class DOMStreamer implements XMLProducer, Recyclable {
 
     /** The transformer factory shared by all instances (only used by DefaultDOMStreamer) */
-    protected static final TransformerFactory FACTORY = TransformerFactory.newInstance();
+    private static final TransformerFactory FACTORY = TransformerFactory.newInstance();
 
     /** Default value for normalizeNamespaces. */
     private static final boolean DEFAULT_NORMALIZE_NAMESPACES = true;
@@ -505,10 +505,10 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                 namespace = "http://www.w3.org/2000/xmlns/";
             } else {
                 // Attribute name for this prefix's declaration
-                String declname = (prefix.equals("")) ? "xmlns" : "xmlns:" + prefix;
+                String declname = (prefix.length() == 0) ? "xmlns" : "xmlns:" + prefix;
 
                 // Scan until we run out of Elements or have resolved the namespace
-                while ((null != parent) && (null == namespace)
+                while ((null != parent)
                    && (((type = parent.getNodeType()) == Node.ELEMENT_NODE)
                        || (type == Node.ENTITY_REFERENCE_NODE))) {
                     if (type == Node.ELEMENT_NODE) {
@@ -564,8 +564,8 @@ public class DOMStreamer implements XMLProducer, Recyclable {
                             //System.out.println("ending prefix mapping " + (String) entry.getKey());
                         }
                     }
-
                     currentElementInfo = currentElementInfo.parent;
+                    break;
                 case Node.DOCUMENT_NODE:
                 case Node.CDATA_SECTION_NODE:
                     break;
