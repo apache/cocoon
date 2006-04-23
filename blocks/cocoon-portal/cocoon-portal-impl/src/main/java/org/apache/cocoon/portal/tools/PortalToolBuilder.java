@@ -47,7 +47,7 @@ public class PortalToolBuilder {
 			    ptf.setName(funcs[i].getAttribute("name"));
 			    ptf.setFunction(funcs[i].getAttribute("pipeline"));
 			    ptf.setId(funcs[i].getAttribute("id"));
-			    ptf.setInternal(new Boolean(funcs[i].getAttribute("internal", "false")).booleanValue());
+			    ptf.setInternal(funcs[i].getAttributeAsBoolean("internal", false));
 			    functions.put(ptf.getName(), ptf);
 			}
 			Configuration[] i18ns = conf.getChild("i18n").getChildren();
