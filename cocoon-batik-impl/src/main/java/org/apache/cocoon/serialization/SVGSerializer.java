@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -51,7 +50,7 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
+implements Serializer, Configurable, CacheableProcessingComponent, Contextualizable {
 
     /**
      * Get the context
@@ -162,7 +161,7 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
                     value = new Integer(parameters[i].getAttributeAsInteger("value"));
                 } else if ("BOOLEAN".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Boolean(parameters[i].getAttributeAsBoolean("value"));
+                    value = Boolean.valueOf(parameters[i].getAttributeAsBoolean("value"));
                 } else if ("COLOR".equals(keyType)) {
                     // Can throw an exception
                     String stringValue = parameters[i].getAttribute("value");
