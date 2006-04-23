@@ -20,7 +20,6 @@ import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
 import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
 import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 
@@ -40,7 +39,7 @@ import java.util.ArrayList;
  *
  * @version $Id$
  */
-public class JavascriptLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
+public class JavascriptLanguage extends AbstractProgrammingLanguage {
 
     public Program preload(String filename, File baseDirectory, String encoding) throws LanguageException {
         return load(filename, baseDirectory, encoding);
