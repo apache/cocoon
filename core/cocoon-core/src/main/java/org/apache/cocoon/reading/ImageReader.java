@@ -270,7 +270,7 @@ final public class ImageReader extends ResourceReader {
              * for example) crashes the entire JVM (yes, dude, the bug is *that* nasty
              * since it happens in JPEG routines which are native!)
              * I'm perfectly aware of the huge memory problems that this causes (almost
-             * doubling memory consuption for each image and making the GC work twice
+             * doubling memory consumption for each image and making the GC work twice
              * as hard) but it's *far* better than restarting the JVM every 2 minutes
              * (since this is the average experience for image-intensive web application
              * such as an image gallery).
@@ -365,6 +365,8 @@ final public class ImageReader extends ResourceReader {
     */
     public Serializable getKey() {
         return super.getKey().toString()
+                + ':' + this.fitUniform
+                + ':' + this.enlarge
                 + ':' + this.width
                 + ':' + this.height
                 + ":" + this.scaleColor[0]
