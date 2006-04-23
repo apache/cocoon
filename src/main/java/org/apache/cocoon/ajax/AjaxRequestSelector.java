@@ -18,7 +18,6 @@ package org.apache.cocoon.ajax;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.selection.AbstractSwitchSelector;
@@ -42,7 +41,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @since 2.1.8
  * @version $Id$
  */
-public class AjaxRequestSelector extends AbstractSwitchSelector implements ThreadSafe {
+public class AjaxRequestSelector extends AbstractSwitchSelector {
     
     public Object getSelectorContext(Map objectModel, Parameters parameters) {
         Request req = ObjectModelHelper.getRequest(objectModel);
@@ -51,7 +50,6 @@ public class AjaxRequestSelector extends AbstractSwitchSelector implements Threa
 
     public boolean select(String expression, Object selectorContext) {
         boolean test = BooleanUtils.toBoolean(expression);
-
         return test == ((Boolean)selectorContext).booleanValue();
     }
 }
