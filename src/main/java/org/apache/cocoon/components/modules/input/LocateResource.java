@@ -172,12 +172,14 @@ public class LocateResource extends AbstractInputModule implements Serviceable, 
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (filename != "") {
+        if (filename.length() > 0) {
             urlstring = shortenURI(urlstring, minLen);
         }
 
         String result = locateResource(urlstring, filename, minLen);
-        result = (result == null? result : result + filename);
+        if (result != null) {
+            result += filename;
+        }
         if (this.getLogger().isDebugEnabled())
             this.getLogger().debug(
                 "located " + name + " @ " + result);
@@ -203,7 +205,7 @@ public class LocateResource extends AbstractInputModule implements Serviceable, 
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (filename != "") {
+        if (filename.length() > 0) {
             urlstring = shortenURI(urlstring, minLen);
         }
 
@@ -220,5 +222,4 @@ public class LocateResource extends AbstractInputModule implements Serviceable, 
         }
         return (uris == null ? null : uris.toArray());
     }
-
 }
