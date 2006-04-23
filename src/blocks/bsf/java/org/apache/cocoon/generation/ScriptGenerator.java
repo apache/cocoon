@@ -37,7 +37,8 @@ import java.io.StringReader;
 
 /**
  * The Scriptgenerator executes arbitraty scripts using the BSF framework
- * and additional interpreter (Rhino, Jython, etc.) as a Cocoon Generator.
+ * and additional interpreter (Rhino, Groovy, Jython, etc.) as a
+ * Cocoon Generator.
  *
  * Additional language support can be added during configuration, eg
  * using:
