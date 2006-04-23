@@ -21,7 +21,6 @@ import org.apache.avalon.excalibur.component.LogkitLoggerManager;
 import org.apache.avalon.excalibur.component.RoleManager;
 import org.apache.avalon.excalibur.logger.LogKitManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -43,9 +42,9 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
+public class GeneratorSelector extends ExcaliburComponentSelector {
 
     public final static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
@@ -96,7 +95,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         }
     }
 
-    public void compose (ComponentManager manager) throws ComponentException {
+    public void compose(ComponentManager manager) throws ComponentException {
         super.compose(manager);
         this.manager = manager;
 

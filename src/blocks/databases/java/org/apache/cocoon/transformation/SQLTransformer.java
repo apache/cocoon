@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -150,8 +148,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
-public class SQLTransformer extends AbstractSAXTransformer
-                            implements Disposable, Configurable {
+public class SQLTransformer extends AbstractSAXTransformer {
 
     /** The SQL transformer namespace */
     public static final String NAMESPACE = "http://apache.org/cocoon/SQL/2.0";

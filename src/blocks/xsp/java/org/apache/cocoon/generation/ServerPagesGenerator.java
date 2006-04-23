@@ -16,7 +16,6 @@
 package org.apache.cocoon.generation;
 
 import org.apache.commons.collections.ArrayStack;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -56,10 +55,10 @@ import java.util.Map;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesGenerator.java,v 1.1 2004/03/10 15:20:51 unico Exp $
+ * @version $Id$
  */
 public class ServerPagesGenerator extends ServletGenerator
-        implements Disposable, CacheableProcessingComponent, Configurable {
+        implements CacheableProcessingComponent, Configurable {
     /**
      * The sitemap-defined server pages program generator
      */

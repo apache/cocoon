@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -87,13 +86,13 @@ import org.apache.commons.lang.BooleanUtils;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @version $Id$
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
  * @see org.apache.cocoon.util.JDBCTypeConversions
  */
-public abstract class DatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable, ThreadSafe {
+public abstract class DatabaseAction extends AbstractComplementaryConfigurableAction implements Disposable, ThreadSafe {
 
     // ========================================================================
     // constants

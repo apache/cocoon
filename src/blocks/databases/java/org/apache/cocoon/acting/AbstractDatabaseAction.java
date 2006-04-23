@@ -38,7 +38,6 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -169,9 +168,9 @@ import org.apache.cocoon.util.ImageUtils;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Configurable, Disposable {
+public abstract class AbstractDatabaseAction extends AbstractComplementaryConfigurableAction implements Disposable {
     protected Map files = new HashMap();
     protected static final Map typeConstants;
     protected ServiceSelector dbselector;
