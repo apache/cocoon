@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class IncrementTransformer extends AbstractTransformer implements Transformer, CacheableProcessingComponent {
+public class IncrementTransformer extends AbstractTransformer implements CacheableProcessingComponent {
 	XMLConsumer consumer;
 	Map objectModel;
 	String key;

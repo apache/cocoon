@@ -15,13 +15,11 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.generation.AbstractServerPage;
 import org.xml.sax.SAXException;
 
@@ -29,9 +27,9 @@ import org.xml.sax.SAXException;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: XSPGenerator.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version $Id$
  */
-public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Recyclable {
+public abstract class XSPGenerator extends AbstractServerPage implements Contextualizable {
     protected Context avalonContext = null;
 
     /** Contextualize this class */

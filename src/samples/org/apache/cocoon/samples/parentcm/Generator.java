@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
@@ -37,7 +36,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
  * @version $Id$
  */
-public class Generator extends ServiceableGenerator implements Poolable {
+public class Generator extends ServiceableGenerator {
 
     /**
      * Current time.

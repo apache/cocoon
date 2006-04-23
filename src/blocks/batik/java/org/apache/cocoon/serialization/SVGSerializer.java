@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -51,10 +50,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
+implements Serializer, Configurable, CacheableProcessingComponent, Contextualizable {
 
     /**
      * Get the context

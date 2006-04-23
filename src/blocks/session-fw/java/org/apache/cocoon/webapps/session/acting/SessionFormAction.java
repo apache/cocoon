@@ -17,7 +17,6 @@ package org.apache.cocoon.webapps.session.acting;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.acting.FormValidatorAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -93,9 +92,9 @@ import java.util.Map;
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionFormAction.java,v 1.7 2004/04/03 03:01:35 joerg Exp $
+ * @version $Id$
 */
-public class SessionFormAction extends FormValidatorAction implements ThreadSafe {
+public class SessionFormAction extends FormValidatorAction {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.acting.AbstractValidatorAction#getDescriptor(org.apache.cocoon.environment.SourceResolver, org.apache.avalon.framework.parameters.Parameters)
@@ -110,5 +109,4 @@ public class SessionFormAction extends FormValidatorAction implements ThreadSafe
             ObjectModelHelper.getRequest(objectModel).getParameter(
                 SessionConstants.SESSION_FORM_PARAMETER));
     }
-
 }
