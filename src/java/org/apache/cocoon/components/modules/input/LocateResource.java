@@ -171,12 +171,14 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (!filename.equals("")) {
+        if (filename.length() > 0) {
             urlstring = shortenURI(urlstring, minLen);
         }
 
         String result = locateResource(urlstring, filename, minLen);
-        result = (result == null? result : result + filename);
+        if (result != null) {
+            result += filename;
+        }
         if (this.getLogger().isDebugEnabled())
             this.getLogger().debug(
                 "located " + name + " @ " + result);
@@ -202,7 +204,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (!filename.equals("")) {
+        if (filename.length() > 0) {
             urlstring = shortenURI(urlstring, minLen);
         }
 
@@ -219,5 +221,4 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         }
         return (uris == null ? null : uris.toArray());
     }
-
 }
