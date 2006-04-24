@@ -605,7 +605,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 String sourceURI = (String) execList.get(i);
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry) compiledScripts.get(sourceURI);
-                long lastMod = entry.getSource().getLastModified();
+                long lastMod = 0;
+                if (reloadScripts && lastExecTime != 0) {
+                    lastMod = entry.getSource().getLastModified();
+                }
                 Script script = entry.getScript(context, this.scope, false, this);
                 if (lastExecTime == 0 || lastMod > lastExecTime) {
                     script.exec(context, thrScope);
