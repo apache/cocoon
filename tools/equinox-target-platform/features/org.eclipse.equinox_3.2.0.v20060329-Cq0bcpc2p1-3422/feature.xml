@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox"
+      label="%featureName"
+      version="3.2.0.v20060329-Cq0bcpc2p1-3422"
+      provider-name="%providerName"> 
+      
+   <description>
+      %description
+   </description>
+   
+   <copyright>
+      %copyright
+   </copyright>
+   
+   <license url="%licenseURL">
+      %license
+   </license>  
+   
+	<plugin
+         id="org.eclipse.equinox.common"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v20060329"
+         unpack="false"/>
+
+	<plugin
+         id="org.eclipse.equinox.device"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060109"
+         unpack="false"/>       
+            
+    <plugin
+         id="org.eclipse.equinox.event"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060206"
+         unpack="false"/>
+         
+    <plugin
+         id="org.eclipse.equinox.http"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060317"
+         unpack="false"/>
+         
+     <plugin
+         id="org.eclipse.equinox.log"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060206"
+         unpack="false"/>
+         
+     <plugin
+         id="org.eclipse.equinox.metatype"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060224"
+         unpack="false"/>
+         
+     <plugin
+         id="org.eclipse.equinox.preferences"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v20060327-1200"
+         unpack="false"/>
+         
+      <plugin
+         id="org.eclipse.equinox.servlet.api"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060206"
+         unpack="false"/>     
+                
+      <plugin
+         id="org.eclipse.equinox.registry"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v20060327"
+         unpack="false"/>
+         
+     <plugin
+         id="org.eclipse.equinox.useradmin"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20060214"
+         unpack="false"/>                  
+              
+     <plugin
+         id="org.eclipse.osgi"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v20060328"
+         unpack="false"/>
+         
+    <plugin
+         id="org.eclipse.osgi.services"
+         download-size="0"
+         install-size="0"
+         version="3.1.100.v20060109"
+         unpack="false"/>
+         
+     <plugin
+         id="org.eclipse.osgi.util"
+         download-size="0"
+         install-size="0"
+         version="3.1.100.v20060109"
+         unpack="false"/>
+         
+     
+</feature>
