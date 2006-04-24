@@ -57,7 +57,7 @@ public class CheckAccessTransformer extends AbstractSAXTransformer {
         if (RIGHTS_NAMESPACE_URI.equals(uri) && ACCESS_TAG.equals(name)) {
             String id = attr.getValue(RIGHT_ID);
             if(!urs.userIsAllowed(id, this.ptm.getPortalObjects().getProfileManager().getUser())) {
-                this.stack.push(new Boolean(false));
+                this.stack.push(Boolean.FALSE);
             }
             this.startRecording();
         } else {
