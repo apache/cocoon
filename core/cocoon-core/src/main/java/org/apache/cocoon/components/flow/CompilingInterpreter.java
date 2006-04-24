@@ -107,7 +107,7 @@ public abstract class CompilingInterpreter
             if (refresh) {
                 source.refresh();
             }
-            if (script == null || compileTime < source.getLastModified()) {
+            if (script == null || (refresh && compileTime < source.getLastModified())) {
                 script = interpreter.compileScript(context, scope, source);
                 compileTime = source.getLastModified();
             }
