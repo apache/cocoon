@@ -210,8 +210,9 @@
     </component-instance>
 
     <!--+
-        | Following three modules definitions, 'defaults', 'myxml', and
-        | 'slashdot', are used only in the samples.
+        | Following five modules definitions, 'defaults', 'myxml',
+        | 'slashdot' 'random-100-to-500' and 'random-5000-to-10000',
+        | are used only in the samples.
         +-->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
       <values>
@@ -224,6 +225,14 @@
     </component-instance>
     <component-instance logger="core.modules.input" name="slashdot"     class="org.apache.cocoon.components.modules.input.XMLFileModule">
       <file src="http://slashdot.org/slashdot.rss"/>
+    </component-instance>
+    <component-instance logger="core.modules.input" name="random-100-to-500" class="org.apache.cocoon.components.modules.input.RandomNumberModule">
+      <min>100</min>
+      <max>500</max>
+    </component-instance>
+    <component-instance  logger="core.modules.input" name="random-5000-to-10000" class="org.apache.cocoon.components.modules.input.RandomNumberModule">
+      <min>5000</min>
+      <max>10000</max>
     </component-instance>
 
   </input-modules>
