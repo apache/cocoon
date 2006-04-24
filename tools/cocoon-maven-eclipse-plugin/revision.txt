@@ -1,0 +1,9 @@
+URL: http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin
+UUID des Projektarchivs: 13f79535-47bb-0310-9956-ffa450edef68
+Revision: 395669
+Knotentyp: Verzeichnis
+Plan: normal
+Letzter Autor: fgiust
+Letzte geänderte Rev: 393604
+Letztes Änderungsdatum: 2006-04-12 22:44:24 +0200 (Mi, 12 Apr 2006)
+Eigenschaften zuletzt geändert: 2005-12-08 17:10:01 +0100 (Do, 08 Dez 2005)
