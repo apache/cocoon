@@ -40,15 +40,17 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
   <modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
-    
   </modules>
   <repositories>
+    <repository>
+      <id>central</id>
+      <url>http://ibiblio.org/maven2</url>
+    </repository>
     <repository>
       <id>apache-maven2</id>
       <name>Apache Maven2 Repository</name>
