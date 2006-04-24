@@ -90,3 +90,5 @@ HOW TO START THE COCOON WEBAPP (OSGI MODE)
 7. Run it by hitting the "Run" button
 
 8. point your browser to http://localhost/sitemap-test/test
+   (the first reponse produces an error because nothing is returned, but
+    after a refresh, everything works fine.)
