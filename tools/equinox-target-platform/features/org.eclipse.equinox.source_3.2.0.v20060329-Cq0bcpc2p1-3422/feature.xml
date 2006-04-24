@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature primary="false"  provider-name="%providerName"    label="%featureName"   id="org.eclipse.equinox.source"  version="3.2.0.v20060329-Cq0bcpc2p1-3422">
+	<description >
+		%description
+	</description>
+	<copyright >
+		%copyright
+	</copyright>
+	<license url="%licenseURL">
+		%license
+	</license>
+	<plugin    fragment="false"  download-size="0" install-size="0" id="org.eclipse.equinox.source" version="3.2.0.v20060329-Cq0bcpc2p1-3422"/>
+</feature>
