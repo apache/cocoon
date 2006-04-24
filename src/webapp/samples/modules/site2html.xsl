@@ -69,7 +69,7 @@
         <table>
           <tr>
             <td class="copyright">
-              Copyright (c) 1999-2004 <a href="http://www.apache.org/">The Apache Software Foundation</a>. All Rights Reserved.
+              Copyright (c) 1999-2006 <a href="http://www.apache.org/">The Apache Software Foundation</a>. All Rights Reserved.
             </td>
           </tr>
         </table>

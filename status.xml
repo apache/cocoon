@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1716">
+      RandomNumberModule: does not returns random number in the range (min,max) as expected.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1721" due-to="Georg Hüttenegger" due-to-email="georg.huettenegger@gmx.at">
       Performance Issue/JavaScriptFlowScript: If &lt;reload-scripts&gt; is set to false,
       don't check for last modification time of javascript source files. 
