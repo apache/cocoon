@@ -31,6 +31,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.CompilingInterpreter;
@@ -45,6 +46,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
@@ -453,7 +455,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 String sourceURI = (String) execList.get(i);
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry) compiledScripts.get(sourceURI);
-                long lastMod = entry.getSource().getLastModified();
+                long lastMod = 0;
+                if (reloadScripts && lastExecTime != 0) {
+                    lastMod = entry.getSource().getLastModified();
+                }
                 Script script = entry.getScript(context, this.scope, false, this);
                 if (lastExecTime == 0 || lastMod > lastExecTime) {
                     script.exec(context, thrScope);
@@ -488,7 +493,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
         }
         throw new ResourceNotFoundException(fileName + ": not found");
-
     }
 
     protected Script compileScript(Context cx, Scriptable scope, Source src)
@@ -676,10 +680,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                                 "handleContinuation", args);
                 } catch (JavaScriptException ex) {
                     throw locationTracker.getException("Error calling continuation", ex);
-
                 } catch (EcmaError ee) {
                     throw locationTracker.getException("Error calling continuation", ee);
-
                 }
             } finally {
                 kScope.setLock(false);
