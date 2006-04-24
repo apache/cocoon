@@ -28,7 +28,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
