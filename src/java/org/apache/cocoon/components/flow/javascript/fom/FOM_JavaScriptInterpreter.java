@@ -760,26 +760,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
                 } catch (JavaScriptException ex) {
                     throw locationTracker.getException("Error calling flowscript function " + funName, ex);
-//                    EvaluatorException ee = Context.reportRuntimeError(
-//                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
-//                                                                                                    ex.getMessage()));
-//                    Throwable unwrapped = unwrap(ex);
-//                    if (unwrapped instanceof ProcessingException) {
-//                        throw (ProcessingException) unwrapped;
-//                    }
-//                    throw new CascadingRuntimeException(ee.getMessage(),
-//                                                        unwrapped);
                 } catch (EcmaError ee) {
                     throw locationTracker.getException("Error calling flowscript function " + funName, ee);
-//                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-//                    if (ee.getSourceName() != null) {
-//                        Context.reportRuntimeError(msg, ee.getSourceName(),
-//                                                   ee.getLineNumber(), ee.getLineSource(),
-//                                                   ee.getColumnNumber());
-//                    } else {
-//                        Context.reportRuntimeError(msg);
-//                    }
-//                    throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
                 thrScope.setLock(false);
@@ -856,26 +838,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                                 "handleContinuation", args);
                 } catch (JavaScriptException ex) {
                     throw locationTracker.getException("Error calling continuation", ex);
-//                    EvaluatorException ee = Context.reportRuntimeError(
-//                                                                       ToolErrorReporter.getMessage("msg.uncaughtJSException",
-//                                                                                                    ex.getMessage()));
-//                    Throwable unwrapped = unwrap(ex);
-//                    if (unwrapped instanceof ProcessingException) {
-//                        throw (ProcessingException)unwrapped;
-//                    }
-//                    throw new CascadingRuntimeException(ee.getMessage(),
-//                                                        unwrapped);
                 } catch (EcmaError ee) {
                     throw locationTracker.getException("Error calling continuation", ee);
-//                    String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
-//                    if (ee.getSourceName() != null) {
-//                        Context.reportRuntimeError(msg, ee.getSourceName(),
-//                                                   ee.getLineNumber(), ee.getLineSource(),
-//                                                   ee.getColumnNumber());
-//                    } else {
-//                        Context.reportRuntimeError(msg);
-//                    }
-//                    throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
                 kScope.setLock(false);
