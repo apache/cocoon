@@ -44,37 +44,28 @@ public class RandomNumberModule extends AbstractInputModule implements ThreadSaf
         returnNames = tmp;
     }
 
-    public Object getAttribute( String name, Configuration modeConf, Map objectModel ) throws ConfigurationException {
-        
-        long min = 0;
-        long max = java.lang.Long.MAX_VALUE;
+    public Object getAttribute(String name, Configuration modeConf, Map objectModel) throws ConfigurationException {
+        long min = Long.parseLong((String)this.settings.get("min", "0"));
+        long max = Long.parseLong((String)this.settings.get("max", String.valueOf(Long.MAX_VALUE)));
         if (modeConf != null) {
-            min = Long.parseLong(modeConf.getAttribute("min","0"));
-            max = Long.parseLong(modeConf.getAttribute("max",String.valueOf(max)));
-            
-            //preferred
-            min = Long.parseLong(modeConf.getChild("min").getValue("0"));
-            max = Long.parseLong(modeConf.getChild("max").getValue(String.valueOf(max)));
-        }
-        return Long.toString(java.lang.Math.round(java.lang.Math.random()*(max-min)));
+            min = modeConf.getAttributeAsLong("max", min);
+            max = modeConf.getAttributeAsLong("max", max);
 
+            //preferred
+            min = modeConf.getChild("min").getValueAsLong(min);
+            max = modeConf.getChild("max").getValueAsLong(max);
+        }
+        return Long.toString(min + Math.round(Math.random()*(max-min)));
     }
 
-
-    public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) throws ConfigurationException {
-
+    public Iterator getAttributeNames(Configuration modeConf, Map objectModel) throws ConfigurationException {
         return RandomNumberModule.returnNames.iterator();
     }
 
-
-    public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
+    public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
         throws ConfigurationException {
-
             List values = new LinkedList();
-            values.add( this.getAttribute(name, modeConf, objectModel ) );
-
+            values.add(this.getAttribute(name, modeConf, objectModel));
             return values.toArray();
-            
     }
-
 }
