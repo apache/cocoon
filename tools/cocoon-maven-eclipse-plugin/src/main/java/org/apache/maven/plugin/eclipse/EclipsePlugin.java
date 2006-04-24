@@ -69,12 +69,18 @@ public class EclipsePlugin
     private static final String BUILDER_JDT_CORE_JAVA = "org.eclipse.jdt.core.javabuilder"; //$NON-NLS-1$
 
     private static final String BUILDER_WST_COMPONENT_STRUCTURAL = "org.eclipse.wst.common.modulecore.ComponentStructuralBuilder"; //$NON-NLS-1$
+    
+    private static final String BUILDER_PDE_MANIFEST = "org.eclipse.pde.ManifestBuilder";  //$NON-NLS-1$
+    
+    private static final String BUILDER_PDE_SCHEMA = "org.eclipse.pde.SchemaBuilder";  //$NON-NLS-1$
 
     private static final String NATURE_WST_MODULE_CORE_NATURE = "org.eclipse.wst.common.modulecore.ModuleCoreNature"; //$NON-NLS-1$
 
     private static final String NATURE_JDT_CORE_JAVA = "org.eclipse.jdt.core.javanature"; //$NON-NLS-1$
 
     private static final String NATURE_JEM_WORKBENCH_JAVA_EMF = "org.eclipse.jem.workbench.JavaEMFNature"; //$NON-NLS-1$
+    
+    private static final String NATURE_PDE_PLUGIN = "org.eclipse.pde.PluginNature";  //$NON-NLS-1$
 
     private static final String COMMON_PATH_JDT_LAUNCHING_JRE_CONTAINER = "org.eclipse.jdt.launching.JRE_CONTAINER"; //$NON-NLS-1$
 
@@ -217,6 +223,13 @@ public class EclipsePlugin
      * Not a plugin parameter. Is this a java project?
      */
     private boolean isJavaProject;
+    
+    /**
+     * Is it an PDE project?
+     * 
+     * @parameter expression="${eclipse.pde}" default-value="false"
+     */
+    private boolean pde;    
 
     /**
      * Getter for <code>buildcommands</code>.
@@ -526,7 +539,8 @@ public class EclipsePlugin
             new EclipseClasspathWriter( getLog(), eclipseProjectDir, project, deps ).write( projectBaseDir, sourceDirs,
                                                                                             classpathContainers,
                                                                                             localRepository,
-                                                                                            buildOutputDirectory );
+                                                                                            buildOutputDirectory,
+                                                                                            pde );
         }
 
         getLog().info( Messages.getString( "EclipsePlugin.wrote", new Object[] { //$NON-NLS-1$
@@ -565,6 +579,11 @@ public class EclipsePlugin
                 projectnatures.add( NATURE_JEM_WORKBENCH_JAVA_EMF ); // WTP 0.7/1.0 nature
             }
         }
+        
+        if( pde ) 
+        {
+        	projectnatures.add( NATURE_PDE_PLUGIN );
+        }
 
     }
 
@@ -596,6 +615,12 @@ public class EclipsePlugin
         if ( wtpR7 )
         {
             buildcommands.add( BUILDER_WST_COMPONENT_STRUCTURAL_DEPENDENCY_RESOLVER ); // WTP 0.7 builder
+        }
+        
+        if ( pde )
+        {
+            buildcommands.add( BUILDER_PDE_MANIFEST );
+            buildcommands.add( BUILDER_PDE_SCHEMA );            
         }
     }
 

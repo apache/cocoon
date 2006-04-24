@@ -30,6 +30,7 @@ import org.apache.maven.plugin.ide.IdeDependency;
 import org.apache.maven.plugin.ide.IdeUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
@@ -97,7 +98,7 @@ public class EclipseClasspathWriter
     }
 
     public void write( File projectBaseDir, EclipseSourceDir[] sourceDirs, List classpathContainers,
-                       ArtifactRepository localRepository, File buildOutputDirectory )
+                       ArtifactRepository localRepository, File buildOutputDirectory, boolean rcp )
         throws MojoExecutionException
     {
 
@@ -170,7 +171,7 @@ public class EclipseClasspathWriter
 
             if ( dep.isAddedToClasspath() )
             {
-                addDependency( writer, dep, localRepository );
+                addDependency( writer, dep, localRepository, rcp );
             }
         }
 
@@ -180,7 +181,7 @@ public class EclipseClasspathWriter
 
     }
 
-    private void addDependency( XMLWriter writer, IdeDependency dep, ArtifactRepository localRepository )
+    private void addDependency( XMLWriter writer, IdeDependency dep, ArtifactRepository localRepository, boolean rcp )
         throws MojoExecutionException
     {
 
@@ -219,12 +220,41 @@ public class EclipseClasspathWriter
             else
             {
                 File localRepositoryFile = new File( localRepository.getBasedir() );
+                
+                if ( dep.isOSGiBundle() && rcp )
+                {
+                	// do nothing as required bundles need to be added to the Eclipse target platform
+                	return;
+                }                
+                else if ( !dep.isOSGiBundle() && rcp ) // && !dep.isTestDependency() && !dep.isProvided() )
+                {
+	                String libs = "target/osgi/lib";
+	                try {
+	                	File libsDir = new File(libs);
+	                	if(!libsDir.exists()) {
+	                		libsDir.mkdirs();
+	                	}
+						FileUtils.copyFileToDirectory(dep.getFile(), libsDir);
+						
+					} 
+	                catch (IOException e) 
+	                {
+						throw new MojoExecutionException("Can't copy artifact '" + dep.getArtifactId() + "'");
+					}
+	                path = libs + "/" + dep.getFile().getName();
+	                kind = "lib";
+                } 
+                else 
+                {           	
 
-                String fullPath = artifactPath.getPath();
-
-                path = "M2_REPO/" //$NON-NLS-1$
-                    + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, new File( fullPath ), false );
-
+	
+	                String fullPath = artifactPath.getPath();
+	
+	                path = "M2_REPO/" //$NON-NLS-1$
+	                    + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, new File( fullPath ), false );
+	
+	                kind = "var"; //$NON-NLS-1$
+                }
                 if ( dep.getSourceAttachment() != null )
                 {
                     sourcepath = "M2_REPO/" //$NON-NLS-1$
@@ -239,7 +269,6 @@ public class EclipseClasspathWriter
                                                        "\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
-                kind = "var"; //$NON-NLS-1$
             }
 
         }
