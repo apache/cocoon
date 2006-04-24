@@ -1,0 +1,11 @@
+Author: reinhard
+Date: Mon Apr 24 04:07:51 2006
+New Revision: 396513
+
+URL: http://svn.apache.org/viewcvs?rev=396513&view=rev
+Log:
+branch maven-eclipse-plugin to add PDE functionality
+
+Added:
+    cocoon/trunk/tools/cocoon-maven-eclipse-plugin/
+      - copied from r396512, maven/plugins/trunk/maven-eclipse-plugin/
