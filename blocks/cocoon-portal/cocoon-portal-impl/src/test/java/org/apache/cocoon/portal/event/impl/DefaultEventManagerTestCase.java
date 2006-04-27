@@ -191,6 +191,39 @@ public class DefaultEventManagerTestCase extends AbstractPortalTestCase {
         assertEquals(1, receiver.receiveCount12);
     }
 
+    public void testNoEventReceiver() throws Exception {
+        this.eventManager.send(new Event1());
+    }
+
+    public void testUnsubscribe() throws Exception {
+        EventReceiver receiver = new EventReceiver();
+        this.eventManager.subscribe(receiver);
+        assertEquals(0, receiver.receiveCount);
+        this.eventManager.send(new Event1());
+        assertEquals(1, receiver.receiveCount);
+        this.eventManager.unsubscribe(receiver);
+        this.eventManager.send(new Event1());
+        assertEquals(1, receiver.receiveCount);
+        this.eventManager.subscribe(receiver);
+        this.eventManager.send(new Event2());
+        assertEquals(2, receiver.receiveCount);
+    }
+
+    public void testMultiSubscribe() throws Exception {
+        EventReceiver receiver = new EventReceiver();
+        this.eventManager.subscribe(receiver);
+        assertEquals(0, receiver.receiveCount);
+        this.eventManager.send(new Event1());
+        assertEquals(1, receiver.receiveCount);
+
+        this.eventManager.subscribe(receiver);
+        this.eventManager.send(new Event1());
+        assertEquals(2, receiver.receiveCount);
+        this.eventManager.subscribe(receiver);
+        this.eventManager.send(new Event2());
+        assertEquals(3, receiver.receiveCount);
+    }
+
     public static final class EventReceiver implements Receiver {
 
         public int receiveCount;
