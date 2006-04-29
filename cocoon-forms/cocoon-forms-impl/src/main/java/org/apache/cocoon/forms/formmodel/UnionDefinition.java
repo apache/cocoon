@@ -24,32 +24,6 @@ package org.apache.cocoon.forms.formmodel;
 public class UnionDefinition extends AbstractContainerDefinition {
     private String caseWidgetId;
 
-    /*
-    public void setDatatype(Datatype datatype) {
-        if (!String.class.isAssignableFrom(datatype.getTypeClass()))
-            throw new RuntimeException("Only datatype string is allowed for this widget at " + getLocation() + ".");
-        super.setDatatype(datatype);
-    }
-
-    public void setDefault(Object value) throws Exception {
-        if (!(value == null || String.class.isAssignableFrom(value.getClass())))
-            throw new Exception("UnionDefinition: Default case must be supplied as a string (" + getLocation() + ")");
-        if (value == null || value.equals("")) {
-            if (isRequired())
-                throw new Exception("UnionWidget: Union is marked required, but no default case was supplied (" + getLocation() + ")");
-            this.defaultValue = "";
-        } else {
-            if (!hasWidget((String)value))
-                throw new Exception("UnionWidget: The default value \"" + value + "\" does not match a union case (" + getLocation() + ")");
-            this.defaultValue = (String)value;
-        }
-    }
-
-    public Object getDefaultValue() {
-        return defaultValue;
-    }
-    */
-    
     /**
      * initialize this definition with the other, sort of like a copy constructor
      */
@@ -61,7 +35,7 @@ public class UnionDefinition extends AbstractContainerDefinition {
     		this.caseWidgetId = other.caseWidgetId;
     		
     	} else {
-    		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
+    		throw new Exception("Definition to inherit from is not of the right type! (at "+ getLocation()+").");
     	}
     }
 
@@ -79,3 +53,4 @@ public class UnionDefinition extends AbstractContainerDefinition {
         return unionWidget;
     }
 }
+
