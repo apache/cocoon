@@ -15,6 +15,11 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.event.RepeaterEvent;
+import org.apache.cocoon.forms.event.RepeaterListener;
+import org.apache.cocoon.forms.event.ValueChangedListener;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
+
 /**
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
  * 
@@ -25,6 +30,7 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private int minSize;
     private int maxSize;
     private boolean orderable;
+    private RepeaterListener listener;
 
     public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable, boolean orderable) {
         super();
@@ -69,4 +75,24 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     public boolean getOrderable() {
         return this.orderable;
     }
+    
+    public void addRepeaterListener(RepeaterListener listener) {
+        checkMutable();
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+    
+    public void fireRepeaterEvent(RepeaterEvent event) {
+        if (this.listener != null) {
+            this.listener.repeaterModified(event);
+        }
+    }
+    
+    public boolean hasRepeaterListeners() {
+        return this.listener != null;
+    }
+
+    public RepeaterListener getRepeaterListener() {
+        return this.listener;
+    }
+    
 }
