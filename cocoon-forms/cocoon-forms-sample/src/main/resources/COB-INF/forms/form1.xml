@@ -22,6 +22,12 @@
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
          xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
+  <fd:on-processing-phase>
+    <fd:javascript>
+      Packages.java.lang.System.out.println('Processing phase : ' + event.getPhase());
+    </fd:javascript>
+  </fd:on-processing-phase>
+        
   <fd:validation>
     <!-- This demonstrates form level validation -->
     <fd:javascript>
@@ -262,6 +268,26 @@
     </fd:field>
   
     <fd:repeater id="contacts">
+      <fd:on-repeater-modified>
+          <fd:javascript>
+              var action = event.getAction();
+              var rowindex = event.getRow();
+              // Check if there is a valid row index
+              if (rowindex >= 0) {
+                // don't try to access the row if the event is deleted, since the row is not there anymore.
+                if (action != Packages.org.apache.cocoon.forms.event.RepeaterEventAction.ROW_DELETED) {
+                  var repeater = event.source;
+                  var repeaterRow = repeater.getChild(rowindex);
+                  var firstName = repeaterRow.getChild('firstname').getValue();
+                  java.lang.System.err.println("Repeater event " + action + " on row " + rowindex + " (contact named " + firstName + ")");
+                } else {
+                  java.lang.System.err.println("Repeater event " + action + " on row " + rowindex + " (cannot retrieve row anymore)");
+                }
+              } else {
+                java.lang.System.err.println("Repeater event " + action + " on unspecified row");
+              }
+          </fd:javascript>
+      </fd:on-repeater-modified>
       <fd:validation>
         <!-- This demonstrates validating a repeater: we check here if all contacts are distinct.
            A repeater cannot itself display a validation error, and therefore sets a validation
