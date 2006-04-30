@@ -214,6 +214,17 @@
       That generates smaller bytecode allowing to compiler larger XSPs before hitting the
       64k limit for the size of the generate() method.
     </action>
+    <action dev="SG" type="add" fixes-bug="COCOON-1781 COCOON-1685">
+      Forms block: modified ProcessingPhase to add a PROCESSING_INITIALIZE phase instead of the spurious 
+      double READ_FROM_REQUEST_VALUE sent before. Made a ProcessingPhaseListener configurable from 
+      form definition with on-processing-phase and adapted the JavaScript widget listener to support
+      processing phase events.
+    </action>
+    <action dev="SG" type="add" fixes-bug="COCOON-1801">
+      Forms block: added repeater events. Repeater now sends row added, deleted etc.. events. 
+      The listener can be added in definition with an on-repeater-modified element. Added support
+      for these events in JavaScript listener.
+    </action>
   </release>
   <release version="2.1.9" date="April 7 2006">
     <action dev="JBQ" type="fix">
