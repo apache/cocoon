@@ -28,7 +28,7 @@ import org.apache.cocoon.forms.formmodel.tree.TreeSelectionListener;
  * @version $Id$
  */
 public class WidgetEventMulticaster extends AWTEventMulticaster implements
-    ActionListener, ValueChangedListener, ProcessingPhaseListener {
+    ActionListener, ValueChangedListener, ProcessingPhaseListener, RepeaterListener {
 
     protected WidgetEventMulticaster(EventListener a, EventListener b) {
         super(a, b);
@@ -117,4 +117,20 @@ public class WidgetEventMulticaster extends AWTEventMulticaster implements
         if (b == null)  return a;
         return new WidgetEventMulticaster(a, b);
     }
+
+    // -- RepeaterListener -------------------------------------- 
+    
+    public void repeaterModified(RepeaterEvent e) {
+        ((RepeaterListener)a).repeaterModified(e);
+        ((RepeaterListener)b).repeaterModified(e);
+    }
+    
+    public static RepeaterListener add(RepeaterListener a, RepeaterListener b) {
+        return (RepeaterListener)addInternal(a, b);
+    }
+    
+    public static RepeaterListener remove(RepeaterListener l, RepeaterListener oldl) {
+        return (RepeaterListener)removeInternal(l, oldl);
+    }
+    
 }

@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.forms.event.RepeaterListener;
+import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
@@ -55,6 +59,12 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
         super.setupDefinition(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
 
+        // parse "on-repeater-modified"
+        Iterator iter = buildEventListeners(repeaterElement, "on-repeater-modified", RepeaterListener.class).iterator();
+        while (iter.hasNext()) {
+            repeaterDefinition.addRepeaterListener((RepeaterListener)iter.next());
+        }        
+        
         setupContainer(repeaterElement,"widgets",repeaterDefinition);
 
         repeaterDefinition.makeImmutable();

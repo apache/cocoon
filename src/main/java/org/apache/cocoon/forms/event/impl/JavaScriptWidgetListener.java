@@ -15,17 +15,19 @@
  */
 package org.apache.cocoon.forms.event.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.CreateEvent;
 import org.apache.cocoon.forms.event.CreateListener;
+import org.apache.cocoon.forms.event.ProcessingPhaseEvent;
+import org.apache.cocoon.forms.event.ProcessingPhaseListener;
+import org.apache.cocoon.forms.event.RepeaterEvent;
+import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
@@ -55,24 +57,11 @@ public abstract class JavaScriptWidgetListener {
      */
     protected void callScript(WidgetEvent event) {
         try {
-            
-            HashMap values = new HashMap(2);
-            values.put("event", event);
             //FIXME(SW) it would be nice to have "this" be the widget, but I don't know how to define
             //the "this" object for a script (this is easy for a function)
-            
             Map objectModel = ContextHelper.getObjectModel(context);
-
-            // Add the view data that was passed to showForm()
-            Object viewData = FlowHelper.getContextObject(objectModel);
-            if (viewData != null) {
-                values.put("viewData", viewData);
-            }
-            
             Widget w = event.getSourceWidget();
-            
             JavaScriptHelper.callFunction(this.func, w, new Object[]{w, event}, objectModel);
-            
         } catch(RuntimeException re) {
             // rethrow
             throw re;
@@ -124,4 +113,29 @@ public abstract class JavaScriptWidgetListener {
             super.callScript(event);
         }
     }
+
+    public static class JSProcessingPhaseListener extends JavaScriptWidgetListener implements ProcessingPhaseListener {
+
+        public JSProcessingPhaseListener(Function func, Context context) {
+            super(func, context);
+        }
+
+        public void phaseEnded(ProcessingPhaseEvent event) {
+            super.callScript(event);
+        }
+    }
+
+    
+    public static class JSRepeaterListener extends JavaScriptWidgetListener implements RepeaterListener {
+
+        public JSRepeaterListener(Function func, Context context) {
+            super(func, context);
+        }
+
+        public void repeaterModified(RepeaterEvent event) {
+            super.callScript(event);
+        }
+    }
+    
 }
+

@@ -24,7 +24,11 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.FormsRuntimeException;
+import org.apache.cocoon.forms.event.RepeaterEvent;
+import org.apache.cocoon.forms.event.RepeaterEventAction;
+import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
@@ -59,6 +63,7 @@ public class Repeater extends AbstractWidget
     protected final List rows = new ArrayList();
     protected ValidationError validationError;
     private boolean orderable = false;
+    private RepeaterListener listener;
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         super(repeaterDefinition);
@@ -70,6 +75,7 @@ public class Repeater extends AbstractWidget
         }
         
         this.orderable = this.definition.getOrderable();
+        this.listener = this.definition.getRepeaterListener();
     }
 
     public WidgetDefinition getDefinition() {
@@ -79,6 +85,8 @@ public class Repeater extends AbstractWidget
     public void initialize() {
         for (int i = 0; i < this.rows.size(); i++) {
             ((RepeaterRow)rows.get(i)).initialize();
+            // TODO(SG) Is this safe !?
+            broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_ADDED, i));
         }
         super.initialize();
     }
@@ -100,6 +108,7 @@ public class Repeater extends AbstractWidget
         rows.add(repeaterRow);
         repeaterRow.initialize();
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_ADDED, rows.size() - 1));
         return repeaterRow;
     }
 
@@ -107,11 +116,13 @@ public class Repeater extends AbstractWidget
         RepeaterRow repeaterRow = new RepeaterRow(definition);
         if (index >= this.rows.size()) {
             rows.add(repeaterRow);
+            index = rows.size() - 1;
         } else {
             rows.add(index, repeaterRow);
         }
         repeaterRow.initialize();
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_ADDED, index));
         return repeaterRow;
     }
 
@@ -174,8 +185,10 @@ public class Repeater extends AbstractWidget
      * @throws IndexOutOfBoundsException if the the index is outside the range of existing rows.
      */
     public void removeRow(int index) {
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_DELETING, index));
         rows.remove(index);
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROW_DELETED, index));
     }
 
     /**
@@ -209,6 +222,7 @@ public class Repeater extends AbstractWidget
         }
 
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));        
     }
 
     public void moveRowLeft(int index) {
@@ -220,6 +234,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index, temp);
         }
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));                
     }
 
     public void moveRowRight(int index) {
@@ -231,6 +246,7 @@ public class Repeater extends AbstractWidget
             this.rows.set(index, temp);
         }
         getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));                
     }
 
     /**
@@ -245,7 +261,9 @@ public class Repeater extends AbstractWidget
      * Clears all rows from the repeater and go back to the initial size
      */
     public void clear() {
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARING));        
         rows.clear();
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_CLEARED));        
 
         // and reset to initial size
         for (int i = 0; i < this.definition.getInitialSize(); i++) {
@@ -253,6 +271,30 @@ public class Repeater extends AbstractWidget
         }
         getForm().addWidgetUpdate(this);
     }
+    
+    public void addRepeaterListener(RepeaterListener listener) {
+        this.listener = WidgetEventMulticaster.add(this.listener, listener);
+    }
+
+    public void removeRepeaterListener(RepeaterListener listener) {
+        this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+
+    public boolean hasRepeaterListeners() {
+        return this.listener != null;
+    }
+
+    public void broadcastEvent(WidgetEvent event) {
+        if (event instanceof RepeaterEvent) {
+            if (this.listener != null) {
+                this.listener.repeaterModified((RepeaterEvent)event);
+            }
+        } else {
+            // Other kinds of events
+            super.broadcastEvent(event);
+        }
+    }
+    
 
     /**
      * Gets a widget on a certain row.
@@ -511,7 +553,6 @@ public class Repeater extends AbstractWidget
         public void initialize() {
             // Initialize children but don't call super.initialize() that would call the repeater's
             // on-create handlers for each row.
-            // FIXME(SW): add an 'on-create-row' handler?
             Iterator it = this.getChildren();
             while(it.hasNext()) {
               ((Widget)it.next()).initialize();
