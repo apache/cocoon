@@ -215,8 +215,9 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
                 info("Singleton initialization: ", bean, beanName);
             } else if (isFactoryBean(bean)) {
                 Object service = new FactoryBeanServiceFactory((FactoryBean) bean);
+                logger.debug("Register FactoryBean=" + itfName + " hint=" + hint + " service=" + service);
                 ServiceRegistration registration =
-                    this.bundleContext.registerService(beanName, service, properties);
+                    this.bundleContext.registerService(itfName, service, properties);
                 synchronized (this) {
                     // keep track on registred services
                     this.serviceRegistrations.put(beanName, registration);
