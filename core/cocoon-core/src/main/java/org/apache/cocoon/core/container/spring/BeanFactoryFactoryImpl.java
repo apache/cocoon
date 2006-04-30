@@ -70,8 +70,12 @@ public class BeanFactoryFactoryImpl
             } else {
                 ae.logger = (Logger)parentFactory.getBean(ProcessingUtil.LOGGER_ROLE);
             }
-            ae.servletContext = ((ServletConfig) sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
-                    .getServletContext();
+            // The servletContext isn't used here, furthermore it breaks previous contracts
+            // to have a mandatory dependency on the existence of a servlet config within the
+            // sitemap context, this dependency has always been optional. /DF
+            // ae.servletContext = ((ServletConfig) sitemapContext.get(CocoonServlet.CONTEXT_SERVLET_CONFIG))
+            //        .getServletContext();
+            ae.servletContext = null;
             ae.settings = settings;
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
