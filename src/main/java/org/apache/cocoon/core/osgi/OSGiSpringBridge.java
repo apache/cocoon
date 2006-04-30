@@ -114,7 +114,7 @@ public class OSGiSpringBridge implements CocoonSpringBeanRegistry {
             // Hinted role: create query
             String query = "(" + HINT_PROPERTY + "=" + hint + ")";
             ServiceReference[] results = ctx.getServiceReferences(itf, query);
-            result = (results != null && results.length > 1) ? results[0] : null;
+            result = (results != null && results.length > 0) ? results[0] : null;
         }
 
         return result;
