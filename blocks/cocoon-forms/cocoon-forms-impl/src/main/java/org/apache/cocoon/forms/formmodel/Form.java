@@ -78,6 +78,7 @@ public class Form extends AbstractContainerWidget
     public Form(FormDefinition definition) {
         super(definition);
         this.definition = definition;
+        this.listener = definition.getProcessingPhaseListener();
     }
 
     /**
@@ -292,6 +293,8 @@ public class Form extends AbstractContainerWidget
         // Fire the binding phase events
         fireEvents();
 
+        this.phase = ProcessingPhase.PROCESSING_INITIALIZE;
+        
         // setup processing
         this.submitWidget = null;
         this.locale = formContext.getLocale();

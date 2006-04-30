@@ -83,4 +83,10 @@ public class FormDefinition extends AbstractContainerDefinition {
 
         super.addWidgetDefinition(definition);
     }
+    /**
+     * @return Returns the listener.
+     */
+    public ProcessingPhaseListener getProcessingPhaseListener() {
+        return listener;
+    }
 }
