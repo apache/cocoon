@@ -15,8 +15,12 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Iterator;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.forms.event.ProcessingPhaseListener;
+import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.formmodel.library.LibraryManager;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.w3c.dom.Element;
@@ -47,6 +51,11 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
         
         // set local URI
         formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
+    
+        Iterator iter = buildEventListeners(formElement, "on-processing-phase", ProcessingPhaseListener.class).iterator();
+        while (iter.hasNext()) {
+            formDefinition.addProcessingPhaseListener((ProcessingPhaseListener)iter.next());
+        }
         
         super.setupDefinition(formElement, formDefinition);
         setDisplayData(formElement, formDefinition);

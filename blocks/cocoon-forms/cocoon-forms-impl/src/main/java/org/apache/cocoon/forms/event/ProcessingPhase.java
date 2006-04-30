@@ -31,6 +31,8 @@ public class ProcessingPhase extends ValuedEnum {
     protected ProcessingPhase(String name, int value) {
         super(name, value);
     }
+    public static final int PROCESSING_INITIALIZE_VALUE = 4;
+    public static final ProcessingPhase PROCESSING_INITIALIZE = new ProcessingPhase("Processing initialize", PROCESSING_INITIALIZE_VALUE);
     
     public static final int LOAD_MODEL_VALUE = 0;
     public static final ProcessingPhase LOAD_MODEL = new ProcessingPhase("Load model", LOAD_MODEL_VALUE);
