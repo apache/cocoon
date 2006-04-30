@@ -21,6 +21,8 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.event.CreateListener;
+import org.apache.cocoon.forms.event.ProcessingPhaseListener;
+import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
@@ -64,6 +66,10 @@ public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, T
             return new JavaScriptWidgetListener.JSValueChangedListener(func, context);
         } else if (listenerClass == TreeSelectionListener.class) {
             return new JavaScriptWidgetListener.JSTreeSelectionListener(func, context);
+        } else if (listenerClass == ProcessingPhaseListener.class) {
+            return new JavaScriptWidgetListener.JSProcessingPhaseListener(func, context);
+        } else if (listenerClass == RepeaterListener.class) {
+            return new JavaScriptWidgetListener.JSRepeaterListener(func, context);
         } else {
             throw new Exception("Unkonwn event class: " + listenerClass);
         }
