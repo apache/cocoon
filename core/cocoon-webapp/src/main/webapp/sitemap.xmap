@@ -35,8 +35,10 @@
 
  <map:components>
 
-   <!-- include some additional components -->
-   <map:include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>
+   <!--+
+       | All needed components are inherited from the parent container
+       | configured in WEB-INF/cocoon.xconf
+       +-->
 
  </map:components>
 
