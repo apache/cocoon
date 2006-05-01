@@ -24,6 +24,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>1</version>
+  </parent>
   
   <packaging>pom</packaging>  
   
@@ -49,23 +55,19 @@
   <repositories>
     <repository>
       <id>central</id>
+      <name>Maven central repository</name>
       <url>http://ibiblio.org/maven2</url>
     </repository>
     <repository>
-      <id>apache-maven2</id>
-      <name>Apache Maven2 Repository</name>
-      <url>http://cvs.apache.org/maven-snapshot-repository</url>
+      <id>apache.snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://svn.apache.org/maven-snapshot-repository</url>
     </repository>
     <repository>
       <id>apache-cvs</id>
       <name>Apache CVS Repository</name>
-      <url>http://cvs.apache.org/repository</url>
+      <url>http://svn.apache.org/repository</url>
       <layout>legacy</layout>
-    </repository>
-    <repository>
-      <id>maven-snapshot</id>
-      <name>Maven snapshot Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2/</url>
     </repository>
   </repositories>
   <!-- Activate this element if you want to use snapshot versions of plugins
