@@ -392,6 +392,16 @@ public class DefaultEventManager
             }
             return this.parents;
         }
+
+        /**
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        public boolean equals(Object obj) {
+            if ( obj instanceof HierarchyInfo ) {
+                return ((HierarchyInfo)obj).className.equals(this.className);
+            }
+            return false;
+        }
     }
 
     protected static final class ReceiverInfo {
@@ -401,6 +411,17 @@ public class DefaultEventManager
         public ReceiverInfo(Receiver r, Method m) {
             this.receiver = r;
             this.method = m;
+        }
+
+        /**
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        public boolean equals(Object obj) {
+            if ( obj instanceof ReceiverInfo ) {
+                return  ((ReceiverInfo)obj).receiver.equals(this.receiver)
+                     && ((ReceiverInfo)obj).method.equals(this.method);
+            }
+            return false;
         }
     }
 }
