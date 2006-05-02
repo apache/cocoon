@@ -48,6 +48,12 @@
           TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
      -->
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
       <version>0.8</version>
