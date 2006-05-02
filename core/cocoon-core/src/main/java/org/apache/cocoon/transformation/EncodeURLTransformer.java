@@ -17,12 +17,14 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.ElementAttributeMatching;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -31,7 +33,6 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.apache.regexp.RESyntaxException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -105,13 +106,13 @@ public class EncodeURLTransformer
      * Configuration default exclude pattern,
      * ie img/@src
      */
-    public final static String EXCLUDE_NAME_DEFAULT = "img/@src";
+    public final static String EXCLUDE_NAME_DEFAULT = "img/@src=";
 
     /**
      * Configuration default exclude pattern,
      * ie .*\/@href|.*\/@action|frame/@src
      */
-    public final static String INCLUDE_NAME_DEFAULT = ".*/@href|.*/@action|frame/@src";
+    public final static String INCLUDE_NAME_DEFAULT = ".*/@href=|.*/@action=|frame/@src=";
 
     private String includeNameConfigure = INCLUDE_NAME_DEFAULT;
     private String excludeNameConfigure = EXCLUDE_NAME_DEFAULT;
@@ -168,7 +169,7 @@ public class EncodeURLTransformer
                                                                this.excludeNameConfigure);
             try {
                 this.elementAttributeMatching = new ElementAttributeMatching(includeName, excludeName);
-            } catch (RESyntaxException reex) {
+            } catch (PatternSyntaxException reex) {
                 final String message = "Cannot parse include-name: " + includeName + " " +
                     "or exclude-name: " + excludeName + "!";
                 throw new ProcessingException(message, reex);
@@ -307,6 +308,108 @@ public class EncodeURLTransformer
             encoded_url = url;
         }
         return encoded_url;
+    }
+    
+    /**
+     * A helper class for matching element names, and attribute names.
+     *
+     * <p>
+     *  For given include-name, exclude-name decide if element-attribute pair
+     *  matches. This class defines the precedence and matching algorithm.
+     * </p>
+     *
+     * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
+     * @version    CVS $Id$
+     */
+    public static class ElementAttributeMatching {
+        /**
+         * Regular expression of including patterns
+         *
+         */
+        protected Pattern includeNameRE;
+        /**
+         * Regular expression of excluding patterns
+         *
+         */
+        protected Pattern excludeNameRE;
+
+
+        /**
+         *Constructor for the ElementAttributeMatching object
+         *
+         * @param  includeName            Description of Parameter
+         * @param  excludeName            Description of Parameter
+         * @exception  PatternSyntaxException  Description of Exception
+         */
+        public ElementAttributeMatching(String includeName, String excludeName) throws PatternSyntaxException {
+            includeNameRE = Pattern.compile(includeName, Pattern.CASE_INSENSITIVE);
+            excludeNameRE = Pattern.compile(excludeName, Pattern.CASE_INSENSITIVE);
+        }
+
+
+        /**
+         * Return true iff element_name attr_name pair is not matched by exclude-name,
+         * but is matched by include-name
+         * @param  element_name
+         * @param  attr_name
+         * @param value TODO
+         *
+         * @return               boolean true iff value of attribute_name should get rewritten, else
+         *   false.
+         */
+        public boolean matchesElementAttribute(String element_name, String attr_name, String value) {
+            String element_attr_name = canonicalizeElementAttribute(element_name, attr_name, value);
+
+            if (excludeNameRE != null && includeNameRE != null) {
+                return !matchesExcludesElementAttribute(element_attr_name) &&
+                        matchesIncludesElementAttribute(element_attr_name);
+            } else {
+                return false;
+            }
+        }
+
+
+        /**
+         * Build from elementname, and attribute name a single string.
+         * <p>
+         *   String concatenated <code>element name + "/@" + attribute name</code>
+         *   is matched against the include and excluding patterns.
+         * </p>
+         * @param  element_name  Description of Parameter
+         * @param  attr_name     Description of Parameter
+         * @param value The value
+         *
+         * @return               Description of the Returned Value
+         */
+        private String canonicalizeElementAttribute(String element_name, String attr_name, String value) {
+            return element_name + "/@" + attr_name + "=" + value;
+        }
+
+
+        /**
+         * Return true iff element_name attr_name pair is matched by exclude-name.
+         *
+         * @param  element_attr_name
+         * @return                    boolean true iff exclude-name matches element_name, attr_name, else
+         *   false.
+         */
+        private boolean matchesExcludesElementAttribute(String element_attr_name) {
+            boolean match = excludeNameRE.matcher(element_attr_name).lookingAt();
+            return match;
+        }
+
+
+        /**
+         * Return true iff element_name attr_name pair is matched by include-name.
+         *
+         * @param  element_attr_name
+         * @return                    boolean true iff include-name matches element_name, attr_name, else
+         *   false.
+         */
+        private boolean matchesIncludesElementAttribute(String element_attr_name) {
+            boolean match = includeNameRE.matcher(element_attr_name).lookingAt();
+            return match;
+        }
     }
 }
 
