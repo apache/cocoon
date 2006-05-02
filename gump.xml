@@ -1569,6 +1569,7 @@
 
     <library name="jackrabbit"/>
     <library name="lucene"/>
+    <library name="jcr"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
