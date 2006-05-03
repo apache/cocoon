@@ -43,6 +43,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
                                  File context,
                                  Map attributes,
                                  Map parameters,
+                                 Map headers,
                                  Map links,
                                  List gatheredLinks,
                                  CommandLineContext cliContext,
@@ -51,7 +52,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
     throws MalformedURLException {
         super(uri, null, context, stream, log);
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
-                             new CommandLineRequest(this, null, uri, null, attributes, parameters));
+                             new CommandLineRequest(this, null, uri, null, attributes, parameters, headers));
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
                              new CommandLineResponse());
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
@@ -69,13 +70,14 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
                                  File context,
                                  Map attributes,
                                  Map parameters,
+                                 Map headers,
                                  Map links,
                                  List gatheredLinks,
                                  CommandLineContext cliContext,
                                  OutputStream stream,
                                  Logger log)
     throws MalformedURLException {
-        this(uri, 0L, context, attributes, parameters, links, gatheredLinks, cliContext, stream, log);
+        this(uri, 0L, context, attributes, parameters, headers, links, gatheredLinks, cliContext, stream, log);
     }
 
     /**

@@ -94,7 +94,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
         String markupLanguage = "xsp";
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment("/", context, null,
-                null, cliContext, log);
+                null, null, cliContext, log);
         precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
@@ -110,7 +110,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
         Environment env = new LinkSamplingEnvironment("/", context, null,
-                null, cliContext, log);
+                null, null, cliContext, log);
         precompile(uri, env, markupLanguage, programmingLanguage);
     }
 

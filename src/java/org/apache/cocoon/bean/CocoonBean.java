@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * <p>The Cocoon Bean simplifies usage of the Cocoon object. Allows to create,
@@ -491,11 +492,16 @@ public class CocoonBean extends CocoonWrapper {
                     gatheredLinks = null;
                 }
 
+                final TreeMap headers = new TreeMap();
+                headers.put("user-agent", userAgent);
+                headers.put("accept", accept);
+
                 status =
                     getPage(
                         target.getDeparameterizedSourceURI(),
                         getLastModified(target),
                         target.getParameters(),
+                        headers,
                         target.confirmExtensions() ? translatedLinks : null,
                         gatheredLinks,
                         output);
