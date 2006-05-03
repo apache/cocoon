@@ -45,6 +45,7 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                                    File contextFile,
                                    Map attributes,
                                    Map parameters,
+                                   Map headers,
                                    CommandLineContext cliContext,
                                    Logger log)
     throws MalformedURLException, IOException {
@@ -53,7 +54,7 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
             getLogger().debug("uri = " + uri);
         }
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
-                             new CommandLineRequest(this, null, uri, null, attributes, parameters));
+                             new CommandLineRequest(this, null, uri, null, attributes, parameters, headers));
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
                              new CommandLineResponse());
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,

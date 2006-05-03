@@ -25,16 +25,15 @@ import java.util.Iterator;
  * The avalon behavioural component interface of crawling.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonCrawler.java,v 1.5 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface CocoonCrawler extends Component
-{
+public interface CocoonCrawler extends Component {
+
     /**
      * Role name of this avalon component.
      * Its value is <code>org.apache.cocoon.components.crawler.CocoonCrawler</code>.
      */
     String ROLE = CocoonCrawler.class.getName();
-
 
     /**
      * This is the same as calling crawl(url,-1);
@@ -42,8 +41,7 @@ public interface CocoonCrawler extends Component
      * @param  url  The URL to start crawling from.
      */
     void crawl(URL url);
-    
-    
+
 	/**
      * start crawling the URL.
      * <p>
