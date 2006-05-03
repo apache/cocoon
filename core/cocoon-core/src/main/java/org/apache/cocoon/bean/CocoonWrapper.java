@@ -69,8 +69,8 @@ public class CocoonWrapper {
     private String logKit = null;
     protected String logger = null;
     protected String logLevel = "ERROR";
-    private String userAgent = DEFAULT_USER_AGENT;
-    private String accept = DEFAULT_ACCEPT;
+    protected String userAgent = DEFAULT_USER_AGENT;
+    protected String accept = DEFAULT_ACCEPT;
     private List classList = new ArrayList();
 
     // Objects used alongside User Supplied Parameters
@@ -303,15 +303,16 @@ public class CocoonWrapper {
         }
         log.info("Processing URI: " + uri);
 
-        // Get parameters, deparameterized URI and path from URI
+        // Get parameters, headers, deparameterized URI and path from URI
         final TreeMap parameters = new TreeMap();
+        final TreeMap headers = new TreeMap();
         final String deparameterizedURI =
             NetUtils.deparameterize(uri, parameters);
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         int status =
-            getPage(deparameterizedURI, 0L, parameters, null, null, outputStream);
+            getPage(deparameterizedURI, 0L, parameters, headers, null, null, outputStream);
 
         if (status >= 400) {
             throw new ProcessingException("Resource not found: " + status);
@@ -333,15 +334,16 @@ public class CocoonWrapper {
         }
         log.info("Processing URI: " + uri);
 
-        // Get parameters, deparameterized URI and path from URI
+        // Get parameters, headers, deparameterized URI and path from URI
         final TreeMap parameters = new TreeMap();
+        final TreeMap headers = new TreeMap();
         final String deparameterizedURI =
             NetUtils.deparameterize(uri, parameters);
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         int status =
-            getPage(deparameterizedURI, 0L, parameters, null, null, handler);
+            getPage(deparameterizedURI, 0L, parameters, headers, null, null, handler);
 
         if (status >= 400) {
             throw new ProcessingException("Resource not found: " + status);
@@ -371,12 +373,13 @@ public class CocoonWrapper {
     protected Collection getLinks(String deparameterizedURI, Map parameters)
         throws Exception {
 
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        final TreeMap headers = new TreeMap();
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         LinkSamplingEnvironment env =
             new LinkSamplingEnvironment(deparameterizedURI, context, null,
-                                        parameters, cliContext, log);
+                                        parameters, headers, cliContext, log);
         processLenient(env);
         return env.getLinks();
     }
@@ -394,17 +397,18 @@ public class CocoonWrapper {
     protected int getPage(String deparameterizedURI,
                           long lastModified,
                           Map parameters,
+                          Map headers,
                           Map links,
                           List gatheredLinks,
                           OutputStream stream)
     throws Exception {
 
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         FileSavingEnvironment env =
             new FileSavingEnvironment(deparameterizedURI, lastModified, context,
-                                      null, parameters, links,
+                                      null, parameters, headers, links,
                                       gatheredLinks, cliContext, stream, log);
 
         // Here Cocoon can throw an exception if there are errors in processing the page
@@ -431,17 +435,18 @@ public class CocoonWrapper {
     protected int getPage(String deparameterizedURI,
                           long lastModified,
                           Map parameters,
+                          Map headers,
                           Map links,
                           List gatheredLinks,
                           ContentHandler handler)
     throws Exception {
 
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         FileSavingEnvironment env =
             new FileSavingEnvironment(deparameterizedURI, lastModified, context,
-                                      null, parameters, links,
+                                      null, parameters, headers, links,
                                       gatheredLinks, cliContext, null, log);
 
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
@@ -486,12 +491,13 @@ public class CocoonWrapper {
     protected String getType(String deparameterizedURI, Map parameters)
         throws Exception {
 
-        parameters.put("user-agent", userAgent);
-        parameters.put("accept", accept);
+        final TreeMap headers = new TreeMap();
+        headers.put("user-agent", userAgent);
+        headers.put("accept", accept);
 
         FileSavingEnvironment env =
             new FileSavingEnvironment(deparameterizedURI, context, null,
-                                      parameters, empty, null, cliContext,
+                                      parameters, headers, empty, null, cliContext,
                                       new NullOutputStream(), log);
         processLenient(env);
         return env.getContentType();
