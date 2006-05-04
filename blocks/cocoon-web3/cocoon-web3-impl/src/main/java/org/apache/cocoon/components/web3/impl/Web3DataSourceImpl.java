@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,10 +39,10 @@ import org.apache.cocoon.components.web3.Web3DataSource;
 public class Web3DataSourceImpl extends AbstractLogEnabled
 implements Web3DataSource, ThreadSafe {
 
-    protected Web3Properties properties = null;
+    protected Web3Properties properties;
     protected int            poolsize = 0;
     protected int            current_clients = 0;
-    protected String         mySID = null;
+    protected String         mySID;
 
     protected boolean        trace = false;
     protected int            level = 0;
@@ -50,6 +50,9 @@ implements Web3DataSource, ThreadSafe {
     private static Mutex     lock = new Mutex();
     protected ServiceManager manager;
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }

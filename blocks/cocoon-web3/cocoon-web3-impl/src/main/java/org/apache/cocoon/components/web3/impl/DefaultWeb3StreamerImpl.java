@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.web3.impl;
 
 import com.sap.mw.jco.JCO;
