@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,19 +38,28 @@ import java.util.Date;
 public class Web3ClientImpl extends AbstractLogEnabled 
 implements Web3Client, Disposable, Recyclable, Poolable {
 
-    protected JCO.Client client = null;
-    protected String repository = null;
-        
+    protected JCO.Client client;
+    protected String repository;
+
+    /**
+     * @see org.apache.cocoon.components.web3.Web3Client#initClient(com.sap.mw.jco.JCO.Client)
+     */
     public void initClient(JCO.Client client) {
         this.client = client;
         this.repository = "" + (new Date ()).getTime();
     }
-    
+
+    /**
+     * @see org.apache.cocoon.components.web3.Web3Client#releaseClient()
+     */
     public void releaseClient() {
         JCO.releaseClient(this.client);
         this.client = null;
     }
-    
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         this.client = null;
         this.repository = null;
@@ -62,15 +71,15 @@ implements Web3Client, Disposable, Recyclable, Poolable {
         }
         return null;
     }
-    
+
     public void abort(String message) {
         this.client.abort (message);
     }
-    
+
     public Object clone() {
         return null;
     }
-    
+
     public void confirmTID(String tid) {
         this.client.confirmTID (tid);
     }
@@ -78,11 +87,11 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     public void connect() {
         this.client.connect ();
     }
-    
+
     public String createTID() {
         return this.client.createTID ();
     }
-    
+
     public void disconnect() {
         this.client.disconnect ();
     }
@@ -90,51 +99,51 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     public void execute(JCO.Function function) {
         this.client.execute (function);
     }
-    
+
     public void execute(JCO.Function function, String tid) {
         this.client.execute (function, tid);
     }
-    
+
     public void execute(JCO.Function function, String tid, String queue_name) { 
         this.client.execute (function, tid, queue_name);
     }
-    
+
     public void execute(JCO.Function function, String tid, 
                         String queue_name, int queue_pos) {
         this.client.execute (function, tid, queue_name, queue_pos);
     }
-    
+
     public void execute(String name, JCO.ParameterList input, 
                         JCO.ParameterList output) {
         this.client.execute (name, input, output);
     }
-    
+
     public void execute(String name, JCO.ParameterList input, 
                         JCO.ParameterList output, JCO.ParameterList tables) {
         this.client.execute (name, input, output, tables);
     }
-    
+
     public void execute(String name, JCO.ParameterList input, 
                         JCO.ParameterList tables, String tid) {
         this.client.execute (name, input, tables, tid);
     }
-    
+
     public void execute(java.lang.String name, JCO.ParameterList input, 
                         JCO.ParameterList tables, String tid, 
                         String queue_name) {
         this.client.execute (name, input, tables, tid, queue_name);
     }
-    
+
     public void execute(java.lang.String name, JCO.ParameterList input, 
                         JCO.ParameterList tables, String tid, 
                         String queue_name, int queue_pos) {
         this.client.execute (name, input, tables, tid, queue_name, queue_pos);
     }
-    
+
     public boolean getAbapDebug() {
         return this.client.getAbapDebug ();
     }
-    
+
     public String getASHost() {
         return this.client.getASHost ();
     }
@@ -142,15 +151,15 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     public JCO.Attributes getAttributes() {
         return this.client.getAttributes ();
     }
-    
+
     public String getClient() {
         return this.client.getClient ();
     }
-    
+
     public String getGroup() {
         return this.client.getGroup ();
     }
-    
+
     public String getGWHost() {
         return this.client.getGWHost ();
     }
@@ -158,15 +167,15 @@ implements Web3Client, Disposable, Recyclable, Poolable {
     public String getGWServ() {
         return this.client.getGWServ ();
     }
-    
+
     public String getLanguage() {
         return this.client.getLanguage ();
     }
-    
+
     public String getMSHost() {
         return this.client.getMSHost ();
     }
-    
+
     public String[][] getPropertyInfo() {
         return this.client.getPropertyInfo ();
     }
