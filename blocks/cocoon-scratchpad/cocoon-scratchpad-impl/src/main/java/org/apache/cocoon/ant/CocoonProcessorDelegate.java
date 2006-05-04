@@ -333,6 +333,7 @@ public class CocoonProcessorDelegate extends AbstractLogEnabled
                 this.contextDir,
                 attributes,
                 parameters,
+                null,
                 clContext,
                 getLogger());
         cocoon.process(env);
