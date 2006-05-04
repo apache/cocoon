@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,24 +26,24 @@ import com.sap.mw.jco.JCO.Function;
  * @version $Id$
  */
 public interface Web3Client {
-    
+
     String ROLE = Web3Client.class.getName();
-    
+
     /**
      * Releases the Connection to the backend
      */
     void releaseClient ();
-    
+
     /**
      * Initialize the client
      */
     void initClient (Client client);
-    
+
     /**
      * Get a Client Repository
      */
     IRepository getRepository ();
-    
+
     /**
      * Execute an Abab function
      */

@@ -1,19 +1,18 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.transformation;
 
 import java.util.HashMap;
@@ -51,24 +50,24 @@ public class Web3RfcTransformer extends AbstractTransformer
 implements Serviceable, Disposable, Configurable, Poolable, Recyclable {
     
     /** The service manager instance */
-    protected ServiceManager  manager             = null;
-    protected Web3DataSource    web3source          = null;
+    protected ServiceManager  manager;
+    protected Web3DataSource    web3source;
     
-    protected Web3Client        connection          = null;
-    protected JCO.Repository    repository          = null;
-    protected IFunctionTemplate functionT           = null;
-    protected JCO.Function      function            = null;
-    protected JCO.ParameterList importParameterList = null;
-    protected JCO.ParameterList tablesParameterList = null;
-    protected JCO.Record        theRecord           = null;
-    protected JCO.Field         fillMe              = null;
+    protected Web3Client        connection;
+    protected JCO.Repository    repository;
+    protected IFunctionTemplate functionT;
+    protected JCO.Function      function;
+    protected JCO.ParameterList importParameterList;
+    protected JCO.ParameterList tablesParameterList;
+    protected JCO.Record        theRecord;
+    protected JCO.Field         fillMe;
     
     protected AttributesImpl    attributes          = new AttributesImpl();
     protected int               startcount          = 0;
     protected boolean           error               = false;
-    protected String            backend             = null;
-    protected String            default_backend     = null;
-    protected String            streamer            = null;
+    protected String            backend;
+    protected String            default_backend;
+    protected String            streamer;
     protected HashMap           tags                = new HashMap();
     
     public void setup(SourceResolver resolver, Map objectModel,
