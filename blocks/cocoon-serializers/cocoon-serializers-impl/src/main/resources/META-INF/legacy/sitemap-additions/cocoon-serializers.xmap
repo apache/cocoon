@@ -31,6 +31,7 @@
                     src="org.apache.cocoon.components.serializers.XHTMLSerializer"
                     mime-type="text/xhtml">
       <encoding>UTF-8</encoding>
+      <omit-xml-declaration>no</omit-xml-declaration>
     </map:serializer>
     <map:serializer name="ehtml"
                     logger="sitemap.serializer.ehtml"
