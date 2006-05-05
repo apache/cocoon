@@ -38,7 +38,7 @@
       | Include all configuration files ending with ".xconf" 
       | from the sitemap-additions directory.
       +-->
-  <include dir="context://WEB-INF/sitemap-additions" pattern="*.xconf"/>
+  <include dir="context://WEB-INF/sitemap-additions" pattern="*.xmap"/>
 
   <!--+
       | Include all configuration files ending with ".samplesxconf" 
