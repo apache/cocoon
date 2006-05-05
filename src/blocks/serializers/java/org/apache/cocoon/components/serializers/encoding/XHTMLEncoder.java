@@ -19,7 +19,7 @@ package org.apache.cocoon.components.serializers.encoding;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: XHTMLEncoder.java,v 1.1 2004/04/27 18:35:21 pier Exp $
+ * @version CVS $Id:XHTMLEncoder.java 30932 2004-07-29 19:35:38 +0200 (Thu, 29 Jul 2004) vgritsenko $
  */
 public class XHTMLEncoder extends XMLEncoder {
 
@@ -75,6 +75,7 @@ public class XHTMLEncoder extends XMLEncoder {
      * The table of all configured HTML/4.0 character encodings.
      */
     private static final char ENCODINGS[][][] = {
+        { { 39 } , "&#039;".toCharArray() },
         { { 160 } , "&nbsp;".toCharArray() },
         { { 161 } , "&iexcl;".toCharArray() },
         { { 162 } , "&cent;".toCharArray() },
