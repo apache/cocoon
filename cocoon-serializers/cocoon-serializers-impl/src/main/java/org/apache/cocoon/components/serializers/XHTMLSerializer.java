@@ -81,6 +81,9 @@ public class XHTMLSerializer extends XMLSerializer {
 
     /** The <code>DocType</code> instance representing the document. */
     protected DocType doctype_default = null;
+    
+    /** Define whether to put XML declaration in the head of the document. */
+    private String omitXmlDeclaration = null;
 
     /* ====================================================================== */
 
@@ -113,6 +116,8 @@ public class XHTMLSerializer extends XMLSerializer {
     throws ConfigurationException {
         super.configure(conf);
 
+        this.omitXmlDeclaration = conf.getChild("omit-xml-declaration").getValue(null);
+
         String doctype = conf.getChild("doctype-default").getValue(null);
         if ("none".equalsIgnoreCase(doctype)) {
             this.doctype_default = null;
@@ -129,6 +134,20 @@ public class XHTMLSerializer extends XMLSerializer {
     }
 
     /* ====================================================================== */
+
+    /**
+     * Write the XML document header.
+     * <p>
+     * This method will write out the <code>&lt;?xml version=&quot;1.0&quot
+     * ...&gt;</code> header unless omit-xml-declaration is set.
+     * </p>
+     */
+    protected void head()
+    throws SAXException {
+        if (!"yes".equals(this.omitXmlDeclaration)) {
+            super.head();
+        }
+    }
 
     /**
      * Receive notification of the beginning of the document body.
@@ -199,4 +218,5 @@ public class XHTMLSerializer extends XMLSerializer {
         }
         super.endElementImpl(uri, local, qual);
     }
+    
 }
