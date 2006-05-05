@@ -66,7 +66,7 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
             Element initialValueElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "initial-value", false);
             if (initialValueElement != null) {
                 String localeValue = DomHelper.getAttribute(initialValueElement, "locale", null);
-                Locale locale = localeValue == null ? null : I18nUtils.parseLocale(localeValue);
+                Locale locale = localeValue == null ? Locale.getDefault() : I18nUtils.parseLocale(localeValue);
                 String value = DomHelper.getElementText(initialValueElement);
                 ConversionResult result = datatype.convertFromString(value, locale);
                 if (!result.isSuccessful()) {
