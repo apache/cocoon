@@ -228,6 +228,9 @@
       The listener can be added in definition with an on-repeater-modified element. Added support
       for these events in JavaScript listener.
     </action>
+    <action dev="SG" type="fix" fixes-bug="COCOON-1844">
+      Passing the default locale while parsing initial-value on a form if no locale attribute was specified.
+    </action>
   </release>
   <release version="2.1.9" date="April 7 2006">
     <action dev="JBQ" type="fix">
