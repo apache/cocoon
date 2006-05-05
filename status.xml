@@ -182,6 +182,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dec="AJS" type="add" fixes-bug="COCOON-1845" due-to="Maurizio Pillitu" due-to-email="m.pillitu@thebug.it">
+      As with all the AbstractTextSerializer based serializers, the XHTMLSerializer should handle the omit-xml-declaration to not put the XML declaration as first line of the serialized document.
+      This prevents many rendering problems in Internet Explorer. Default behaviour is to send the xml declaration as before.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1511" due-to="James Bates" due-to-email="james.bates@amplexor.com ">
       Commandline interface: the user-agent is now correctly set in the request headers (and not in the request parameters).
     </action>
