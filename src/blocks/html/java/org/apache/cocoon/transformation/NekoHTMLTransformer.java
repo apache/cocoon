@@ -15,11 +15,8 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,7 +31,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.cyberneko.html.HTMLConfiguration;
@@ -59,7 +55,7 @@ public class NekoHTMLTransformer
      * Properties for Neko format
      */
     private Properties properties;
-    
+
     /**
      * Tags that must be normalized
      */
@@ -108,7 +104,7 @@ public class NekoHTMLTransformer
      */
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
-        
+
         String configUrl = config.getChild("neko-config").getValue(null);
         if (configUrl != null) {
             org.apache.excalibur.source.SourceResolver resolver = null;
@@ -150,7 +146,7 @@ public class NekoHTMLTransformer
 
             ByteArrayInputStream bais =
                 new ByteArrayInputStream(text.getBytes());
-            
+
             DOMBuilder builder = new DOMBuilder();
             parser.setContentHandler(builder);
             parser.parse(new InputSource(bais));
@@ -186,13 +182,13 @@ public class NekoHTMLTransformer
             this.tags.put(tok, tok);
         }
     }
-    
+
     public static class HtmlSaxParser extends AbstractSAXParser {
 
         public HtmlSaxParser(Properties properties) {
             super(getConfig(properties));
         }
-    
+
         private static HTMLConfiguration getConfig(Properties properties) {
             HTMLConfiguration config = new HTMLConfiguration();
             config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
@@ -209,5 +205,4 @@ public class NekoHTMLTransformer
             return config;
         }
     }
-    
 }
