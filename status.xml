@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="update">
+      Updated ehcache to 1.2.
+    </action>
     <action dev="RG" type="fix" fixes-bug="COCOON-1742">
       The JDK 1.4 version of the EncodeURLTransformer did not work properly as it was not matching just the
       beginning of the string as the Jakarta-regexp version does. The transformer was corrected to only match

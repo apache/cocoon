@@ -503,7 +503,7 @@
     <title>EHCache</title>
     <description>Easy Hibernate Cache</description>
     <used-by>EHCache Store</used-by>
-    <lib>core/ehcache-1.1.jar</lib>
+    <lib>core/ehcache-1.2.jar</lib>
     <homepage>http://ehcache.sourceforge.net/</homepage>
   </file>
 
