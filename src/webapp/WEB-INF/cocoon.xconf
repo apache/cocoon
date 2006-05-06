@@ -212,7 +212,8 @@
 
     <!--+
         | Following five modules definitions, 'defaults', 'myxml',
-        | 'slashdot' '' and '', are used only in the samples.
+        | 'slashdot' 'random-100-to-500' and 'random-5000-to-10000',
+        | are used only in the samples.
         +-->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
       <values>
