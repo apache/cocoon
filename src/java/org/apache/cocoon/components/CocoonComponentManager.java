@@ -349,8 +349,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                         if (component instanceof Recomposable) {
                             ((Recomposable) component).recompose(this);
                         }
-                        ((RequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects.env,
-                                                                      objectModel);
+                        ((RequestLifecycleComponent) component).setup(objects.env, objectModel);
                     } catch (Exception local) {
                         throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
                     }
@@ -374,8 +373,7 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                         if (component instanceof Recomposable) {
                             ((Recomposable) component).recompose(this);
                         }
-                        ((GlobalRequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects.env,
-                                                                      objectModel);
+                        ((GlobalRequestLifecycleComponent) component).setup(objects.env, objectModel);
                     } catch (Exception local) {
                         throw new ComponentException(role, "Exception during setup of RequestLifecycleComponent.", local);
                     }
