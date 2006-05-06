@@ -52,7 +52,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.SimpleSourceResolver;
 import org.apache.cocoon.util.Settings;
-import org.apache.cocoon.util.PropertySettings;
 import org.apache.cocoon.util.SettingsHelper;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
@@ -561,7 +560,7 @@ public class Cocoon
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(false);
-        StringBuffer msg = new StringBuffer();
+        StringBuffer msg = new StringBuffer(2048);
         msg.append("DEBUGGING INFORMATION:").append(lineSeparator);
         if (internal) {
             msg.append("INTERNAL ");
@@ -603,7 +602,6 @@ public class Cocoon
                     msg.append(", ");
                 }
             }
-
             msg.append("'").append(lineSeparator);
         }
 
