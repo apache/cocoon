@@ -44,7 +44,7 @@ public class BlockContext extends ServletContextWrapper {
     
     public static final String SUPER = "super";
 
-    private Hashtable attributes;
+    private Hashtable attributes = new Hashtable();
     private Servlet servlet;
     private String mountPath;
     private Dictionary properties;
@@ -56,7 +56,14 @@ public class BlockContext extends ServletContextWrapper {
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return this.attributes.get(name);
+        Object value = this.attributes.get(name);
+        // Make service references available as servlet context attributes
+        // FIXME: The other attribute methods should reflect that service references
+        // are available as attributes 
+        if (value == null) {
+            value = this.componentContext.locateService(name);
+        }
+        return value;
     }
 
     /*

@@ -90,14 +90,21 @@ public class BlockServlet extends HttpServlet {
         return this.blockContext;
     }
     
-    protected void activate(ComponentContext componentContext) {
+    protected void activate(ComponentContext componentContext)
+    throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         this.componentContext = componentContext;
         this.blockContext = new BlockContext();
         
         this.blockContext.setProperties(this.componentContext.getProperties());
         this.blockContext.setMountPath((String) this.componentContext.getProperties().get("path"));
-        this.blockServlet =
-            (Servlet) this.componentContext.locateService("blockServlet");
+        String blockServletClass = (String) this.componentContext.getProperties().get("servletClass");
+        if (blockServletClass != null) {
+            this.blockServlet =
+                (Servlet) this.componentContext.getBundleContext().getBundle().loadClass(blockServletClass).newInstance();
+        } else {
+            this.blockServlet =
+                (Servlet) this.componentContext.locateService("blockServlet");
+        }
         this.blockContext.setServlet(this.blockServlet);
         this.blockContext.activate(this.componentContext);
     }
