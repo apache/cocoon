@@ -38,18 +38,21 @@
       bind="setParentBeanFactory"/>      
   </scr:component>  
 
-  <!-- The SitemapServlet of this bundle -->
-  <scr:component name="org.apache.cocoon.webapp.SitemapServlet">
-    <scr:implementation class="org.apache.cocoon.sitemap.SitemapServlet"/>  
+  <!-- The BlockServlet of this bundle -->
+  <scr:component name="org.apache.cocoon.webapp.BlockServlet">
+    <scr:implementation class="org.apache.cocoon.blocks.BlockServlet"/>
     <scr:service>
       <scr:provide interface="javax.servlet.Servlet"/>
-    </scr:service>    
+	</scr:service>
+	
     <scr:property name="path" value="/cocoon-webapp"/>
+    <scr:property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
     <scr:property name="sitemapPath" value="/src/main/webapp/sitemap.xmap"/>            
-    <scr:reference name="beanFactory"
+
+    <scr:reference name="interface org.springframework.web.context.WebApplicationContext.ROOT"
       interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
       target="(component.name=org.apache.cocoon.webapp.SpringEcmFactory)"
       bind="setBeanFactory"/>         
-  </scr:component>  
+  </scr:component>
 
 </components>
