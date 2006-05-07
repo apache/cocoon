@@ -68,7 +68,7 @@
       +-->
   <xsl:template match="fi:help">
     <xsl:variable name="id" select="concat(../@id, ':help')"/>
-    <div class="forms-help" id="{$id}" style="visibility:hidden; position:absolute;">
+    <div class="forms-help forms help" id="{$id}" style="visibility:hidden; position:absolute;">
     	<span style="float:right"><a href="#" onClick="document.getElementById('{$id}').style.visibility = 'hidden';return false;"><img align="top" alt="close" src="{$resources-uri}/forms/img/close.gif" height="6" width="6"/></a></span>
       <xsl:apply-templates select="node()"/>
     </div>
@@ -87,7 +87,7 @@
     <xsl:variable name="browser-variable"><xsl:value-of select="translate($id, '.', '_')"/>_jsWidget</xsl:variable>
 
     <script type="text/javascript">var <xsl:value-of select="$browser-variable"/>;</script>
-    <div id="{@id}" class="forms-doubleList" title="{fi:hint}">
+    <div id="{@id}" class="forms-doubleList forms doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
           <tr>
@@ -279,4 +279,5 @@
       <xsl:apply-templates select="." mode="common"/>
     </span>
   </xsl:template>
+
 </xsl:stylesheet>

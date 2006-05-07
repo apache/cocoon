@@ -35,6 +35,7 @@
   -->
   <xsl:template match="fi:group[fi:styling/@layout and not(fi:styling/@type)]">
     <div title="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates mode="group-layout" select="."/>
     </div>
@@ -73,17 +74,17 @@
         <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}"/>
       </xsl:if>
       <!-- div containing the tabs -->
-      <div class="forms-tabArea">
+      <div class="forms-tabArea forms tabArea">
         <xsl:for-each select="fi:items/fi:*">
           <xsl:variable name="pos" select="position() - 1"/>
           <span id="{$id}_tab_{$pos}" onclick="forms_showTab('{$id}', {$pos}, {last()}, '{$state-widget}')">
             <xsl:attribute name="class">
-              <xsl:text>forms-tab</xsl:text>
-              <xsl:if test="$active = $pos"> forms-activeTab</xsl:if>
+              <xsl:text>forms-tab forms tab</xsl:text>
+              <xsl:if test="$active = $pos"> forms-activeTab active</xsl:if>
             </xsl:attribute>
             <xsl:copy-of select="fi:label/node()"/>
             <xsl:if test="fi:items/*//fi:validation-message">
-              <span class="forms-validation-message">&#160;!&#160;</span>
+              <span class="forms-validation-message forms validation-message">&#160;!&#160;</span>
             </xsl:if>
           </span>
         </xsl:for-each>
@@ -91,7 +92,7 @@
       <!-- a div for each of the items -->
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
-        <div class="forms-tabContent" id="{$id}_items_{$pos}">
+        <div class="forms-tabContent forms tabContent" id="{$id}_items_{$pos}">
           <xsl:if test="$active != $pos">
             <xsl:attribute name="style">display:none</xsl:attribute>
           </xsl:if>
@@ -159,7 +160,7 @@
           </xsl:for-each>
         </select>
         <xsl:if test="fi:items/*//fi:validation-message">
-          <span class="forms-validation-message">&#160;!&#160;</span>
+          <span class="forms-validation-message forms validation-message">&#160;!&#160;</span>
         </xsl:if>
       </legend>
       <!-- a div for each of the items -->
@@ -230,6 +231,7 @@
   -->
   <xsl:template match="fi:group[fi:styling/@layout='column']" mode="group-layout">
     <table border="0" summary="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <tbody>
         <xsl:apply-templates select="fi:items/*" mode="group-column-content"/>
       </tbody>
@@ -241,16 +243,16 @@
   -->
   <xsl:template match="fi:*" mode="group-column-content">
     <tr>
-      <td><xsl:apply-templates select="." mode="label"/></td>
+      <td class="forms label"><xsl:apply-templates select="." mode="label"/></td>
     </tr>
     <tr>
-      <td><xsl:apply-templates select="."/></td>
+      <td class="forms content"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
   <xsl:template match="fi:action" mode="group-column-content">
     <tr>
-      <td><xsl:apply-templates select="."/></td>
+      <td class="forms action"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
@@ -259,6 +261,7 @@
   -->
   <xsl:template match="fi:group[fi:styling/@layout='columns']" mode="group-layout">
     <table border="0" summary="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <tbody>
         <xsl:apply-templates select="fi:items/*" mode="group-columns-content"/>
       </tbody>
@@ -270,8 +273,8 @@
   -->
   <xsl:template match="fi:*" mode="group-columns-content">
     <tr>
-      <td><xsl:apply-templates select="." mode="label"/></td>
-      <td><xsl:apply-templates select="."/></td>
+      <td class="forms label"><xsl:apply-templates select="." mode="label"/></td>
+      <td class="forms content"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
@@ -280,6 +283,7 @@
   -->
   <xsl:template match="fi:group[fi:styling/@layout='row']" mode="group-layout">
     <table border="0" summary="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <tbody>
         <tr>
           <xsl:apply-templates select="fi:items/*" mode="group-row-content"/>
@@ -292,18 +296,19 @@
     Default row layout : label left and input right
   -->
   <xsl:template match="fi:*" mode="group-row-content">
-    <td><xsl:apply-templates select="." mode="label"/></td>
-    <td><xsl:apply-templates select="."/></td>
+    <td class="forms label"><xsl:apply-templates select="." mode="label"/></td>
+    <td class="forms content"><xsl:apply-templates select="."/></td>
   </xsl:template>
 
   <xsl:template match="fi:action" mode="group-row-content">
-    <td><xsl:apply-templates select="."/></td>
+    <td class="forms action"><xsl:apply-templates select="."/></td>
   </xsl:template>
   <!--
     Rows group items layout
   -->
   <xsl:template match="fi:group[fi:styling/@layout='rows']" mode="group-layout">
     <table border="0" summary="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <tbody>
         <tr>
           <xsl:apply-templates select="fi:items/*" mode="group-rows-labels"/>
@@ -319,21 +324,21 @@
     Default rows layout : label above and input below
   -->
   <xsl:template match="fi:*" mode="group-rows-labels">
-    <td><xsl:apply-templates select="." mode="label"/></td>
+    <td class="forms label"><xsl:apply-templates select="." mode="label"/></td>
   </xsl:template>
 
   <xsl:template match="fi:action" mode="group-rows-labels">
-    <td>&#160;</td>
+    <td class="forms action">&#160;</td>
   </xsl:template>
 
   <xsl:template match="fi:*" mode="group-rows-content">
-    <td><xsl:apply-templates select="."/></td>
+    <td class="forms content"><xsl:apply-templates select="."/></td>
   </xsl:template>
 
   <!-- boolean field : checkbox and label on a single line -->
   <xsl:template match="fi:booleanfield" mode="group-columns-content">
     <tr>
-      <td colspan="2">
+      <td colspan="2" class="forms booleanfield">
         <xsl:apply-templates select="."/>
         <xsl:apply-templates select="." mode="label"/>
       </td>
@@ -343,14 +348,14 @@
   <!-- action : on a single line -->
   <xsl:template match="fi:action" mode="group-columns-content">
     <tr>
-      <td colspan="2"><xsl:apply-templates select="."/></td>
+      <td colspan="2" class="forms action"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
   <!-- any other element : on a single line -->
   <xsl:template match="*" mode="group-columns-content">
     <tr>
-      <td colspan="2"><xsl:apply-templates select="."/></td>
+      <td colspan="2" class="forms other"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
@@ -358,17 +363,17 @@
   <xsl:template match="fi:multivaluefield[fi:styling/@list-type='double-listbox' or not(fi:selection-list)]"
                 mode="group-columns-content">
     <tr>
-      <td colspan="2"><xsl:apply-templates select="." mode="label"/></td>
+      <td colspan="2" class="forms other label"><xsl:apply-templates select="." mode="label"/></td>
     </tr>
     <tr>
-      <td colspan="2"><xsl:apply-templates select="."/></td>
+      <td colspan="2" class="forms other"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
   <!-- nested group -->
   <xsl:template match="fi:group" mode="group-columns-content">
     <tr>
-      <td colspan="2"><xsl:apply-templates select="."/></td>
+      <td colspan="2" class="forms other"><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
 
@@ -377,5 +382,16 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+    
+  <xsl:template match="fi:group" mode="css">
+      <xsl:variable name="class"><xsl:text>forms </xsl:text> 
+          <xsl:value-of select="local-name()"/><xsl:text> </xsl:text> 
+          <xsl:value-of select="fi:styling/@layout"/><xsl:text> </xsl:text> 
+          <xsl:value-of select="fi:styling/@type"/><xsl:text> </xsl:text> 
+          <xsl:value-of select="fi:styling/@class"/>
+      </xsl:variable>
+      <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
+  </xsl:template>
+    
 
 </xsl:stylesheet>

@@ -54,7 +54,7 @@
   <xsl:template match="fi:field">
     <span id="{@id}">
       <xsl:if test="fi:captcha-image">
-        <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle"/>
+        <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle" class="forms captcha"/>
         <xsl:text> </xsl:text>
       </xsl:if>
       <!--  @id:input is what labels point to -->
@@ -69,7 +69,7 @@
       | Field in "output" state: display its value
       +-->
   <xsl:template match="fi:field[@state='output']" priority="3">
-    <span id="{@id}"><xsl:value-of select="fi:value/node()"/></span>
+    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:value-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -80,7 +80,7 @@
     <xsl:apply-templates select="fi:validation-message"/>
     <!-- required mark -->
     <xsl:if test="@required='true'">
-      <span class="forms-field-required"> * </span>
+      <span class="forms-field-required forms {local-name()} required-mark"> * </span>
     </xsl:if>
   </xsl:template>
 
@@ -90,11 +90,20 @@
       | example @checked or @selected
       +-->
   <xsl:template match="fi:*" mode="styling">
+    <xsl:apply-templates select="." mode="css"/>
     <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
 
     <!--  Auto submit on fields which are listening -->
-      <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange) and not(fi:styling/@list-type = 'double-listbox')">
-      <xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
+    <xsl:if test="@listening = 'true' and not(fi:styling/@submit-on-change = 'false') and not(fi:styling/@onchange) and not(fi:styling/@list-type = 'double-listbox')">
+      <xsl:choose>
+          <!-- IE does not react to a click with an onchange, as firefox does, so for radio and checkbox put an onclick handler instead -->
+	      <xsl:when test="local-name() = 'booleanfield' or fi:styling/@list-type = 'radio' or fi:styling/@list-type = 'checkbox'">
+	        <xsl:attribute name="onclick">forms_submitForm(this)</xsl:attribute>  
+	      </xsl:when>
+          <xsl:otherwise>
+	      	<xsl:attribute name="onchange">forms_submitForm(this)</xsl:attribute>
+          </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
 
     <xsl:if test="@state = 'disabled'">
@@ -128,7 +137,7 @@
   </xsl:template>
 
   <xsl:template match="fi:styling/@list-type | fi:styling/@list-orientation |
-                       fi:styling/@listbox-size | fi:styling/@format | fi:styling/@layout"
+                       fi:styling/@listbox-size | fi:styling/@format | fi:styling/@layout | fi:styling/@class"
                 mode="styling">
     <!--+
         | Ignore marker attributes so they don't go into the resuling HTML.
@@ -171,7 +180,7 @@
       |
       +-->
   <xsl:template match="fi:validation-message">
-    <a href="#" class="forms-validation-message" id="forms-validation-message-{../@id}">
+    <a href="#" class="forms-validation-message forms validation-message" id="forms-validation-message-{../@id}">
       <xsl:attribute name="onclick">
         <xsl:text>alert('</xsl:text>
         <xsl:call-template name="apos-replace">
@@ -203,7 +212,7 @@
     <xsl:variable name="vertical" select="string(fi:styling/@list-orientation) != 'horizontal'"/>
     <xsl:choose>
       <xsl:when test="$vertical">
-        <table id="{$id}" cellpadding="0" cellspacing="0" border="0" title="{fi:hint}">
+        <table id="{$id}" cellpadding="0" cellspacing="0" border="0" title="{fi:hint}" class="forms vertical-list">
           <xsl:for-each select="fi:selection-list/fi:item">
             <xsl:variable name="item-id" select="concat($id, ':', position())"/>
             <tr>
@@ -230,7 +239,7 @@
         </table>
       </xsl:when>
       <xsl:otherwise>
-        <span id="{$id}" title="{fi:hint}">
+        <span id="{$id}" title="{fi:hint}" class="forms horizontal-list">
           <xsl:for-each select="fi:selection-list/fi:item">
             <xsl:variable name="item-id" select="concat($id, ':', position())"/>
             <input type="radio" id="{$item-id}" name="{$id}" value="{@value}">
@@ -295,14 +304,14 @@
       +-->
   <xsl:template match="fi:field[@state='output' and fi:selection-list]" priority="3">
     <xsl:variable name="value" select="fi:value/node()"/>
-    <span id="{@id}"><xsl:copy-of select="fi:selection-list/fi:item[@value=$value]/fi:label/node()"/></span>
+    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:selection-list/fi:item[@value=$value]/fi:label/node()"/></span>
   </xsl:template>
 
   <!--+
       | fi:output is rendered as text
       +-->
   <xsl:template match="fi:output">
-    <span id="{@id}"><xsl:copy-of select="fi:value/node()"/></span>
+    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -329,6 +338,7 @@
     </xsl:variable>
 
     <label for="{$resolvedId}" title="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
       <xsl:copy-of select="fi:label/node()"/>
     </label>
   </xsl:template>
@@ -337,7 +347,7 @@
       | Labels for pure outputs must not contain <label/> as there is no element to point to.
       +-->
   <xsl:template match="fi:output | fi:messages | fi:field[fi:selection-list][fi:styling/@list-type='radio']" mode="label">
-    <xsl:copy-of select="fi:label/node()"/>
+    <span><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:label/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -372,6 +382,7 @@
       +-->
   <xsl:template match="fi:booleanfield[@state='output']" priority="3">
     <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}">
+        <xsl:apply-templates select="." mode="css"/>
     	  <xsl:if test="fi:value != 'false'">
     	    <xsl:attribute name="checked">checked</xsl:attribute>
     	  </xsl:if>
@@ -424,6 +435,7 @@
         <xsl:variable name="value" select="@value"/>
         <xsl:variable name="item-id" select="concat($id, ':', position())"/>
         <input id="{$item-id}" type="checkbox" value="{@value}" name="{$id}">
+          <xsl:apply-templates select="." mode="css"/>
           <xsl:if test="$state = 'disabled'">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>
@@ -470,11 +482,12 @@
   <xsl:template match="fi:multivaluefield[@state='output']" priority="3">
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
     <span id="{@id}">
+      <xsl:apply-templates select="." mode="css"/>
       <xsl:for-each select="fi:selection-list/fi:item">
         <xsl:variable name="value" select="@value"/>
         <xsl:if test="$values[. = $value]">
           <xsl:value-of select="fi:label/node()"/>
-    	    </xsl:if>
+    	</xsl:if>
       </xsl:for-each>
     </span>
   </xsl:template>
@@ -486,11 +499,12 @@
     <span id="{@id}" title="{fi:hint}">
       <xsl:choose>
         <xsl:when test="fi:value">
+            <xsl:apply-templates select="." mode="css"/>
           <!-- Has a value (filename): display it with a change button -->
             <xsl:text>[</xsl:text>
             <xsl:value-of select="fi:value"/>
             <xsl:text>] </xsl:text>
-            <input type="button" id="{@id}:input" name="{@id}" value="..." onclick="forms_submitForm(this)"/>
+            <input type="button" id="{@id}:input" name="{@id}" value="..." onclick="forms_submitForm(this)" class="forms upload-change-button"/>
         </xsl:when>
         <xsl:otherwise>
           <input type="file" id="{@id}:input" name="{@id}" title="{fi:hint}" accept="{@mime-types}">
@@ -506,7 +520,7 @@
       | fi:upload, output state
       +-->
   <xsl:template match="fi:upload[@state='output']" priority="3">
-      <span id="{@id}"><xsl:copy-of select="fi:value/node()"/></span>
+      <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -523,6 +537,7 @@
   <xsl:template match="fi:repeater">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
     <table id="{@id}" border="1">
+      <xsl:apply-templates select="." mode="css"/>
       <tr>
         <xsl:for-each select="fi:headings/fi:heading">
           <th><xsl:value-of select="."/></th>
@@ -585,27 +600,28 @@
       +-->
   <xsl:template match="fi:form">
     <table border="1">
+      <xsl:apply-templates select="." mode="css"/>
       <xsl:for-each select="fi:widgets/*">
         <tr>
           <xsl:choose>
             <xsl:when test="self::fi:repeater">
-              <td colspan="2">
+              <td colspan="2" class="forms repeater-cell">
                 <xsl:apply-templates select="."/>
               </td>
             </xsl:when>
             <xsl:when test="self::fi:booleanfield">
-              <td>&#160;</td>
-              <td>
+              <td class="forms empty-cell">&#160;</td>
+              <td class="forms booleanfield-cell">
                 <xsl:apply-templates select="."/>
                 <xsl:text> </xsl:text>
                 <xsl:apply-templates select="." mode="label"/>
               </td>
             </xsl:when>
             <xsl:otherwise>
-              <td>
+              <td class="forms label-cell">
                 <xsl:apply-templates select="." mode="label"/>
               </td>
-              <td>
+              <td class="forms input-cell">
                 <xsl:apply-templates select="."/>
               </td>
             </xsl:otherwise>
@@ -629,6 +645,7 @@
       <xsl:if test="fi:message">
         <xsl:apply-templates select="." mode="label"/>:
         <ul>
+		  <xsl:apply-templates select="." mode="css"/>            
           <xsl:for-each select="fi:message">
             <li><xsl:apply-templates/></li>
           </xsl:for-each>
@@ -644,7 +661,7 @@
           <xsl:copy-of select="header"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
+          <p class="forms-validation-errors forms validation-errors-header">The following errors have been detected (marked with !):</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -654,17 +671,17 @@
           <xsl:copy-of select="footer"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
+          <p class="forms-validation-errors forms validation-errors-footer">Please, correct them and re-submit the form.</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
     <xsl:if test="$messages">
-      <div class="forms-validation-errors">
+      <div class="forms-validation-errors forms validation-errors">
         <xsl:copy-of select="$header"/>
         <ul>
           <xsl:for-each select="$messages">
-            <li class="forms-validation-error">
+            <li class="forms-validation-error forms validation-errors-content">
               <xsl:variable name="label">
                 <xsl:apply-templates select=".." mode="label"/>
               </xsl:variable>
@@ -718,6 +735,17 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
+  </xsl:template>
+    
+  <xsl:template match="*" mode="css">
+      <xsl:variable name="class"><xsl:text>forms </xsl:text>
+          <xsl:value-of select="local-name()"/><xsl:text> </xsl:text>
+          <xsl:value-of select="@state"/><xsl:text> </xsl:text>
+          <xsl:value-of select="fi:styling/@class"/><xsl:text> </xsl:text>
+          <xsl:if test="@required = 'true'"><xsl:text>required </xsl:text></xsl:if> 
+          <xsl:if test="count(fi:validation-error) != 0">with-errors</xsl:if>
+      </xsl:variable>
+      <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
   </xsl:template>
 
 </xsl:stylesheet>
