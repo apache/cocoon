@@ -33,13 +33,13 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.osgi.service.component.ComponentContext;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Use this servlet as entry point to Cocoon. It wraps the @link {@link TreeProcessor} and delegates
@@ -54,9 +54,9 @@ public class SitemapServlet extends HttpServlet {
 	private static final String DEFAULT_SITEMAP_PATH = "/COB-INF/sitemap.xmap";	
 	private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
-	private CocoonSpringBeanRegistry beanFactory;
+	private BeanFactory beanFactory;
 	private Logger logger;
-	private String sitemapPath = DEFAULT_SITEMAP_PATH;
+	private String sitemapPath;
     protected Context cocoonContext;
 	private Processor processor;	
 	private Settings settings;
@@ -67,7 +67,17 @@ public class SitemapServlet extends HttpServlet {
 	 */
     public void init(ServletConfig config) throws ServletException {
     	super.init(config);
-    	
+
+        // Get a bean factory from the servlet context
+        this.beanFactory =
+            (BeanFactory) this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        if (this.beanFactory == null)
+            throw new ServletException("No BeanFactory in the context");
+        
+        this.sitemapPath = this.getServletContext().getInitParameter(SITEMAP_PATH_PROPERTY);
+        if (this.sitemapPath == null)
+            this.sitemapPath = DEFAULT_SITEMAP_PATH;
+        
     	// get components from the beanFactory
     	this.logger = (Logger) this.beanFactory.getBean("org.apache.avalon.framework.logger.Logger");
     	this.settings = (Settings) this.beanFactory.getBean(Settings.ROLE);
@@ -153,28 +163,4 @@ public class SitemapServlet extends HttpServlet {
         treeProcessorConf.setAttribute("file", this.sitemapPath);
 		return treeProcessorConf;
 	}	    
-
-	/**
-	 * Get a Spring BeanFactory injected by OSGi declarative services.
-	 */
-	protected void setBeanFactory(CocoonSpringBeanRegistry beanFactory) {
-		this.beanFactory = beanFactory;
-	}
-	
-	/**
-	 * Set the path of the sitemap
-	 */
-	public void setSitemapPath(String sitemapPath) {
-		this.sitemapPath = sitemapPath;
-	}	
-
-	/**
-	 * This Method is used in an OSGi environment to activate this servlet as bundle.
-	 * 
-	 * @param componentContext - The component context is made available and gives access to OSGi framework information
-	 */
-	protected void activate(ComponentContext componentContext) throws Exception {
-		this.setSitemapPath((String) componentContext.getProperties().get(SITEMAP_PATH_PROPERTY));			
-	}
-	
 }
