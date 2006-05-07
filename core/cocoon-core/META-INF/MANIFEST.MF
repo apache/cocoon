@@ -47,7 +47,7 @@ Bundle-ClassPath: target/osgi/lib/ant-1.6.5.jar,
  target/osgi/lib/xml-resolver-1.1.jar,
  target/osgi/lib/easymock-1.1.jar,
  target/osgi/lib/jmock-1.0.1.jar,
- target/osgi/lib/junit-3.8.1.jar,
+ target/osgi/lib/junit-3.8.2.jar,
  target/osgi/lib/xmlunit-0.8.jar,
  target/osgi/lib/activemq-optional-3.2.jar
 Export-Package: junit.framework,
@@ -130,6 +130,7 @@ Export-Package: junit.framework,
  org.springframework.beans.factory.config
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0",
+ org.apache.cocoon.blocks,
  org.osgi.framework,
  org.osgi.service.component,
  org.osgi.service.log
