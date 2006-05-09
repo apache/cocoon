@@ -275,7 +275,7 @@
       <version>1.6.5</version>
     </dependency>
     <dependency>
-      <groupId>ehcache</groupId>
+      <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
       <version>1.2</version>
     </dependency>
