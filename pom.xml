@@ -65,7 +65,7 @@
     </repository>
     <repository>
       <id>apache-cvs</id>
-      <name>Apache CVS Repository</name>
+      <name>Apache Maven Repository</name>
       <url>http://svn.apache.org/repository</url>
       <layout>legacy</layout>
     </repository>
