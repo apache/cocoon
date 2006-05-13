@@ -73,7 +73,7 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>excalibur-sourceresolve</groupId>
+      <groupId>org.apache.excalibur.components.sourceresolve</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
       <version>2.1</version>
       <exclusions>
@@ -94,7 +94,7 @@
     <dependency>
       <groupId>castor</groupId>
       <artifactId>castor</artifactId>
-      <version>0.9.7</version>
+      <version>1.0M1</version>
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
