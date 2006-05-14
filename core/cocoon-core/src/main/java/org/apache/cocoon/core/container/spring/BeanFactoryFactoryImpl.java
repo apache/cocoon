@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import javax.servlet.ServletConfig;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
@@ -24,7 +22,6 @@ import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
