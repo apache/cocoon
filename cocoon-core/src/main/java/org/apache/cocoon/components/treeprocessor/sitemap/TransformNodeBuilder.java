@@ -37,6 +37,9 @@ public class TransformNodeBuilder extends AbstractProcessingNodeBuilder
     private Collection views;
     private Map  pipelineHints;
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
         String type = this.treeBuilder.getTypeForStatement(config, Transformer.ROLE);
@@ -53,6 +56,9 @@ public class TransformNodeBuilder extends AbstractProcessingNodeBuilder
         return this.treeBuilder.setupNode(node, config);
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder#linkNode()
+     */
     public void linkNode() throws Exception {
         this.node.setViews(
             ((SitemapLanguage)this.treeBuilder).getViewNodes(this.views)

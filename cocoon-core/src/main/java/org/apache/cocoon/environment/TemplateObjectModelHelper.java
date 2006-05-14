@@ -180,6 +180,7 @@ public class TemplateObjectModelHelper {
             try {
                 final String JAVA_PACKAGE = "JavaPackage";
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                // FIXME - NativeJavaPackage is an internal class which we should not use
                 Scriptable newPackages = new NativeJavaPackage( "", cl );
                 newPackages.setParentScope( getScope() );
                 newPackages.setPrototype( ScriptableObject.getClassPrototype(   getScope(),
