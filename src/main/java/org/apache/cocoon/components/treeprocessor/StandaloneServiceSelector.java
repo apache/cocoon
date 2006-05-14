@@ -112,40 +112,37 @@ public class StandaloneServiceSelector
         return info;
     }
 
-    protected void addComponent(String className,
-                                String role,
+    protected void addComponent(String        role,
+                                String        className,
                                 Configuration configuration) 
     throws ConfigurationException {
+        if( this.initialized ) {
+            throw new ConfigurationException( 
+                "Cannot add components to an initialized service selector: " + role );
+        }
         try {
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Adding component (" + role + " = " + className + ")" );
             }
-            // FIXME - use different classloader
+
             final Class clazz = this.getClass().getClassLoader().loadClass( className );
-            this.addComponent( role, clazz, configuration );
+
+            final ComponentInfo info = getComponentInfo( clazz,
+                                                         configuration);
+
+            this.componentInfos.put( role, info );
+
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
                                  + role + " at " + configuration.getLocation();
-
-            if( this.getLogger().isErrorEnabled() ) {
-                this.getLogger().error( message, cnfe );
-            }
 
             throw new ConfigurationException( message, cnfe );
         } catch( final ServiceException ce ) {
             final String message = "Cannot setup class "+ className + " for role " + role
                                  + " at " + configuration.getLocation();
-
-            if( this.getLogger().isErrorEnabled() ) {
-                this.getLogger().error( message, ce );
-            }
-
             throw new ConfigurationException( message, ce );
         } catch( final Exception e ) {
             final String message = "Unexpected exception when setting up role " + role + " at " + configuration.getLocation();
-            if( this.getLogger().isErrorEnabled() ) {
-                this.getLogger().error( message, e );
-            }
             throw new ConfigurationException( message, e );
         }        
     }
@@ -273,7 +270,7 @@ public class StandaloneServiceSelector
                 throw new ConfigurationException(message);
             }
 
-            this.addComponent( className, key, instance );
+            this.addComponent( key, className, instance );
         }
     }
 
@@ -323,42 +320,5 @@ public class StandaloneServiceSelector
         this.singletons.clear();
         this.componentInfos.clear();
         this.disposed = true;
-    }
-
-    /** Add a new component to the manager.
-     * @param key the key for the new component.
-     * @param component the class of this component.
-     * @param configuration the configuration for this component.
-     */
-    public void addComponent( final String key,
-                              final Class component,
-                              final Configuration configuration)
-    throws ServiceException {
-        if( this.initialized ) {
-            throw new ServiceException( key,
-                "Cannot add components to an initialized service selector" );
-        }
-
-        try {
-            final ComponentInfo handler = getComponentInfo( component,
-                                                            configuration);
-
-            this.componentInfos.put( key, handler );
-
-            if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug(
-                    "Adding " + component.getName() + " for key [" + key + "]" );
-            }
-        } catch (ServiceException se) {
-            throw se;
-        } catch( final Exception e ) {
-            final String message =
-                "Could not set up component for key [ " + key + "]";
-            if( this.getLogger().isErrorEnabled() ) {
-                this.getLogger().error( message, e );
-            }
-
-            throw new ServiceException(key, message, e );
-        }
     }
 }
