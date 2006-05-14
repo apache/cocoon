@@ -35,6 +35,9 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
     private ActSetNode  actSetNode;
     private String      actSetName;
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config) throws Exception {
         
         boolean inActionSet = this.treeBuilder.getAttribute(ActionSetNodeBuilder.IN_ACTION_SET) != null;
@@ -89,6 +92,9 @@ public class ActNodeBuilder extends AbstractParentProcessingNodeBuilder
         return this.actSetNode;
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder#linkNode()
+     */
     public void linkNode() throws Exception {
 
         if (this.actSetNode != null) {

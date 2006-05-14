@@ -59,7 +59,7 @@ import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
-import org.apache.cocoon.components.treeprocessor.StandaloneServiceSelector;
+import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
@@ -403,7 +403,7 @@ public class SitemapLanguage
 
         // Create & initialize the NodeBuilder selector.
         {
-            StandaloneServiceSelector selector = new StandaloneServiceSelector();
+            NodeBuilderSelector selector = new NodeBuilderSelector();
 
             // Load the builder config file
             SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
