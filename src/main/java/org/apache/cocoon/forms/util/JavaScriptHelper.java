@@ -28,6 +28,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Element;
 
 /**
@@ -59,7 +60,7 @@ public class JavaScriptHelper {
         try {
             // This version of compileReader is deprecated but must be left as is to avoid breaking 2.1
             script = ctx.compileReader(
-                getRootScope(), //scope
+                getRootScope(null), //scope
                 new StringReader(jsText), // in
                 sourceName == null ? "<unknown>" : sourceName, // sourceName
                 DomHelper.getLineLocation(element), // lineNo
@@ -98,7 +99,7 @@ public class JavaScriptHelper {
         Function func;
         try {
             func = ctx.compileFunction(
-                getRootScope(), //scope
+                getRootScope(null), //scope
                 jsText, // in
                 sourceName == null ? "<unknown>" : sourceName, // sourceName
                 DomHelper.getLineLocation(element) - 1, // lineNo, "-1" because we added "function..."
@@ -115,7 +116,7 @@ public class JavaScriptHelper {
      * 
      * @return an appropriate root scope
      */
-    public static Scriptable getRootScope() {
+    public static Scriptable getRootScope(Map objectModel) {
         // FIXME: TemplateOMH should be used in 2.2
         //return TemplateObjectModelHelper.getScope();
         
@@ -125,11 +126,32 @@ public class JavaScriptHelper {
             Context ctx = Context.enter();
             try {
                 _rootScope = ctx.initStandardObjects(null);
+                try {
+                    ScriptableObject.defineClass(_rootScope, FOM_SimpleCocoon.class);
+                } catch (Exception e) {
+                    throw new CascadingRuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
+                }
             } finally {
                 Context.exit();
             }
         }
-        return _rootScope;
+        if (objectModel == null) {
+            return _rootScope;
+        } else {
+            Context ctx = Context.enter();
+            try {
+                Scriptable scope = ctx.newObject(_rootScope);
+                FOM_SimpleCocoon cocoon = (FOM_SimpleCocoon) ctx.newObject(scope, "FOM_SimpleCocoon", new Object[] { });
+                cocoon.setObjectModel(objectModel);
+                cocoon.setParentScope(scope);
+                scope.put("cocoon", scope, cocoon);
+                return scope;
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Cannot setup a root context with a cocoon object for javascript", e);
+            } finally {
+                Context.exit();
+            }
+        }
     }
 
     /**
@@ -150,7 +172,7 @@ public class JavaScriptHelper {
         if (parentScope != null) {
             return parentScope;
         } else {
-            return getRootScope();
+            return getRootScope(objectModel);
         }
     }
 
@@ -214,6 +236,7 @@ public class JavaScriptHelper {
                     scope.put("viewData", scope, Context.toObject(viewData, scope));
                 }
             }
+            func.setParentScope(scope);
             Object result = func.call(ctx, scope, thisObject == null? null: Context.toObject(thisObject, scope), arguments);
             return FlowHelper.unwrap(result);
         } finally {
