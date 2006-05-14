@@ -85,6 +85,8 @@ public class ExpressionContextImpl implements ExpressionContext {
                 return new BigDecimal(((Long)value).longValue());
             else if (value instanceof Integer)
                 return new BigDecimal(((Integer)value).intValue());
+            else if (value instanceof Number)
+                return new BigDecimal(value.toString());
             else
                 return value;
         }
