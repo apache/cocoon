@@ -16,11 +16,9 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -38,11 +36,12 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
- * Default component selector for Cocoon's components.
+ * This is the selector used to select/create node builders.
  *
  * @version $Id$
  * @since 2.2
@@ -69,8 +68,11 @@ public class StandaloneServiceSelector
     /** The application context for components */
     protected Context context;
 
-    /** Used to map roles to ComponentHandlers. */
-    protected final Map componentHandlers = Collections.synchronizedMap(new HashMap());
+    /** Used to map roles to component infos. */
+    protected final Map componentInfos = Collections.synchronizedMap(new HashMap());
+
+    /** All singletons. */
+    protected final Map singletons = Collections.synchronizedMap(new HashMap());
 
     /** Is the Manager disposed or not? */
     protected boolean disposed;
@@ -92,22 +94,21 @@ public class StandaloneServiceSelector
      * @param componentClass Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
-     * @param serviceManager The service manager which will be managing the Component.
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    protected ComponentInfo getComponentHandler( final String role,
-                                                    final Class componentClass,
-                                                    final Configuration configuration,
-                                                    final ServiceManager serviceManager)
+    protected ComponentInfo getComponentInfo( final Class componentClass,
+                                              final Configuration configuration)
     throws Exception {
-        ComponentInfo info;
-        info = new ComponentInfo();
+        final ComponentInfo info = new ComponentInfo();
         info.fill(configuration);
-        info.setRole(role);
         info.setConfiguration(configuration);
         info.setComponentClassName(componentClass.getName());
-        info.setModel(ComponentInfo.MODEL_SINGLETON);
+        if ( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
+            info.setModel(ComponentInfo.MODEL_SINGLETON);
+        } else {
+            info.setModel(ComponentInfo.MODEL_PRIMITIVE);
+        }
         return info;
     }
 
@@ -173,16 +174,23 @@ public class StandaloneServiceSelector
                 "You cannot select a component from a disposed service selector." );
         }
 
-        Object component = this.componentHandlers.get( key );
+        Object component = this.singletons.get(key);
+        if ( component == null ) {
+            final ComponentInfo info = (ComponentInfo)this.componentInfos.get( key );
 
-        // Retrieve the instance of the requested component
-        if( null == component ) {
-            final String message = this.roleName
-                + ": service selector could not find the component for key [" + key + "]";
-            if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( message );
+            // Retrieve the instance of the requested component
+            if( null == info ) {
+                final String message = this.roleName
+                   + ": service selector could not find the component for key [" + key + "]";
+                throw new ServiceException( key, message );
             }
-            throw new ServiceException( key, message );
+            try {
+                component = this.createComponent(info);
+            } catch (ServiceException se) {
+                throw se;
+            } catch (Exception e) {
+                throw new ServiceException(key, "Unable to create new component.", e);
+            }
         }
 
         return component;
@@ -205,7 +213,7 @@ public class StandaloneServiceSelector
         boolean exists = false;
 
         try {
-            Object component = this.componentHandlers.get( key );
+            Object component = this.componentInfos.get( key );
             exists = (component != null);
         } catch( Throwable t ) {
             // We can safely ignore all exceptions
@@ -218,7 +226,9 @@ public class StandaloneServiceSelector
      * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
      */
     public void release( final Object component ) {
-        // nothing to do as we only serve singletons
+        if ( !(component instanceof ThreadSafe) ) {
+            ContainerUtil.dispose(component);
+        }
     }
 
     /**
@@ -234,26 +244,23 @@ public class StandaloneServiceSelector
      */
     public void configure( final Configuration config )
     throws ConfigurationException {
-        this.roleName = getRoleName(config);
+        this.roleName = config.getAttribute("role", null);
 
         // Get default key
-        this.defaultKey = config.getAttribute(this.getDefaultKeyAttributeName(), null);
+        this.defaultKey = config.getAttribute("default", null);
 
-        // Add components
-        String compInstanceName = getComponentInstanceName();
-
-        Configuration[] instances = config.getChildren();
+        final Configuration[] instances = config.getChildren();
 
         for (int i = 0; i < instances.length; i++) {
 
-            Configuration instance = instances[i];
+            final Configuration instance = instances[i];
             String key = instance.getAttribute("name").trim();
 
-            String classAttr = instance.getAttribute(getClassAttributeName(), null);
+            String classAttr = instance.getAttribute("builder", null);
             String className;
 
             // component-instances names explicitly defined
-            if (compInstanceName.equals(instance.getName())) {
+            if ("node".equals(instance.getName())) {
                 className = (classAttr == null) ? null : classAttr.trim();
             } else {
                 className = null;
@@ -263,12 +270,28 @@ public class StandaloneServiceSelector
                 String message = "Unable to determine class name for component named '" + key +
                     "' at " + instance.getLocation();
 
-                getLogger().error(message);
                 throw new ConfigurationException(message);
             }
 
             this.addComponent( className, key, instance );
         }
+    }
+
+    /**
+     * Create a new component.
+     */
+    protected Object createComponent(ComponentInfo info)
+    throws Exception {
+        final Object component = ClassUtils.newInstance(info.getComponentClassName());
+        ContainerUtil.enableLogging(component, this.getLogger());
+        ContainerUtil.contextualize(component, this.context);
+        ContainerUtil.service(component, this.serviceManager);
+        ContainerUtil.configure(component, info.getConfiguration());
+        if ( component instanceof Parameterizable ) {
+            ContainerUtil.parameterize(component, Parameters.fromConfiguration(info.getConfiguration()));
+        }
+        ContainerUtil.initialize(component);
+        return component;
     }
 
     /**
@@ -278,46 +301,27 @@ public class StandaloneServiceSelector
     throws Exception {
         this.initialized = true;
 
-        List keys = new ArrayList( this.componentHandlers.keySet() );
-        final Map components = new HashMap();
-
-        for( int i = 0; i < keys.size(); i++ ) {
-            final Object key = keys.get( i );
-            final ComponentInfo handler =
-                (ComponentInfo)this.componentHandlers.get( key );
-
-            try {
-                Object component = ClassUtils.newInstance(handler.getComponentClassName());
-                ContainerUtil.enableLogging(component, this.getLogger());
-                ContainerUtil.contextualize(component, this.context);
-                ContainerUtil.service(component, this.serviceManager);
-                ContainerUtil.configure(component, handler.getConfiguration());
-                if ( component instanceof Parameterizable ) {
-                    ContainerUtil.parameterize(component, Parameters.fromConfiguration(handler.getConfiguration()));
-                }
-                ContainerUtil.initialize(component);
-                components.put(key, component);
-            } catch( Exception e ) {
-                if( this.getLogger().isDebugEnabled() ) {
-                    this.getLogger().debug( "Caught an exception trying to initialize "
-                        + "of the component handler.", e );
-                }
+        final Iterator i = this.componentInfos.entrySet().iterator();
+        while ( i.hasNext() ) {
+            final Map.Entry entry = (Map.Entry)i.next();
+            final ComponentInfo info = (ComponentInfo)entry.getValue();
+            if ( info.getModel() == ComponentInfo.MODEL_SINGLETON ) {
+                this.singletons.put(entry.getKey(), this.createComponent(info));
             }
         }
-        this.componentHandlers.clear();
-        this.componentHandlers.putAll(components);
     }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        Iterator iter = this.componentHandlers.values().iterator();
+        final Iterator iter = this.singletons.values().iterator();
         while( iter.hasNext() ) {
             final Object current = iter.next();
             ContainerUtil.dispose(current);
         }
-        this.componentHandlers.clear();
+        this.singletons.clear();
+        this.componentInfos.clear();
         this.disposed = true;
     }
 
@@ -336,12 +340,10 @@ public class StandaloneServiceSelector
         }
 
         try {
-            final ComponentInfo handler = getComponentHandler( null,
-                                                               component,
-                                                               configuration,
-                                                               this.serviceManager);
+            final ComponentInfo handler = getComponentInfo( component,
+                                                            configuration);
 
-            this.componentHandlers.put( key, handler );
+            this.componentInfos.put( key, handler );
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug(
@@ -358,52 +360,5 @@ public class StandaloneServiceSelector
 
             throw new ServiceException(key, message, e );
         }
-    }
-
-    /**
-     * Get the name for component-instance elements (i.e. components not defined
-     * by their role shortcut. If <code>null</code>, any element having a 'class'
-     * attribute will be considered as a component instance.
-     * <p>
-     * The default here is to return <code>null</code>, and subclasses can redefine
-     * this method to return particular values.
-     *
-     * @return <code>null</code>, but can be changed by subclasses
-     */
-    protected String getComponentInstanceName() {
-        return "node";
-    }
-
-    /**
-     * Get the name of the attribute giving the class name of a component.
-     * The default here is "class", but this can be overriden in subclasses.
-     *
-     * @return "<code>class</code>", but can be changed by subclasses
-     */
-    protected String getClassAttributeName() {
-        return "builder";
-    }
-
-    /**
-     * Get the name of the attribute giving the default key to use if
-     * none is given. The default here is "default", but this can be
-     * overriden in subclasses. If this method returns <code>null</code>,
-     * no default key can be specified.
-     *
-     * @return "<code>default</code>", but can be changed by subclasses
-     */
-    protected String getDefaultKeyAttributeName() {
-        return "default";
-    }
-
-    /**
-     * Get the role name for this selector. This is called by <code>configure()</code>
-     * to set the value of <code>this.roleName</code>.
-     *
-     * @return the role name, or <code>null<code> if it couldn't be determined.
-     */
-    protected String getRoleName(Configuration config) {
-        // Get the role for this selector
-        return config.getAttribute("role", null);
     }
 }
