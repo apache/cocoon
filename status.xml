@@ -182,6 +182,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="SG" type="add" fixes-bug="COCOON-1804">
+      Added a lightweight FOM_SimpleCocoon class, and placed it in the javascript scope when there isn't 
+      already a scope defined. This way, even when using javaflow, you have access to the cocoon
+      object (with request etc..) from javascript snippets in definition.
+    </action>
     <action dev="SG" type="add" fixes-bug="COCOON-1782">
       Added CSS classes in cocoon forms default XSLs.
     </action>
