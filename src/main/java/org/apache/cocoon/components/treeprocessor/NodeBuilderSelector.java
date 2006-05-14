@@ -46,7 +46,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @version $Id$
  * @since 2.2
  */
-public class StandaloneServiceSelector
+public class NodeBuilderSelector
     extends AbstractLogEnabled
     implements ServiceSelector,
                Serviceable,

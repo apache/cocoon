@@ -44,6 +44,9 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
 
     protected String continuationId;
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
         resourceName = config.getAttribute("resource", null);
@@ -91,6 +94,9 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
         return this.node;
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder#linkNode()
+     */
     public void linkNode() throws Exception {
         if (resourceName != null) {
             // We have a <map:call resource="..."/>
