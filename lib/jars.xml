@@ -836,7 +836,7 @@
       SOAP 1.1 specification and SOAP with Attachments note.
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-saaj-1.3.jar</lib>
+    <lib>optional/axis-saaj-1.4.jar</lib>
     <homepage>http://java.sun.com/xml/saaj/</homepage>
   </file>
 
@@ -861,7 +861,7 @@
       on the Java platform.
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-jaxrpc-1.3.jar</lib>
+    <lib>optional/axis-jaxrpc-1.4.jar</lib>
     <homepage>http://java.sun.com/xml/jaxrpc/</homepage>
   </file>
 
@@ -872,7 +872,7 @@
       Protocol")
     </description>
     <used-by>Axis block</used-by>
-    <lib>optional/axis-1.3.jar</lib>
+    <lib>optional/axis-1.4.jar</lib>
     <homepage>http://ws.apache.org/axis/</homepage>
   </file>
 
