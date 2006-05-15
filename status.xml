@@ -182,6 +182,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="BRD" type="fix">
+      CForms/Ajax: when the Ajax-update contained an empty textarea, IE failed to parse this correctly,
+      displaying '&lt;/span>&lt;/div>' in the textarea. Fixed by adding an explicit closing tag for
+      textareas.
+    </action>
+    <action dev="BRD" type="fix">
+      CForms: widgets in unions lost their value when switching between union cases.
+    </action>
     <action dev="AG" type="update">
       Updated axis to 1.4 and commons-collections to 3.2.
     </action>
