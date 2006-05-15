@@ -45,14 +45,14 @@ HOW TO START THE COCOON WEBAPP (NON OSGI MODE)
 ----------------------------------------------
 
 0. checkout complete trunk and
-  $ mvn clean install -Dmaven.test.skip=true
+  $ mvn clean install
 
-  Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
+  Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
   repositories are temporarily unaccessible and cause the build to fail.
 
 1. go to core/cocoon-webapp
   $ mvn cocoon:deploy
-  $ mvn jetty6:run
+  $ mvn jetty6:run-exploded
 
 2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
 
