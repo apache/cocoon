@@ -85,7 +85,7 @@ dojo.lang.mixin(cocoon.ajax.insertion, {
                 }
                 refElt.removeChild(firstChild);
             }
-            
+
             // Insert the new one
             refElt.appendChild(newElt);
         })
@@ -119,13 +119,20 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	        // IE or text
 	        var text = dojo.lang.isString(node) ? node : node.xml;
 	        var div = targetDoc.createElement("DIV");
-	        
+
 	        // Code below heavily inspired by the Prototype library
 	        var scriptExpr = "(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)";
-	        
-	        // Update screen with removed scripts
-	        div.innerHTML = text.replace(new RegExp(scriptExpr, 'img'), '');;
-	        
+            var textWithoutScripts = text.replace(new RegExp(scriptExpr, 'img'), '');
+
+            // Internet Explorer can't handle empty <textarea .../> elements, so replace
+            // them with <textarea></textarea>
+            var textareaExpr = "(<textarea[^<]*)\/>";
+            var textAreaMatches = textWithoutScripts.match(textareaExpr);
+            var textFixed = textWithoutScripts.replace(new RegExp(textareaExpr, 'img'), "$1></textarea>");
+
+            // Update screen with removed scripts
+	        div.innerHTML = textFixed;
+
 	        var matchAll = new RegExp(scriptExpr, 'img');
 	        var matchOne = new RegExp(scriptExpr, 'im');
 	        var allMatches = text.match(matchAll);
@@ -136,7 +143,7 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 		        }
 		    }
 	        return { element: dojo.dom.getFirstChildElement(div), scripts: scripts };
-	        
+
 	    } else {
 	        var scripts = new Array();
 	        var element = this._importDomNode(node, targetDoc, scripts);
@@ -171,17 +178,17 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	            }
 	            return element;
 	        break;
-	        
+
 	        case dojo.dom.TEXT_NODE:
 	            return targetDoc.createTextNode(node.nodeValue);
 	        break;
-	        
+
 	        case dojo.dom.CDATA_SECTION_NODE:
 	            return targetDoc.createTextNode(node.nodeValue);
 	        break;
 	    }
 	},
-	
+
 	_runScripts: function(imported) {
         // Evaluate scripts
         for (var i = 0; i < imported.scripts.length; i++) {
@@ -196,7 +203,7 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
         this._runScripts(imports);
         return this.parseDojoWidgets(imports.element);
     },
-    
+
     destroy: function(element) {
 	    var widget = dojo.widget.byNode(element);
 	    if (widget) {
@@ -218,7 +225,7 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	    // Find a parent widget (if any) so that Dojo can maintain its widget tree
 	    var parentWidget = this.findParentWidget(element);
 		var parser = new dojo.xml.Parse();
-	
+
 		// FIXME: parser.parseElement() parses the _children_ of an element, whereas we want here
 		// the element itself to be parsed. Parsing its parent is not an option as we don't want
 		// to parse the siblings. So place it in a temporary div that we'll trash afterwards.
@@ -232,10 +239,10 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 		element = div.firstChild;
 		div.parentNode.replaceChild(element, div);
 		parentWidget && parentWidget.onResized();
-		
+
 		return element;
 	},
-	
+
 	findParentWidget: function(element) {
 	    var parent = element.parentNode;
 	    var widget;
