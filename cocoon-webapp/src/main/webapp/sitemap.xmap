@@ -269,6 +269,38 @@
     -->
 
     <!--+
+        | Cocoon-provided client-side resources.
+        | Some block's jar files (e.g. Ajax & Forms) include client-side resources
+        | such as JavaScript, CSS and images. The system-level pattern below
+        | fetches these resources, while allowing them to be overridden if needed
+        | in the webapp's "resources" directory.
+        |
+        | Defining this pattern in the root sitemap avoids duplicating it in subsitemaps,
+        | which reduces copy/pasting in application code and allows better client-side
+        | caching by giving each resource a single URL.
+        |
+        | Furthermore, some Cocoon code such as the Forms-provided XSLs assume that
+        | resources are available at that URL.
+        |
+        | The absolute path for these resources is "{request:contextPath}/_cocoon/resources"
+        +-->
+    <map:match pattern="_cocoon/resources/*/**">
+	  <map:select type="resource-exists">
+		<map:when test="resources/{1}/{2}">
+		  <map:read src="resources/{1}/{2}"/>
+		</map:when>
+		<!-- For Cocoon development, read directly from source directories
+                <map:when test="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}">
+                  <map:read src="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}"/>
+	        </map:when>
+		-->
+		<map:otherwise>
+		  <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
+		</map:otherwise>
+	  </map:select>
+	</map:match>
+
+    <!--+
         | Mount everything else by calling the sitemap.xmap file located
         | in the requested folder.
         +-->
