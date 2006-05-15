@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ import org.apache.commons.lang.ObjectUtils;
  */
 public class Union extends AbstractContainerWidget {
 
-    //Note: union instances behave like simple "field" instance with respect to 
+    //Note: union instances behave like simple "field" instance with respect to
     //      XSLT post-processing, the choice of element-name reflects this.
     private static final String UNION_EL = "field";
 
@@ -96,6 +96,13 @@ public class Union extends AbstractContainerWidget {
         // Read current case from request
         String newValue = (String)getValue();
         if (newValue != null && !newValue.equals("")) {
+            // We need to know if the case widget is the submit widget,
+            // and since the submit widget is only determined after the readFromRequest,
+            // we need to do it here prematurely (as happens in Action & Upload)
+            String fullId = caseWidget.getRequestParameterName();
+            if (fullId.equals(formContext.getRequest().getParameter(Form.SUBMIT_ID_PARAMETER))) {
+               getForm().setSubmitWidget(this.caseWidget);
+            }
 
             if (getForm().getSubmitWidget() == this.caseWidget && !newValue.equals(this.caseValue)) {
                 // If submitted by the case widget and its value has changed, read the values
@@ -111,7 +118,7 @@ public class Union extends AbstractContainerWidget {
                 widget.readFromRequest(formContext);
             }
         }
-        
+
         if (!ObjectUtils.equals(this.caseValue, newValue)) {
             this.caseValue = newValue;
             getForm().addWidgetUpdate(this);
@@ -138,8 +145,8 @@ public class Union extends AbstractContainerWidget {
     }
 
     public Widget getChild(String id) {
-        if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id)) {
-            ((ContainerDefinition)definition).createWidget(this, id);
+        if (!widgets.hasWidget(id) && definition.hasWidget(id)) {
+            definition.createWidget(this, id);
             Widget child = super.getChild(id);
             child.initialize();
             return child;
@@ -149,7 +156,7 @@ public class Union extends AbstractContainerWidget {
 
     //TODO: check further: cause the claim in the accompanied comment doesn't seem
     // to be completely correct
-    
+
     // This method is overridden to suppress output of sub-widget sax fragments.
 //    public void generateItemsSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
 //        // Do nothing
