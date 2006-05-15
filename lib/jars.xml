@@ -248,7 +248,7 @@
     <title>Jakarta Commons Collections</title>
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
-    <lib>core/commons-collections-3.1.jar</lib>
+    <lib>core/commons-collections-3.2.jar</lib>
     <homepage>http://jakarta.apache.org/commons/collections/</homepage>
   </file>
 
