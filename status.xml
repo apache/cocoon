@@ -183,7 +183,7 @@
 -->
   <release version="2.1.10" date="TBD">
     <action dev="AG" type="update">
-      Updated axis to 1.4.
+      Updated axis to 1.4 and commons-collections to 3.2.
     </action>
     <action dev="SG" type="add" fixes-bug="COCOON-1804">
       Added a lightweight FOM_SimpleCocoon class, and placed it in the javascript scope when there isn't 
