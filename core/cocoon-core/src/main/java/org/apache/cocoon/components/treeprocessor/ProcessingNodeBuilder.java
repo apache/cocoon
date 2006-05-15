@@ -20,9 +20,18 @@ import org.apache.avalon.framework.configuration.Configuration;
 /**
  * A <code>ProcessingNode</code> builder.
  * <p>
- * Lifecycle information : a <code>TreeBuilder</code> can be recycled
- * and used to build several <code>Processor</code>s, each one defining
- * a different <code>ServiceManager</code>.
+ * A processing node builder is used to create the processing statements
+ * for a sitemap.
+ * A node builder can either be implemented as a singleton, using
+ * the ThreadSafe marker interface, or each time a builder is required
+ * a new instance is created.
+ * All builders are managed by the {@link NodeBuilderSelector}.
+ * A node builder can implement the following marker interfaces from
+ * Avalon: LogEnabled, Contextualizable, Initializable
+ * and Configurable. Other marker interfaces, like Recyclable, Poolable
+ * or Disposable are not supported!
+ * If the builder needs a service manager it can fetch this one from
+ * the tree builder.
  * <p>
  *
  * @version $Id$
