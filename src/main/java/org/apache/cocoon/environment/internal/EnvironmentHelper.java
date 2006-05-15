@@ -34,6 +34,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Helper class for maintaining the environment stack.
@@ -391,7 +392,17 @@ implements SourceResolver, Serviceable, Disposable {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if ( stack != null && !stack.isEmpty()) {
             EnvironmentInfo info = stack.getCurrentInfo();
-            return (ServiceManager) info.processor.getBeanFactory().getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+            Processor processor = info.processor;
+            BeanFactory factory = info.processor.getBeanFactory();
+            while ( factory == null && processor != null ) {
+                processor = processor.getParent();
+                if ( processor != null ) {
+                    factory = processor.getBeanFactory();
+                }
+            }
+            if ( factory != null ) {
+                return (ServiceManager) factory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
+            }
         }
         return null;
     }
