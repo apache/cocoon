@@ -45,6 +45,7 @@ import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.servlet.multipart.RequestFactory;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.time.StopWatch;
 
 /**
@@ -124,6 +125,8 @@ public class CocoonServlet extends HttpServlet {
             this.coreUtil = new CoreUtil(this.environmentContext, env);
             this.log = this.coreUtil.getRootLogger();
         } catch (Exception e) {
+            this.servletContext.log("Error during initialization - aborting.");
+            this.servletContext.log(ExceptionUtils.getFullStackTrace(e));
             if ( e instanceof ServletException ) {
                 throw (ServletException)e;
             }
