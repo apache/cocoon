@@ -44,7 +44,6 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
@@ -153,7 +152,7 @@ public class SitemapLanguage
      * Selector for ProcessingNodeBuilders which is set up in the context of the
      * processor that we are building.
      */
-    private ServiceSelector itsBuilders;
+    private NodeBuilderSelector itsBuilders;
 
     /**
      * The sitemap component information grabbed while building itsMaanger
@@ -294,18 +293,7 @@ public class SitemapLanguage
         }
 
         ProcessingNodeBuilder builder;
-        try {
-            builder = (ProcessingNodeBuilder) this.itsBuilders.select(nodeName);
-        } catch (ServiceException ce) {
-            // Is it because this element is unknown ?
-            if (this.itsBuilders.isSelectable(nodeName)) {
-                // No : rethrow
-                throw ce;
-            }
-            // Throw a more meaningful exception
-            String msg = "Unknown element '" + nodeName + "' at " + config.getLocation();
-            throw new ConfigurationException(msg);
-        }
+        builder = (ProcessingNodeBuilder) this.itsBuilders.getBuilder(nodeName);
 
         builder.setBuilder(this);
 
