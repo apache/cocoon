@@ -180,7 +180,7 @@ public class XMLFileModule extends AbstractJXPathModule
                         logger.debug("Document cached... checking validity of uri " + this.uri);
                     }
 
-                    int valid = this.validity == null? SourceValidity.INVALID: this.validity.isValid();
+                    int valid = this.validity == null? SourceValidity.INVALID : this.validity.isValid();
                     if (valid != SourceValidity.VALID) {
                         // Get new source and validity
                         src = resolver.resolveURI(this.uri);
@@ -205,13 +205,11 @@ public class XMLFileModule extends AbstractJXPathModule
                         }
                     }
                 }
-
                 dom = this.document;
             } finally {
                 if (src != null) {
                     resolver.release(src);
                 }
-
                 if (!this.cacheable) {
                     if (logger.isDebugEnabled()) {
                         logger.debug("Not caching document cached... uri " + this.uri);
@@ -220,14 +218,12 @@ public class XMLFileModule extends AbstractJXPathModule
                     this.document = null;
                 }
             }
-
             if (logger.isDebugEnabled()) {
                 logger.debug("Done with document... uri " + this.uri);
             }
             return dom;
         }
     }
-
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -269,7 +265,7 @@ public class XMLFileModule extends AbstractJXPathModule
         }
         this.cacheAll = config.getChild("cacheable").getValueAsBoolean(true);
 
-        this.documents = Collections.synchronizedMap(new HashMap());
+        this.documents = Collections.synchronizedMap(new ReferenceMap());
         Configuration[] files = config.getChildren("file");
         for (int i = 0; i < files.length; i++) {
             boolean reload = files[i].getAttributeAsBoolean("reloadable", this.reloadAll);
@@ -305,7 +301,6 @@ public class XMLFileModule extends AbstractJXPathModule
         this.expressionValuesCache = null;
     }
 
-
     /**
      * Retrieve document helper
      */
@@ -337,7 +332,6 @@ public class XMLFileModule extends AbstractJXPathModule
                     + " statically in "
                     + staticConfLocation);
         }
-
         if (!this.documents.containsKey(src)) {
             boolean reload = this.reloadAll;
             boolean cache = this.cacheAll;
@@ -351,11 +345,9 @@ public class XMLFileModule extends AbstractJXPathModule
                             + ": please use 'cacheable', not 'cachable'");
                 }
             }
-
             this.documents.put(src, new DocumentHelper(reload, cache, src, this));
         }
-
-        return (DocumentHelper) this.documents.get(src);
+        return (DocumentHelper)this.documents.get(src);
     }
 
     /**
