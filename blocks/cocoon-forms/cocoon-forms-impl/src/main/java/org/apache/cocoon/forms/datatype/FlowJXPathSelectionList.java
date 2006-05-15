@@ -171,10 +171,9 @@ public class FlowJXPathSelectionList implements SelectionList {
                 }
 
                 // Get the label (can be ommitted)
-                itemCtx.setLenient(true);
-                label = itemCtx.getValue(this.labelPath);
-                if (label == null) {
-                    label = stringValue;
+                if (this.labelPath != null) {
+                    itemCtx.setLenient(true);
+                    label = itemCtx.getValue(this.labelPath);
                 }
             }
 
