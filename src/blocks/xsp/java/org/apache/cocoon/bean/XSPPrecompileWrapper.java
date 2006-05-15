@@ -17,7 +17,6 @@ package org.apache.cocoon.bean;
 
 import java.io.File;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -132,7 +131,7 @@ public class XSPPrecompileWrapper extends CocoonWrapper {
         Source source = null;
         Object key = CocoonComponentManager.startProcessing(environment);
         CocoonComponentManager.enterEnvironment(environment,
-                (ComponentManager) getComponentManager(), cocoon);
+                getComponentManager(), cocoon);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("XSP generation begin:" + fileName);
