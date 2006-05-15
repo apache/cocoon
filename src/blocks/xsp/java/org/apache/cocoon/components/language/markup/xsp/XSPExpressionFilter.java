@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
+import org.apache.cocoon.components.language.markup.AbstractMarkupLanguage;
 import org.apache.cocoon.components.language.markup.LogicsheetFilter;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -175,8 +176,8 @@ public class XSPExpressionFilter extends LogicsheetFilter
      * Remove interpolation attributes and return cleaned attribute list.
      */
     private Attributes pushInterpolationStack(Attributes attribs) {
-        String valueAttr = attribs.getValue(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION);
-        String valueText = attribs.getValue(markupURI, XSPMarkupLanguage.TEXT_INTERPOLATION);
+        String valueAttr = attribs.getValue(markupURI, AbstractMarkupLanguage.ATTR_INTERPOLATION);
+        String valueText = attribs.getValue(markupURI, AbstractMarkupLanguage.TEXT_INTERPOLATION);
 
         // Neither interpolation flag in attribute list: push tail to stack.
         if (valueAttr == null && valueText == null ) {
@@ -194,12 +195,12 @@ public class XSPExpressionFilter extends LogicsheetFilter
 
         if (valueAttr != null) {
             attrInterpolation = Boolean.valueOf(valueAttr).booleanValue();
-            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, XSPMarkupLanguage.ATTR_INTERPOLATION));
+            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, AbstractMarkupLanguage.ATTR_INTERPOLATION));
         }
 
         if (valueText != null) {
             textInterpolation = Boolean.valueOf(valueText).booleanValue();
-            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, XSPMarkupLanguage.TEXT_INTERPOLATION));
+            cleanedAttribs.removeAttribute(cleanedAttribs.getIndex(markupURI, AbstractMarkupLanguage.TEXT_INTERPOLATION));
         }
 
         interpolationStack.addLast(new InterpolationSettings(attrInterpolation,
