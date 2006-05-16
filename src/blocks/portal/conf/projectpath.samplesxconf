@@ -15,11 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xconf xpath="/cocoon/input-modules" 
+<samplesxconf xpath="/cocoon/input-modules"
        unless="component-instance[@name='portalpath']">
     <component-instance logger="core.modules.input"
           name="portalpath"
           class="org.apache.cocoon.components.modules.input.ProjectPathModule">
        <uri-prefix>samples/blocks/portal/</uri-prefix>
     </component-instance>
-</xconf>
+</samplesxconf>

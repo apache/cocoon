@@ -82,6 +82,30 @@
     </map:actions>
   </map:components>
 
+  <map:resources>
+    <map:resource name="show-portal">
+      <map:act type="cowarp-is-logged-in">
+        <map:parameter name="application" value="portal"/>
+
+        <map:generate type="portal" label="content"/>
+        <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
+          <map:parameter name="user" value="{ID}"/>
+          <map:parameter name="title" value="{global:mainTitle}"/>
+          <map:parameter name="base" value="{portalpath:relative}"/>
+        </map:transform>
+        <map:transform type="cinclude"/>
+        <map:transform type="portal-coplet"/>
+        <map:transform type="portal-new-eventlink"/>
+        <map:transform type="encodeURL"/>
+        <!--
+        <map:transform type="htmlroot" />
+        -->
+        <!-- If you don't need JSR-168 support, you can use the html serializer instead -->
+        <map:serialize type="html-include"/>
+      </map:act>
+    </map:resource>
+  </map:resources>
+
   <!-- =========================== Views =================================== -->
 
   <map:views>
@@ -200,25 +224,7 @@
 
       <!-- Test pipeline for portal engine -->
       <map:match pattern="portal">
-        <map:act type="cowarp-is-logged-in">
-          <map:parameter name="application" value="portal"/>
-
-          <map:generate type="portal" label="content"/>
-          <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-            <map:parameter name="user" value="{ID}"/>
-            <map:parameter name="title" value="{global:mainTitle}"/>
-            <map:parameter name="base" value="{portalpath:relative}"/>
-          </map:transform>
-          <map:transform type="cinclude"/>
-          <map:transform type="portal-coplet"/>
-          <map:transform type="portal-new-eventlink"/>
-          <map:transform type="encodeURL"/>
-          <!--
-          <map:transform type="htmlroot" />
-          -->
-          <!-- If you don't need JSR-168 support, you can use the html serializer instead -->
-          <map:serialize type="html-include"/>
-        </map:act>
+        <map:call resource="show-portal"/>
       </map:match>
 
       <!-- Test pipeline for bookmark -->
@@ -301,14 +307,19 @@
             <map:act type="portal-save-profile"/>
 -->
           <map:act type="cowarp-logout">
-		    <map:parameter name="application" value="portal"/>
-        </map:act>
+		        <map:parameter name="application" value="portal"/>
+          </map:act>
         </map:act>
         <!-- TODO logout page -->
-        <map:redirect-to uri="login"/>
+        <map:redirect-to uri="portal"/>
+      </map:match>
+
+      <!-- Test pipeline for portal engine -->
+      <map:match pattern="*">
+        <map:call resource="show-portal"/>
       </map:match>
       
-      	<!-- ==== P O R T A L   T O O L S ==== -->
+        <!-- ==== P O R T A L   T O O L S ==== -->
 	
 	<!-- mount sitemap of the portal tools -->
 	<map:match pattern="tools/**"> 
@@ -326,6 +337,12 @@
 	<map:match pattern="userImages/*.jpg">
 		<map:read mime-type="image/jpg" src="tools/plugins/userManagement/userImages/{1}.jpg"/>
 	</map:match>
+
+
+      <!-- process page labels -->
+      <map:match pattern="*">
+        <map:call resource="show-portal"/>
+      </map:match>
 
       <!-- Everything else redirect to the portal -->
       <map:match pattern="**">

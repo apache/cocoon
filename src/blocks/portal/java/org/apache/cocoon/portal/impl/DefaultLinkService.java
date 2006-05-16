@@ -135,7 +135,7 @@ public class DefaultLinkService
             return this.getRefreshLinkURI(secure);
         }
         final LinkInfo info = this.getInfo();
-        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
+        final StringBuffer buffer = new StringBuffer(initBuffer(info, event, secure));
         boolean hasParams = info.hasParameters();
 
         // add comparable events
@@ -163,6 +163,11 @@ public class DefaultLinkService
         hasParams = this.addEvent(buffer, event, hasParams);
 
         return buffer.toString();
+    }
+
+    protected String initBuffer(LinkInfo info, Event event, Boolean secure)
+    {
+        return info.getBase(secure);
     }
 
     /**
@@ -201,7 +206,7 @@ public class DefaultLinkService
         }
         final LinkInfo info = this.getInfo();
         boolean hasParams = info.hasParameters();
-        final StringBuffer buffer = new StringBuffer(info.getBase(secure));
+        final StringBuffer buffer = new StringBuffer(initBuffer(info, events, secure));
 
         // add comparable events
         Iterator iter = info.comparableEvents.iterator();
@@ -250,6 +255,10 @@ public class DefaultLinkService
             }
         }
         return buffer.toString();
+    }
+
+    protected String initBuffer(LinkInfo info, List events, Boolean secure) {
+        return info.getBase(secure);
     }
 
     /**
@@ -357,7 +366,7 @@ public class DefaultLinkService
         return this.eventsMarshalled.booleanValue();
     }
 
-    private String processEvent(Event event, StringBuffer value) {
+    protected String processEvent(Event event, StringBuffer value) {
         String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
         if (event instanceof ConvertableEvent && getEventsMarshalled()) {
             final String eventParName = ((ConvertableEvent) event).getRequestParameterName();

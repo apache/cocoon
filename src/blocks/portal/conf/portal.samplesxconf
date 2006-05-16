@@ -21,8 +21,109 @@
       It demonstrates several features of the portal engine,
       so it's not optimized for production. Make sure that
       if you use the portal for your own projects that you
-      remove all unused stuff from the configuration! 
+      remove all unused stuff from the configuration!
  -->
+
+  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal"
+             role="org.apache.cocoon.portal.event.EventManager">
+    <event-aspects>
+      <!--  The client should not cache the page. -->
+      <aspect type="no-client-caching"/>
+      <!-- Uncomment this aspect when marshalling JSR168 portlet events
+      <aspect type="convertable"/>
+      -->
+      <!-- Use the action counter with great care. We recommend turning it off. -->
+      <!-- Remove action-counter when using PageLabels -->
+      <!-- aspect type="action-counter"/ -->
+      <aspect type="frame"/>
+      <aspect type="link"/>
+      <aspect type="full-screen-coplet"/>
+      <!-- Uncomment the following when using PageLabels
+      <aspect type="page-label"/>
+      -->
+      <!-- Comment the following out if you don't need WSRP: -->
+      <aspect type="wsrp"/>
+      <aspect type="request-parameter">
+        <!-- Uncomment the following when marshalling JSR168 portlet events
+        <parameter name="parameter-name" value="cocoon-portal-event,url"/>
+        -->
+      </aspect>
+    </event-aspects>
+    <!-- add a new instance of each class as a subscriber: -->
+    <subscriber-classes>
+      <!-- Please note that Subcribers are deprecated. Please use receivers instead. -->
+      <!-- class name="CLASSNAME"/> -->
+    </subscriber-classes>
+    <!-- add each component as a subscriber (the component should be thread safe): -->
+    <subscriber-roles>
+      <!-- Please note that Subcribers are deprecated. Please use receivers instead. -->
+      <!-- <role name="AVALON-ROLE"/> -->
+    </subscriber-roles>
+    <!-- add a new instance of each class as a receiver: -->
+    <receiver-classes>
+      <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaulCopletDataEventSubscriber"/>
+      <class
+        name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
+      <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
+    </receiver-classes>
+    <!-- add each component as a receiver (the component should be thread safe): -->
+    <receiver-roles>
+      <!-- <role name="AVALON-ROLE"/> -->
+    </receiver-roles>
+  </component>
+
+  <!-- This is the portal manager.
+       The portal manager can be extended with different aspects.
+       Currently the JSR-168 aspect is configured/activated.
+       If you don't need the JSR-168 support uncomment the aspect.
+       In a similar manner the wsrp support works.
+  -->
+  <component class="org.apache.cocoon.portal.impl.PortalManagerImpl"
+             logger="portal" role="org.apache.cocoon.portal.PortalManager">
+    <aspects>
+      <!-- JSR-168 support: -->
+      <aspect adapter="portlet"/>
+      <!-- wsrp support: -->
+      <aspect adapter="wsrp"/>
+    </aspects>
+    <fullScreenNav>true</fullScreenNav>
+  </component>
+
+
+  <!-- This is the portal service -->
+  <component class="org.apache.cocoon.portal.impl.PortalServiceImpl" logger="portal"
+             role="org.apache.cocoon.portal.PortalService">
+    <portals>
+      <!-- Configure your portals here: -->
+    </portals>
+  </component>
+
+  <!-- To enable PageLabels change DefaultLinkService to PageLabelLinkService -->
+  <component class="org.apache.cocoon.portal.impl.DefaultLinkService"
+             logger="portal"
+             role="org.apache.cocoon.portal.LinkService">
+    <parameter name="defaultPort" value="8888"/>
+    <parameter name="defaultSecurePort" value="443"/>
+  </component>
+
+  <!-- To enable PageLabels change DefaultEventConverter to PageLabelEventConverter -->
+  <component class="org.apache.cocoon.portal.event.impl.DefaultEventConverter" logger="portal"
+             role="org.apache.cocoon.portal.event.EventConverter">
+  </component>
+
+  <!-- Page Label Manager -->
+  <component class="org.apache.cocoon.portal.impl.PageLabelManager" logger="portal"
+             role="org.apache.cocoon.portal.impl.PageLabelManager">
+    <!-- Uncomment to marshall JSR-168 portlet events
+    <marshallEvents>true</marshallEvents>
+    -->
+    <!-- Uncomment to enable non sticky tabs
+    <nonStickyTabs>true</nonStickyTabs>
+    -->
+    <!-- Uncomment to have the label appear in the path instead of as a request parameter
+    <urlPath>true</urlPath>
+    -->
+  </component>
   <component role="org.osoco.cowarp.ApplicationManager"
              class="org.osoco.cowarp.impl.StandardApplicationManager"/>
 
@@ -57,7 +158,19 @@
   <component class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Cowarp">
     <parameter name="userinfo-provider" value="org.osoco.cowarp.portal.UserInfoProviderImpl"/>
   </component>
- 
+
+  <component class="org.apache.cocoon.components.persistence.CastorSourceConverter"
+             role="org.apache.cocoon.components.persistence.CastorSourceConverter" logger="portal">
+    <mapping-source source="layout">
+      resource://org/apache/cocoon/portal/layout/layout.xml</mapping-source>
+    <mapping-source source="copletbasedata">
+      resource://org/apache/cocoon/portal/coplet/copletbasedata.xml</mapping-source>
+    <mapping-source source="copletdata">
+      resource://org/apache/cocoon/portal/coplet/copletdata.xml</mapping-source>
+    <mapping-source source="copletinstancedata">
+      resource://org/apache/cocoon/portal/coplet/copletinstancedata.xml</mapping-source>
+  </component>
+
   <component class="org.apache.cocoon.portal.profile.impl.AuthenticationProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Auth">
   </component>
 

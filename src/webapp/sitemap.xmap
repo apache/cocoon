@@ -122,7 +122,7 @@
     <map:transformer logger="sitemap.transformer.include" name="include" pool-max="${include-transformer.pool-max}" src="org.apache.cocoon.transformation.IncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-max="${xinclude-transformer.pool-max}" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
     <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-max="${cinclude-transformer.pool-max}" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
-    <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
+    <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" pool-max="${encodeurl-transformer.pool-max}" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
     <map:transformer logger="sitemap.transformer.write-source" name="write-source" src="org.apache.cocoon.transformation.SourceWritingTransformer"/>
     <map:transformer logger="sitemap.transformer.jpath" name="jpath" src="org.apache.cocoon.transformation.JPathTransformer"/>
     <map:transformer logger="sitemap.transformer.filter" name="filter" src="org.apache.cocoon.transformation.FilterTransformer"/>
@@ -404,7 +404,8 @@
       | cache points.
       +-->
    <map:pipes default="caching">
-     <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+     <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
+               pool-max="${caching-pipeline.pool-max}">
        <!--+
            | If not specified, the value of the outputBufferSize parameter is -1.
            | This will cause Cocoon to buffer all output until processing has finished
@@ -420,18 +421,21 @@
            +-->
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
-     <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
+     <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline"
+               pool-max="${caching-point-pipeline.pool-max">
        <!-- parameter name="autoCachingPoint" value="On"/ -->
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
-     <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
+     <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"
+               pool-max="${noncaching-pipeline.pool-max}">
        <!-- parameter name="outputBufferSize" value="8192"/ -->
      </map:pipe>
      <!--+
          | This pipeline implementation caches the complete content for a defined
          | period of time (expires). The cache key is the current uri.
          +-->
-     <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
+     <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline"
+               pool-max="${expires-pipeline.pool-max}">
        <parameter name="cache-expires" value="${expires-pipeline.cache-expires}"/> <!-- Expires in secondes -->
      </map:pipe>
    </map:pipes>
@@ -691,7 +695,7 @@
         | in the requested folder.
         +-->
     <map:match pattern="*/**">
-      <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
+      <map:mount check-reload="${sitemap-mount.check-reload}" src="{1}/" uri-prefix="{1}"/>
     </map:match>
 
     <!--+

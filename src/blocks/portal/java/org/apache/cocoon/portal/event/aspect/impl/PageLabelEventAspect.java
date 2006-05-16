@@ -78,12 +78,14 @@ public class PageLabelEventAspect
             final EventManager publisher = service.getComponentManager().getEventManager();
             final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
             final String parameterName = this.labelManager.getRequestParameterName();
+            final boolean useUrlPath = this.labelManager.isUrlPath();
 
-            String label = request.getParameter(parameterName);
+            String label = (useUrlPath) ? request.getSitemapURI() : request.getParameter(parameterName);
+
             // The pageLabel must be single valued
             if (label != null) {
                 String previous = this.labelManager.getPreviousLabel();
-                if (previous != null && previous.equals(label)) {
+                if (previous != null && previous.equals(label) ) {
                     // Already on this page. Don't publish the pageLabel events
                 } else {
                     Iterator iter = this.labelManager.getPageLabelEvents(label).iterator();

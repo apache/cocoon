@@ -265,10 +265,14 @@ public class PortletURLConverter {
 
     private String encodeParameterValues(String[] paramValues) {
         StringBuffer returnvalue = new StringBuffer(100);
-        returnvalue.append(paramValues.length);
-        for (int i = 0; i < paramValues.length; i++) {
-            returnvalue.append("_");
-            returnvalue.append(encodeValue(paramValues[i]));
+        if (paramValues == null) {
+            returnvalue.append("0");
+        } else {
+            returnvalue.append(paramValues.length);
+            for (int i = 0; i < paramValues.length; i++) {
+                returnvalue.append("_");
+                returnvalue.append(encodeValue(paramValues[i]));
+            }
         }
         return returnvalue.toString();
     }

@@ -182,6 +182,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="RG" type="update">
+      Portal: PageLabels can now be configured to be part of the url.
+    </action>
+    <action dev="RG" type="update">
+      Made the pool-max values in the html block's generators externally configurable. Made sitemap
+      reloading externally configurable. Made pipeline amd encodeURLTransformer pool-max values
+      externally configurable.
+    </action>
     <action dev="BRD" type="fix">
       CForms/Ajax: when the Ajax-update contained an empty textarea, IE failed to parse this correctly,
       displaying '&lt;/span>&lt;/div>' in the textarea. Fixed by adding an explicit closing tag for
