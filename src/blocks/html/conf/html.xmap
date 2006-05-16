@@ -21,6 +21,7 @@
 
     <map:generator name="html"
                    logger="sitemap.generator.html"
+                   pool-max="${html-generator.pool-max}"
                    src="org.apache.cocoon.generation.HTMLGenerator"
                    label="content">
       <!-- Tidy configuration file.
@@ -29,6 +30,7 @@
     </map:generator>
     <map:generator name="nekohtml"
                    logger="sitemap.generator.html"
+                   pool-max="${nekohtml-generator.pool-max}"
                    src="org.apache.cocoon.generation.NekoHTMLGenerator"
                    label="content">
       <!-- NekoHTML configuration file.
