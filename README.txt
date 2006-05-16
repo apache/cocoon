@@ -54,7 +54,7 @@ HOW TO START THE COCOON WEBAPP (NON OSGI MODE)
   $ mvn cocoon:deploy
   $ mvn jetty6:run-exploded
 
-2. point your browser to http://localhost:8888/ or http://localhost:8888/apps/cocoon-deployer-plugin-demo/test
+2. point your browser to http://localhost:8888/
 
 HOW TO START THE COCOON WEBAPP (OSGI MODE)
 ------------------------------------------
