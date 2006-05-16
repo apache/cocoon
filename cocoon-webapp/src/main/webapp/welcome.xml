@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@
     | This is a very simple XML page done just to show how a simple 
     | cocoon pipeline works.
     |
-    | CVS $Id: welcome.xml,v 1.5 2004/04/05 12:25:35 antonio Exp $
+    | $Id$
     +-->
-
 <welcome>
- <message>
-   Congratulations! If you are reading this page, it means that
-   your Apache Cocoon installation was successful.
- </message>
+  <message>
+    Congratulations! If you are reading this page, it means that
+    your Apache Cocoon installation was successful.
+  </message>
+  <message>
+    To know more about Cocoon capabilities, look at the <link href="apps/">sample blocks</link>.    
+  </message>
 </welcome>
