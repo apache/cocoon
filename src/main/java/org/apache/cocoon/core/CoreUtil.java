@@ -492,52 +492,10 @@ public class CoreUtil {
     }
 
     /**
-     * Create the classloader that inlcudes all the [block]/BLOCK-INF/classes directories. 
+     * Create the classloader 
      * @throws Exception
      */
     protected void createClassloader() throws Exception {
-        // get the wiring
-        final SourceResolver resolver = this.createSourceResolver(this.log);    
-        Source wiringSource = null;
-        final Configuration wiring;
-        try {
-            wiringSource = resolver.resolveURI(Constants.WIRING);
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            wiring = builder.build( wiringSource.getInputStream() );            
-        } catch(org.apache.excalibur.source.SourceNotFoundException snfe) {
-            throw new WiringNotFoundException("wiring.xml not found in the root directory of your Cocoon application.");
-        } finally {
-            resolver.release(wiringSource);
-        }
-        
-        // get all wired blocks and add their classed directory to the classloader
-        List urlList = new ArrayList();        
-        Configuration[] blocks = wiring.getChildren("block");
-        for(int i = 0; i < blocks.length; i++) {
-            String location = blocks[i].getAttribute("location");
-            if(this.log.isDebugEnabled()) {
-                this.log.debug("Found block " + blocks[i].getAttribute("id") + " at " + location);
-            }
-            Source classesDir = null;
-            try {
-               classesDir = resolver.resolveURI(location + "/" + Constants.BLOCK_META_DIR + "/classes");
-               if(classesDir.exists()) {
-                   String classesDirURI = classesDir.getURI();
-                   urlList.add(new URL(classesDirURI));
-                   if(this.log.isDebugEnabled()) {
-                       this.log.debug("added " + classesDir.getURI());
-                   }
-               }               
-            } finally {
-                resolver.release(classesDir);
-            }
-        }
-    
-        // setup the classloader using the current classloader as parent
-        ClassLoader parentClassloader = Thread.currentThread().getContextClassLoader();
-        URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);        
-        URLClassLoader classloader = new URLClassLoader(urls, parentClassloader);
-        Thread.currentThread().setContextClassLoader(classloader);
         this.classloader = Thread.currentThread().getContextClassLoader();
     }
 
