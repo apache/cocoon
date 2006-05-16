@@ -21,5 +21,19 @@
         <map:mount uri-prefix="{1}" src="{1}/"/>
       </map:match>
     </map:pipeline>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:generate type="xpathdirectory" src="./"> 
+          <map:parameter name="xpath" value="/xsamples/group"/> 
+          <map:parameter name="depth" value="2"/>
+          <map:parameter name="xmlFiles" value="\.xsamples$"/> 
+        </map:generate> 
+        <map:transform src="group2samples.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize type="html"/>        
+      </map:match>
+    </map:pipeline>
   </map:pipelines>
 </map:sitemap>
