@@ -38,6 +38,7 @@ public class LinkInfo {
     protected boolean            hasParameters = false;
     protected final ArrayList    comparableEvents = new ArrayList(5);
     protected final StringBuffer url = new StringBuffer();
+    protected final Request      request;
 
     /** Is the page called using https? */
     protected final boolean isSecure;
@@ -45,22 +46,50 @@ public class LinkInfo {
     public LinkInfo(Request request, int defaultPort, int defaultSecurePort) {
         this.isSecure = request.getScheme().equals("https");
         // create relative url
-        String relativeURI = request.getSitemapURI();
-        final int pos = relativeURI.lastIndexOf('/');
-        if ( pos != -1 ) {
-            relativeURI = relativeURI.substring(pos+1);
-        }
+        String relativeURI = getRelativeURI(request);
 
-        // do we need a protocol shift for link base?
-        if ( this.isSecure ) {
-            this.secureLinkBase = relativeURI;
-            this.httpLinkBase = this.getAbsoluteUrl(request, false, defaultPort);
-        } else {
-            httpLinkBase = relativeURI;
-            this.secureLinkBase = this.getAbsoluteUrl(request, true, defaultSecurePort);
-        }
+        this.request = request;
+        this.secureLinkBase = getSecureLinkBase(request, relativeURI, defaultSecurePort);
+        this.httpLinkBase = getHttpLinkBase(request, relativeURI, defaultPort);
     }
 
+    protected String getRelativeURI(Request request) {
+        String relativeURI = request.getSitemapURI();
+        final int pos = relativeURI.lastIndexOf('/');
+        if (pos != -1)
+        {
+            relativeURI = relativeURI.substring(pos + 1);
+        }
+        return relativeURI;
+    }
+
+    /**
+     * Return the base url for a secure http request
+     * @param relativeURI The current relative URI
+     * @param defaultPort The default port to use
+     * @return A String containing the base url for a secure http request
+     */
+    protected String getSecureLinkBase(Request request, String relativeURI, int defaultPort) {
+        return (this.isSecure) ? relativeURI : getAbsoluteUrl(request, true, defaultPort);
+    }
+
+    /**
+     * Return the url for an http request
+     * @param relativeURI The current relative URI
+     * @param defaultPort The default port to use
+     * @return A string containing the base url for an http request
+     */
+    protected String getHttpLinkBase(Request request, String relativeURI, int defaultPort) {
+        return (this.isSecure) ? getAbsoluteUrl(request, false, defaultPort) : relativeURI;
+    }
+
+    /**
+     * Return the absolute URL for a reqeust
+     * @param request The current Request
+     * @param useSecure true if the Request should be secure
+     * @param port The port to use
+     * @return A String containing the absolute url for a request
+     */
     protected String getAbsoluteUrl(Request request, boolean useSecure, int port) {
         final StringBuffer buffer = new StringBuffer();
         if ( useSecure ) {

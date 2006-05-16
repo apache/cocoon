@@ -22,7 +22,7 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Contraint codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: ConstraintType.java,v 1.5 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id: ConstraintType.java 30932 2004-07-29 17:35:38Z vgritsenko $
  */
 public class ConstraintType
 {

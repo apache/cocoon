@@ -28,6 +28,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -56,16 +57,21 @@ import org.apache.cocoon.components.ContextHelper;
  */
 public class PageLabelManager
     extends AbstractLogEnabled
-    implements ThreadSafe, Serviceable, Configurable, Contextualizable, Component {
+    implements ThreadSafe, Serviceable, Configurable, Contextualizable, Component, Disposable {
 
     public static final String ROLE = PageLabelManager.class.getName();
 
     /** The service manager */
     protected ServiceManager manager;
+    /** The portal Service */
+    protected PortalService service;
     /** The cocoon context */
     protected Context context;
     protected String aspectName = null;
     private String requestParameterName;
+
+   //boolean to determine if page label should use directory structure
+    private boolean useUrlPath;
     private boolean nonStickyTabs;
     private boolean marshallEvents;
 
@@ -74,19 +80,28 @@ public class PageLabelManager
     protected static final String EVENT_MAP = PageLabelManager.class.getName() + "E";
     private static final String DEFAULT_REQUEST_PARAMETER_NAME = "pageLabel";
 
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.service = (PortalService) this.manager.lookup(PortalService.ROLE);
+    }
+
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if (this.manager != null) {
+            this.manager.release(this.service);
+            this.manager = null;
+        }
     }
 
     /* (non-Javadoc)
     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
     */
-    public void configure(Configuration config)
-    {
+    public void configure(Configuration config) {
         this.requestParameterName =
             config.getChild("parameterName").getValue(DEFAULT_REQUEST_PARAMETER_NAME);
         this.aspectName = config.getChild("aspectName").getValue("tab");
@@ -94,6 +109,8 @@ public class PageLabelManager
             Boolean.valueOf(config.getChild("nonStickyTabs").getValue("false")).booleanValue();
         this.marshallEvents =
             Boolean.valueOf(config.getChild("marshallEvents").getValue("false")).booleanValue();
+        this.useUrlPath =
+            Boolean.valueOf(config.getChild("urlPath").getValue("false")).booleanValue();
     }
 
     /* (non-Javadoc)
@@ -130,7 +147,16 @@ public class PageLabelManager
     public String  setCurrentLabel() {
         final Request request =
             ObjectModelHelper.getRequest(ContextHelper.getObjectModel(this.context));
-        String value = request.getParameter(this.requestParameterName);
+        String value;
+        if (this.useUrlPath) {
+            value = request.getSitemapURI();
+            if (!isLabel(value)) {
+                value = null;
+            }
+        } else {
+            value = request.getParameter(this.requestParameterName);
+        }
+
         String[] labels = getLabels();
 
         if (value != null) {
@@ -141,13 +167,20 @@ public class PageLabelManager
     }
 
     /**
+     * Returns whether directory structure should be used
+     * @return A boolean specifying if directory structure should be used.
+     */
+    public boolean isUrlPath() {
+        return this.useUrlPath;
+    }
+
+    /**
      * Returns the request parameter being used to identify the page label.
      * @return A String containing the request parameter name used for page labels.
      */
     public String getRequestParameterName() {
         return this.requestParameterName;
     }
-
 
     /**
      * Return the Map that contains events for all the page labels.
@@ -208,6 +241,30 @@ public class PageLabelManager
         }
     }
 
+    public boolean isLabel(String pageLabel) {
+        PortalService service = null;
+        try
+        {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            Map map = (Map) service.getAttribute(LABEL_MAP);
+            if (null == map)
+            {
+                map = initializeLabels(service);
+                service.setAttribute(LABEL_MAP, map);
+            }
+
+            return map.containsKey(pageLabel);
+        }
+        catch (ServiceException ce)
+        {
+            throw new CascadingRuntimeException("Unable to lookup component.", ce);
+        }
+        finally
+        {
+            this.manager.release(service);
+        }
+    }
+
     /**
      * Returns true if events are not to be exposed as request parameters
      */
@@ -225,6 +282,7 @@ public class PageLabelManager
             String[] labels = (String[]) service.getAttribute(LABEL_ARRAY);
             if (null == labels) {
                 labels = new String[2];
+                labels[0] = getRoot();
                 service.setAttribute(LABEL_ARRAY, labels);
             }
             return labels;
@@ -259,6 +317,37 @@ public class PageLabelManager
         return map;
     }
 
+    private String getRoot() {
+        Layout portalLayout = service.getEntryLayout(null);
+        if (portalLayout == null) {
+            portalLayout =
+                service.getComponentManager().getProfileManager().getPortalLayout(null, null);
+        }
+
+        if (portalLayout instanceof CompositeLayout) {
+            return getRoot((CompositeLayout)portalLayout, new StringBuffer(""));
+        }
+        return "";
+    }
+
+    private String getRoot(CompositeLayout layout, StringBuffer root) {
+        for (int j=0; j < layout.getSize(); j++) {
+            Item tab = layout.getItem(j);
+            if (tab instanceof NamedItem) {
+                if (root.length() > 0) {
+                    root.append(".");
+                }
+                root.append(((NamedItem)tab).getName());
+                Layout child = tab.getLayout();
+                if (child != null && child instanceof CompositeLayout) {
+                    getRoot((CompositeLayout)child, root);
+                }
+                break;
+            }
+        }
+        return root.toString();
+    }
+
 
     /**
      * Populate the event map
@@ -290,14 +379,10 @@ public class PageLabelManager
             if (this.nonStickyTabs) {
                 // With non-sticky tabs the non-leaf nodes always display
                 // the left-most child tabs
-                if (lhList == null)
-                {
-                    if (allEvents != null)
-                    {
+                if (lhList == null) {
+                    if (allEvents != null) {
                         lhList = allEvents;
-                    }
-                    else
-                    {
+                    } else {
                         lhList = events;
                     }
                 }

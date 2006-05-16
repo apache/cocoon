@@ -52,6 +52,7 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.SimpleSourceResolver;
 import org.apache.cocoon.util.Settings;
+import org.apache.cocoon.util.PropertySettings;
 import org.apache.cocoon.util.SettingsHelper;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
@@ -74,6 +75,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.ConcurrentModificationException;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -120,12 +122,12 @@ public class Cocoon
                     return result;
                 }
             }
-            
+
             if (obj instanceof Exception) {
                 // Many exceptions in Cocoon have a message like "blah blah at file://foo/bar.xml:12:1"
                 String msg = ((Exception)obj).getMessage();
                 if (msg == null) return null;
-                
+
                 int pos = msg.lastIndexOf(" at ");
                 if (pos != -1) {
                     return LocationUtils.parse(msg.substring(pos + 4));
@@ -134,16 +136,16 @@ public class Cocoon
                     return null;
                 }
             }
-            
+
             // Try next finders.
             return null;
         }
     };
-    
+
     static {
         LocationUtils.addFinder(confLocFinder);
     }
-    
+
     static Cocoon instance;
 
     /** The root Cocoon logger */
@@ -602,6 +604,7 @@ public class Cocoon
                     msg.append(", ");
                 }
             }
+
             msg.append("'").append(lineSeparator);
         }
 
@@ -630,17 +633,27 @@ public class Cocoon
 
         // log all of the session attributes
         if (session != null) {
-            // Fix bug #12139: Session can be modified while still
-            // being enumerated here
-            synchronized (session) {
-                e = session.getAttributeNames();
-                while (e.hasMoreElements()) {
-                    String p = (String) e.nextElement();
-                    msg.append("PARAM: '").append(p).append("' ")
+            StringBuffer buffer = new StringBuffer("");
+            int count = -1;
+            while (count <= 0) {
+                // Fix bug #12139: Session can be modified while still
+                // being enumerated here
+                try {
+                    e = session.getAttributeNames();
+                    while (e.hasMoreElements()) {
+                        String p = (String) e.nextElement();
+                        buffer.append("PARAM: '").append(p).append("' ")
                        .append("VALUE: '").append(session.getAttribute(p)).append("'")
                        .append(lineSeparator);
+                    }
+                    break;
+                } catch (ConcurrentModificationException ex) {
+                    buffer = new StringBuffer("");
+                    ++count;
                 }
+
             }
+            msg.append(buffer.toString());
         }
 
         getLogger().debug(msg.toString());
