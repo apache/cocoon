@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -33,6 +34,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
+import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
@@ -64,6 +66,8 @@ public class CocoonBeanFactory
     protected final Logger avalonLogger;
     protected final Context avalonContext;
     protected final ConfigurationInfo avalonConfiguration;
+
+    protected final List disposeBeans = new ArrayList();
 
     public CocoonBeanFactory(BeanFactory parent) {
         this(null, parent, null, null, null, null);
@@ -134,6 +138,17 @@ public class CocoonBeanFactory
     }
 
     /**
+     * @see org.springframework.beans.factory.support.AbstractBeanFactory#destroySingletons()
+     */
+    public void destroySingletons() {
+        super.destroySingletons();
+        for(int i=this.disposeBeans.size()-1;i>=0;i--) {
+            ContainerUtil.dispose(this.disposeBeans.get(i));
+        }
+        this.disposeBeans.clear();
+    }
+
+    /**
      * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle interfaces.
      */
     protected static final class AvalonPostProcessor implements DestructionAwareBeanPostProcessor {
@@ -142,13 +157,13 @@ public class CocoonBeanFactory
 
         protected final Logger logger;
         protected final Context context;
-        protected final BeanFactory beanFactory;
+        protected final CocoonBeanFactory beanFactory;
         protected final Map components;
 
         public AvalonPostProcessor(Map         components,
                                    Context     context,
                                    Logger      logger,
-                                   BeanFactory factory) {
+                                   CocoonBeanFactory factory) {
             this.components = components;
             this.context = context;
             this.logger = logger;
@@ -222,7 +237,9 @@ public class CocoonBeanFactory
             } catch (Exception e) {
                 throw new BeanInitializationException("Unable to stop bean " + beanName, e);
             }
-            ContainerUtil.dispose(bean);
+            if ( bean instanceof Disposable ) {
+                this.beanFactory.disposeBeans.add(bean);
+            }
         }
     }
 }

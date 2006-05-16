@@ -1,12 +1,12 @@
 /*
  * Copyright 2004, 2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,9 +50,17 @@ import org.apache.excalibur.store.StoreJanitor;
 /**
  * Store implementation based on EHCache.
  * (http://ehcache.sourceforge.net/)
+ * @version $Id$
  */
-public class EHDefaultStore extends AbstractLogEnabled 
-implements Store, Contextualizable, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
+public class EHDefaultStore
+    extends AbstractLogEnabled 
+    implements Store,
+               Contextualizable,
+               Serviceable,
+               Parameterizable,
+               Initializable,
+               Disposable,
+               ThreadSafe {
 
     // ---------------------------------------------------- Constants
 
@@ -76,7 +84,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
 
     /** The service manager */
     private ServiceManager manager;
-    
+
     /** The store janitor */
     private StoreJanitor storeJanitor;
 
@@ -90,7 +98,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cacheName = "cocoon-ehcache-" + instanceCount;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
@@ -98,7 +106,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
@@ -163,13 +171,11 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * </p>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-
         this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
         this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
-        
+
         this.eternal = parameters.getParameterAsBoolean("eternal", true);
-        if (!this.eternal)
-        {
+        if (!this.eternal) {
             this.timeToLiveSeconds = parameters.getParameterAsLong("timeToLiveSeconds", 0L);
             this.timeToIdleSeconds = parameters.getParameterAsLong("timeToIdleSeconds", 0L);
         }
@@ -180,22 +186,19 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
                     getLogger().debug("Using cache directory: " + cacheDir);
                 }
                 setDirectory(cacheDir);
-            }
-            else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
+            } else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
                 if (this.getLogger().isDebugEnabled()) {
                     getLogger().debug("Using work directory: " + workDir);
                 }
                 setDirectory(workDir);
-            }
-            else if (parameters.getParameter("directory", null) != null) {
+            } else if (parameters.getParameter("directory", null) != null) {
                 String dir = parameters.getParameter("directory");
                 dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
                 if (this.getLogger().isDebugEnabled()) {
                     getLogger().debug("Using directory: " + dir);
                 }
                 setDirectory(new File(dir));
-            }
-            else {
+            } else {
                 try {
                     // Legacy: use working directory by default
                     setDirectory(workDir);
@@ -205,35 +208,32 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         } catch (IOException e) {
             throw new ParameterException("Unable to set directory", e);
         }
-
     }
 
     /**
      * Sets the cache directory
      */
     private void setDirectory(final File directory) throws IOException  {
-        
-        /* Save directory path prefix */
+        // Save directory path prefix
         String directoryPath = getFullFilename(directory);
         directoryPath += File.separator;
 
-        /* If directory doesn't exist, create it anew */
+        // If directory doesn't exist, create it anew
         if (!directory.exists()) {
             if (!directory.mkdir()) {
                 throw new IOException("Error creating store directory '" + directoryPath + "': ");
             }
         }
 
-        /* Is given file actually a directory? */
+        // Is given file actually a directory?
         if (!directory.isDirectory()) {
             throw new IOException("'" + directoryPath + "' is not a directory");
         }
 
-        /* Is directory readable and writable? */
+        // Is directory readable and writable?
         if (!(directory.canRead() && directory.canWrite())) {
             throw new IOException("Directory '" + directoryPath + "' is not readable/writable");
         }
-
         System.setProperty("java.io.tmpdir", directoryPath);
     }
 
@@ -267,7 +267,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
     }
-    
+
     /**
      * Shutdown the CacheManager.
      */
@@ -278,14 +278,16 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
             this.storeJanitor = null;
         }
         this.manager = null;
-        this.cacheManager.shutdown();
-        this.cacheManager = null;
+        if ( this.cacheManager != null ) {
+            this.cacheManager.shutdown();
+            this.cacheManager = null;
+        }
         this.cache = null;
     }
-    
+
     // ---------------------------------------------------- Store implementation
-    
-    /* (non-Javadoc)
+
+    /**
      * @see org.apache.excalibur.store.Store#free()
      */
     public Object get(Object key) {
@@ -295,22 +297,20 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
             if (element != null) {
                 value = element.getValue();
             }
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             getLogger().error("Failure retrieving object from store", e);
         }
         if (getLogger().isDebugEnabled()) {
             if (value != null) {
                 getLogger().debug("Found key: " + key);
-            } 
-            else {
+            } else {
                 getLogger().debug("NOT Found key: " + key);
             }
         }
         return value;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#free()
      */
     public void store(Object key, Object value) throws IOException {
@@ -330,7 +330,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cache.put(element);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
@@ -350,15 +350,14 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
                     }
                 }
             }
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error in free()", e);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
      */
     public void remove(Object key) {
@@ -368,7 +367,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.cache.remove((Serializable) key);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#clear()
      */
     public void clear() {
@@ -377,34 +376,31 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         }
         try {
             this.cache.removeAll();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             getLogger().error("Failure to clearing store", e);
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
         try {
             return this.cache.get((Serializable) key) != null;
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             getLogger().error("Failure retrieving object from store",e);
         }
         return false;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
         List keys = null;
         try {
             keys = this.cache.getKeys();
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error while getting cache keys", e);
             }
@@ -413,19 +409,17 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         return Collections.enumeration(keys);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
         try {
             return this.cache.getSize();
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error while getting cache size", e);
             }
             return 0;
         }
     }
-
 }
