@@ -246,7 +246,7 @@
   <mailingLists>
     <mailingList>
       <name>Cocoon User List</name>
-      <subscribe>users-subscribe@mcocoon.apache.org</subscribe>
+      <subscribe>users-subscribe@cocoon.apache.org</subscribe>
       <unsubscribe>users-unsubscribe@cocoon.apache.org</unsubscribe>
       <post>users@cocoon.apache.org</post>
       <archive>http://mail-archives.apache.org/mod_mbox/cocoon-users</archive>
@@ -258,7 +258,7 @@
     </mailingList>
     <mailingList>
       <name>Cocoon Developer List</name>
-      <subscribe>dev-subscribe@mcocoon.apache.org</subscribe>
+      <subscribe>dev-subscribe@cocoon.apache.org</subscribe>
       <unsubscribe>dev-unsubscribe@cocoon.apache.org</unsubscribe>
       <post>dev@cocoon.apache.org</post>
       <archive>http://mail-archives.apache.org/mod_mbox/cocoon-dev</archive>
@@ -270,7 +270,7 @@
     </mailingList>
     <mailingList>
       <name>Cocoon Documentation List</name>
-      <subscribe>docs-subscribe@mcocoon.apache.org</subscribe>
+      <subscribe>docs-subscribe@cocoon.apache.org</subscribe>
       <unsubscribe>docs-unsubscribe@cocoon.apache.org</unsubscribe>
       <post>docs@cocoon.apache.org</post>
       <archive>http://mail-archives.apache.org/mod_mbox/cocoon-docs</archive>
@@ -282,7 +282,7 @@
     </mailingList>
     <mailingList>
       <name>Cocoon Subversion Repository List</name>
-      <subscribe>cvs-subscribe@mcocoon.apache.org</subscribe>
+      <subscribe>cvs-subscribe@cocoon.apache.org</subscribe>
       <unsubscribe>cvs-unsubscribe@cocoon.apache.org</unsubscribe>
       <archive>http://mail-archives.apache.org/mod_mbox/cocoon-cvs</archive>
       <otherArchives>
@@ -294,7 +294,7 @@
   </mailingLists>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
-    <developerConnection>scn:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
     <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>
   <distributionManagement>
