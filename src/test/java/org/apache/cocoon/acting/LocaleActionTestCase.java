@@ -27,8 +27,6 @@ import org.apache.cocoon.environment.mock.MockSession;
 
 /**
  * JUnit-based tests for {@link LocaleAction} class.
- * 
- * @author Andrew Stevens
  */
 public class LocaleActionTestCase extends SitemapComponentTestCase {
     /*
