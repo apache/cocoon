@@ -103,7 +103,6 @@ import java.util.Vector;
  * making the constructors private to inhibit creation outside of
  * the derived class.
  *
- * @author Christoph Grein
  * @version $Id$
  */
 public class EnumerationFactory {
