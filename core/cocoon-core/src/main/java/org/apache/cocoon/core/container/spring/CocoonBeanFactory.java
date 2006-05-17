@@ -34,7 +34,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
-import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
