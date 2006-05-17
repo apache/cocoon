@@ -42,10 +42,8 @@ import javax.servlet.ServletException;
  * <li>resolve paths for context resources.
  * </ul>
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version $Id$
  */
-
 public class BootstrapServlet extends ParanoidCocoonServlet {
     
     protected File contextDir;

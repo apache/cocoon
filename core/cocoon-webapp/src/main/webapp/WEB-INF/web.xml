@@ -47,19 +47,19 @@
     <description>Cocoon</description>
 
     <!--
-      The regular servlet class (trusts the servlet container classloader)
-      -->
-    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
-    <!--
       The paranoid servlet class, to be used instead of regular one when
       having conflicts between libraries used by Cocoon and the servlet
       container.
+    -->
     <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
     <init-param>
       <param-name>classloader-class</param-name>
-      <param-value>org.apache.commons.javaflow.ContinuationCompilingClassLoader</param-value>
+      <param-value>org.apache.cocoon.servlet.ParanoidClassLoader</param-value>
     </init-param>
-    -->
+    <!--
+      The regular servlet class (trusts the servlet container classloader)
+    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+      -->
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding

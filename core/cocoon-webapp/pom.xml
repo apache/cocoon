@@ -82,6 +82,11 @@
       <artifactId>cocoon-core</artifactId>
       <version>2.2.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-paranoid-impl</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>    
     <!--dependency> cocoon-session-fw-sample doesn't work because of old-style xconf/roles-files
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-session-fw-sample</artifactId>
