@@ -64,6 +64,7 @@
    <!-- The exception generator can only be used in a <handle-errors> section : it produces an XML
         representation of the exception that caused the error handler to be executed -->
    <map:generator name="exception" src="org.apache.cocoon.generation.ExceptionGenerator"/>
+   <map:generator label="content" logger="sitemap.generator.mp3directory" name="mp3directory" src="org.apache.cocoon.generation.MP3DirectoryGenerator"/>
 
    <!--
      - Virtual Pipeline Generator: Composed of other pipeline components.
@@ -123,6 +124,8 @@
    <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
    <map:transformer logger="sitemap.transformer.log" name="log" pool-max="16" src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer logger="sitemap.transformer.paginate" name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
+   <map:transformer logger="sitemap.transformer.jpath" name="jpath" src="org.apache.cocoon.transformation.JPathTransformer"/>
+   <map:transformer logger="sitemap.transformer.filter" name="filter" src="org.apache.cocoon.transformation.FilterTransformer"/>
  </map:transformers>
 
 
@@ -192,6 +195,7 @@
    <map:serializer logger="sitemap.serializer.sxc"  mime-type="application/vnd.sun.xml.calc" name="sxc" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxd"  mime-type="application/vnd.sun.xml.draw" name="sxd" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
    <map:serializer logger="sitemap.serializer.sxi"  mime-type="application/vnd.sun.xml.impress" name="sxi" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+   <map:serializer logger="sitemap.serializer.vrml" mime-type="model/vrml" name="vrml" src="org.apache.cocoon.serialization.TextSerializer"/>
  </map:serializers>
 
 

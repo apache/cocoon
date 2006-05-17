@@ -35,7 +35,12 @@
   <include dir="context://WEB-INF/xconf" pattern="*.xconf"/>
 
   <!--+
-      | Include all configuration files ending with ".xconf" 
+      | Include core sitemap configuration.
+      +-->
+  <include src="context://WEB-INF/sitemap-additions/cocoon-core-sitemap.xmap"/>
+
+  <!--+
+      | Include all configuration files ending with ".xmap" 
       | from the sitemap-additions directory.
       +-->
   <include dir="context://WEB-INF/sitemap-additions" pattern="*.xmap"/>
