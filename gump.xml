@@ -139,6 +139,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="xml-fop-maintenance"/>
     <depend project="cocoon-block-batik"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
     
     <library name="fop"/>
 
