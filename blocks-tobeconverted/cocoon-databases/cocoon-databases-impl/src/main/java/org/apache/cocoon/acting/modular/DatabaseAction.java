@@ -84,7 +84,6 @@ import org.apache.commons.lang.BooleanUtils;
  * <tr><td>fail-on-empty    </td><td>(boolean) fail is statement affected zero rows (true)</td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output

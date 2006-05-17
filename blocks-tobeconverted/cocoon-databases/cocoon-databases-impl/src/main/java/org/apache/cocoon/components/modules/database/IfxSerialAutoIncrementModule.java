@@ -31,7 +31,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Here: Informix IUS 9.21 SERIAL columns
  * (need another one for SERIAL8 ones!)
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class IfxSerialAutoIncrementModule implements AutoIncrementModule, ThreadSafe {

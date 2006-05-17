@@ -51,7 +51,6 @@ import org.xml.sax.SAXException;
  * the Connection to use, parameters specify the table and column
  * to pull the image from, and source specifies the source key information.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @version $Id$
  */
 public class DatabaseReader extends ServiceableReader

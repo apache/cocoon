@@ -44,7 +44,6 @@ import java.util.TreeSet;
  *                                           </table>                       </td></tr>
  * </table>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class CollectionMetaModule extends AbstractMetaModule implements ThreadSafe {

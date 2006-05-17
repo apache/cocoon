@@ -22,8 +22,6 @@ package org.apache.cocoon.util;
  * BuzHash is Copyright (c)1996 Robert Uzgalis, All Rights Reserved.
  * Used with kind permission of the author
  *
- * @author <a href="mailto:buz@zis.com">Robert Uzgalis</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public final class HashUtil {

@@ -40,7 +40,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * transaction to try to insert a row with the same ID since it
  * requires only shared locks. C.f. "Phantom Problem"
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class ManualAutoIncrementModule extends AbstractAutoIncrementModule implements ThreadSafe {

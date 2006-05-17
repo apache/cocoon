@@ -36,7 +36,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * different sequence name, set an attribute "sequence" for the
  * modeConf e.g. &lt;mode name="auto" type="auto" sequence="my_sequence"/&gt;.
  *
- * @author <a href="mailto:pmhahn@titan.lahn.de">Philipp Hahn</a>
  * @version $Id$
  */
 public class PgsqlAutoIncrementModule implements AutoIncrementModule, ThreadSafe {

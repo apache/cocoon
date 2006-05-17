@@ -33,7 +33,6 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * tables, and can select from more than one row of a table at a
  * time.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class DatabaseSelectAction extends DatabaseAction {

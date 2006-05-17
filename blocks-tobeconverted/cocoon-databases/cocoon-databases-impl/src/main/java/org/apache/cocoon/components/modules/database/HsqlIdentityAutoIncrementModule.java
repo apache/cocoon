@@ -32,7 +32,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * Here: <a href="http://hsqldb.sourceforge.net">HSQLDB</a> 1.6 IDENTITY columns
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class HsqlIdentityAutoIncrementModule implements AutoIncrementModule, ThreadSafe {

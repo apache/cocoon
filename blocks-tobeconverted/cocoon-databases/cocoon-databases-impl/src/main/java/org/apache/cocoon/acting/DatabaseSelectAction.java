@@ -39,8 +39,6 @@ import java.util.Map;
  * their values are used to populate request attributes. Otherwise,
  * values from database are used.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class DatabaseSelectAction extends AbstractDatabaseAction implements ThreadSafe {

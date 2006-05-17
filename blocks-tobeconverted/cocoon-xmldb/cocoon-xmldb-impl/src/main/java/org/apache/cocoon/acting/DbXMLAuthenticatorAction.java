@@ -82,8 +82,6 @@ import java.util.Map;
  * "false". No values are then propagated to the sesion and session object is
  * not verified.
  *
- * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
- * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
  * @version $Id$
  *

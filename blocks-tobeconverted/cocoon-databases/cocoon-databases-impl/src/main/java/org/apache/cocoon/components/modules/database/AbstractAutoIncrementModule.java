@@ -29,7 +29,6 @@ import org.apache.cocoon.util.HashMap;
  * deploying more AutoIncrementModules.  In order to get at the Logger, use
  * getLogger().
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public abstract class AbstractAutoIncrementModule extends AbstractLogEnabled

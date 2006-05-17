@@ -318,8 +318,6 @@ public class EncodeURLTransformer
      *  matches. This class defines the precedence and matching algorithm.
      * </p>
      *
-     * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id$
      */
     public static class ElementAttributeMatching {
         /**
