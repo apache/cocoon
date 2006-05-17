@@ -21,15 +21,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
-/*
+/**
  * The <code>ParanoidClassLoader</code> reverses the search order for
  * classes.  It checks this classloader before it checks its parent.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-
 public class ParanoidClassLoader extends URLClassLoader {
 
     /**
@@ -67,22 +64,6 @@ public class ParanoidClassLoader extends URLClassLoader {
      */
     public ParanoidClassLoader(final URL[] urls, final ClassLoader parent, final URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
-    }
-
-    /**
-     * Extends <code>URLClassLoader</code>'s initialization methods so we
-     * return a <code>ParanoidClassLoad</code> instead.
-     */
-    public static final URLClassLoader newInstance(final URL[] urls) {
-        return new ParanoidClassLoader(urls);
-    }
-
-    /**
-     * Extends <code>URLClassLoader</code>'s initialization methods so we
-     * return a <code>ParanoidClassLoad</code> instead.
-     */
-    public static final URLClassLoader newInstance(final URL[] urls, final ClassLoader parent) {
-        return new ParanoidClassLoader(urls, parent);
     }
 
     /**
