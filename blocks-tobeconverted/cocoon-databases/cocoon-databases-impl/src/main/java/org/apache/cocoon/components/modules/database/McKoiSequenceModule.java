@@ -34,7 +34,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * "sequence" for the modeConf e.g. &lt;mode name="auto" type="auto"
  * sequence="my_sequence"/&gt;.
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class McKoiSequenceModule implements AutoIncrementModule, ThreadSafe {

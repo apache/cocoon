@@ -38,9 +38,10 @@ public class StringUtils {
      * @param line The string to be split
      * @param delimiter A string containing token separators
      * @return An array of token
+     * @deprecated Use commons lang instead.
      */
     public static String[] split(String line, String delimiter) {
-        return Tokenizer.tokenize(line, delimiter, false);
+        return org.apache.commons.lang.StringUtils.split(line, delimiter);
     }
 
     /**

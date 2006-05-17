@@ -31,7 +31,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Encapsulate MS SQLServer behaviour for autoincrement columns.
  *
  *
- * @author <a href="mailto:andrzej@chaeron.com">Andrzej Jan Taramina</a>
  * @version $Id$
  */
 public class SQLServerIdentityAutoIncrementModule implements AutoIncrementModule, ThreadSafe {

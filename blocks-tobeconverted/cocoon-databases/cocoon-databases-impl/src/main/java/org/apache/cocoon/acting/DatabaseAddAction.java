@@ -46,8 +46,6 @@ import org.apache.commons.lang.StringUtils;
  * that if a secondary table relies on the value of a new primary key in a
  * primary table, the primary key must be created using manual mode.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @version $Id$
  */
 public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadSafe {

@@ -56,7 +56,6 @@ import java.util.Map;
  * <a href="http://www.dbxml.org">dbXML</a>, and the trailing
  * slash in the base tag is important!
  *
- * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
  * @version CVS $Id$
  * @deprecated Use the XML:DB pseudo protocol instead.
  */

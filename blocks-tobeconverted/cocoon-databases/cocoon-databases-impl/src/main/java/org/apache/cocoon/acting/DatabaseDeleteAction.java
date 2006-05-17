@@ -39,7 +39,6 @@ import java.util.Map;
  * in the correct order.  In other words, it removes one record by
  * the keys.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @version $Id$
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction implements ThreadSafe {

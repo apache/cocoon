@@ -48,7 +48,6 @@ import org.apache.avalon.framework.service.ServiceException;
  * &lt;/table&gt;
  *</pre>
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class DatabaseQueryAction extends DatabaseAction {

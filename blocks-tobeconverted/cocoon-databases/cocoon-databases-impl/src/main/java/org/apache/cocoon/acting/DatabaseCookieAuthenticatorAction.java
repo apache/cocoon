@@ -67,7 +67,6 @@ import java.util.Map;
  *  attributes to the session without creating a new one, specify action
  *  parameter "append-session" to "yes" or "true".
  *
- * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
  * @version $Id$
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {

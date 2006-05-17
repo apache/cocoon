@@ -58,8 +58,6 @@ import org.apache.excalibur.source.SourceValidity;
  * will fetch the first column returned by the statement "<code>SELECT photo
  * from people where userid='foo'</code>" in the datasource "<code>personel</code>"
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public class BlobSource extends AbstractLogEnabled implements Source, Serviceable {

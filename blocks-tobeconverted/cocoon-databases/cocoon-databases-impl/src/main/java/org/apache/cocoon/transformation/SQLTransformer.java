@@ -136,14 +136,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *       startSerializedXMLRecording(...) should be used.
  * </p>
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
- *         (PWR Organisation &amp; Entwicklung)
- * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @author <a href="mailto:pmhahn@titan.lahn.de">Philipp Hahn</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class SQLTransformer extends AbstractSAXTransformer {

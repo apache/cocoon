@@ -32,8 +32,6 @@ import java.util.Map;
 /**
  * A factory for 'blob:' sources.
  *
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public class BlobSourceFactory

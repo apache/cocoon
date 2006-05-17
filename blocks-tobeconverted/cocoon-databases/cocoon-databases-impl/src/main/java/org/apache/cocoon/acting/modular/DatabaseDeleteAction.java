@@ -29,7 +29,6 @@ import org.apache.avalon.framework.service.ServiceException;
  * Updates a record in a database. The action can update one or more
  * tables, and can update more than one row to a table at a time. 
  *
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class DatabaseDeleteAction extends DatabaseAction {
