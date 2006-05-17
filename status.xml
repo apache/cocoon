@@ -182,6 +182,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="BRD" type="fix">
+      CForms: added a Repeater.moveRow2(from, to) method, which in contrast to the
+      Repeater.moveRow method inserts the row at the exact to-index specified.
+    </action>
     <action dev="BD" type="fix" due-to="Vince" due-to-email="vince@indo-chine.org">
       FOP block depends on XSP block (for samples)
     </action>
