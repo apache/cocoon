@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="BD" type="fix" due-to="Vince" due-to-email="vince@indo-chine.org">
+      FOP block depends on XSP block (for samples)
+    </action>
     <action dev="RG" type="update">
       Portal: PageLabels can now be configured to be part of the url.
     </action>
