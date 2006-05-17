@@ -57,12 +57,8 @@ import javax.servlet.http.HttpServlet;
  *      is resolved to the basedir of the servlet context.
  * </ul>
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @version $Id$
  */
-
 public class ParanoidCocoonServlet extends HttpServlet {
 
     /**
@@ -78,10 +74,11 @@ public class ParanoidCocoonServlet extends HttpServlet {
 
     protected ClassLoader classloader;
 
+    /**
+     * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+     */
     public void init(ServletConfig config) throws ServletException {
-
         super.init(config);
-
         // Create the classloader in which we will load the servlet
         // this can either be specified by an external file configured
         // as a parameter in web.xml or (the default) all jars and
@@ -98,7 +95,6 @@ public class ParanoidCocoonServlet extends HttpServlet {
         }
         this.classloader = createClassLoader(classLoaderName, getContextDir(), classPath);
 
-        
         String servletName = config.getInitParameter("servlet-class");
         if (servletName == null) {
             servletName = DEFAULT_SERVLET_CLASS;
@@ -188,7 +184,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
 
         return urls;
     }
-    
+
     protected URL[] getClassPath(final String externalClasspath, final File contextDir) throws ServletException {
         final List urlList = new ArrayList();
 
@@ -250,14 +246,16 @@ public class ParanoidCocoonServlet extends HttpServlet {
         } catch (IOException io) {
             throw new ServletException(io);
         }
-
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
 
         return urls;
     }
 
-    protected ClassLoader createClassLoader(final String className, final File contextDir, final URL[] classPath) throws ServletException {
-        if (className != null) {
+    protected ClassLoader createClassLoader(final String className,
+                                            final File contextDir,
+                                            final URL[] classPath)
+    throws ServletException {
+        if (className != null && !className.equals(ParanoidClassLoader.class.getName())) {
             try {
                 final Class classLoaderClass = Class.forName(className);
                 final Class[] parameterClasses = new Class[] { ClassLoader.class, File.class };
@@ -283,35 +281,14 @@ public class ParanoidCocoonServlet extends HttpServlet {
                 throw new ServletException("", e);
             }
         } else {
-            return ParanoidClassLoader.newInstance(classPath, this.getClass().getClassLoader());
+            return new ParanoidClassLoader(classPath, this.getClass().getClassLoader());
         }
-    }
-
-    
-    /**
-     * Get the classloader that will be used to create the actual servlet. Its
-     * classpath is defined by the WEB-INF/classes and WEB-INF/lib directories
-     * in the context dir.
-     * @deprecated
-     */
-    protected ClassLoader getClassLoader(File contextDir) throws ServletException {
-        return createClassLoader(null, contextDir, getClassPath(contextDir));
-    }
-
-    /**
-     * Get the classloader that will be used to create the actual servlet. Its
-     * classpath is defined by an external file.
-     * @deprecated
-     */
-    protected ClassLoader getClassLoader(final String externalClasspath, final File contextDir) throws ServletException {
-        return createClassLoader(null, contextDir, getClassPath(externalClasspath, contextDir));
     }
 
     /**
      * Service the request by delegating the call to the real servlet
      */
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-
         final ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(this.classloader);
@@ -325,7 +302,6 @@ public class ParanoidCocoonServlet extends HttpServlet {
      * Destroy the actual servlet
      */
     public void destroy() {
-
         if (this.servlet != null) {
             final ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
@@ -335,7 +311,6 @@ public class ParanoidCocoonServlet extends HttpServlet {
                 Thread.currentThread().setContextClassLoader(old);
             }
         }
-
         super.destroy();
     }
 
@@ -344,6 +319,4 @@ public class ParanoidCocoonServlet extends HttpServlet {
             return name.endsWith(".zip") || name.endsWith(".jar");
         }
     }
-
 }
-
