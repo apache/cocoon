@@ -225,6 +225,33 @@ public class Repeater extends AbstractWidget
         broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));        
     }
 
+    /**
+     * Move a row from one place to another. In contrast to {@link #moveRow}, this
+     * method treats the to-index as the exact row-index where you want to have the
+     * row moved to.
+     *
+     * @param from the existing row position
+     * @param to the target position. The "from" item will be moved before that position.
+     */
+    public void moveRow2(int from, int to) {
+        int size = this.rows.size();
+
+        if (from < 0 || from >= size || to < 0 || to >= size) {
+            throw new IllegalArgumentException("Cannot move from " + from + " to " + to +
+                    " on repeater with " + size + " rows");
+        }
+
+        if (from == to) {
+            return;
+        }
+
+        Object fromRow = this.rows.remove(from);
+        this.rows.add(to, fromRow);
+
+        getForm().addWidgetUpdate(this);
+        broadcastEvent(new RepeaterEvent(this, RepeaterEventAction.ROWS_REARRANGED));
+    }
+
     public void moveRowLeft(int index) {
         if (index == 0 || index >= this.rows.size()) {
             // do nothing
