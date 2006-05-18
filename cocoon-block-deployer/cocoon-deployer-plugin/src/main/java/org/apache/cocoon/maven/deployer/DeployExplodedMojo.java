@@ -29,7 +29,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class DeployExplodedMojo extends AbstractDeployMojo {
 	
     /** 
-     * @parameter expression="${targetVersion}" default-value="3.0"	
+     * @parameter expression="${targetVersion}" default-value="2.2"	
      */
 	private String serverVersion;
 
@@ -39,7 +39,7 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
 	private String blocksdir;	
 	
 	public void execute() throws MojoExecutionException {
-		if(this.serverVersion.equals("2.3")) {
+		if(this.serverVersion.equals("2.2")) {
 			this.deployMonolithicCocoonApp(blocksdir);
 		} else {
 			this.deployBlocks();
