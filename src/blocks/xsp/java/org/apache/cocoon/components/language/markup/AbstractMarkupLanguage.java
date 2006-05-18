@@ -35,7 +35,6 @@ import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.store.Store;
-import org.apache.cocoon.util.HashMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -43,6 +42,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,7 +84,7 @@ public abstract class AbstractMarkupLanguage
     protected String name;
 
     /** The supported language table */
-    protected HashMap languages;
+    protected Map languages;
 
     /** The code-generation logicsheet cache */
     protected Store logicsheetCache;

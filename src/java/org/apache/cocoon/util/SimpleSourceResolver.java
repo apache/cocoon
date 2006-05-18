@@ -49,8 +49,7 @@ import org.apache.excalibur.source.impl.URLSourceFactory;
  * </ul>
  * Relative URIs are resolved relatively to the context root, i.e. similarily to "<code>context:</code>".
  *
- * @version $Id: SimpleSourceResolver.java 380191 2006-02-23 18:31:51Z cziegeler $
- * @since 2.2
+ * @version $Id$
  */
 public final class SimpleSourceResolver extends AbstractLogEnabled
     implements ThreadSafe, Contextualizable, SourceResolver {

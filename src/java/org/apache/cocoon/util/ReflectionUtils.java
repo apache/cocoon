@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @author tcurdt
+ * @version $Id$
  *
  */
 public final class ReflectionUtils {
