@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.deployer.applicationserver.MonolithicServer23;
+import org.apache.cocoon.deployer.applicationserver.MonolithicServer22;
 import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.monolithic.SingleFileDeployer;
 
@@ -36,7 +36,7 @@ public class MonolithicCocoonDeployer {
         	File lib = (File) libraries.get(id);  	
         	try {
         		
-        		MonolithicServer23 zipExtractor = new MonolithicServer23(basedir, logger);
+        		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
                 zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
                 zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
