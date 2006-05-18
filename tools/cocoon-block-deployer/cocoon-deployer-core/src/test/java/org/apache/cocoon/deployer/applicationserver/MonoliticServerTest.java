@@ -27,7 +27,7 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 	private static final String SERVER_DIR = "target/test/monolithicServer23";
 	
 	public void testSimpleDeploy() throws Exception {
-		MonolithicServer23 monolithicServer = new MonolithicServer23(new File(SERVER_DIR), new ConsoleLogger());
+		MonolithicServer22 monolithicServer = new MonolithicServer22(new File(SERVER_DIR), new ConsoleLogger());
 		monolithicServer.addRule("**webdav*.xconf", new SingleFileDeployer("WEB-INF/xconf"));
 		monolithicServer.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));
 		monolithicServer.addRule("COB-INF**", new SingleFileDeployer("app/block1", true));  
@@ -39,7 +39,7 @@ public class MonoliticServerTest extends AbstractDeployerTestCase {
 	}
 	
 	public void testNotWorkingDeploy() throws Exception {
-		MonolithicServer23 monolithicServer = new MonolithicServer23(new File(SERVER_DIR), new ConsoleLogger());
+		MonolithicServer22 monolithicServer = new MonolithicServer22(new File(SERVER_DIR), new ConsoleLogger());
 		monolithicServer.addRule("**webdav*.xconf", new SingleFileDeployer("WEB-INF/xconf"));
 		monolithicServer.extract(this.getMockArtefact("validMonolithicBlock-02/valid-block-1.0.jar"));
 		try {

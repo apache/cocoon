@@ -34,14 +34,14 @@ import org.apache.cocoon.deployer.monolithic.FileDeployer;
 import org.apache.cocoon.deployer.util.WildcardHelper;
 import org.apache.commons.lang.Validate;
 
-public class MonolithicServer23 {
+public class MonolithicServer22 {
 
 	private Logger logger;
 	private File basedir;
 	private List rules = new ArrayList();
 	private Set alreadyDeployedFilesSet =  new HashSet();
 	
-	public MonolithicServer23(File basedir, Logger logger) {
+	public MonolithicServer22(File basedir, Logger logger) {
 		Validate.notNull(basedir, "The basedir of the server mustn't be null.");
 		Validate.notNull(logger, "A logger must be set.");
 		this.basedir = basedir;
