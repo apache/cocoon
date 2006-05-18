@@ -88,8 +88,9 @@ import org.apache.log.format.Formatter;
  *  </dd>
  * </dl>
  *
+ * @deprecated This class will be removed in 2.2
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: CocoonTargetFactory.java,v 1.3 2004/03/28 10:27:20 antonio Exp $
+ * @version CVS $Id$
  */
 public class CocoonTargetFactory
     extends FileTargetFactory

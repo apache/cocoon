@@ -47,6 +47,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @deprecated This class will be removed in 2.2
  * @version $Id$
  */
 public class CocoonLogFormatter extends ExtensiblePatternFormatter

@@ -38,9 +38,10 @@ import org.apache.log.util.DefaultErrorHandler;
  *  properties of LogEvent
  * 'subformat' indicates a particular subformat and is currently unused.
  *
+ * @deprecated This class will be removed in 2.2
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtensiblePatternFormatter.java,v 1.5 2004/03/28 10:27:20 antonio Exp $
+ * @version CVS $Id$
  */
 public class ExtensiblePatternFormatter
     implements Formatter
