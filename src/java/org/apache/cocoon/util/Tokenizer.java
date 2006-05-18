@@ -22,6 +22,7 @@ import java.util.NoSuchElementException;
  * Replacement for StringTokenizer in java.util, because of bug in the
  * Sun's implementation.
  *
+ * @deprecated Use commons lang. This class will be removed in 2.2.
  * @author <A HREF="mailto:moravek@pobox.sk">Peter Moravek</A>
  * @version CVS $Id$
  */

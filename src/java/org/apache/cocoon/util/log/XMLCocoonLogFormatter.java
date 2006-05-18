@@ -59,6 +59,7 @@ import java.util.StringTokenizer;
  * <li><code>host</code> : outputs the request host header (&lt;priority&gt;).<li>
  * </ul>
  *
+ * @deprecated This class will be removed in 2.2
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
