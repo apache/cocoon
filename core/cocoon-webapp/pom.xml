@@ -40,17 +40,9 @@
         <artifactId>cocoon-deployer-plugin</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <configuration>
-          <serverVersion>2.3</serverVersion>
+          <serverVersion>2.2</serverVersion>
         </configuration>
-      </plugin>      
-      <!-- 
-        <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-        <warSourceDirectory>../src/webapp</warSourceDirectory>
-        </configuration>
-        </plugin>
-      -->
+      </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty6-plugin</artifactId>
@@ -76,14 +68,9 @@
       <artifactId>cocoon-core</artifactId>
       <version>2.2.0-SNAPSHOT</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-paranoid-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>    
-    <!--dependency> cocoon-session-fw-sample doesn't work because of old-style xconf/roles-files
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-session-fw-sample</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency-->
     <dependency>
