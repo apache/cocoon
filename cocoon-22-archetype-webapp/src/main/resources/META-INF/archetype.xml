@@ -1,0 +1,14 @@
+<archetype>
+  <id>cocoon-22-archetype-webapp</id>
+  <resources>
+    <resource>src/main/webapp/sitemap.xmap</resource>  
+    <resource>src/main/webapp/welcome.xml</resource>      
+    <resource>src/main/webapp/WEB-INF/web.xml</resource>
+    <resource>src/main/webapp/WEB-INF/log4j.xconf</resource>
+    <resource>src/main/webapp/WEB-INF/cocoon.xconf</resource>    
+    <resource>src/main/webapp/WEB-INF/properties/core.properties</resource>
+    <resource>src/main/webapp/WEB-INF/properties/dev/core.properties</resource>
+    <resource>src/main/webapp/WEB-INF/sitemap-additions/cocoon-core-sitemap.xmap</resource>    
+    <resource>src/main/webapp/WEB-INF/xconf/cocoon-core.xconf</resource>       
+  </resources>
+</archetype>

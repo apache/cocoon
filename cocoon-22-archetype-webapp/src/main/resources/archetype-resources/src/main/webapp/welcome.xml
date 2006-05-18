@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2006 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <title>Cocoon 2.2 webapp project artifact sucessfully started!</title>
+  </head>
+  <body>
+    <h2>Congratulations,</h2>
+    <p>
+      you have successfully started your own Cocoon 2.2 project based on the 'cocoon-22-archetype-webapp' Maven 2 archetype.
+    </p>
+    <p>
+      The archetype that you used only loads a reduced set of components. It only includes the most important sitemap components 
+      (e.g. the file generator, the XSLT transformer, the XHTML serializer) and Cocoon Forms and Cocoon Template.
+    </p>
+  </body>
+</html>
