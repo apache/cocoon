@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="CZ" type="add">
+      CForms: Java event listeners can now implement Configurable, LogEnabled, and Contextualizable.
+    </action>
     <action dev="BRD" type="fix">
       CForms: added a Repeater.moveRow2(from, to) method, which in contrast to the
       Repeater.moveRow method inserts the row at the exact to-index specified.
@@ -438,7 +441,7 @@
       CForms: call dispose() on every DatatypeBuilder if needed
     </action>
     <action dev="JBQ" type="add" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
-      CForms: Java event listeners can now implement Serviceable to get a ServiceManager
+      CForms: Java event listeners can now implement Serviceable to get a ServiceManager and Initializable.
     </action>
     <action dev="JBQ" type="fix" due-to="Philippe Gassmann" due-to-email="phil@anyware-tech.com">
       CForms: when building the query string in AJAX mode, do not include &lt;input type="button"&gt;
