@@ -39,8 +39,9 @@ import java.io.InputStream;
  * @version $Id$
  */
 public class PropertySettings implements Settings {
+
     /** The list of properties used to configure Cocoon. */
-    private Map properties = new HashMap();
+    private Map properties = new java.util.HashMap();
 
         /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);

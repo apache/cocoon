@@ -25,7 +25,7 @@ import org.apache.avalon.framework.logger.Logger;
  * Helper class to create Stettings and for replacing property references with the value of the
  * property
  *
- * @version $Id:  $
+ * @version $Id$
  * @since 2.1.9
  */
 public class SettingsHelper {

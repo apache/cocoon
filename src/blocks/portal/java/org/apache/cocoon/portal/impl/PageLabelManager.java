@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,6 @@ import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
-import org.apache.cocoon.util.HashMap;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.components.ContextHelper;
@@ -53,7 +53,7 @@ import org.apache.cocoon.components.ContextHelper;
  * 'pageLabel'.
  * @author Ralph Goers
  *
- * @version CVS $Id: $
+ * @version CVS $Id$
  */
 public class PageLabelManager
     extends AbstractLogEnabled
