@@ -28,7 +28,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.util.WildcardHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -150,26 +149,11 @@ public abstract class AbstractClassLoaderFactory
         }
 
         URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
-        int[][] includes = compilePatterns(config.getIncludes());
-        int[][] excludes = compilePatterns(config.getExcludes());
         
-        return this.createClassLoader(urls, includes, excludes, parent);
+        return this.createClassLoader(urls, config.getIncludes(), config.getExcludes(), parent);
     }
 
-    protected abstract ClassLoader createClassLoader(URL[] urls, int[][] includes, int[][] excludes, ClassLoader parent);
-
-    private int[][] compilePatterns(List patternConfigs) throws ConfigurationException {
-        if (patternConfigs.size() == 0) {
-            return null;
-        }
-        final int[][] patterns = new int[patternConfigs.size()][];
-
-        for (int i = 0; i < patternConfigs.size(); i++) {
-            patterns[i] = WildcardHelper.compilePattern((String)patternConfigs.get(i));
-        }
-
-        return patterns;
-    }
+    protected abstract ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent);
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
