@@ -22,10 +22,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 /**
  * A <code>ClassLoader</code> factory, setting up the classpath given a
  * &lt;classpath&gt; configuration.
- * 
+ *
  * @version $Id$
  */
 public interface ClassLoaderFactory {
+
     final static String ROLE = ClassLoaderFactory.class.getName();
     
     ClassLoader createClassLoader(ClassLoader parent, Configuration config) throws ConfigurationException;
