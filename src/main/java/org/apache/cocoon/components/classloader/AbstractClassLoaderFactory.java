@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -53,7 +52,6 @@ import org.apache.excalibur.source.TraversableSource;
  * </pre>
  */
 public abstract class AbstractClassLoaderFactory
-    extends AbstractLogEnabled
     implements ClassLoaderFactory,
                Serviceable,
                ThreadSafe,
@@ -70,11 +68,11 @@ public abstract class AbstractClassLoaderFactory
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
     }
 
-    private void ensureIsDirectory(Source src, String location) throws ConfigurationException {
+    private void ensureIsDirectory(Source src) throws Exception {
         if (!src.exists()) {
-            throw new ConfigurationException(src.getURI() + " doesn't exist, at " + location);
+            throw new Exception(src.getURI() + " doesn't exist");
         } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
-            throw new ConfigurationException(src.getURI() + " is not a directory, at " + location);
+            throw new Exception(src.getURI() + " is not a directory");
         }
     }
 
@@ -121,7 +119,7 @@ public abstract class AbstractClassLoaderFactory
             Source src = null;
             try {
                 src = resolver.resolveURI(directory);
-                ensureIsDirectory(src, null);
+                ensureIsDirectory(src);
                 urlList.add(new URL(src.getURI()));
             } finally {
                 this.resolver.release(src);
@@ -136,7 +134,7 @@ public abstract class AbstractClassLoaderFactory
             Source src = null;
             try {
                 src = resolver.resolveURI(directory);
-                ensureIsDirectory(src, null);
+                ensureIsDirectory(src);
                 Iterator iter = ((TraversableSource)src).getChildren().iterator();
                 while (iter.hasNext()) {
                     Source childSrc = (Source)iter.next();
