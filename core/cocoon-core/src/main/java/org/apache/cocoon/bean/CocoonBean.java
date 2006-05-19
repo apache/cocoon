@@ -23,7 +23,7 @@ import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.util.WildcardHelper;
 import org.apache.commons.lang.SystemUtils;
 
 import org.apache.excalibur.source.ModifiableSource;

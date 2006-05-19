@@ -20,7 +20,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.util.WildcardHelper;
 
 /**
  * @version $Id$

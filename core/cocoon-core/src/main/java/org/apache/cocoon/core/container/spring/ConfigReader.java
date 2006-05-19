@@ -30,7 +30,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.util.WildcardHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
