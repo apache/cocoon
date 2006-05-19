@@ -17,6 +17,7 @@
 package org.apache.cocoon.components.classloader;
 
 import java.net.URL;
+import java.util.List;
 
 /**
  * @see AbstractClassLoaderFactory
@@ -24,7 +25,7 @@ import java.net.URL;
  */
 public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
 
-    protected ClassLoader createClassLoader(URL[] urls, int[][] includes, int[][] excludes, ClassLoader parent) {
-        return new ReloadingClassLoader(urls, includes, excludes, parent);
+    protected ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent) {
+        return new ReloadingClassLoader(urls, includePatterns, excludePatterns, parent);
     }
 }
