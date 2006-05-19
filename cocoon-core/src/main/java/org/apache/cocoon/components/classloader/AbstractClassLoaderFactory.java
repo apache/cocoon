@@ -81,64 +81,93 @@ public abstract class AbstractClassLoaderFactory
     /**
      * @see org.apache.cocoon.components.classloader.ClassLoaderFactory#createClassLoader(java.lang.ClassLoader, org.apache.avalon.framework.configuration.Configuration)
      */
-    public ClassLoader createClassLoader(ClassLoader parent, Configuration config) throws ConfigurationException {
-        final List urlList = new ArrayList();
-        Configuration[] children = config.getChildren();
+    public ClassLoader createClassLoader(ClassLoader parent, Configuration config)
+    throws ConfigurationException {
+        final ClassLoaderConfiguration configBean = new ClassLoaderConfiguration();
+        final Configuration[] children = config.getChildren();
         for (int i = 0; i < children.length; i++) {
-            Configuration child = children[i];
-            String name = child.getName();
-            Source src = null;
-            try {
-                // A class dir: simply add its URL
-                if ("class-dir".equals(name)) {
-                    src = resolver.resolveURI(child.getAttribute("src"));
-                    ensureIsDirectory(src, child.getLocation());
-                    urlList.add(new URL(src.getURI()));
-                
-                // A lib dir: scan for all jar and zip it contains
-                } else if ("lib-dir".equals(name)) {
-                    src = resolver.resolveURI(child.getAttribute("src"));
-                    ensureIsDirectory(src, child.getLocation());
-                    Iterator iter = ((TraversableSource)src).getChildren().iterator();
-                    while (iter.hasNext()) {
-                        Source childSrc = (Source)iter.next();
-                        String childURI = childSrc.getURI();
-                        resolver.release(childSrc);
-                        if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
-                            urlList.add(new URL(childURI));
-                        }
-                    }
-                } else if (!"include-classes".equals(name) && !"exclude-classes".equals(name) ) {
-                    throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
-                }
-            } catch(ConfigurationException ce) {
-                throw ce;
-            } catch(Exception e) {
-                throw new ConfigurationException("Error loading " + name + " at " + child.getLocation(), e);
-            } finally {
-                resolver.release(src);
-                src = null;                
+            final Configuration child = children[i];
+            final String name = child.getName();
+            if ("class-dir".equals(name)) {
+                configBean.addClassDirectory(child.getAttribute("src"));
+            } else if ("lib-dir".equals(name)) {
+                configBean.addLibDirectory(child.getAttribute("src"));
+            } else if ("include-classes".equals(name)) {
+                configBean.addInclude(child.getAttribute("pattern"));
+            } else if ("exclude-classes".equals(name)) {
+                configBean.addExclude(child.getAttribute("pattern"));
+            } else {
+                throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
             }
         }
-        
+        try {
+            return this.createClassLoader(parent, configBean);
+        } catch(ConfigurationException ce) {
+            throw ce;
+        } catch(Exception e) {
+            throw new ConfigurationException("Error creating class loader.", e);
+        }
+    }
+
+    protected ClassLoader createClassLoader(ClassLoader parent, ClassLoaderConfiguration config)
+    throws Exception {
+        final List urlList = new ArrayList();
+        Iterator i;
+        // process class directories
+        i = config.getClassDirectories().iterator();
+        while ( i.hasNext() ) {
+            // A class dir: simply add its URL
+            final String directory = (String)i.next();
+            Source src = null;
+            try {
+                src = resolver.resolveURI(directory);
+                ensureIsDirectory(src, null);
+                urlList.add(new URL(src.getURI()));
+            } finally {
+                this.resolver.release(src);
+            }
+        }
+
+        // process lib directories
+        i = config.getLibDirectories().iterator();
+        while ( i.hasNext() ) {
+            // A lib dir: scan for all jar and zip it contains
+            final String directory = (String)i.next();
+            Source src = null;
+            try {
+                src = resolver.resolveURI(directory);
+                ensureIsDirectory(src, null);
+                Iterator iter = ((TraversableSource)src).getChildren().iterator();
+                while (iter.hasNext()) {
+                    Source childSrc = (Source)iter.next();
+                    String childURI = childSrc.getURI();
+                    resolver.release(childSrc);
+                    if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
+                        urlList.add(new URL(childURI));
+                    }
+                }
+            } finally {
+                this.resolver.release(src);
+            }
+        }
+
         URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
-        int[][] includes = compilePatterns(config.getChildren("include-classes"));
-        int[][] excludes = compilePatterns(config.getChildren("exclude-classes"));
+        int[][] includes = compilePatterns(config.getIncludes());
+        int[][] excludes = compilePatterns(config.getExcludes());
         
         return this.createClassLoader(urls, includes, excludes, parent);
     }
 
     protected abstract ClassLoader createClassLoader(URL[] urls, int[][] includes, int[][] excludes, ClassLoader parent);
 
-    private int[][] compilePatterns(Configuration[] patternConfigs) throws ConfigurationException {
-        if (patternConfigs.length == 0) {
+    private int[][] compilePatterns(List patternConfigs) throws ConfigurationException {
+        if (patternConfigs.size() == 0) {
             return null;
         }
+        final int[][] patterns = new int[patternConfigs.size()][];
 
-        int[][] patterns = new int[patternConfigs.length][];
-
-        for (int i = 0; i < patternConfigs.length; i++) {
-            patterns[i] = WildcardHelper.compilePattern(patternConfigs[i].getAttribute("pattern"));
+        for (int i = 0; i < patternConfigs.size(); i++) {
+            patterns[i] = WildcardHelper.compilePattern((String)patternConfigs.get(i));
         }
 
         return patterns;
