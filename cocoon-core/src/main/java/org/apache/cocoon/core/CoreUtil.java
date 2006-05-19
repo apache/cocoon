@@ -616,9 +616,8 @@ public class CoreUtil {
         AvalonEnvironment env = new AvalonEnvironment();
         env.context = this.appContext;
         env.logger = this.log;
-        env.servletContext = this.environmentContext;
         env.settings = this.settings;
-        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(env);
+        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(env, this.environmentContext);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
         ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext, true);
 
