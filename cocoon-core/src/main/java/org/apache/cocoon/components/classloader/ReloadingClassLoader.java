@@ -18,6 +18,7 @@ package org.apache.cocoon.components.classloader;
 
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
+import java.util.List;
 
 import org.apache.commons.jci.stores.ResourceStore;
 
@@ -32,16 +33,16 @@ public class ReloadingClassLoader extends DefaultClassLoader {
      * Alternate constructor to define a parent and initial <code>URL</code>
      * s.
      */
-    public ReloadingClassLoader(URL[] urls, int[][] includes, int[][] excludes, final ClassLoader parent) {
-        this(urls, includes, excludes, parent, null);
+    public ReloadingClassLoader(URL[] urls, List includePatterns, List excludePatterns, final ClassLoader parent) {
+        this(urls, includePatterns, excludePatterns, parent, null);
     }
 
     /**
      * Alternate constructor to define a parent, initial <code>URL</code>s,
      * and a default <code>URLStreamHandlerFactory</code>.
      */
-    public ReloadingClassLoader(final URL[] urls, int[][] includes, int[][] excludes, ClassLoader parent, URLStreamHandlerFactory factory) {
-        super(urls, includes, excludes, parent, factory);
+    public ReloadingClassLoader(final URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent, URLStreamHandlerFactory factory) {
+        super(urls, includePatterns, excludePatterns, parent, factory);
     }
 
     public void addResourceStore(final ResourceStore pStore) {
