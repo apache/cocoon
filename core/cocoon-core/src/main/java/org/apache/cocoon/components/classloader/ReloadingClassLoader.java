@@ -24,6 +24,7 @@ import org.apache.commons.jci.stores.ResourceStore;
 
 /**
  * @version $Id$
+ * @since 2.2
  */
 public class ReloadingClassLoader extends DefaultClassLoader {
 

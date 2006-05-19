@@ -27,17 +27,6 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
-
 /**
  * Abstract implementation of {@link ClassLoaderFactory}. It accepts both class directory and jar
  * directory configurations.
@@ -55,109 +44,11 @@ import org.apache.excalibur.source.TraversableSource;
  *   &lt;exclude-classes pattern="org.apache.cocoon.transformation.**"/&gt;
  * &/lt;classpath&gt;
  * </pre>
+ * @version $Id$
+ * @since 2.2
  */
 public abstract class AbstractClassLoaderFactory
-    implements ClassLoaderFactory,
-               Serviceable,
-               ThreadSafe,
-               Disposable {
-
-    protected ServiceManager manager;
-    protected SourceResolver resolver;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-    }
-
-    private void ensureIsDirectory(Source src) throws Exception {
-        if (!src.exists()) {
-            throw new Exception(src.getURI() + " doesn't exist");
-        } else if (!(src instanceof TraversableSource) || !((TraversableSource)src).isCollection()) {
-            throw new Exception(src.getURI() + " is not a directory");
-        }
-    }
-
-    /**
-     * @see org.apache.cocoon.components.classloader.ClassLoaderFactory#createClassLoader(java.lang.ClassLoader, org.apache.avalon.framework.configuration.Configuration)
-     */
-    public ClassLoader createClassLoader(ClassLoader parent, Configuration config)
-    throws ConfigurationException {
-        final ClassLoaderConfiguration configBean = new ClassLoaderConfiguration();
-        final Configuration[] children = config.getChildren();
-        for (int i = 0; i < children.length; i++) {
-            final Configuration child = children[i];
-            final String name = child.getName();
-            if ("class-dir".equals(name)) {
-                configBean.addClassDirectory(child.getAttribute("src"));
-            } else if ("lib-dir".equals(name)) {
-                configBean.addLibDirectory(child.getAttribute("src"));
-            } else if ("include-classes".equals(name)) {
-                configBean.addInclude(child.getAttribute("pattern"));
-            } else if ("exclude-classes".equals(name)) {
-                configBean.addExclude(child.getAttribute("pattern"));
-            } else {
-                throw new ConfigurationException("Unexpected element " + name + " at " + child.getLocation());
-            }
-        }
-        try {
-            return this.createClassLoader(parent, configBean);
-        } catch(ConfigurationException ce) {
-            throw ce;
-        } catch(Exception e) {
-            throw new ConfigurationException("Error creating class loader.", e);
-        }
-    }
-
-    protected ClassLoader createClassLoader(ClassLoader parent, ClassLoaderConfiguration config)
-    throws Exception {
-        final List urlList = new ArrayList();
-        Iterator i;
-        // process class directories
-        i = config.getClassDirectories().iterator();
-        while ( i.hasNext() ) {
-            // A class dir: simply add its URL
-            final String directory = (String)i.next();
-            Source src = null;
-            try {
-                src = resolver.resolveURI(directory);
-                ensureIsDirectory(src);
-                urlList.add(new URL(src.getURI()));
-            } finally {
-                this.resolver.release(src);
-            }
-        }
-
-        // process lib directories
-        i = config.getLibDirectories().iterator();
-        while ( i.hasNext() ) {
-            // A lib dir: scan for all jar and zip it contains
-            final String directory = (String)i.next();
-            Source src = null;
-            try {
-                src = resolver.resolveURI(directory);
-                ensureIsDirectory(src);
-                Iterator iter = ((TraversableSource)src).getChildren().iterator();
-                while (iter.hasNext()) {
-                    Source childSrc = (Source)iter.next();
-                    String childURI = childSrc.getURI();
-                    resolver.release(childSrc);
-                    if (childURI.endsWith(".jar") || childURI.endsWith(".zip")) {
-                        urlList.add(new URL(childURI));
-                    }
-                }
-            } finally {
-                this.resolver.release(src);
-            }
-        }
-
-        URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
-        
-        return this.createClassLoader(urls, config.getIncludes(), config.getExcludes(), parent);
-    }
+    implements ClassLoaderFactory {
 
     protected URL getUrl(ServletContext servletContext, String rootPath, String path) 
     throws MalformedURLException {
@@ -193,10 +84,10 @@ public abstract class AbstractClassLoaderFactory
         return rootPath + path;        
     }
 
-    protected ClassLoader createClassLoader(ClassLoader              parent,
-                                            ClassLoaderConfiguration config,
-                                            ServletContext           servletContext,
-                                            String                   rootPath)
+    public ClassLoader createClassLoader(ClassLoader              parent,
+                                         ClassLoaderConfiguration config,
+                                         ServletContext           servletContext,
+                                         String                   rootPath)
     throws Exception {
         if ( rootPath == null ) {
             rootPath = "/";
@@ -267,14 +158,4 @@ public abstract class AbstractClassLoaderFactory
         }
     }
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.resolver);
-            this.resolver = null;
-            this.manager = null;
-        }
-    }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * @see AbstractClassLoaderFactory
  * @version $Id$
+ * @since 2.2
  */
 public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
 
