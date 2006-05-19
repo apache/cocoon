@@ -110,7 +110,10 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
             this.settings = (Settings) this.parentBeanfactory.getBean(ProcessingUtil.SETTINGS_ROLE);
         }
         
-		AvalonEnvironment avalonEnvironment = this.createAvalonEnvironment();
+        // create a minimal OSGi servlet context
+        Context osgiServletContext = new OSGiServletContext(this.logger, componentContext);     
+
+        AvalonEnvironment avalonEnvironment = this.createAvalonEnvironment(osgiServletContext);
 		
 		// get the configuration file property
 		String configFile= (String) this.componentContext.getProperties().get(CONFIG_FILE);
@@ -118,7 +121,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
 		}
 		if (this.parentBeanfactory == null)
-		    this.parentBeanfactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment);
+		    this.parentBeanfactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment, osgiServletContext);
 		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
 		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
 				null, this.parentBeanfactory, false, false);
@@ -135,16 +138,13 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
      * @throws ServletException
      * @throws MalformedURLException
      */
-    private AvalonEnvironment createAvalonEnvironment() throws ServletException, MalformedURLException {
+    private AvalonEnvironment createAvalonEnvironment(Context osgiServletContext) throws ServletException, MalformedURLException {
         URL manifestUrl = this.componentContext.getBundleContext().getBundle().getEntry(MANIFEST_FILE);
 		String contextPath = manifestUrl.toString();
 		contextPath = manifestUrl.toString().substring(0, contextPath.length() - (MANIFEST_FILE.length() - 1));
 		
 		this.logger.debug("Context path: " + contextPath);
 
-		// create a minimal OSGi servlet context
-		Context osgiServletContext = new OSGiServletContext(this.logger, componentContext);		
-		
 		// create a minimal Avalon Context
 		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath, null, null);
 		
@@ -153,7 +153,6 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		avalonEnvironment.context = avalonContext;
 		avalonEnvironment.logger = this.logger;	
 		avalonEnvironment.settings = this.settings;
-		avalonEnvironment.servletContext = osgiServletContext;
         return avalonEnvironment;
     }
     
