@@ -20,6 +20,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.classloader.ClassLoaderFactory;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceResolver;
@@ -44,6 +45,24 @@ public class BeanFactoryFactoryImpl
             throw new BeanInitializationException("BeanFactory is not a configurable listable bean factory: " + factory);
         }
         this.beanFactory = (ConfigurableListableBeanFactory)factory;
+    }
+
+    public ClassLoader createClassLoader(Context sitemapContext,
+                                            Configuration config)
+    throws Exception {
+        // we don't create a new class loader if there is no new configuration
+        if ( config == null ) {
+            return Thread.currentThread().getContextClassLoader();            
+        }
+        // get parent bean factory
+        BeanFactory parentFactory = getCurrentBeanFactory(sitemapContext);
+        final String factoryRole = config.getAttribute("factory-role",
+                ClassLoaderFactory.ROLE);
+
+        // Create a new classloader
+        ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
+        return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
+                                           config);
     }
 
     /**

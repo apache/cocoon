@@ -76,10 +76,10 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -217,9 +217,7 @@ public class SitemapLanguage
         this.attributes.put(name, value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
@@ -277,6 +275,9 @@ public class SitemapLanguage
         return true;
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getRegisteredNode(java.lang.String)
+     */
     public ProcessingNode getRegisteredNode(String name) {
         if (this.canGetNode) {
             return (ProcessingNode) this.registeredNodes.get(name);
@@ -284,6 +285,9 @@ public class SitemapLanguage
         throw new IllegalArgumentException("Categories are only available during buildNode()");
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#createNodeBuilder(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNodeBuilder createNodeBuilder(Configuration config) throws Exception {
         // FIXME : check namespace
         String nodeName = config.getName();
