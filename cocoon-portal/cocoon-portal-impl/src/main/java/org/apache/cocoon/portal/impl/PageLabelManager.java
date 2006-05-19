@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,6 @@ import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFeatures;
 import org.apache.cocoon.portal.layout.NamedItem;
-import org.apache.cocoon.util.HashMap;
 
 /**
  * Manages the various activities required for page labels.
