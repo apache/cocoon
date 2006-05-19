@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * The configuration for a {@link ClassLoaderFactory}.
  * @version $Id$
+ * @since 2.2
  */
 public class ClassLoaderConfiguration {
 
