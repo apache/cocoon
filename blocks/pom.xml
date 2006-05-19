@@ -69,7 +69,6 @@
 		<module>cocoon-midi</module>
 		<module>cocoon-naming</module>
 		<module>cocoon-ojb</module>
-		<module>cocoon-paranoid</module>
 		<module>cocoon-petstore</module>
 		<module>cocoon-poi</module>
 		<module>cocoon-portal</module>
