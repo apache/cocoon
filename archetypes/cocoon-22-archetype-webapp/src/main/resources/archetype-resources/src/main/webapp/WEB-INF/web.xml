@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 1999-2005 The Apache Software Foundation
+  Copyright 1999-2006 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,137 +14,38 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!--+
-    | This is the Cocoon web-app configurations file
-    +-->
-
 <!DOCTYPE web-app
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
 
-  <!-- Context Configuration ========================================== -->
-
-  <!--+
-      | Set a context property useful to allow you to ProxyPass your
-      | web application mounted to a different URI without loosing the
-      | ability to do cookie-based sessions.
-      | WARNING: this is Jetty specific!
-      +-->
-  <!--context-param>
-    <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
-    <param-value>/some/path/to/your/webapp</param-value>
-    <description>An override of the session cookie path</description>
-   </context-param-->
-
-  <!-- Servlet Configuration ========================================== -->
-
   <servlet>
     <servlet-name>Cocoon</servlet-name>
     <display-name>Cocoon</display-name>
-    <description>Cocoon</description>
+    <description>Cocoon servlet - ${artifactId}</description>
 
-    <!--
-      The paranoid servlet class, to be used instead of regular one when
-      having conflicts between libraries used by Cocoon and the servlet
-      container.
-    -->
-    <servlet-class>org.apache.cocoon.servlet.ParanoidCocoonServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+    <!-- If you don't want to use the ParanoidClassLoader, that reverses
+         the classloading hierarchy and loads the jars and classes of the
+         web application _first_, and want to rely on the normal web application
+         classloading, remove the "classloader-class" parameter. -->
     <init-param>
       <param-name>classloader-class</param-name>
       <param-value>org.apache.cocoon.servlet.ParanoidClassLoader</param-value>
     </init-param>
-    <!--
-      The regular servlet class (trusts the servlet container classloader)
-    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
-      -->
 
-    <!--
-      Set encoding used by the container. If not set the ISO-8859-1 encoding
-      will be assumed.
-      Since the servlet specification requires that the ISO-8859-1 encoding
-      is used (by default), you should never change this value unless
-      you have a buggy servlet container.
-    -->
     <init-param>
       <param-name>container-encoding</param-name>
       <param-value>ISO-8859-1</param-value>
     </init-param>
 
-    <!--
-      This parameter allows you to startup Cocoon2 immediately after startup
-      of your servlet engine.
-    -->
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <!-- URL space mappings ============================================= -->
-
-  <!--
-    Cocoon handles all the URL space assigned to the webapp using its sitemap.
-    It is recommended to leave it unchanged. Under some circumstances though
-    (like integration with proprietary webapps or servlets) you might have
-    to change this parameter.
-  -->
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
-
-  <!--
-    Some servlet engines (Tomcat) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
-  <servlet-mapping>
-    <servlet-name>Cocoon</servlet-name>
-    <url-pattern>*.jsp</url-pattern>
-  </servlet-mapping>
-  <!--
-    Some servlet engines (WebLogic) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
-  <servlet-mapping>
-    <servlet-name>Cocoon</servlet-name>
-    <url-pattern>*.html</url-pattern>
-  </servlet-mapping>
-
-  <!-- various MIME type mappings ====================================== -->
-
-  <mime-mapping>
-    <extension>css</extension>
-    <mime-type>text/css</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>xml</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>xsl</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>xconf</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>xmap</extension>
-    <mime-type>text/xml</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>ent</extension>
-    <mime-type>text/plain</mime-type>
-  </mime-mapping>
-
-  <mime-mapping>
-    <extension>grm</extension>
-    <mime-type>text/plain</mime-type>
-  </mime-mapping>
 
 </web-app>
