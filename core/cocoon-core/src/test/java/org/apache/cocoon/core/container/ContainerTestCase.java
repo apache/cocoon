@@ -296,9 +296,8 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.logger = this.logger;
         avalonEnv.context = this.context;
         avalonEnv.settings = new MutableSettings();
-        avalonEnv.servletContext = new MockContext();
 
-        this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv);
+        this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv, new MockContext());
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
         this.addComponents( rolesInfo );

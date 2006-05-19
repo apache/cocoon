@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import javax.servlet.ServletContext;
-
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.Settings;
@@ -29,7 +27,6 @@ import org.apache.cocoon.core.Settings;
  * @version $Id$
  */
 public final class AvalonEnvironment {
-    public ServletContext servletContext;
     public Context  context;
     public Logger   logger;
     public Settings settings;
