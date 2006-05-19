@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.components.classloader;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
@@ -102,7 +104,7 @@ public class DefaultClassLoader extends URLClassLoader {
 
         if (clazz == null) {
             
-            ClassLoader parent = getParent();
+            final ClassLoader parent = getParent();
 
             if (tryClassHere(name)) {
                 try {
@@ -149,6 +151,25 @@ public class DefaultClassLoader extends URLClassLoader {
         }
 
         return resource;
+    }
+
+    /**
+     * Adds a new directory of class files.
+     * 
+     * @param file
+     *            for jar or directory
+     * @throws IOException
+     */
+    public final void addDirectory(File file) throws IOException {
+        this.addURL(file.getCanonicalFile().toURL());
+    }
+
+    /**
+     * Adds a new URL
+     */
+
+    public void addURL(URL url) {
+        super.addURL(url);
     }
 }
 
