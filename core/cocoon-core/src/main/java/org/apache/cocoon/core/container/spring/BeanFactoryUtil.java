@@ -131,11 +131,12 @@ public class BeanFactoryUtil {
      * @return A new root application factory.
      * @throws Exception
      */
-    public static ConfigurableListableBeanFactory createRootBeanFactory(AvalonEnvironment  env)
+    public static ConfigurableListableBeanFactory createRootBeanFactory(AvalonEnvironment  env,
+                                                                        ServletContext     servletContext)
     throws Exception {
     	ApplicationContext parent = null;
-    	if(env.servletContext != null) {
-    		parent = (ApplicationContext)env.servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+    	if( servletContext != null) {
+    		parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
     	}
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);
         factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
