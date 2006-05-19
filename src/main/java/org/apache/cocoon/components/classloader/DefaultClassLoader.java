@@ -21,10 +21,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
+import java.util.List;
 
 import org.apache.cocoon.util.WildcardHelper;
 
 /**
+ * This class loader reverses the search order for classes.  It checks this classloader
+ * before it checks its parent. In addition it can be configured with includes and excludes.
+ *
  * @version $Id$
  */
 public class DefaultClassLoader extends URLClassLoader {
@@ -36,18 +40,31 @@ public class DefaultClassLoader extends URLClassLoader {
      * Alternate constructor to define a parent and initial <code>URL</code>
      * s.
      */
-    public DefaultClassLoader(URL[] urls, int[][] includes, int[][] excludes, final ClassLoader parent) {
-        this(urls, includes, excludes, parent, null);
+    public DefaultClassLoader(URL[] urls, List includePatterns, List excludePatterns, final ClassLoader parent) {
+        this(urls, includePatterns, excludePatterns, parent, null);
     }
 
     /**
      * Alternate constructor to define a parent, initial <code>URL</code>s,
      * and a default <code>URLStreamHandlerFactory</code>.
      */
-    public DefaultClassLoader(final URL[] urls, int[][] includes, int[][] excludes, ClassLoader parent, URLStreamHandlerFactory factory) {
+    public DefaultClassLoader(final URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent, URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
-        this.includes = includes;
-        this.excludes = excludes;
+        this.includes = compilePatterns(includePatterns);
+        this.excludes = compilePatterns(excludePatterns);
+    }
+
+    private int[][] compilePatterns(List patternConfigs) {
+        if (patternConfigs.size() == 0) {
+            return null;
+        }
+        final int[][] patterns = new int[patternConfigs.size()][];
+
+        for (int i = 0; i < patternConfigs.size(); i++) {
+            patterns[i] = WildcardHelper.compilePattern((String)patternConfigs.get(i));
+        }
+
+        return patterns;
     }
 
     protected boolean tryClassHere(String name) {
