@@ -17,9 +17,9 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.WildcardHelper;
 
 import java.util.HashMap;
 import java.util.Map;
