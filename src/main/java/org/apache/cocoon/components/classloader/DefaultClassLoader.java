@@ -30,6 +30,7 @@ import org.apache.cocoon.util.WildcardHelper;
  * before it checks its parent. In addition it can be configured with includes and excludes.
  *
  * @version $Id$
+ * @since 2.2
  */
 public class DefaultClassLoader extends URLClassLoader {
 

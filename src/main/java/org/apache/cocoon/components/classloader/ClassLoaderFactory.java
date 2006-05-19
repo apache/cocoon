@@ -16,18 +16,22 @@
  */
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import javax.servlet.ServletContext;
 
 /**
  * A <code>ClassLoader</code> factory, setting up the classpath given a
  * &lt;classpath&gt; configuration.
  *
  * @version $Id$
+ * @since 2.2
  */
 public interface ClassLoaderFactory {
 
     final static String ROLE = ClassLoaderFactory.class.getName();
-    
-    ClassLoader createClassLoader(ClassLoader parent, Configuration config) throws ConfigurationException;
+
+    ClassLoader createClassLoader(ClassLoader              parent,
+                                  ClassLoaderConfiguration config,
+                                  ServletContext           servletContext,
+                                  String                   rootPath)
+    throws Exception;
 }
