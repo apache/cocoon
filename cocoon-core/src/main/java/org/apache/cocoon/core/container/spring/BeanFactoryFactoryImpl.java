@@ -20,7 +20,9 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.components.classloader.ClassLoaderFactory;
+import org.apache.cocoon.components.classloader.ClassLoaderUtils;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceResolver;
@@ -48,7 +50,7 @@ public class BeanFactoryFactoryImpl
     }
 
     public ClassLoader createClassLoader(Context sitemapContext,
-                                            Configuration config)
+                                         Configuration config)
     throws Exception {
         // we don't create a new class loader if there is no new configuration
         if ( config == null ) {
@@ -60,9 +62,12 @@ public class BeanFactoryFactoryImpl
                 ClassLoaderFactory.ROLE);
 
         // Create a new classloader
+        ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(config);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
-                                           config);
+                                           configBean,
+                                           null,
+                                           null);
     }
 
     /**
