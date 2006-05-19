@@ -902,6 +902,8 @@
     <library name="wsdl4j"/>
     <library name="commons-discovery"/>
 
+    <depend project="cocoon-block-xsp" type="samples"/>
+
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
 
@@ -1334,6 +1336,7 @@
     <depend project="cocoon-block-databases" type="samples"/>
     <depend project="cocoon-block-forms" type="samples"/>
     <depend project="cocoon-block-hsqldb" type="samples"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="db-ojb"/>
     <depend project="jdo"/>
     <depend project="antlr"/>
