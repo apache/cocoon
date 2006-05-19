@@ -87,7 +87,6 @@ public final class PreemptiveLoader {
     
     /**
      * Start the preemptive loading
-     * @param manager   A component manager
      * @param resolver  A source resolver
      * @param logger    A logger
      */
