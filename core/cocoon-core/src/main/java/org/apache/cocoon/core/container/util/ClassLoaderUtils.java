@@ -18,7 +18,7 @@ package org.apache.cocoon.core.container.util;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.classloader.ClassLoaderConfiguration;
+import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 
 /**
  * Utility class for converting Avalon based Configuration into a {@link ClassLoaderConfiguration}.
