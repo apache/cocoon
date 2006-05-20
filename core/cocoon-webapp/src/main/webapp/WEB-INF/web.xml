@@ -47,14 +47,6 @@
     <description>Cocoon demo web application</description>
 
     <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
-    <!-- If you don't want to use the ParanoidClassLoader, that reverses
-         the classloading hierarchy and loads the jars and classes of the
-         web application _first_, and want to rely on the normal web application
-         classloading, remove the "classloader-class" parameter. -->
-    <init-param>
-      <param-name>classloader-class</param-name>
-      <param-value>org.apache.cocoon.servlet.ParanoidClassLoader</param-value>
-    </init-param>
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding
