@@ -33,6 +33,11 @@
   <description/>
   <dependencies>
     <dependency>
+      <groupId>commons-jci</groupId>
+      <artifactId>commons-jci</artifactId>
+      <version>r306555</version>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.3</version>
