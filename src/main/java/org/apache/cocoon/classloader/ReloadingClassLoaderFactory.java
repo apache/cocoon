@@ -14,24 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.components.classloader;
+package org.apache.cocoon.classloader;
 
-import javax.servlet.ServletContext;
+import java.net.URL;
+import java.util.List;
 
 /**
- * A <code>ClassLoader</code> factory, setting up the classpath given a
- * &lt;classpath&gt; configuration.
- *
+ * @see AbstractClassLoaderFactory
  * @version $Id$
  * @since 2.2
  */
-public interface ClassLoaderFactory {
+public class ReloadingClassLoaderFactory extends AbstractClassLoaderFactory {
 
-    final static String ROLE = ClassLoaderFactory.class.getName();
-
-    ClassLoader createClassLoader(ClassLoader              parent,
-                                  ClassLoaderConfiguration config,
-                                  ServletContext           servletContext,
-                                  String                   rootPath)
-    throws Exception;
+    protected ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent) {
+        return new ReloadingClassLoader(urls, includePatterns, excludePatterns, parent);
+    }
 }
