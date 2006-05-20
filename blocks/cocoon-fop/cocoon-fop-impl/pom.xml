@@ -46,6 +46,12 @@
       <groupId>fop</groupId>
       <artifactId>fop</artifactId>
       <version>0.20.5</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>batik</groupId>
