@@ -102,6 +102,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Bean Factory for this sitemap. */
     protected BeanFactory beanFactory;
 
+    /** Classloader for this sitemap. */
+    protected ClassLoader classLoader;
+
     /**
      * Builds a concrete processig, given the wrapping processor
      */
@@ -116,6 +119,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** Set the processor data, result of the treebuilder job */
     public void setProcessorData(BeanFactory beanFactory,
+                                 ClassLoader classLoader,
                                  ProcessingNode rootNode,
                                  List disposableNodes,
                                  List enterSitemapEventListeners,
@@ -123,7 +127,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
-
+        this.classLoader = classLoader;
         this.beanFactory = beanFactory;
         this.manager = (ServiceManager)this.beanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         this.rootNode = rootNode;
@@ -303,6 +307,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             requestCount++;
         }
 
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.classLoader);
         try {
             final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
             this.enteredSitemap(enterEvent);
@@ -360,6 +366,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                 // Marked for disposal and no more concurrent requests.
                 dispose();
             }
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
     }
 
