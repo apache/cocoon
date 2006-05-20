@@ -34,11 +34,12 @@ public interface BeanFactoryFactory {
      * Build a bean factory with the contents of the &lt;map:components&gt; element of
      * the tree.
      */
-    ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
-                                                      Configuration  config,
-                                                      Context        sitemapContext,
-                                                      SourceResolver resolver,
-                                                      Settings       settings)
+    ConfigurableListableBeanFactory createBeanFactory(ClassLoader    classLoader,
+            Logger         sitemapLogger,
+            Configuration  config,
+            Context        sitemapContext,
+            SourceResolver resolver,
+            Settings       settings)
     throws Exception;
 
     /**
