@@ -185,6 +185,9 @@ public class SitemapLanguage
     /** Nodes registered using registerNode() */
     private Map registeredNodes = new HashMap();
 
+    /** Class Loader for this sitemap. */
+    private ClassLoader itsClassLoader = this.getClass().getClassLoader();
+
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -243,6 +246,13 @@ public class SitemapLanguage
      */
     public ConfigurableListableBeanFactory getBeanFactory() {
         return this.itsBeanFactory;
+    }
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getClassLoader()
+     */
+    public ClassLoader getClassLoader() {
+        return this.itsClassLoader;
     }
 
     /**
@@ -363,11 +373,15 @@ public class SitemapLanguage
             }
         }
         // Context and manager and classloader for the sitemap we build
+        
         final Context itsContext = createContext(tree);
 
         // TODO Get factory from spring
         final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
         factory.setBeanFactory(this.beanFactory);
+
+        // TODO Create class loader (and filter classpath configuration from componentConfig!)
+        // this.itsClassLoader = factory.createClassLoader(itsContext, componentConfig.getChild("classpath", false));
 
         // check for sitemap local properties
         Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(ProcessingUtil.SETTINGS_ROLE);
