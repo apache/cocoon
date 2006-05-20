@@ -95,6 +95,12 @@
   </build>
   <dependencies>
 
+    <!--  bootstrap -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-bootstrap</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
     <!--  excalibur -->
     <dependency>
       <groupId>org.apache.excalibur.components.pool</groupId>
@@ -174,11 +180,6 @@
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
       <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-jci</groupId>
-      <artifactId>commons-jci</artifactId>
-      <version>r306555</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
