@@ -53,7 +53,7 @@ public class BeanFactoryFactoryImpl
                                          Configuration config)
     throws Exception {
         // we don't create a new class loader if there is no new configuration
-        if ( config == null ) {
+        if ( true ) { //config == null ) {
             return Thread.currentThread().getContextClassLoader();            
         }
         // get parent bean factory
@@ -64,6 +64,7 @@ public class BeanFactoryFactoryImpl
         // Create a new classloader
         ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(config);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
+        // TODO - we need the servlet context and the path to the sitemap starting from the root context!
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,
                                            null,
@@ -73,12 +74,14 @@ public class BeanFactoryFactoryImpl
     /**
      * @see org.apache.cocoon.core.container.spring.BeanFactoryFactory#createBeanFactory(org.apache.avalon.framework.logger.Logger, org.apache.avalon.framework.configuration.Configuration, org.apache.avalon.framework.context.Context, org.apache.excalibur.source.SourceResolver, org.apache.cocoon.core.Settings)
      */
-    public ConfigurableListableBeanFactory createBeanFactory(Logger         sitemapLogger,
+    public ConfigurableListableBeanFactory createBeanFactory(ClassLoader    classLoader,
+                                                             Logger         sitemapLogger,
                                                              Configuration  config,
                                                              Context        sitemapContext,
                                                              SourceResolver resolver,
                                                              Settings       settings)
     throws Exception {
+        Thread.currentThread().setContextClassLoader(classLoader);
         // setup spring container
         // first, get the correct parent
         final ConfigurableListableBeanFactory parentFactory = this.getCurrentBeanFactory(sitemapContext);
@@ -95,7 +98,7 @@ public class BeanFactoryFactoryImpl
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
             final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, resolver);
-            return BeanFactoryUtil.createBeanFactory(ae, ci, resolver, parentFactory, false);
+            return BeanFactoryUtil.createBeanFactory(classLoader, ae, ci, resolver, parentFactory, false);
         }
         return parentFactory;
     }
