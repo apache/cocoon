@@ -33,6 +33,8 @@ public interface TreeBuilder {
 
     ConcreteTreeProcessor getProcessor();
 
+    ClassLoader getClassLoader();
+
     void setProcessor(ConcreteTreeProcessor processor);
 
     /**
