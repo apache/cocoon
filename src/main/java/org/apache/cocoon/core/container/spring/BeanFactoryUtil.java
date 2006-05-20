@@ -79,7 +79,26 @@ public class BeanFactoryUtil {
         return createBeanFactory(env, info, resolver, parent, addCocoon, true);
     }
     
-     /**
+    /**
+     * Create a new (sub) bean factory.
+     *
+     * @param env  The avalon environment.
+     * @param info The avalon configuration.
+     * @param parent The parent factory or null.
+     * @return A new bean factory.
+     * @throws Exception
+     */
+    public static ConfigurableListableBeanFactory createBeanFactory(ClassLoader       classLoader,
+                                                                    AvalonEnvironment env,
+                                                                    ConfigurationInfo info,
+                                                                    SourceResolver    resolver,
+                                                                    BeanFactory       parent,
+                                                                    boolean           addCocoon)
+    throws Exception {
+        return createBeanFactory(classLoader, env, info, resolver, parent, addCocoon, true);
+    }
+
+    /**
      * Create a new (sub) bean factory.
      *
      * @param env  The avalon environment.
@@ -95,30 +114,62 @@ public class BeanFactoryUtil {
                                                                     boolean           addCocoon,
                                                                     boolean           preInstantiateSingletons)
     throws Exception {
-        final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
-        Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
-        Logger logger = env.logger;
-        if ( info.rootLogger != null ) {
-            logger = env.logger.getChildLogger(info.rootLogger);
+        return createBeanFactory(Thread.currentThread().getContextClassLoader(), env, info, resolver, parent, addCocoon, preInstantiateSingletons);
+    }
+
+    /**
+     * Create a new (sub) bean factory.
+     *
+     * @param env  The avalon environment.
+     * @param info The avalon configuration.
+     * @param parent The parent factory or null.
+     * @return A new bean factory.
+     * @throws Exception
+     */
+    public static ConfigurableListableBeanFactory createBeanFactory(ClassLoader       classLoader,
+                                                                    AvalonEnvironment env,
+                                                                    ConfigurationInfo info,
+                                                                    SourceResolver    resolver,
+                                                                    BeanFactory       parent,
+                                                                    boolean           addCocoon,
+                                                                    boolean           preInstantiateSingletons)
+    throws Exception {
+        final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            if ( classLoader != null ) {
+                Thread.currentThread().setContextClassLoader(classLoader);
+            }
+            final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
+            Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
+            Logger logger = env.logger;
+            if ( info.rootLogger != null ) {
+                logger = env.logger.getChildLogger(info.rootLogger);
+            }
+            CocoonBeanFactory factory;
+//            if ( classLoader == null ) {
+                factory = new CocoonBeanFactory(rsc, 
+                                                parent,
+                                                logger,
+                                                info,
+                                                env.context,
+                                                env.settings);
+//            } else {
+//            }
+            if ( info.rootLogger != null ) {
+                factory.registerSingleton(Logger.class.getName(), logger);
+            }
+            // add local resolver
+            if ( resolver != null ) {
+                factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
+            }            
+            prepareBeanFactory(factory, info);
+            if (preInstantiateSingletons) {
+                factory.preInstantiateSingletons();
+            }
+            return factory;
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
-        CocoonBeanFactory factory = new CocoonBeanFactory(rsc, 
-                                                          parent,
-                                                          logger,
-                                                          info,
-                                                          env.context,
-                                                          env.settings);
-        if ( info.rootLogger != null ) {
-            factory.registerSingleton(Logger.class.getName(), logger);
-        }
-        // add local resolver
-        if ( resolver != null ) {
-            factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
-        }            
-        prepareBeanFactory(factory, info);
-        if (preInstantiateSingletons) {
-            factory.preInstantiateSingletons();
-        }
-        return factory;
     }
 
     /**

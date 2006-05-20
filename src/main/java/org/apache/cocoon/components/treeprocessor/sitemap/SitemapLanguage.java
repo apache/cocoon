@@ -366,6 +366,7 @@ public class SitemapLanguage
         this.itsNamespace = tree.getNamespace();
 
         Configuration componentConfig = tree.getChild("components", false);
+        Configuration classPathConfig = null;
 
         if (componentConfig == null) {
             if (getLogger().isDebugEnabled()) {
@@ -380,9 +381,6 @@ public class SitemapLanguage
         final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
         factory.setBeanFactory(this.beanFactory);
 
-        // TODO Create class loader (and filter classpath configuration from componentConfig!)
-        // this.itsClassLoader = factory.createClassLoader(itsContext, componentConfig.getChild("classpath", false));
-
         // check for sitemap local properties
         Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(ProcessingUtil.SETTINGS_ROLE);
         if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
@@ -394,9 +392,28 @@ public class SitemapLanguage
             tree = this.replaceProperties(tree, settings);
         }
 
+        if ( componentConfig != null ) {
+            // before we pass the configuration we have to strip the
+            // additional configuration parts, like classpath as these
+            // are not configurations for the component container
+            final DefaultConfiguration c = new DefaultConfiguration(componentConfig.getName(), 
+                    componentConfig.getLocation(),
+                    componentConfig.getNamespace(),
+                    "");
+            c.addAll(componentConfig);
+            classPathConfig = c.getChild("classpath", false);
+            if ( classPathConfig != null ) {
+                c.removeChild(classPathConfig);
+            }
+            componentConfig = c;
+        }
+
+        // Create class loader
+        this.itsClassLoader = factory.createClassLoader(itsContext, classPathConfig);
+
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
-        this.itsBeanFactory = factory.createBeanFactory(this.getLogger(), componentConfig, itsContext, this.processor.getSourceResolver(), settings);
+        this.itsBeanFactory = factory.createBeanFactory(this.itsClassLoader, this.getLogger(), componentConfig, itsContext, this.processor.getSourceResolver(), settings);
         this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         if (componentConfig != null) {
             // only register listeners if a new bean factory is created
