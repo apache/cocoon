@@ -3,14 +3,14 @@
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
  * You may obtain a copy of the License at 
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed  under the  License is distributed on an "AS IS" BASIS,
  * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
  * implied.
- * 
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -40,7 +40,7 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class PoolableFactoryBean
     implements FactoryBean, BeanFactoryAware {
-    
+
     /** The default max size of the pool. */
     public static final int DEFAULT_MAX_POOL_SIZE = 64;
 
@@ -105,7 +105,7 @@ public class PoolableFactoryBean
     throws Exception {
         this(name, className, DEFAULT_MAX_POOL_SIZE);
     }
-    
+
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
      * created by the specified factory object.
@@ -148,6 +148,7 @@ public class PoolableFactoryBean
             this.poolOutMethod = null;
         }
     }
+
     /**
      * Dispose of associated Pools and Factories.
      */
@@ -163,7 +164,7 @@ public class PoolableFactoryBean
             }
         }
     }
-    
+
     /**
      * Permanently removes a poolable from the pool's active list and
      *  destroys it so that it will not ever be reused.
@@ -315,14 +316,14 @@ public class PoolableFactoryBean
     }
 
     protected static final class ProxyHandler implements InvocationHandler, ProcessingUtil.CleanupTask {
-        
+
         private final ThreadLocal componentHolder = new ThreadLocal();
         private final PoolableFactoryBean handler;
 
         public ProxyHandler(PoolableFactoryBean handler) {
             this.handler = handler;
         }
-        
+
         /**
          * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
          */
@@ -341,8 +342,7 @@ public class PoolableFactoryBean
                 throw ite.getTargetException();
             }
         }
-        
-        
+
         /**
          * @see ProcessingUtil.CleanupTask#invoke()
          */
@@ -356,6 +356,4 @@ public class PoolableFactoryBean
             this.componentHolder.set(null);
         }
     }
-    
-    
 }
