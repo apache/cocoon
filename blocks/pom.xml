@@ -50,6 +50,7 @@
 		<!-- module>cocoon-core-samples-additional</module>
 		<module>cocoon-core-samples-main</module -->
 		<module>cocoon-cron</module>
+		<module>cocoon-databases</module>
 		<module>cocoon-deli</module>
 		<module>cocoon-eventcache</module>
 		<module>cocoon-faces</module>
@@ -87,9 +88,11 @@
 		<module>cocoon-taglib</module>
 		<module>cocoon-template</module>
 		<module>cocoon-tour</module>
+		<module>cocoon-validation</module>
 		<module>cocoon-velocity</module>
 		<module>cocoon-web3</module>
 		<module>cocoon-webdav</module>
+		<module>cocoon-xmldb</module>
 		<module>cocoon-xsp</module>
 	</modules>
   <scm>
