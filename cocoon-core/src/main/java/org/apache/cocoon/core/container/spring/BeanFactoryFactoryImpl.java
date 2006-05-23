@@ -18,6 +18,7 @@ package org.apache.cocoon.core.container.spring;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.classloader.ClassLoaderConfiguration;
 import org.apache.cocoon.classloader.ClassLoaderFactory;
@@ -49,26 +50,27 @@ public class BeanFactoryFactoryImpl
         this.beanFactory = (ConfigurableListableBeanFactory)factory;
     }
 
-    public ClassLoader createClassLoader(Context sitemapContext,
-                                         Configuration config)
+    public ClassLoader createClassLoader(Context        sitemapContext,
+                                         SourceResolver sitemapResolver,
+                                         Configuration  config)
     throws Exception {
         // we don't create a new class loader if there is no new configuration
         if ( true ) { //config == null ) {
             return Thread.currentThread().getContextClassLoader();            
         }
+        org.apache.cocoon.environment.Context envContext = (org.apache.cocoon.environment.Context) sitemapContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+
         // get parent bean factory
         BeanFactory parentFactory = getCurrentBeanFactory(sitemapContext);
         final String factoryRole = config.getAttribute("factory-role",
                 ClassLoaderFactory.ROLE);
 
         // Create a new classloader
-        ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(config);
+        ClassLoaderConfiguration configBean = ClassLoaderUtils.createConfiguration(sitemapResolver, config);
         ClassLoaderFactory clFactory = (ClassLoaderFactory)parentFactory.getBean(factoryRole);
-        // TODO - we need the servlet context and the path to the sitemap starting from the root context!
         return clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(),
                                            configBean,
-                                           null,
-                                           null);
+                                           envContext);
     }
 
     /**

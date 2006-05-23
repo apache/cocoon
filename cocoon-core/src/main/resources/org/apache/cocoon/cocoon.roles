@@ -33,8 +33,8 @@
 <!-- Roles for the cocoon core. The "cocoon-version" attribute is used by the Cocoon build system
      for shared blocks, that should add their roles here in 2.1 but not in 2.2 -->
 <role-list cocoon-version = '2.2'>
-  <role name="org.apache.cocoon.components.classloader.ClassLoaderFactory"
-        default-class="org.apache.cocoon.components.classloader.DefaultClassLoaderFactory"/>
+  <role name="org.apache.cocoon.classloader.ClassLoaderFactory"
+        default-class="org.apache.cocoon.classloader.DefaultClassLoaderFactory"/>
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
