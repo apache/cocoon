@@ -15,6 +15,8 @@ so there's no hurry to sync, or maybe we won't sync at all.
 Xsltal block is in branch only for now, it can wait for more examples before
 "porting" to trunk.
 
+imageop block is in branch only!
+
 HtmlUnit test framework is in branch only.
 
 Tour block has been updated for 2.1.8, need to be synced and tested in trunk.
