@@ -31,7 +31,6 @@ public interface ClassLoaderFactory {
 
     ClassLoader createClassLoader(ClassLoader              parent,
                                   ClassLoaderConfiguration config,
-                                  ServletContext           servletContext,
-                                  String                   rootPath)
+                                  ServletContext           servletContext)
     throws Exception;
 }

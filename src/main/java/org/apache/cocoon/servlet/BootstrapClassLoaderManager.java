@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -38,6 +39,14 @@ import org.apache.cocoon.classloader.DefaultClassLoaderFactory;
  */
 public class BootstrapClassLoaderManager {
 
+    private static final String WEB_INF_COCOON_LIB = "WEB-INF/cocoon-lib";
+
+    private static final String WEB_INF_COCOON_CLASSES = "WEB-INF/cocoon-classes";
+
+    private static final String WEB_INF_LIB = "WEB-INF/lib";
+
+    private static final String WEB_INF_CLASSES = "WEB-INF/classes";
+
     protected static ClassLoader bootstrapClassLoader;
 
     protected static final String CONTEXT_PREFIX = "context:";
@@ -50,8 +59,22 @@ public class BootstrapClassLoaderManager {
             // Create configuration
             ClassLoaderConfiguration config = new ClassLoaderConfiguration();
 
-            config.addClassDirectory("WEB-INF/classes");
-            config.addLibDirectory("WEB-INF/lib");
+            try {
+                if ( servletContext.getResource("/" + WEB_INF_CLASSES) != null ) {
+                    config.addClassDirectory(WEB_INF_CLASSES);
+                }
+                if ( servletContext.getResource("/" + WEB_INF_LIB) != null ) {
+                    config.addLibDirectory(WEB_INF_LIB);
+                }
+                if ( servletContext.getResource("/" + WEB_INF_COCOON_CLASSES) != null ) {
+                    config.addClassDirectory(WEB_INF_COCOON_CLASSES);
+                }
+                if ( servletContext.getResource("/" + WEB_INF_COCOON_LIB) != null ) {
+                    config.addLibDirectory(WEB_INF_COCOON_LIB);
+                }
+            } catch (MalformedURLException mue) {
+                throw new ServletException("", mue);
+            }
             final String externalClasspath = servletContext.getInitParameter("bootstrap-classpath-file");
             if ( externalClasspath != null ) {
                 getClassPath(externalClasspath, servletContext, config);
@@ -119,7 +142,7 @@ public class BootstrapClassLoaderManager {
         try {
             final Class classLoaderFactoryClass = Class.forName(factoryClassName);
             ClassLoaderFactory factory = (ClassLoaderFactory)classLoaderFactoryClass.newInstance();
-            return factory.createClassLoader(config.getClass().getClassLoader(), config, servletContext, "/");
+            return factory.createClassLoader(config.getClass().getClassLoader(), config, servletContext);
         } catch (InstantiationException e) {
             throw new ServletException("", e);
         } catch (IllegalAccessException e) {
