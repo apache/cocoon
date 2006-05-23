@@ -176,6 +176,21 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="add">
+      Properties can now be defined on a per sitemap base. This includes different set of
+      properties for different running modes.
+    </action>
+    <action dev="CZ" type="add">
+      Add support for different running modes. This allows to have different configurations
+      for several environments like production, testing or development. On startup of Cocoon
+      one can select the running mode by using a system property.
+    </action>
+    <action dev="CZ" type="add">
+      Rewrote the whole core container by using Spring as the component container. It is now
+      possible to use Avalon based configuration files next to Spring style configuration files
+      and they are all "merged" and managed by one single container instance. Each sitemap
+      gets its own container with possibly own configuration.
+    </action>
     <action dev="CZ" type="update">
       Removed obsolete support for JCS.
     </action>
