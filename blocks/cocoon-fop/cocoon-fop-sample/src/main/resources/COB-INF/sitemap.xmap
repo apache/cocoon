@@ -17,7 +17,7 @@
 
 <!--+
     | FOP block samples sitemap
-    | CVS $Id$
+    | $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -88,7 +88,8 @@
         <map:serialize type="fo2pdf"/>
       </map:match>
 
-      <!-- reuse the XSP caching example for our caching test -->
+      <!-- reuse the XSP caching example for our caching test
+           Disabled for now as we don't want a dependency to XSP!
       <map:match pattern="cache-test-*.pdf">
         <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
         <map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
@@ -97,7 +98,7 @@
         </map:transform>
         <map:serialize type="fo2pdf"/>
       </map:match>
-
+      -->
     </map:pipeline>
   </map:pipelines>
 </map:sitemap>
