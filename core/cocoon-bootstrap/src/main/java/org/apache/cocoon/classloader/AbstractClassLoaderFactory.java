@@ -50,7 +50,7 @@ import javax.servlet.ServletContext;
 public abstract class AbstractClassLoaderFactory
     implements ClassLoaderFactory {
 
-    protected URL getUrl(ServletContext servletContext, String rootPath, String path) 
+    protected URL getUrl(ServletContext servletContext, String path) 
     throws MalformedURLException {
         // check for files
         final File file = this.getFile(path);
@@ -61,7 +61,7 @@ public abstract class AbstractClassLoaderFactory
         if ( path.indexOf(":/") > 0 ) {
             return new URL(path);
         }
-        return servletContext.getResource(this.getContextPath(rootPath, path));
+        return servletContext.getResource(this.getContextPath(path));
     }
 
     protected File getFile(String path) 
@@ -77,23 +77,17 @@ public abstract class AbstractClassLoaderFactory
         return null;
     }
 
-    protected String getContextPath(String rootPath, String path) {
+    protected String getContextPath(String path) {
         if ( path.startsWith("context://") ) {
             return path.substring(9);
         }
-        return rootPath + path;        
+        return "/" + path;        
     }
 
     public ClassLoader createClassLoader(ClassLoader              parent,
                                          ClassLoaderConfiguration config,
-                                         ServletContext           servletContext,
-                                         String                   rootPath)
+                                         ServletContext           servletContext)
     throws Exception {
-        if ( rootPath == null ) {
-            rootPath = "/";
-        } else if ( !rootPath.endsWith("/") ) {
-            rootPath = rootPath + "/";
-        }
         final List urlList = new ArrayList();
         Iterator i;
         // process class directories
@@ -101,7 +95,10 @@ public abstract class AbstractClassLoaderFactory
         while ( i.hasNext() ) {
             // A class dir: simply add its URL
             final String directory = (String)i.next();
-            final URL url = this.getUrl(servletContext, rootPath, directory);
+            final URL url = this.getUrl(servletContext, directory);
+            if ( url == null ) {
+                throw new Exception("Directory not found for classpath: " + directory);
+            }
             // TODO Should we somehow check if this is a dir?
             urlList.add(url);
         }
@@ -131,7 +128,7 @@ public abstract class AbstractClassLoaderFactory
                 if ( directory.indexOf(":/") > 0 ) {
                     throw new Exception("Can't handle absolute url as lib class path: " + directory);
                 }
-                final String contextPath = this.getContextPath(rootPath, directory);
+                final String contextPath = this.getContextPath(directory);
                 final Set resources = servletContext.getResourcePaths(contextPath + '/');
                 if ( resources != null ) {
                     final Iterator iter = resources.iterator();
