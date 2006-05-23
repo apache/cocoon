@@ -55,7 +55,7 @@ public class BeanFactoryFactoryImpl
                                          Configuration  config)
     throws Exception {
         // we don't create a new class loader if there is no new configuration
-        if ( true ) { //config == null ) {
+        if ( config == null ) {
             return Thread.currentThread().getContextClassLoader();            
         }
         org.apache.cocoon.environment.Context envContext = (org.apache.cocoon.environment.Context) sitemapContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
