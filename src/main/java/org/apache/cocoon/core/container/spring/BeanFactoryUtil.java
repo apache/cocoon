@@ -145,16 +145,14 @@ public class BeanFactoryUtil {
             if ( info.rootLogger != null ) {
                 logger = env.logger.getChildLogger(info.rootLogger);
             }
+            // Spring uses the context classloader to create new beans
             CocoonBeanFactory factory;
-//            if ( classLoader == null ) {
-                factory = new CocoonBeanFactory(rsc, 
-                                                parent,
-                                                logger,
-                                                info,
-                                                env.context,
-                                                env.settings);
-//            } else {
-//            }
+            factory = new CocoonBeanFactory(rsc, 
+                                            parent,
+                                            logger,
+                                            info,
+                                            env.context,
+                                            env.settings);
             if ( info.rootLogger != null ) {
                 factory.registerSingleton(Logger.class.getName(), logger);
             }

@@ -409,7 +409,7 @@ public class SitemapLanguage
         }
 
         // Create class loader
-        this.itsClassLoader = factory.createClassLoader(itsContext, classPathConfig);
+        this.itsClassLoader = factory.createClassLoader(itsContext, this.processor.getSourceResolver(), classPathConfig);
 
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
