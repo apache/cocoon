@@ -159,7 +159,9 @@ public class BeanFactoryUtil {
             // add local resolver
             if ( resolver != null ) {
                 factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
-            }            
+            }
+            // add local settings
+            factory.registerSingleton(ProcessingUtil.SETTINGS_ROLE, env.settings);
             prepareBeanFactory(factory, info);
             if (preInstantiateSingletons) {
                 factory.preInstantiateSingletons();
