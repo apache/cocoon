@@ -69,6 +69,10 @@ public class DefaultClassLoader extends URLClassLoader {
     }
 
     protected boolean tryClassHere(String name) {
+        // don't include classes in the java or javax.servlet package
+        if ( name != null && (name.startsWith("java.") || name.startsWith("javax.servlet") ) ) {
+            return false;
+        }
         // Scan includes, then excludes
         boolean tryHere;
         
