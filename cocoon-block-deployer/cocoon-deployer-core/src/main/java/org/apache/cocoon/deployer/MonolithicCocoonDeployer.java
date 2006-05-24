@@ -35,8 +35,8 @@ public class MonolithicCocoonDeployer {
         	Object id = it.next();
         	File lib = (File) libraries.get(id);  	
         	try {
-        		
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
+                zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF"));        		
                 zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
                 zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
