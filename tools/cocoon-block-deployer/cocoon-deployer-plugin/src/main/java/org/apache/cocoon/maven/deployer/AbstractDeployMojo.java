@@ -18,6 +18,7 @@ package org.apache.cocoon.maven.deployer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -216,6 +217,16 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         }
 
         MonolithicCocoonDeployer.deploy(files, webappDirectory_, blocksdir, new MavenLoggingWrapper(this.getLog()));
+        
+        // make sure that all configuration files available in the webapp override block configuration files
+        try {
+            copyResources( getWarSourceDirectory(), webappDirectory_, getWebXml() );
+        } catch (IOException e) {
+            throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
+        }
+        
+        // take care of paranoid classloading
+        // TBD
 	}   
     
     
