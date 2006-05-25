@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="SG" type="update">
+      Updated XReporter expressions to latest version (see http://issues.cocoondev.org/browse/XRP-113 ).
+    </action>
     <action dev="CZ" type="add">
       CForms: Java event listeners can now implement Configurable, LogEnabled, and Contextualizable.
     </action>
