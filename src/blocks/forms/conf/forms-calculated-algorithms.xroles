@@ -15,17 +15,9 @@
   limitations under the License.
 -->
 
-<!-- $Id$ -->
-<xconf xpath="/cocoon" unless="@version != '2.1' or forms-expression">
+<xroles xpath="/role-list" unless="/role-list[@cocoon-version != '2.1']|role[@name='org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilderSelector']">
 
-  <!--+
-      | Cocoon Forms expression language and additional functions
-      +-->
-  <forms-expression logger="forms.expression">
-    <function name="Null" class="org.apache.cocoon.forms.expression.NullFunction"/>
-    <function name="IsNull" class="org.apache.cocoon.forms.expression.IsNullFunction"/>
-    <function name="String" class="org.apache.cocoon.forms.expression.StringFunction"/>
-    <function name="Sum" class="org.apache.cocoon.forms.expression.SumFunction"/>
-  </forms-expression>
-
-</xconf>
+  <role name="org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilderSelector"
+        shorthand="forms-calculated-algorithms"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+</xroles>

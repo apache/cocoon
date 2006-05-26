@@ -47,6 +47,7 @@
       <widget name="captcha" src="org.apache.cocoon.forms.formmodel.CaptchaDefinitionBuilder"/>
       <widget name="tree" src="org.apache.cocoon.forms.formmodel.tree.builder.TreeDefinitionBuilder"/>
       <widget name="imagemap" src="org.apache.cocoon.forms.formmodel.ImageMapDefinitionBuilder"/>
+      <widget name="calculatedfield" src="org.apache.cocoon.forms.formmodel.CalculatedFieldDefinitionBuilder"/>
     </widgets>
   </forms-formmanager>
 
