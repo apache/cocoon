@@ -95,9 +95,9 @@
       <version>1.4</version>
     </dependency>
     <dependency>
-      <groupId>org.outerj.xreporter</groupId>
+      <groupId>xreporter</groupId>
       <artifactId>xreporter-expression</artifactId>
-      <version>1.2.1</version>
+      <version>r672</version>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>
