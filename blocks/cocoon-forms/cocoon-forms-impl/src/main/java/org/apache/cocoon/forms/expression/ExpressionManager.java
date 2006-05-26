@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.expression;
 
+import java.util.List;
+
 import org.outerj.expression.Expression;
 import org.outerj.expression.ParseException;
 import org.outerj.expression.ExpressionException;
@@ -30,5 +32,21 @@ public interface ExpressionManager {
     
     String ROLE = ExpressionManager.class.getName();
     
+    /**
+     * Parse the given expression.
+     * @param expression The string containing the expression to parse.
+     * @return The Expression object resulting from parse.
+     * @throws ParseException If something goes wrong while parsing.
+     * @throws ExpressionException If the expression has been parsed successfully but is invalid.
+     */
     Expression parse(String expression) throws ParseException, ExpressionException;
+    
+    /**
+     * Parse the given expression to extract variables.
+     * @param expressionString The string containing the expression to parse.
+     * @return A {@link List} of {@link org.outerj.expression.VariableFunction}, one for each variable used in the expression. {@see org.outerj.expression.VariableFunction#getVariableName()}.
+     * @throws ParseException If something goes wrong while parsing.
+     * @throws ExpressionException If the expression has been parsed successfully but is invalid.
+     */
+    List parseVariables(String expressionString) throws ParseException, ExpressionException;
 }
