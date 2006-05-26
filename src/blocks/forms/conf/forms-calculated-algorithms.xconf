@@ -16,16 +16,16 @@
 -->
 
 <!-- $Id$ -->
-<xconf xpath="/cocoon" unless="@version != '2.1' or forms-expression">
+<xconf xpath="/cocoon" unless="@version != '2.1' or forms-calculated-algorithms">
 
   <!--+
-      | Cocoon Forms expression language and additional functions
+      | Cocoon Forms calculated fields algorithms
       +-->
-  <forms-expression logger="forms.expression">
-    <function name="Null" class="org.apache.cocoon.forms.expression.NullFunction"/>
-    <function name="IsNull" class="org.apache.cocoon.forms.expression.IsNullFunction"/>
-    <function name="String" class="org.apache.cocoon.forms.expression.StringFunction"/>
-    <function name="Sum" class="org.apache.cocoon.forms.expression.SumFunction"/>
-  </forms-expression>
+  <forms-calculated-algorithms logger="forms.algorithms" default="formula">
+    <algorithm name="formula" class="org.apache.cocoon.forms.formmodel.algorithms.SimpleFormulaBuilder"/>
+    <algorithm name="javascript" class="org.apache.cocoon.forms.formmodel.algorithms.JavaScriptBuilder"/>
+    <algorithm name="java" class="org.apache.cocoon.forms.formmodel.algorithms.JavaAlgorithmBuilder"/>
+    <algorithm name="repeatedformula" class="org.apache.cocoon.forms.formmodel.algorithms.RepeatedFormulaBuilder"/>
+  </forms-calculated-algorithms>
 
 </xconf>
