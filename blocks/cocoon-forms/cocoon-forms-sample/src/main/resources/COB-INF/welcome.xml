@@ -47,6 +47,7 @@
   <sample name="Multipage wizard" href="do-multipage.flow">(Ajax) A multipage wizard, using widget states and actions to move between pages.</sample>
   <sample name="CAPTCHA validation" href="captcha/">CAPTCHA validation (requires <a href="/samples/blocks/batik/">Batik block</a>)</sample>
   <sample name="ImageMap" href="imagemap">A simple form using the Image Map widget</sample>
+  <sample name="Calculated fields" href="do-calculatedfields.flow">Calculated fields : values are calculated automatically</sample>
  </group>
 
  <group name="Binding Samples">
