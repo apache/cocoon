@@ -16,12 +16,13 @@
 
 package org.apache.cocoon.forms.expression;
 
+import java.util.List;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.outerj.expression.DefaultFunctionFactory;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionException;
@@ -60,13 +61,19 @@ public class DefaultExpressionManager
     }
     
     public Expression parse(String expressionString) throws ParseException, ExpressionException {
-        
         FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
-        parser.sum();
+        parser.parse();
 
         Expression expression = parser.getExpression();
         expression.check();
 
         return expression;
     }
+    
+    public List parseVariables(String expressionString) throws ParseException, ExpressionException {
+        FormulaParser parser = new FormulaParser(new java.io.StringReader(expressionString), factory);
+        parser.parse();
+        return parser.getVariables();
+    }
+    
 }
