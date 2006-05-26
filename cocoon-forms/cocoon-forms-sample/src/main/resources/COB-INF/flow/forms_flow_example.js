@@ -211,3 +211,11 @@ function do_inplace() {
             "\noccupation: " + form.getChild("occupation").value +
             "\ncomments: " + form.getChild("comments") });
 }
+
+function do_calculatedfields(form) {
+    var form = new Form("forms/calculatedfields.xml");
+    form.showForm("calculatedfields-display-pipeline.jx");
+    cocoon.sendPage("textresult-display-pipeline.jx",
+        {title: "Calculated results", text: "Grand total of your order: " + form.getChild("grandtotal").value});
+}
+
