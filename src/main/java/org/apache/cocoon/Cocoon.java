@@ -288,13 +288,6 @@ public class Cocoon implements Processor, BeanFactoryAware {
     }
 
     /**
-     * @see org.apache.cocoon.Processor#getComponentConfigurations()
-     */
-    public Map getComponentConfigurations() {
-        return null;
-    }
-
-    /**
      * Return this (Cocoon is always at the root of the processing chain).
      * 
      * @since 2.1.1
