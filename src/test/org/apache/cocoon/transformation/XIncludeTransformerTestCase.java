@@ -96,9 +96,19 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     *
     * @throws Exception if ComponentManager enterEnvironment fails
     */
-   public void testXIncludeFallbackTest() throws Exception {
-       getLogger().debug("testXIncludeFallbackTest");
+   public void testXIncludeSimpleFallbackTest() throws Exception {
+       getLogger().debug("testXIncludeSimpleFallbackTest");
        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-fallbackTest.xml",
                "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
    }
+   
+   /** Testcase for xinclude with a nested xinclude elemento into the fallback
+   *
+   * @throws Exception if ComponentManager enterEnvironment fails
+   */
+  public void testXIncludeNestedXincludeElementInAFallbackTest() throws Exception {
+      getLogger().debug("testXIncludeNestedXincludeElementInAFallbackTest");
+      xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
+              "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
+  }
 }
