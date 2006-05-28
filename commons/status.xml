@@ -176,6 +176,10 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="remove">
+      Remove the SitemapConfigurable interface completly. The new include and property mechanism provides
+      a cleaner way of per sitemap configurations.
+    </action>
     <action dev="CZ" type="add">
       Properties can now be defined on a per sitemap base. This includes different set of
       properties for different running modes.

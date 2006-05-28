@@ -44,13 +44,6 @@ public class MockProcessor implements Processor {
     }
     
     /**
-     * @see org.apache.cocoon.Processor#getComponentConfigurations()
-     */
-    public Map getComponentConfigurations() {
-        return null;
-    }
-    
-    /**
      * @see org.apache.cocoon.Processor#getContext()
      */
     public String getContext() {

@@ -31,9 +31,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.core.Settings;
-import org.apache.cocoon.core.container.util.DefaultSitemapConfigurationHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
@@ -52,8 +50,7 @@ import org.springframework.core.io.Resource;
  * @version $Id$
  */
 public class CocoonBeanFactory
-    extends DefaultListableBeanFactory
-    implements NameForAliasAware {
+    extends DefaultListableBeanFactory {
 
     protected final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
 
@@ -99,23 +96,6 @@ public class CocoonBeanFactory
         if ( settings != null ) {
             (new CocoonSettingsConfigurer(settings)).postProcessBeanFactory(this);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.core.container.spring.NameForAliasAware#getNameForAlias(java.lang.String)
-     */
-    public String getNameForAlias(String alias) {
-        if ( this.avalonConfiguration != null ) {
-            final String value = this.avalonConfiguration.getRoleForName(alias);
-            if ( value != null ) {
-                return value;
-            }
-            if ( this.getParentBeanFactory() instanceof NameForAliasAware ) {
-                return ((NameForAliasAware)this.getParentBeanFactory()).getNameForAlias(alias);
-            }
-        }
-        // default: we just return the alias
-        return alias;
     }
 
     /**
@@ -215,9 +195,6 @@ public class CocoonBeanFactory
                         }
                         ContainerUtil.parameterize(bean, p);
                     }
-                }
-                if ( bean instanceof SitemapConfigurable ) {
-                    ((SitemapConfigurable)bean).configure(new DefaultSitemapConfigurationHolder(beanName));
                 }
                 ContainerUtil.initialize(bean);
             } catch (Exception e) {

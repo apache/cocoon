@@ -101,7 +101,6 @@
 
       <node name="pipelines" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNodeBuilder">
         <allowed-children>pipeline, handle-errors</allowed-children>
-        <ignored-children>component-configurations</ignored-children>
       </node>
 
       <node name="pipeline" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelineNodeBuilder">

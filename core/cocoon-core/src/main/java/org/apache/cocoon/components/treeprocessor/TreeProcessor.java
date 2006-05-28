@@ -17,7 +17,6 @@ package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -271,13 +270,6 @@ public class TreeProcessor extends AbstractLogEnabled
         }
 
         return result;
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#getComponentConfigurations()
-     */
-    public Map getComponentConfigurations() {
-        return this.concreteProcessor.getComponentConfigurations();
     }
 
     /**

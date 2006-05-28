@@ -23,11 +23,6 @@
 
   <map:pipelines>
 
-    <map:component-configurations>
-        <global-variables/>
-    </map:component-configurations>
-
-
     <map:pipeline>
 
         <map:match pattern="">
