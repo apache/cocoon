@@ -18,8 +18,8 @@ package org.apache.cocoon;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SubmitMethod;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequestSettings;
 import com.gargoylesoftware.htmlunit.WebResponse;
-import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.xpath.HtmlUnitXPath;
 import com.gargoylesoftware.htmlunit.xml.XmlPage;
@@ -40,11 +40,9 @@ import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -151,8 +149,8 @@ public abstract class HtmlUnitTestCase
     protected void loadResponse(String pageURL)
         throws Exception
     {
-        URL url = new URL(baseURL, pageURL);
-        this.response = webClient.loadWebResponse(url, SubmitMethod.GET, new ArrayList(0));
+        WebRequestSettings webRequestSettings = new WebRequestSettings(new URL(baseURL, pageURL), SubmitMethod.GET);
+        this.response = webClient.loadWebResponse(webRequestSettings);
     }
 
     /**
@@ -280,7 +278,6 @@ public abstract class HtmlUnitTestCase
         FileUtils.writeStringToFile(dstfile, content.toString(), encoding);
 
         // Leave server some time to realize that file has changed.
-
         Thread.sleep(1000);
     }
 }
