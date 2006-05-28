@@ -23,7 +23,6 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.util.List;
 
-import org.apache.cocoon.util.WildcardHelper;
 
 /**
  * This class loader reverses the search order for classes.  It checks this classloader
