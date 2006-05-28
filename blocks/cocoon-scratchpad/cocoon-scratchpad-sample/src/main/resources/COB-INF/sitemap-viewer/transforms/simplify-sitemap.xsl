@@ -25,7 +25,7 @@
       ! skipping some 
       ! -->
     
-    <xsl:template match="map:components|map:views|map:view|map:component-configurations|map:parameter">
+    <xsl:template match="map:components|map:views|map:view|map:parameter">
     </xsl:template>
     
     

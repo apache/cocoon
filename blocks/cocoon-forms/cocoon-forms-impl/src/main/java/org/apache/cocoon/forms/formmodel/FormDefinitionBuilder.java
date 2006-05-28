@@ -20,7 +20,6 @@ import java.util.Iterator;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
-import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.formmodel.library.LibraryManager;
 import org.apache.cocoon.util.location.LocationAttributes;
 import org.w3c.dom.Element;

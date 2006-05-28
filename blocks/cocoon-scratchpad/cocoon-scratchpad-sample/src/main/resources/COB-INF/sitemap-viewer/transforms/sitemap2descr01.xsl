@@ -32,7 +32,7 @@
     </xsl:template>
     
     
-    <xsl:template match="map:components|map:views|map:component-configurations">
+    <xsl:template match="map:components|map:views">
     </xsl:template>
     
     

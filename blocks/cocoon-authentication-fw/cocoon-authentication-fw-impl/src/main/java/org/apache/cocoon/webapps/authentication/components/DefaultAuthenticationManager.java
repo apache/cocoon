@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -34,8 +36,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.SitemapConfigurable;
-import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -68,17 +68,14 @@ import org.xml.sax.SAXException;
 public class DefaultAuthenticationManager
         extends AbstractLogEnabled
         implements AuthenticationManager,
-                   SitemapConfigurable,
                    Serviceable,
                    Disposable,
                    ThreadSafe,
+                   Configurable,
                    Contextualizable {
 
     /** The name of the session attribute storing the user status */
     public final static String SESSION_ATTRIBUTE_USER_STATUS = DefaultAuthenticationManager.class.getName() + "/UserStatus";
-
-    /** The manager for the authentication handlers */
-    protected SitemapConfigurationHolder holder;
 
     /** The Service Manager */
     protected ServiceManager manager;
@@ -98,12 +95,14 @@ public class DefaultAuthenticationManager
     /** This is the key used to store the current request state in the request object */
     private static final String REQUEST_STATE_KEY = RequestState.class.getName();
 
+    /** The map containing the handler configurations for this sitemap. */
+    protected Map handlerConfigs;
+
     /**
-     * Set the sitemap configuration containing the handlers
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void configure(SitemapConfigurationHolder holder)
-    throws ConfigurationException {
-        this.holder = holder;
+    public void configure(Configuration config) throws ConfigurationException {
+        this.handlerConfigs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context), config);
     }
 
     /**
@@ -111,16 +110,8 @@ public class DefaultAuthenticationManager
      */
     private Map getHandlerConfigurations()
     throws ProcessingException {
-        Map configs = (Map) this.holder.getPreparedConfiguration();
-        if ( null == configs ) {
-            try {
-                configs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context),
-                                                                            this.holder);
-            } catch (ConfigurationException ce) {
-                throw new ProcessingException("Configuration error.", ce);
-            }
-        }
-        return configs;
+        // TODO - we have to find a way to get the parent handlers!
+        return this.handlerConfigs;
     }
 
     /**

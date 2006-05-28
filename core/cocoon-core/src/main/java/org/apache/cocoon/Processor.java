@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -83,12 +81,6 @@ public interface Processor {
      */
     InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception;
-
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
-     */
-    Map getComponentConfigurations();
 
     /**
      * Get the root processor parent of this processor.
