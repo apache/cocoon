@@ -312,7 +312,7 @@ public class WidgetFinder {
                 refreshForClear((Repeater)event.getSourceWidget());
             }
             if (listener != null) {
-                listener.repeaterModified((RepeaterEvent)event);
+                listener.repeaterModified(event);
             }
         }
     }
