@@ -37,12 +37,12 @@
             <xsl:apply-templates/>
         </sitemap>
     </xsl:template>
-    
-    
-    <xsl:template match="map:components|map:views|map:component-configurations">
+
+
+    <xsl:template match="map:components|map:views">
     </xsl:template>
-    
-    
+
+
     <xsl:template match="map:match" mode="print">
         <xsl:param name="use_cnt" select="-1"/>
         <xsl:param name="depth"  select="0"/>

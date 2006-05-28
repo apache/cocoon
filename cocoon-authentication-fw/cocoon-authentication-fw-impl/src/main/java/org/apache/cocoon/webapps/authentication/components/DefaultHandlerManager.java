@@ -22,14 +22,12 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 
 
 /**
- *  This is a utility class managing the authentication handlers
+ *  This is a utility class managing the authentication handlers.
  *
  * @version $Id$
  */
@@ -38,22 +36,16 @@ public final class DefaultHandlerManager {
     /**
      * Get the current handler configuration
      */
-    static public Map prepareHandlerConfiguration(Map            objectModel,
-                                                  SitemapConfigurationHolder holder)
+    static public Map prepareHandlerConfiguration(Map           objectModel,
+                                                  Configuration configs)
     throws ConfigurationException {
-        Map configs = (Map)holder.getPreparedConfiguration();
-        if ( null == configs ) {
-            ChainedConfiguration chainedConfig = holder.getConfiguration();
-            configs = prepare( objectModel, holder, chainedConfig );
-        }
-        return configs;
+        return prepare( objectModel, configs );
     }
     /**
      * Prepare the handler configuration
      */
-    static private Map prepare( Map            objectModel,
-                                SitemapConfigurationHolder holder,
-                                ChainedConfiguration conf) 
+    static private Map prepare( Map           objectModel,
+                                Configuration conf) 
     throws ConfigurationException {
         // test for handlers
         boolean found = false;
@@ -66,20 +58,9 @@ public final class DefaultHandlerManager {
             }
         }
 
-        Map values = null;
-        final ChainedConfiguration parent = conf.getParent();
-        if ( null != parent ) {
-            values = prepare( objectModel, holder, parent );
-            if ( found ) {
-                values = new HashMap( values );
-            }
-        } else if ( found ){
+        final Map values;
+        if ( found ){
             values = new HashMap(10);
-        } else {
-            values = Collections.EMPTY_MAP;
-        }
-
-        if ( found ) {
             for(int i=0; i<handlers.length;i++) {
                 // check unique name
                 final String name = handlers[i].getAttribute("name");
@@ -89,18 +70,19 @@ public final class DefaultHandlerManager {
 
                 addHandler( objectModel, handlers[i], values );
             }
+        } else {
+            values = Collections.EMPTY_MAP;
         }
-        holder.setPreparedConfiguration( conf, values );
-        
+
         return values;
     }
 
     /**
      * Add one handler configuration
      */
-    static private void addHandler(Map            objectModel,
-                                   Configuration  configuration,
-                                   Map            values)
+    static private void addHandler(Map           objectModel,
+                                   Configuration configuration,
+                                   Map           values)
     throws ConfigurationException {
         // get handler name
         final String name = configuration.getAttribute("name");
@@ -115,6 +97,4 @@ public final class DefaultHandlerManager {
         }
         values.put( name, currentHandler );
     }
-
-
 }
