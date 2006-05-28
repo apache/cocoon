@@ -27,13 +27,19 @@ public class FlowscriptReloadTestCase
     final String flowscriptPath = "samples/flow/test/sendpage.js";
     final String paramToken = "@REPLACEME@";
     final String resultXPath = "html/body/p[1]";
+    
+    protected void copyWebappFile(String filename, String param, String value) throws Exception {
+        super.copyWebappFile(filename, param, value);
+        // AG: Default javacript check-reload time in cocoon.xconf is 4 seconds
+        // Let's wait 1 ms more, 4001 ms seems to be ok. 
+        Thread.sleep(4001);
+    }
 
     public void testFlowscriptReload()
         throws Exception
     {
         // Copy the flowscript from its source directory to the destination
         // area, and replace the parameter value with 'abc' 
-
         final String expected1 = "replaceme-abc";
         copyWebappFile(flowscriptPath, paramToken, expected1);
         loadHtmlPage(pageurl+"showString");
@@ -42,13 +48,8 @@ public class FlowscriptReloadTestCase
 
         // Copy the flowscript from its source directory to the destination
         // area, and replace the parameter value with '123' 
-
         final String expected2 = "replaceme-123";
         copyWebappFile(flowscriptPath, paramToken, expected2);
-        // AG: Default javacript check-reload time in cocoon.xconf is 4 seconds
-        // Let's wait 1 ms more, 4001 ms seems to be ok. 
-        Thread.sleep(4001);
-
         loadHtmlPage(pageurl+"showString");
         String result2 = evalXPath(resultXPath);
         assertEquals("After flowscript was modified", expected2, result2);
