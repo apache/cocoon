@@ -182,6 +182,17 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="add" fixes-bug="COCOON-1753" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
+      XInclude transformer uses href fragment rather than xpointer attribute (spec conformance).
+      The XInclude 1.0 spec (see http://www.w3.org/TR/xinclude/#include_element) states the following
+      about the href attribute:
+      <br/>
+      'Fragment identifiers must not be used; their appearance is a fatal error.'
+      <br/>
+      Cocoon's XIncludeTransformer incorrectly allows xpointer fragments to be specified using
+      a fragment identifier in the href attribute. The correct way to support xpointers is the
+      'xpointer' attribute on xi:include, which the transformer does not currently recognize.
+    </action>
     <action dev="AG" type="update">
       Cocoon htmlunit testcases are now compatible with htmlunit 1.8.
     </action>
