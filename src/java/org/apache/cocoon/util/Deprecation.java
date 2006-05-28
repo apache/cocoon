@@ -17,6 +17,7 @@ package org.apache.cocoon.util;
 
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.enums.ValuedEnum;
 
 /**
@@ -88,7 +89,7 @@ public class Deprecation {
         }
         
         public static LogLevel getLevel(String level) {
-            return (LogLevel)ValuedEnum.getEnum(LogLevel.class, level);
+            return (LogLevel)Enum.getEnum(LogLevel.class, level);
         }
     }
 
