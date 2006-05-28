@@ -31,10 +31,10 @@ import org.apache.cocoon.environment.mock.MockEnvironment;
  * A simple testcase for FilterTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id$
+ * @version SVN $Id$
  */
 public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
-    
+
     /**
      * Run this test suite from commandline
      *
@@ -43,7 +43,7 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     public static void main( String[] args ) {
         TestRunner.run(suite());
     }
-    
+
     /** Create a test suite.
      * This test suite contains all test cases of this class.
      * @return the Test object containing all test cases.
@@ -53,59 +53,52 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         return suite;
     }
     
+    private void xincludeTest(String input, String result) throws Exception {
+        Parameters parameters = new Parameters();
+
+        String src =  null;
+
+        // enter & leave environment, as a manager is looked up using
+        // the processing context stack
+        MockEnvironment env = new
+        MockEnvironment(null);
+        Processor processor = (Processor)this.lookup(Processor.ROLE);
+
+        CocoonComponentManager.enterEnvironment(
+        env, new WrapperComponentManager(this.getManager()), processor);
+
+        assertEqual(load(result), transform("xinclude", src, parameters, load(input)));
+
+        CocoonComponentManager.leaveEnvironment();
+    }
+
     /** Testcase for xinclude simple include
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ComponentManager enterEnvironment fails
      */
     public void testXInclude1() throws Exception {
         getLogger().debug("testXInclude1");
-        
-        Parameters parameters = new Parameters();
-        
-        String input = "resource://org/apache/cocoon/transformation/xinclude-input-1.xml";
-        String result = "resource://org/apache/cocoon/transformation/xinclude-result-1.xml";
-        String src =  null;
-        
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new
-        MockEnvironment(null);
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        CocoonComponentManager.enterEnvironment(
-        env, new WrapperComponentManager(this.getManager()), processor);
-        
-        assertEqual( load(result),
-        transform("xinclude", src, parameters, load(input)));
-        
-        CocoonComponentManager.leaveEnvironment();
+        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-1.xml",
+                "resource://org/apache/cocoon/transformation/xinclude-result-1.xml");
     }
+
     /** Testcase for xinclude simple text include
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ComponentManager enterEnvironment fails
      */
     public void testXInclude2() throws Exception {
         getLogger().debug("testXInclude2");
-        
-        Parameters parameters = new Parameters();
-        
-        String input = "resource://org/apache/cocoon/transformation/xinclude-input-2.xml";
-        String result = "resource://org/apache/cocoon/transformation/xinclude-result-2.xml";
-        String src =  null;
-        
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new
-        MockEnvironment(null);
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        CocoonComponentManager.enterEnvironment(
-        env, new WrapperComponentManager(this.getManager()), processor);
-        
-        assertEqual( load(result),
-        transform("xinclude", src, parameters, load(input)));
-        
-        CocoonComponentManager.leaveEnvironment();
+        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-2.xml",
+                "resource://org/apache/cocoon/transformation/xinclude-result-2.xml");
     }
     
+    /** Testcase for xinclude simple fallback
+    *
+    * @throws Exception if ComponentManager enterEnvironment fails
+    */
+   public void testXIncludeFallbackTest() throws Exception {
+       getLogger().debug("testXIncludeFallbackTest");
+       xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-fallbackTest.xml",
+               "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
+   }
 }
