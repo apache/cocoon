@@ -186,7 +186,7 @@
       Cocoon htmlunit testcases are now compatible with htmlunit 1.8.
     </action>
     <action dev="AG" type="update">
-      Updated xmlunit to 1.0.
+      Updated xmlunit to 1.0 and junit to 3.8.2.
     </action>
     <action dev="SG" type="add">
       Added calculated fields implementation.
