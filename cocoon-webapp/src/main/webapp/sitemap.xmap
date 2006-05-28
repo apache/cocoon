@@ -118,20 +118,6 @@
      | You may have as many pipelines in your sitemap as you like.
      +-->
  <map:pipelines>
-
-  <map:component-configurations>
-    <global-variables>
-       <!--+
-           | Define global parameters here:
-           |   <skin>my_skin</skin>
-           |   ...
-           | You can access them by {global:*name*}, e.g. {global:skin}.
-           | These values are inherited into sub-sitemaps and can
-           | be extended there.
-           +-->
-    </global-variables>
-  </map:component-configurations>
-
   <!-- main pipeline -->
   <map:pipeline>
 

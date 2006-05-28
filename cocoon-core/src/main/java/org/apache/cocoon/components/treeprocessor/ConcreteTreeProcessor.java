@@ -24,16 +24,13 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.core.container.spring.CocoonBeanFactory;
-import org.apache.cocoon.core.container.spring.NameForAliasAware;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -78,11 +75,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
-
-    private Configuration componentConfigurations;
-
-    /** The sitemap configurations. */
-    protected Map sitemapComponentConfigurations;
 
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
@@ -134,61 +126,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
         this.leaveSitemapEventListeners = leaveSitemapEventListeners;
-    }
-
-    /** Set the sitemap component configurations (called as part of the tree building process) */
-    public void setComponentConfigurations(Configuration componentConfigurations) {
-        this.componentConfigurations = componentConfigurations;
-        this.sitemapComponentConfigurations = null;
-    }
-
-    /**
-     * @see org.apache.cocoon.Processor#getComponentConfigurations()
-     */
-    public Map getComponentConfigurations() {
-        // do we have the sitemap configurations prepared for this processor?
-        if ( null == this.sitemapComponentConfigurations ) {
-
-            synchronized (this) {
-
-                if ( this.sitemapComponentConfigurations == null ) {
-                    // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null
-                                                     ? null
-                                                     : this.componentConfigurations.getChildren());
-
-                    if ( null != childs ) {
-
-                        if ( null == this.wrappingProcessor.parent ) {
-                            this.sitemapComponentConfigurations = new HashMap(12);
-                        } else {
-                            // copy all configurations from parent
-                            this.sitemapComponentConfigurations = new HashMap(
-                                        this.wrappingProcessor.parent.getComponentConfigurations());
-                        }
-
-                        // and now check for new configurations
-                        for(int m = 0; m < childs.length; m++) {
-                            String r = childs[m].getName();
-                            // FIXME: No alias handling in non bean context environment
-                            if (this.beanFactory != null && this.beanFactory instanceof NameForAliasAware)
-                                r = ((NameForAliasAware)this.beanFactory).getNameForAlias(r);
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
-                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
-                        }
-                    } else {
-                        // we don't have configurations
-                        if ( null == this.wrappingProcessor.parent ) {
-                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
-                        } else {
-                            // use configuration from parent
-                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations();
-                        }
-                    }
-                }
-            }
-        }
-        return this.sitemapComponentConfigurations;
     }
 
     /**

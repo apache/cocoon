@@ -33,16 +33,12 @@ import java.util.List;
  */
 public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        // Check for component configurations
-        Configuration child = config.getChild("component-configurations", false);
-        if (child != null) {
-            checkNamespace(child);
-            this.treeBuilder.getProcessor().setComponentConfigurations(child);
-        }
-
-        PipelinesNode node = new PipelinesNode();
+        final PipelinesNode node = new PipelinesNode();
         this.treeBuilder.setupNode(node, config);
 
         Configuration[] childConfigs = config.getChildren();
