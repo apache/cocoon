@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.forms.event.RepeaterListener;
-import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 

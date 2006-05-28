@@ -17,7 +17,6 @@ package org.apache.cocoon.forms.formmodel;
 
 import org.apache.cocoon.forms.event.RepeaterEvent;
 import org.apache.cocoon.forms.event.RepeaterListener;
-import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 
 /**
