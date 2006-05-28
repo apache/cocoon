@@ -21,18 +21,18 @@
     <xi:include href="test3.xml"/>
     <hr/>
 
-    <para><b><![CDATA[<xi:include href="test2.xml#xpointer(/page/content/para[2])"/>]]></b></para>
-    <xi:include href="test2.xml#xpointer(/page/content/para[2])"/>
+    <para><b><![CDATA[<xi:include href="test2.xml" xpointer="xpointer(/page/content/para[2])"/>]]></b></para>
+    <xi:include href="test2.xml" xpointer="xpointer(/page/content/para[2])"/>
     <hr/>
 
-    <para><b><![CDATA[<xi:include href="test2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>]]></b></para>
-    <xi:include href="test2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>
+    <para><b><![CDATA[<xi:include href="test2.xml" xpointer="xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>]]></b></para>
+    <xi:include href="test2.xml" xpointer="xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>
     <hr/>
 
     <para><b>Inclusion with an invalid xpointer expression, will cause fallback
         element content to be inserted:</b></para>
-    <para><b><![CDATA[<xi:include href="test2.xml#xpointer(">]]></b></para>
-    <xi:include href="test2.xml#xpointer(">
+    <para><b><![CDATA[<xi:include href="test2.xml" xpointer(">]]></b></para>
+    <xi:include href="test2.xml" xpointer="xpointer(">
       <a>
         <b>
           Any random content inside the xi:include element will be ignored.
@@ -46,9 +46,9 @@
     <hr/>
 
     <para><b><![CDATA[
-    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
+    <xi:include href="" xpointer="xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
         ]]></b></para>
-    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
+    <xi:include href="" xpointer="xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
     <hr/>
 
     <para><b>This sample demonstrates the recursive inclusion: here file4.xml
@@ -61,8 +61,8 @@
         one after the other. If one doesn't return a result, it is skipped and
         the next one is evaluated, until one is found that returns a
         result.</b></para>
-    <para><b><![CDATA[<xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>]]></b></para>
-    <xi:include href="test2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>
+    <para><b><![CDATA[<xi:include href="test2.xml" xpointer="xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>]]></b></para>
+    <xi:include href="test2.xml" xpointer="xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>
     <hr/>
   
   </content>
