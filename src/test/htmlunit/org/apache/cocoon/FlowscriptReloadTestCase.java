@@ -26,7 +26,7 @@ public class FlowscriptReloadTestCase
     final String pageurl = "/samples/flow/test/";
     final String flowscriptPath = "samples/flow/test/sendpage.js";
     final String paramToken = "@REPLACEME@";
-    final String resultXPath = "html/body//p[1]";
+    final String resultXPath = "html/body/p[1]";
 
     public void testFlowscriptReload()
         throws Exception
@@ -45,6 +45,10 @@ public class FlowscriptReloadTestCase
 
         final String expected2 = "replaceme-123";
         copyWebappFile(flowscriptPath, paramToken, expected2);
+        // AG: Default javacript check-reload time in cocoon.xconf is 4 seconds
+        // Let's wait 1 ms more, 4001 ms seems to be ok. 
+        Thread.sleep(4001);
+
         loadHtmlPage(pageurl+"showString");
         String result2 = evalXPath(resultXPath);
         assertEquals("After flowscript was modified", expected2, result2);
