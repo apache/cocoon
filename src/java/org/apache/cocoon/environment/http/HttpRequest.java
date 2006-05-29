@@ -17,6 +17,7 @@ package org.apache.cocoon.environment.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -314,7 +315,11 @@ public final class HttpRequest implements Request {
 
     public String getParameter(String name) {
         String value = this.req.getParameter(name);
-        if (this.form_encoding == null || value == null) {
+        if (this.form_encoding == null || this.form_encoding == null || value == null) {
+            return value;
+        }
+        // Form and container encoding are equal, skip expensive value decoding
+        if (this.container_encoding.equals(this.form_encoding)) {
             return value;
         }
         return decode(value);
@@ -327,7 +332,7 @@ public final class HttpRequest implements Request {
                 this.container_encoding = "ISO-8859-1";
             byte[] bytes = str.getBytes(this.container_encoding);
             return new String(bytes, form_encoding);
-        } catch (java.io.UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException uee) {
             throw new CascadingRuntimeException("Unsupported Encoding Exception", uee);
         }
     }

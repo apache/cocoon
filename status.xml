@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1625" due-to="Aleksander Bandelj" due-to-email="aleksander.bandelj@academa.si">
+      HTTPRequest: Redundant copying between container and form encoding.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1694" due-to="Pier Fumagalli" due-to-email="pier@betaversion.org">
       Error decommissioning component: org.apache.cocoon.components.store.impl.EHDefaultStore.
     </action>
