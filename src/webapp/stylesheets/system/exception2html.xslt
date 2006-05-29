@@ -44,7 +44,7 @@
           table { border-collapse: collapse; margin-top: 0.3em; }
           td { padding: 0.1em; }
         </style>
-        <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
+        <script src="{$contextPath}/scripts/main.js" type="text/javascript">&#160;</script>
       </head>
       <body>
         <xsl:attribute name="onload">
