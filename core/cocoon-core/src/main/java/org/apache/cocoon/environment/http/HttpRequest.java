@@ -390,7 +390,11 @@ public final class HttpRequest extends AbstractRequest {
 
     public String getParameter(String name) {
         String value = this.req.getParameter(name);
-        if (this.form_encoding == null || value == null) {
+        if (this.form_encoding == null || this.form_encoding == null || value == null) {
+            return value;
+        }
+        // Form and container encoding are equal, skip expensive value decoding
+        if (this.container_encoding.equals(this.form_encoding)) {
             return value;
         }
         return decode(value);
