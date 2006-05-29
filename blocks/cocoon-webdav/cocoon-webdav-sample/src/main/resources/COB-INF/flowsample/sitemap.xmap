@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<map:components>
+<map:components property-dir="properties">
   <map:generators default="file">
     <map:generator name="traverse" src="org.apache.cocoon.generation.TraversableGenerator"/>
     <map:generator name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
@@ -29,13 +29,6 @@
 </map:flow>
 
 <map:pipelines>
-  <map:component-configurations>
-    <global-variables>
-      <staging></staging>
-      <!--staging>webdav://localhost/webdav/flowsample/</staging-->
-    </global-variables>
-  </map:component-configurations>
-
   <map:pipeline>
     <map:match pattern="**/*.kont">
       <map:call continuation="{2}"/>

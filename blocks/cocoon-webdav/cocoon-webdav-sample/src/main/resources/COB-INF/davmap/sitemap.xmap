@@ -18,7 +18,7 @@
 
 <!-- =========================== Components ================================ -->
 
-  <map:components>
+  <map:components property-dir="properties">
   
     <map:generators default="file">
       <map:generator 
@@ -81,13 +81,6 @@
   </map:views>
 
   <map:pipelines>
-    
-    <map:component-configurations>
-      <global-variables>
-        <staging>repository:./repo/</staging>
-      </global-variables>
-    </map:component-configurations>
-    
 <!-- ========================= Private Resources =========================== -->
 
     <map:pipeline type="noncaching" internal-only="true">
