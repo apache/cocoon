@@ -5,12 +5,12 @@ for details.
 NB this concerns only for tests on the reponse of a running Cocoon server.
 Unit tests for Cocoon classes are as ever written as JUnit tests.
 
-To run htmlunit tests you have to download htmlunit 1.5 from
+To run htmlunit tests you have to download htmlunit 1.8 from
 http://sourceforge.net/project/showfiles.php?group_id=47038.  
 Unpack it into a convenient directory and set the path in your 
 local.build.properties, for example:
 
-    htmlunit.home = /my/htmlunit-1.5
+    htmlunit.home = /my/htmlunit-1.8
 
 Then build Cocoon, start the server, and run the tests:
 
