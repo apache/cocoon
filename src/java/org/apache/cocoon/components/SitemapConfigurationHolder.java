@@ -20,9 +20,10 @@ package org.apache.cocoon.components;
  * using this object.
  * 
  * @since 2.1
- * 
+ * @deprecated This functionality will be replaced in 2.2 with a more flexible
+ *             configuration mechanism.
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurationHolder.java,v 1.4 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version $Id$
  */
 public interface SitemapConfigurationHolder {
 

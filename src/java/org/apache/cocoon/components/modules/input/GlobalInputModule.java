@@ -31,6 +31,7 @@ import java.util.Map;
  * values are inherited from one sitemap to its sub sitemaps and can be
  * extended there.
  *
+ * @deprecated This module will be replaced by a better version in 2.2.
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */

@@ -33,6 +33,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * This "component" is a trick to get global variables on a per
  * sitemap base
  *
+ * @deprecated This component will be replaced by a better version in 2.2.
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
