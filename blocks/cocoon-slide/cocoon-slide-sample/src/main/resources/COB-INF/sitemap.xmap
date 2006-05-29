@@ -17,6 +17,9 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
+  <map:components property-dir="properties">
+  </map:components>
+
 <!-- ========================== Flowscript ================================= -->
 
   <map:flow language="javascript">
@@ -38,14 +41,6 @@
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
-   
-   <map:component-configurations>
-     <global-variables>
-       <namespace>cocoon</namespace>
-       <base>/samples/blocks/slide</base>
-     </global-variables>
-   </map:component-configurations>
-
 <!-- =========================== Screens ================================= -->
    
    <map:pipeline internal-only="false" type="noncaching">

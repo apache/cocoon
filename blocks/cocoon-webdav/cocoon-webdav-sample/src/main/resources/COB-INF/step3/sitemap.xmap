@@ -16,21 +16,13 @@
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<map:components>
+<map:components property-dir="properties">
   <map:generators default="file">
     <map:generator name="traverse" src="org.apache.cocoon.generation.TraversableGenerator"/>
   </map:generators>
 </map:components>
 
 <map:pipelines>
-
-  <map:component-configurations>
-    <global-variables>
-      <staging></staging>
-      <!--staging>webdav://localhost/webdav/step3/</staging-->
-    </global-variables>
-  </map:component-configurations>
-
   <map:pipeline>
 
     <map:match pattern="repo/">
