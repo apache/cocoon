@@ -80,6 +80,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     public static final String XINCLUDE_INCLUDE_ELEMENT = "include";
     public static final String XINCLUDE_FALLBACK_ELEMENT = "fallback";
     public static final String XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE = "href";
+    public static final String XINCLUDE_INCLUDE_ELEMENT_XPOINTER_ATTRIBUTE = "xpointer";
     public static final String XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE = "parse";
 
     private static final String XINCLUDE_CACHE_KEY = "XInclude"; 
@@ -93,7 +94,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         this.validity = new MultiSourceValidity(resolver, MultiSourceValidity.CHECK_ALWAYS); 
         this.xIncludePipe = new XIncludePipe(); 
         this.xIncludePipe.enableLogging(getLogger());
-        this.xIncludePipe.init(null);
+        this.xIncludePipe.init(null, null);
         super.setContentHandler(xIncludePipe);
         super.setLexicalHandler(xIncludePipe);
     }
@@ -158,10 +159,18 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
          * XIncludePipe. Used to detect loop inclusions.
          * */
         private String href;
+
+        /**
+         * Value of the xpointer attribute of the xi:include element that caused the creation of this
+         * XIncludePipe. Used to detect loop inclusions.
+         */
+        private String xpointer;
+
         private XIncludePipe parent;
 
-        public void init(String uri) {
+        public void init(String uri, String xpointer) {
             this.href = uri;
+            this.xpointer = xpointer;
             this.xmlBaseSupport = new XMLBaseSupport(resolver, getLogger());
         }
 
@@ -175,6 +184,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
 
         public String getHref() {
             return href;
+        }
+
+        public String getXpointer() {
+            return xpointer;
         }
 
         public void endDocument() throws SAXException { 
@@ -203,17 +216,14 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
                     String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
-                    if (href == null) {
-                        throw new SAXException(raw + " must have a 'href' attribute at " + getLocation());
-                    }
 
                     String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
+                    String xpointer = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_XPOINTER_ATTRIBUTE);
 
-                    if (null == parse) parse="xml";
                     xIncludeLevel++;
 
                     try {
-                        processXIncludeElement(href, parse);
+                        processXIncludeElement(href, parse, xpointer);
                     } catch (ProcessingException e) {
                         getLogger().debug("Rethrowing exception", e);
                         throw new SAXException(e);
@@ -361,25 +371,38 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             super.setDocumentLocator(locator);
         }
 
-        protected void processXIncludeElement(String href, String parse)
-        throws SAXException,ProcessingException,IOException {
+        protected void processXIncludeElement(String href, String parse, String xpointer)
+        throws SAXException, ProcessingException, IOException {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processing XInclude element: href="+href+", parse="+parse);
+                getLogger().debug("Processing XInclude element: href="+href+", parse="+parse+", xpointer="+xpointer);
             }
 
+            // Default for @parse is "xml"
+            if (parse == null) {
+                parse = "xml";
+            }
             Source url = null;
-            String suffix = "";
+
             try {
                 int fragmentIdentifierPos = href.indexOf('#');
                 if (fragmentIdentifierPos != -1) {
-                    suffix = href.substring(fragmentIdentifierPos + 1);
+                    getLogger().warn("Fragment identifer found in 'href' attribute: " + href + 
+                            "\nFragment identifiers are forbidden by the XInclude specification. " +
+                            "They are still handled by XIncludeTransformer for backward " +
+                            "compatibility, but their use is deprecated and will be prohibited " +
+                            "in a future release.  Use the 'xpointer' attribute instead.");
+                    if (xpointer == null) {
+                        xpointer = href.substring(fragmentIdentifierPos + 1);
+                    }
                     href = href.substring(0, fragmentIdentifierPos);
                 }
 
-                // an empty href is a reference to the current document -- this can be different than the current base
-                if (href.equals("")) {
-                    if (this.href == null)
+                // An empty or absent href is a reference to the current document -- this can be different than the current base
+                if (href == null || href.length() == 0) {
+                    if (this.href == null) {
                         throw new SAXException("XIncludeTransformer: encountered empty href (= href pointing to the current document) but the location of the current document is unknown.");
+                    }
+                    // The following can be simplified once fragment identifiers are prohibited
                     int fragmentIdentifierPos2 = this.href.indexOf('#');
                     if (fragmentIdentifierPos2 != -1)
                         href = this.href.substring(0, fragmentIdentifierPos2);
@@ -389,19 +412,17 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
 
                 url = xmlBaseSupport.makeAbsolute(href);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("URL: " + url.getURI() + "\nSuffix: " + suffix);
+                    getLogger().debug("URL: " + url.getURI() + "\nXPointer: " + xpointer);
                 }
 
                 // add the source to the SourceValidity 
                 validity.addSource(url); 
- 
-                // check loop inclusion
-                String canonicURI = url.getURI() + (suffix.length() > 0 ? "#" + suffix: "");
-                if (isLoopInclusion(canonicURI))
-                    throw new ProcessingException("Detected loop inclusion of " + canonicURI);
 
                 if (parse.equals("text")) {
                     getLogger().debug("Parse type is text");
+                    if (xpointer != null) {
+                        throw new SAXException("xpointer attribute must not be present when parse='text': " + getLocation());
+                    }
                     InputStream is = null;
                     InputStreamReader isr = null;
                     Reader reader = null;
@@ -420,19 +441,25 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         if (is != null) is.close();
                     }
                 } else if (parse.equals("xml")) {
+                    getLogger().debug("Parse type is XML");
+
+                    // Check loop inclusion
+                    if (isLoopInclusion(url.getURI(), xpointer)) {
+                        throw new ProcessingException("Detected loop inclusion of href=" + url.getURI() + ", xpointer=" + xpointer);
+                    }
+
                     XIncludePipe subPipe = new XIncludePipe();
                     subPipe.enableLogging(getLogger());
-                    subPipe.init(canonicURI);
+                    subPipe.init(url.getURI(), xpointer);
                     subPipe.setConsumer(xmlConsumer);
                     subPipe.setParent(this);
 
-                    getLogger().debug("Parse type is XML");
                     try {
-                        if (suffix.length() > 0) {
-                            XPointer xpointer;
-                            xpointer = XPointerFrameworkParser.parse(NetUtils.decodePath(suffix));
-                            XPointerContext context = new XPointerContext(suffix, url, subPipe, getLogger(), manager);
-                            xpointer.process(context);
+                        if (xpointer != null && xpointer.length() > 0) {
+                            XPointer xptr;
+                            xptr = XPointerFrameworkParser.parse(NetUtils.decodePath(xpointer));
+                            XPointerContext context = new XPointerContext(xpointer, url, subPipe, getLogger(), manager);
+                            xptr.process(context);
                         } else {
                             SourceUtil.toSAX(url, new IncludeXMLConsumer(subPipe));
                         }
@@ -464,6 +491,8 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         fallBackException = e;
                         getLogger().error("Error processing an xInclude, will try to use fallback.", e);
                     }
+                } else {
+                    throw new SAXException("Found 'parse' attribute with unknown value " + parse + " at " + getLocation());
                 }
             } catch (SourceException se) {
                 throw SourceUtil.handle(se);
@@ -474,14 +503,18 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             }
         }
 
-        public boolean isLoopInclusion(String uri) {
-            if (uri.equals(this.href)) {
+        public boolean isLoopInclusion(String uri, String xpointer) {
+            if (xpointer == null) {
+                xpointer = "";
+            }
+
+            if (uri.equals(this.href) && xpointer.equals(this.xpointer == null ? "" : this.xpointer)) {
                 return true;
             }
 
             XIncludePipe parent = getParent();
             while (parent != null) {
-                if (uri.equals(parent.getHref())) {
+                if (uri.equals(parent.getHref()) && xpointer.equals(parent.getXpointer() == null ? "" : parent.getXpointer())) {
                     return true;
                 }
                 parent = parent.getParent();
