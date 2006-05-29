@@ -52,7 +52,12 @@ final class AvalonServiceManager
             throw new ServiceException("AvalonServiceManager",
                                        "Component with '" + role + "' is not defined in this service manager.");
         }
-        return this.beanFactory.getBean(role);
+        try {
+            return this.beanFactory.getBean(role);
+        } catch (BeansException be) {
+            throw new ServiceException("AvalonServiceManager",
+                                       "Exception during lookup of component with '" + role + "'.", be);
+        }
     }
 
     /**
