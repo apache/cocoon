@@ -25,6 +25,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
+ * This filter can be used as a wrapper around a "real" filter to
+ * support the paranoid class loader.
+ *
  * @version $Id$
  */
 public class ParanoidServletFilter implements Filter {
