@@ -56,7 +56,16 @@ public class AvalonServiceSelector
         if ( key == null || key.toString().length() == 0 ) {
             key = this.defaultKey;
         }
-        return this.beanFactory.getBean(this.role + key);
+        if ( !this.isSelectable(key) ) {
+            throw new ServiceException("AvalonServiceSelector",
+                                       "Component with role '" + this.role + "' and key '" + key + "' is not defined in this service selector.");
+        }
+        try {
+            return this.beanFactory.getBean(this.role + key);
+        } catch (BeansException be) {
+            throw new ServiceException("AvalonServiceSelector",
+                                       "Exception during lookup of component with role '" + this.role + "' and key '" + key + "'.", be);
+        }
     }
 
     /**
