@@ -22,12 +22,13 @@
     version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:h="http://apache.org/cocoon/request/2.0"
+    xmlns:svg="http://www.w3.org/2000/svg" 
     >
 
     <xsl:param name="fillColor" select="'#330000'"/>
 
     <xsl:template name="main" match="/">
-        <svg width="600" height="500">
+        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
             <defs>
                 <filter id="blur1">
                     <feGaussianBlur stdDeviation="3"/>
@@ -40,7 +41,7 @@
             <g title="this is a tooltip">
                 <rect
                     style="{concat('fill:',$fillColor,';stroke:#000000;stroke-width:4;filter:url(#blur1);')}"
-                    x="30" y="30" rx="20" ry="20" width="500" height="400"/>
+                    x="30" y="30" rx="20" ry="20" width="700" height="400"/>
                 <text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="80">
                     <xsl:value-of select="concat('color:',$fillColor)"/>
                 </text>
@@ -50,9 +51,9 @@
     </xsl:template>
 
     <xsl:template match="h:header">
-        <text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="{40 * (2 + position())}">
+        <svg:text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="{40 * (2 + position())}">
             <xsl:value-of select="concat(@name,':',.)"/>
-        </text>
+        </svg:text>
     </xsl:template>
 
 </xsl:stylesheet>
