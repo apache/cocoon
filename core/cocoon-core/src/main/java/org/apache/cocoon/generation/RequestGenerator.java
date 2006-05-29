@@ -183,6 +183,12 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
         }
         end("configurationParameters");
 
+        start("remoteUser", attr);
+        if (request.getRemoteUser() != null) {
+            data(request.getRemoteUser());
+        }
+        end("remoteUser");
+
         end("request");
 
         this.contentHandler.endPrefixMapping(PREFIX);
