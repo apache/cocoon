@@ -91,24 +91,37 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
         xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-2.xml",
                 "resource://org/apache/cocoon/transformation/xinclude-result-2.xml");
     }
-    
+
     /** Testcase for xinclude simple fallback
-    *
-    * @throws Exception if ComponentManager enterEnvironment fails
-    */
-   public void testXIncludeSimpleFallbackTest() throws Exception {
-       getLogger().debug("testXIncludeSimpleFallbackTest");
+     * Check issue: COCOON-1489
+     *
+     * @throws Exception if ComponentManager enterEnvironment fails
+     */
+   public void testXIncludeSimpleFallback() throws Exception {
+       getLogger().debug("testXIncludeSimpleFallback");
        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-fallbackTest.xml",
                "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
    }
-   
+
    /** Testcase for xinclude with a nested xinclude elemento into the fallback
+    * Check issue: COCOON-1489
+    *
+    * @throws Exception if ComponentManager enterEnvironment fails
+    */
+  public void testXIncludeNestedXincludeElementInAFallback() throws Exception {
+      getLogger().debug("testXIncludeNestedXincludeElementInAFallback");
+      xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
+              "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
+  }
+
+  /** Testcase for xinclude simple fallback when parse attribute is 'text'
+   *  Check issue: COCOON-1110 
    *
    * @throws Exception if ComponentManager enterEnvironment fails
    */
-  public void testXIncludeNestedXincludeElementInAFallbackTest() throws Exception {
-      getLogger().debug("testXIncludeNestedXincludeElementInAFallbackTest");
-      xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
+  public void testXIncludeSimpleFallbackForTextParse() throws Exception {
+      getLogger().debug("testXIncludeSimpleFallbackForTextParse");
+      xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-simpleFallbackForTextParseTest.xml",
               "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
   }
 }
