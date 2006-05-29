@@ -46,6 +46,7 @@ import org.apache.cocoon.xml.XMLBaseSupport;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity; 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -435,6 +436,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         while ((read = reader.read(ary)) != -1) {
                             super.characters(ary,0,read);
                         }
+                    } catch (SourceNotFoundException e) {
+                        useFallback = true;
+                        fallBackException = new CascadingException("Resource not found: " + url.getURI());
+                        getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } finally {
                         if (reader != null) reader.close();
                         if (isr != null) isr.close();
