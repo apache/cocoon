@@ -19,7 +19,7 @@
 
 <!-- =========================== Components =================================== -->
 
-	<map:components>
+	<map:components property-dir="properties">
 		<map:transformers default="xslt">
 			<map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
 				<catalogues default="forms">
@@ -61,23 +61,6 @@
 <!-- =========================== Pipelines ================================= -->
 
 <map:pipelines>
-
-		<map:component-configurations>
-			<global-variables>
-				<history>_query_bean_history_</history><!-- the name of the Session Attribute, used to store History -->
-				<lucene-analyzer>org.apache.lucene.analysis.standard.StandardAnalyzer</lucene-analyzer><!-- the name of the Lucene Analyzer to use -->	
-				<!--+
-						|		The path to the Lucene Index to use. 
-						|
-						| 	If you supply an absolute path, this will be used as-is
-						| 	If you supply a non-absolute path, this will be used inside the 
-						|		servlet's work-directory. If stored here, it will be destroyed on shutdown.
-						|
-						+-->
-				<lucene-directory>cocoon-docs</lucene-directory>
-			</global-variables>
-		</map:component-configurations>
-
 		<map:pipeline internal-only="true">
 		
 			<map:act type="locale">

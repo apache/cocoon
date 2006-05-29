@@ -23,7 +23,7 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Components ============================== -->
-  <map:components>
+  <map:components property-dir="properties">
     <map:actions>
       <!-- Action to store locale name as cookie. -->
       <map:action name="cookie-locale" src="org.apache.cocoon.acting.LocaleAction">
@@ -49,16 +49,6 @@
 
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
-         <!--+
-             | (Re)Define global parameters, used in the input modules GlobalInputModule demo.
-    <map:component-configurations>
-      <global-variables>
-         <global-sub-sitemap>This value is defined in the samples/modules/sitemap.xmap</global-sub-sitemap>
-         <global-sitemap-override>This value was defined in the samples/sitemap.xmap, but was overridden by samples/modules/sitemap.xmap</global-sitemap-override>
-      </global-variables>
-    </map:component-configurations>
-             +-->
-
     <map:pipeline>
 
       <!-- Default URL matcher. Matches '/' URLs-->

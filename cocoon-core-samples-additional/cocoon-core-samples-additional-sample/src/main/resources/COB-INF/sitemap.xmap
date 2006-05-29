@@ -21,7 +21,7 @@
 
   <!-- ========================= Components ================================ -->
 
-  <map:components>
+  <map:components property-dir="properties">
     <map:generators default="file">
       <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
       <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
@@ -57,16 +57,6 @@
   <!-- ========================== Pipelines ================================ -->
 
   <map:pipelines>
-         <!--+
-             | Define global parameters, used in the input modules GlobalInputModule demo.
-    <map:component-configurations>
-      <global-variables>
-         <global-sitemap>This value is defined in the samples/sitemap.xmap</global-sitemap>
-         <global-sitemap-override>This value is defined in the samples/sitemap.xmap, should be overridden by samples/modules/sitemap.xmap</global-sitemap-override>
-      </global-variables>
-    </map:component-configurations>
-             +-->
-
     <map:pipeline>
       <map:match pattern="v">
         <map:generate type="virtual"/>
