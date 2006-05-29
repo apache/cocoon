@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="add" fixes-bug="COCOON-1110">
+      XIncludeTransformer: xi:fallback fail when use parse="text".
+    </action>
     <action dev="AG" type="add" fixes-bug="COCOON-1753" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
       XInclude transformer uses href fragment rather than xpointer attribute (spec conformance).
       The XInclude 1.0 spec (see http://www.w3.org/TR/xinclude/#include_element) states the following
