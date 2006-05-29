@@ -182,7 +182,7 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
-    <action dev="AG" type="add" fixes-bug="COCOON-1110">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1110">
       XIncludeTransformer: xi:fallback fail when use parse="text".
     </action>
     <action dev="AG" type="add" fixes-bug="COCOON-1753" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
