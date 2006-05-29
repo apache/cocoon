@@ -21,7 +21,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.4 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @deprecated This functionality will be replaced in 2.2 with a more flexible
+ *             configuration mechanism.
+ * @version CVS $Id$
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {

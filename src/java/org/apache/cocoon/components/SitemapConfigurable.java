@@ -25,8 +25,10 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * each time the component is looked up!
  *
  * @since 2.1
+ * @deprecated This functionality will be replaced in 2.2 with a more flexible
+ *             configuration mechanism.
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface SitemapConfigurable {
 
