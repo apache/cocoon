@@ -315,7 +315,7 @@ public final class HttpRequest implements Request {
 
     public String getParameter(String name) {
         String value = this.req.getParameter(name);
-        if (this.form_encoding == null || this.form_encoding == null || value == null) {
+        if (this.form_encoding == null || this.container_encoding == null || value == null) {
             return value;
         }
         // Form and container encoding are equal, skip expensive value decoding
