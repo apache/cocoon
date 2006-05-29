@@ -19,7 +19,7 @@
 
   <!-- ========================= Components ================================ -->
 
-  <map:components logger="portal">
+  <map:components logger="portal" property-dir="conf/properties">
     <map:include src="conf/cocoon-portal-sample.xconf"/>
     <map:include src="conf/cocoon-portal-tools.xconf"/>
 
@@ -81,16 +81,6 @@
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
-    <map:component-configurations>
-      <!-- select skin to use -->
-      <map:global-variables>
-		<skin>modern</skin>
-    	<mainTitle>Cocoon Portal</mainTitle>
-	    <toolsTitle>Cocoon Portal Tools</toolsTitle>
-      </map:global-variables>
-
-    </map:component-configurations>
-
     <!-- The internal pipelines for loading and saving -->
     <map:pipeline internal-only="true">
       <map:match pattern="sunrise-authuser">
