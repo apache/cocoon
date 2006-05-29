@@ -28,6 +28,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 
 /**
@@ -43,7 +44,7 @@ import org.apache.excalibur.source.TraversableSource;
  *</pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: CopySourceAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version $Id$
  */
 public class CopySourceAction extends ServiceableAction implements ThreadSafe
 {
@@ -89,17 +90,9 @@ public class CopySourceAction extends ServiceableAction implements ThreadSafe
         
         // And transfer all content.
         try {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = is.read(buffer, 0, buffer.length)) > 0) {
-                os.write(buffer, 0, len);
-            }
-            os.close();
-        } catch(Exception e) {
-            if (wdest.canCancel(os)) {
-                wdest.cancel(os);
-            }
+            SourceUtil.copy(is, os);
         } finally {
+            os.close();
             is.close();
         }
         // Success !
