@@ -18,10 +18,15 @@
 <!--+
     | Authentication (with flow) block samples sitemap.
     |
-    | CVS $Id$
+    | @version $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- Include the configuration for the authentication manager. -->
+  <map:components>
+    <map:include src="conf/auth-manager-flow.xconf"/>
+  </map:components>
 
   <map:flow language="javascript">
      <map:script src="flow/sample.js"/>
@@ -29,17 +34,6 @@
 
 <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
-    <map:component-configurations>
-      <authentication-manager>
-        <handlers>
-          <handler name="flowdemohandler">
-            <redirect-to uri="cocoon:/login"/>
-            <authentication uri="cocoon:raw:/authenticate"/>
-          </handler>
-        </handlers>
-      </authentication-manager>
-    </map:component-configurations>
-
     <map:pipeline>
       <map:match pattern="">
         <map:redirect-to uri="login" session="true"/>

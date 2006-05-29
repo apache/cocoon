@@ -19,7 +19,7 @@
 
   <!-- ========================= Components ================================ -->
 
-  <map:components logger="portal">
+  <map:components logger="portal" property-dir="conf/properties">
     <map:generators default="file">
       <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
     </map:generators>
@@ -83,27 +83,7 @@
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
-
-    <map:component-configurations>
-      <authentication-manager>
-        <handlers>
-          <handler name="portal-handler">
-            <redirect-to uri="cocoon:/login"/>
-            <authentication uri="cocoon:raw:/sunrise-authuser"/>
-          </handler>
-        </handlers>
-      </authentication-manager>
-
-      <!-- select skin to use -->
-      <map:global-variables>
-				<skin>common</skin>
-				<mainTitle>Cocoon Portal</mainTitle>
-				<toolsTitle>Cocoon Portal Tools</toolsTitle>
-      </map:global-variables>
-
-    </map:component-configurations>
-
-  <map:pipeline>
+    <map:pipeline>
     <!-- This action sets the portal name for the current request and
          initializes the portal service. So this should be the first
          task for every request!
