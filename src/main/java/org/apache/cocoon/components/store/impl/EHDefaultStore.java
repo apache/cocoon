@@ -27,6 +27,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
@@ -266,6 +267,7 @@ public class EHDefaultStore
                 this.timeToLiveSeconds, this.timeToIdleSeconds, true, 120);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
+        getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
     }
 
     /**
@@ -278,10 +280,30 @@ public class EHDefaultStore
             this.storeJanitor = null;
         }
         this.manager = null;
-        if ( this.cacheManager != null ) {
-            this.cacheManager.shutdown();
-            this.cacheManager = null;
+        /*
+         * EHCache can be a bitch when shutting down. Basically every cache registers
+         * a hook in the Runtime for every persistent cache, that will be executed when
+         * the JVM exit. It might happen (though) that we are shutting down Cocoon
+         * because of the same event (someone sending a TERM signal to the VM).
+         * So what we need to do here is to check if the cache itself is still alive,
+         * then we're going to shutdown EHCache entirely (if there are other caches open
+         * they will be shut down as well), if the cache is not alive, either another
+         * instance of this called the shutdown method on the CacheManager (thanks) or
+         * otherwise the hook had time to run before we got here.
+         */
+        synchronized (this.cache) {
+            if (Status.STATUS_ALIVE == this.cache.getStatus()) {
+                try {
+                    getLogger().info("Disposing EHCache cache \"" + this.cacheName + "\".");
+                    this.cacheManager.shutdown();
+                } catch (IllegalStateException e) {
+                    getLogger().error("Error disposing EHCache cache \"" + this.cacheName + "\".", e);
+                }
+            } else {
+                getLogger().info("EHCache cache \"" + this.cacheName + "\" already disposed.");
+            }
         }
+        this.cacheManager = null;
         this.cache = null;
     }
 
