@@ -58,27 +58,40 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
                 "resource://org/apache/cocoon/transformation/xinclude-result-2.xml");
     }
 
-    // TODO: AG (2006-05-29): The following 2 testcases fail, due an unexpeced exception: 
+    // TODO: AG (2006-05-29): The following 3 testcases fail, due an unexpeced exception: 
     // org.springframework.beans.factory.NoSuchBeanDefinitionException
     // Once the avalon support into spring is totally transparent, this should work again.
     // Another option is to rewrite the XInclude transformer to only use spring framework.
     /** Testcase for xinclude simple fallback
-    *
-    * @throws Exception if ComponentManager enterEnvironment fails
-    */
-   /*public void testXIncludeSimpleFallbackTest() throws Exception {
-       getLogger().debug("testXIncludeSimpleFallbackTest");
+     * Check issue: COCOON-1489
+     *
+     * @throws Exception if ComponentManager enterEnvironment fails
+     */
+   /*public void testXIncludeSimpleFallback() throws Exception {
+       getLogger().debug("testXIncludeSimpleFallback");
        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-fallbackTest.xml",
                "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
    }*/
 
    /** Testcase for xinclude with a nested xinclude elemento into the fallback
+    * Check issue: COCOON-1489
+    *
+    * @throws Exception if ComponentManager enterEnvironment fails
+    */
+    /*public void testXIncludeNestedXincludeElementInAFallback() throws Exception {
+        getLogger().debug("testXIncludeNestedXincludeElementInAFallback");
+        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
+            "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
+    }*/
+
+  /** Testcase for xinclude simple fallback when parse attribute is 'text'
+   *  Check issue: COCOON-1110 
    *
    * @throws Exception if ComponentManager enterEnvironment fails
    */
-  /*public void testXIncludeNestedXincludeElementInAFallbackTest() throws Exception {
-      getLogger().debug("testXIncludeNestedXincludeElementInAFallbackTest");
-      xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
-              "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
-  }*/
+    /*public void testXIncludeSimpleFallbackForTextParse() throws Exception {
+        getLogger().debug("testXIncludeSimpleFallbackForTextParse");
+        xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-simpleFallbackForTextParseTest.xml",
+            "resource://org/apache/cocoon/transformation/xinclude-result-fallbackTest.xml");
+    }*/
 }
