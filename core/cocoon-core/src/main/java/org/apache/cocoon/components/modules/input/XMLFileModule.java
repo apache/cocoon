@@ -275,7 +275,7 @@ public class XMLFileModule extends AbstractJXPathModule
             // by assigning the source uri to this.src the last one will be the default
             // OTOH caching / reload parameters can be specified in one central place
             // if multiple file tags are used.
-            this.documents.put(files[i], new DocumentHelper(reload, cache, this.src, this));
+            this.documents.put(this.src, new DocumentHelper(reload, cache, this.src, this));
         }
 
         // init caches
