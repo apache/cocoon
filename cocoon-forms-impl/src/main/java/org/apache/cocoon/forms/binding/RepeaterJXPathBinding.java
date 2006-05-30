@@ -292,7 +292,6 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Tests if any of the elements in a List is not null.
      * @param list
-     * @return
      */
     private boolean hasNonNullElements(List list) {
         Iterator iter = list.iterator();
