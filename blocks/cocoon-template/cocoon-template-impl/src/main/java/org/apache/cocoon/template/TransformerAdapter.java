@@ -61,9 +61,9 @@ public class TransformerAdapter extends ServiceableTransformer {
         }
 
         public void dispose() {
-            setParsingContext( null );
             this.manager.release(this.parsingContext.getInstructionFactory());
             this.manager.release(this.parsingContext.getStringTemplateParser());
+            setParsingContext(null);
         }
 
         public void endDocument() throws SAXException {
