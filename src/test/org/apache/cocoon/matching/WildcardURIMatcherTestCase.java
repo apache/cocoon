@@ -28,14 +28,33 @@ public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
         Parameters parameters = new Parameters();
 
         Map result = match("wildcard-uri", "**", parameters);
-        System.out.println(result);
         assertNotNull("Test if resource exists", result);
         assertEquals("Test for **", "test/foo/bla/end", result.get("1"));
         
         result = match("wildcard-uri", "**/bla/*", parameters);
-        System.out.println(result);
         assertNotNull("Test if resource exists", result);
         assertEquals("Test for **/bla/* {1}", "test/foo", result.get("1"));
         assertEquals("Test for **/bla/* {2}", "end", result.get("2"));
+    }
+
+    public void testWildcardURIMatchSimplePattern() throws Exception {
+        getRequest().setRequestURI("/test");
+
+        final Parameters parameters = new Parameters();
+
+        Map result = match("wildcard-uri", "*", parameters);
+        assertNotNull("Test if resource exists", result);
+        assertEquals("Test for *", "test", result.get("1"));
+    }
+
+    public void testWildcardURIMatchDoublePattern() throws Exception {
+        getRequest().setRequestURI("/test/something.xmlbla.xml");
+
+        final Parameters parameters = new Parameters();
+
+        Map result = match("wildcard-uri", "*/*.xml", parameters);
+        assertNotNull("Test if resource exists", result);
+        assertEquals("Test for */*.xml", "test", result.get("1"));
+        assertEquals("Test for */*.xml", "something.xmlbla", result.get("2"));
     }
 }
