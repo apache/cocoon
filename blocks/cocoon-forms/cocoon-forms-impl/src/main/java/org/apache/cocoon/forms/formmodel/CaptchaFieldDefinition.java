@@ -20,7 +20,7 @@ import org.apache.avalon.framework.context.Context;
 /**
  * A {@link FieldDefinition} for {@link CaptchaField}s.
  * 
- * @see http://www.captcha.net/
+ * @see <a href="http://www.captcha.net">www.captcha.net</a>
  * @version $Id$
  */
 public class CaptchaFieldDefinition extends FieldDefinition {

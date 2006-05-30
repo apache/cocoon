@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.binding;
 
 import org.apache.cocoon.forms.binding.library.Library;
+import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
@@ -76,10 +77,16 @@ public abstract class AbstractCustomBinding implements Binding {
      * @throws BindingException
      */
     public final void loadFormFromModel(Widget frmModel, Object objModel) throws BindingException {
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informStartLoadingModel();
+        }
         try {
             doLoad(frmModel, (JXPathContext)objModel);
         } catch (Exception e) {
             throw new BindingException("Error executing custom binding", e);
+        }
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informEndLoadingModel();
         }
     }
 
@@ -93,10 +100,16 @@ public abstract class AbstractCustomBinding implements Binding {
      * @throws BindingException
      */
     public final void saveFormToModel(Widget frmModel, Object objModel) throws BindingException {
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informStartSavingModel();
+        }
         try {
             doSave(frmModel, (JXPathContext)objModel);
         } catch (Exception e) {
             throw new BindingException("Error executing custom binding", e);
+        }
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informEndSavingModel();
         }
     }
 
