@@ -182,6 +182,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1489" due-to="Jason Johnston" due-to-email="cocoon@lojjic.net">
+      XIncludeTransformer: XInclude transformer does not handle fallback correctly.
+    </action>
+    <action dev="AG" type="fix" fixes-bug="COCOON-1266" due-to="Martin Kuck" due-to-email="martin.kuck@multi-m.de">
+      ResourceReader fails to add HTTP headers.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1840" due-to="Guillaume Déflache" due-to-email="guillaume@anyware-tech.com">
       XMLFileModule: file-specific configuration ignored.
     </action>
