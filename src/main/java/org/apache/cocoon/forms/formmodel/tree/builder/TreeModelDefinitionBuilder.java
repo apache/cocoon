@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
+import org.apache.cocoon.forms.formmodel.tree.TreeModel;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
 import org.w3c.dom.Element;
 
@@ -25,7 +26,7 @@ import org.w3c.dom.Element;
  */
 public interface TreeModelDefinitionBuilder {
     
-    static final String ROLE = TreeModelDefinitionBuilder.class.getName();
+    String ROLE = TreeModelDefinitionBuilder.class.getName();
 
     TreeModelDefinition build(Element treeModelElement) throws Exception;
 }

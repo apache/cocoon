@@ -63,8 +63,6 @@ public class TreeSelectionEvent extends WidgetEvent {
     
     /**
      * Is the first path a new addition to the selection?
-     * 
-     * @return
      */
     public boolean isAddedPath() {
         return this.isNew[0];

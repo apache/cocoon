@@ -25,7 +25,7 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  * A {@link org.apache.cocoon.forms.validation.WidgetValidator} that relies on a CAPTCHA
  * test.
  * 
- * @see http://www.captcha.net/
+ * @see <a href="http://www.captcha.net">www.captcha.net</a>
  * @version $Id$
  */
 public class CaptchaValidator implements WidgetValidator {

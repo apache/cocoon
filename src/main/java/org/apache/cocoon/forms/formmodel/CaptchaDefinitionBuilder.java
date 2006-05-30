@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link CaptchaFieldDefinition}s.
  *
- * @see http://www.captcha.net/
+ * @see <a href="http://www.captcha.net">www.captcha.net</a>
  * @version $Id$
  */
 public class CaptchaDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder implements Contextualizable, ThreadSafe {

@@ -179,6 +179,53 @@ public class Form extends AbstractContainerWidget
     }
 
     /**
+     * Inform the form that the values will be loaded.
+     */
+    public void informStartLoadingModel() {
+        if (this.phase != ProcessingPhase.LOAD_MODEL) {
+            throw new IllegalStateException("Cannot load form in phase " + this.phase);
+        }
+    }
+
+    /**
+     * Inform the form that the values are loaded.
+     */
+    public void informEndLoadingModel() {
+        // Notify the end of the current phase
+        if (this.listener != null) {
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+        }
+        // TODO - Should we change the phase?
+    }
+
+    /**
+     * Inform the form that the values will be saved.
+     */
+    public void informStartSavingModel() {
+        if (this.phase != ProcessingPhase.VALIDATE) {
+            throw new IllegalStateException("Cannot save model in phase " + this.phase);
+        }
+        if (!isValid()) {
+            throw new IllegalStateException("Cannot save an invalid form.");
+        }
+        this.phase = ProcessingPhase.SAVE_MODEL;
+    }
+
+    /**
+     * Inform the form that the values are saved.
+     */
+    public void informEndSavingModel() {
+        if (this.phase != ProcessingPhase.SAVE_MODEL) {
+            throw new IllegalStateException("Cannot save model in phase " + this.phase);
+        }
+        // Notify the end of the current phase
+        if (this.listener != null) {
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+        }
+        // TODO - Should we change the phase?
+    }
+
+    /**
      * Get the locale to be used to process this form.
      *
      * @return the form's locale.
@@ -234,27 +281,6 @@ public class Form extends AbstractContainerWidget
     public void setFormHandler(FormHandler formHandler) {
         this.formHandler = formHandler;
     }
-
-// TODO: going through the form for load and save ensures state consistency. To we add this or
-// keep the binding strictly separate ?
-//    public void load(Object data, Binding binding) {
-//        if (this.phase != ProcessingPhase.LOAD_MODEL) {
-//            throw new IllegalStateException("Cannot load form in phase " + this.phase);
-//        }
-//        binding.loadFormFromModel(this, data);
-//    }
-//
-//    public void save(Object data, Binding binding) throws BindingException {
-//        if (this.phase != ProcessingPhase.VALIDATE) {
-//            throw new IllegalStateException("Cannot save model in phase " + this.phase);
-//        }
-//
-//        if (!isValid()) {
-//            throw new IllegalStateException("Cannot save an invalid form.");
-//        }
-//        this.phase = ProcessingPhase.SAVE_MODEL;
-//        binding.saveFormToModel(this, data);
-//    }
 
     public void addProcessingPhaseListener(ProcessingPhaseListener listener) {
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
