@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1741" due-to="Freek Segers" due-to-email="freek.segers@nerocmediaware.nl">
+      CForms: Output widget does not initialize from &lt;fd:initial-value&gt;.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1744" due-to="Tim Williams" due-to-email="williamstw@gmail.com">
       Template block: NullPointerException.
     </action>
