@@ -46,14 +46,14 @@ import com.ibm.icu.math.BigDecimal;
  */
 public class CalculatedField extends Field {
 
-    private CalculatedFieldDefinition definition = null;
+//    private CalculatedFieldDefinition definition;
     private CalculatedFieldAlgorithm algorithm = null;
         
     private WidgetFinder finder = null;
     private RecalculateValueListener mockListener = new RecalculateValueListener();
     
     private boolean needRecaulculate = false;
-    private boolean initialized = false;
+//    private boolean initialized = false;
     private boolean calculating = false;
 
     
@@ -63,7 +63,7 @@ public class CalculatedField extends Field {
     protected CalculatedField(CalculatedFieldDefinition definition) {
         super(definition);
         
-        this.definition = definition;
+//        this.definition = definition;
         this.algorithm = definition.getAlgorithm();
     }
     
@@ -74,7 +74,7 @@ public class CalculatedField extends Field {
         this.finder.addRepeaterListener(new InstallHandlersListener());
         installHandlers();
         
-        this.initialized = true;
+//        this.initialized = true;
     }
     
     /**

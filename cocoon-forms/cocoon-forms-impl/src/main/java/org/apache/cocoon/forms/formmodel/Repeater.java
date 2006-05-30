@@ -277,7 +277,7 @@ public class Repeater extends AbstractWidget
     }
 
     /**
-     * @deprecated {@see #clear()}
+     * @deprecated See {@link #clear()}
      *
      */
     public void removeRows() {

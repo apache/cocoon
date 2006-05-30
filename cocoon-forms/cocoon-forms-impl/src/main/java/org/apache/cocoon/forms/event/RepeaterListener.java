@@ -16,7 +16,7 @@
 package org.apache.cocoon.forms.event;
 
 /**
- * Listeners for {@link ListenerEvent}s
+ * Listeners for {@link RepeaterEvent}s
  * 
  * @version $Id$
  */

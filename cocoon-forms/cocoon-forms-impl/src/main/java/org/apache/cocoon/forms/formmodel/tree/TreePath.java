@@ -79,7 +79,7 @@ public class TreePath {
      * TreePath. The first element (index 0) is the root.
      * 
      * @return an array of Objects representing the TreePath
-     * @see #TreePath(Object[])
+     * @see #TreePath()
      */
     public Object[] getObjectPath(TreeModel model) {
         int i = getPathCount();
@@ -96,7 +96,7 @@ public class TreePath {
      * DefaultTreeModel this will return an instance of TreeNode.
      * 
      * @return the Object at the end of the path
-     * @see #TreePath(Object[])
+     * @see #TreePath()
      */
     public Object getLastPathObject(TreeModel model) {
         Object parent;
