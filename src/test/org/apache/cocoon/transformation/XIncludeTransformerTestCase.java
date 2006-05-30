@@ -111,7 +111,7 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     public void testXIncludeNestedXincludeElementInAFallback() throws Exception {
          getLogger().debug("testXIncludeNestedXincludeElementInAFallback");
          xincludeTest("resource://org/apache/cocoon/transformation/xinclude-input-nestedXincludeFallbackTest.xml",
-                 "resource://org/apache/cocoon/transformation/xinclude-result-nestedXincludeFallbackTest.xml");
+                 "resource://org/apache/cocoon/transformation/xinclude-result-1.xml");
      }
 
     /**
