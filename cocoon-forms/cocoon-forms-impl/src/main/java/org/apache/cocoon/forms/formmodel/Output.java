@@ -63,6 +63,14 @@ public class Output extends AbstractWidget implements DataWidget, ValueChangedLi
         return definition;
     }
 
+    public void initialize() {
+        Object value = this.definition.getInitialValue();
+        if (value != null) {
+            setValue(value);
+        }
+        super.initialize();
+    }
+
     public void readFromRequest(FormContext formContext) {
         // do nothing
     }
