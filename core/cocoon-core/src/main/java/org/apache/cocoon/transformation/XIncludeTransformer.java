@@ -142,23 +142,32 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     private class XIncludePipe extends AbstractXMLPipe {
         /** Helper class to keep track of xml:base attributes */
         private XMLBaseSupport xmlBaseSupport;
-        /** Element nesting level when inside an xi:include element. */
-        private int xIncludeLevel = 0;
-        /** Should the content of the fallback element be inserted when it is encountered? */
-        private boolean useFallback = false;
-        /** Element nesting level when inside the fallback element. */
-        private int fallbackLevel;
-        /** In case {@link #useFallback} = true, then this should contain the exception that caused fallback to be needed. */
+        /** The nesting level of xi:include elements that have been encountered. */
+        private int xIncludeElementLevel = 0;
+
+        /** The nesting level of fallback that should be used */
+        private int useFallbackLevel = 0;
+
+        /** The nesting level of xi:fallback elements that have been encountered. */
+        private int fallbackElementLevel;
+
+        /**
+         * In case {@link #useFallbackLevel} > 0, then this should contain the 
+         * exception that caused fallback to be needed. In the case of nested
+         * include elements it will contain only the deepest exception.
+         */
         private Exception fallBackException;
+
         /**
          * Locator of the current stream, stored here so that it can be restored after
          * another document send its content to the consumer.
          */
         private Locator locator;
+
         /**
          * Value of the href attribute of the xi:include element that caused the creation of the this
          * XIncludePipe. Used to detect loop inclusions.
-         * */
+         */
         private String href;
 
         /**
@@ -191,6 +200,18 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
             return xpointer;
         }
 
+        /**
+         * Determine whether the pipe is currently in a state where contents
+         * should be evaluated, i.e. xi:include elements should be resolved
+         * and elements in other namespaces should be copied through. Will
+         * return false for fallback contents within a successful xi:include,
+         * and true for contents outside any xi:include or within an xi:fallback
+         * for an unsuccessful xi:include.
+         */
+        private boolean isEvaluatingContent() {
+            return xIncludeElementLevel == 0 || (fallbackElementLevel > 0 && fallbackElementLevel == useFallbackLevel);
+        }
+
         public void endDocument() throws SAXException { 
             // We won't be getting any more sources so mark the MultiSourceValidity as finished. 
             validity.close(); 
@@ -198,152 +219,128 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         } 
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
-            if (xIncludeLevel == 1 && useFallback && XINCLUDE_NAMESPACE_URI.equals(uri) && XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
-                fallbackLevel++;
-
-                // don't need these anymore
-                useFallback = false;
-                fallBackException = null;
-
-                return;
-            } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
-                xIncludeLevel++;
-                return;
-            } else if (xIncludeLevel > 0 && fallbackLevel > 0) {
-                fallbackLevel++;
-            }
-
+            // Track xml:base context:
             xmlBaseSupport.startElement(uri, name, raw, attr);
+            // Handle elements in xinclude namespace:
             if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
+                // Handle xi:include:
                 if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
-                    String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
+                    // Process the include, unless in an ignored fallback:
+                    if (isEvaluatingContent()) {
+                        String href = attr.getValue("", XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
+                        String parse = attr.getValue("", XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
+                        String xpointer = attr.getValue("", XINCLUDE_INCLUDE_ELEMENT_XPOINTER_ATTRIBUTE);
 
-                    String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-                    String xpointer = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_XPOINTER_ATTRIBUTE);
-
-                    xIncludeLevel++;
-
-                    try {
-                        processXIncludeElement(href, parse, xpointer);
-                    } catch (ProcessingException e) {
-                        getLogger().debug("Rethrowing exception", e);
-                        throw new SAXException(e);
-                    } catch (IOException e) {
-                        getLogger().debug("Rethrowing exception", e);
-                        throw new SAXException(e);
+                        try {
+                            processXIncludeElement(href, parse, xpointer);
+                        } catch (ProcessingException e) {
+                            getLogger().debug("Rethrowing exception", e);
+                            throw new SAXException(e);
+                        } catch (IOException e) {
+                            getLogger().debug("Rethrowing exception", e);
+                            throw new SAXException(e);
+                        }
                     }
-                    return;
+                    xIncludeElementLevel++;
+                } else if (XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
+                    // Handle xi:fallback
+                    fallbackElementLevel++;
+                } else {
+                    // Unknown element:
+                    throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
                 }
-
-                throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
-
-            } else {
-                super.startElement(uri,name,raw,attr);
+            } else if (isEvaluatingContent()) {
+                // Copy other elements through when appropriate:
+                super.startElement(uri, name, raw, attr);
             }
         }
 
         public void endElement(String uri, String name, String raw) throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1) {
-                xIncludeLevel--;
-                if (xIncludeLevel == 0)
-                    xmlBaseSupport.endElement(uri, name, raw);
-                if (xIncludeLevel == 0 && useFallback) {
-                    // an error was encountered but a fallback element was not found: throw the error now
-                    useFallback = false;
-                    Exception localFallBackException = fallBackException;
-                    fallBackException = null;
-                    fallbackLevel = 0;
-                    getLogger().error("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
-                    throw new SAXException("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
-                }
-                return;
-            }
-
-            if (fallbackLevel > 0) {
-                fallbackLevel--;
-                if (fallbackLevel == 0)
-                    return;
-            }
-
+            // Track xml:base context:
             xmlBaseSupport.endElement(uri, name, raw);
-            super.endElement(uri,name,raw);
+
+            // Handle elements in xinclude namespace:
+            if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
+                // Handle xi:include:
+                if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
+                    xIncludeElementLevel--;
+                    if (useFallbackLevel > xIncludeElementLevel) {
+                        useFallbackLevel = xIncludeElementLevel;
+                    }
+                } else if (XINCLUDE_FALLBACK_ELEMENT.equals(name)) {
+                    // Handle xi:fallback:
+                    fallbackElementLevel--;
+                }
+            } else if (isEvaluatingContent()) {
+                // Copy other elements through when appropriate:
+                super.endElement(uri, name, raw);
+            }
         }
 
-        public void startPrefixMapping(String prefix, String uri)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.startPrefixMapping(prefix, uri);
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.startPrefixMapping(prefix, uri);
+            }
         }
 
-        public void endPrefixMapping(String prefix)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.endPrefixMapping(prefix);
+        public void endPrefixMapping(String prefix) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.endPrefixMapping(prefix);
+            }
         }
 
-        public void characters(char c[], int start, int len)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.characters(c, start, len);
+        public void characters(char c[], int start, int len) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.characters(c, start, len);
+            }
         }
 
-        public void ignorableWhitespace(char c[], int start, int len)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.ignorableWhitespace(c, start, len);
+        public void ignorableWhitespace(char c[], int start, int len) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.ignorableWhitespace(c, start, len);
+            }
         }
 
-        public void processingInstruction(String target, String data)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.processingInstruction(target, data);
+        public void processingInstruction(String target, String data) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.processingInstruction(target, data);
+            }
         }
 
-        public void skippedEntity(String name)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.skippedEntity(name);
+        public void skippedEntity(String name) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.skippedEntity(name);
+            }
         }
 
-        public void startEntity(String name)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.startEntity(name);
+        public void startEntity(String name) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.startEntity(name);
+            }
         }
 
-        public void endEntity(String name)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.endEntity(name);
+        public void endEntity(String name) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.endEntity(name);
+            }
         }
 
-        public void startCDATA()
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.startCDATA();
+        public void startCDATA() throws SAXException {
+            if (isEvaluatingContent()) {
+                super.startCDATA();
+            }
         }
 
-        public void endCDATA()
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.endCDATA();
+        public void endCDATA() throws SAXException {
+            if (isEvaluatingContent()) {
+                super.endCDATA();
+            }
         }
 
-        public void comment(char ch[], int start, int len)
-                throws SAXException {
-            if (xIncludeLevel > 0 && fallbackLevel < 1)
-                return;
-            super.comment(ch, start, len);
+        public void comment(char ch[], int start, int len) throws SAXException {
+            if (isEvaluatingContent()) {
+                super.comment(ch, start, len);
+            }
         }
 
         public void setDocumentLocator(Locator locator) {
@@ -373,7 +370,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         }
 
         protected void processXIncludeElement(String href, String parse, String xpointer)
-        throws SAXException, ProcessingException, IOException {
+        throws SAXException,ProcessingException,IOException {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Processing XInclude element: href="+href+", parse="+parse+", xpointer="+xpointer);
             }
@@ -437,7 +434,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                             super.characters(ary,0,read);
                         }
                     } catch (SourceNotFoundException e) {
-                        useFallback = true;
+                        useFallbackLevel++;
                         fallBackException = new CascadingException("Resource not found: " + url.getURI());
                         getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } finally {
@@ -472,12 +469,12 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         if (locator != null)
                             xmlConsumer.setDocumentLocator(locator);
                     } catch (ResourceNotFoundException e) {
-                        useFallback = true;
+                        useFallbackLevel++;
                         fallBackException = new CascadingException("Resource not found: " + url.getURI());
                         getLogger().error("xIncluded resource not found: " + url.getURI(), e);
                     } catch (ParseException e) {
                         // this exception is thrown in case of an invalid xpointer expression
-                        useFallback = true;
+                        useFallbackLevel++;
                         fallBackException = new CascadingException("Error parsing xPointer expression", e);
                         fallBackException.fillInStackTrace();
                         getLogger().error("Error parsing XPointer expression, will try to use fallback.", e);
@@ -488,11 +485,11 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         getLogger().error("Error in processXIncludeElement", e);
                         throw e;
                     } catch(MalformedURLException e) {
-                        useFallback = true;
+                        useFallbackLevel++;
                         fallBackException = e;
                         getLogger().error("Error processing an xInclude, will try to use fallback.", e);
                     } catch(IOException e) {
-                        useFallback = true;
+                        useFallbackLevel++;
                         fallBackException = e;
                         getLogger().error("Error processing an xInclude, will try to use fallback.", e);
                     }
