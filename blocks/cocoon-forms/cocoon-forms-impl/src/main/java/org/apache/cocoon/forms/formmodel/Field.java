@@ -476,8 +476,9 @@ public class Field extends AbstractWidget
 
     public void setRequired(boolean required) {
         this.required = required;
+        getForm().addWidgetUpdate(this);
     }
-    
+
     /**
      * @return "field"
      */
