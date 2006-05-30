@@ -37,6 +37,7 @@
   <name>Cocoon Tools [modules]</name>
 
   <modules>
+    <module>archetypes</module>
     <module>cocoon-block-deployer</module>
     <module>cocoon-maven-eclipse-plugin</module>
   </modules>
