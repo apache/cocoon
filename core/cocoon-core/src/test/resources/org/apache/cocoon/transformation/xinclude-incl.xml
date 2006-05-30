@@ -16,6 +16,7 @@
 -->
 
 <root-include>
+  <br/>
   <p>include 1</p>
   <p>include 2</p>
   <p>include 3</p>
