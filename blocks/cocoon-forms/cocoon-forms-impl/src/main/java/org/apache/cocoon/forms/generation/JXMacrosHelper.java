@@ -277,7 +277,7 @@ public class JXMacrosHelper {
      * Get a child widget of a given widget, throwing an exception if no such child exists.
      *
      * @param currentWidget
-     * @param id
+     * @param path
      */
     public Widget getWidget(Widget currentWidget, String path) {
         Widget result = currentWidget.lookupWidget(path);
@@ -301,7 +301,7 @@ public class JXMacrosHelper {
      * event so that the template can insert styling information in it.
      *
      * @param widget
-     * @param locale
+     * @param arguments
      * @throws SAXException
      */
     public void generateWidget(Widget widget, Map arguments) throws SAXException {
@@ -313,9 +313,8 @@ public class JXMacrosHelper {
 
     /**
      * Flush the root element name that has been stored in
-     * {@link #generateWidget(Widget, Locale)}.
+     * {@link #generateWidget(Widget, Map)}.
      *
-     * @param obj the object that is terminated (widget or validation error)
      * @throws SAXException
      */
     public void flushRootAndPop() throws SAXException {

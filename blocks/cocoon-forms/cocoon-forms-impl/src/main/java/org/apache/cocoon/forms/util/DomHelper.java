@@ -70,7 +70,7 @@ public class DomHelper {
     /**
      * Retrieves the location of an element node in the source file from which
      * the Document was created. This will only work for Document's created
-     * with the method {@link #parse(InputSource)} of this class.
+     * with the method {@link #parse(InputSource, ServiceManager)} of this class.
      */
     public static String getLocation(Element element) {
         return LocationAttributes.getLocationString(element);

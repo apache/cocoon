@@ -18,11 +18,7 @@ package org.apache.cocoon.forms.samples;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
@@ -32,15 +28,18 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  * Example of a custom validator.  Check that the given date is a valid birth date, i.e. 
  * is at least 5 years before current date and no more than 100 years old.
  */
-public class CustomBirthDateValidator implements WidgetValidator, LogEnabled, Contextualizable {
+public class CustomBirthDateValidator
+    extends AbstractLogEnabled
+    implements WidgetValidator {
 
-    private Logger logger = null;
-    private Context context = null;
-    
-    
+    /**
+     * @see org.apache.cocoon.forms.validation.WidgetValidator#validate(org.apache.cocoon.forms.formmodel.Widget)
+     */
     public boolean validate(Widget widget) {
         Date birthDate = (Date) widget.getValue();
-        if (logger.isDebugEnabled()) logger.debug("Validating date " + birthDate);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Validating date " + birthDate);
+        }
         GregorianCalendar cal = new GregorianCalendar();
         cal.add(GregorianCalendar.YEAR, -5);
         Date maxDate = cal.getTime();
@@ -54,13 +53,4 @@ public class CustomBirthDateValidator implements WidgetValidator, LogEnabled, Co
         }
         return true;
     }
-
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
 }

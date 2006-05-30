@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.util;
 import java.util.AbstractList;
 import java.util.Map;
 
+import org.apache.cocoon.forms.formmodel.AbstractContainerWidget;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 

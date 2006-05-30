@@ -122,7 +122,7 @@ public class TreeWalker implements Iterator {
     
     /**
      * Get the current depth of this walker (can be used e.g. to compute indentation margins
-     * or CSS styles). If root node is visible (see {@link Tree#isRootVisible()), depth 0 is
+     * or CSS styles). If root node is visible (see {@link Tree#isRootVisible()}), depth 0 is
      * for the root. Otherwise, children of the root node are at depth 0.
      * 
      * @return the current depth

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.forms.binding.library.Library;
+import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
@@ -38,17 +38,14 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  *
  * @version $Id$
  */
-public abstract class JXPathBindingBase implements Binding, LogEnabled {
+public abstract class JXPathBindingBase
+    extends AbstractLogEnabled
+    implements Binding {
 
-    /**
-     * Avalon Logger to use in all subclasses.
-     */
-    private Logger logger;
-    
     /**
      * the local library, if this is the top binding
      */
-    private Library enclosingLibrary = null;
+    private Library enclosingLibrary;
     
     /**
      * Object holding the values of the common objects on all Bindings.
@@ -94,7 +91,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     		try {
     			return !this.enclosingLibrary.dependenciesHaveChanged();
     		} catch(Exception e) {
-    			logger.error("Error checking dependencies!",e);
+    			getLogger().error("Error checking dependencies!",e);
     			throw new NestableRuntimeException("Error checking dependencies!",e);
     		}
     	}
@@ -203,7 +200,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * depending on the configured value of the "direction" attribute.
      */
     public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc)
-            throws BindingException {
+    throws BindingException {
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
         applyNSDeclarations(jxpc);
@@ -217,15 +214,23 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
+     *
+     * @see org.apache.cocoon.forms.binding.Binding#loadFormFromModel(org.apache.cocoon.forms.formmodel.Widget, java.lang.Object)
      */
     public final void loadFormFromModel(Widget frmModel, Object objModel)
-            throws BindingException {
+    throws BindingException {
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informStartLoadingModel();
+        }
         if (objModel != null) {
             JXPathContext jxpc = makeJXPathContext(objModel);
             loadFormFromModel(frmModel, jxpc);
         } else {
             throw new NullPointerException(
                     "null object passed to loadFormFromModel() method");
+        }
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informEndLoadingModel();
         }
     }
 
@@ -257,15 +262,23 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
+     *
+     * @see org.apache.cocoon.forms.binding.Binding#saveFormToModel(org.apache.cocoon.forms.formmodel.Widget, java.lang.Object)
      */
     public void saveFormToModel(Widget frmModel, Object objModel)
                 throws BindingException {
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informStartSavingModel();
+        }
         if (objModel != null) {
             JXPathContext jxpc = makeJXPathContext(objModel);
             saveFormToModel(frmModel, jxpc);    
         } else {
             throw new NullPointerException(
                     "null object passed to saveFormToModel() method");
+        }
+        if ( frmModel instanceof Form ) {
+            ((Form)frmModel).informEndSavingModel();
         }
     }
 
@@ -307,19 +320,6 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         return jxpc;
     }
 
-    /**
-     * Receives the Avalon logger to use.
-     * Subclasses should always start with <code>super.enableLogging(logger)
-     * </code> in possible overriding versions.
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-
-    protected Logger getLogger() {
-        return logger;
-    }
-    
     /**
      * JXPath factory that combines the DOMFactory and support for collections.
      */

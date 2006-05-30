@@ -37,12 +37,12 @@ public class FOM_SimpleCocoon extends ScriptableObject {
         return "FOM_SimpleCocoon";
     }
 
-    private FOM_Cocoon.FOM_Request request = null;
-    private FOM_Cocoon.FOM_Context context = null;
-    private FOM_Cocoon.FOM_Session session = null;
+    private FOM_Cocoon.FOM_Request request;
+    private FOM_Cocoon.FOM_Context context;
+    private FOM_Cocoon.FOM_Session session;
     
     private Scriptable response;
-    private Scriptable parameters;
+    //private Scriptable parameters;
     
     
     public Scriptable jsGet_request() {
