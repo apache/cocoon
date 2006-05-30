@@ -63,7 +63,7 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 	
 	handleError: function(message, request) {
 	    if (confirm(message + "\nShow server response?")) {
-	        var w = window.open(undefined, "Cocoon Error", "location=no");
+	        var w = window.open(undefined, "Cocoon Error", "location=no,resizable=yes,scrollbars=yes");
 	        if (w == undefined) {
 	            alert("You must allow popups from this server to display the response.");
 	        } else {
