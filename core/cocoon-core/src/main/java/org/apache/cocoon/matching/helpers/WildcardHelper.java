@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.matching.helpers;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is an utility class that perform wilcard-patterns matching and
@@ -34,9 +34,9 @@ public class WildcardHelper {
     }
 
     /**
-     * @see org.apache.cocoon.util.WildcardHelper#match(HashMap, String, int[])
+     * @see org.apache.cocoon.util.WildcardHelper#match(Map, String, int[])
      */
-    public static boolean match(HashMap map, String data, int[] expr) 
+    public static boolean match(Map map, String data, int[] expr) 
     throws NullPointerException {
         return org.apache.cocoon.util.WildcardHelper.match(map, data, expr);
     }
