@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.classloader;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is an utility class that perform wilcard-patterns matching and
@@ -32,9 +32,7 @@ public class WildcardHelper {
     /** The int representing begin in the pattern <code>int []</code>. */
     protected static final int MATCH_BEGIN = -4;
     /** The int representing end in pattern <code>int []</code>. */
-    protected static final int MATCH_THEEND = -5;
-    /** The int value that terminates the pattern <code>int []</code>. */
-    protected static final int MATCH_END = -3;
+    protected static final int MATCH_END = -5;
 
     /**
      * Translate the given <code>String</code> into a <code>int []</code>
@@ -119,7 +117,7 @@ public class WildcardHelper {
         }
 
         // Must match end at the end
-        expr[y] = MATCH_THEEND;
+        expr[y] = MATCH_END;
         return expr;
     }
 
@@ -127,7 +125,7 @@ public class WildcardHelper {
      * match a pattern agains a string and isolates wildcard replacement into a
      * <code>Stack</code>.
      */
-    public static boolean match (HashMap map, String data, int[] expr) 
+    public static boolean match (Map map, String data, int[] expr) 
     throws NullPointerException {
         if (data == null) {
             throw new NullPointerException ("No data provided");
@@ -149,7 +147,6 @@ public class WildcardHelper {
         // The position in the expression, input, translation and result arrays
         int exprpos = 0;
         int buffpos = 0;
-        int rsltpos = 0;
         int offset = -1;
 
         // The matching count
@@ -178,39 +175,50 @@ public class WildcardHelper {
             // Check if the data in the expression array before the current
             // expression character matches the data in the input buffer
             if (matchBegin) {
-                if (!matchArray(expr, exprpos, charpos, buff, buffpos))
-                    return (false);
+                if (!matchArray(expr, exprpos, charpos, buff, buffpos)) {
+                    return false;
+                }
                 matchBegin = false;
             } else {
-                offset = indexOfArray (expr, exprpos, charpos, buff,
-                        buffpos);
-                if (offset < 0)
-                    return (false);
+                offset = indexOfArray (expr, exprpos, charpos, buff, buffpos);
+                if (offset < 0) {
+                    return false;
+                }
             }
 
+            // This code can never be reached, so it's commented out now!
             // Check for MATCH_BEGIN
-            if (matchBegin) {
-                if (offset != 0)
-                    return (false);
-                matchBegin = false;
-            }
+            //if (matchBegin) {
+            //    if (offset != 0)
+            //        return false;
+            //    matchBegin = false;
+            //}
 
             // Advance buffpos
             buffpos += (charpos - exprpos);
 
             // Check for END's
             if (exprchr == MATCH_END) {
-                if (rsltpos > 0 && map != null) {
-                    map.put(Integer.toString(++mcount),new String(rslt, 0, rsltpos));
+                // Check that we reached buffer's end
+                // if not, we'll search again!
+                if ( buffpos != buff.length ) {
+                    int startpos = buffpos - (charpos - exprpos);
+                    while ( buffpos != buff.length ) {
+                        buffpos -= (charpos - exprpos);
+                        buffpos++;
+                        offset = indexOfArray (expr, exprpos, charpos, buff, buffpos);
+                        if (offset < 0) {
+                            return false;
+                        }
+                        buffpos = offset + (charpos - exprpos);    
+                    }
+                    // replace value in result map
+                    if (map != null ) {
+                        String oldValue = (String)map.get(Integer.toString(mcount));
+                        map.put (Integer.toString(mcount), oldValue + new String(buff, startpos, offset - startpos));
+                    }
                 }
-                // Don't care about rest of input buffer
-                return (true);
-            } else if (exprchr == MATCH_THEEND) {
-                if (rsltpos > 0 && map != null ) {
-                    map.put (Integer.toString(++mcount),new String(rslt, 0, rsltpos));
-                }
-                // Check that we reach buffer's end
-                return (buffpos == buff.length);
+                return true;
             }
 
             // Search the next expression character
@@ -226,19 +234,23 @@ public class WildcardHelper {
                     lastIndexOfArray (expr, exprpos, charpos, buff,
                     buffpos);
 
-            if (offset < 0)
-                return (false);
+            if (offset < 0) {
+                return false;
+            }
 
             // Copy the data from the source buffer into the result buffer
             // to substitute the expression character
+            int rsltpos = 0;
             if (prevchr == MATCH_PATH) {
-                while (buffpos < offset)
+                while (buffpos < offset) {
                     rslt[rsltpos++] = buff[buffpos++];
+                }
             } else {
                 // Matching file, don't copy '/'
                 while (buffpos < offset) {
-                    if (buff[buffpos] == '/')
-                        return (false);
+                    if (buff[buffpos] == '/') {
+                        return false;
+                    }
                     rslt[rsltpos++] = buff[buffpos++];
                 }
             }
@@ -246,7 +258,6 @@ public class WildcardHelper {
             if ( map != null ) {
                 map.put(Integer.toString(++mcount),new String (rslt, 0, rsltpos));
             }
-            rsltpos = 0;
         }
     }
 
