@@ -65,15 +65,15 @@
 
   <group name="Avaliable Documentation">
     <sample name="Validation Block Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/blocks/validation.html">
+            href="http://cocoon.zones.apache.org/daisy/documentation/683.html">
       On-line documentation for the Validation block.
     </sample>
     <sample name="ValidatingTransformer Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/validatingtransformer.html">
+            href="http://cocoon.zones.apache.org/daisy/documentation/684.html">
       On-line documentation for the ValidatingTransformer.
     </sample>
     <sample name="ValidationReportTransformer Documentation"
-            href="http://cocoon.zones.apache.org/daisy/documentation/components/transformers/validationreporttransformer.html">
+            href="http://cocoon.zones.apache.org/daisy/documentation/691.html">
       On-line documentation for the ValidationReportTransformer.
     </sample>
   </group>
