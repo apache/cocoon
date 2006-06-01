@@ -153,7 +153,6 @@ public class WildcardHelper {
         // The position in the expression, input, translation and result arrays
         int exprpos = 0;
         int buffpos = 0;
-        int rsltpos = 0;
         int offset = -1;
 
         // The matching count
@@ -206,12 +205,26 @@ public class WildcardHelper {
 
             // Check for END's
             if (exprchr == MATCH_END) {
-                if (rsltpos > 0 && map != null ) {
-                    map.put (Integer.toString(++mcount),new String(rslt, 0, rsltpos));
+                // Check that we reached buffer's end
+                // if not, we'll search again!
+                if ( buffpos != buff.length ) {
+                    int startpos = buffpos - (charpos - exprpos);
+                    while ( buffpos != buff.length ) {
+                        buffpos -= (charpos - exprpos);
+                        buffpos++;
+                        offset = indexOfArray (expr, exprpos, charpos, buff, buffpos);
+                        if (offset < 0) {
+                            return false;
+                        }
+                        buffpos = offset + (charpos - exprpos);    
+                    }
+                    // replace value in result map
+                    if (map != null ) {
+                        String oldValue = (String)map.get(Integer.toString(mcount));
+                        map.put (Integer.toString(mcount), oldValue + new String(buff, startpos, offset - startpos));
+                    }
                 }
-                // Check that we reach buffer's end
-                // FIXME - if (buffpos != buff.length) then we have to search the expr again!
-                return (buffpos == buff.length);
+                return true;
             }
 
             // Search the next expression character
@@ -227,19 +240,23 @@ public class WildcardHelper {
                     lastIndexOfArray (expr, exprpos, charpos, buff,
                     buffpos);
 
-            if (offset < 0)
-                return (false);
+            if (offset < 0) {
+                return false;
+            }
 
             // Copy the data from the source buffer into the result buffer
             // to substitute the expression character
+            int rsltpos = 0;
             if (prevchr == MATCH_PATH) {
-                while (buffpos < offset)
+                while (buffpos < offset) {
                     rslt[rsltpos++] = buff[buffpos++];
+                }
             } else {
                 // Matching file, don't copy '/'
                 while (buffpos < offset) {
-                    if (buff[buffpos] == '/')
-                        return (false);
+                    if (buff[buffpos] == '/') {
+                        return false;
+                    }
                     rslt[rsltpos++] = buff[buffpos++];
                 }
             }
@@ -247,7 +264,6 @@ public class WildcardHelper {
             if ( map != null ) {
                 map.put(Integer.toString(++mcount),new String (rslt, 0, rsltpos));
             }
-            rsltpos = 0;
         }
     }
 
