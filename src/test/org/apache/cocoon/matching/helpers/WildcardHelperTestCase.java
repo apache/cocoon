@@ -59,13 +59,23 @@ public class WildcardHelperTestCase extends TestCase {
 
     public void testWildcardURIMatchDoublePattern() throws Exception {
         final Map resultMap = new HashMap();
-        final String uri = "test/something.xmlbla.xml";
+        final String uri = "test/something.xml";
         final String pattern = "*/*.xml";
         int[] expr = WildcardHelper.compilePattern(pattern);
         boolean result = WildcardHelper.match(resultMap, uri, expr);
         assertTrue("Test if url matches: " + uri + " - " + pattern, result);
         assertEquals("Test if result matches for {0}", uri, resultMap.get("0"));
         assertEquals("Test if result matches for {1}", "test", resultMap.get("1"));
-        assertEquals("Test if result matches for {2}", "something.xmlbla", resultMap.get("2"));
+        assertEquals("Test if result matches for {2}", "something", resultMap.get("2"));
+
+        final Map resultMap2 = new HashMap();
+        final String uri2 = "test/something.xmlbla.xml";
+        final String pattern2 = "*/*.xml";
+        int[] expr2 = WildcardHelper.compilePattern(pattern2);
+        boolean result2 = WildcardHelper.match(resultMap2, uri2, expr2);
+        assertTrue("Test if url matches: " + uri2 + " - " + pattern2, result2);
+        assertEquals("Test if result matches for {0}", uri2, resultMap2.get("0"));
+        assertEquals("Test if result matches for {1}", "test", resultMap2.get("1"));
+        assertEquals("Test if result matches for {2}", "something.xmlbla", resultMap2.get("2"));
     }
 }
