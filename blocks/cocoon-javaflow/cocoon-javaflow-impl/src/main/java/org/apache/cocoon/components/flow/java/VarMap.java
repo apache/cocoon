@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * Simplified version of a map.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public final class VarMap implements Serializable {

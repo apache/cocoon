@@ -27,7 +27,6 @@ import org.jfor.jfor.converter.Converter;
  * This class uses the <a href="http://www.jfor.org">jfor</a> library
  * to serialize XSL:FO documents to RTF streams.
  *
- * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
  * @version $Id$
  */
 

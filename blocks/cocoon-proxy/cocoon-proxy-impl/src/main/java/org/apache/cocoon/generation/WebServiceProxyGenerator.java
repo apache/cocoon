@@ -69,8 +69,6 @@ import java.util.StringTokenizer;
  * 9) (TBD) Use Axis for SOAP-RPC and SOAP-DOC bindings.
  *
  *
- * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
- * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2, 2002
  * @version $Id$
  */
 public class WebServiceProxyGenerator extends ServiceableGenerator {

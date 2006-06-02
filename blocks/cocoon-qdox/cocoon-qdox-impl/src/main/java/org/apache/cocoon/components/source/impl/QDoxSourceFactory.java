@@ -73,7 +73,6 @@ import org.apache.regexp.RESyntaxException;
  * to parse the Java sourcefiles.
  * </p>
  * 
- * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
  * @version $Id$
  */
 public final class QDoxSourceFactory

@@ -40,10 +40,8 @@ import org.apache.commons.collections.MultiHashMap;
  * simplicity favors inheritance.
  * 
  * @since 2.1
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
  * @version $Id$
  */
-
 public abstract class AbstractDoubleMapEventRegistry
     extends AbstractLogEnabled
     implements Initializable, EventRegistry, Disposable, ThreadSafe {

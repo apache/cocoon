@@ -21,8 +21,8 @@ import org.w3c.dom.Element;
 
 /**
  * The builder for the char default convertor.
- * 
- * @author Maurizio Pillitu, Simone Gianni
+ *
+ * @version $Id$
  */
 public class CharConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {

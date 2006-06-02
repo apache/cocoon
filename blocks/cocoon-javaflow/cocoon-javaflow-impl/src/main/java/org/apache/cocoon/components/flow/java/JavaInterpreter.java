@@ -35,8 +35,6 @@ import org.apache.commons.jxpath.JXPathIntrospector;
 /**
  * Implementation of the java flow interpreter.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @version $Id$
  */
 public final class JavaInterpreter extends AbstractInterpreter {

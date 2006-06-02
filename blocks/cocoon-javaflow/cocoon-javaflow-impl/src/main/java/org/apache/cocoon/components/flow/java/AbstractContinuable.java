@@ -30,9 +30,7 @@ import org.apache.excalibur.source.SourceUtil;
 /**
  * Abstract class to add basic methods for flow handling.
  * 
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: AbstractContinuable.java 30932 2004-07-29 17:35:38Z vgritsenko $
+ * @version $Id$
  */
 public abstract class AbstractContinuable {
 

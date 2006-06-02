@@ -21,7 +21,6 @@ import org.apache.excalibur.source.SourceValidity;
  * The SourceValidity object for cache invalidation based on 
  * external events.
  * 
- * @author Geoff Howard (ghoward@apache.org)
  * @version $Id$ 
  */
 public class EventValidity implements SourceValidity {
