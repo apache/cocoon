@@ -20,7 +20,6 @@ import javax.mail.internet.MimePart;
 /**
  *  Description of the Interface
  *
- * @author Bernhard Huber
  * @since 26 October 2002
  * @version $Id$
  */
@@ -32,7 +31,7 @@ public interface ContentTypePreference {
      *@param  mimepart  Description of the Parameter
      *@return           Description of the Return Value
      */
-    public int preference(MimePart mimepart);
+    int preference(MimePart mimepart);
 }
 
 

@@ -21,7 +21,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  * Test case for the MIDISerializer
- * @author Mark Leicester
+ * @version $Id$
  */
 public class XMidiSerializerTestCase extends SitemapComponentTestCase {
 

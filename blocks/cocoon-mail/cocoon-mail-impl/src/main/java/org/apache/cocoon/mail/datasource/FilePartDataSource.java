@@ -29,14 +29,12 @@ import org.apache.cocoon.servlet.multipart.Part;
  * object in a DataSource interface.
  * @see javax.activation.DataSource
  *
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class FilePartDataSource implements DataSource {
     private Part part;
-    private String contentType = null;
-    private String name = null;
+    private String contentType;
+    private String name;
 
     /** Creates a new instance of FilePartDataSource from an
      * {@link Part} object.

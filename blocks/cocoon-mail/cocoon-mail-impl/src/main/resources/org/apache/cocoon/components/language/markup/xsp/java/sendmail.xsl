@@ -18,10 +18,7 @@
 <!--
  * This is a stylesheet to send mail via the java mail API.
  *
- * @author Donald A. Ball Jr.
- * @author Christian Haul
- * @author Frank Riddersbusch
- * @version CVS $Revision: 1.4 $ $Date: 2004/05/09 20:05:59 $
+ * @version $Revision: 1.4 $ $Date: 2004/05/09 20:05:59 $
 -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

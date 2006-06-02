@@ -21,7 +21,6 @@ import javax.mail.internet.MimePart;
 /**
  *  A simple MimePart preference selecting algorithm
  *
- * @author Bernhard Huber
  * @since 26. Oktober 2002
  * @version $Id$
  */

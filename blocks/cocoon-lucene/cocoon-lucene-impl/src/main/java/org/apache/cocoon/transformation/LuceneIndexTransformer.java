@@ -56,8 +56,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * documentation on the Cocoon Wiki.</p>
  * <p>TODO: Write more documentation.</p>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
  * @version $Id$
  */
 public class LuceneIndexTransformer extends AbstractTransformer

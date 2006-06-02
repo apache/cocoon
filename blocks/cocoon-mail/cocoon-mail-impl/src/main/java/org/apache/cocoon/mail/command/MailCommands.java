@@ -22,7 +22,6 @@ import javax.mail.MessagingException;
 /**
  *  Execute a list of commands.
  *
- * @author Bernhard Huber
  * @since 23. Oktober 2002
  * @version $Id$
  */

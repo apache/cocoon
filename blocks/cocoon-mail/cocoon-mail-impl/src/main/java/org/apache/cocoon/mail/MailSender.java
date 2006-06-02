@@ -24,7 +24,6 @@ import javax.mail.internet.AddressException;
  * and the <code>sendmail.xsl</code> logicsheet for sending an email message.
  *
  * @since 2.1.5
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public interface MailSender {
@@ -43,7 +42,7 @@ public interface MailSender {
     /**
      * Set SMTP hostname, username, and password to use for mail sending.
      */
-    public void setSmtpHost(String hostname, String username, String password);
+    void setSmtpHost(String hostname, String username, String password);
 
     //
     // Compose Message

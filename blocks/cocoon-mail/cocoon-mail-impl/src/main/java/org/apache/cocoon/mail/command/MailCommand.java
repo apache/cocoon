@@ -20,7 +20,6 @@ import javax.mail.MessagingException;
 /**
  *  This interface the basic contract of a MailCommand
  *
- * @author Bernhard Huber
  * @since 23. Oktober 2002
  * @version $Id$
  */

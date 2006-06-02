@@ -20,11 +20,10 @@ import org.xml.sax.Attributes;
 /**
  * A helper class for generating a lucene document in a SAX ContentHandler.
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
-class IndexHelperField
-{
+class IndexHelperField {
+
     String localFieldName;
     String qualifiedFieldName;
     StringBuffer text;

@@ -39,7 +39,6 @@ import org.apache.cocoon.mail.command.MailCommands;
 /**
  * Manage invocation of mail commands.
  *
- * @author Bernhard Huber
  * @since 23 October 2002
  * @version $Id$
  */

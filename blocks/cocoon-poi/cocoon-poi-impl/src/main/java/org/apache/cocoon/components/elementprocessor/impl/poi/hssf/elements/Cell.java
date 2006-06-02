@@ -29,7 +29,6 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 /**
  * internal representation of a Cell
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 // package scope

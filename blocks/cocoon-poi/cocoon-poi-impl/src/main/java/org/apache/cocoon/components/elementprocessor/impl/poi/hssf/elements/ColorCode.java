@@ -23,8 +23,6 @@ import java.util.StringTokenizer;
 /**
  * Color codes
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 public class ColorCode {
@@ -33,7 +31,7 @@ public class ColorCode {
     private static final int _blue            = 2;
     private static final int _component_count = 3;
     private int[]            _components      = new int[ _component_count ];
-    private String           rgbstring        = null;
+    private String           rgbstring;
 
     /**
      * construct the ColorCode object
