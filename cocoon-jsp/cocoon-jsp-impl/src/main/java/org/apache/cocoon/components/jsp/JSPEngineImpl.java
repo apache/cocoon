@@ -31,7 +31,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Allows Servlets and JSPs to be used as a generator.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @version $Id$
  */
 public class JSPEngineImpl extends AbstractLogEnabled

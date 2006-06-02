@@ -23,7 +23,6 @@ import org.apache.commons.collections.MultiHashMap;
  * A light object for persisting the state of an EventRegistry implementation 
  * based on two MultiHashMaps.
  * 
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
  * @version $Id$
  */
 public class EventRegistryDataWrapper implements Serializable {

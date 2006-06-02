@@ -25,7 +25,6 @@ import org.apache.commons.jxpath.DynamicPropertyHandler;
 /**
  * JXPath handler for VarMap.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public final class VarMapHandler implements DynamicPropertyHandler {

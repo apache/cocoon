@@ -105,8 +105,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * TODO: *much* better error handling.
  *
- * @author <a href="mailto: gianugo@apache.org">Gianugo Rabellino</a>
- * @author <a href="mailto:d.madama@pro-netics.com>Daniele Madama</a>
  * @version $Id$
  */
 public class DASLTransformer extends AbstractSAXTransformer {

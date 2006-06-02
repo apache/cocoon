@@ -18,7 +18,6 @@
 <!--
  * Employee binding bean
  *
- * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
  * @version CVS $Revision: 1.2 $ $Date: 2004/03/30 11:10:53 $
 -->
 <fd:context xmlns:fd="http://apache.org/cocoon/forms/1.0#binding" path="/" >

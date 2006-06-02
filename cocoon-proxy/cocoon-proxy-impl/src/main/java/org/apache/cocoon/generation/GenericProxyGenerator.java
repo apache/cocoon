@@ -47,7 +47,6 @@ import org.xml.sax.SAXException;
  * <br>TODO: doesn't handle authentication properly
  * <br>TODO: doesn't handle (and doubt it'll ever will) HTTP/1.1 keep-alive
  *
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @version $Id$
  */
 public class GenericProxyGenerator extends ServiceableGenerator {

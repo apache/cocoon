@@ -34,9 +34,7 @@ import org.w3c.dom.Element;
 /**
  * Implementation of the Cocoon Forms/Java Flow integration.
  * 
- * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: FormInstance.java 239610 2005-08-24 11:36:41Z thorsten $
+ * @version $Id$
  */
 public class FormInstance extends AbstractContinuable {
 

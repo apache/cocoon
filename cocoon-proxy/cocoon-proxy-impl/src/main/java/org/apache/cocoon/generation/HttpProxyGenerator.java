@@ -52,9 +52,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * <b>Jakarta Commons HTTPClient Library</b> to access an XML stream
  * over HTTP.
  *
- * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
- * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2002
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {

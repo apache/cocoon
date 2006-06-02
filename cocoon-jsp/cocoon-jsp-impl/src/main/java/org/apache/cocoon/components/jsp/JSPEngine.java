@@ -25,12 +25,11 @@ import java.io.IOException;
 /**
  * A component for loading and running Servlets and JSPs.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @version $Id$
  */
 public interface JSPEngine {
 
-    public static final String ROLE = JSPEngine.class.getName();
+    String ROLE = JSPEngine.class.getName();
     
     /**
      * Execute the Servlet/JSP and return the output.
@@ -40,9 +39,9 @@ public interface JSPEngine {
      * @exception ServletException
      * @exception Exception
      */
-    public byte[] executeJSP(String url,
-                             HttpServletRequest request,
-                             HttpServletResponse response,
-                             ServletContext context)
-        throws IOException, ServletException, Exception;
+    byte[] executeJSP(String url,
+                      HttpServletRequest request,
+                      HttpServletResponse response,
+                      ServletContext context)
+    throws IOException, ServletException, Exception;
 }

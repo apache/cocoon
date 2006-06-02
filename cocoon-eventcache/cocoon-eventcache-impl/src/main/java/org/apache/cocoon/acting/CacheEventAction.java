@@ -35,7 +35,6 @@ import org.apache.cocoon.environment.SourceResolver;
  * 
  * This is used in the Event based cache example. 
  * 
- * @author Geoff Howard (ghoward@apache.org)
  * @version $Id$
  */
 public class CacheEventAction extends ServiceableAction implements ThreadSafe {

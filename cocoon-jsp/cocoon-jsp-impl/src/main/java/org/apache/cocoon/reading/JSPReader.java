@@ -39,7 +39,6 @@ import org.apache.excalibur.source.Source;
  * The <code>JSPReader</code> component is used to serve Servlet and JSP page 
  * output data in a sitemap pipeline.
  *
- * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
  * @version $Id$
  */
 public class JSPReader extends ServiceableReader implements Configurable {

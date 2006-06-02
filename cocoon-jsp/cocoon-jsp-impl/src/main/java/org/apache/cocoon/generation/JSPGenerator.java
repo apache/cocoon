@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
 /**
  * Allows Servlets and JSPs to be used as a generator.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @version $Id$
  */
 public class JSPGenerator extends ServiceableGenerator {

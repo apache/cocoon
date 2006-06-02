@@ -38,8 +38,6 @@ import java.util.Locale;
  * jsp-response. This a WLS-specific implementation.
  * This code contain WLS 5.1 specific classes, and uses WLS internal classes.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
  * @version $Id$
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled

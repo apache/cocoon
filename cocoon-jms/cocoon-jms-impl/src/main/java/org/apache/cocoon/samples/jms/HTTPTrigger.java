@@ -23,7 +23,6 @@ import org.hsqldb.Trigger;
 
 /**
  * @version $Id$
- * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class HTTPTrigger implements Trigger {
 

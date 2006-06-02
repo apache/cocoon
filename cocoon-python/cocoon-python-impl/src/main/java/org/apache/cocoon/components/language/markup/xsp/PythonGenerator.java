@@ -42,7 +42,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * <code>ServerPagesGenerator</code> programs
  * written in Python language
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class PythonGenerator extends XSPGenerator

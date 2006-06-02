@@ -62,7 +62,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * </table>
  * 
  * @version $Id$
- * @author <a href="mailto:haul@apache.org">haul</a>
  * @deprecated  use {@link org.apache.cocoon.components.jms.JMSConnectionManager} instead
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 

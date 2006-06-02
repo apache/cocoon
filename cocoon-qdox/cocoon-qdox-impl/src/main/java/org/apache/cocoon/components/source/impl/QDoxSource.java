@@ -60,7 +60,6 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Source implementation for XML Javadoc.
  *
- * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
  * @version $Id$ $Date: 2004/04/30 22:50:39 $
  */
 public final class QDoxSource extends AbstractSource
