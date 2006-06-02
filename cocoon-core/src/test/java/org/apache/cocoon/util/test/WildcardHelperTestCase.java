@@ -48,7 +48,7 @@ public class WildcardHelperTestCase extends TestCase {
         assertEquals("Test if result matches for {2}", "end", resultMap.get("2"));
     }
 
-    public void testWildcardURIMatchSimplePattern() throws Exception {
+    public void testSimplePattern() throws Exception {
         final Map resultMap = new HashMap();
         final String uri = "test";
         final String pattern = "*";
@@ -59,7 +59,7 @@ public class WildcardHelperTestCase extends TestCase {
         assertEquals("Test if result matches for {1}", uri, resultMap.get("1"));
     }
 
-    public void testWildcardURIMatchDoublePattern() throws Exception {
+    public void testDoublePattern() throws Exception {
         final Map resultMap = new HashMap();
         final String uri = "test/something.xml";
         final String pattern = "*/*.xml";
@@ -80,4 +80,19 @@ public class WildcardHelperTestCase extends TestCase {
         assertEquals("Test if result matches for {1}", "test", resultMap2.get("1"));
         assertEquals("Test if result matches for {2}", "something.xmlbla", resultMap2.get("2"));
     }
+
+    public void testEmptyPattern() throws Exception {
+        final Map resultMap = new HashMap();
+        final String pattern = "";
+        final int[] expr = WildcardHelper.compilePattern(pattern);
+        boolean result = WildcardHelper.match(resultMap, "something", expr);
+        assertFalse("Url 'something' should not match empty pattern.", result);
+
+        result = WildcardHelper.match(resultMap, "something/hello.gif", expr);
+        assertFalse("Url 'something/hello.gif' should not match empty pattern.", result);
+
+        result = WildcardHelper.match(resultMap, "", expr);
+        assertTrue("Empty url should match empty pattern", result);
+    }
+
 }
