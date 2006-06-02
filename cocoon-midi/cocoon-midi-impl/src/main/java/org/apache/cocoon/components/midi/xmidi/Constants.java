@@ -21,13 +21,9 @@ package org.apache.cocoon.components.midi.xmidi;
  * The warranty disclaimer of the MIT license (http://www.opensource.org/licenses/mit-license.html)
  * applies to Peter Arthur Loeb's code.
  *
- * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @author <a href="mailto:peter@palserv.com">Peter Loeb</a>
+ * @version $Id$
  */
-
-
-public final class Constants
-{
+public final class Constants {
 	public static final String VERSION = "1.2";
 
 }

@@ -21,7 +21,6 @@ import javax.mail.internet.MimePart;
 /**
  *  Description of the Class
  *
- * @author Bernhard Huber
  * @since 26 October 2002
  * @version $Id$
  */

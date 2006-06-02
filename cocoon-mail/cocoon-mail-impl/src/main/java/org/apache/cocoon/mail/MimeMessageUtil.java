@@ -30,7 +30,6 @@ import javax.mail.internet.MimePart;
 /**
  *  Description of the Class
  *
- * @author Bernhard Huber
  * @since 26. Oktober 2002
  * @version $Id$
  */

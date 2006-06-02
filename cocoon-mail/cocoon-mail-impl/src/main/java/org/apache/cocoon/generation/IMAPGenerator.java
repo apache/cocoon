@@ -52,7 +52,6 @@ import java.util.Properties;
  *
  * <br>TODO Refactor all of this to use the MailCommandManager, etc...
  *
- * @author <a href="mailto:tony@apache.org">Tony Collen</a>
  * @version $Id$
  */
 public class IMAPGenerator extends AbstractGenerator {

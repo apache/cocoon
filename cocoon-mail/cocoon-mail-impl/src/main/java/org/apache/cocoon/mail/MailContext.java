@@ -32,7 +32,6 @@ import org.apache.cocoon.environment.Request;
 /**
  * Encapsulation of context info of this webmail application
  *
- * @author Bernhard Huber
  * @since 29 December 2002
  * @version $Id$
  */

@@ -47,8 +47,6 @@ import java.util.Map;
  * <p>It also supports all of the {@link Sendmail} action sitemap parameters</p>
  *
  * @deprecated Please use the {@link Sendmail Sendmail} action instead.
- * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class SendmailAction extends Sendmail {

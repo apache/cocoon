@@ -47,7 +47,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *   Having one or more javamail objects, like Message, Folder, et al. emit SAX events
  * </p>
  *
- * @author Bernhard Huber
  * @since 24. Oktober 2002
  * @version $Id$
  */
@@ -798,9 +797,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
     /**
      *  XMLizable Wrapper for one or more folders, saxing folders.
      *
-     *@author     Bernhard Huber
-     *@created    30. Dezember 2002
-     *@version    CVS Version: $Id$
      */
     static class FolderXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -848,10 +844,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
     /**
      *  XMLizable Wrapper for one or more messages, saxing envelope only of messages.
-     *
-     *@author     Bernhard Huber
-     *@created    30. Dezember 2002
-     *@version    CVS Version: $Id$
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -924,10 +916,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
 
     /**
      *  XMLizable Wrapper for a message, saxing a message envelope, plus content.
-     *
-     *@author     Bernhard Huber
-     *@created    30. Dezember 2002
-     *@version    CVS Version: $Id$
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable {

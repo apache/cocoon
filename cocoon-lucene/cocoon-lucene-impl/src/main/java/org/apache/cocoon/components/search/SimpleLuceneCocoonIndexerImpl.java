@@ -47,7 +47,6 @@ import java.util.Iterator;
  *  HTTP protocol.
  * </p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled

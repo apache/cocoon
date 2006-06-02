@@ -27,11 +27,10 @@ import java.io.IOException;
 /**
  * This class encapsulates some helper methods.
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
-public class LuceneCocoonHelper
-{
+public class LuceneCocoonHelper {
+
     /**
      *Gets the directory attribute of the LuceneCocoonHelper class
      *

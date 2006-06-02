@@ -26,11 +26,10 @@ import java.util.NoSuchElementException;
 /**
  * This class should help you to manage paging of hits.
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
-public class LuceneCocoonPager implements ListIterator
-{
+public class LuceneCocoonPager implements ListIterator {
+
     /**
      * Default count of hits per page.
      */
@@ -271,8 +270,6 @@ public class LuceneCocoonPager implements ListIterator
     /**
      * A helper class encapsulating found document, and its score
      *
-     * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    CVS $Id$
      */
     public static class HitWrapper {
         float score;

@@ -26,7 +26,6 @@ import org.apache.avalon.framework.context.Context;
  *    resources in case of valueUnbound - ie. session removal.
  *  </p> 
  *
- * @author Bernhard Huber
  * @since 02 January 2003
  * @version $Id$
  */
