@@ -21,8 +21,7 @@ import org.apache.excalibur.source.SourceException;
 
 /**
  * NOP implementation of RepositoryInterceptor.
- * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
+ * @version $Id$ 
  */
 public abstract class RepositoryInterceptorBase implements RepositoryInterceptor {
 

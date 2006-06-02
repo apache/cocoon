@@ -36,8 +36,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * RequestDispatcher from ServletContext.getNamedDispatcher().
  * </p>
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
  * @version $Id$
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled

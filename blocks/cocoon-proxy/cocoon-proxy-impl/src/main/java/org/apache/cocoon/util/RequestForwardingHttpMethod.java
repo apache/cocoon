@@ -31,7 +31,6 @@ import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
  * This is a generic and externally configurable method, to forward any Request
  * to a server.
  * 
- * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @version $Id$
  */
 public class RequestForwardingHttpMethod extends EntityEnclosingMethod {

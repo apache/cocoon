@@ -27,7 +27,6 @@ import org.apache.excalibur.store.Store;
  * in the default <code>Store</code> defined in cocoon.xconf.
  * 
  * @since 2.1
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
  * @version $Id$
  */
 public class StoreEventRegistryImpl extends AbstractDoubleMapEventRegistry 

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon;
 
-import java.util.Map;
-
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;

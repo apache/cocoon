@@ -35,7 +35,6 @@ import org.apache.cocoon.caching.EventRegistry;
  * disk.
  *
  * @since 2.1
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
  * @version $Id$
  */
 public class DefaultEventRegistryImpl extends AbstractDoubleMapEventRegistry

@@ -24,8 +24,6 @@ import org.apache.cocoon.environment.Redirector;
 /**
  * Helper class to associate cocoon flow informations to the continuation.
  *
- * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public class CocoonContinuationContext {

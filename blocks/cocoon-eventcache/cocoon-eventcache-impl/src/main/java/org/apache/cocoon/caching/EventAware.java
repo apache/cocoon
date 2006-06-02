@@ -21,7 +21,6 @@ import org.apache.cocoon.caching.validity.Event;
  * Defines the simple contract for components that need to receive notification 
  * of cache Events.
  * 
- * @author Geoff Howard (ghoward@apache.org)
  * @version $Id$
  */
 public interface EventAware {
@@ -31,6 +30,5 @@ public interface EventAware {
      * 
      * @param e The Event
      */
-    public void processEvent(Event e);
-
+    void processEvent(Event e);
 }

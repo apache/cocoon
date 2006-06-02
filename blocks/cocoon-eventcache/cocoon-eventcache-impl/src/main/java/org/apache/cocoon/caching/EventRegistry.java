@@ -34,7 +34,6 @@ import org.apache.cocoon.caching.validity.Event;
  * the public contract with the Cache.
  *  
  * @since 2.1
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
  * @version $Id$
  */
 public interface EventRegistry {
@@ -50,14 +49,14 @@ public interface EventRegistry {
      * @param e event
      * @param key key
      */
-    public void register(Event e, Serializable key);
+    void register(Event e, Serializable key);
     
     /**
      * Remove all occurances of the specified key from the registry.
      * 
      * @param key - The key to remove.
      */
-    public void removeKey(Serializable key);
+    void removeKey(Serializable key);
     
     /**
      * Retrieve an array of all keys mapped to this event.
@@ -66,7 +65,7 @@ public interface EventRegistry {
      * @return an array of keys which should not be modified or null if 
      *      no keys are mapped to this event.
      */
-    public Serializable[] keysForEvent(Event e);
+    Serializable[] keysForEvent(Event e);
     
     /**
      * Retrieve an array of all keys regardless of event mapping, or null if
@@ -74,12 +73,12 @@ public interface EventRegistry {
      * 
      * @return an array of keys which should not be modified
      */
-    public Serializable[] allKeys(); 
+    Serializable[] allKeys(); 
     
     /**
      * Clear all event-key mappings from the registry.
      */
-    public void clear();
+    void clear();
     
     /**
      * Returns whether the registry was successful in retrieving its 
@@ -94,5 +93,5 @@ public interface EventRegistry {
      * @return true if the Component recovered its state successfully, 
      *          false otherwise.
      */
-    public boolean wasRecoverySuccessful();
+    boolean wasRecoverySuccessful();
 }

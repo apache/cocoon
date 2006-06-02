@@ -37,7 +37,6 @@ import org.hsqldb.Trigger;
  * block and JMS messages. 
  * 
  * @version $Id$
- * @author <a href="mailto:haul@apache.org">haul</a>
  */
 public class JMSTrigger implements Trigger {
 
