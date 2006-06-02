@@ -15,10 +15,10 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
+<!-- @version $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
-  
+
   <group name="Back">
    <sample name="Back" href="./">
     Back to the samples home page.
