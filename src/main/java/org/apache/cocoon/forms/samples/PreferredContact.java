@@ -20,7 +20,6 @@ import org.apache.commons.lang.enums.Enum;
 /**
  * Test apache enum class.
  * 
- * @author Simone Gianni <s.gianni@thebug.it>
  * @version $Id$
  */
 public class PreferredContact extends Enum {
