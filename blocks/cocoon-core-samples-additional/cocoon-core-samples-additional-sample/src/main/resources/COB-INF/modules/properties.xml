@@ -18,13 +18,13 @@
 <!--+
     | Prints out all passed parameters.
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <properties xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <jx:forEach var="name" items="${parameters.names}">
+  <jx:forEach var="name" items="${cocoon.parameters.names}">
     <property>
       <name>${name}</name>
-      <value>${parameters.getParameter(name)}</value>
+      <value>${cocoon.parameters.getParameter(name)}</value>
     </property>
   </jx:forEach>
 </properties>

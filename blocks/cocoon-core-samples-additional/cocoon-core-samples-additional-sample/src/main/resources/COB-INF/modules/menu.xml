@@ -17,7 +17,7 @@
 <!--+
     | Menu definition.
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <book software="Apache Cocoon"
       title="Apache Cocoon Input Modules Samples"

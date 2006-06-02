@@ -17,7 +17,7 @@
 <!--+
     | Transforms to HTML page.
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <!DOCTYPE html [
 <!ENTITY nbsp "&#160;">
