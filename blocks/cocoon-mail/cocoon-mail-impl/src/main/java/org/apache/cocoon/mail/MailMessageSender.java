@@ -66,8 +66,6 @@ import java.util.Properties;
  * <tr><th>smtp-password</th><td>Password for authentication</td><td>opt</td><td>String</td></tr>
  * </tbody></table>
  *
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
  * @version $Id$
  */
@@ -98,13 +96,11 @@ public class MailMessageSender
 
     /**
      * Helper class for attachment data.
-     * @author haul
-     * @since 2.1
      */
     private static class Attachment {
-        private Object obj = null;
-        private String type = null;
-        private String name = null;
+        private Object obj;
+        private String type;
+        private String name;
         protected boolean isURL = false;
 
         /**

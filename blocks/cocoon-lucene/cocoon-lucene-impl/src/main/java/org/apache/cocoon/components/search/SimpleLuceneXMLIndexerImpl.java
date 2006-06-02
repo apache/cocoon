@@ -62,8 +62,6 @@ import java.util.List;
  *     &lt;/lucene-xml-indexer&gt;
  *   </tt></pre></p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @version $Id$
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled

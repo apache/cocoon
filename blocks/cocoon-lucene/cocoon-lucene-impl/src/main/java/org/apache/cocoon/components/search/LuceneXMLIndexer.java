@@ -37,7 +37,6 @@ import java.util.List;
  *  <code>build()</code>.
  * </p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
 public interface LuceneXMLIndexer {

@@ -35,12 +35,10 @@ import java.util.Stack;
  *  to store specific tags in Lucene, so that you can
  *  display them with hits.
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @version $Id$
  */
-public class LuceneIndexContentHandler implements ContentHandler
-{
+public class LuceneIndexContentHandler implements ContentHandler {
+
     public static final String LUCENE_URI = "http://apache.org/cocoon/lucene/1.0";
 
     /**

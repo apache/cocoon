@@ -21,7 +21,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  * Test case for the MIDIGenerator
- * @author Mark Leicester
+ * @version $Id$
  */
 public class XMidiGeneratorTestCase extends SitemapComponentTestCase {
 

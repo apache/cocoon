@@ -116,10 +116,6 @@ import javax.mail.internet.AddressException;
  * <code>server-error</code> for <code>status</code> and
  * <code>message</code> contains a corresponding message.</p>
  *
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
  * @version $Id$
  */

@@ -89,10 +89,6 @@ import java.util.Map;
  * &lt;/search:results&gt;
  * </tt></pre>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
  * @version $Id$
  */
 public class SearchGenerator extends ServiceableGenerator

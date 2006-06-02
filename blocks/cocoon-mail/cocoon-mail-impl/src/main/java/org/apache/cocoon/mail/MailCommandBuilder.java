@@ -30,7 +30,6 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *   a command instance are the tasks of this class.
  * </p>
  *
- * @author Bernhard Huber
  * @since 28. Dezember 2002
  * @version $Id$
  */

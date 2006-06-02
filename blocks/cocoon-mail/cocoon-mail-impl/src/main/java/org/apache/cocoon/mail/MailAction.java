@@ -51,7 +51,6 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *
  * @see MailContext
  *
- * @author Bernhard Huber
  * @version $Id$
  * @since Cocoon 2.1, 16 December 2002
  */

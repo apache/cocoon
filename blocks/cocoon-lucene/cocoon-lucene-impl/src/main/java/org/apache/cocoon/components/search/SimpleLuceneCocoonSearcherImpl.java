@@ -56,7 +56,6 @@ import java.io.IOException;
  *   This class returns an Hit object as its search result.
  * </p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
 public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled

@@ -30,8 +30,6 @@ import org.apache.excalibur.source.Source;
  *
  * @see org.apache.excalibur.source.Source
  * @see javax.activation.DataSource
- * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class SourceDataSource implements DataSource {

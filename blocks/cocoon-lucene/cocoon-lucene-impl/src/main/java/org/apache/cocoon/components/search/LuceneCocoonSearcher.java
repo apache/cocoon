@@ -30,10 +30,10 @@ import org.apache.lucene.store.Directory;
  *   and an index, and generating hits which matches the query string in the index.
  * </p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
  */
 public interface LuceneCocoonSearcher {
+
     /**
      * The ROLE name of this avalon component.
      * <p>

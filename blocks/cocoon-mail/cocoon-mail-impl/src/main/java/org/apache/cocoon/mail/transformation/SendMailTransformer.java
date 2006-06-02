@@ -196,8 +196,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </ul>
  * </p>
  *
- * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version SVN $Id$
+ * @version $Id$
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
 

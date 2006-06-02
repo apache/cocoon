@@ -24,7 +24,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 /**
  *  An abstract MailCommand template
  *
- * @author Bernhard Huber
  * @since 23. Oktober 2002
  * @version $Id$
  */
