@@ -29,7 +29,6 @@ import org.apache.excalibur.source.SourceException;
  * greatly improves property management performance.
  * </p> 
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public abstract class AbstractConfigurableSourceDescriptor 
 extends AbstractConfigurableSourceInspector implements SourceDescriptor {

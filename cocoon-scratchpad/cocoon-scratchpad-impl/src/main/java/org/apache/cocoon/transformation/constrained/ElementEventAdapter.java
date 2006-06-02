@@ -17,7 +17,6 @@ package org.apache.cocoon.transformation.constrained;
 
 /**
  *
- * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @version $Id$
  */
 public abstract class ElementEventAdapter implements ElementEventListener {

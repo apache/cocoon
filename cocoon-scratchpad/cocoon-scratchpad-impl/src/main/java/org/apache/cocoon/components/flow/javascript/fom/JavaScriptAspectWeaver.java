@@ -82,7 +82,6 @@ import org.apache.excalibur.source.SourceResolver;
  *       See Stefano's proposal?</li>
  * </ul>
  * 
- * @author <a href="mailto:reinhard@apache.org">Reinhard Poetz</a> 
  * @since Sept, 2003
  * @version $Id$
  */

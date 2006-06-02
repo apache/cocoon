@@ -22,7 +22,6 @@ import org.apache.excalibur.source.SourceValidity;
  * a second array that could contain an alternative response.
  *
  * @since 2.1.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class ExtendedCachedResponse extends CachedResponse {

@@ -27,7 +27,6 @@ import org.apache.excalibur.source.impl.validity.NOPValidity;
  * Abstract base class for inspectors that can calculate 
  * the size of an image of a particular type.
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public abstract class AbstractImageSourceInspector
     extends AbstractLogEnabled

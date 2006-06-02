@@ -35,7 +35,6 @@ import org.apache.excalibur.source.SourceValidity;
  * {@link org.apache.cocoon.util.SourceReloader}.
  * 
  * @since 2.1.4
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public class SoftSourceCache implements SourceCache {
@@ -109,11 +108,10 @@ public class SoftSourceCache implements SourceCache {
 
 	/**
 	 * Private helper to hold source validities and cached objects.
-	 * @author <a href="mailto:haul@apache.org">Christian Haul</a>
 	 */
 	private static class CacheEntry {
-		public SourceValidity validity = null;
-		public Object object = null;
+		public SourceValidity validity;
+		public Object object;
 
 		public CacheEntry(SourceValidity val, Object obj) {
 			this.validity = val;

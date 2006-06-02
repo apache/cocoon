@@ -18,11 +18,10 @@ package org.apache.cocoon.slop.interfaces;
 
 /** General constants for the SLOP block
  *
- * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
  * @version $Id$
  */
-
 public interface SlopConstants {
+
     String SLOP_NAMESPACE_URI = "http://apache.org/cocoon/slop/parser/1.0";
 
     // element names

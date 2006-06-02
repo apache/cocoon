@@ -46,7 +46,6 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  *  A Cocoon Generator that runs an Ant build file
  *
- * @author <a href="mailto:ceyates@stanford.edu">Charles Yates</a>
  * @version $Id$
  */
 public class AntBuildGenerator

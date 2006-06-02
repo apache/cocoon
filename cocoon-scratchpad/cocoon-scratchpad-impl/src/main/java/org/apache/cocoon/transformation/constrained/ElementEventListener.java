@@ -20,13 +20,11 @@ import java.util.EventListener;
 
 /**
  *
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
  * @version $Id$
  */
 public interface ElementEventListener extends EventListener {
 
-  public void containerElementEnded(ContainerElementEndEvent e) throws Exception;
+    void containerElementEnded(ContainerElementEndEvent e) throws Exception;
 
-  public void elementValueRecieved(ElementValueEvent e) throws Exception;
-
+    void elementValueRecieved(ElementValueEvent e) throws Exception;
 }

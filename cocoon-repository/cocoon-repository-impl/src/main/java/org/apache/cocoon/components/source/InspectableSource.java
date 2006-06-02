@@ -23,7 +23,6 @@ import org.apache.excalibur.source.SourceException;
 /**
  * A source, which owns meta informations in form of properties
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
  * @version $Id$
  */
 public interface InspectableSource extends Source {
@@ -31,21 +30,21 @@ public interface InspectableSource extends Source {
     /** 
      * To get a meta information from a source 
      */
-    public SourceProperty getSourceProperty(String namespace, String name) throws SourceException;
+    SourceProperty getSourceProperty(String namespace, String name) throws SourceException;
 
     /** 
      * To set a meta information 
      */
-    public void setSourceProperty(SourceProperty property) throws SourceException;
+    void setSourceProperty(SourceProperty property) throws SourceException;
 
     /** 
      * Get alll informations 
      */
-    public SourceProperty[] getSourceProperties() throws SourceException;
+    SourceProperty[] getSourceProperties() throws SourceException;
 
     /**
      * Remove property
      */
-    public void removeSourceProperty(String namespace, String name) throws SourceException;
+    void removeSourceProperty(String namespace, String name) throws SourceException;
 }
 

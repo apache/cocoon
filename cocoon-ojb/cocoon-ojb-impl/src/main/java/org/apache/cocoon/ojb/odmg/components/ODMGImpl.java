@@ -33,7 +33,6 @@ import java.util.HashMap;
  * OJB backed implementation of the ODMG component. Creates a ODMG Implementation
  * Object and stores it for the future use.
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public class ODMGImpl extends AbstractLogEnabled

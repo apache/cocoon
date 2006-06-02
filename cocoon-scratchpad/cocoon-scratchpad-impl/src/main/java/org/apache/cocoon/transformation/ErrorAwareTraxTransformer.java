@@ -32,8 +32,8 @@ import org.apache.cocoon.xml.XMLConsumer;
  * <p>Using this transformer with Apache Xalan-J 2, for example, will allow Cocoon
  * to capture the output of <code>&lt;xsl:message&#nbsp;terminate="yes"/&gt;</code>
  * and to serve it up using the standard error handling pipelines.</p>
- * 
- * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
+ *
+ * @version $Id$
  */
 public class ErrorAwareTraxTransformer extends TraxTransformer
 implements ErrorListener {

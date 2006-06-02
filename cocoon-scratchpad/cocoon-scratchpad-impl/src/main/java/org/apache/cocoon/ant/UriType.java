@@ -30,7 +30,6 @@ import org.apache.cocoon.util.NetUtils;
  * avoiding to use extensive String operation spread
  * over all classes.
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class UriType {

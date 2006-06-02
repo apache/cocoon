@@ -29,7 +29,6 @@ import org.apache.cocoon.util.NetUtils;
 /**
  *   A simple Cocoon crawler
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class CocoonCrawling extends AbstractLogEnabled {
@@ -105,8 +104,6 @@ public class CocoonCrawling extends AbstractLogEnabled {
     /**
      *   An Iterator iterating over URIs which are not visited already,
      *   visited URIs are moved immediatly to a set of visited URIs
-     *
-     * @author    huber@apache.org
      */
     public static class CocoonCrawlingIterator implements Iterator {
         /**

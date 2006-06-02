@@ -21,12 +21,6 @@
  */
 package javax.jdo;
 
-/**
- * @author agallardo
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 abstract public interface Transaction {
 	abstract public void begin();
 	abstract public void commit();

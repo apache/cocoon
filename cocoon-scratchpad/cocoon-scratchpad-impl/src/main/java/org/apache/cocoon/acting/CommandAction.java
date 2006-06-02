@@ -31,15 +31,15 @@ import org.apache.excalibur.source.SourceUtil;
  * Therefore, a parameter named 'command' has to be configured in the sitemap 
  * to hold the filename as value.
  * 
- * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
  * @version $Id$
  */
-
 public class CommandAction extends AbstractAction implements ThreadSafe {
 	
 	public final static String PARAM_COMMAND = "command";
-	
-	
+
+    /**
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters param )
 	throws Exception {
 		String command = param.getParameter(PARAM_COMMAND);
@@ -64,7 +64,6 @@ public class CommandAction extends AbstractAction implements ThreadSafe {
 		else {
 			return null;
 		}
-        return(EMPTY_MAP);
+        return EMPTY_MAP;
     }
-
 }

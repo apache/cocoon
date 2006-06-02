@@ -35,7 +35,6 @@ import org.apache.cocoon.util.NetUtils;
  *   File writing is delayed until the content-type is clear, until then
  *   output is written into temporary buffer
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class DelayedFileSavingEnvironment extends AbstractCommandLineEnvironment {

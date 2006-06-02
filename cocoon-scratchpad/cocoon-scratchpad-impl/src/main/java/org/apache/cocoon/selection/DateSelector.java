@@ -102,7 +102,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *  &lt;/map:pipelines&gt;
  * </code></pre>
  *
- * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
  * @version $Id$
  */
 public class DateSelector extends AbstractSwitchSelector

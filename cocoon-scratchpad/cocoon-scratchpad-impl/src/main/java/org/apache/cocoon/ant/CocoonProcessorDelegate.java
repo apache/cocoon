@@ -41,7 +41,6 @@ import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 /**
  * A facade for Cocoon processing
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class CocoonProcessorDelegate extends AbstractLogEnabled

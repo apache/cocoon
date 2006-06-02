@@ -22,21 +22,19 @@ import org.apache.cocoon.ProcessingException;
 
 /** Interface to SLOP parsers
  *
- * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
  * @version $Id$
  */
- 
 public interface SlopParser {
 
    /** must be called before any call to processLine() */
-    public void startDocument(ContentHandler destination)
+    void startDocument(ContentHandler destination)
         throws SAXException, ProcessingException;
 
     /** must be called once all calls to processLine() are done */
-    public void endDocument()
+    void endDocument()
         throws SAXException, ProcessingException;
 
     /** call this to process input lines, does the actual parsing */
-    public void processLine(String line)
+    void processLine(String line)
         throws SAXException, ProcessingException;
 }

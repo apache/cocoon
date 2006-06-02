@@ -43,7 +43,6 @@ import org.apache.excalibur.source.impl.validity.FileTimeStampValidity;
  * by running batch processes.
  *
  * @since 2.1.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
 public class SimpleCache extends CacheImpl {

@@ -22,7 +22,6 @@ import java.util.ListIterator;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @version $Id$
  */
 public class XmlTreeConstraint {
@@ -30,8 +29,8 @@ public class XmlTreeConstraint {
 	private boolean debug = true;
 
 	private Boolean isMyUriRequired;
-	private List allowedMyUriStackEnd = null;
-	private List allowedGlobalStackEnd = null;
+	private List allowedMyUriStackEnd;
+	private List allowedGlobalStackEnd;
 
 
 	public XmlTreeConstraint(List allowedMyUriStackEnd,
