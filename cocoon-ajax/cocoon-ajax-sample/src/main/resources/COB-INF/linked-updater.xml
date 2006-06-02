@@ -60,13 +60,13 @@
 					<a href="linked-updater-content-3" dojoType="PartialLink" target="bottom#changeme">Click me to insert at the bottom</a><br/>
 					<a href="linked-updater-content-3" dojoType="PartialLink" target="after#changeme">Click me to insert after</a><br/>
 					<p>Memory available on the server:
-					  <span id="freemem">[unkown]</span>
+					  <span id="freemem">[unknown]</span>
 					</p>
 					<p>Current Time on the server (updated every 1 second):
-					  <span id="clock">[unkown]</span>
+					  <span id="clock">[unknown]</span>
 					</p>
   				<p>Current Time on the server (updated every 5 seconds):
-					  <span id="clock1">[unkown]</span>
+					  <span id="clock1">[unknown]</span>
 					</p>
 				</td>
 				<td>
