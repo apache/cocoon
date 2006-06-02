@@ -18,7 +18,7 @@
 <!--+
     | Input Modules sample sitemap.
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 

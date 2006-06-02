@@ -17,7 +17,7 @@
 <!--+
     | Demo file for XMLFileModule
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <forrestconf version="1.0">
   <skin>forrest-site</skin>

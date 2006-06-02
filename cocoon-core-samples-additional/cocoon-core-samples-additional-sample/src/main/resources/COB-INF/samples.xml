@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml 216123 2005-07-13 07:18:17Z cziegeler $
+    | @version $Id$
     +-->
 
 <samples name="Additional Cocoon Core Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
