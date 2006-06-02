@@ -204,6 +204,9 @@ public class WildcardHelper {
                 if ( buffpos != buff.length ) {
                     int startpos = buffpos - (charpos - exprpos);
                     while ( buffpos != buff.length ) {
+                        if ( exprpos == charpos ) {
+                            return false;
+                        }
                         buffpos -= (charpos - exprpos);
                         buffpos++;
                         offset = indexOfArray (expr, exprpos, charpos, buff, buffpos);
@@ -283,7 +286,7 @@ public class WildcardHelper {
             throw new IllegalArgumentException ("rend < rpos");
         // If we need to match a zero length string return current dpos
         if (rend == rpos)
-            return (d.length); //?? dpos?
+            return d.length; //?? dpos?
         // If we need to match a 1 char length string do it simply
         if ((rend - rpos) == 1) {
             // Search for the specified character
