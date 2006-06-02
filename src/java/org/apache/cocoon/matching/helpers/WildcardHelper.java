@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,6 @@ public class WildcardHelper {
     protected static final int MATCH_BEGIN = -4;
     /** The int representing end in pattern <code>int []</code>. */
     protected static final int MATCH_END = -5;
-
 
     /**
      * Translate the given <code>String</code> into a <code>int []</code>
@@ -210,6 +209,9 @@ public class WildcardHelper {
                 if ( buffpos != buff.length ) {
                     int startpos = buffpos - (charpos - exprpos);
                     while ( buffpos != buff.length ) {
+                        if ( exprpos == charpos ) {
+                            return false;
+                        }
                         buffpos -= (charpos - exprpos);
                         buffpos++;
                         offset = indexOfArray (expr, exprpos, charpos, buff, buffpos);
@@ -289,7 +291,7 @@ public class WildcardHelper {
             throw new IllegalArgumentException ("rend < rpos");
         // If we need to match a zero length string return current dpos
         if (rend == rpos)
-            return (d.length); //?? dpos?
+            return d.length; //?? dpos?
         // If we need to match a 1 char length string do it simply
         if ((rend - rpos) == 1) {
             // Search for the specified character
