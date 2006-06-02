@@ -29,6 +29,16 @@
 	    cocoon.ajax.periodicalUpdate(2000, "display-freememory", "freemem");
 	}
 	dojo.addOnLoad(initTimer);
+	
+	function initClock() {
+  	cocoon.ajax.periodicalUpdate(1000, "display-clock", "clock");
+	}
+	dojo.addOnLoad(initClock);
+	
+	function initClock1() {
+  	cocoon.ajax.periodicalUpdate(5000, "display-clock", "clock1");
+	}
+ 	dojo.addOnLoad(initClock1);
   </script>
 
 	<style>
@@ -49,9 +59,15 @@
 					<a href="linked-updater-content-3" dojoType="PartialLink" target="top#changeme">Click me to insert at the top</a><br/>
 					<a href="linked-updater-content-3" dojoType="PartialLink" target="bottom#changeme">Click me to insert at the bottom</a><br/>
 					<a href="linked-updater-content-3" dojoType="PartialLink" target="after#changeme">Click me to insert after</a><br/>
-					<br/>
-					Memory available on the server:<br/>
-					<span id="freemem">[unkown]</span>
+					<p>Memory available on the server:
+					  <span id="freemem">[unkown]</span>
+					</p>
+					<p>Current Time on the server (updated every 1 second):
+					  <span id="clock">[unkown]</span>
+					</p>
+  				<p>Current Time on the server (updated every 5 seconds):
+					  <span id="clock1">[unkown]</span>
+					</p>
 				</td>
 				<td>
 					<div class="container">
@@ -63,7 +79,5 @@
 				</td>
 			</tr>
 		</table>
-	
-	
 	</content>
 </page>
