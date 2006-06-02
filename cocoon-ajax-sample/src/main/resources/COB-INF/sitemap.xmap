@@ -60,11 +60,10 @@
        <map:serialize type="html"/>
      </map:match>
 
-     <map:match pattern="display-freememory">
+     <map:match pattern="display-*">
        <map:generate type="jx" src="{0}.xml"/>
        <map:serialize type="html"/>
      </map:match>
-
 
      <!-- Generic pipeline to load resources in jars -->
      <map:match pattern="resources/*/**">
