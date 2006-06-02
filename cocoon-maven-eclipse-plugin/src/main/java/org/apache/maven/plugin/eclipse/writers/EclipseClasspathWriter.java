@@ -228,7 +228,7 @@ public class EclipseClasspathWriter
                 }                
                 else if ( !dep.isOSGiBundle() && rcp ) // && !dep.isTestDependency() && !dep.isProvided() )
                 {
-	                String libs = "target/osgi/lib";
+	                String libs = "lib";
 	                try {
 	                	File libsDir = new File(libs);
 	                	if(!libsDir.exists()) {
