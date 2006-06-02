@@ -64,12 +64,11 @@ import org.apache.excalibur.source.SourceResolver;
  * </pre>
  * 
  * @since 2.1.4
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public interface SourceCache {
 	
-	public static final String ROLE = SourceCache.class.getName();
+	String ROLE = SourceCache.class.getName();
 	
 	/**
 	 * Register a source reloader that will recreate cached objects.

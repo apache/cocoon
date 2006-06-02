@@ -46,7 +46,6 @@ import java.util.Collections;
  * <code>maxage</code> is set to -1, that means the cookie will live until the
  * session is invalidated. If you want to remove a cookie, set its maxage to 0.
  *
- * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
  * @version $Id$
  */
 public class CookieCreatorAction extends ServiceableAction

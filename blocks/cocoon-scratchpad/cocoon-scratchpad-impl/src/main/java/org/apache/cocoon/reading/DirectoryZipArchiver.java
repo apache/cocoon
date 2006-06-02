@@ -43,7 +43,6 @@ import java.util.zip.ZipOutputStream;
  * NOTE (SM): no content-length information is passed to the user since we
  * can't estimate it before actually performing the compression.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @version $Id$
  */
 public class DirectoryZipArchiver extends AbstractReader {

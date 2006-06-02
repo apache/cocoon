@@ -20,7 +20,6 @@ import java.util.Date;
 /**
  * This interface for lock of a source
  *
- * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
  * @version $Id$
  */
 public class SourceLock {

@@ -20,7 +20,6 @@ import java.io.Serializable;
 /**
  *  Department's Bean
  *
- * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version $Id$
 */
 public class Department implements Serializable {

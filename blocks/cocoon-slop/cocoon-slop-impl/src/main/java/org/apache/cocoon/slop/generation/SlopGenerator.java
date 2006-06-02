@@ -39,18 +39,16 @@ import org.xml.sax.helpers.LocatorImpl;
  * SlopGenerator: Simple Line-Oriented Parsing of text files.
  * General code structure lifted from the Chaperon TextGenerator - thanks Stephan!
  *
- * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
  * @version $Id$
  */
-
 public class SlopGenerator extends ServiceableGenerator
         implements CacheableProcessingComponent {
 
-    private Source inputSource = null;
-    private String encoding = null;
-    private SlopParser parser = null;
+    private Source inputSource;
+    private String encoding;
+    private SlopParser parser;
     private boolean preserveSpace = false;
-    private String validTagnameChars = null;
+    private String validTagnameChars;
 
     /**
      * Recycle this component.

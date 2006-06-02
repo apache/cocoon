@@ -44,7 +44,6 @@ import org.apache.ojb.broker.util.logging.LoggingConfiguration;
  * It is important that Avalon component is initialized before any access
  * to OJB API is made.</p>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class LoggerImpl extends AbstractLogEnabled

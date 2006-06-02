@@ -18,8 +18,7 @@
 <!--
  * Simple demo that inserts a row into hsqldb using OJB with PB
  *
- * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/03/17 11:28:20 $
+ * @version $Id$
 -->
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">

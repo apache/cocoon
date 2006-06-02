@@ -32,18 +32,17 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  * TODO describe class
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
 public class CachingSourceTestCase extends ContainerTestCase {
     
     public void testResolveURI() throws Exception {
-        
+
         SourceResolver resolver = (SourceResolver) lookup(SourceResolver.ROLE);
-        
+
         String scheme = "async-caching";
         String uri = "resource://org/apache/cocoon/components/" +
             "source/impl/cachingsourcetest.xml?foo=bar";
-        
+
         // resolve CachingSource
         Source source = resolver.resolveURI(
             scheme + ":" + uri + "&cocoon:cache-expires=10");

@@ -51,7 +51,6 @@ import org.xml.sax.SAXException;
  * &lt;/page&gt;
  * </pre>
  *
- * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
  * @version $Id$
  */
 public class SourcePropsWritingTransformer extends AbstractSAXTransformer {

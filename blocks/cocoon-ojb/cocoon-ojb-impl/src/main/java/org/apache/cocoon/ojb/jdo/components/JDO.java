@@ -23,7 +23,6 @@ import javax.jdo.PersistenceManager;
  * Interface of the JDO Persistent Manager Factory.
  * It is used to get the Persistence Manager to interact with JDO using OJB
  *
- * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version $Id$
 */
 public interface JDO extends Component {

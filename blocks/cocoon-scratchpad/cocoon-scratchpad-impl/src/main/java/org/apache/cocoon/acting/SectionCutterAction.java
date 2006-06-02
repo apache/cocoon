@@ -40,10 +40,8 @@ import org.apache.cocoon.environment.SourceResolver;
  *  of the URI). When an expression matches, the action will set the configured
  *  variable in the Map.
  *
- * @author     <a href="mailto:sergio.carvalho@acm.org">Sergio Carvalho</a>
  * @version $Id$
  */
-
 public class SectionCutterAction extends ConfigurableServiceableAction implements ThreadSafe {
 
     Vector sections = new Vector();
@@ -123,8 +121,6 @@ public class SectionCutterAction extends ConfigurableServiceableAction implement
     /**
      *  Description of the Class
      *
-     * @author     subzero
-     * @version
      */
     static class Section extends Object {
         String matchExpression;

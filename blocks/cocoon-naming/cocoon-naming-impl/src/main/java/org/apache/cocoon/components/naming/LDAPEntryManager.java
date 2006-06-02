@@ -45,7 +45,6 @@ import org.apache.cocoon.ProcessingException;
  *	The <code>LDAPEntryManager</code> is an Avalon Component for managing Entries in a Javax Naming Directory.
  *	This is the LDAP implementation of the {@link org.apache.cocoon.components.naming.EntryManager EntryManager} interface.
  *  This is designed to be used from FlowScript, it uses Maps instead of NamingEnumerations and Attributes.
- *	@author Jeremy Quinn <a href="http://apache.org/~jeremy">http://apache.org/~jeremy</a>.
  *
  *   Example configuration (goes in cocoon.xconf)
  *   <pre><tt>
@@ -56,8 +55,9 @@ import org.apache.cocoon.ProcessingException;
  *	  &lt;parameter name="ldap-pass" value="password"/&gt;
  *  &lt;/component&gt;
  *   </tt></pre></p>
+ *
+ * @version $Id$
  */
-
 public class LDAPEntryManager
 	extends AbstractLogEnabled
 	implements EntryManager, Parameterizable, Disposable, Recyclable {

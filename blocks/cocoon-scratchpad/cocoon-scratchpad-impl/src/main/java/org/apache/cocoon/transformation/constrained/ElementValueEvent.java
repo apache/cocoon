@@ -19,7 +19,6 @@ import org.xml.sax.Attributes;
 
 /**
  *
- * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
  * @version $Id$
  */
 public class ElementValueEvent extends ContainerElementEndEvent {

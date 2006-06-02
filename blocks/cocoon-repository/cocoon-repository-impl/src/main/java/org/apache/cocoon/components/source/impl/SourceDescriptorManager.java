@@ -45,8 +45,6 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 /**
  * This source descriptor acts as container for a set of source inspectors/descriptors.
  * 
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * @version $Id$
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 

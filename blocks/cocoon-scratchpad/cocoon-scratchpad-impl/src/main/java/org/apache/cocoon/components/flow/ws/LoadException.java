@@ -18,7 +18,7 @@ package org.apache.cocoon.components.flow.ws;
 import org.apache.cocoon.ProcessingException;
 
 /**
- * @author Adam Ratcliffe
+ * @version $Id$
  */
 public class LoadException extends ProcessingException {
 

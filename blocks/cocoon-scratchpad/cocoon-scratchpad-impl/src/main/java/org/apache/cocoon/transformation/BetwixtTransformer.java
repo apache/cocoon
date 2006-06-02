@@ -66,11 +66,12 @@ import org.xml.sax.SAXException;
  * each object it contains.
  *
  * @see <a href="http://jakarta.apache.org/commons/betwixt/">Betwixt Projekt Homepage</a>
- * @author <a href="mailto:cgaffga@triplemind.com">Christoph Gaffga</a>
+ * @version $Id$
  */
 public class BetwixtTransformer
     extends AbstractTransformer
     implements Configurable {
+
     private static final String BETWIXT_NSURI =
         "http://apache.org/cocoon/betwixt/1.0";
 

@@ -31,8 +31,6 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * The interface for a property of a source
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
  * @version $Id$
  */
 public class SourceProperty implements XMLizable {

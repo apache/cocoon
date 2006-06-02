@@ -27,7 +27,6 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
 /**
  *  Employee's Impl
  *
- * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version $Id$
 */
 public class EmployeeDAO {

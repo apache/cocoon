@@ -23,13 +23,11 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * A source inspector exposes source properties.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * @version $Id$
  */
 public interface SourceInspector {
 
-    public final static String ROLE = SourceInspector.class.getName();
+    String ROLE = SourceInspector.class.getName();
 
     /**
      * Gets the SourceProperty associated with the given Source identified 
@@ -42,7 +40,7 @@ public interface SourceInspector {
      * if the inspector does not provide this property.
      * @throws SourceException
      */
-    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
+    SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException;
 
     /**
@@ -53,7 +51,7 @@ public interface SourceInspector {
      * by this SourceInspector.
      * @throws SourceException  
      */
-    public SourceProperty[] getSourceProperties(Source source) throws SourceException;
+    SourceProperty[] getSourceProperties(Source source) throws SourceException;
     
     /**
      * Check if this inspector handles the property of the given type.
@@ -63,7 +61,7 @@ public interface SourceInspector {
      * @return  <code>true</code> if this inspector handles properties of the given type
      * else <code>false</code>.
      */
-    public boolean handlesProperty(String namespace, String name);
+    boolean handlesProperty(String namespace, String name);
     
     /**
      * Get the validity object that describes the validity state
@@ -73,6 +71,6 @@ public interface SourceInspector {
      * its properties, <code>null</code> if the source properties
      * are not cacheable.
      */
-    public SourceValidity getValidity(Source source);
+    SourceValidity getValidity(Source source);
 }
 

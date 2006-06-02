@@ -41,8 +41,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *  and write it in a way similar to AWT & Swing Event Handling. Part of this
  *  code is from the SQLTransformer of Donald Ball.
  *
- * @author     <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @author     <a href="mailto:tom.klaasen@pandora.be">Tom Klaasen</a>
  * @version $Id$
  */
 public abstract class AbstractConstrainedTransformer
@@ -271,9 +269,6 @@ public abstract class AbstractConstrainedTransformer
 
 	/**
 	 *  Utility methods also for subclasses
-	 *
-	 *@author     Nicola Ken Barozzi
-	 *@since      14 May 2002
 	 */
 	public static class RipperListener extends ElementEventAdapter {
 

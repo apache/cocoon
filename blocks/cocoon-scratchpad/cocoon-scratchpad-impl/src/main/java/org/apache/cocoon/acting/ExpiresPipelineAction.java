@@ -37,12 +37,14 @@ import java.util.Map;
  *   Three parameters: cache-role and cache-key (cache-key is required)
  *                   action with value remove (required)
  *
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  * @since 2.1.1
  */
 public class ExpiresPipelineAction extends ServiceableAction implements ThreadSafe {
 
+    /**
+     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public Map act(Redirector redirector,
                     SourceResolver resolver,
                     Map objectModel,

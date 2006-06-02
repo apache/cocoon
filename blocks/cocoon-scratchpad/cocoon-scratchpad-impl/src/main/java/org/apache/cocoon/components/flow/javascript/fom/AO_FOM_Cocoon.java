@@ -49,11 +49,8 @@ import org.mozilla.javascript.continuations.Continuation;
  * Implementation of FOM (Flow Object Model).
  *
  * @since 2.1 
- * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
- * @author <a href="mailto:reinhard.at.apache.org">Reinhard Poetz</a>
  * @version $Id$
  */
-
 public class AO_FOM_Cocoon extends ScriptableObject {
 
     private AO_FOM_JavaScriptInterpreter interpreter;

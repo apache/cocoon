@@ -114,9 +114,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  *   and sends it into the cocoon pipeline.
  * </p>
  *
- * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @version $Id$
- *
  */
 public class CocoonFilterGeneratorImpl implements Filter {
 
@@ -398,8 +396,6 @@ public class CocoonFilterGeneratorImpl implements Filter {
     /**
      * Local request wrapper storing xml-data as a request-attribute.
      *
-     * @author     HuberB1
-     * @version
      */
     static class CocoonFilterGeneratorRequestWrapper extends HttpServletRequestWrapper {
         /**
@@ -447,8 +443,6 @@ public class CocoonFilterGeneratorImpl implements Filter {
     /**
      * Stub implementation of Servlet Config
      *
-     * @author     HuberB1
-     * @version
      */
     static class CocoonFilterGeneratorConfig implements ServletConfig {
         ServletContext c;
@@ -514,8 +508,6 @@ public class CocoonFilterGeneratorImpl implements Filter {
     /**
      * A response wrapper storing response in a byte array output stream.
      *
-     * @author     HuberB1
-     * @version
      */
     class CocoonFilterGeneratorResponseWrapper extends HttpServletResponseWrapper {
         private ByteArrayOutputStream output;
@@ -607,8 +599,6 @@ public class CocoonFilterGeneratorImpl implements Filter {
     /**
      * A servlet output stream storing output into a DataOutputStream.
      *
-     * @author     HuberB1
-     * @version
      */
     static class CocoonFilterGeneratorOutputStream extends ServletOutputStream {
 

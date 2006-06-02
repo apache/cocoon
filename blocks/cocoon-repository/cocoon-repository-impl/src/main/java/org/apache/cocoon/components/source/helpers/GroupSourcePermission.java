@@ -18,7 +18,6 @@ package org.apache.cocoon.components.source.helpers;
 /**
  * This class represents a source permission for groups
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public class GroupSourcePermission extends AbstractSourcePermission {

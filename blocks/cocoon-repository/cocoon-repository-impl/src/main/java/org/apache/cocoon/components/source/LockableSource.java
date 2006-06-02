@@ -23,7 +23,6 @@ import org.apache.cocoon.components.source.helpers.SourceLock;
 /**
  * A source, which could be locked
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public interface LockableSource extends Source {
@@ -35,13 +34,13 @@ public interface LockableSource extends Source {
      *
      * @throws SourceException If an exception occurs during this operation
      */
-    public void addSourceLocks(SourceLock sourcelock) throws SourceException;
+    void addSourceLocks(SourceLock sourcelock) throws SourceException;
 
     /**
      * Returns a list of locks on the source.
      *
      * @return Enumeration of SourceLock
      */
-    public SourceLock[] getSourceLocks() throws SourceException;
+    SourceLock[] getSourceLocks() throws SourceException;
 }
 

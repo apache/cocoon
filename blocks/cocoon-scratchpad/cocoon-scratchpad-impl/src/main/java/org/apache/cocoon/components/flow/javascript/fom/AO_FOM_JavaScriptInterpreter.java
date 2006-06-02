@@ -80,10 +80,6 @@ import org.mozilla.javascript.tools.shell.Global;
  *    </ul>
  * </p>
  * 
- * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
- * @author <a href="mailto:reinhard@apache.org">Reinhard Poetz</a> 
  * @since 2.1
  * @version $Id$
  */
