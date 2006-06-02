@@ -21,7 +21,6 @@ import org.apache.excalibur.source.SourceException;
 /**
  * A source, which could exist in different versions
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public interface VersionableSource extends Source {
@@ -29,31 +28,31 @@ public interface VersionableSource extends Source {
     /** 
      * If this source versioned
      */
-    public boolean isVersioned() throws SourceException;
+    boolean isVersioned() throws SourceException;
 
     /** 
      * Get the current revision of the source
      */
-    public String getSourceRevision() throws SourceException;
+    String getSourceRevision() throws SourceException;
 
     /** 
      * Sets the wanted revision of the source
      */
-    public void setSourceRevision(String sourcerevision) throws SourceException;
+    void setSourceRevision(String sourcerevision) throws SourceException;
 
     /** 
      * Get the current branch of the revision from the source
      */
-    public String getSourceRevisionBranch() throws SourceException;
+    String getSourceRevisionBranch() throws SourceException;
 
     /** 
      * Sets the wanted branch of the revision from the source
      */
-    public void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException;
+    void setSourceRevisionBranch(String sourcerevisionbranch) throws SourceException;
 
     /** 
      * Get the latest revision
      */
-    public String getLatestSourceRevision() throws SourceException;
+    String getLatestSourceRevision() throws SourceException;
 }
 

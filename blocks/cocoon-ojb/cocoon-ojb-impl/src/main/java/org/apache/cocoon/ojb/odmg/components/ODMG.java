@@ -25,7 +25,6 @@ import org.odmg.ODMGException;
  * the ODMG Implementation object to interact with object database
  * through ODMG API.
  *
- * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @version $Id$
  */
 public interface ODMG extends Component {

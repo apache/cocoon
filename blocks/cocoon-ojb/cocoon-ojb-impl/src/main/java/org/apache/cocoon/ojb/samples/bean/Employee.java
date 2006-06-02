@@ -21,7 +21,6 @@ import java.io.Serializable;
 /**
  *  Employee's Bean
  *
- * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version $Id$
 */
 public class Employee implements Serializable {

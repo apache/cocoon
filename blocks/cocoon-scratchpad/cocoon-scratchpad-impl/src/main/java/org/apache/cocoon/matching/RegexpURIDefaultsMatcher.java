@@ -27,7 +27,6 @@ import org.apache.regexp.REProgram;
 /**
  * Matches the request URIs against a regular expression pattern.
  *
- * @author     <a href="mailto:huber@apache.org">Bernhard Huber</a>
  * @since 03 January 2003
  * @version $Id$
  */

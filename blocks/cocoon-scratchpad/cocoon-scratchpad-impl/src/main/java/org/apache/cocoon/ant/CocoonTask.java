@@ -55,7 +55,6 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Ant task for running Cocoon.
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class CocoonTask extends Task {
@@ -527,8 +526,6 @@ public class CocoonTask extends Task {
      * A factory creating Cocoon objects.
      * This class encapsulates creation, disposing of Cocoon objects, and
      * creating of classes for using Cocoon in some task, subtask execution
-     *
-     * @author    huber@apache.org
      */
     public static class CocoonFactory extends AbstractLogEnabled
              implements Contextualizable, Configurable {
@@ -688,8 +685,6 @@ public class CocoonTask extends Task {
     /**
      * Enumerated attribute with the values "DEBUG", "INFO", "WARN", "ERROR",
      * and "FATAL_ERROR"
-     *
-     * @author    huber@apache.org
      */
     public static class LogLevelOption extends EnumeratedAttribute {
         /**

@@ -24,7 +24,6 @@ import org.apache.excalibur.source.SourceException;
 /**
  * A source, which is restrictable, which means you need a username and password.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @version $Id$
  */
 public interface RestrictableSource extends Source {
@@ -32,12 +31,12 @@ public interface RestrictableSource extends Source {
     /** 
      * Get the current credential for the source
      */
-    public SourceCredential getSourceCredential() throws SourceException;
+    SourceCredential getSourceCredential() throws SourceException;
 
     /** 
      * Set the credential for the source
      */
-    public void setSourceCredential(SourceCredential sourcecredential) throws SourceException;
+    void setSourceCredential(SourceCredential sourcecredential) throws SourceException;
 
     /**
      * Add a permission to this source
@@ -46,7 +45,7 @@ public interface RestrictableSource extends Source {
      *
      * @throws SourceException If an exception occurs during this operation
      **/
-    public void addSourcePermission(SourcePermission sourcepermission) throws SourceException;
+    void addSourcePermission(SourcePermission sourcepermission) throws SourceException;
 
     /**
      * Remove a permission from this source
@@ -55,13 +54,13 @@ public interface RestrictableSource extends Source {
      *
      * @throws SourceException If an exception occurs during this operation
      **/
-    public void removeSourcePermission(SourcePermission sourcepermission) throws SourceException;
+    void removeSourcePermission(SourcePermission sourcepermission) throws SourceException;
 
     /**
      * Returns a list of the existing permissions
      *
      * @return Array of SourcePermission
      */
-    public SourcePermission[] getSourcePermissions() throws SourceException;
+    SourcePermission[] getSourcePermissions() throws SourceException;
 }
 

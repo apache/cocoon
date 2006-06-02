@@ -36,7 +36,6 @@ import org.apache.cocoon.slop.interfaces.SlopConstants;
  * between the header and body of the email message and parse them
  * with different rules.
  *
- * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
  * @version $Id$
  */
 public class SimpleSlopParser implements SlopParser,SlopConstants {

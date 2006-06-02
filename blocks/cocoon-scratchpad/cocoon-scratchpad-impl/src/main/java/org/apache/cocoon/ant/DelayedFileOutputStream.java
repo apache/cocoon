@@ -27,7 +27,6 @@ import java.io.OutputStream;
 /**
  *   A output stream writing to a ByteArrayOutputStream, until FilOutputStream target is defined.
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class DelayedFileOutputStream extends OutputStream {

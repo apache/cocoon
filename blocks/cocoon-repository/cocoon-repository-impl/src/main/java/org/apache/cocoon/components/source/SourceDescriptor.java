@@ -22,11 +22,10 @@ import org.apache.excalibur.source.SourceException;
 /**
  * A source descriptor handles modifiable source properties.
  * 
- * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public interface SourceDescriptor extends SourceInspector {
 
-    public static final String ROLE = SourceDescriptor.class.getName();
+    String ROLE = SourceDescriptor.class.getName();
     
     /**
      * Set a property on a Source.
@@ -34,7 +33,7 @@ public interface SourceDescriptor extends SourceInspector {
      * @param source  the Source to set the SourceProperty on
      * @param property  the SourceProperty to set
      */
-    public void setSourceProperty(Source source, SourceProperty property) 
+    void setSourceProperty(Source source, SourceProperty property) 
         throws SourceException;
     
     /**
@@ -44,7 +43,7 @@ public interface SourceDescriptor extends SourceInspector {
      * @param namespace  namespace identifier of the property to remove
      * @param name  name of the property to remove
      */
-    public void removeSourceProperty(Source source, String namespace, String name) 
+    void removeSourceProperty(Source source, String namespace, String name) 
         throws SourceException;
 
 }

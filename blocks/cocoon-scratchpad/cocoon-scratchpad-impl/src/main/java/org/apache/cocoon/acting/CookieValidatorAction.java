@@ -30,11 +30,8 @@ import java.util.Map;
  *  parameters are described via the external xml file.
  *  @see org.apache.cocoon.acting.AbstractValidatorAction 
  *
- * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
-
 public class CookieValidatorAction extends AbstractValidatorAction {
 
     /* (non-Javadoc)

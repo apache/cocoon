@@ -28,7 +28,6 @@ import javax.jdo.PersistenceManagerFactory;
  * Implementation of the JDO component. Creates one PersistenceManagerFactory
  * and stores it for the future use.
  *
- * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version $Id$
 */
 public class JDOImpl extends AbstractLogEnabled

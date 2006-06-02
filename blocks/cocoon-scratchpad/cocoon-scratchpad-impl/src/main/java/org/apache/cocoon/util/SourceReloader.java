@@ -21,7 +21,6 @@ import org.apache.excalibur.source.Source;
  * Load data from a source and return an object.
  * 
  * @since 2.1.4
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @version $Id$
  */
 public interface SourceReloader {

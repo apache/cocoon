@@ -61,8 +61,6 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * </p>
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:unico@hippo.nl">Unico Hommes</a>
  * @version $Id$
  */
 public class TraversableSourceDescriptionGenerator extends TraversableGenerator {

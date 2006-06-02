@@ -33,7 +33,6 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * This action sets a new LINK_OBJECT entry in the objectModel entry.
  *
- * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
  * @since 16 December 2002
  * @version $Id$
  */

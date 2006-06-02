@@ -21,7 +21,6 @@ import java.io.OutputStream;
 /**
  *   A OutputStream writting no bytes at all.
  *
- * @author    huber@apache.org
  * @version $Id$
  */
 public class NullOutputStream extends OutputStream {

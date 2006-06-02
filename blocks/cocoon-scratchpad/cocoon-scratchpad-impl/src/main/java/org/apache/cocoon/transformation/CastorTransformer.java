@@ -84,9 +84,6 @@ import java.util.Map;
  * The <code>command</code> attribute specifies the class that implements CastorUnmarshalCommand
  * and will be called before and after unmarshaling.</p>
  *
- * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
  * @version $Id$
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {

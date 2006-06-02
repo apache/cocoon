@@ -25,8 +25,6 @@ import org.apache.excalibur.source.SourceException;
 /**
  * This source inspector adds extra attributes for image files.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
  * @version $Id$
  */
 public class GIFSourceInspector extends AbstractImageSourceInspector implements ThreadSafe {
