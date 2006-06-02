@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServlet;
  * <code>paranoid-classpath</code>.
  * <ul>
  * <li><code>servlet-class</code> defines the sandboxed servlet class, the
- * default is {@link CocoonServlet}
+ * default is "org.apache.cocoon.servlet.CocoonServlet".
  * <li><code>paranoid-classpath</code> expects the name of a text file that
  * can contain lines begining with
  * <code>class-dir:<code> (directory containing classes),
