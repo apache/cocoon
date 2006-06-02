@@ -54,8 +54,8 @@ public class LocatedException extends NestableException
     }
 
     /**
-     * Crawl the cause chain and ensure causes are properly set using {@ link Throwable#initCause}.
-     * This is needed because some exceptions (e.g. SAXException) don't have a {@ link Throwable#getCause}
+     * Crawl the cause chain and ensure causes are properly set using {@link Throwable#initCause}.
+     * This is needed because some exceptions (e.g. SAXException) don't have a {@link Throwable#getCause}
      * that is used to print stacktraces.
      */
     public static void ensureCauseChainIsSet(Throwable thr) {

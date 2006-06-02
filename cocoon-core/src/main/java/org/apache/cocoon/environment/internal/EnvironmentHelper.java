@@ -285,7 +285,7 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
      *
-     * <p>It's the counterpart to the {@link #enterProcessor(Processor, ServiceManager, Environment)}
+     * <p>It's the counterpart to the {@link #enterProcessor(Processor, Environment)}
      * method.</p>
      */
     public static void leaveProcessor() {
