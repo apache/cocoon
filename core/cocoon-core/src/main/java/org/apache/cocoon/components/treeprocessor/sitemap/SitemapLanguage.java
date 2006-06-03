@@ -99,6 +99,8 @@ public class SitemapLanguage
     extends AbstractLogEnabled
     implements TreeBuilder, Contextualizable, Serviceable, Recyclable, BeanFactoryAware {
 
+    private static final String CLASSLOADER_CONFIG_NAME = "classloader";
+
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
 
@@ -401,7 +403,7 @@ public class SitemapLanguage
                     componentConfig.getNamespace(),
                     "");
             c.addAll(componentConfig);
-            classPathConfig = c.getChild("classpath", false);
+            classPathConfig = c.getChild(CLASSLOADER_CONFIG_NAME, false);
             if ( classPathConfig != null ) {
                 c.removeChild(classPathConfig);
             }
