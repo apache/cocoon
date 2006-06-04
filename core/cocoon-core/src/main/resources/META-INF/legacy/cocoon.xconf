@@ -36,6 +36,11 @@
       | from the sitemap-additions directory.
       +-->
   <include dir="context://WEB-INF/sitemap-additions" pattern="*.xmap"/>
-
   
+  <!--+
+      | Include Spring beans definition files ending with ".xml" from
+      | the spring directory.
+      +-->
+  <include-beans dir="context://WEB-INF/spring" pattern="*.xml"/>
+
 </cocoon>
