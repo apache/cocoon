@@ -25,12 +25,13 @@ import org.apache.cocoon.deployer.logger.Logger;
 import org.apache.cocoon.deployer.monolithic.SingleFileDeployer;
 
 /**
- * Deploy blocks to a monolithic Cocoon web application.
+ * Deploy blocks to a monolithic Cocoon web application. The files contained by a block are copied to the right places.
+ * based on rules.
  */
 public class MonolithicCocoonDeployer {
 
 	public static void deploy(final Map libraries, final File basedir, final String blocksdir, final Logger logger) {
-
+		
         for(Iterator it = libraries.keySet().iterator(); it.hasNext();) {
         	Object id = it.next();
         	File lib = (File) libraries.get(id);  	
@@ -39,6 +40,7 @@ public class MonolithicCocoonDeployer {
                 zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF"));        		
                 zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
                 zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
+                zipExtractor.addRule("**spring/**.xml", new SingleFileDeployer("WEB-INF/spring"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);

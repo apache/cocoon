@@ -19,10 +19,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.cocoon.deployer.BlockDeployer;
 import org.apache.cocoon.deployer.MonolithicCocoonDeployer;
@@ -193,30 +196,19 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         
         blockDeployer.deploy(deploy, false, true);
         
-    }	
- 
+    }
+    
 	/**
 	 * Deploy a monolithic Cocoon web application. This means it doesn't use
 	 * the features that the blocks-fw offers.
 	 */
-	protected void deployMonolithicCocoonApp(final String blocksdir)  throws MojoExecutionException {
+	protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir)  throws MojoExecutionException {
     	File webappDirectory_ = getWebappDirectory();
     	
     	// build the web application
         this.buildExplodedWebapp(webappDirectory_);
         
-        // loop over all artifacts and deploy them correctly
-        Map files = new HashMap();
-        for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
-        	Artifact artifact = (Artifact) it.next();
-        	String id = artifact.getArtifactId();
-        	if(files.containsKey(id)) {
-        		throw new MojoExecutionException("There are at least two artifacts with the ID '" + id + "'.");
-        	}
-        	files.put(id, artifact.getFile());
-        }
-
-        MonolithicCocoonDeployer.deploy(files, webappDirectory_, blocksdir, new MavenLoggingWrapper(this.getLog()));
+        this.deployBlocksIntoMonotiticWebapp(blocksdir, webappDirectory_, new HashSet());
         
         // make sure that all configuration files available in the webapp override block configuration files
         try {
@@ -227,7 +219,44 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         
         // take care of paranoid classloading
         // TBD
-	}   
+	}  
+    
+    /**
+     * Deploy a particular block at development time.
+     * 
+     * @param blocksdir
+     * @throws MojoExecutionException
+     */
+    protected void deployMonolithicCocoonAppAsBlockWebapp(final String blocksdir) throws MojoExecutionException {
+        File webappDirectory_ = getWebappDirectory();        
+        
+        File webinfDir = new File( webappDirectory, WEB_INF );
+        webinfDir.mkdirs();
+        
+        this.deployBlocksIntoMonotiticWebapp(blocksdir, webappDirectory_, new HashSet());
+        
+        // create a special root sitemap with <map:classloader> and <map:mount> elements
+    }
+    
+    /**
+     * Deploy blocks into  a monolithic Cocoon web application. This means it doesn't use
+     * the features that the upcoming blocks-fw (aka Cocoon 3.0) offers.
+     */
+    private void deployBlocksIntoMonotiticWebapp(final String blocksdir, final File webappDirectory, Set excludedArtifacts) throws MojoExecutionException {
+        // loop over all artifacts and deploy them correctly
+        Map files = new HashMap();
+        for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
+            Artifact artifact = (Artifact) it.next();
+            String id = artifact.getArtifactId();
+            if(files.containsKey(id)) {
+                throw new MojoExecutionException("There are at least two artifacts with the ID '" + id + "'.");
+            }
+            files.put(id, artifact.getFile());
+        }
+
+        MonolithicCocoonDeployer.deploy(files, webappDirectory, blocksdir, new MavenLoggingWrapper(this.getLog()));
+        
+    }         
     
     
 }
