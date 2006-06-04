@@ -86,15 +86,6 @@
         </configuration>
       </plugin>    
     </plugins>
-  </build>
-  <developers>
-    <developer>
-      <name>Reinhard Poetz</name>
-      <email>reinhard@apache.org</email>
-      <roles>
-        <role>committer</role>
-      </roles>
-    </developer>
-  </developers>  
+  </build> 
   
 </project>
