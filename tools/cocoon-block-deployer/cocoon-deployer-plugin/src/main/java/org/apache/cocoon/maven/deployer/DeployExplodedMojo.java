@@ -40,7 +40,7 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
 	
 	public void execute() throws MojoExecutionException {
 		if(this.serverVersion.equals("2.2")) {
-			this.deployMonolithicCocoonApp(blocksdir);
+			this.deployMonolithicCocoonAppAsWebapp(blocksdir);
 		} else {
 			this.deployBlocks();
 		}
