@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dojo.hostenv.conditionalLoadModule({
+dojo.kwCompoundRequire({
         common: [
                 "cocoon.ajax.BUHandler"
         ]
 });
-s
-dojo.hostenv.moduleLoaded("cocoon.ajax.*");
+
+dojo.provide("cocoon.ajax.*");
