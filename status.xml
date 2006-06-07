@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-1857" due-to="Brian Vargas" due-to-email="ardvaark-apachebugs@procrastinators.org">
+      Set instrumentation manager on child component managers to enable instrumentation of all components including sitemap components.
+    </action>
     <action dev="CZ" type="fix">
       Fix bug in wildcard matcher where a uri containing a pattern twice did not always match. For example,
       the uri "hallo.xml.xml" did not match "*.xml".
