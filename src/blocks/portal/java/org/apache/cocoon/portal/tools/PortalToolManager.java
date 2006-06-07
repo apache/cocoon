@@ -152,7 +152,6 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
 	
 	/**
 	 * Returns a Collection of all Tools
-	 * @return
 	 */
 	public Collection getTools() {
 		return tools.values();
@@ -161,7 +160,6 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
 	/**
 	 * Returns the tool with the id.
 	 * @param id Tool-Id
-	 * @return
 	 */
 	public PortalTool getTool(String id) {
 		return (PortalTool) tools.get(id);
@@ -169,7 +167,6 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
 
 	/**
 	 * Returns a Collection of tools which offers functions
-	 * @return
 	 */
 	public Collection getToolsWithFunctions() {
 		ArrayList tmp = new ArrayList();
@@ -196,7 +193,6 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
     
     /**
      * Returns the Configuration for the plugins
-     * @return
      */
     public Configuration getConfiguration() {
         return configuration;
@@ -236,7 +232,6 @@ public class PortalToolManager implements ThreadSafe, Component, Parameterizable
     /**
      * Returns a value from the auth context 
      * @param key Path (e.g. /foo/bar)
-     * @return
      */
     public String sGet(String key) {
         SessionContext ctx;

@@ -30,7 +30,6 @@ public interface PortalToolComponent {
     
     /**
      * Returns the id of the component
-     * @return
      */
     String getId();
     
@@ -41,7 +40,6 @@ public interface PortalToolComponent {
     void setName(String name);
     /**
      * Returns the name of the component
-     * @return
      */
     String getName();
 }

@@ -17,8 +17,6 @@ package org.apache.cocoon.reading.imageop;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.RasterOp;
 import java.awt.image.WritableRaster;
 
 import javax.imageio.ImageIO;

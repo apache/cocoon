@@ -30,7 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * easily represented as a DOM.
  *
  * <p>The {@link #toSAX} method is implemented by streaming (using a
- * {@link DOMStreamer}) the results of the {@link #toDOM} that must be
+ * {@link DOMStreamer}) the results of the {@link #toDOM(Node)} that must be
  * implemented by concrete subclasses.</p>
  *
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>

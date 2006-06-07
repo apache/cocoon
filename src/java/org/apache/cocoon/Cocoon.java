@@ -52,7 +52,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.SimpleSourceResolver;
 import org.apache.cocoon.util.Settings;
-import org.apache.cocoon.util.PropertySettings;
 import org.apache.cocoon.util.SettingsHelper;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;

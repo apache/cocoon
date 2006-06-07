@@ -111,7 +111,7 @@ public abstract class Part implements Disposable {
     
     /**
      * Returns an InputStream containing the file data
-     * @throws Exception
+     * @throws IOException
      */
     public abstract InputStream getInputStream() throws IOException;
 

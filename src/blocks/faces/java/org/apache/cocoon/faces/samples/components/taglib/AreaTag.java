@@ -188,7 +188,7 @@ public class AreaTag extends UIComponentTag {
                 area.getAttributes().put("styleClass", styleClass);
             }
         }
-        if (area instanceof ValueHolder) {
+        if (component instanceof ValueHolder) {
             ValueHolder valueHolder = (ValueHolder) component;
             if (value != null) {
                 if (FacesUtils.isExpression(value)) {

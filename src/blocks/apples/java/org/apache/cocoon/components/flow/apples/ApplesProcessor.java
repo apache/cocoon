@@ -42,7 +42,7 @@ import org.apache.cocoon.environment.Response;
 public class ApplesProcessor extends AbstractInterpreter implements Serviceable, ContinuationsDisposer {
 
 
-    private ServiceManager serviceManager;
+    //private ServiceManager serviceManager;
 
 
     public void callFunction(
@@ -178,7 +178,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable,
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         super.service(serviceManager);
-        this.serviceManager = serviceManager;
+        //this.serviceManager = serviceManager;
     }
 
 

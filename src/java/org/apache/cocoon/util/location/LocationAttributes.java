@@ -71,7 +71,6 @@ public class LocationAttributes {
      * 
      * @param locator the <code>Locator</code> (can be null)
      * @param attrs the <code>Attributes</code> where locator information should be added
-     * @return
      */
     public static Attributes addLocationAttributes(Locator locator, Attributes attrs) {
         if (locator == null || attrs.getIndex(URI, SRC_ATTR) != -1) {
@@ -108,7 +107,7 @@ public class LocationAttributes {
 
     /**
      * Returns the location of an element (SAX flavor). If the location is to be kept
-     * into an object built from this element, consider using {@link #getLocation(Attributes)}
+     * into an object built from this element, consider using {@link #getLocation(Attributes, String)}
      * and the {@link Locatable} interface.
      * 
      * @param attrs the element's attributes that hold the location information
@@ -162,7 +161,7 @@ public class LocationAttributes {
     /**
      * Returns the {@link Location} of an element (DOM flavor).
      * 
-     * @param attrs the element that holds the location information
+     * @param elem the element that holds the location information
      * @param description a description for the location (if <code>null</code>, the element's name is used)
      * @return a {@link Location} object
      */

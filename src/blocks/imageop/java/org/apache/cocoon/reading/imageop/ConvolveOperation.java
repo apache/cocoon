@@ -17,8 +17,6 @@ package org.apache.cocoon.reading.imageop;
 
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.awt.image.Raster;
-import java.awt.image.RasterOp;
 import java.awt.image.WritableRaster;
 
 import java.util.StringTokenizer;

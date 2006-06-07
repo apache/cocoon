@@ -17,13 +17,14 @@ package org.apache.cocoon.xml;
 
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
 
 /**
  * Abstract implementation of {@link XMLFragment} for objects that are more
  * easily represented as SAX events.
  *
  * <p>The {@link #toDOM} method is implemented by piping in a {@link DOMBuilder}
- * the results of {@link #toSAX} that must be implemented by concrete
+ * the results of {@link #toSAX(ContentHandler)} that must be implemented by concrete
  * subclasses.</p>
  *
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>

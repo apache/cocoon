@@ -73,7 +73,6 @@ public class PortalToolFunction implements PortalToolComponent {
 	}
 	/**
 	 * Returns the Functionname
-	 * @return
 	 */
 	public String getFunction() {
 		return function;
@@ -90,7 +89,6 @@ public class PortalToolFunction implements PortalToolComponent {
 	
 	/**
 	 * not in use!
-	 * @return
 	 */
     public boolean isInternal() {
         return internal;

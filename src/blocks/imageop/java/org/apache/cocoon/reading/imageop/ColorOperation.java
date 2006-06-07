@@ -15,10 +15,6 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-import java.awt.RenderingHints;
-
-import java.awt.image.Raster;
-import java.awt.image.RasterOp;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 
@@ -27,7 +23,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 public class ColorOperation
     implements ImageOperation
 {
-    private RescaleOp m_ColorFilter = null;
+    private RescaleOp m_ColorFilter;
     private String   m_Prefix;
     private boolean  m_Enabled;
      

@@ -55,7 +55,6 @@ public class UserBean {
 	 * return specified context value
 	 * 
 	 * @param key 
-	 * @return
 	 */
 	public String getContextItem (String key) {
 		if (this.context.get(key) != null) {

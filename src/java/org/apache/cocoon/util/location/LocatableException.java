@@ -25,7 +25,8 @@ package org.apache.cocoon.util.location;
  * and location separately. This interface gives access to the raw message.
  * <p>
  * <strong>Note:</strong> care should be taken for locatable exceptions to use only immutable and
- * serializable implementations of {@link Location} ({@see org.apache.cocoon.util.location.LocationImpl#get(Location)}).
+ * serializable implementations of {@link Location} 
+ * @see org.apache.cocoon.util.location.LocationImpl#get(Location)
  * 
  * @since 2.1.8
  * @version $Id$
