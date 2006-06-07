@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dojo.hostenv.conditionalLoadModule({
+dojo.kwCompoundRequire({
         common: [
                 "cocoon.forms.common",
                 "cocoon.forms.CFormsForm",
                 "cocoon.forms.CFormsRepeater",
+                "cocoon.forms.CFormsDragAndDropRepeater",
                 "cocoon.forms.CFormsSuggest",
                 "dojo.widget.InlineEditBox" // also needed by advanced-field-styling
         ]
 });
 
-dojo.hostenv.moduleLoaded("cocoon.forms.*");
+dojo.provide("cocoon.forms.*");
