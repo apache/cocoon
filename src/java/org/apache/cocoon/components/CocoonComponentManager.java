@@ -36,6 +36,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -81,6 +82,8 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /** has this been disposed? */
     private boolean wasDisposed;
 
+    /** The instrument manager (if any). */
+    private InstrumentManager instrumentManager;
 
     /** Create the ComponentManager */
     public CocoonComponentManager() {
@@ -95,13 +98,28 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
         super(manager, loader);
-        this.parentManager = manager;
+        this.setParentManager(manager);
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
         super(manager);
+        this.setParentManager(manager);
+    }
+
+    protected void setParentManager(final ComponentManager manager) {
         this.parentManager = manager;
+        if ( manager instanceof CocoonComponentManager ) {
+            this.setInstrumentManager(((CocoonComponentManager)manager).instrumentManager);
+        }
+    }
+
+    /**
+     * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#setInstrumentManager(org.apache.excalibur.instrument.InstrumentManager)
+     */
+    public void setInstrumentManager(InstrumentManager iManager) {
+        this.instrumentManager = iManager;
+        super.setInstrumentManager(iManager);
     }
 
     /**
