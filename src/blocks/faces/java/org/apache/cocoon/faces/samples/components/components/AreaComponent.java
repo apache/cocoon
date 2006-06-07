@@ -197,8 +197,6 @@ public class AreaComponent extends UIOutput {
      *
      * @param context <code>FacesContext</code> for the current request
      * @param state   State to be restored
-     *
-     * @throws IOException if an input/output error occurs
      */
     public void restoreState(FacesContext context, Object state) {
         Object values[] = (Object[]) state;

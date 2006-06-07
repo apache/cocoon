@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
  * Ant task for running Cocoon. Allows for the embedding of Cocoon into 
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonTask.java,v 1.5 2004/05/04 14:19:05 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CocoonTask extends Task implements DynamicConfigurator {
 
@@ -191,38 +191,29 @@ public class CocoonTask extends Task implements DynamicConfigurator {
     /**
      * Do the execution and return a return code.
      *
-     * @return the return code from the execute java class if it was
-     * executed in a separate VM (fork = "yes").
-     *
      * @throws BuildException if required parameters are missing
      */
     public void execute() throws BuildException {
-        // FIXME - This is never read
-        int err= -1;
-
         if (cmdl.getClasspath() == null) {
             throw new BuildException("Could not find a classpath that points to the Cocoon classes");
         }
         try {
             try {
                 execute(cmdl);
-                err = 0;
             } catch (ExitException ex) {
-                err = ex.getStatus();
+                // ignore
             }
         } catch (BuildException e) {
             if (failOnError) {
                 throw e;
             } else {
                 log(e.getMessage(), Project.MSG_ERR);
-                err = 0;
             }
         } catch (Throwable t) {
             if (failOnError) {
                 throw new BuildException(t);
             } else {
                 log(t.getMessage(), Project.MSG_ERR);
-                err = 0;
             }
         }
     }

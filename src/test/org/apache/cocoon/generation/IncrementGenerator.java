@@ -20,13 +20,13 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -44,7 +44,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id$
  */
 public class IncrementGenerator implements Contextualizable, Generator, CacheableProcessingComponent {
-	XMLConsumer consumer;
+
+    XMLConsumer consumer;
 	Map objectModel;
 	String key;
 	Context context;
@@ -76,7 +77,7 @@ public class IncrementGenerator implements Contextualizable, Generator, Cacheabl
 	}
 	
 	public static void increment(Map objectModel, String key) {
-		Context context = ObjectModelHelper.getContext(objectModel);
+		org.apache.cocoon.environment.Context context = ObjectModelHelper.getContext(objectModel);
 		Integer count = (Integer) context.getAttribute(key);
 		if (count == null) {
 			count = new Integer(0);
@@ -93,7 +94,7 @@ public class IncrementGenerator implements Contextualizable, Generator, Cacheabl
 		return NOPValidity.SHARED_INSTANCE;
 	}
 
-	public void contextualize(org.apache.avalon.framework.context.Context arg0) throws ContextException {
+	public void contextualize(Context context) throws ContextException {
 		this.context = context;
 	}
 }

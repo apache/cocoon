@@ -15,14 +15,9 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-import java.awt.RenderingHints;
-
 import java.awt.color.ColorSpace;
 
 import java.awt.image.ColorConvertOp;
-import java.awt.image.Raster;
-import java.awt.image.RasterOp;
-import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 
 import org.apache.avalon.framework.parameters.Parameters;

@@ -59,7 +59,7 @@ import javax.faces.event.ActionEvent;
 public class MapTag extends UIComponentTag {
 
 
-    private String current = null;
+    private String current;
 
 
     public void setCurrent(String current) {
@@ -67,7 +67,7 @@ public class MapTag extends UIComponentTag {
     }
 
 
-    private String actionListener = null;
+    private String actionListener;
 
 
     public void setActionListener(String actionListener) {
@@ -75,7 +75,7 @@ public class MapTag extends UIComponentTag {
     }
 
 
-    private String action = null;
+    private String action;
 
 
     public void setAction(String action) {
@@ -83,7 +83,7 @@ public class MapTag extends UIComponentTag {
     }
 
 
-    private String immediate = null;
+    private String immediate;
 
 
     public void setImmediate(String immediate) {
@@ -91,7 +91,7 @@ public class MapTag extends UIComponentTag {
     }
 
 
-    private String styleClass = null;
+    private String styleClass;
 
 
     public void setStyleClass(String styleClass) {

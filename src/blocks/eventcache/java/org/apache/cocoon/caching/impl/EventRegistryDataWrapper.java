@@ -17,33 +17,32 @@ package org.apache.cocoon.caching.impl;
 
 import java.io.Serializable;
 
-import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.map.MultiValueMap;
 
 /**
  * A light object for persisting the state of an EventRegistry implementation 
  * based on two MultiHashMaps.
  * 
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistryDataWrapper.java,v 1.3 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class EventRegistryDataWrapper implements Serializable {
-    private MultiHashMap m_keyMMap;
-    private MultiHashMap m_eventMMap;
+    private MultiValueMap m_keyMMap;
+    private MultiValueMap m_eventMMap;
     
     public EventRegistryDataWrapper() {
-        this.m_keyMMap = null;
-        this.m_eventMMap = null;
     }
-    public void setupMaps(MultiHashMap keyMap, MultiHashMap eventMap) {
+
+    public void setupMaps(MultiValueMap keyMap, MultiValueMap eventMap) {
         this.m_keyMMap = keyMap;
         this.m_eventMMap = eventMap;
     }
 
-    public MultiHashMap get_eventMap() {
+    public MultiValueMap get_eventMap() {
         return m_eventMMap;
     }
 
-    public MultiHashMap get_keyMap() {
+    public MultiValueMap get_keyMap() {
         return m_keyMMap;
     }
 }

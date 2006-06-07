@@ -24,7 +24,7 @@ import java.io.PushbackInputStream;
  *
  * A newline is espected after each boundary and is parsed away.
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: TokenStream.java,v 1.4 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 class TokenStream extends PushbackInputStream {
 
@@ -111,8 +111,6 @@ class TokenStream extends PushbackInputStream {
 
     /**
      * Return the stream state
-     *
-     * @return
      */
     public int getState() {
         return state;
@@ -126,8 +124,6 @@ class TokenStream extends PushbackInputStream {
      * The stream state is updated after each call.
      *
      * @param out The output buffer
-     *
-     * @return
      *
      * @throws IOException
      */
@@ -199,8 +195,6 @@ class TokenStream extends PushbackInputStream {
      *
      * @param out
      *
-     * @return
-     *
      * @throws IOException
      */
     public int read(byte[] out) throws IOException {
@@ -216,8 +210,6 @@ class TokenStream extends PushbackInputStream {
      * @param out
      * @param off
      * @param len
-     *
-     * @return
      *
      * @throws IOException
      */
@@ -241,8 +233,6 @@ class TokenStream extends PushbackInputStream {
 
     /**
      * @see java.io.InputStream#read()
-     *
-     * @return
      *
      * @throws IOException
      */

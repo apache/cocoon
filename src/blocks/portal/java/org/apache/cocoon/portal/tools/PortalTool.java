@@ -50,7 +50,6 @@ public class PortalTool {
 	
 	/**
 	 * returns a collection of available function
-	 * @return
 	 */
 	public Collection getFunctions() {
 	    return functions.values();
@@ -59,7 +58,6 @@ public class PortalTool {
 	/**
 	 * returns the function with the id id
 	 * @param id
-	 * @return
 	 */
 	public PortalToolFunction getFunction(String id) {
 	    return (PortalToolFunction) functions.get(id); 
@@ -67,7 +65,6 @@ public class PortalTool {
 	
 	/**
 	 * not in use!
-	 * @return
 	 */
 	public Collection getInternalFunctions() {
 	    ArrayList internal = new ArrayList();
@@ -98,7 +95,6 @@ public class PortalTool {
 
     /**
      * returns the id of the tools
-     * @return
      */
     public String getId() {
         return toolId;
@@ -106,17 +102,14 @@ public class PortalTool {
     
     /**
      * returns the name of the tool
-     * @return
      */
     public String getName() {
         return toolName;
     }
-    
+
     /**
-     * @return
      */
     public List getI18n() {
         return i18n;
     }
-    
 }

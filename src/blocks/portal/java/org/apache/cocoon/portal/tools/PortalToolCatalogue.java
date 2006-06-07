@@ -27,7 +27,6 @@ public class PortalToolCatalogue {
     private String location = "";
 
     /**
-     * @return
      */
     public String getId() {
         return id;
@@ -41,7 +40,6 @@ public class PortalToolCatalogue {
     }
 
     /**
-     * @return
      */
     public String getLocation() {
         return location;
@@ -55,7 +53,6 @@ public class PortalToolCatalogue {
     }
 
     /**
-     * @return
      */
     public String getName() {
         return name;

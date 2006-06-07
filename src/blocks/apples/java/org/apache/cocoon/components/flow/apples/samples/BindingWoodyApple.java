@@ -206,7 +206,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
      * Translate source path into target path so we keep a clean source XML
      * 
      * @param path
-     * @return
      */
     private String makeTargetURI(String path) {
         final String sfx = ".xml";
@@ -283,7 +282,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
      * Loads (and parses) the Document from the specified Source
      * 
      * @param documentSrc
-     * @return
      * @throws ProcessingException
      */
     private Document loadDocumentFromSource(Source documentSrc)

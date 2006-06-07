@@ -28,7 +28,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Struct;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -211,7 +210,7 @@ public class JDBCTypeConversions {
             value = BooleanUtils.toBooleanObject(set.getBoolean(dbcol));
             break;
         case Types.STRUCT:
-            value = (Struct) set.getObject(dbcol);
+            value = set.getObject(dbcol);
             break;
         case Types.OTHER:
             value = set.getObject(dbcol);

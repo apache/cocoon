@@ -318,8 +318,6 @@ public class MultipartParser {
      *
      * @param in
      *
-     * @return
-     *
      * @throws IOException
      */
     private Hashtable readHeaders(TokenStream in) throws IOException {
@@ -351,8 +349,6 @@ public class MultipartParser {
      * Get boundary from contentheader
      *
      * @param hdr
-     *
-     * @return
      */
     private String getBoundary(String hdr) {
 
@@ -368,8 +364,6 @@ public class MultipartParser {
      * Read string until newline or end of stream
      *
      * @param in
-     *
-     * @return
      *
      * @throws IOException
      */

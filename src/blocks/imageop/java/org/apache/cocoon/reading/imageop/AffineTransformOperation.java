@@ -15,12 +15,10 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-import java.awt.RenderingHints;
 
 import java.awt.geom.AffineTransform;
 
 import java.awt.image.AffineTransformOp;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 import java.util.StringTokenizer;

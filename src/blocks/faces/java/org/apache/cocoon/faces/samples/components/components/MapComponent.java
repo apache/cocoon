@@ -129,7 +129,7 @@ public class MapComponent extends UICommand {
 
     // ----------------------------------------------------- Event Methods
 
-    private static Class signature[] = {AreaSelectedEvent.class};
+    //private static Class signature[] = {AreaSelectedEvent.class};
 
 
     /**
@@ -214,8 +214,6 @@ public class MapComponent extends UICommand {
      *
      * @param context <code>FacesContext</code> for the current request
      * @param state   State to be restored
-     *
-     * @throws IOException if an input/output error occurs
      */
     public void restoreState(FacesContext context, Object state) {
         removeDefaultActionListener(context);

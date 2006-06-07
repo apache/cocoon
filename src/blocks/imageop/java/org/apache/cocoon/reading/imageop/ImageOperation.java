@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.reading.imageop;
 
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 import org.apache.avalon.framework.component.Component;
@@ -26,7 +25,7 @@ import org.apache.cocoon.ProcessingException;
 
 public interface ImageOperation extends Component 
 {
-    static String ROLE = ImageOperation.class.getName();
+    String ROLE = ImageOperation.class.getName();
     
     void setPrefix( String prefix );
     
