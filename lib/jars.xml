@@ -1248,7 +1248,7 @@
       Dojo Ajax toolkit, packaged as resources in /org/apache/cocoon/dojo/resources
     </description>
     <used-by>Ajax block</used-by>
-    <lib>optional/dojo-rsrc-20060310.jar</lib>
+    <lib>optional/dojo-rsrc-20060605.jar</lib>
     <homepage>http://dojotoolkit.org/</homepage>
   </file>
 
