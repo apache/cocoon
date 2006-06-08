@@ -55,6 +55,8 @@
     </ul>
     <p>This sample has a <a href="do-dojoRepeater.flow">variation using Dojo</a> that allows drag-and-drop reordering
        of rows and clicking anywhere in a row to select it.</p>
+    <p>Here is another <a href="do-dojoRepeaters.flow">Dojo sample</a> that extends the above dojo sample by
+    allowing drag-and-drop support between different repeaters.</p>
       <ft:repeater id="contacts">
         <div>
         <jx:choose>

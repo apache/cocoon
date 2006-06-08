@@ -26,7 +26,7 @@
   <fi:init>
 	<script type="text/javascript">
 	  // Uncomment this to see Dojo debug
-	  // var djConfig = { isDebug: true };
+	  var djConfig = { isDebug: true };
 	
     </script>	
   </fi:init>
