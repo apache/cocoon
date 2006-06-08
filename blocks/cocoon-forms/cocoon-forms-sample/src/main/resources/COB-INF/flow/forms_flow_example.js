@@ -124,6 +124,30 @@ function do_dojoRepeater() {
     );
 }
 
+function do_dojoRepeaters() {
+    var form = new Form("forms/dynamicrepeaters.xml");
+    form.setAttribute("counter1", new java.lang.Integer(0));
+    form.setAttribute("counter2", new java.lang.Integer(0));
+    form.setAttribute("counter3", new java.lang.Integer(0));
+    form.getChild("addcontact1").performAction(); // to increment the counter
+    form.getChild("addcontact2").performAction(); // to increment the counter
+    form.getChild("addcontact3").performAction(); // to increment the counter
+    form.showForm("dynamicrepeaters_dojo-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    var rootElement = doc.createElement("contact_root");
+    rootElement.appendChild(doc.createElement("contacts1"));
+    rootElement.appendChild(doc.createElement("contacts2"));
+    rootElement.appendChild(doc.createElement("contacts3"));
+    doc.appendChild(rootElement);
+    form.createBinding("forms/dynamicrepeaters_binding.xml");
+    
+    form.save(doc);
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Contact list", document: doc}
+    );
+}
+
 function do_datasourceChooser() {
     var form = new Form("forms/datasource_chooser.xml");
     form.showForm("datasource_chooser-display-pipeline.jx");
