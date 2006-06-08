@@ -26,8 +26,9 @@ dojo.require("dojo.widget.DomWidget");
  *
  * @version $Id$
  */
+
 // Extends the base DomWidget class. We don't need all the HtmlWidget stuff
-// but need traversal of the DOM to build child widgets
+// but need traversal of the DOM to build child widgets.
 cocoon.forms.CFormsRepeater = function() {
 	dojo.widget.DomWidget.call(this);
 };
@@ -35,22 +36,26 @@ cocoon.forms.CFormsRepeater = function() {
 dojo.inherits(cocoon.forms.CFormsRepeater, dojo.widget.DomWidget);
 
 dojo.lang.extend(cocoon.forms.CFormsRepeater, {
-	// Properties
-	orderable: false,
-	select: "$no$", // default value used to type the property, but indicating that
-	                // no selection will occur
-	
-	// Widget definition
-	widgetType: "CFormsRepeater",
+    // Properties
+    orderable: false,
+    select: "$no$", // default value used to type the property, but indicating that
+                    // no selection will occur
+
+    // Widget definition
+    widgetType: "CFormsRepeater",
     isContainer: true,
+    //
+    getType: function() {
+			    return "cforms-" + this.id;
+    },
     buildRendering: function(args, parserFragment, parentWidget) {
 	    // FIXME: we should destroy all drag sources and drop targets when the widget is destroyed
         // Magical statement to get the dom node, stolen in DomWidget
 	    this.domNode = parserFragment["dojo:"+this.widgetType.toLowerCase()].nodeRef;
-	    
+
         this.id = this.domNode.getAttribute("id");
         if (!this.orderable && this.select == "none") {
-            dojo.debug("CFormsRepeater '" + this.id + "' is not orderable nor selectable");
+            dojo.debug(this.widgetType + " '" + this.id + "' is not orderable nor selectable");
         }
 
         if (this.orderable) {
@@ -60,11 +65,11 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 
             // Check that TR's are in TBODY otherwise it doesn't work
 	        if (firstRow.tagName.toLowerCase() == "tr" && firstRow.parentNode.tagName.toLowerCase() != "tbody") {
-	            throw "CFormsRepeater requires TR's to be in a TBODY (check '" + this.id + "')";
+	            throw this.widgetType + " requires TR's to be in a TBODY (check '" + this.id + "')";
 	        }
 
-			var type = "cforms-" + this.id;
-			var dropTarget = new dojo.dnd.HtmlDropTarget(firstRow.parentNode, [type]);
+           var type = this.getType();
+           var dropTarget = new dojo.dnd.HtmlDropTarget(firstRow.parentNode, [type]);
 
 			dropTarget.createDropIndicator = function() {
 				this.dropIndicator = document.createElement("div");
@@ -77,7 +82,7 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 				}
 			};
 			dojo.event.connect(dropTarget, "insert", this, "afterInsert");
-		
+
 			var row;
 			for (var idx = 0; row = dojo.byId(this.id + "." + idx); idx++) {
 				var dragSource = new dojo.dnd.HtmlDragSource(row, type);
@@ -123,8 +128,8 @@ dojo.lang.extend(cocoon.forms.CFormsRepeater, {
 	    // Compute the row number before which to place the moved row
 	    if (position == "after") before++;
 	    if (before == source || before == source + 1) return; // no change needed
-	
-//		dojo.debug("moving row " + source + " before " + before + " (" + position + ")");
+
+        // dojo.debug("moving row " + source + " before " + before + " (" + position + ")");
 
 		// submit the form to update server-side model
 		var form = cocoon.forms.getForm(this.domNode);
