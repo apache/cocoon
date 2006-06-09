@@ -65,6 +65,13 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="update">
+    Support CLOBs in SQLTransformer when returned as stored procedure
+    parameters, or as columns in a cursor returned by stored procedure.
+   </action>
+   <action dev="VG" type="fix">
+    Fix reading of the CLOBs in SQLTransformer.
+   </action>
    <action dev="CZ" type="update">
      Move XSP logicsheets from the databases block to the xsp block.
    </action>
