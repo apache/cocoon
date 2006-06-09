@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <!--+
-    | This is the main Maven file that contains all global settings, *management and information.
+    | This is the main Maven file that contains all global settings, management and information.
     | @version $Id$
     +-->
 <project
@@ -225,6 +225,17 @@
         <role>Committer</role>
       </roles>
       <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>vgritsenko</id>
+      <name>Vadim Gritsenko</name>
+      <email>vgritsenko@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>-5</timezone>
     </developer>
   </developers>
   <issueManagement>
