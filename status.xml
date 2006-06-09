@@ -182,6 +182,13 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="update">
+      Databases: Support CLOBs in SQLTransformer when returned as stored procedure
+      parameters, or as columns in a cursor returned by stored procedure.
+    </action>
+    <action dev="VG" type="fix">
+      Databases: Fix reading of the CLOBs in SQLTransformer.
+    </action>
     <action dev="AG" type="update">
       Updated bcel to 5.2.
     </action>
@@ -189,7 +196,8 @@
       CForms Block: Add multiple repeater drag &amp; drop dojo sample.
     </action> 
     <action dev="CZ" type="fix" fixes-bug="COCOON-1857" due-to="Brian Vargas" due-to-email="ardvaark-apachebugs@procrastinators.org">
-      Set instrumentation manager on child component managers to enable instrumentation of all components including sitemap components.
+      Set instrumentation manager on child component managers to enable
+      instrumentation of all components including sitemap components.
     </action>
     <action dev="AG" type="update">
       Updated dojo to 20060605.
