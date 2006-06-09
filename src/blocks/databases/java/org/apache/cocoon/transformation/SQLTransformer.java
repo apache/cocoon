@@ -150,6 +150,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class SQLTransformer extends AbstractSAXTransformer {
 
+    private static final int BUFFER_SIZE = 1024;
+
     /** The SQL transformer namespace */
     public static final String NAMESPACE = "http://apache.org/cocoon/SQL/2.0";
 
@@ -930,13 +932,13 @@ public class SQLTransformer extends AbstractSAXTransformer {
         protected int columnCase;
 
         /** Registered IN parameters */
-        protected HashMap inParameters;
+        protected Map inParameters;
 
         /** Registered OUT parameters */
-        protected HashMap outParameters;
+        protected Map outParameters;
 
         /** Mapping out parameters - objectModel */
-        protected HashMap outParametersNames;
+        protected Map outParametersNames;
 
         /** Check if nr of rows need to be written out. */
         protected boolean showNrOfRows;
@@ -1023,7 +1025,8 @@ public class SQLTransformer extends AbstractSAXTransformer {
 
         protected void setOutParameter(int pos, String type, String name) {
             if (outParameters == null) {
-                outParameters = new HashMap();
+                // make sure output parameters are ordered
+                outParameters = new TreeMap();
                 outParametersNames = new HashMap();
             }
             outParameters.put(new Integer(pos), type);
@@ -1071,16 +1074,16 @@ public class SQLTransformer extends AbstractSAXTransformer {
             while (i.hasNext()) {
                 Integer counter = (Integer) i.next();
                 String type = (String) outParameters.get(counter);
-                int index = type.lastIndexOf(".");
 
+                int index = type.lastIndexOf(".");
                 String className, fieldName;
-                if (index > -1) {
-                    className = type.substring(0, index);
-                    fieldName = type.substring(index + 1, type.length());
-                } else {
+                if (index == -1) {
                     getLogger().error("Invalid SQLType: " + type, null);
                     throw new SQLException("Invalid SQLType: " + type);
                 }
+                className = type.substring(0, index);
+                fieldName = type.substring(index + 1, type.length());
+
                 try {
                     Class clss = Class.forName(className);
                     Field fld = clss.getField(fieldName);
@@ -1301,30 +1304,15 @@ public class SQLTransformer extends AbstractSAXTransformer {
             return nr;
         }
 
-        protected String getColumnValue(int i) throws SQLException {
-            int numberOfChar = 1024;
-            String retval;
-
-            if (rs.getMetaData().getColumnType(i) == java.sql.Types.DOUBLE) {
-                retval = getStringValue(rs.getBigDecimal(i));
-            } else if (rs.getMetaData().getColumnType(i) == java.sql.Types.CLOB) {
-                Clob clob = rs.getClob(i);
-                InputStream inputStream = clob.getAsciiStream();
-                byte[] readByte = new byte[numberOfChar];
-                StringBuffer buffer = new StringBuffer();
-                try {
-                    while (inputStream.read(readByte) > -1) {
-                        String string = new String(readByte, this.clobEncoding);
-                        buffer.append(string);
-                    }
-                } catch (IOException e) {
-                    throw new SQLException("Error reading stream from CLOB");
-                }
-                retval = buffer.toString();
+        protected String getColumnValue(ResultSet rs, int i) throws SQLException {
+            final int type = rs.getMetaData().getColumnType(i);
+            if (type == java.sql.Types.DOUBLE) {
+                return getStringValue(rs.getBigDecimal(i));
+            } else if (type == java.sql.Types.CLOB) {
+                return getStringValue(rs.getClob(i));
             } else {
-                retval = getStringValue(rs.getObject(i));
+                return getStringValue(rs.getObject(i));
             }
-            return retval;
         }
 
         // fix not applied here because there is no metadata from Name -> number and coltype
@@ -1332,7 +1320,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
         // as this function is only called for ancestor lookups.
         protected String getColumnValue(String name) throws SQLException {
             String retval = getStringValue(rs.getObject(name));
-            // if (rs.getMetaData().getColumnType( name ) == 8)
+            // if (rs.getMetaData().getColumnType( name ) == java.sql.Types.DOUBLE)
             // retval = transformer.getStringValue( rs.getBigDecimal( name ) );
             return retval;
         }
@@ -1430,9 +1418,31 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 for (int i = 1; i <= md.getColumnCount(); i++) {
                     String columnName = getColumnName(md.getColumnName(i));
                     start(columnName, EMPTY_ATTRIBUTES);
-                    serializeData(getColumnValue(i));
+                    serializeData(getColumnValue(rs, i));
                     end(columnName);
                 }
+            }
+        }
+
+        private void serializeResultSet(ResultSet rs) throws SQLException, SAXException {
+            final ResultSetMetaData md = rs.getMetaData();
+            final int n = md.getColumnCount();
+
+            // Get column names
+            final String[] columns = new String[n + 1];
+            for (int i = 1; i <= n; i++) {
+                columns[i] = getColumnName(md.getColumnName(i));
+            }
+
+            // Process rows
+            while (rs.next()) {
+                start(rowElement, EMPTY_ATTRIBUTES);
+                for (int i = 1; i <= n; i++) {
+                    start(columns[i], EMPTY_ATTRIBUTES);
+                    serializeData(getColumnValue(rs, i));
+                    end(columns[i]);
+                }
+                end(this.rowElement);
             }
         }
 
@@ -1442,8 +1452,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 return;
             }
 
-            // make sure output follows order as parameter order in stored procedure
-            Iterator itOutKeys = new TreeMap(outParameters).keySet().iterator();
+            Iterator itOutKeys = outParameters.keySet().iterator();
             while (itOutKeys.hasNext()) {
                 final Integer counter = (Integer) itOutKeys.next();
                 try {
@@ -1456,27 +1465,11 @@ public class SQLTransformer extends AbstractSAXTransformer {
                     } else {
                         final ResultSet rs = (ResultSet) obj;
                         try {
-                            ResultSetMetaData md = rs.getMetaData();
-                            while (rs.next()) {
-                                start(this.rowElement, EMPTY_ATTRIBUTES);
-                                for (int i = 1; i <= md.getColumnCount(); i++) {
-                                    String columnName = getColumnName(md.getColumnName(i));
-                                    start(columnName, EMPTY_ATTRIBUTES);
-                                    if (md.getColumnType(i) == 8) {  // prevent nasty exponent notation
-                                        serializeData(getStringValue(rs.getBigDecimal(i)));
-                                    } else {
-                                        serializeData(getStringValue(rs.getObject(i)));
-                                    }
-                                    end(columnName);
-                                }
-                                end(this.rowElement);
-                            }
+                            serializeResultSet(rs);
                         } finally {
                             try {
                                 rs.close();
-                            } catch (SQLException e) {
-                                /* ignored */
-                            }
+                            } catch (SQLException e) { /* ignored */ }
                         }
                     }
 
@@ -1505,12 +1498,26 @@ public class SQLTransformer extends AbstractSAXTransformer {
         /**
          * Convert object to string represenation
          */
-        private String getStringValue(Object object) {
+        private String getStringValue(Object object) throws SQLException {
             if (object instanceof byte[]) {
                 // FIXME Encoding?
                 return new String((byte[]) object);
             } else if (object instanceof char[]) {
                 return new String((char[]) object);
+            } else if (object instanceof Clob) {
+                Clob clob = (Clob) object;
+                StringBuffer buffer = new StringBuffer();
+                InputStream is = clob.getAsciiStream();
+                try {
+                    byte[] bytes = new byte[BUFFER_SIZE];
+                    int n;
+                    while ((n = is.read(bytes)) > -1) {
+                        buffer.append(new String(bytes, 0, n, this.clobEncoding));
+                    }
+                } catch (IOException e) {
+                    throw new SQLException("Error reading stream from CLOB");
+                }
+                return buffer.toString();
             } else if (object != null) {
                 return object.toString();
             }
@@ -1545,8 +1552,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
             return "<ancestor level " + level + ", name " + name + ">";
         }
     }
-    
-    
+
     /**
      * Stop recording of text and return the recorded information.
      * @return The String, trimmed.
@@ -1566,5 +1572,4 @@ public class SQLTransformer extends AbstractSAXTransformer {
         }
         return text;
     }
-
 }
