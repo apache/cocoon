@@ -189,9 +189,6 @@
     <action dev="VG" type="fix">
       Databases: Fix reading of the CLOBs in SQLTransformer.
     </action>
-    <action dev="AG" type="update">
-      Updated bcel to 5.2.
-    </action>
     <action dev="AG" type="add" due-to="Carlos Chávez &amp; Eric Meyer" due-to-email="cchavez@agssa.net &amp; emeyer@quoininc.com">
       CForms Block: Add multiple repeater drag &amp; drop dojo sample.
     </action> 
