@@ -1146,7 +1146,7 @@
       possibility to analyze, create, and manipulate (binary) Java class files.
     </description>
     <used-by>XSLTC, javaflow</used-by>
-    <lib>endorsed/bcel-5.2.jar</lib>
+    <lib>endorsed/jakarta-bcel-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/bcel/</homepage>
   </file>
 
