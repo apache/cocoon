@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.maven.deployer;
 
+import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
+import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
@@ -37,13 +39,31 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
      * @parameter expression="${blocksDirectory}" default-value="apps"	
      */
 	private String blocksdir;	
+    
+    /**
+     * All blocks that should't be deployed; a path reference is used instead.
+     * 
+     * @parameter
+     */
+    private DevelopmentBlock[] blocks;
+    
+    /**
+     * Custom Cocoon properties
+     * 
+     * @parameter
+     */
+    private DevelopmentProperty[] properties;        
 	
 	public void execute() throws MojoExecutionException {
 		if(this.serverVersion.equals("2.2")) {
-			this.deployMonolithicCocoonAppAsWebapp(blocksdir);
-		} else {
-			this.deployBlocks();
-		}
+            if(this.blocks == null) {
+                this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);
+            } else {
+                this.blockDeploymentMonolithicCocoon(this.blocksdir, this.blocks, this.properties);
+            }
+        } else {
+            throw new MojoExecutionException("Only version 2.2 is supported.");
+        }
 	}
 
 }
