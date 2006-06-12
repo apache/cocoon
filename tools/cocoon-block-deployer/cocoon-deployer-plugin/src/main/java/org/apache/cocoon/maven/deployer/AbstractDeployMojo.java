@@ -17,20 +17,15 @@ package org.apache.cocoon.maven.deployer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.cocoon.deployer.BlockDeployer;
-import org.apache.cocoon.deployer.MonolithicCocoonDeployer;
-import org.apache.cocoon.deployer.generated.deploy.x10.Deploy;
-import org.apache.cocoon.deployer.resolver.NullVariableResolver;
+import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
+import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
+import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -39,11 +34,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.war.AbstractWarMojo;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
+ * 
+ * @version $Id$
  */
 abstract class AbstractDeployMojo extends AbstractWarMojo 
 {
@@ -141,62 +136,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
      * @parameter expression="${maven.war.webxml}"
      */
     private String webXml;
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
-	
-    protected void deployBlocks() throws MojoExecutionException 
-    {
-    	File webappDirectory_ = getWebappDirectory();
-    	
-    	// build the web application without blocks
-        this.buildExplodedWebapp(webappDirectory_);
-        
-        // read the deployment descriptor
-    	Deploy deploy;
-    	try 
-    	{
-        	this.getLog().info("using deploymentDescriptor at " + deploymentDescriptor.getAbsolutePath());    		
-			deploy = (Deploy) Deploy.unmarshal(new FileReader(deploymentDescriptor));
-		} 
-    	catch (MarshalException e) 
-		{
-			throw new MojoExecutionException("The deployment descriptor at '" + deploymentDescriptor.getAbsolutePath() + "' can't be parsed.");
-		} 
-    	catch (ValidationException e) 
-    	{
-			throw new MojoExecutionException("The deployment descriptor at '" + deploymentDescriptor.getAbsolutePath() + "' is not valid XML.");
-		} 
-    	catch (FileNotFoundException e) 
-    	{
-			throw new MojoExecutionException("The deployment descriptor can't be found at '" + deploymentDescriptor.getAbsolutePath() + "'.");
-		}
-        
-    	// set the target directory 
-    	if(webappDirectory_ != null) {
-    		String targetUri = "file:///" + webappDirectory_.getAbsolutePath().replaceAll("\\\\", "/");
-    		this.getLog().debug("targetUrl: " + targetUri);
-    		
-    		deploy.getCocoon().setTargetUrl(targetUri);
-    		
-        	if(deploy.getCocoon().getTargetUrl() != null) {
-        		this.getLog().warn("The targetUrl set in the <cocoon> element of '" + deploymentDescriptor.getAbsolutePath() +
-        	        "' was overriden by '" + targetUri + "'");
-        	}    		
-    	}
-    	
-    	// finally use the block deployer to add blocks to the web app
-        BlockDeployer blockDeployer =
-            new BlockDeployer(new MavenArtifactProvider(this.artifactResolver, 
-            											this.artifactFactory,
-                                                        this.localRepository,
-                                                        this.remoteArtifactRepositories,
-                                                        this.metadataSource, 
-                                                        this.getLog()),
-                              new NullVariableResolver(),
-                              new MavenLoggingWrapper(this.getLog()));
-        
-        blockDeployer.deploy(deploy, false, true);
-        
-    }
     
 	/**
 	 * Deploy a monolithic Cocoon web application. This means it doesn't use
@@ -208,7 +147,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
     	// build the web application
         this.buildExplodedWebapp(webappDirectory_);
         
-        this.deployBlocksIntoMonotiticWebapp(blocksdir, webappDirectory_, new HashSet());
+        MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());        
+        deployer.deploy(getBlockArtifactsAsMap(null), webappDirectory_, 
+                blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
         
         // make sure that all configuration files available in the webapp override block configuration files
         try {
@@ -225,24 +166,41 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
      * Deploy a particular block at development time.
      * 
      * @param blocksdir
+     * @param blocks 
+     * @param properties 
      * @throws MojoExecutionException
      */
-    protected void deployMonolithicCocoonAppAsBlockWebapp(final String blocksdir) throws MojoExecutionException {
+    protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks, 
+            final DevelopmentProperty[] properties) throws MojoExecutionException {
         File webappDirectory_ = getWebappDirectory();        
         
-        File webinfDir = new File( webappDirectory, WEB_INF );
+        File webinfDir = new File(webappDirectory_, WEB_INF);
         webinfDir.mkdirs();
         
-        this.deployBlocksIntoMonotiticWebapp(blocksdir, webappDirectory_, new HashSet());
+        // add current block to the development properties
+        DevelopmentBlock curBlock = new DevelopmentBlock();
+        curBlock.artifactId = this.getProject().getArtifactId();
+        curBlock.groupId = this.getProject().getGroupId();
+        try {
+            curBlock.setLocalPath(this.getProject().getBasedir().getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            throw new MojoExecutionException("Problems with setting the basedir of this block.", e);
+        }
+        DevelopmentBlock[] extBlocks = new DevelopmentBlock[blocks.length + 1];
+        System.arraycopy(blocks, 0, extBlocks, 0, blocks.length);
+        extBlocks[blocks.length] = curBlock;
         
-        // create a special root sitemap with <map:classloader> and <map:mount> elements
-    }
+        // deploy all blocks
+        MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
+        deployer.deploy(getBlockArtifactsAsMap(blocks), webappDirectory_, 
+                blocksdir, extBlocks, properties);
+    }      
     
+
     /**
-     * Deploy blocks into  a monolithic Cocoon web application. This means it doesn't use
-     * the features that the upcoming blocks-fw (aka Cocoon 3.0) offers.
+     * Create a <code>Map</code> of <code>java.io.File</code> objects pointing to artifacts.
      */
-    private void deployBlocksIntoMonotiticWebapp(final String blocksdir, final File webappDirectory, Set excludedArtifacts) throws MojoExecutionException {
+    private Map getBlockArtifactsAsMap(DevelopmentBlock[] excludedBlocks) throws MojoExecutionException {
         // loop over all artifacts and deploy them correctly
         Map files = new HashMap();
         for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
@@ -251,12 +209,27 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
             if(files.containsKey(id)) {
                 throw new MojoExecutionException("There are at least two artifacts with the ID '" + id + "'.");
             }
-            files.put(id, artifact.getFile());
+            if(containsArtifact(excludedBlocks, artifact.getArtifactId(), artifact.getGroupId())) {
+                this.getLog().debug("Skipping " + artifact.getArtifactId() + ":" + artifact.getGroupId());
+            } else {
+                files.put(id, artifact.getFile());
+            }
         }
+        return files;
+    }     
+    
+    /**
+     * @return true if the DevelopmentBlock array contains a block with the passed artifactId and groupId
+     */
+    private boolean containsArtifact(DevelopmentBlock[] blocks, String artifactId, String groupId) {
+        if(blocks != null) {
+            for(int i = 0; i < blocks.length; i++) {
+                if(blocks[i].artifactId.equals(artifactId) && blocks[i].groupId.equals(groupId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        MonolithicCocoonDeployer.deploy(files, webappDirectory, blocksdir, new MavenLoggingWrapper(this.getLog()));
-        
-    }         
-    
-    
 }
