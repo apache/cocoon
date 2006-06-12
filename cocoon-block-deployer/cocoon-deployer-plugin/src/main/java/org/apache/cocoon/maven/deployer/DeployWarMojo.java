@@ -38,6 +38,11 @@ import org.codehaus.plexus.archiver.war.WarArchiver;
  */
 public class DeployWarMojo extends AbstractDeployMojo {
 
+    /** 
+     * @parameter expression="${blocksDirectory}" default-value="apps"  
+     */
+    private String blocksdir;       
+    
 	/**
 	 * The directory for the generated WAR.
 	 * 
@@ -72,8 +77,9 @@ public class DeployWarMojo extends AbstractDeployMojo {
 	public void execute() throws MojoExecutionException {
 
 		File warFile = new File(outputDirectory, warName + ".war");
-		this.deployBlocks();
-
+		
+        this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);
+        
 		try {
 			performPackaging(warFile);
 		} catch (Exception e) {
