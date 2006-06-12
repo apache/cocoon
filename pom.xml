@@ -35,7 +35,6 @@
   <name>Cocoon Deployer [modules]</name>
 
   <modules>
-    <module>cocoon-deployer-core</module>  
     <module>cocoon-deployer-minimal-webapp</module>     
     <module>cocoon-deployer-plugin</module>
     <module>cocoon-deployer-plugin-demo</module>
