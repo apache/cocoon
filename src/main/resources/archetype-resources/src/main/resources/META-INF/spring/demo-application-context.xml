@@ -14,4 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<test>${groupId}:${artifactId}</test>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="demo" class="demo.MyBean" singleton="true"/>
+</beans>
