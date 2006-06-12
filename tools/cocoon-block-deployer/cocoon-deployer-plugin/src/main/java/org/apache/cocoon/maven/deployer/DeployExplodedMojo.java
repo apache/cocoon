@@ -45,18 +45,18 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
      * 
      * @parameter
      */
-    private DevelopmentBlock[] blocks;
+    private DevelopmentBlock[] blocks = new DevelopmentBlock[0];
     
     /**
      * Custom Cocoon properties
      * 
      * @parameter
      */
-    private DevelopmentProperty[] properties;        
+    private DevelopmentProperty[] properties = new DevelopmentProperty[0];
 	
 	public void execute() throws MojoExecutionException {
 		if(this.serverVersion.equals("2.2")) {
-            if(this.blocks == null) {
+            if(this.getProject().getPackaging().equals("war")) {
                 this.deployMonolithicCocoonAppAsWebapp(this.blocksdir);
             } else {
                 this.blockDeploymentMonolithicCocoon(this.blocksdir, this.blocks, this.properties);
