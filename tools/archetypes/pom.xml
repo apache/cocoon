@@ -19,17 +19,26 @@
     |
     +-->
 <project>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon</artifactId>
+    <artifactId>cocoon-tools-modules</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
+  
   <modelVersion>4.0.0</modelVersion>
+  
+    <groupId>org.apache.cocoon</groupId>  
   <artifactId>cocoon-archetypes</artifactId>
-  <name>Various Maven Archetypes</name>
   <version>1-SNAPSHOT</version>
+    
+  <name>Various Maven Archetypes</name>
+
   <packaging>pom</packaging>
+  
   <modules>
-    <module>cocoon-22-archetype-webapp</module>
+    <module>cocoon-22-archetype-block</module>
+    <module>cocoon-22-archetype-webapp</module>    
   </modules>
+  
 </project>
