@@ -20,13 +20,15 @@ import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Create a Cocoon web application based on a block deployment descriptor.
+ * Create a web application that makes use of Cocoon blocks. In the case of a web application module, 
+ * (packaging: war) all referenced blocks are added, in the case of block (packaging: jar) additionally
+ * a minimal Cocoon environemt is created and it is also possible to reference <i>other</i> locally available 
+ * blocks and to set custom properties to make development highly dynamic.
  * 
  * @goal deploy
  * @requiresProject true
  * @phase package
  * @requiresDependencyResolution runtime
- * @description Create a Cocoon web application.
  */
 public class DeployExplodedMojo extends AbstractDeployMojo {
 	
