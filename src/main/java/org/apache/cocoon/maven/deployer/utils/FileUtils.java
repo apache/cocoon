@@ -23,7 +23,7 @@ import org.apache.cocoon.maven.deployer.monolithic.DeploymentException;
 /**
  * Utitily class to handle ZIP archives.
  * 
- * @version $Id:$
+ * @version $Id$
  */
 public class FileUtils {
 
