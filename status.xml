@@ -182,6 +182,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="COCOON-1247">
+      Databases: Support multiple results in SQLTransformer.
+    </action>
+    <action dev="VG" type="fix" fixes-bug="COCOON-1552">
+      Databases: Fix NPE in SQLTransformer in error handling code.
+    </action>
     <action dev="VG" type="update">
       Databases: Support CLOBs in SQLTransformer when returned as stored procedure
       parameters, or as columns in a cursor returned by stored procedure.
