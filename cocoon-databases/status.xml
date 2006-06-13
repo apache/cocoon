@@ -65,6 +65,12 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="fix" fixes-bug="COCOON-1247">
+     Support multiple results in SQLTransformer.
+   </action>
+   <action dev="VG" type="fix" fixes-bug="COCOON-1552">
+     Fix NPE in SQLTransformer in error handling code.
+   </action>
    <action dev="VG" type="update">
     Support CLOBs in SQLTransformer when returned as stored procedure
     parameters, or as columns in a cursor returned by stored procedure.
