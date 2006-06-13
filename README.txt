@@ -18,6 +18,24 @@ There are also some Daisy documentation pages about this, for more "stable" info
 http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
 http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
 
+HOW TO BUILD THE COCOON WEBAPP (NON OSGI MODE)
+----------------------------------------------
+
+Since Cocoon release 2.2, Cocoon relies on Maven 2 for its build
+process. You have to install Maven 2.0.4 (or later) first. Once
+Maven is installed, use following command:
+
+  $ mvn -Dmaven.test.skip=true install
+
+In case of any failures, repeat command as necessary till you see
+the message:
+
+  BUILD SUCCESSFUL
+
+You may need anywhere from 5 minutes to 4 hours for this step to
+complete.
+
+ 
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
 
@@ -35,26 +53,29 @@ workspace, it should point to your local m2 repository.
 You can also get eclipse to download the sources of the dependent libraries and attach them 
 to the jars in eclipse :
 
-$ mvn -Declipse.downloadSources=true eclipse:eclipse
+  $ mvn -Declipse.downloadSources=true eclipse:eclipse
 
 For further information about the maven eclipse plugin visit 
 
-http://maven.apache.org/plugins/maven-eclipse-plugin/
+  http://maven.apache.org/plugins/maven-eclipse-plugin/
+
 
 HOW TO START THE COCOON WEBAPP (NON OSGI MODE)
 ----------------------------------------------
 
-0. checkout complete trunk and
+Checkout complete trunk and build it. If clean rebuild is desired,
+use command:
   $ mvn clean install
 
-  Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
-  repositories are temporarily unaccessible and cause the build to fail.
+Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
+repositories are temporarily unaccessible and cause the build to fail.
 
-1. go to core/cocoon-webapp
+Go to core/cocoon-webapp:
   $ mvn cocoon:deploy
   $ mvn jetty6:run-exploded
 
-2. point your browser to http://localhost:8888/
+Point your browser to http://localhost:8888/
+
 
 HOW TO START THE COCOON WEBAPP (OSGI MODE)
 ------------------------------------------
