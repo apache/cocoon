@@ -1146,6 +1146,8 @@ public class SQLTransformer extends AbstractSAXTransformer {
 
             this.outUri = this.params.getParameter(SQLTransformer.MAGIC_NS_URI_ELEMENT, SQLTransformer.this.namespaceURI);
             this.outPrefix = this.params.getParameter(SQLTransformer.MAGIC_NS_PREFIX_ELEMENT, "sql");
+            this.rowsetElement = this.params.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset");
+            this.rowElement = this.params.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row");
 
             this.showNrOfRows = parameters.getParameterAsBoolean(SQLTransformer.MAGIC_NR_OF_ROWS, false);
             this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
@@ -1217,8 +1219,6 @@ public class SQLTransformer extends AbstractSAXTransformer {
          * Execute the query. Connection must be set already.
          */
         private void execute() throws SQLException {
-            this.rowsetElement = params.getParameter(SQLTransformer.MAGIC_DOC_ELEMENT, "rowset");
-            this.rowElement = params.getParameter(SQLTransformer.MAGIC_ROW_ELEMENT, "row");
             setColumnCase(params.getParameter(SQLTransformer.MAGIC_COLUMN_CASE, "lowercase"));
 
             // Construct query string
@@ -1333,12 +1333,22 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 return true;
             }
 
-            if (rs == null || !rs.next()) {
-                // No more rows.
-                return false;
+            if (rs != null && rs.next()) {
+                // Have next row
+                return true;
             }
 
-            return true;
+            while (pst.getMoreResults()) {
+                rs = pst.getResultSet();
+                md = rs.getMetaData();
+                if (rs.next()) {
+                    // Have next row in next result set
+                    return true;
+                }
+            }
+
+            // Nothing left
+            return false;
         }
 
         /**
