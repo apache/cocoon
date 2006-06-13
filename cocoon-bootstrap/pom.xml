@@ -40,7 +40,7 @@
         <configuration>
           <pde>true</pde>
         </configuration>
-      </plugin>         
+      </plugin>
     </plugins>
   </build>
   <dependencies>
