@@ -94,7 +94,7 @@ public class XSLTAspect
 
     protected List variables = new ArrayList();
 
-    protected Parameters parameters = null;
+    protected Parameters parameters;
 
     protected VariableResolverFactory variableFactory;
     
