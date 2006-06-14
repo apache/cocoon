@@ -166,6 +166,7 @@ public class XSLTAspect
     throws SAXException {
         // FIXME Get the stylesheet either from a layout attribute or another aspect
         try {
+            // FIXME - object model is not passed
             String stylesheet = config.stylesheet.resolve(null);
             return stylesheet;
         } catch (PatternException pe) {

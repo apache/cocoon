@@ -41,6 +41,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.util.HtmlDomParser;
+import org.apache.cocoon.portal.util.InputModuleHelper;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.XMLUtils;
@@ -114,12 +115,16 @@ public class ProxyTransformer
     /** The portal service. */
     protected PortalService portalService;
 
+    /** Helper for resolving input modules. */
+    protected InputModuleHelper imHelper;
+
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
+        this.imHelper = new InputModuleHelper(manager);
     }
 
     /**
@@ -130,6 +135,10 @@ public class ProxyTransformer
             this.manager.release(this.portalService);
             this.portalService = null;
             this.manager = null;
+        }
+        if ( this.imHelper != null ) {
+            this.imHelper.dispose();
+            this.imHelper = null;
         }
     }
 
@@ -156,14 +165,13 @@ public class ProxyTransformer
 
         final CopletData copletData = this.copletInstanceData.getCopletData();
 
-        final String startURI = (String)copletData.getAttribute(START_URI);
-
         this.link = (String) this.copletInstanceData.getTemporaryAttribute(LINK);
 
         this.documentBase = (String) this.copletInstanceData.getAttribute(DOCUMENT_BASE);
 
         if (this.link == null) {
-            this.link = startURI;
+            final String startURI = (String)copletData.getAttribute(START_URI);
+            this.link = this.imHelper.resolve(startURI);
         }
 
         if (documentBase == null) {
