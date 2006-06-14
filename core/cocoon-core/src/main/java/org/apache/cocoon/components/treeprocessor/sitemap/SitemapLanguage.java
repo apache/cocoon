@@ -62,6 +62,7 @@ import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.core.PropertyProvider;
 import org.apache.cocoon.core.Settings;
@@ -1107,19 +1108,28 @@ public class SitemapLanguage
         try {
             directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
             if (directory.exists() && directory instanceof TraversableSource) {
+                final List propertyUris = new ArrayList();
                 final Iterator c = ((TraversableSource) directory).getChildren().iterator();
                 while (c.hasNext()) {
                     final Source src = (Source) c.next();
                     if ( src.getURI().endsWith(".properties") ) {
-                        final InputStream propsIS = src.getInputStream();
-                        if ( this.getLogger().isDebugEnabled() ) {
-                            this.getLogger().debug("Reading settings from '" + src.getURI() + "'.");
-                        }
-                        final Properties p = new Properties();
-                        p.load(propsIS);
-                        propsIS.close();
-                        s.fill(p);
+                        propertyUris.add(src);
                     }
+                }
+                // sort
+                Collections.sort(propertyUris, CoreUtil.getSourceComparator());
+                // now process
+                final Iterator i = propertyUris.iterator();
+                while ( i.hasNext() ) {
+                    final Source src = (Source)i.next();
+                    final InputStream propsIS = src.getInputStream();
+                    if ( this.getLogger().isDebugEnabled() ) {
+                        this.getLogger().debug("Reading settings from '" + src.getURI() + "'.");
+                    }
+                    final Properties p = new Properties();
+                    p.load(propsIS);
+                    propsIS.close();
+                    s.fill(p);
                 }
             }
         } catch (IOException ignore) {
