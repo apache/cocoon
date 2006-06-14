@@ -176,6 +176,13 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="fix">
+      Property files are read in alphabetical order to provide a reliable read order.
+    </action>
+    <action dev="CZ" type="add">
+      Add setting "org.apache.cocoon.sitemap.internalonly.disable" to disable all internal pipelines for
+      development purposes.
+    </action>
     <action dev="CZ" type="remove">
       Remove the SitemapConfigurable interface completly. The new include and property mechanism provides
       a cleaner way of per sitemap configurations.
