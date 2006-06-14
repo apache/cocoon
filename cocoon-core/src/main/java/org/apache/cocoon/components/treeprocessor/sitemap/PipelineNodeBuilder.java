@@ -20,10 +20,13 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.TreeBuilder;
+import org.apache.cocoon.core.Settings;
 
 /**
  * Builds a &lt;map:pipeline&gt;
@@ -32,18 +35,47 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  */
 public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder {
 
+    private static final String ATTRIBUTE_INTERNAL_ONLY = "internal-only";
+
+    private static final String PROPERTY_SITEMAP_INTERNALONLY = "org.apache.cocoon.sitemap.internalonly.disable";
+
+    /** Will the ignore-internal flag of a pipeline be ignored? */
+    protected boolean ignoreInternalOnly;
+
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
+     */
+    public void setBuilder(TreeBuilder treeBuilder) {
+        super.setBuilder(treeBuilder);
+        // check ssettings for ignoring of internal only pipeline flags
+        this.ignoreInternalOnly = false;
+        final Settings settings = (Settings)treeBuilder.getBeanFactory().getBean(ProcessingUtil.SETTINGS_ROLE);
+        final String value = settings.getProperty(PipelineNodeBuilder.PROPERTY_SITEMAP_INTERNALONLY);
+        if ( value != null ) {
+            this.ignoreInternalOnly = Boolean.valueOf(value).booleanValue();
+        }
+    }
+
     /** This builder can have parameters -- return <code>true</code> */
     protected boolean hasParameters() {
         return true;
     }
 
+    /**
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#buildNode(org.apache.avalon.framework.configuration.Configuration)
+     */
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
         String type = this.treeBuilder.getTypeForStatement(config, ProcessingPipeline.ROLE);
         PipelineNode node = new PipelineNode(type);
 
         this.treeBuilder.setupNode(node, config);
-        node.setInternalOnly(config.getAttributeAsBoolean("internal-only", false));
+        // if internal only is ignore, all pipelines are directly accessible
+        if ( this.ignoreInternalOnly ) {
+            node.setInternalOnly(false);
+        } else {
+            node.setInternalOnly(config.getAttributeAsBoolean(PipelineNodeBuilder.ATTRIBUTE_INTERNAL_ONLY, false));
+        }
 
         // Main (with no "type" attribute) error handler: new in Cocoon 2.1, must have a generator
         ProcessingNode mainHandler = null;

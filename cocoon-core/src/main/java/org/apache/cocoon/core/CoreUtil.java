@@ -22,9 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -450,17 +453,26 @@ public class CoreUtil {
         try {
             directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
             if (directory.exists() && directory instanceof TraversableSource) {
+                final List propertyUris = new ArrayList();
                 final Iterator c = ((TraversableSource) directory).getChildren().iterator();
                 while (c.hasNext()) {
                     final Source src = (Source) c.next();
                     if ( src.getURI().endsWith(".properties") ) {
-                        final InputStream propsIS = src.getInputStream();
-                        this.environmentContext.log("Reading settings from '" + src.getURI() + "'.");
-                        final Properties p = new Properties();
-                        p.load(propsIS);
-                        propsIS.close();
-                        s.fill(p);
+                        propertyUris.add(src);
                     }
+                }
+                // sort
+                Collections.sort(propertyUris, getSourceComparator());
+                // now process
+                final Iterator i = propertyUris.iterator();
+                while ( i.hasNext() ) {
+                    final Source src = (Source)i.next();
+                    final InputStream propsIS = src.getInputStream();
+                    this.environmentContext.log("Reading settings from '" + src.getURI() + "'.");
+                    final Properties p = new Properties();
+                    p.load(propsIS);
+                    propsIS.close();
+                    s.fill(p);
                 }
             }
         } catch (IOException ignore) {
@@ -468,6 +480,26 @@ public class CoreUtil {
             this.environmentContext.log("Continuing initialization.");            
         } finally {
             resolver.release(directory);
+        }
+    }
+
+    /**
+     * Return a source comparator
+     */
+    public static Comparator getSourceComparator() {
+        return new SourceComparator();
+    }
+
+    protected final static class SourceComparator implements Comparator {
+
+        /**
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
+        public int compare(Object o1, Object o2) {
+            if ( !(o1 instanceof Source) || !(o2 instanceof Source)) {
+                return 0;
+            }
+            return ((Source)o1).getURI().compareTo(((Source)o2).getURI());
         }
     }
 
