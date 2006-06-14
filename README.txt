@@ -33,7 +33,9 @@ the message:
   BUILD SUCCESSFUL
 
 You may need anywhere from 5 minutes to 4 hours for this step to
-complete.
+complete. This wide time span depends on how many jar files 
+(artifacts) the build depends on you already have in your local 
+Maven 2 repository.
 
  
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
