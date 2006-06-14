@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -42,6 +43,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.util.InputModuleHelper;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.XMLUtils;
@@ -67,7 +69,7 @@ import org.xml.sax.SAXException;
  */
 public class ProxyTransformer
     extends AbstractTransformer
-    implements Serviceable, Parameterizable {
+    implements Serviceable, Disposable, Parameterizable {
 
     /**
      * Parameter for specifying the envelope tag
@@ -141,12 +143,25 @@ public class ProxyTransformer
     /** The sitemap parameters */
     protected Parameters parameters;
 
-    /* (non-Javadoc)
+    /** Helper for resolving input modules. */
+    protected InputModuleHelper imHelper;
+
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.imHelper = new InputModuleHelper(manager);
+    }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.imHelper != null ) {
+            this.imHelper.dispose();
+            this.imHelper = null;
+        }
     }
 
     /**
@@ -172,14 +187,13 @@ public class ProxyTransformer
 
         final CopletData copletData = this.copletInstanceData.getCopletData();
 
-        final String startURI = (String)copletData.getAttribute(START_URI);
-
         this.link = (String) this.copletInstanceData.getTemporaryAttribute(LINK);
 
         this.documentBase = (String) this.copletInstanceData.getAttribute(DOCUMENT_BASE);
 
         if (this.link == null) {
-            this.link = startURI;
+            final String startURI = (String)copletData.getAttribute(START_URI);
+            this.link = this.imHelper.resolve(startURI);
         }
 
         if (documentBase == null) {
@@ -196,7 +210,7 @@ public class ProxyTransformer
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
@@ -265,7 +279,7 @@ public class ProxyTransformer
                     }
                 }
             }
-            
+
             // now append parameters from the sitemap - if any
             final String[] names = this.parameters.getNames();
             for(int i=0; i<names.length; i++) {
@@ -293,7 +307,6 @@ public class ProxyTransformer
                         result = readXML(connection);
                         remoteURI = checkForRedirect(result, documentBase);
                     }
-
                 }
                 while (remoteURI != null);
             } catch (IOException ex) {
@@ -335,6 +348,7 @@ public class ProxyTransformer
 
         return firstparameter;
     }
+
     /**
      * Check the http status code of the http response to detect any redirects.
      * @param connection The HttpURLConnection
@@ -583,7 +597,6 @@ public class ProxyTransformer
     */
     public static String resolveURI(String uri, String documentBase)
     throws MalformedURLException {
-
         if (uri == null) {
             throw new IllegalArgumentException("URI to be resolved must not be null!");
         }
@@ -632,18 +645,17 @@ public class ProxyTransformer
     }
 
     /**
-    * Method getInstanceData.
-    * @param manager
-    * @param objectModel
-    * @param parameters
-    * @return CopletInstanceData
-    * @throws ProcessingException
-    */
+     * Method getInstanceData.
+     * @param manager
+     * @param objectModel
+     * @param parameters
+     * @return CopletInstanceData
+     * @throws ProcessingException
+     */
     public static CopletInstanceData getInstanceData(ServiceManager manager,
                                                      Map objectModel,
                                                      Parameters parameters)
     throws ProcessingException {
-
         PortalService portalService = null;
         try {
             portalService = (PortalService) manager.lookup(PortalService.ROLE);
@@ -671,5 +683,4 @@ public class ProxyTransformer
             manager.release(portalService);
         }
     }
-
 }
