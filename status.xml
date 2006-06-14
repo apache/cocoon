@@ -203,7 +203,7 @@
       instrumentation of all components including sitemap components.
     </action>
     <action dev="AG" type="update">
-      Updated dojo to 20060605.
+      Updated dojo to 20060614.
     </action>
     <action dev="CZ" type="fix">
       Fix bug in wildcard matcher where a uri containing a pattern twice did not always match. For example,
