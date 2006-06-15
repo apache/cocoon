@@ -219,18 +219,12 @@ public abstract class JXPathBindingBase
      */
     public final void loadFormFromModel(Widget frmModel, Object objModel)
     throws BindingException {
-        if ( frmModel instanceof Form ) {
-            ((Form)frmModel).informStartLoadingModel();
-        }
         if (objModel != null) {
             JXPathContext jxpc = makeJXPathContext(objModel);
             loadFormFromModel(frmModel, jxpc);
         } else {
             throw new NullPointerException(
                     "null object passed to loadFormFromModel() method");
-        }
-        if ( frmModel instanceof Form ) {
-            ((Form)frmModel).informEndLoadingModel();
         }
     }
 
@@ -267,18 +261,12 @@ public abstract class JXPathBindingBase
      */
     public void saveFormToModel(Widget frmModel, Object objModel)
                 throws BindingException {
-        if ( frmModel instanceof Form ) {
-            ((Form)frmModel).informStartSavingModel();
-        }
         if (objModel != null) {
             JXPathContext jxpc = makeJXPathContext(objModel);
             saveFormToModel(frmModel, jxpc);    
         } else {
             throw new NullPointerException(
                     "null object passed to saveFormToModel() method");
-        }
-        if ( frmModel instanceof Form ) {
-            ((Form)frmModel).informEndSavingModel();
         }
     }
 
