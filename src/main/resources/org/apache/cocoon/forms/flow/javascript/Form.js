@@ -245,15 +245,17 @@ Form.prototype.createBinding = function(bindingURI) {
 Form.prototype.load = function(object) {
     if (this.binding == null)
         throw new Error("Binding not configured for this form.");
-
+    this.form.informStartLoadingModel();
     this.binding.loadFormFromModel(this.form, object);
+    this.form.informEndLoadingModel();
 }
 
 Form.prototype.save = function(object) {
     if (this.binding == null)
         throw new Error("Binding not configured for this form.");
-
+    this.form.informStartSavingModel();
     this.binding.saveFormToModel(this.form, object);
+    this.form.informEndSavingModel();
 }
 
 Form.prototype.setAttribute = function(name, value) {
