@@ -77,6 +77,7 @@ import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
@@ -389,6 +390,31 @@ public class SitemapLanguage
         if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
             final String propertyDir = componentConfig.getAttribute("property-dir");
             settings = this.createSettings(settings, propertyDir);
+        }
+        // compatibility with 2.1.x - check for global variables in sitemap
+        // TODO - This will be removed in later versions!
+        if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
+            Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
+            // now check for global variables - if any other element occurs: throw exception
+            Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
+            for(int i=0; i<children.length; i++) {
+                if ( "global-variables".equals(children[i].getName()) ) {
+                    final Properties p = new Properties();
+                    final MutableSettings mutableSettings;
+                    if ( settings instanceof MutableSettings ) {
+                        mutableSettings = (MutableSettings)settings;
+                    } else {
+                        mutableSettings = new MutableSettings(settings);
+                    }
+                    Configuration[] variables = children[i].getChildren();
+                    for(int v=0; v<variables.length; v++) {
+                        p.setProperty(variables[v].getName(), variables[v].getValue());
+                    }
+                    mutableSettings.fill(p);
+                } else {
+                    throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
+                }
+            }
         }
         // replace properties?
         if ( componentConfig == null || componentConfig.getAttributeAsBoolean("replace-properties", true) ) {
