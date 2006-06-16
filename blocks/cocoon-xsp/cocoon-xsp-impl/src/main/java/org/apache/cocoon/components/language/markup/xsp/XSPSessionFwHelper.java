@@ -28,6 +28,7 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @version $Id$
+ * @deprecated This class is deprecated and will be removed in future versions.
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {
