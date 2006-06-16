@@ -102,7 +102,7 @@
 
       <!-- mount sub-sitemaps -->
       <map:match pattern="plugins/*/**">
-     	 <map:act type="cowarp-is-logged-in">
+     	 <map:act type="cauth-is-logged-in">
             <map:parameter name="application" value="portal"/> 
 	      	<map:act type="check-access-action">
 	    		<map:parameter name="url" value="{../1}/{../2}"/>

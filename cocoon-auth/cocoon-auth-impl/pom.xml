@@ -21,14 +21,14 @@
 <project>
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-portal</artifactId>
+    <artifactId>cocoon-auth</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-portal-sample</artifactId>
+  <artifactId>cocoon-auth-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Portal Block Sample</name>
+  <name>Cocoon Authentication Implementation</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -38,22 +38,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-cron-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-ojb-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-auth-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
