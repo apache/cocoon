@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2005 The Apache Software Foundation.
+ * Copyright 1999-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.sql.CallableStatement;
@@ -46,10 +47,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
-
 import org.apache.cocoon.transformation.helpers.TextRecorder;
-
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -102,7 +101,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  * The following DTD is valid:
  * <code>
- * &lt;!ENTITY % param  "(own-connection?,(use-connection|(dburl,username,password))?,show-nr-or-rows?,doc-element?,row-element?,namespace-uri?,namespace-prefix?,clob-encoding?)"&gt;<br>
+ * &lt;!ENTITY % param "(own-connection?,(use-connection|(dburl,username,password))?,show-nr-or-rows?,doc-element?,row-element?,namespace-uri?,namespace-prefix?,clob-encoding?)"&gt;<br>
  * &lt;!ELEMENT execute-query (query,(in-parameter|out-parameter)*,execute-query?, %param;)&gt;<br>
  * &lt;!ELEMENT own-connection (#PCDATA)&gt;<br>
  * &lt;!ELEMENT use-connection (#PCDATA)&gt;<br>
@@ -130,6 +129,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  * Connection sharing between queries can be disabled, globally or on per-query basis, using
  * <code>own-connection</code> parameter.
+ * </p>
+ *
+ * <p>
+ * By default, CLOBs are read from the database using character stream, so that character
+ * decoding is performed by the database. Using <code>clob-encoding</code> parameter,
+ * this behavior can be overrided, so that data is read as byte stream and decoded using
+ * specified character encoding.
  * </p>
  *
  * <p>
@@ -1151,6 +1157,9 @@ public class SQLTransformer extends AbstractSAXTransformer {
 
             this.showNrOfRows = parameters.getParameterAsBoolean(SQLTransformer.MAGIC_NR_OF_ROWS, false);
             this.clobEncoding = parameters.getParameter(SQLTransformer.CLOB_ENCODING, "");
+            if (this.clobEncoding.length() == 0) {
+                this.clobEncoding = null;
+            }
 
             // Start prefix mapping for output namespace, only if it's not mapped yet
             final String prefix = SQLTransformer.this.findPrefixMapping(this.outUri);
@@ -1319,6 +1328,7 @@ public class SQLTransformer extends AbstractSAXTransformer {
         // for a given "name" versus number.  That being said this shouldn't be an issue
         // as this function is only called for ancestor lookups.
         protected String getColumnValue(String name) throws SQLException {
+            //noinspection UnnecessaryLocalVariable
             String retval = getStringValue(rs.getObject(name));
             // if (rs.getMetaData().getColumnType( name ) == java.sql.Types.DOUBLE)
             // retval = transformer.getStringValue( rs.getBigDecimal( name ) );
@@ -1512,9 +1522,14 @@ public class SQLTransformer extends AbstractSAXTransformer {
             if (object instanceof byte[]) {
                 // FIXME Encoding?
                 return new String((byte[]) object);
-            } else if (object instanceof char[]) {
+            }
+
+            if (object instanceof char[]) {
                 return new String((char[]) object);
-            } else if (object instanceof Clob) {
+            }
+
+            // Old behavior: Read bytes & decode
+            if (object instanceof Clob && this.clobEncoding != null) {
                 Clob clob = (Clob) object;
                 StringBuffer buffer = new StringBuffer();
                 InputStream is = clob.getAsciiStream();
@@ -1528,7 +1543,26 @@ public class SQLTransformer extends AbstractSAXTransformer {
                     throw new SQLException("Error reading stream from CLOB");
                 }
                 return buffer.toString();
-            } else if (object != null) {
+            }
+
+            // Correct behavior: Read character data
+            if (object instanceof Clob) {
+                Clob clob = (Clob) object;
+                StringBuffer buffer = new StringBuffer();
+                Reader cs = clob.getCharacterStream();
+                try {
+                    char[] chars = new char[BUFFER_SIZE];
+                    int n;
+                    while ((n = cs.read(chars)) > -1) {
+                        buffer.append(chars, 0, n);
+                    }
+                } catch (IOException e) {
+                    throw new SQLException("Error reading stream from CLOB");
+                }
+                return buffer.toString();
+            }
+
+            if (object != null) {
                 return object.toString();
             }
 
