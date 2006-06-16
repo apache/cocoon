@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 /**
  *  This is the default implementation of the session manager
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class DefaultSessionManager
@@ -60,16 +61,16 @@ implements Serviceable, ThreadSafe, SessionManager, Disposable, Contextualizable
     private ContextManager contextManager;
 
     /**
-    * Avalon Serviceable Interface
-    */
-   public void service(ServiceManager manager)
-   throws ServiceException {
-       this.manager = manager;
-       this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
-   }
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager)
+    throws ServiceException {
+        this.manager = manager;
+        this.contextManager = (ContextManager)this.manager.lookup(ContextManager.ROLE);
+    }
 
     /**
-     * Avalon Disposable Interface
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if (this.manager != null ) {

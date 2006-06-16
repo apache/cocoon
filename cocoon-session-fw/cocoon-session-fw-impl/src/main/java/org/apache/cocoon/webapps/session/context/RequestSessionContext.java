@@ -113,6 +113,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getLocales()
  *  - getAuthType()
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class RequestSessionContext

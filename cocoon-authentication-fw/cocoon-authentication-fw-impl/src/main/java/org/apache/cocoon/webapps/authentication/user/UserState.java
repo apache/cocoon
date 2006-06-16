@@ -23,6 +23,7 @@ import java.util.Map;
  * This object holds all authentication handlers ({@link UserHandler}
  * the user is currently logged-in to.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class UserState

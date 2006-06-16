@@ -43,6 +43,7 @@ import org.w3c.dom.DocumentFragment;
  * &lt;session:getxml context="authentication" path="/authentication/ID"/&gt;
  * using the session transformer.
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class ContextInputModule

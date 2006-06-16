@@ -41,6 +41,7 @@ import org.xml.sax.ext.LexicalHandler;
 /**
  *  This is a simple implementation of the session context.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class SimpleSessionContext

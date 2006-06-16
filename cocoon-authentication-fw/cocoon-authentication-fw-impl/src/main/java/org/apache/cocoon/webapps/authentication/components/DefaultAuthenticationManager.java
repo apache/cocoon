@@ -40,6 +40,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
@@ -63,6 +64,7 @@ import org.xml.sax.SAXException;
 /**
  * This is the basis authentication component.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class DefaultAuthenticationManager
@@ -102,6 +104,7 @@ public class DefaultAuthenticationManager
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
+        Deprecation.logger.warn("The authentication-fw block is deprecated. Please use the auth block instead.");
         this.handlerConfigs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context), config);
     }
 

@@ -38,6 +38,7 @@ import org.apache.cocoon.ProcessingException;
  *  is build in the DOM model.
  *  As this context is used in a web context, all methods must be synchronized.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface SessionContext
