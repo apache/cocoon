@@ -41,6 +41,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
@@ -65,6 +66,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id$
 */
 public class DefaultAuthenticationManager
@@ -106,6 +108,7 @@ public class DefaultAuthenticationManager
      */
     public void configure(SitemapConfigurationHolder holder)
     throws ConfigurationException {
+        Deprecation.logger.warn("The authentication-fw block is deprecated. Please use the auth block instead.");
         this.holder = holder;
     }
 

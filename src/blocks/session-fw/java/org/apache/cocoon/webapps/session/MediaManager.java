@@ -20,7 +20,8 @@ package org.apache.cocoon.webapps.session;
  * It provides simple support for developing multi-channel applications
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: MediaManager.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface MediaManager {
 

@@ -21,7 +21,8 @@ package org.apache.cocoon.webapps.session.xml;
  * A utility class which will soon be removed...
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtil.java,v 1.2 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class XMLUtil {
 

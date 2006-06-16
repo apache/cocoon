@@ -25,7 +25,8 @@ import org.apache.cocoon.ProcessingException;
  * per request, an authentication context once per session etc.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProvider.java,v 1.4 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface SessionContextProvider {
 

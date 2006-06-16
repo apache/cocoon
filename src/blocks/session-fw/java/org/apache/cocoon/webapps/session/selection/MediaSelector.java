@@ -29,7 +29,8 @@ import org.apache.cocoon.webapps.session.MediaManager;
  *  This selector uses the media management.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: MediaSelector.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class MediaSelector
 implements Serviceable, Selector, ThreadSafe {

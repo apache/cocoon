@@ -39,7 +39,8 @@ import org.apache.cocoon.webapps.session.SessionManager;
  * the uthentication framework.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionAction.java,v 1.5 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class SessionAction
 extends ServiceableAction

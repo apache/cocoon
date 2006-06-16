@@ -24,7 +24,8 @@ import java.util.Map;
  * the user is currently logged-in to.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserState.java,v 1.2 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class UserState
 implements java.io.Serializable {

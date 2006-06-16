@@ -92,6 +92,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
 */
 public class SessionFormAction extends FormValidatorAction {

@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
  * pipeline.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id$
 */
 public class SessionPreTransformer

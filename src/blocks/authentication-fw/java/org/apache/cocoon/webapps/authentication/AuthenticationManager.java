@@ -31,6 +31,7 @@ import org.apache.excalibur.source.SourceParameters;
  * actions perform all required tasks.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id$
 */
 public interface AuthenticationManager {

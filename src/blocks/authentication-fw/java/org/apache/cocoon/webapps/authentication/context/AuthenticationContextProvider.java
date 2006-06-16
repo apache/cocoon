@@ -34,7 +34,8 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  *  Context provider for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContextProvider.java,v 1.8 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class AuthenticationContextProvider
 extends AbstractLogEnabled

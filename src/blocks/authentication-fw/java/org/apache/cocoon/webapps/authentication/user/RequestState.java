@@ -27,8 +27,9 @@ import org.apache.excalibur.source.SourceResolver;
  * is currently used for this request.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.7 2004/03/19 13:59:21 cziegeler Exp $
-*/
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
+ */
 public final class RequestState
 implements java.io.Serializable {
 

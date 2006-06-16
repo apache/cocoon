@@ -39,7 +39,8 @@ import org.apache.cocoon.ProcessingException;
  *  As this context is used in a web context, all methods must be synchronized.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContext.java,v 1.4 2004/03/19 14:16:55 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface SessionContext
 extends Serializable {

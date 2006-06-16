@@ -34,6 +34,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
@@ -46,7 +47,8 @@ import org.xml.sax.SAXException;
  * Context manager
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultContextManager.java,v 1.7 2004/03/19 14:16:55 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class DefaultContextManager
 extends AbstractLogEnabled
@@ -79,6 +81,7 @@ implements Serviceable, ContextManager, ThreadSafe, Component, Contextualizable,
         this.contextSelector = (ServiceSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        Deprecation.logger.warn("The session-fw block is deprecated. Please use the provided alternatives instead.");
     }
 
     /**

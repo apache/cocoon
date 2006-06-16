@@ -22,7 +22,8 @@ import org.w3c.dom.DocumentFragment;
  * Form manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FormManager.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface FormManager {
 

@@ -29,7 +29,8 @@ import org.w3c.dom.DocumentFragment;
  * The <code>Session-fw</code> object helper
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: XSPSessionFwHelper.java,v 1.8 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
  * @since 2.1.1
  */
 public class XSPSessionFwHelper {

@@ -42,7 +42,8 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class SimpleSessionContext
 implements SessionContext {

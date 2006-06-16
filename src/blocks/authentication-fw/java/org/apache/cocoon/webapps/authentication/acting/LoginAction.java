@@ -35,6 +35,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  into the temporary context.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id$
 */
 public final class LoginAction extends ServiceableAction

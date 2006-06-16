@@ -44,7 +44,8 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.8 2004/04/15 08:51:31 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled

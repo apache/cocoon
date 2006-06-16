@@ -19,7 +19,8 @@ package org.apache.cocoon.webapps.session;
  * The <code>Constants</code> used throughout the core of the session management.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionConstants.java,v 1.4 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface SessionConstants {
 
