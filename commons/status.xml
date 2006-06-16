@@ -59,7 +59,7 @@
 <!ENTITY ccedil           "&#x000E7;">
 ]>
 
-<!-- SVN $Id$ -->
+<!-- @version $Id$ -->
 
 <status>
  <developers>
@@ -185,7 +185,8 @@
     </action>
     <action dev="CZ" type="remove">
       Remove the SitemapConfigurable interface completly. The new include and property mechanism provides
-      a cleaner way of per sitemap configurations.
+      a cleaner way of per sitemap configurations. (Compatibility for global sitemap variables is provided but
+      will be removed in later versions.)
     </action>
     <action dev="CZ" type="add">
       Properties can now be defined on a per sitemap base. This includes different set of
