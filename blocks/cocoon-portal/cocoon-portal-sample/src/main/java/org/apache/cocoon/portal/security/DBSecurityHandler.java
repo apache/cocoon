@@ -19,14 +19,15 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.auth.AbstractSecurityHandler;
+import org.apache.cocoon.auth.ApplicationManager;
+import org.apache.cocoon.auth.SecurityHandler;
 import org.apache.cocoon.ojb.samples.bean.User;
 import org.apache.ojb.broker.PersistenceBroker;
 import org.apache.ojb.broker.PersistenceBrokerFactory;
 import org.apache.ojb.broker.query.Criteria;
 import org.apache.ojb.broker.query.Query;
 import org.apache.ojb.broker.query.QueryByCriteria;
-import org.osoco.cowarp.AbstractSecurityHandler;
-import org.osoco.cowarp.ApplicationManager;
 
 /**
  * @version $Id$
@@ -35,9 +36,9 @@ public class DBSecurityHandler
     extends AbstractSecurityHandler {
 
     /**
-     * @see org.osoco.cowarp.SecurityHandler#login(Map)
+     * @see SecurityHandler#login(Map)
      */
-    public org.osoco.cowarp.User login(Map loginContext) throws Exception {
+    public org.apache.cocoon.auth.User login(Map loginContext) throws Exception {
         PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
 
         try {
@@ -69,9 +70,9 @@ public class DBSecurityHandler
     }
 
     /**
-     * @see org.osoco.cowarp.SecurityHandler#logout(Map, org.osoco.cowarp.User)
+     * @see SecurityHandler#logout(Map, org.apache.cocoon.auth.User)
      */
-    public void logout(Map context, org.osoco.cowarp.User user) {
+    public void logout(Map context, org.apache.cocoon.auth.User user) {
         // nothing to do
     }
 }

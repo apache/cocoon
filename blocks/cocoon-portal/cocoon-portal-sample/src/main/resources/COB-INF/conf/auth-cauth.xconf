@@ -15,25 +15,25 @@
   limitations under the License.
 -->
 <!--+
-    | This is the configuration for using CoWarp for authentication.
+    | This is the configuration for using CAuth for authentication.
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <components>
-  <!-- Include CoWarp components. -->
-  <include src="resource://org/osoco/cowarp/roles.xconf"/>
+  <!-- Include CAuth components. -->
+  <include src="resource://org/apache/cocoon/auth/roles.xconf"/>
 
   <!-- This security handler uses OJB and the hsqldb for the authentication: -->
-  <component role="org.osoco.cowarp.SecurityHandler/portal" 
+  <component role="org.apache.cocoon.auth.SecurityHandler/portal" 
              class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
   <!-- If you want to use a pipeline for the authentication use this configuration:
-    <component role="org.osoco.cowarp.SecurityHandler/portal" 
-               class="org.osoco.cowarp.impl.PipelineSecurityHandler">
+    <component role="org.apache.cocoon.auth.SecurityHandler/portal" 
+               class="org.apache.cocoon.auth.impl.PipelineSecurityHandler">
       <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
     </component>
   -->
-  <component role="org.osoco.cowarp.Application/portal" 
-             class="org.osoco.cowarp.portal.StandardPortalApplication" 
+  <component role="org.apache.cocoon.auth.Application/portal" 
+             class="org.apache.cocoon.auth.portal.StandardPortalApplication" 
              security-handler="portal"/>
 
 </components>

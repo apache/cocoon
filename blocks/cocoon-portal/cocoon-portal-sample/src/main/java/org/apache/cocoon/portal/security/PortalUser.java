@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.security;
 
 import java.util.ArrayList;
 
-import org.osoco.cowarp.StandardUser;
+import org.apache.cocoon.auth.StandardUser;
 
 /**
  * @version $Id$
