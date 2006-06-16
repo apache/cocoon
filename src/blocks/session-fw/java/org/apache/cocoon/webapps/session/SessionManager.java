@@ -28,7 +28,8 @@ import org.xml.sax.SAXException;
  *  The main purpose of this component is creating and termination sessions
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SessionManager.java,v 1.2 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface SessionManager {
 

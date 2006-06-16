@@ -28,7 +28,8 @@ import org.apache.excalibur.source.SourceParameters;
  * inside a handler configuration.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ApplicationConfiguration.java,v 1.4 2004/03/19 13:59:22 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class ApplicationConfiguration
 implements java.io.Serializable {

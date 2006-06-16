@@ -55,6 +55,7 @@ import java.util.Map;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
 */
 public final class ConfigurationGenerator extends ServiceableGenerator {

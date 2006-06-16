@@ -35,6 +35,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  * This is the default implementation for the transaction manager.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id$
 */
 public final class DefaultTransactionManager

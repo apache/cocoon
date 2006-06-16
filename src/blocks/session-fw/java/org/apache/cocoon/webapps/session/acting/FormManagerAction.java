@@ -30,7 +30,8 @@ import org.apache.cocoon.webapps.session.FormManager;
  * This action invokes the form manager to process incomming form values
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FormManagerAction.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class FormManagerAction
 extends ServiceableAction

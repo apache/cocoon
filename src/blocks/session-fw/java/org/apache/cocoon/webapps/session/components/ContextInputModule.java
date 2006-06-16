@@ -44,7 +44,8 @@ import org.w3c.dom.DocumentFragment;
  * using the session transformer.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextInputModule.java,v 1.3 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
  */
 public class ContextInputModule
     implements ThreadSafe, Serviceable, Disposable, InputModule {

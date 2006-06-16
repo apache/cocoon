@@ -55,6 +55,7 @@ import java.util.StringTokenizer;
  * This is the implementation for the authentication context
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
 */
 public class AuthenticationContext implements SessionContext {

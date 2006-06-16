@@ -31,7 +31,8 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  This action logs the current user out of a given handler
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LogoutAction.java,v 1.7 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class LogoutAction
 extends ServiceableAction

@@ -50,7 +50,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant).
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.8 2004/04/03 03:01:35 joerg Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
  */
 public class SessionPostTransformer extends SessionPreTransformer {
 

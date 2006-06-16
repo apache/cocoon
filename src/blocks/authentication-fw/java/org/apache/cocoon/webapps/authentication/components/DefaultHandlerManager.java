@@ -32,7 +32,8 @@ import org.apache.cocoon.webapps.authentication.configuration.HandlerConfigurati
  *  This is a utility class managing the authentication handlers
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultHandlerManager.java,v 1.6 2004/03/19 13:59:22 cziegeler Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class DefaultHandlerManager {
 

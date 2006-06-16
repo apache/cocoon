@@ -29,7 +29,8 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
  *  This action tests if the user is logged in for a given handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LoggedInAction.java,v 1.6 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public final class LoggedInAction
 extends ServiceableAction

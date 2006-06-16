@@ -40,6 +40,7 @@ import org.xml.sax.SAXException;
  * using the servlet authentication mechanisms.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version CVS $Id: PipelineAuthenticator.java 30932 2004-07-29 17:35:38Z vgritsenko $
 */
 public class ServletAuthenticator

@@ -20,7 +20,8 @@ package org.apache.cocoon.webapps.authentication;
  * framework.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationConstants.java,v 1.5 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @deprecated This block is deprecated and will be removed in future versions.
+ * @version CVS $Id$
 */
 public interface AuthenticationConstants {
 
