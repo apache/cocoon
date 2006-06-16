@@ -26,6 +26,7 @@ import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 /**
  * The authentication Handler.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class UserHandler

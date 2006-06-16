@@ -29,6 +29,7 @@ import org.apache.excalibur.source.SourceParameters;
 /**
  * The authentication Handler.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class HandlerConfiguration

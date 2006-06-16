@@ -24,6 +24,7 @@ import org.apache.cocoon.ProcessingException;
  * correctly: for example a request context object should only created once
  * per request, an authentication context once per session etc.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface SessionContextProvider {

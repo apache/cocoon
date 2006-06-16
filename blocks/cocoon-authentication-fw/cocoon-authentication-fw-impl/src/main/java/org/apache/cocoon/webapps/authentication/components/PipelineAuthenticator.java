@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 /**
  * Verify if a user can be authenticated.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class PipelineAuthenticator

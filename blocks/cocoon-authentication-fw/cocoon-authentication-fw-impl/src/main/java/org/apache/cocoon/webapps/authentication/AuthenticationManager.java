@@ -30,6 +30,7 @@ import org.apache.excalibur.source.SourceParameters;
  * component should not be used from custom code. The provided
  * actions perform all required tasks.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface AuthenticationManager {

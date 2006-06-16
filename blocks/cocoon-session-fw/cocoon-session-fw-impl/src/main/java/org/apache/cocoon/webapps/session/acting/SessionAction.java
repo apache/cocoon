@@ -38,6 +38,7 @@ import org.apache.cocoon.webapps.session.SessionManager;
  * any own session context and must not be authenticated anymore using
  * the uthentication framework.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class SessionAction

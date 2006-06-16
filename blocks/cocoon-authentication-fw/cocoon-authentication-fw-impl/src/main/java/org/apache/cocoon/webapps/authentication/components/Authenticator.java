@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
  * and gets the information set.
  * An authenticator must be implemented in a thread safe manner!
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface Authenticator {

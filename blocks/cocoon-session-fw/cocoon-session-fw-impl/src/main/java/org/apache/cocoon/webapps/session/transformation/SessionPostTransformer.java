@@ -49,6 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the SessionPreTransformer, although this is not needed (but then the
  * implementation of the SessionTransformer would be very unperformant).
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class SessionPostTransformer extends SessionPreTransformer {

@@ -27,6 +27,7 @@ import org.apache.excalibur.source.SourceParameters;
  * This object stores information about an application configuration
  * inside a handler configuration.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class ApplicationConfiguration

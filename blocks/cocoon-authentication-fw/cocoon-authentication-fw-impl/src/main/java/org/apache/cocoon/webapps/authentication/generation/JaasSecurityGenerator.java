@@ -45,6 +45,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <li><b>username</b> - The username of the user</li>
  * <li><b>password</b> - The password of the user</li></ul>
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id: PortalJaasSecurityGenerator.java 96 2004-08-28 21:30:23Z kulawik $
  */
 public class JaasSecurityGenerator extends ServiceableGenerator {

@@ -19,6 +19,7 @@ package org.apache.cocoon.webapps.authentication;
  * The <code>Constants</code> used throughout the core of the authentication
  * framework.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface AuthenticationConstants {

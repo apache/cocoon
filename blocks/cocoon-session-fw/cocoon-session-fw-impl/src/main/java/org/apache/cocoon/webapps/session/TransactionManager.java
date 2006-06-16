@@ -26,6 +26,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
  *  We distingish between reading and writing. Usually parallel reading is
  *  allowed but if one thread wants to write, no other can read or write.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface TransactionManager {

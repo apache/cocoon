@@ -21,6 +21,7 @@ import org.w3c.dom.DocumentFragment;
 /**
  * Form manager
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface FormManager {

@@ -30,6 +30,7 @@ import org.apache.cocoon.webapps.session.MediaManager;
 /**
  * This is the default implementation for the media manager
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class DefaultMediaManager

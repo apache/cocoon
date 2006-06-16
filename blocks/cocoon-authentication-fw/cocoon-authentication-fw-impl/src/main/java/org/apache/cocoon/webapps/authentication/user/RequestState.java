@@ -26,6 +26,7 @@ import org.apache.excalibur.source.SourceResolver;
  * This object holds the information which handler and application
  * is currently used for this request.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class RequestState

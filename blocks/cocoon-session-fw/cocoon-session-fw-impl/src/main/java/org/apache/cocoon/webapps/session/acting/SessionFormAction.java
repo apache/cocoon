@@ -90,6 +90,7 @@ import java.util.Map;
  * @see org.apache.cocoon.acting.FormValidatorAction
  * @see org.apache.cocoon.acting.AbstractValidatorAction
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
 */
 public class SessionFormAction extends FormValidatorAction {

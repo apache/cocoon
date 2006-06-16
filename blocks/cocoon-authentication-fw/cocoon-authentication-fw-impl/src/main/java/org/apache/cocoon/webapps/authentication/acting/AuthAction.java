@@ -33,6 +33,7 @@ import org.apache.cocoon.webapps.authentication.user.RequestState;
  *  The main task of this action is to check if the user is authenticated
  *  using a handler. If not a redirect takes place.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class AuthAction

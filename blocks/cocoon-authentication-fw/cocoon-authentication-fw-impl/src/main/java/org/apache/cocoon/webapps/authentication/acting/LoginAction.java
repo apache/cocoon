@@ -34,6 +34,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  If the authentication is not successful, the error information is stored
  *  into the temporary context.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class LoginAction extends ServiceableAction
