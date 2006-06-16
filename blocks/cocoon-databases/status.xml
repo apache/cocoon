@@ -65,6 +65,10 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Read CLOBs using getCharacterStream, delegate character decoding
+     to the database. Revert to old behavior if clob-encoding parameter is present.
+   </action>
    <action dev="VG" type="fix" fixes-bug="COCOON-1247">
      Support multiple results in SQLTransformer.
    </action>
