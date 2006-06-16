@@ -21,11 +21,11 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>  
-  
+
   <packaging>pom</packaging>  
-  
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
@@ -34,13 +34,14 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-blocks-modules</artifactId>
-    
+
   <name>Cocoon Blocks [modules]</name>
 
   <modules>
         <module>cocoon-ajax</module>
 		<module>cocoon-apples</module>
 		<module>cocoon-asciiart</module>
+		<module>cocoon-auth</module>
 		<module>cocoon-authentication-fw</module>
 		<module>cocoon-axis</module>
 		<module>cocoon-batik</module>

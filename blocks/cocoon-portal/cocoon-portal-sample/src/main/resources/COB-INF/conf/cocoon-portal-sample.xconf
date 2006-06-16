@@ -38,13 +38,9 @@
   <!-- If you don't need WSRP support, you can remove the following include: -->
   <include src="resource://org/apache/cocoon/portal/wsrp/portal-wsrp.roles"/>
 
-  <!-- We use CoWarp for authentication. If you don't use CoWarp remove this line: -->
-  <include src="auth-cowarp.xconf"/>
+  <!-- We use CAuth for authentication. If you don't use CAuth remove this line: -->
+  <include src="auth-cauth.xconf"/>
   
-  <!-- If you want to use the authentication-fw uncomment this line: 
-  <include src="auth-authfw.xconf"/>
-  -->
-
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
