@@ -41,6 +41,9 @@ The initial code of the official Cocoon form handling block (CForms)
 evolved from the Woody donation made by Outerthought
 (http://outerthought.org).
 
+The initial code of the official Cocoon authentication block (CAuth)
+evolved from the CoWarp donation made by Carsten Ziegeler (cziegeler@osoco.org).
+
 
  Credits of included software
  ----------------------------
