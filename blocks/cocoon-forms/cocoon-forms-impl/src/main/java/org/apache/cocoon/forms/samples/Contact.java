@@ -23,6 +23,7 @@ package org.apache.cocoon.forms.samples;
 public class Contact {
     private long id;
     private String firstName;
+    private String middleInitial;
     private String lastName;
     private String phone;
     private String email;
@@ -69,7 +70,8 @@ public class Contact {
     }
 
     public String toString() {
-        return "< id = " + id + ", firstName = " + firstName + ", lastName = " + lastName + ", phone = " + phone + ", email = " + email + " >";
+        return "< id = " + id + ", firstName = " + firstName + ", middleInitial = " + middleInitial
+            + ", lastName = " + lastName + ", phone = " + phone + ", email = " + email + " >";
     }
 
     public PreferredContact getPreferred() {
@@ -78,5 +80,13 @@ public class Contact {
 
     public void setPreferred(PreferredContact preferred) {
         this.preferred = preferred;
+    }
+
+    public String getMiddleInitial() {
+        return middleInitial;
+    }
+
+    public void setMiddleInitial(String middleInitial) {
+        this.middleInitial = middleInitial;
     }
 }
