@@ -29,7 +29,8 @@ import org.apache.cocoon.auth.User;
 /**
  * Get the information about the current user.
  * This implementation uses CAuth.
- *
+ * Note: This class belongs to cauth but has to be defined in the portal block for now.
+ *       This will be cleaned up with Cocoon 2.2.
  * @version $Id$
  */
 public class UserInfoProviderImpl

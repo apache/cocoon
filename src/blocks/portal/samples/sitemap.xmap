@@ -73,18 +73,18 @@
       <map:action name="portal-urlhelper"
                   src="org.apache.cocoon.portal.acting.URLAction"/>
 
-      <map:action name="cowarp-is-logged-in"
-                  src="org.osoco.cowarp.acting.LoggedInAction"/>
-      <map:action name="cowarp-login"
-                  src="org.osoco.cowarp.acting.LoginAction"/>
-      <map:action name="cowarp-logout"
-                  src="org.osoco.cowarp.acting.LogoutAction"/>
+      <map:action name="cauth-is-logged-in"
+                  src="org.apache.cocoon.auth.acting.LoggedInAction"/>
+      <map:action name="cauth-login"
+                  src="org.apache.cocoon.auth.acting.LoginAction"/>
+      <map:action name="cauth-logout"
+                  src="org.apache.cocoon.auth.acting.LogoutAction"/>
     </map:actions>
   </map:components>
 
   <map:resources>
     <map:resource name="show-portal">
-      <map:act type="cowarp-is-logged-in">
+      <map:act type="cauth-is-logged-in">
         <map:parameter name="application" value="portal"/>
 
         <map:generate type="portal" label="content"/>
@@ -210,11 +210,11 @@
       </map:match>
 
       <!-- Do an auto login as anonymous -->
-      <map:act type="cowarp-is-logged-in">
+      <map:act type="cauth-is-logged-in">
         <map:parameter name="application" value="portal"/>
         <map:parameter name="negate-result" value="true"/>
 
-        <map:act type="cowarp-login">
+        <map:act type="cauth-login">
           <map:parameter name="application" value="portal"/>
 
           <map:parameter name="name" value="anonymous"/>
@@ -229,7 +229,7 @@
 
       <!-- Test pipeline for bookmark -->
       <map:match pattern="bookmark">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
 
           <map:act type="portal-bookmark">
@@ -239,7 +239,7 @@
       </map:match>
 
       <map:match pattern="portalxml">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
 
             <map:generate type="portal" label="content"/>
@@ -253,13 +253,13 @@
         - if we are anonymous, then logout
         - if we are any other use, redirect to loggedin
         -->
-          <map:act type="cowarp-is-logged-in">
+          <map:act type="cauth-is-logged-in">
             <map:parameter name="application" value="portal"/>
 
             <map:select type="parameter" >
               <map:parameter name="parameter-selector-test" value="{ID}"/>
               <map:when test="anonymous">
-                <map:act type="cowarp-logout">
+                <map:act type="cauth-logout">
                   <map:parameter name="application" value="portal"/>
                 </map:act>
               </map:when>
@@ -270,7 +270,7 @@
           </map:act>
 
         <!-- Start the authentication process -->
-        <map:act type="cowarp-login">
+        <map:act type="cauth-login">
           <map:parameter name="application" value="portal"/>
           <map:parameter name="name" value="{request-param:name}"/>
           <map:parameter name="password" value="{request-param:password}"/>
@@ -289,7 +289,7 @@
       </map:match>
 
       <map:match pattern="loggedin">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
 
           <map:generate src="resources/logged-in.xml"/>
@@ -301,12 +301,12 @@
       </map:match>
 
       <map:match pattern="logout">
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
 <!--
             <map:act type="portal-save-profile"/>
 -->
-          <map:act type="cowarp-logout">
+          <map:act type="cauth-logout">
 		        <map:parameter name="application" value="portal"/>
           </map:act>
         </map:act>
@@ -323,7 +323,7 @@
 	
 	<!-- mount sitemap of the portal tools -->
 	<map:match pattern="tools/**"> 
-		<map:act type="cowarp-is-logged-in">
+		<map:act type="cauth-is-logged-in">
 			<map:parameter name="application" value="portal"/> 
 			
 			<map:mount uri-prefix="tools" check-reload="no" src="tools/sitemap.xmap"/>

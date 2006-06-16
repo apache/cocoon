@@ -124,21 +124,18 @@
     <urlPath>true</urlPath>
     -->
   </component>
-  <component role="org.osoco.cowarp.ApplicationManager"
-             class="org.osoco.cowarp.impl.StandardApplicationManager"/>
-
   
   <!-- This security handler makes use of a pipeline for the authentication: -->
-  <component role="org.osoco.cowarp.SecurityHandler/portal" 
-             class="org.osoco.cowarp.impl.PipelineSecurityHandler">
+  <component role="org.apache.cocoon.auth.SecurityHandler/portal" 
+             class="org.apache.cocoon.auth.impl.PipelineSecurityHandler">
     <authentication-resource>cocoon:raw:/sunrise-authuser</authentication-resource>
   </component>
   <!-- This security handler uses OJB and the hsqldb for the authentication (JDK 1.4 required):
-    <component role="org.osoco.cowarp.SecurityHandler/portal" 
-               class="org.apache.cocoon.portal.security.DBSecurityHandler"/>
+    <component role="org.apache.cocoon.auth.SecurityHandler/portal" 
+               class="org.apache.cocoon.auth.portal.security.DBSecurityHandler"/>
   -->
-  <component role="org.osoco.cowarp.Application/portal" 
-             class="org.osoco.cowarp.portal.StandardPortalApplication" 
+  <component role="org.apache.cocoon.auth.Application/portal" 
+             class="org.apache.cocoon.auth.portal.StandardPortalApplication" 
              security-handler="portal">
     <profiles>
       <copletbasedata-global-load uri="cocoon:raw:/load-global-profile?profile=copletbasedata"/>
@@ -155,8 +152,8 @@
       <layout-user-save uri="cocoon:raw:/save-user-profile?profile=layout"/>
     </profiles>
   </component>
-  <component class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/Cowarp">
-    <parameter name="userinfo-provider" value="org.osoco.cowarp.portal.UserInfoProviderImpl"/>
+  <component class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager" logger="portal" role="org.apache.cocoon.portal.profile.ProfileManager/CAuth">
+    <parameter name="userinfo-provider" value="org.apache.cocoon.auth.portal.UserInfoProviderImpl"/>
   </component>
 
   <component class="org.apache.cocoon.components.persistence.CastorSourceConverter"

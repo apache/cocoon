@@ -27,7 +27,8 @@ import org.apache.cocoon.auth.User;
 
 /**
  * This is a default implementation for a portal application.
- *
+ * Note: This class belongs to cauth but has to be defined in the portal block for now.
+ *       This will be cleaned up with Cocoon 2.2.
  * @version $Id$
 */
 public class StandardPortalApplication

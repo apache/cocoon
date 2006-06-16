@@ -20,9 +20,9 @@
 
     <portal name="portal">
       <!-- This is the sample portal: 
-         - we use the cowarp profile manager
+         - we use the cauth profile manager
        -->
-      <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Cowarp</profile-manager>
+      <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/CAuth</profile-manager>
       <!-- If you want to use the authentication framework, comment out the above line
            and uncomment the following line:
         <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
