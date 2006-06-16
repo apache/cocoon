@@ -297,37 +297,4 @@ public class StandardApplicationManager
             }
         }
     }
-
-    /**
-     * Logs the user out of all applications.
-     * This method has not been tested yet.
-     * @param session The corresponding session
-     */
-    public static void logoutFromAllApplications(final HttpSession session) {
-        final Map loginInfos = (Map)session.getAttribute(LOGIN_INFO_KEY);
-        if ( loginInfos != null ) {
-            final StandardApplicationManager appManager =
-                  (StandardApplicationManager)session.getServletContext()
-                                  .getAttribute(StandardApplicationManager.class.getName());
-            final Iterator i = loginInfos.values().iterator();
-            while ( i.hasNext() ) {
-                final LoginInfo info = (LoginInfo)i.next();
-                if ( info.isUsed() ) {
-                    final Iterator appIter = info.getApplications().iterator();
-                    SecurityHandler handler = null;
-                    while ( appIter.hasNext() ) {
-                        final String appName = (String)appIter.next();
-                        try {
-                            final Application app = appManager.getApplication(appName);
-                            app.userWillLogout(info.getUser(), null);
-                            handler = app.getSecurityHandler();
-                        } catch (Exception ignore) {
-                            // we ignore this
-                        }
-                    }
-                    handler.logout(null, info.getUser());
-                }
-            }
-        }
-    }
 }

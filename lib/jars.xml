@@ -1128,16 +1128,6 @@
     <lib>optional/portals-bridges-common-1.0.jar</lib>
     <homepage>http://portals.apache.org/bridges/</homepage>
   </file>
-  <file id="cowarp">
-    <title>CoWarp</title>
-    <description>
-      A web application framework for Cocoon providing an authentication mechanism
-      with special support for the portal.
-    </description>
-    <used-by>Portal</used-by>
-    <lib>optional/cowarp-0.4.jar</lib>
-    <homepage>http://osoco.sourceforge.net/cowarp/</homepage>
-  </file>
 
   <file>
     <title>Jakarta BCEL</title>

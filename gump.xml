@@ -326,6 +326,26 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-auth" status="unstable" dir="src/blocks/auth">
+    <package>org.apache.cocoon</package>
+
+    <description>Components for the authentication framework</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="auth"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/auth-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
   <project name="cocoon-block-portal-fw" status="deprecated" dir="src/blocks/portal-fw">
     <package>org.apache.cocoon</package>
 
@@ -1034,6 +1054,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-auth"/>
     <depend project="cocoon-block-authentication-fw"/>
     <depend project="cocoon-block-forms"/>
     <depend project="cocoon-block-cron"/>
@@ -1044,7 +1065,6 @@
     <depend project="commons-collections"/>
     <depend project="portals-pluto" inherit="runtime"/>
     <depend project="portals-bridges-common"/>
-    <depend project="cowarp"/>
     <depend project="ws-axis"/>
     <depend project="wsdl4j"/>
     <depend project="wsrp4j"/>
@@ -1057,7 +1077,6 @@
     <library name="pluto"/>
     <library name="portlet-api"/>
     <library name="portals-bridges-common"/>
-    <library name="cowarp"/>
     <library name="axis"/>
     <library name="axis-saaj"/>
     <library name="axis-jaxrpc"/>
@@ -1868,12 +1887,6 @@
     <url href="http://incubator.apache.org/jackrabbit"/>
     <package>org.apache.jackrabbit</package>
     <jar name="lib/optional/jackrabbit-20050422T153417.jar"/>
-  </project>
-
-  <project name="cowarp">
-    <url href="http://osoco.sourceforge.net/cowarp/"/>
-    <package>org.osoco.cowarp</package>
-    <jar name="lib/optional/cowarp-0.4.jar"/>
   </project>
 
   <project name="wsrp4j">

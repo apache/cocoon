@@ -217,7 +217,7 @@
           <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
          -->
-        <map:act type="cowarp-is-logged-in">
+        <map:act type="cauth-is-logged-in">
           <map:parameter name="application" value="portal"/>
  
           <map:select type="resource-exists">
