@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
  * and creation commands. This transformer should be the first in the
  * pipeline.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class SessionPreTransformer

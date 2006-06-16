@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
  * This is a very simple authenticator that checks if the user is authenticated
  * using the servlet authentication mechanisms.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id: PipelineAuthenticator.java 30932 2004-07-29 17:35:38Z vgritsenko $
  */
 public class ServletAuthenticator

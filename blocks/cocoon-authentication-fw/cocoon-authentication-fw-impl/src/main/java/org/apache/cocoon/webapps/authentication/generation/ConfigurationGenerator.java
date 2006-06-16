@@ -54,6 +54,7 @@ import java.util.Map;
 /**
  *  This is the authentication Configuration Generator.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class ConfigurationGenerator extends ServiceableGenerator {

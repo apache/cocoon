@@ -37,6 +37,7 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *  Context provider for the temporarily context, the request and the
  *  response context.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class StandardSessionContextProvider

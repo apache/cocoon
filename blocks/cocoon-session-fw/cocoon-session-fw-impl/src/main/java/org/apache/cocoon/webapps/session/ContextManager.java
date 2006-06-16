@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
  *  The contained information can either be an XML tree or custom
  *  objects.
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface ContextManager {

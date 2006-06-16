@@ -32,6 +32,7 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 /**
  *  Context provider for the authentication context
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class AuthenticationContextProvider

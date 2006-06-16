@@ -33,6 +33,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
@@ -44,6 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * Context manager
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class DefaultContextManager
@@ -77,6 +79,7 @@ implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable
         this.contextSelector = (ServiceSelector)this.manager.lookup(SessionContextProvider.ROLE+"Selector");
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        Deprecation.logger.warn("The session-fw block is deprecated. Please use the provided alternatives instead.");
     }
 
     /**

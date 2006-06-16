@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
  *
  *  The main purpose of this component is creating and termination sessions
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public interface SessionManager {

@@ -33,6 +33,7 @@ import org.apache.cocoon.webapps.session.context.SessionContext;
 /**
  * This is the default implementation for the transaction manager.
  * 
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public final class DefaultTransactionManager

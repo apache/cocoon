@@ -21,6 +21,7 @@ package org.apache.cocoon.webapps.session.transformation;
  * the SessionPostTransformer whicb inherits from the SessionPreTransformer.
  * So those three do all the work
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
 public class SessionTransformer

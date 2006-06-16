@@ -29,6 +29,7 @@ import org.apache.cocoon.webapps.session.FormManager;
 /**
  * This action invokes the form manager to process incomming form values
  *
+ * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
 */
 public final class FormManagerAction
