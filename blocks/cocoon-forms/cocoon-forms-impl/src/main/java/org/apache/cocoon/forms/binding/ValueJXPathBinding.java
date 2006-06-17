@@ -122,7 +122,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
 
         Object oldValue = jxpc.getValue(this.xpath);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("value= " + value + "-- oldvalue=" + oldValue);
+            getLogger().debug("value= " + value + " -- oldvalue=" + oldValue);
         }
 
         boolean update = false;
