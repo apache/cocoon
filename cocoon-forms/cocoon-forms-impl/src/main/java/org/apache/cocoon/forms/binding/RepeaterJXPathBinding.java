@@ -121,18 +121,18 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         Pointer ptr = jxpc.getPointer(this.repeaterPath);
         if (ptr.getNode() != null) {
             // There are some nodes to load from
-
-            int initialSize = repeater.getSize();
+            final int initialSize = repeater.getSize();
 
             // build a jxpath iterator for pointers
             JXPathContext repeaterContext = jxpc.getRelativeContext(ptr);
             Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
             //iterate through it
+            int currentRow = 0;
             while (rowPointers.hasNext()) {
                 // create a new row, take that as the frmModelSubContext
                 Repeater.RepeaterRow thisRow;
-                if (initialSize > 0) {
-                    thisRow = repeater.getRow(--initialSize);
+                if (currentRow < initialSize) {
+                    thisRow = repeater.getRow(currentRow++);
                 } else {
                     thisRow = repeater.addRow();
                 }
