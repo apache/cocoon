@@ -731,7 +731,7 @@ public class LDAPTransformer extends AbstractTransformer {
     }
 
     public void startElement(String uri, String name, String raw, Attributes attributes) throws SAXException {
-        if (!uri.equals(my_uri)) {
+        if (uri == null || !uri.equals(my_uri)) {
             super.startElement(uri, name, raw, attributes);
             return;
         }
