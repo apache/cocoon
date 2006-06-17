@@ -182,7 +182,7 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
-    <action dev="AG" type="fix" due-to="Igor Naumov" due-to-email="igornaumov@hotmail.com">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1861" due-to="Igor Naumov" due-to-emal="igornaumov@hotmail.com">
       Naming Block: Check for Null URI in LDAPTransformer.
     </action>
     <action dev="CZ" type="add">
