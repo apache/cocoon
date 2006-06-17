@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" due-to="Igor Naumov" due-to-email="igornaumov@hotmail.com">
+      Naming Block: Check for Null URI in LDAPTransformer.
+    </action>
     <action dev="CZ" type="add">
       Add the CoWarp contribution by Carsten Ziegeler from the Osoco open source project (http://osoco.sourceforge.net/cowarp/).
     </action>
