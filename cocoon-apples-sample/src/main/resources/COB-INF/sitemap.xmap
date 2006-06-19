@@ -113,12 +113,12 @@
       </map:match>
 
       <map:match pattern="calc/*">
-        <map:generate type="jx" src="context://samples/flow/jxcalc/screens/{1}.xml"/>
+        <map:generate type="jx" src="context://blocks/cocoon-core-samples-main-sample/flow/jxcalc/screens/{1}.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
           <map:parameter name="servletPath" value="{request:servletPath}"/>
           <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
           <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="samples/flow/jxcalc/screens/{1}.xml"/>
+          <map:parameter name="file" value="blocks/cocoon-core-samples-main-sample/flow/jxcalc/screens/{1}.xml"/>
           <map:parameter name="remove" value="{0}"/>
         </map:transform>
         <map:serialize/>
