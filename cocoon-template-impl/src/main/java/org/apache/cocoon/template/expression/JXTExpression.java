@@ -22,9 +22,10 @@ import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.jxpath.JXPathExpression;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class JXTExpression extends Subst {
+
     private String raw;
     private Object compiledExpression;
 

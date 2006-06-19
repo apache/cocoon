@@ -19,9 +19,10 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.SAXException;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public interface AttributeAwareXMLConsumer extends XMLConsumer {
-    public void attribute(String uri, String localName, String qName,
+    
+    void attribute(String uri, String localName, String qName,
             String type, String value) throws SAXException;
 }

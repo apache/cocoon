@@ -37,6 +37,7 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 
 public class JavaScriptExpression extends AbstractExpression {
+
     private Script script;
     private JSIntrospector introspector;
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,11 +38,15 @@ import org.xml.sax.SAXException;
  * performance penalty for this however: you effectively recompile the template
  * for every instance document)
  * 
- * @version SVN $Id$
+ * @version $Id$
  */
 public class TransformerAdapter extends ServiceableTransformer {
+
     static class TemplateConsumer extends Parser implements XMLConsumer, Serviceable, Disposable {
+
         private ServiceManager manager;
+
+        private final JXTemplateGenerator gen;
 
         public TemplateConsumer() {
             this.gen = new JXTemplateGenerator();
@@ -53,6 +57,9 @@ public class TransformerAdapter extends ServiceableTransformer {
             this.gen.setup(resolver, objectModel, null, parameters);
         }
 
+        /**
+         * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+         */
         public void service(ServiceManager manager) throws ServiceException {
             this.manager = manager;
             this.gen.service(manager);
@@ -60,6 +67,9 @@ public class TransformerAdapter extends ServiceableTransformer {
                     (InstructionFactory) this.manager.lookup(InstructionFactory.ROLE)));
         }
 
+        /**
+         * @see org.apache.avalon.framework.activity.Disposable#dispose()
+         */
         public void dispose() {
             this.manager.release(this.parsingContext.getInstructionFactory());
             this.manager.release(this.parsingContext.getStringTemplateParser());
@@ -79,33 +89,46 @@ public class TransformerAdapter extends ServiceableTransformer {
             super.recycle();
             gen.recycle();
         }
-
-        JXTemplateGenerator gen;
     }
 
-    TemplateConsumer templateConsumer = new TemplateConsumer();
+    protected final TemplateConsumer templateConsumer = new TemplateConsumer();
 
+    /**
+     * @see org.apache.cocoon.transformation.ServiceableTransformer#recycle()
+     */
     public void recycle() {
         super.recycle();
         templateConsumer.recycle();
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.ServiceableTransformer#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
         templateConsumer.setup(resolver, objectModel, src, parameters);
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.ServiceableTransformer#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         templateConsumer.service(manager);
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.ServiceableTransformer#dispose()
+     */
     public void dispose() {
         templateConsumer.dispose();
         super.dispose();
     }
 
+    /**
+     * @see org.apache.cocoon.xml.AbstractXMLProducer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
+     */
     public void setConsumer(XMLConsumer xmlConsumer) {
         super.setConsumer(templateConsumer);
         templateConsumer.setConsumer(xmlConsumer);

@@ -16,7 +16,7 @@
 package org.apache.cocoon.template.expression;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class Subst {
     // VOID
