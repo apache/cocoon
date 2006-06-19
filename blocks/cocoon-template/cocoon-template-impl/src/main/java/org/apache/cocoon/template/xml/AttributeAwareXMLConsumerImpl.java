@@ -28,9 +28,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class AttributeAwareXMLConsumerImpl implements AttributeAwareXMLConsumer {
+
     private StartElement currentElement;
     private List saxbits;
     private Locator locator;

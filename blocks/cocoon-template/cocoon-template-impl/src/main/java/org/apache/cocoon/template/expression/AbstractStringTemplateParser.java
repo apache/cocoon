@@ -36,19 +36,30 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
-        implements Serviceable, Disposable,ThreadSafe, StringTemplateParser {
+public abstract class AbstractStringTemplateParser
+    extends AbstractLogEnabled
+    implements Serviceable, Disposable, ThreadSafe, StringTemplateParser {
 
     private ServiceManager manager;
     private ExpressionFactory expressionFactory;
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.expressionFactory = (ExpressionFactory) this.manager.lookup(ExpressionFactory.ROLE);
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
-        this.manager.release(this.expressionFactory);
+        if ( this.manager != null ) {
+            this.manager.release(this.expressionFactory);
+            this.manager = null;
+            this.expressionFactory = null;
+        }
     }
 
     protected JXTExpression compile(final String expression) throws Exception {
@@ -59,6 +70,9 @@ public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
         return new JXTExpression(expression, this.expressionFactory.getExpression(language, expression));
     }
 
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileBoolean(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     */
     public JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
@@ -67,6 +81,9 @@ public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
         return res;
     }
 
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileInt(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     */
     public JXTExpression compileInt(String val, String msg, Locator location) throws SAXException {
         JXTExpression res = compileExpr(val, msg, location);
         if (res != null && res.getCompiledExpression() == null && res.getRaw() != null) {
@@ -75,6 +92,9 @@ public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
         return res;
     }
 
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#compileExpr(java.lang.String, java.lang.String, org.xml.sax.Locator)
+     */
     public JXTExpression compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException {
         if (inStr == null) {
             return null;
@@ -87,6 +107,9 @@ public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
         return (JXTExpression) substitutions.get(0);
     }
 
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader, java.lang.String, org.xml.sax.Locator)
+     */
     public List parseSubstitutions(Reader in, String errorPrefix, Locator location) throws SAXParseException {
         try {
             return parseSubstitutions(in);
@@ -96,5 +119,4 @@ public abstract class AbstractStringTemplateParser extends AbstractLogEnabled
             throw new SAXParseException(errorPrefix + err.getMessage(), location, new ErrorHolder(err));
         }
     }
-
 }

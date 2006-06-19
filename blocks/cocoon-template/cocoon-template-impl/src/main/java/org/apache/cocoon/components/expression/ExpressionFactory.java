@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.components.expression;
 
+/**
+ * @version $Id$
+ */
 public interface ExpressionFactory {
 
     String ROLE = ExpressionFactory.class.getName();

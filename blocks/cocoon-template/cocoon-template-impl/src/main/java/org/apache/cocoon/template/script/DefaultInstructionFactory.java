@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,12 +40,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * @version SVN $Id: DefaultInstructionFactory.java 169615 2005-05-11 09:57:41Z
- *          lgawron $
+ * @version $Id$
  */
-public class DefaultInstructionFactory extends AbstractLogEnabled implements ThreadSafe, Serviceable, Configurable,
-        InstructionFactory {
-    private Map instructions = new HashMap();
+public class DefaultInstructionFactory
+    extends AbstractLogEnabled
+    implements ThreadSafe, Serviceable, Configurable, InstructionFactory {
+
+    private final Map instructions = new HashMap();
     private ServiceManager manager;
     private final static Class[] INSTRUCTION_CONSTRUCTOR_PARAMS = new Class[] { ParsingContext.class,
             StartElement.class, Attributes.class, Stack.class };
@@ -119,10 +120,16 @@ public class DefaultInstructionFactory extends AbstractLogEnabled implements Thr
         }
     }
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
+    /**
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration omitted) throws ConfigurationException {
         SourceResolver resolver = null;
         Source source = null;
