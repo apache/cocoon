@@ -204,6 +204,9 @@ public class WildcardHelper {
 
             // Check for END's
             if (exprchr == MATCH_END) {
+                if ( buffpos != buff.length && buff[charpos] == '/') {
+                    return false;
+                }
                 // Check that we reached buffer's end
                 // if not, we'll search again!
                 if ( buffpos != buff.length ) {
