@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,12 +30,12 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
  * An accessor that handles a <code>Map</code> of accessors.
- * @version SVN $Id$
+ * @version $Id$
  */
 public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadSafe  {
 
     /** Reference to the accessors */
-    private Map accessors = null;
+    private Map accessors;
 
     /** The service manager instance */
     private ServiceManager manager;
@@ -44,9 +44,11 @@ public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadS
      * The accessors that should be part of the map are configured
      * through <code>&lt;element name="the key that will be used in
      * the map" accessor="the name of the accessor"/&gt;</code>.
+     *
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
-        HashMap accessors = new HashMap();
+        Map accessors = new HashMap();
         Configuration[] children = config.getChildren("element");
         for (int i = 0; i < children.length; i++) {
             String accessor = children[i].getAttribute("accessor");
@@ -60,20 +62,15 @@ public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadS
     /**
      * Set the current <code>ServiceManager</code> instance used by this
      * <code>Serviceable</code>.
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
     /**
-     * Release all resources.
-     */
-    public void dispose() {
-        this.manager = null;
-    }
-
-    /**
      * Get the map of accessors
+     * @see org.apache.cocoon.components.accessor.Accessor#getObject()
      */
     public Object getObject() {
         return this.accessors;
@@ -82,7 +79,7 @@ public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadS
     /**
      * Map that finds the accessor at access time.
      */
-    public class AccessorMap extends HashMap {
+    public static class AccessorMap extends HashMap {
 
         private ServiceManager manager;
 
@@ -117,12 +114,15 @@ public class MapAccessor implements Accessor, Configurable, Serviceable, ThreadS
         public void clear() {
             throw new UnsupportedOperationException("AccessorMap is read only");
         }
+
         public Object put(Object key, Object value) {
             throw new UnsupportedOperationException("AccessorMap is read only");
         }
+
         public void putAll(Map m) {
             throw new UnsupportedOperationException("AccessorMap is read only");
         }
+
         public Object remove(Object key) {
             throw new UnsupportedOperationException("AccessorMap is read only");
         }
