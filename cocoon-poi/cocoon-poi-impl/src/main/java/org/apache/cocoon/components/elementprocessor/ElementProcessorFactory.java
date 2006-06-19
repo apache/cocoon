@@ -19,7 +19,6 @@ package org.apache.cocoon.components.elementprocessor;
  * Create instances of specific ElementProcessor implementations to
  * handle specific XML elements and their content.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public interface ElementProcessorFactory {
@@ -38,7 +37,7 @@ public interface ElementProcessorFactory {
      *            ElementProcessor available for the specified name
      */
 
-    public ElementProcessor createElementProcessor(final String name)
+    ElementProcessor createElementProcessor(final String name)
         throws CannotCreateElementProcessorException;
 
 }       // end public interface ElementProcessorFactory

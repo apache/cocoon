@@ -28,7 +28,6 @@ import java.io.IOException;
  * This element has an attribute (DefaultSizePts) and is a container
  * element
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPCols extends BaseElementProcessor {

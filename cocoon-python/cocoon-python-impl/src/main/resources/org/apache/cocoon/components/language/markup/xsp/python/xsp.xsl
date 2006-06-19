@@ -18,8 +18,7 @@
 <!--
   - XSP Core logicsheet for the Python language
   -
-  - @author <a href="mailto:vgritsenko@apache.org>Vadim Gritsenko</a>
-  - @version CVS $Id$
+  - @version $Id$
   -->
 
 <xsl:stylesheet version="1.0"

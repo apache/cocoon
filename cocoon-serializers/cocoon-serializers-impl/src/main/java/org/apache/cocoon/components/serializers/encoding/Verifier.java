@@ -18,7 +18,6 @@ package org.apache.cocoon.components.serializers.encoding;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public interface Verifier {
@@ -27,5 +26,5 @@ public interface Verifier {
      * Check if the specified character is allowed by this
      * <code>Verifier</code>.
      */
-    public boolean allows(char c);
+    boolean allows(char c);
 }

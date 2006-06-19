@@ -30,7 +30,6 @@ import java.io.IOException;
  * This element has no attributes, but has string content, which is
  * numeric.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EP_Type extends BaseElementProcessor {

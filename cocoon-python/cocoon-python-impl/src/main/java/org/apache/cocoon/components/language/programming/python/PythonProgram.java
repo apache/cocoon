@@ -34,7 +34,6 @@ import java.util.Iterator;
 /**
  * This class represents program in the Python language.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class PythonProgram extends AbstractLogEnabled implements Program {

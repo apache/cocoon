@@ -26,8 +26,6 @@ import org.apache.cocoon.components.elementprocessor.impl.poi.hssf.HSSFElementPr
 /**
  * Serializer to produce an HSSF stream.
  *
- * @author   Marc Johnson (marc_johnson27591@hotmail.com)
- * @author   Nicola Ken Barozzi (nicolaken@apache.org)
  * @version $Id$
  */
 public class HSSFSerializer extends POIFSSerializer
@@ -36,13 +34,6 @@ public class HSSFSerializer extends POIFSSerializer
     private ElementProcessorFactory _element_processor_factory;
     private final static String _mime_type = "application/vnd.ms-excel";
     String locale;
-
-    /**
-     * Constructor
-     */
-    public HSSFSerializer() {
-        super();
-    }
 
     /**
      * Initialialize the component. Initialization includes allocating any

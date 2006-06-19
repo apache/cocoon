@@ -19,7 +19,6 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 /**
  * No-op implementation of ElementProcessor to handle the "Cells" tag
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPCells extends BaseElementProcessor {

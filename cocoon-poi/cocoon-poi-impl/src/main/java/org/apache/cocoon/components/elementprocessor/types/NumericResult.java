@@ -23,7 +23,6 @@ import java.io.IOException;
  * either a valid value, or an IOException that was created by the
  * numeric converter
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class NumericResult

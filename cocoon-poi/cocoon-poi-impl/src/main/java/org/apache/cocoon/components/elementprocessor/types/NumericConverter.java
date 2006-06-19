@@ -24,7 +24,6 @@ import java.io.IOException;
  * This class knows how to convert strings into numbers, and also
  * knows how to check the results against certain criteria
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class NumericConverter

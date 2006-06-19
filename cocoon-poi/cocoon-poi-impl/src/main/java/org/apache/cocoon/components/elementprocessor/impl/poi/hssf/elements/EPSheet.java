@@ -40,8 +40,6 @@ import java.io.IOException;
  * <li>OutlineSymbolsRight
  * </ul>
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com) 
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 public class EPSheet extends BaseElementProcessor {

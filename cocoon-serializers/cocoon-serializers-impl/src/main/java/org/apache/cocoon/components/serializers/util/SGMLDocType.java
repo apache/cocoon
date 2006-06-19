@@ -20,7 +20,6 @@ package org.apache.cocoon.components.serializers.util;
  * the document type public and system IDs and root element name for SGML
  * (like HTML) documents.
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public class SGMLDocType extends DocType {

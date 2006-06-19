@@ -22,13 +22,12 @@ package org.apache.cocoon.components.elementprocessor;
  * numbers formatted according to different locales in the &lt;Cell&gt; tags.
  * However, the ESQL generator for instance will generate them no other way.
  * 
- * @author Andrew C. Oliver (acoliver@apache.org)
  * @version $Id$
  */
-public interface LocaleAware
-{
+public interface LocaleAware {
+
     /**
      * Set the locale for a given element processor.
      */
-    public void setLocale(String locale);
-}   // end public interface LocaleAware
+    void setLocale(String locale);
+}

@@ -20,7 +20,6 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * No-op implementation of ElementProcessor to handle the "MergedRegions" tag
  * This element has no attributes and contains a string.
  *
- * @author Danny Mui (danny@muibros.com)
  * @version $Id$
  */
 public class EPMergedRegions extends BaseElementProcessor {

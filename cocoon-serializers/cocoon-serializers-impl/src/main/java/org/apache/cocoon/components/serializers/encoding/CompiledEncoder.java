@@ -18,7 +18,6 @@ package org.apache.cocoon.components.serializers.encoding;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public abstract class CompiledEncoder extends CompiledCharset implements Encoder {

@@ -28,8 +28,6 @@ import java.io.IOException;
  * print orientation (landscape or portrait)
  *
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Victor Skladovs (skladov@his.de)
  * @version $Id$
  */
 public class EP_Orientation extends BaseElementProcessor {

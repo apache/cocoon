@@ -18,7 +18,6 @@ package org.apache.cocoon.components.serializers.encoding;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public interface Encoder extends Verifier {
@@ -32,5 +31,5 @@ public interface Encoder extends Verifier {
      * &quot;<code>&amp;#x012F;</code>&quot;
      * </p>
      */
-    public char[] encode(char character);
+    char[] encode(char character);
 }

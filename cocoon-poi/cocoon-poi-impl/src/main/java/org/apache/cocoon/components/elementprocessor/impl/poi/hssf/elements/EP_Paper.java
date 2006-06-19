@@ -28,8 +28,6 @@ import java.io.IOException;
  * content describes the paper to be used (e.g., A4)
  *
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Victor Skladov (skladov@his.de)
  * @version $Id$
  */
 public class EP_Paper extends BaseElementProcessor {

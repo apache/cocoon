@@ -21,9 +21,6 @@
 		<title>Castor Transformer</title>
 		<version>0.9</version>
 		<type>Technical document</type>
-		<authors>
-			<person name="Thorsten Mauch" email="mauch@imkenberg.de"/>
-		 </authors>
 		 <abstract>This document describes the castor transformer of Cocoon.</abstract>
 	</header>
 	<body>
