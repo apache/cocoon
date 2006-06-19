@@ -47,14 +47,14 @@
         </sample>
     </group>
 
-    <group name="XSP + FOP caching test">
+    <!--group name="XSP + FOP caching test">
         <sample name="PDF with pageKey=ONE, 250 pages" href="cache-test-250.pdf?pageKey=ONE&amp;other=xyz&amp;validity=60">
             Needs the serverpages generator to generate input, see generated document or sitemap for info.
         </sample>
         <sample name="PDF with pageKey=TWO, 125 pages" href="cache-test-125.pdf?pageKey=TWO&amp;validity=45">
             Uses a different pageKey value to check that both are cached separately.
         </sample>
-    </group>
+    </group-->
 
     <group name="Resources">
         <sample name="FOP web site" href="http://xml.apache.org/fop">
