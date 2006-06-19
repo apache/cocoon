@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,20 +22,23 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.environment.TemplateObjectModelHelper;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class FlowAttributeAccessor extends ObjectModelAccessor {
 
+    /**
+     * @see org.apache.cocoon.components.accessor.ObjectModelAccessor#getObject()
+     */
     public Object getObject() {
         Map map = new HashMap();
-	Object contextObject = FlowHelper.getContextObject(getObjectModel());
+	    Object contextObject = FlowHelper.getContextObject(getObjectModel());
 
         if (contextObject instanceof Map) {
             map.putAll((Map)contextObject);
         } else if (contextObject != null) {
             TemplateObjectModelHelper.fillContext(contextObject, map);
         }
-        
+
         return map;
     }
 }

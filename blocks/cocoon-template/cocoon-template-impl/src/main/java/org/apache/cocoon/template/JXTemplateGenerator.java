@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,18 +48,20 @@ import org.xml.sax.SAXException;
  *                                         embedded JSTL and XPath expression
  *                                         substitution to access data sent by
  *                                         Cocoon Flowscripts.
- * 
+ *
  * @cocoon.sitemap.component.name jx
  * @cocoon.sitemap.component.label content
  * @cocoon.sitemap.component.logger sitemap.generator.jx
- * 
+ *
  * @cocoon.sitemap.component.pooling.max 16
- * 
- * 
- * @version SVN $Id: JXTemplateGenerator.java 169169 2005-05-08 21:23:28Z
- *          lgawron $
+ *
+ *
+ * @version $Id$
  */
-public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
+public class JXTemplateGenerator
+    extends ServiceableGenerator
+    implements CacheableProcessingComponent {
+
     /** The namespace used by this generator */
     public final static String NS = "http://apache.org/cocoon/templates/jx/1.0";
 
@@ -76,16 +78,28 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return this.xmlConsumer;
     }
 
+    /**
+     * @see org.apache.cocoon.generation.ServiceableGenerator#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.scriptManager = (ScriptManager) this.manager.lookup(ScriptManager.ROLE);
     }
 
+    /**
+     * @see org.apache.cocoon.generation.ServiceableGenerator#dispose()
+     */
     public void dispose() {
-        this.manager.release(scriptManager);
+        if ( this.manager != null ) {
+            this.manager.release(this.scriptManager);
+            this.scriptManager = null;
+        }
         super.dispose();
     }
 
+    /**
+     * @see org.apache.cocoon.generation.AbstractGenerator#recycle()
+     */
     public void recycle() {
         this.startDocument = null;
         this.expressionContext = null;
@@ -93,17 +107,25 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         super.recycle();
     }
 
+    /**
+     * @see org.apache.cocoon.generation.AbstractGenerator#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-        if (src != null)
-            startDocument = scriptManager.resolveTemplate(src);
+        if ( src == null ) {
+            throw new ProcessingException("JXTemplateGenerator: 'src' attribute is missing.");
+        }
+        this.startDocument = scriptManager.resolveTemplate(src);
 
         this.expressionContext = FlowObjectModelHelper.getFOMExpressionContext(objectModel, parameters);
         this.definitions = new HashMap();
     }
 
+    /**
+     * @see org.apache.cocoon.generation.Generator#generate()
+     */
     public void generate() throws IOException, SAXException, ProcessingException {
         performGeneration(this.startDocument, null);
 
@@ -118,11 +140,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                 this.manager), null, startEvent, null);
     }
 
+    /**
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+     */
     public Serializable getKey() {
         JXTExpression cacheKeyExpr = (JXTExpression) this.startDocument
                 .getTemplateProperty(JXTemplateGenerator.CACHE_KEY);
-        if (cacheKeyExpr == null)
+        if (cacheKeyExpr == null) {
             return null;
+        }
         try {
             final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.expressionContext);
             if (templateKey != null) {
@@ -134,11 +160,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         return null;
     }
 
+    /**
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
+     */
     public SourceValidity getValidity() {
         JXTExpression validityExpr = (JXTExpression) this.startDocument
                 .getTemplateProperty(JXTemplateGenerator.VALIDITY);
-        if (validityExpr == null)
+        if (validityExpr == null) {
             return null;
+        }
         try {
             final SourceValidity sourceValidity = this.startDocument.getSourceValidity();
             final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.expressionContext);

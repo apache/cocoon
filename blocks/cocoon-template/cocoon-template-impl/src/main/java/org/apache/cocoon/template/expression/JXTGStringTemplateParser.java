@@ -20,14 +20,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version SVN $Id: JXTGStringTemplateParser.java 325986 2005-10-17 21:35:18Z
- *          lgawron $
+ * @version $Id$
  */
 public class JXTGStringTemplateParser extends AbstractStringTemplateParser {
+
     public final static String JXPATH = "jxpath";
     public final static String JEXL = "jexl";
     public final static String JAVASCRIPT = "js";
 
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader)
+     */
     public List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();
         StringBuffer buf = new StringBuffer();

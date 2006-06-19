@@ -24,7 +24,7 @@ package org.apache.cocoon.template.expression;
   avoid copying there. 
 */
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class Literal extends Subst {
     public Literal(String val) {

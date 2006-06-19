@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class Invoker {
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();

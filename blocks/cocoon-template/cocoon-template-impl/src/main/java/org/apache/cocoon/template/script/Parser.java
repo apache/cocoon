@@ -31,7 +31,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * @version SVN $Id$
+ * @version $Id$
  */
 public class Parser implements ContentHandler, LexicalHandler {
     StartDocument startEvent;
