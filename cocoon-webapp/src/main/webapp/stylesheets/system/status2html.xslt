@@ -75,10 +75,11 @@
         <!--
           - Add Xalan / Xerces information using custom Xalan extension
           - (if it's present)
-          -->
+          - Disabled for now as they only work with paranoid class loading!
         <xsl:if test="function-available('xalan:checkEnvironment')">
           <xsl:apply-templates select="xalan:checkEnvironment()"/>
         </xsl:if>
+          -->
       </body>
     </html>
   </xsl:template>
