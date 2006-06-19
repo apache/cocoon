@@ -19,7 +19,6 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 /**
  * Style shading codes
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class StyleShading {

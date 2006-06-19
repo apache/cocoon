@@ -18,7 +18,6 @@ package org.apache.cocoon.components.serializers.encoding;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public interface Charset extends Verifier {
@@ -26,15 +25,15 @@ public interface Charset extends Verifier {
     /**
      * Return the primary name of this <code>Charset</code>
      */
-    public String getName();
+    String getName();
 
     /**
      * Return all alias names for this <code>Charset</code>
      */
-    public String[] getAliases();
+    String[] getAliases();
 
     /**
      * Compare two <code>Charset</code> instances for equality.
      */
-    public boolean equals(Charset charset);
+    boolean equals(Charset charset);
 }

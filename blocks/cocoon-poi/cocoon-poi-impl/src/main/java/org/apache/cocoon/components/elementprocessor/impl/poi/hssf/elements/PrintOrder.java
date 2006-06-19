@@ -24,7 +24,6 @@ import java.io.IOException;
  * Print order -- encapsulation of the strings representing the print
  * ordering, and a simpler way to deal with them.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class PrintOrder {

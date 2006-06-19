@@ -36,8 +36,6 @@ import org.apache.poi.hssf.util.Region;
 /**
  * internal representation of a Sheet
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 

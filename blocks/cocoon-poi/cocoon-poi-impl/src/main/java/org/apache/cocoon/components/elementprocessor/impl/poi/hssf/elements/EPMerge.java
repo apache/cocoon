@@ -25,7 +25,6 @@ import java.io.IOException;
  * No-op implementation of ElementProcessor to handle the "Merge" tag.
  * This element is a container of other elements and has several attributes.
  *
- * @author Danny Mui (danny@muibros.com)
  * @version $Id$
  */
 public class EPMerge extends BaseElementProcessor {

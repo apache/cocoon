@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
  * The <code>DocType</code> class encapsulates informations regarding
  * the document type public and system IDs and root element name.
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public class DocType {
@@ -34,11 +33,11 @@ public class DocType {
     private static final char S_DOCTYPE_6[] = ">".toCharArray();
     
     /** The name of the root element. */
-    protected String root_name = null;
+    protected String root_name;
     /** The configured system identifier. */
-    protected String public_id = null;
+    protected String public_id;
     /** The configured public identifier. */
-    protected String system_id = null;
+    protected String system_id;
 
     /**
      * Create a new <code>DocType</code> instance.

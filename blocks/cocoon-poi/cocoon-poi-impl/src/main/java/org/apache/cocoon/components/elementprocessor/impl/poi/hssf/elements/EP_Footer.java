@@ -26,7 +26,6 @@ import java.io.IOException;
  *
  * This element has two attributes: Points and PrefUnit
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EP_Footer extends BaseElementProcessor {

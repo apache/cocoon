@@ -22,7 +22,6 @@ import java.io.IOException;
  * This interface allows a client of NumericConverter to apply more
  * restrictive rules to the number that the NumericConverter obtained.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public interface Validator
@@ -39,5 +38,5 @@ public interface Validator
      *         IOException
      */
 
-    public IOException validate(final Number number);
+    IOException validate(final Number number);
 }   // end public interface Validator

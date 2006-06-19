@@ -41,7 +41,6 @@ import java.io.IOException;
  * endElement event, the POIFSSerializer calls the ElementProcessor's
  * endProcessing method.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public interface ElementProcessor {
@@ -93,7 +92,7 @@ public interface ElementProcessor {
      * @exception IOException if anything goes wrong
      */
 
-    public void initialize(Attribute [] attributes, ElementProcessor parent)
+    void initialize(Attribute [] attributes, ElementProcessor parent)
         throws IOException;
 
     /**
@@ -113,7 +112,7 @@ public interface ElementProcessor {
      * @param data the character data
      */
 
-    public void acceptCharacters(char [] data);
+    void acceptCharacters(char [] data);
 
     /**
      * The data provided in this method call comes from the
@@ -132,7 +131,7 @@ public interface ElementProcessor {
      * @param data the whitespace characters
      */
 
-    public void acceptWhitespaceCharacters(char [] data);
+    void acceptWhitespaceCharacters(char [] data);
 
     /**
      * This is the last method call executed by the
@@ -147,6 +146,6 @@ public interface ElementProcessor {
      * @exception IOException
      */
 
-    public void endProcessing()
+    void endProcessing()
         throws IOException;
 }   // end public interface ElementProcessor

@@ -25,7 +25,6 @@ import java.io.IOException;
  * This element has no attributes and holds its parent element's
  * content.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPContent extends BaseElementProcessor {

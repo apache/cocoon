@@ -29,8 +29,7 @@ import java.util.Collection;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id$
+ * @version $Id$
  */
 public class Compiler extends CompiledCharset {
 

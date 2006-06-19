@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id$ -->
+<!-- @version $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Scratchpad Samples">
 
@@ -33,12 +33,6 @@
   <group name="Castor">
     <sample name="CastorTransformer" href="castor/">
       Show the usage of the Castor Transformer.
-    </sample>
-  </group>
-  
-  <group name="Garbage">
-    <sample name="Garbage" href="garbage/">
-      Flowscript Calculator Sample using Garbage Template Generator
     </sample>
   </group>
   

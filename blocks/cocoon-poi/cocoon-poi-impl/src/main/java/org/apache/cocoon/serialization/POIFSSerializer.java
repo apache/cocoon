@@ -36,94 +36,75 @@ import org.xml.sax.SAXException;
  *    </li>
  *  </ul>
  *
- * @author   Marc Johnson (marc_johnson27591@hotmail.com)
- * @author   Nicola Ken Barozzi (nicolaken@apache.org)
  * @version $Id$
  */
-public abstract class POIFSSerializer extends ElementProcessorSerializer
-{
-  private POIFSFileSystem _filesystem;
+public abstract class POIFSSerializer extends ElementProcessorSerializer {
 
-  /**
-   *  Constructor
-   */
+    private final POIFSFileSystem _filesystem;
 
-  public POIFSSerializer() {
-    super();
-    _filesystem = new POIFSFileSystem();
-  }
-
-  /*
-   *  ********** START implementation of ContentHandler **********
-   */
-  /**
-   *  Receive notification of the end of a document.
-   *
-   *@exception  SAXException  if there is an error writing the document to the
-   *      output stream
-   */
-
-  public void endDocument() throws SAXException {
-    doLocalPreEndDocument();
-
-    OutputStream stream = getOutputStream();
-
-    if ( stream != null ) {
-      try {
-        _filesystem.writeFilesystem( stream );
-      } catch ( IOException e ) {
-        throw SAXExceptionFactory(
-          "could not process endDocument event", e );
-      }
-    } else {
-      throw SAXExceptionFactory(
-        "no outputstream for writing the document!!" );
+    /**
+     * Constructor
+     */
+    public POIFSSerializer() {
+        _filesystem = new POIFSFileSystem();
     }
-    doLocalPostEndDocument();
-  }
 
-  /**
-   *  Provide access to the filesystem for extending classes
-   *
-   *@return    the filesystem
-   */
+    /**
+     * Receive notification of the end of a document.
+     *
+     * @exception  SAXException  if there is an error writing the document to the
+     *      output stream
+     */
+    public void endDocument() throws SAXException {
+        doLocalPreEndDocument();
 
-  protected POIFSFileSystem getFilesystem() {
-    return _filesystem;
-  }
+        OutputStream stream = getOutputStream();
 
-  /**
-   *  Extending classes should do whatever they need to do prior to writing the
-   *  filesystem out
-   */
-
-  protected abstract void doLocalPreEndDocument();
-
-  /**
-   *  Extending classes should do whatever they need to do after writing the
-   *  filesystem out
-   */
-
-  protected abstract void doLocalPostEndDocument();
-
-  /**
-   *  perform pre-initialization on an element processor
-   *
-   *@param  processor         the element processor to be iniitialized
-   *@exception  SAXException  on errors
-   */
-
-  protected void doPreInitialization(ElementProcessor processor)
-      throws SAXException {
-    try {
-      ((POIFSElementProcessor)processor).setFilesystem(_filesystem);
-    } catch (ClassCastException e) {
-      throw SAXExceptionFactory( "could not pre-initialize processor", e );
+        if ( stream != null ) {
+            try {
+                _filesystem.writeFilesystem( stream );
+            } catch ( IOException e ) {
+                throw SAXExceptionFactory("could not process endDocument event", e );
+            }
+        } else {
+            throw SAXExceptionFactory("no outputstream for writing the document!!" );
+        }
+        doLocalPostEndDocument();
     }
-  }
 
-  /*
-   *  **********  END  implementation of ContentHandler **********
-   */
+    /**
+     * Provide access to the filesystem for extending classes
+     *
+     * @return    the filesystem
+     */
+    protected POIFSFileSystem getFilesystem() {
+        return _filesystem;
+    }
+
+    /**
+     * Extending classes should do whatever they need to do prior to writing the
+     * filesystem out
+     */
+    protected abstract void doLocalPreEndDocument();
+
+    /**
+     * Extending classes should do whatever they need to do after writing the
+     * filesystem out
+     */
+    protected abstract void doLocalPostEndDocument();
+
+    /**
+     * perform pre-initialization on an element processor
+     *
+     * @param  processor         the element processor to be iniitialized
+     * @exception  SAXException  on errors
+    */
+    protected void doPreInitialization(ElementProcessor processor)
+    throws SAXException {
+        try {
+            ((POIFSElementProcessor)processor).setFilesystem(_filesystem);
+        } catch (ClassCastException e) {
+            throw SAXExceptionFactory( "could not pre-initialize processor", e );
+        }
+    }
 }
-// end public abstract class POIFSSerializer

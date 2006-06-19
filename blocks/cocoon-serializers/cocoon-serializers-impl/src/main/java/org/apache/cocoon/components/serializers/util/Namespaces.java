@@ -21,7 +21,6 @@ import org.xml.sax.SAXException;
  * The <code>Namespaces</code> class is an utility class implementing a
  * stack for XML namespaces declarations.
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public class Namespaces {

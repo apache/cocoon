@@ -22,7 +22,6 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 /**
  * extension of ElementProcessor for POIFSSerializers
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public interface POIFSElementProcessor extends ElementProcessor

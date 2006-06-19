@@ -57,7 +57,6 @@ import java.util.Map;
  * in order to receive not only the data but also the formatting information
  * of the workbook.</p>
  *
- * @author <a href="patrick@arpage.ch">Patrick Herber</a>
  * @version $Id$
  */
 public class HSSFGenerator extends AbstractGenerator

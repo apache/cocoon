@@ -23,7 +23,6 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  *
  * This element has no attributes, but has string content
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EP_Value extends BaseElementProcessor {

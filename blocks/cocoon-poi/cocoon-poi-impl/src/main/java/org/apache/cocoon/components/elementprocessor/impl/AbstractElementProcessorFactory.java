@@ -30,7 +30,6 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessorFactory;
  * Create instances of specific ElementProcessor implementations to
  * handle specific XML elements and their content.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public abstract class AbstractElementProcessorFactory

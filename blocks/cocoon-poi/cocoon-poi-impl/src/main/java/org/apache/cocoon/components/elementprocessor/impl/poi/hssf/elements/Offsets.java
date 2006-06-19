@@ -31,7 +31,6 @@ import java.io.IOException;
  * code, and I don't think the features that use offsets are terribly
  * mature yet.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class Offsets {

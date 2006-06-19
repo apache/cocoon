@@ -27,7 +27,6 @@ import java.io.IOException;
  * This element contains the maximum number of columns in the
  * containing sheet. The value is contained in the data.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPMaxCol extends BaseElementProcessor {

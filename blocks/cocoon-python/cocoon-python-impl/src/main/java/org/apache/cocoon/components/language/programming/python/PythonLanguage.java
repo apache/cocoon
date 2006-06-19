@@ -40,7 +40,6 @@ import java.util.ArrayList;
  * </pre>
  * The class specified will be used as a Java wrapper interpreting javascript program.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version $Id$
  */
 public class PythonLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {

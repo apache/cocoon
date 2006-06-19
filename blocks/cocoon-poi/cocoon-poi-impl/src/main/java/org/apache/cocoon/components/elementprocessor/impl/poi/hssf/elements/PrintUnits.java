@@ -24,7 +24,6 @@ import java.io.IOException;
  * Print units -- encapsulation of the strings representing them, and
  * a simpler way to deal with them.GTK type codes
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class PrintUnits {
