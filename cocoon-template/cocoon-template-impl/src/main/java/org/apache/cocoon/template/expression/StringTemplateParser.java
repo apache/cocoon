@@ -27,19 +27,23 @@ import org.xml.sax.SAXParseException;
 import java.util.List;
 import java.io.Reader;
 
+/**
+ * @version $Id$
+ */
 public interface StringTemplateParser {
-    public static String ROLE = StringTemplateParser.class.getName();
 
-    /*
-    * Compile a boolean expression (returns either a Compiled Expression or a
-    * Boolean literal)
-    */
+    String ROLE = StringTemplateParser.class.getName();
+
+    /**
+     * Compile a boolean expression (returns either a Compiled Expression or a
+     * Boolean literal)
+     */
     JXTExpression compileBoolean(String val, String msg, Locator location) throws SAXException;
 
-    /*
-    * Compile an integer expression (returns either a Compiled Expression or an
-    * Integer literal)
-    */
+    /**
+     * Compile an integer expression (returns either a Compiled Expression or an
+     * Integer literal)
+     */
     JXTExpression compileInt(String val, String msg, Locator location) throws SAXException;
 
     JXTExpression compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException;

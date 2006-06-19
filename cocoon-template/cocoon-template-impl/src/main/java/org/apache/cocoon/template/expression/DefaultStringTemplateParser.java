@@ -20,10 +20,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version SVN $Id: DefaultStringTemplateParser.java 325973 2005-10-17
- *          19:59:39Z lgawron $
+ * @version  $Id$
  */
 public class DefaultStringTemplateParser extends AbstractStringTemplateParser {
+
+    /**
+     * @see org.apache.cocoon.template.expression.StringTemplateParser#parseSubstitutions(java.io.Reader)
+     */
     public List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();
         StringBuffer buf = new StringBuffer();
