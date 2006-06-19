@@ -38,7 +38,7 @@ public class DeployExplodedMojo extends AbstractDeployMojo {
 	private String serverVersion;
 
     /** 
-     * @parameter expression="${blocksDirectory}" default-value="apps"	
+     * @parameter expression="${blocksDirectory}" default-value="blocks"	
      */
 	private String blocksdir;	
     
