@@ -28,13 +28,13 @@
         |ie: This expresion don't break the Generator: #{$.[4.]$..cocoon/continuation/id}">
         +-->
     <content>
-      <jx:comment>
+      <!--jx:comment>
       	The "comment" tag allows to insert comments in the result file.
       	JXTemplate Expresions are parsed. Samples:
 
 	    This is the continuation id: #{$cocoon/continuation/id}
 	    A backslash dir reference: d:\cocoon\
-      </jx:comment>
+      </jx:comment-->
       <form method="post" action="continue.#{$cocoon/continuation/id}">
         <para>Enter value of <strong>a</strong>: <input type="text" name="a"/></para>
         <input type="submit" name="submit" value="Enter"/>
