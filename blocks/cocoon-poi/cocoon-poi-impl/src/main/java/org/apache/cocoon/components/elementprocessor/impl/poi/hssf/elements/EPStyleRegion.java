@@ -36,8 +36,6 @@ import java.io.IOException;
  * This element is a container of other elements and has four
  * attributes that define the boundaries of the region.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 public class EPStyleRegion extends BaseElementProcessor {

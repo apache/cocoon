@@ -27,8 +27,6 @@ import java.io.IOException;
  * This element has a single attribute, value, which is boolean.
  *
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Victor Skladovs (skladov@his.de)
  * @version $Id$
  */
 public class EP_Grid extends BaseElementProcessor {

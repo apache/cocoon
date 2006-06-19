@@ -31,8 +31,6 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 /**
  * internal representation of a Workbook
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 

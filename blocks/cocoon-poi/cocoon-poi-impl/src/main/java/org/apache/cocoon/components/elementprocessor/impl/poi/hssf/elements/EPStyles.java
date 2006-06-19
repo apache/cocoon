@@ -26,8 +26,6 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * This element is not used in HSSFSerializer 1.0
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
  * @version $Id$
  */
 public class EPStyles extends BaseElementProcessor {

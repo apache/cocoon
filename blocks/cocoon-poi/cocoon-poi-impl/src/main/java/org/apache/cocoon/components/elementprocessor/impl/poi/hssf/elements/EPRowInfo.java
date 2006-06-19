@@ -31,7 +31,6 @@ import java.io.IOException;
  *
  * This element has several attributes and has no content
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPRowInfo extends BaseElementProcessor {

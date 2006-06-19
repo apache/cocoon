@@ -19,7 +19,6 @@ package org.apache.cocoon.components.serializers.encoding;
  * The <code>Charset</code> implementation provided by this factory
  * for the unknown charset.
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public class UnknownCharset implements Charset {

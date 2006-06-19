@@ -30,7 +30,6 @@ import org.apache.poi.hssf.util.Region;
  * Implementation of ElementProcessor to handle the "Cell" tag.
  * This element has several attributes and may contain other elements.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPCell extends BaseElementProcessor implements LocaleAware {

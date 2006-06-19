@@ -21,7 +21,6 @@ import org.apache.commons.lang.BooleanUtils;
  * Encapsulation of a single XML element attribute in a way that
  * shields the consumer from the data's XML origins.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class Attribute

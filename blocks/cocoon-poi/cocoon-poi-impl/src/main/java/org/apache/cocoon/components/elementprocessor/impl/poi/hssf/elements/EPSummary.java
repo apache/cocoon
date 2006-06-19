@@ -24,7 +24,6 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  *
  * This element is not used in HSSFSerializer 1.0
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EPSummary extends BaseElementProcessor {

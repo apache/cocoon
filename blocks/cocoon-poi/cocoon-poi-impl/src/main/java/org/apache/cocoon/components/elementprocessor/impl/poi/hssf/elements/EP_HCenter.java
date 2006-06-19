@@ -27,7 +27,6 @@ import java.io.IOException;
  *
  * This element has a single attribute, value, which is boolean.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class EP_HCenter extends BaseElementProcessor {

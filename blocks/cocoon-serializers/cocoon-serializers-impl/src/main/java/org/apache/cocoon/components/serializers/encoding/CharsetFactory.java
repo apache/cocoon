@@ -31,7 +31,6 @@ import java.util.zip.ZipFile;
 /**
  * 
  * 
- * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
  * @version $Id$
  */
 public final class CharsetFactory {
@@ -44,10 +43,10 @@ public final class CharsetFactory {
     private static CharsetFactory instance = new CharsetFactory();
 
     /** The instance of the JVM default <code>Charset</code>. */
-    private Charset defaultCharset = null;
+    private Charset defaultCharset;
 
     /** The instance of the JVM unknown <code>Charset</code>. */
-    private Charset unknownCharset = null;
+    private Charset unknownCharset;
 
     /** All our charsets, mapped by their name and aliases. */
     private HashMap charsets = new HashMap();

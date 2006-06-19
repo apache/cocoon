@@ -18,9 +18,6 @@
 <document>
   <header>
     <title>Footer</title>
-    <authors>
-      <person name="Bernhard Huber" email="berni_huber@a1.net"/>
-    </authors>
   </header>
   <body>
     <p align="center" class="footer"> 

@@ -45,19 +45,17 @@ import org.xml.sax.SAXException;
  *    <li>void doPreInitialization(ElementProcessor processor)</li>
  * </ul>
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @version $Id$
  */
 public abstract class ElementProcessorSerializer
-    extends AbstractLogEnabled implements Serializer, Serviceable
-{
+    extends AbstractLogEnabled implements Serializer, Serviceable {
+
     private static final boolean _should_set_content_length = false;
     private OutputStream         _output_stream;
     private Stack                _open_elements;
     private Locator              _locator;
     /** Service Manager */
-    protected ServiceManager   manager = null;
+    protected ServiceManager   manager;
 
     /**
      * Constructor

@@ -24,7 +24,6 @@ import java.io.IOException;
  * Print orientation -- encapsulation of the strings representing the
  * print orientation, and a simpler way to deal with them.
  *
- * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @version $Id$
  */
 public class PrintOrientation {
