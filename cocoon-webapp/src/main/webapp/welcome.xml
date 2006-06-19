@@ -27,6 +27,6 @@
     your Apache Cocoon installation was successful.
   </message>
   <message>
-    To know more about Cocoon capabilities, look at the <link href="apps/">sample blocks</link>.    
+    To know more about Cocoon capabilities, look at the <link href="blocks/">sample blocks</link>.    
   </message>
 </welcome>
