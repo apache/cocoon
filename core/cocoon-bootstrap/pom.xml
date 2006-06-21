@@ -18,31 +18,44 @@
     | @version $Id$
     |
     +-->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
     <version>1-SNAPSHOT</version>
   </parent>
+  
   <modelVersion>4.0.0</modelVersion>
+  
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-bootstrap</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  
   <packaging>jar</packaging>
+  
   <name>Cocoon Bootstrap Implementation</name>
+  
   <description/>
+  
   <build>
     <plugins>
-      <plugin>
+      <!-- uncommeent the cocoon-maven-eclipse-plugin plugin to create the Eclipse project files
+           with PDE support. Note that you have to run 'mvn install'
+           in cocoon/trunk/tools/cocoon-maven-eclipse-plugin first -->
+      <!--plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-eclipse-plugin</artifactId>
         <version>2.3-SNAPSHOT</version>
         <configuration>
           <pde>true</pde>
         </configuration>
-      </plugin>
+      </plugin-->  
     </plugins>
   </build>
+  
   <dependencies>
     <dependency>
       <groupId>commons-jci</groupId>
@@ -56,4 +69,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
 </project>
