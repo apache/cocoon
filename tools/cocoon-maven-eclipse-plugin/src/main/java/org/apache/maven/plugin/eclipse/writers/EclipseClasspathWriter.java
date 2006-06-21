@@ -91,6 +91,11 @@ public class EclipseClasspathWriter
      * File name that stores project classpath settings.
      */
     private static final String FILE_DOT_CLASSPATH = ".classpath"; //$NON-NLS-1$
+    
+    /**
+     * Directory name that contains the OSGi libs within the project
+     */
+    private static final String LIB_DIR = "lib"; //$NON-NLS-1$
 
     public EclipseClasspathWriter( Log log, File eclipseProjectDir, MavenProject project, IdeDependency[] deps )
     {
@@ -228,10 +233,10 @@ public class EclipseClasspathWriter
                 }                
                 else if ( !dep.isOSGiBundle() && rcp ) // && !dep.isTestDependency() && !dep.isProvided() )
                 {
-	                String libs = "lib";
 	                try {
-	                	File libsDir = new File(libs);
-	                	if(!libsDir.exists()) {
+	                	File libsDir = new File(LIB_DIR);
+	                	if(!libsDir.exists()) 
+                        {
 	                		libsDir.mkdirs();
 	                	}
 						FileUtils.copyFileToDirectory(dep.getFile(), libsDir);
@@ -239,9 +244,10 @@ public class EclipseClasspathWriter
 					} 
 	                catch (IOException e) 
 	                {
-						throw new MojoExecutionException("Can't copy artifact '" + dep.getArtifactId() + "'");
+						throw new MojoExecutionException(Messages.getString( "EclipsePlugin.cantcopyartifact", 
+                            dep.getArtifactId() ));
 					}
-	                path = libs + "/" + dep.getFile().getName();
+	                path = LIB_DIR + "/" + dep.getFile().getName();
 	                kind = "lib";
                 } 
                 else 

@@ -63,6 +63,11 @@ public class EclipseCleanMojo
     private static final String FILE_FACET_CORE_XML = ".settings/org.eclipse.wst.common.project.facet.core.xml"; //$NON-NLS-1$
 
     /**
+     * Directory name that contains the OSGi libs within the project
+     */
+    private static final String LIB_DIR = "lib"; //$NON-NLS-1$    
+    
+    /**
      * Packaging for the current project.
      * @parameter expression="${project.packaging}"
      * @required
@@ -74,6 +79,13 @@ public class EclipseCleanMojo
      * @parameter expression="${basedir}"
      */
     private File basedir;
+    
+    /**
+     * Is it an PDE project?
+     * 
+     * @parameter expression="${eclipse.pde}" default-value="false"
+     */
+    private boolean pde;        
 
     /**
      * @see org.apache.maven.plugin.AbstractMojo#execute()
@@ -101,6 +113,11 @@ public class EclipseCleanMojo
         {
             delete( settingsDir );
         }
+        
+        if ( pde ) 
+        {
+            delete ( new File( basedir, LIB_DIR ) );
+        }
     }
 
     /**
@@ -112,8 +129,14 @@ public class EclipseCleanMojo
     private void delete( File f )
         throws MojoExecutionException
     {
-        getLog().info( Messages.getString( "EclipseCleanMojo.deleting", f.getName() ) ); //$NON-NLS-1$
-
+        if ( f.isDirectory() ) 
+        {
+            getLog().info( Messages.getString( "EclipseCleanMojo.deletingDirectory", f.getName() ) ); //$NON-NLS-1$
+        } else 
+        {
+            getLog().info( Messages.getString( "EclipseCleanMojo.deletingFile", f.getName() ) ); //$NON-NLS-1$
+        }
+        
         if ( f.exists() )
         {
             if ( !f.delete() )
