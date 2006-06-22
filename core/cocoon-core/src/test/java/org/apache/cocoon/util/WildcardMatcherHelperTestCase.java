@@ -113,14 +113,14 @@ public class WildcardMatcherHelperTestCase
 
     public void test13WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/ab/cd*/end", "/ab/cdxx/end");
+        Map result = WildcardMatcherHelper.match("ab/cd*/end", "ab/cdxx/end");
         assertNotNull(result);
         assertEquals("xx", result.get("1"));
     }
 
     public void test14WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/a*/cd*/end", "/ab/cdxx/end");
+        Map result = WildcardMatcherHelper.match("a*/cd*/end", "ab/cdxx/end");
         assertNotNull(result);
         assertEquals("b", result.get("1"));
         assertEquals("xx", result.get("2"));
@@ -128,7 +128,7 @@ public class WildcardMatcherHelperTestCase
 
     public void test15WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/a**/cd*/end", "/ab/yy/cdxx/end");
+        Map result = WildcardMatcherHelper.match("a**/cd*/end", "ab/yy/cdxx/end");
         assertNotNull(result);
         assertEquals("b/yy", result.get("1"));
         assertEquals("xx", result.get("2"));
@@ -136,13 +136,13 @@ public class WildcardMatcherHelperTestCase
 
     public void test16WildcardURIMatch()
         throws Exception { 
-        Map result = WildcardMatcherHelper.match("/a**/cd*/end/*", "/ab/yy/cdxx/end/foobar/ii");
+        Map result = WildcardMatcherHelper.match("a**/cd*/end/*", "ab/yy/cdxx/end/foobar/ii");
         assertNull(result);
     }
 
     public void test17WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/a**/cd*/end/**", "/ab/yy/cdxx/end/foobar/ii");
+        Map result = WildcardMatcherHelper.match("a**/cd*/end/**", "ab/yy/cdxx/end/foobar/ii");
         assertNotNull(result);
         assertEquals("b/yy", result.get("1"));
         assertEquals("xx", result.get("2"));
@@ -151,7 +151,7 @@ public class WildcardMatcherHelperTestCase
 
     public void test18WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/a**cd*/end/**", "/ab/yy/cdxx/end/foobar/ii");
+        Map result = WildcardMatcherHelper.match("a**cd*/end/**", "ab/yy/cdxx/end/foobar/ii");
         assertNotNull(result);
         assertEquals("b/yy/", result.get("1"));
         assertEquals("xx", result.get("2"));
@@ -160,7 +160,7 @@ public class WildcardMatcherHelperTestCase
 
     public void test19WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/*/*.xml", "/test/something.xmlbla.xml");
+        Map result = WildcardMatcherHelper.match("*/*.xml", "test/something.xmlbla.xml");
         assertNotNull(result);
         assertEquals("test", result.get("1"));
         assertEquals("something.xmlbla", result.get("2"));
@@ -168,8 +168,20 @@ public class WildcardMatcherHelperTestCase
 
     public void test20WildcardURIMatch()
         throws Exception {
-        Map result = WildcardMatcherHelper.match("/ab/cd*/end", "/ab/cd/end");
+        Map result = WildcardMatcherHelper.match("ab/cd*/end", "ab/cd/end");
         assertNotNull(result);
         assertEquals("", result.get("1"));
+    }
+
+    public void testEmptyPattern() throws Exception {
+        assertNotNull(WildcardMatcherHelper.match("", ""));
+        assertNull(WildcardMatcherHelper.match("", "foo"));
+        assertNull(WildcardMatcherHelper.match("", "foo/bar"));
+    }
+
+    public void testEndPattern() throws Exception {
+        assertNotNull(WildcardMatcherHelper.match("*/", "foo/"));
+        assertNull(WildcardMatcherHelper.match("*/", "foo/bar/"));
+        assertNull(WildcardMatcherHelper.match("*/", "test/foo/bar/"));
     }
 }
