@@ -17,6 +17,7 @@ package org.apache.cocoon.template.environment;
 
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -47,15 +48,19 @@ public class FlowObjectModelHelper {
             if (rootScope == null) {
                 rootScope = ctx.initStandardObjects(null);
             }
-            Scriptable scope = ctx.newObject(rootScope);
-            scope.setPrototype(rootScope);
-            scope.setParentScope(null);
-            return scope;
+            try {
+                Scriptable scope = ctx.newObject(rootScope);
+                scope.setPrototype(rootScope);
+                scope.setParentScope(null);
+                return scope;
+            } catch (Exception e) {
+                throw new CascadingRuntimeException("Exception", e);
+            }
         } finally {
             Context.exit();
         }
     }
-    
+
     /**
      * Create an expression context that contains the object model
      */
