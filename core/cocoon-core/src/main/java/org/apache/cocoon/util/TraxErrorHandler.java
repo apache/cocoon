@@ -88,7 +88,7 @@ public class TraxErrorHandler implements ErrorListener {
 
         SourceLocator locator = exception.getLocator();
         if ( null != locator ) {
-            String id = ( locator.getPublicId() != locator.getPublicId() )
+            String id = ( !locator.getPublicId().equals(locator.getPublicId()))
                     ? locator.getPublicId()
                     : ( null != locator.getSystemId() )
                     ? locator.getSystemId() : "SystemId Unknown";
