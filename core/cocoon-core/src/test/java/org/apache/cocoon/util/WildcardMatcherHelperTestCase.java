@@ -173,7 +173,14 @@ public class WildcardMatcherHelperTestCase
         assertEquals("", result.get("1"));
     }
 
-    public void testEmptyPattern() throws Exception {
+    public void test21WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("*/**", "samples/blocks/");
+        assertNotNull(result);
+        assertEquals("", result.get("1"));
+    }
+
+public void testEmptyPattern() throws Exception {
         assertNotNull(WildcardMatcherHelper.match("", ""));
         assertNull(WildcardMatcherHelper.match("", "foo"));
         assertNull(WildcardMatcherHelper.match("", "foo/bar"));
