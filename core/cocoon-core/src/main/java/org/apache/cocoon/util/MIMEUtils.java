@@ -147,7 +147,7 @@ public class MIMEUtils {
             if (line.startsWith("#")) {
                 continue;
             }
-            if (line.trim().equals("")) {
+            if (line.trim().length() == 0) {
                 continue;
             }
             StringTokenizer tok = new StringTokenizer(line, " \t");

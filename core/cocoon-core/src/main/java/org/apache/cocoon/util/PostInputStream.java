@@ -91,13 +91,14 @@ public class PostInputStream extends InputStream {
         }
         init(input, len);
     }
+
     /**
     * Returns the underlying input stream.
     *
     * @return inputStream the underlying InputStream.
     */
     public InputStream getInputStream() {
-        return( m_inputStream );
+        return m_inputStream;
     }
 
     /**
