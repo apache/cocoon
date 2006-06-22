@@ -177,10 +177,11 @@ public class WildcardMatcherHelperTestCase
     throws Exception {
         Map result = WildcardMatcherHelper.match("*/**", "samples/blocks/");
         assertNotNull(result);
-        assertEquals("", result.get("1"));
+        assertEquals("samples", result.get("1"));
+        assertEquals("blocks/", result.get("2"));
     }
 
-public void testEmptyPattern() throws Exception {
+    public void testEmptyPattern() throws Exception {
         assertNotNull(WildcardMatcherHelper.match("", ""));
         assertNull(WildcardMatcherHelper.match("", "foo"));
         assertNull(WildcardMatcherHelper.match("", "foo/bar"));
