@@ -171,7 +171,7 @@ public class WildcardMatcherHelper {
          * @param aStr The extracted substring
          */
         private void add(final String aStr) {
-            map.put("" + idx++, aStr);
+            map.put(String.valueOf(idx++), aStr);
         }
 
         /**

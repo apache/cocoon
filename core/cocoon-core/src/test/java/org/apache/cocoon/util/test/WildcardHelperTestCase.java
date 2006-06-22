@@ -102,6 +102,9 @@ public class WildcardHelperTestCase extends TestCase {
         boolean result = WildcardHelper.match(resultMap, "foo/bar/", expr);
         assertFalse("Url 'foo/bar/' should not match pattern '*/'.", result);
 
+        result = WildcardHelper.match(resultMap, "test/foo/bar/", expr);
+        assertFalse("Url 'test/foo/bar/' should not match pattern '*/'.", result);
+
         result = WildcardHelper.match(resultMap, "foo/", expr);
         assertTrue("Url 'foo/' should match pattern '*/'", result);
     }
