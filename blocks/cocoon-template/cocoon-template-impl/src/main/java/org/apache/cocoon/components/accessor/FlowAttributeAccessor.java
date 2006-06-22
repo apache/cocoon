@@ -31,7 +31,7 @@ public class FlowAttributeAccessor extends ObjectModelAccessor {
      */
     public Object getObject() {
         Map map = new HashMap();
-	    Object contextObject = FlowHelper.getContextObject(getObjectModel());
+        Object contextObject = FlowHelper.getContextObject(getObjectModel());
 
         if (contextObject instanceof Map) {
             map.putAll((Map)contextObject);
