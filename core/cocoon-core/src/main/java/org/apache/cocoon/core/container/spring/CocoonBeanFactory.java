@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -62,8 +61,6 @@ public class CocoonBeanFactory
     protected final Logger avalonLogger;
     protected final Context avalonContext;
     protected final ConfigurationInfo avalonConfiguration;
-
-    protected final List disposeBeans = new ArrayList();
 
     public CocoonBeanFactory(BeanFactory parent) {
         this(null, parent, null, null, null, null);
@@ -114,17 +111,6 @@ public class CocoonBeanFactory
             this.addBeanPostProcessor((BeanPostProcessor) it.next());
         }
         super.preInstantiateSingletons();
-    }
-
-    /**
-     * @see org.springframework.beans.factory.support.AbstractBeanFactory#destroySingletons()
-     */
-    public void destroySingletons() {
-        super.destroySingletons();
-        for(int i=this.disposeBeans.size()-1;i>=0;i--) {
-            ContainerUtil.dispose(this.disposeBeans.get(i));
-        }
-        this.disposeBeans.clear();
     }
 
     /**
@@ -213,9 +199,7 @@ public class CocoonBeanFactory
             } catch (Exception e) {
                 throw new BeanInitializationException("Unable to stop bean " + beanName, e);
             }
-            if ( bean instanceof Disposable ) {
-                this.beanFactory.disposeBeans.add(bean);
-            }
+            ContainerUtil.dispose(bean);
         }
     }
 }
