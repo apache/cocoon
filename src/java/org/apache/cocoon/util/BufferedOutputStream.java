@@ -156,7 +156,7 @@ public final class BufferedOutputStream extends FilterOutputStream {
     public void clearBuffer() {
         this.count = 0;
     }
-    
+
     /**
      * Return the size of the current buffer
      */
