@@ -2436,7 +2436,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         }
         cocoon.put("context", FOM_JavaScriptFlowHelper.getFOM_Context(objectModel));
         cocoon.put("continuation", FOM_JavaScriptFlowHelper.getFOM_WebContinuation(objectModel));
-        cocoon.put("parameters", Parameters.toProperties(parameters));
+        cocoon.put("parameters", parameters);
         this.variables = new MyVariables(cocoon, contextObject, kont, request, session, app, parameters);
         Map map;
         if (contextObject instanceof Map) {
