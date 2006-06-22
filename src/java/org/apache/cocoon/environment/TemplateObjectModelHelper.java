@@ -49,9 +49,9 @@ public class TemplateObjectModelHelper {
         Context ctx = Context.enter();
         try {
             // Create it if never used up to now
-            if (rootScope == null)
+            if (rootScope == null) {
                 rootScope = ctx.initStandardObjects(null);
-
+            }
             Scriptable scope = null;
             try {
                 scope = ctx.newObject(rootScope);
@@ -150,7 +150,7 @@ public class TemplateObjectModelHelper {
 
         // cocoon.parameters
         if ( parameters != null ) {
-            cocoon.put("parameters", Parameters.toProperties(parameters));
+            cocoon.put("parameters", parameters);
         }
 
         final Map map = new HashMap();
