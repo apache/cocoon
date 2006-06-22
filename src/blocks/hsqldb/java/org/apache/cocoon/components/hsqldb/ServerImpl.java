@@ -34,6 +34,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.thread.RunnableManager;
+import org.hsqldb.Database;
+import org.hsqldb.DatabaseManager;
 
 /**
  * This class runs an instance of the HSQLDB HSQL protocol network database server.
@@ -145,6 +147,9 @@ public class ServerImpl extends AbstractLogEnabled
     /** Stop the server */
     public void stop() {
         getLogger().debug("Shutting down HSQLDB");
+        //AG: Temporally workaround for http://issues.apache.org/jira/browse/COCOON-1862
+        // A newer version of hsqldb or SAP NetWeaver may not need the next line
+        DatabaseManager.closeDatabases(Database.CLOSEMODE_COMPACT);
         hsqlServer.stop();
         getLogger().debug("Shutting down HSQLDB: Done");
     }

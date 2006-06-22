@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1862" due-to="Igor Naumov" due-to-emal="igornaumov@hotmail.com">
+      HSQLDB Block: Workaround for HSQLDB improper shutdown in SAP NetWeaver.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1864" due-to="Dennis Dam" due-to-emal="d.dam@hippo.nl">
       CForms Block: RepeaterJXPathBinding - order of row is inverted.
     </action>
