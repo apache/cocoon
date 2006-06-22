@@ -87,20 +87,26 @@ public class WildcardMatcherHelper {
     private static class Matcher {
         //~ Instance fields ------------------------------------------------------------------------
 
+        /** The pattern */
+        private final String pat;
+
         /** The character array of the pattern */
         private final char[] apat;
+
+        /** The length of the character array of the pattern */
+        private final int lpat;
+
+        /** The string */
+        private final String str;
 
         /** The character array of the string */
         private final char[] astr;
 
+        /** The length of the character array of the string */
+        private final int lstr;
+
         /** The <code>Map</code> to be filled */
         private Map map = new HashMap();
-
-        /** The pattern */
-        private final String pat;
-
-        /**The string */
-        private final String str;
 
         /** Whether string matched to pattern */
         private final boolean matched;
@@ -109,10 +115,10 @@ public class WildcardMatcherHelper {
         private int idx = 0;
 
         /** index into pattern */
-        private int ipat;
+        private int ipat = 0;
 
         /** index into string */
-        private int istr;
+        private int istr = 0;
 
         //~ Constructors ---------------------------------------------------------------------------
 
@@ -122,14 +128,14 @@ public class WildcardMatcherHelper {
          * @param aPat The pattern
          * @param aStr The string
          */
-        public Matcher(final String aPat,
-                       final String aStr) {
-            this.str = aStr;
-            this.pat = aPat;
-            ipat = pat.length() - 1;
-            istr = str.length() - 1;
+        public Matcher(final String pat,
+                       final String str) {
+            this.pat = pat;
             apat = pat.toCharArray();
+            lpat = apat.length;
+            this.str = str;
             astr = str.toCharArray();
+            lstr = astr.length;
             add(str);
             matched = match();
         }
@@ -142,18 +148,7 @@ public class WildcardMatcherHelper {
          * @return DOCUMENT ME!
          */
         public Map getMap() {
-            // reverse the map 
-            final Map newmap = new HashMap();
-            int j = map.size() - 1;
-            newmap.put("0", map.get("0"));
-
-            for(int i = 1; i < map.size(); i++) {
-                final Object o = map.get("" + i);
-                newmap.put("" + j, o);
-                j--;
-            }
-
-            return newmap;
+            return map;
         }
 
         /**
@@ -166,7 +161,7 @@ public class WildcardMatcherHelper {
         }
 
         /**
-         * Add a etracted substring to the map
+         * Add a extracted substring to the map
          *
          * @param aStr The extracted substring
          */
@@ -181,18 +176,18 @@ public class WildcardMatcherHelper {
          */
         private boolean match() {
             // scan a common literal suffix
-            scanLiteralSuffix();
+            scanLiteralPrefix();
 
-            // if we are already at the start of both strings 
+            // if we are already at the end of both strings 
             // than the pattern matched
-            if((ipat < 0) && (istr < 0)) return true;
+            if(ipat >= lpat && istr >= lstr) return true;
 
             // if hole string has matched the pattern so far and the rest of the pattern only has wildcard(s)
             // we match too otherwise we clearly don't match
-            if((ipat >= 0) && (istr < 0)) {
-                while((ipat >= 0) && (apat[ipat] == STAR)) ipat--;
+            if(ipat < lpat && istr >= lstr) {
+                while(ipat < lpat && apat[ipat] == STAR) ipat++;
 
-                if(ipat < 0) {
+                if(ipat >= lpat) {
                     add("");
 
                     return true;
@@ -203,36 +198,36 @@ public class WildcardMatcherHelper {
 
             // if hole pattern has matched the string so far but the string has more characters left
             // we don't match
-            if((ipat < 0) && (istr >= 0)) return false;
+            if(ipat >= lpat && istr < lstr) return false;
 
             // if we have not stopped at a wildcard character 
             // a character doesn't match and thus we do not match at all
             if(apat[ipat] != STAR) return false;
 
             // if it is a double (or more) wildcard pattern
-            if((ipat > 0) && (apat[ipat - 1] == STAR)) {
+            if(ipat < lpat - 1 && apat[ipat + 1] == STAR) {
                 // skip to first non star charater in the pattern
-                while((--ipat >= 0) && (apat[ipat] == STAR));
+                while(++ipat < lpat && apat[ipat] == STAR);
 
-                // if we are at the start of the pattern we've matched and are finish scanning
-                if(ipat < 0) {
-                    add(str.substring(0, istr + 1));
+                // if we are at the end of the pattern we've matched and are finish scanning
+                if(ipat >= lpat) {
+                    add(new String(astr, istr, lstr - istr));
 
                     return true;
                 }
 
-                // Now we need to scan for the start of the literal characters in the pattern
-                final int eipat = ipat + 1; // end position of a literal character used for substring operations
+                // Now we need to scan for the end of the literal characters in the pattern
+                final int sipat = ipat; // start position of a literal character used for substring operations
 
-                while((ipat >= 0) && ((apat[ipat] != STAR) || ((ipat > 0) && (apat[ipat - 1] == ESC)))) ipat--;
+                while(ipat < lpat && (apat[ipat] != STAR || (ipat > 0 && apat[ipat - 1] == ESC))) ipat++;
 
-                // if we reached the start of the pattern just do a string compare with the corresponding part from 
-                // the start of the string
-                if(ipat < 0) {
+                // if we reached the end of the pattern just do a string compare with the corresponding part from 
+                // the end of the string
+                if(ipat >= lpat) {
                     // if the remaining length of the string isn't the same as that found in the pattern 
                     // we do not match
-                    if(strncmp(apat, 0, astr, 0, eipat)) {
-                        add(str.substring(eipat, istr + 1));
+                    if(strncmp(apat, sipat, astr, lstr - (lpat - sipat), lpat - sipat)) {
+                        add(new String(astr, istr, lstr - (lpat - sipat) - istr));
 
                         return true;
                     }
@@ -243,28 +238,28 @@ public class WildcardMatcherHelper {
 
                 // Now we need to check whether the litteral substring of the pattern 
                 // is contained in the string somewhere
-                final int l = eipat - ipat - 1;
-                final int eistr = istr + 1;
+                final int l = ipat - sipat;
+                final int sistr = istr;
 
-                while(((istr - l) >= 0) && ! strncmp(apat, ipat + 1, astr, istr - l + 1, l)) istr--;
+                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l)) istr++;
 
-                if((istr - l) < 0) return false;
+                if(istr >= lstr) return false;
 
-                add(str.substring(istr + 1, eistr));
-                istr -= l;
+                add(new String(astr, sistr, istr - sistr));
+                istr += l;
             } else // if it is a single star pattern
              {
                 // skip the star
-                --ipat;
+                ++ipat;
 
                 // if we are at the beginning of the pattern we have to check there is not PATH_SEP in string
-                if(ipat < 0) {
-                    final int eistr = istr + 1;
+                if(ipat >= lpat) {
+                    final int sistr = istr;
 
-                    while((istr >= 0) && (astr[istr] != PATHSEP)) istr--;
+                    while(istr < lstr && (astr[istr] != PATHSEP)) istr++;
 
-                    if(istr < 0) {
-                        add(str.substring(0, eistr));
+                    if(istr >= lstr) {
+                        add(new String(astr, sistr, lstr - sistr));
 
                         return true;
                     }
@@ -275,19 +270,20 @@ public class WildcardMatcherHelper {
 
                 // Now we need to search for the start of either a path sparator or another wildcard characters 
                 // in the pattern
-                final int eipat = ipat + 1;
+                final int sipat = ipat;
 
-                while((ipat >= 0) &&
-                      ((apat[ipat] != STAR) || ((ipat > 0) && (apat[ipat - 1] == ESC))) &&
-                      (apat[ipat] != PATHSEP)) {
-                    ipat--;
+                while(ipat < lpat &&
+                      apat[ipat] != STAR &&
+                      (apat[ipat] != ESC || ipat < lpat - 1 && apat[ipat + 1] != STAR) &&
+                      apat[ipat] != PATHSEP) {
+                    ipat++;
                 }
 
-                // if we reached the beginning of the pattern just do a String compare with the corresponding part from 
-                // the beginning of the string
-                if(ipat < 0) {
-                    if(strncmp(apat, 0, astr, 0, eipat)) {
-                        add(str.substring(eipat, istr + 1));
+                // if we reached the end of the pattern just do a String compare with the corresponding part from 
+                // the end of the string
+                if(ipat >= lpat) {
+                    if(strncmp(apat, sipat, astr, lstr - (ipat - sipat), ipat - sipat)) {
+                        add(new String(astr, istr, lstr - (ipat - sipat) - istr)); // TODO: this is wrong
 
                         return true;
                     }
@@ -299,19 +295,19 @@ public class WildcardMatcherHelper {
                 // Now we need to check whether the litteral substring of the pattern 
                 // is contained in the string somewhere
                 if(apat[ipat] != PATHSEP) {
-                    ipat++;
+                    ipat--;
                 }
 
-                final int l = eipat - ipat;
-                final int eistr = ++istr; // move one up over the end 
+                final int l = ipat- sipat + 1;
+                final int sistr = istr;
 
-                while(((istr - l) >= 0) && ! strncmp(apat, ipat, astr, istr - l, l)) istr--;
+                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l)) istr++;
 
-                if((istr - l) < 0) return false;
+                if(istr >= lstr) return false;
 
-                add(str.substring(istr, eistr)); // TODO check this asd
-                istr -= (l + 1);
-                --ipat;
+                add(new String(astr, sistr, istr - sistr));
+                ipat += l;
+                istr += l;
             }
 
             return match();
@@ -320,17 +316,15 @@ public class WildcardMatcherHelper {
         /**
          * Scan a possible common suffix
          */
-        private void scanLiteralSuffix() {
+        private void scanLiteralPrefix() {
             // scan a common literal suffix
-            while((ipat >= 0) &&
-                  (istr >= 0) &&
-                  ((apat[ipat] != STAR) || ((ipat > 0) && (apat[ipat - 1] == ESC))) &&
-                  (apat[ipat] == astr[istr])) {
-                ipat--;
-
-                if((ipat >= 0) && (apat[ipat] == ESC))  ipat--;
-
-                istr--;
+            while(ipat < lpat &&
+                  istr < lstr &&
+                  (apat[ipat] == ESC && ipat < lpat - 1 && apat[ipat + 1] == STAR && apat[++ipat] == astr[istr] ||
+                   apat[ipat] != STAR &&
+                   apat[ipat] == astr[istr])) {
+                ipat++;
+                istr++;
             }
         }
 
@@ -352,7 +346,7 @@ public class WildcardMatcherHelper {
                                 final int l) {
             int i = 0;
 
-            for(i = 0; (i < l) && (a1[o1 + i] == a2[o2 + i]); i++);
+            for(i = 0; i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]; i++);
 
             return i == l;
         }
