@@ -17,9 +17,13 @@ package org.apache.cocoon.environment;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper;
@@ -50,9 +54,9 @@ public class TemplateObjectModelHelper {
         Context ctx = Context.enter();
         try {
             // Create it if never used up to now
-            if (rootScope == null)
+            if (rootScope == null) {
                 rootScope = ctx.initStandardObjects(null);
-            
+            }
             Scriptable scope = ctx.newObject(rootScope);
             scope.setPrototype(rootScope);
             scope.setParentScope(null);
@@ -146,7 +150,7 @@ public class TemplateObjectModelHelper {
             
         // cocoon.parameters
         if ( parameters != null ) {
-            cocoon.put("parameters", Parameters.toProperties(parameters));
+            cocoon.put("parameters", parameters);
         }
 
         final Map map = new HashMap();
