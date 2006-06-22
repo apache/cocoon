@@ -42,6 +42,7 @@ import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -49,6 +50,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
+import org.springframework.beans.factory.config.Scope;
 
 /**
  * The @link {@link OSGiSpringECMFactory} gives access to all Spring beans via the 
@@ -406,14 +408,6 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 	}
 
 	/**
-	 * @deprecated
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames(java.lang.Class)
-	 */
-	public String[] getBeanDefinitionNames(Class arg0) {
-		return this.beanFactory.getBeanDefinitionNames(arg0);
-	}
-
-	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanNamesForType(java.lang.Class, boolean, boolean)
 	 */
 	public String[] getBeanNamesForType(Class arg0, boolean arg1, boolean arg2) {
@@ -524,4 +518,81 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 	public void setParentBeanFactory(BeanFactory arg0) {
 		this.beanFactory.setParentBeanFactory(arg0);
 	}
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#addPropertyEditorRegistrar(org.springframework.beans.PropertyEditorRegistrar)
+     */
+    public void addPropertyEditorRegistrar(PropertyEditorRegistrar arg0) {
+        this.beanFactory.addPropertyEditorRegistrar(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#destroyScopedBean(java.lang.String)
+     */
+    public void destroyScopedBean(String arg0) {
+        this.beanFactory.destroyScopedBean(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getBeanClassLoader()
+     */
+    public ClassLoader getBeanClassLoader() {
+        return this.beanFactory.getBeanClassLoader();
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#isCacheBeanMetadata()
+     */
+    public boolean isCacheBeanMetadata() {
+        return this.beanFactory.isCacheBeanMetadata();
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#registerScope(java.lang.String, org.springframework.beans.factory.config.Scope)
+     */
+    public void registerScope(String arg0, Scope arg1) {
+        this.beanFactory.registerScope(arg0, arg1);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setBeanClassLoader(java.lang.ClassLoader)
+     */
+    public void setBeanClassLoader(ClassLoader arg0) {
+        this.beanFactory.setBeanClassLoader(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setCacheBeanMetadata(boolean)
+     */
+    public void setCacheBeanMetadata(boolean arg0) {
+        this.beanFactory.setCacheBeanMetadata(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.HierarchicalBeanFactory#containsLocalBean(java.lang.String)
+     */
+    public boolean containsLocalBean(String arg0) {
+        return this.beanFactory.containsLocalBean(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#configureBean(java.lang.Object, java.lang.String)
+     */
+    public Object configureBean(Object arg0, String arg1) throws BeansException {
+        return this.beanFactory.configureBean(arg0, arg1);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#createBean(java.lang.Class, int, boolean)
+     */
+    public Object createBean(Class arg0, int arg1, boolean arg2) throws BeansException {
+        return this.beanFactory.createBean(arg0, arg1, arg2);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#initializeBean(java.lang.Object, java.lang.String)
+     */
+    public Object initializeBean(Object arg0, String arg1) throws BeansException {
+        return this.beanFactory.initializeBean(arg0, arg1);
+    }
 }

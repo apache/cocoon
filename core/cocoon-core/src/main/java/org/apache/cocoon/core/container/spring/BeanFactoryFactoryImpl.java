@@ -74,7 +74,7 @@ public class BeanFactoryFactoryImpl
     }
 
     /**
-     * @see org.apache.cocoon.core.container.spring.BeanFactoryFactory#createBeanFactory(org.apache.avalon.framework.logger.Logger, org.apache.avalon.framework.configuration.Configuration, org.apache.avalon.framework.context.Context, org.apache.excalibur.source.SourceResolver, org.apache.cocoon.core.Settings)
+     * @see org.apache.cocoon.core.container.spring.BeanFactoryFactory#createBeanFactory(java.lang.ClassLoader, org.apache.avalon.framework.logger.Logger, org.apache.avalon.framework.configuration.Configuration, org.apache.avalon.framework.context.Context, org.apache.excalibur.source.SourceResolver, org.apache.cocoon.core.Settings)
      */
     public ConfigurableListableBeanFactory createBeanFactory(ClassLoader    classLoader,
                                                              Logger         sitemapLogger,
