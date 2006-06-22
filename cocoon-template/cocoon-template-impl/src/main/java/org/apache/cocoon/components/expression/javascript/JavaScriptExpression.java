@@ -26,6 +26,7 @@ import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.environment.TemplateObjectModelHelper;
+import org.apache.cocoon.template.environment.FlowObjectModelHelper;
 import org.apache.commons.jexl.util.introspection.Info;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
@@ -45,7 +46,7 @@ public class JavaScriptExpression extends AbstractExpression {
         Context ctx = Context.enter();
         try {
             // Note: used compileReader instead of compileString to work with the older Rhino in C2.1
-            this.script = ctx.compileReader(TemplateObjectModelHelper.getScope(), new StringReader(getExpression()), "", 1, null);
+            this.script = ctx.compileReader(FlowObjectModelHelper.getScope(), new StringReader(getExpression()), "", 1, null);
         } catch (Exception e) {
             // Note: this catch block is only needed for the Rhino in C2.1 where the older
             //       Rhino does not throw RuntimeExceptions
@@ -62,7 +63,7 @@ public class JavaScriptExpression extends AbstractExpression {
     public Object evaluate(ExpressionContext context) throws ExpressionException {
         Context ctx = Context.enter();
         try {
-            Scriptable scope = ctx.newObject(TemplateObjectModelHelper.getScope());
+            Scriptable scope = ctx.newObject(FlowObjectModelHelper.getScope());
             // Populate the scope
             Iterator iter = context.entrySet().iterator();
             while (iter.hasNext()) {
