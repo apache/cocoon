@@ -98,7 +98,7 @@ public class PostInputStream extends InputStream {
     *
     * @return inputStream the underlying InputStream.
     */
-    public synchronized InputStream getInputStream() {
+    public InputStream getInputStream() {
         return m_inputStream;
     }
 

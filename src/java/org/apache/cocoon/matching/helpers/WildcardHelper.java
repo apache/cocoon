@@ -17,6 +17,8 @@ package org.apache.cocoon.matching.helpers;
 
 import java.util.Map;
 
+import org.apache.cocoon.util.WildcardMatcherHelper;
+
 /**
  * This class is an utility class that perform wilcard-patterns matching and
  * isolation.
@@ -26,6 +28,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
+ * @deprecated Use the {@link WildcardMatcherHelper} instead.
  * @version CVS $Id$
  */
 public class WildcardHelper {
