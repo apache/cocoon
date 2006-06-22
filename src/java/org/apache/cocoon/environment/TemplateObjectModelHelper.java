@@ -88,8 +88,8 @@ public class TemplateObjectModelHelper {
      *         + continuation    The Continuation (if available)
      *         + parameters      The parameters (if provided)
      */
-    public static Object getTemplateObjectModel(final Map objectModel,
-                                                final Parameters parameters) {
+    public static Map getTemplateObjectModel(final Map objectModel,
+                                             final Parameters parameters) {
 
         // first create the "cocoon object":
         final Map cocoon = new HashMap();
