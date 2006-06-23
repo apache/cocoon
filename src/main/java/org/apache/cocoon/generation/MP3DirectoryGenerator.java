@@ -50,18 +50,18 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
     // private static final int VBR_SCALE_FLAG      = 8;
 
     // Attributes
-    protected static String MP3_FREQUENCY_ATTR_NAME = "frequency";
-    protected static String MP3_BITRATE_ATTR_NAME   = "bitrate";
-    protected static String MP3_MODE_ATTR_NAME      = "mode";
-    protected static String MP3_VBR_ATTR_NAME   = "variable-rate";
+    protected static final String MP3_FREQUENCY_ATTR_NAME = "frequency";
+    protected static final String MP3_BITRATE_ATTR_NAME   = "bitrate";
+    protected static final String MP3_MODE_ATTR_NAME      = "mode";
+    protected static final String MP3_VBR_ATTR_NAME   = "variable-rate";
 
-    protected static String MP3_TITLE_ATTR_NAME   = "title";
-    protected static String MP3_ARTIST_ATTR_NAME = "artist";
-    protected static String MP3_ALBUM_ATTR_NAME   = "album";
-    protected static String MP3_YEAR_ATTR_NAME    = "year";
-    protected static String MP3_COMMENT_ATTR_NAME = "comment";
-    protected static String MP3_TRACK_ATTR_NAME   = "track";
-    protected static String MP3_GENRE_ATTR_NAME   = "genre";
+    protected static final String MP3_TITLE_ATTR_NAME   = "title";
+    protected static final String MP3_ARTIST_ATTR_NAME = "artist";
+    protected static final String MP3_ALBUM_ATTR_NAME   = "album";
+    protected static final String MP3_YEAR_ATTR_NAME    = "year";
+    protected static final String MP3_COMMENT_ATTR_NAME = "comment";
+    protected static final String MP3_TRACK_ATTR_NAME   = "track";
+    protected static final String MP3_GENRE_ATTR_NAME   = "genre";
 
     /**
      * Extends the <code>setNodeAttributes</code> method from the
