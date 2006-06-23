@@ -71,7 +71,7 @@ public class MockRequest extends AbstractRequest {
     private Map cookies = new HashMap();
     
     private MockSession session;
-    private Environment environment = null;
+    private Environment environment;
     
     private boolean isRequestedSessionIdFromCookie = true;
     private boolean isRequestedSessionIdFromURL = false;
@@ -81,7 +81,7 @@ public class MockRequest extends AbstractRequest {
         this.environment = environment;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#get(java.lang.String)
      */
     public Object get(String name) { 
@@ -99,34 +99,58 @@ public class MockRequest extends AbstractRequest {
         }
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getAuthType()
+     */
     public String getAuthType() {
         return authType;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getCharacterEncoding()
+     */
     public String getCharacterEncoding() {
         return charEncoding;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#setCharacterEncoding(java.lang.String)
+     */
     public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
         charEncoding = enc;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getContentLength()
+     */
     public int getContentLength() {
         return -1;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getContentType()
+     */
     public String getContentType() {
         return contentType;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getParameter(java.lang.String)
+     */
     public String getParameter(String name) {
         return (String)parameters.get(name);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getParameterNames()
+     */
     public Enumeration getParameterNames() {
         return parameters.keys();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getParameterValues(java.lang.String)
+     */
     public String[] getParameterValues(String name) {
         Object param = parameters.get(name);
         if ( null == param ) {
@@ -138,46 +162,80 @@ public class MockRequest extends AbstractRequest {
         return new String[] {(String) param};
     }
 
+    /**
+     * @param name
+     * @param value
+     */
     public void addParameter(String name, String value) {
         parameters.put(name, value);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getProtocol()
+     */
     public String getProtocol() {
         return protocol;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getScheme()
+     */
     public String getScheme() {
         return scheme;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getServerName()
+     */
     public String getServerName() {
         return serverName;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getServerPort()
+     */
     public int getServerPort() {
         return port;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getRemoteAddr()
+     */
     public String getRemoteAddr() {
         return remoteAddr;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getRemoteHost()
+     */
     public String getRemoteHost() {
         return remoteHost;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getLocale()
+     */
     public Locale getLocale() {
         return locale;
     }
     
+    /**
+     * @param locale
+     */
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getLocales()
+     */
     public Enumeration getLocales() {
         return Collections.enumeration(Collections.singleton(getLocale()));
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#isSecure()
+     */
     public boolean isSecure() {
         if (scheme==null) {
             return false;
@@ -185,6 +243,9 @@ public class MockRequest extends AbstractRequest {
         return scheme.equalsIgnoreCase("HTTPS");
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getCookies()
+     */
     public Cookie[] getCookies() {
         if (cookies.isEmpty()) {
             return null;
@@ -193,10 +254,16 @@ public class MockRequest extends AbstractRequest {
         return (Cookie []) cookies.values().toArray(cookieArray);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getCookieMap()
+     */
     public Map getCookieMap() {
         return cookies;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getDateHeader(java.lang.String)
+     */
     public long getDateHeader(String name) {
         String s1 = getHeader(name);
         if (s1 == null) {
@@ -211,30 +278,51 @@ public class MockRequest extends AbstractRequest {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getHeader(java.lang.String)
+     */
     public String getHeader(String name) {
         return (String) headers.get(name);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getHeaders(java.lang.String)
+     */
     public Enumeration getHeaders(String name) {
         throw new AssertionFailedError("Not implemented");
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getHeaderNames()
+     */
     public Enumeration getHeaderNames() {
         return headers.keys();
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getMethod()
+     */
     public String getMethod() {
         return method;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getPathInfo()
+     */
     public String getPathInfo() {
         return pathInfo;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getPathTranslated()
+     */
     public String getPathTranslated() {
         throw new AssertionFailedError("Not implemented");
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getContextPath()
+     */
     public String getContextPath() {
         return contextPath;
     }
@@ -243,6 +331,9 @@ public class MockRequest extends AbstractRequest {
         contextPath = path;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getQueryString()
+     */
     public String getQueryString() {
         return queryString;
     }
@@ -251,22 +342,40 @@ public class MockRequest extends AbstractRequest {
         queryString = string;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getRemoteUser()
+     */
     public String getRemoteUser() {
         return remoteUser;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getUserPrincipal()
+     */
     public Principal getUserPrincipal() {
         return principal;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#isUserInRole(java.lang.String)
+     */
     public boolean isUserInRole(String role) {
+        if ( this.userRole == null ) {
+            return role == null;
+        }
         return userRole.equals(role);
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getRequestedSessionId()
+     */
     public String getRequestedSessionId() {
         return reqSessionId;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getRequestURI()
+     */
     public String getRequestURI() {
         if (this.environment == null) {
             return requestURI;
@@ -278,6 +387,9 @@ public class MockRequest extends AbstractRequest {
         requestURI = uri;
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getSitemapURI()
+     */
     public String getSitemapURI() {
         if (this.environment == null) {
             return requestURI;
@@ -285,6 +397,9 @@ public class MockRequest extends AbstractRequest {
         return this.environment.getURI();
     }
     
+    /**
+     * @see org.apache.cocoon.environment.Request#getSitemapPath()
+     */
     public String getSitemapPath() {
         if (this.environment == null) {
             return "";
@@ -292,14 +407,23 @@ public class MockRequest extends AbstractRequest {
         return this.environment.getURIPrefix();
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getSitemapURIPrefix()
+     */
     public String getSitemapURIPrefix() {
         return "";
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getServletPath()
+     */
     public String getServletPath() {
         return servletPath;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getSession(boolean)
+     */
     public Session getSession(boolean create) {
         if ((session == null) && (create)) {
             this.session = new MockSession();
@@ -312,10 +436,16 @@ public class MockRequest extends AbstractRequest {
         return null;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#getSession()
+     */
     public Session getSession() {
         return getSession(true);
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#isRequestedSessionIdValid()
+     */
     public boolean isRequestedSessionIdValid() {
         if (session != null) {
             try {
@@ -328,10 +458,16 @@ public class MockRequest extends AbstractRequest {
         return false;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#isRequestedSessionIdFromCookie()
+     */
     public boolean isRequestedSessionIdFromCookie() {
         return isRequestedSessionIdFromCookie;
     }
 
+    /**
+     * @see org.apache.cocoon.environment.Request#isRequestedSessionIdFromURL()
+     */
     public boolean isRequestedSessionIdFromURL() {
         return isRequestedSessionIdFromURL;
     }
@@ -384,35 +520,35 @@ public class MockRequest extends AbstractRequest {
         this.isRequestedSessionIdFromCookie = isRequestedSessionIdFromCookie;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
         return this.getAttribute(name, Request.GLOBAL_SCOPE);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
         return this.getAttributeNames(Request.GLOBAL_SCOPE);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
         this.setAttribute(name, value, Request.GLOBAL_SCOPE);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
         this.removeAttribute(name, Request.GLOBAL_SCOPE);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
      */
     public Object getAttribute(String name, int scope) {
@@ -422,7 +558,7 @@ public class MockRequest extends AbstractRequest {
         return this.globalAttributes.get(name);
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
      */
     public Enumeration getAttributeNames(int scope) {
@@ -432,7 +568,7 @@ public class MockRequest extends AbstractRequest {
         return this.globalAttributes.keys();
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
      */
     public void setAttribute(String name, Object value, int scope) {
@@ -443,7 +579,7 @@ public class MockRequest extends AbstractRequest {
         }
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
      */
     public void removeAttribute(String name, int scope) {
@@ -454,7 +590,7 @@ public class MockRequest extends AbstractRequest {
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Request#getInputStream()
      */
     public InputStream getInputStream() throws IOException, UnsupportedOperationException {
@@ -476,4 +612,7 @@ public class MockRequest extends AbstractRequest {
         return result;
     }
 
+    public void setUserRole(String value) {
+        this.userRole = value;
+    }
 }
