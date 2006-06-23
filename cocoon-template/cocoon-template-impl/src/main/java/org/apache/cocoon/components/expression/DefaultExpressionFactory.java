@@ -30,7 +30,7 @@ public class DefaultExpressionFactory
     extends AbstractLogEnabled
     implements Disposable, Serviceable, ThreadSafe, ExpressionFactory {
 
-    public static String DEFAULT_EXPRESSION_LANGUAGE = "default";
+    public static final String DEFAULT_EXPRESSION_LANGUAGE = "default";
 
     /** The component manager */
     protected ServiceManager manager;

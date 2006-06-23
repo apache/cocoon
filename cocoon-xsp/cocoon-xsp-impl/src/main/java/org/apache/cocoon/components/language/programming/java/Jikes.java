@@ -257,7 +257,7 @@ public class Jikes extends AbstractJavaCompiler implements Serviceable {
             getLogger().error(message.toString(), e);
         }
 
-        if ("".equals(message)) {
+        if ("".equals(message.toString())) {
             type = tokens.nextToken().trim().toLowerCase();
             message.append(tokens.nextToken("\n").substring(1).trim());
 

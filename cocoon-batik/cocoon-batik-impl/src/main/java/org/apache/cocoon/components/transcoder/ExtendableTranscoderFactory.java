@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ExtendableTranscoderFactory implements TranscoderFactory {
 
-    protected static Map transcoders = new HashMap();
+    protected static final Map transcoders = new HashMap();
 
     protected final static TranscoderFactory singleton = new ExtendableTranscoderFactory();
 

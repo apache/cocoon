@@ -76,7 +76,7 @@ public class WebDAVUtil {
 
         final String filename = uri.substring(uri.lastIndexOf("/"));
         final String uriPrefix = uri.substring(0, uri.lastIndexOf("/") + 1);
-        final HttpURL sourceURL = new HttpURL(uri);                                                                   
+        //final HttpURL sourceURL = new HttpURL(uri);                                                                   
         final WebdavResource resource = getWebdavResource(uriPrefix);
                         
         if(!resource.putMethod(uriPrefix + filename, content)) {

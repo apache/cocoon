@@ -44,7 +44,7 @@ import org.apache.cocoon.xsp.handler.ComponentHandler;
  */
 public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe, Contextualizable, Serviceable {
 
-    public static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
+    public static final String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
     private Context context;
     
