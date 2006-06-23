@@ -42,7 +42,8 @@ public class ResourceRefSet
     }
 
     public ResourceRef add(ResourceRef ref) {
-        return this.add(ref);
+        this.add((Object)ref);
+        return ref;
     }
 
     public ResourceRef remove(ResourceRef ref) {

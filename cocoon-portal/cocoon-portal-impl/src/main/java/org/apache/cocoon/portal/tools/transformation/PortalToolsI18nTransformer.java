@@ -32,7 +32,7 @@ import org.apache.cocoon.transformation.I18nTransformer;
  */
 public class PortalToolsI18nTransformer extends I18nTransformer {
 
-    public static String ROLE = PortalToolsI18nTransformer.class.getName();
+    public static final String ROLE = PortalToolsI18nTransformer.class.getName();
 
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)

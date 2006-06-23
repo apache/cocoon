@@ -56,7 +56,7 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
     private LanguageSet castorResources ;
 
     // contains String objects
-    private ArrayList castorSupportedLocales = new ArrayList();
+    private Collection castorSupportedLocales = new ArrayList();
     private ClassLoader classLoader;
     private String className;
     private ContentTypeSet contentTypes = new ContentTypeSetImpl();
@@ -345,7 +345,7 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
     } 
 
     public void setCastorSupportedLocales(Collection castorSupportedLocales) {
-        this.castorSupportedLocales = (ArrayList)castorSupportedLocales;
+        this.castorSupportedLocales = castorSupportedLocales;
     }
 
     public void setExpirationCache(String expirationCache) {
