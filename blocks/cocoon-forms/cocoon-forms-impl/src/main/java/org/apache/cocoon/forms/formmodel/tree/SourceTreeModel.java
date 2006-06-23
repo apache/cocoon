@@ -17,11 +17,11 @@ package org.apache.cocoon.forms.formmodel.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -35,10 +35,10 @@ public class SourceTreeModel implements TreeModel {
     
     private TreeModelHelper helper = new TreeModelHelper(this);
     
-    private int[][] fileIncludePatterns = SourceTreeModelDefinition.NO_PATTERNS;
-    private int[][] fileExcludePatterns = SourceTreeModelDefinition.NO_PATTERNS;
-    private int[][] dirIncludePatterns = SourceTreeModelDefinition.NO_PATTERNS;
-    private int[][] dirExcludePatterns = SourceTreeModelDefinition.NO_PATTERNS;
+    private List fileIncludePatterns;
+    private List fileExcludePatterns;
+    private List dirIncludePatterns;
+    private List dirExcludePatterns;
     
     /** optimization hint: don't filter child collections if there are no patterns */
     private boolean hasPatterns = false;
@@ -116,19 +116,15 @@ public class SourceTreeModel implements TreeModel {
         return result;
     }
     
-    private boolean matches(TraversableSource src, int[][]include, int[][]exclude) {
+    private boolean matches(TraversableSource src, List includes, List excludes) {
         boolean matches = true;
-        String name = src.getName();
-        
-        //FIXME: match allowed a null Map very recently. Replace it by null once 2.1.8 is out,
-        // we will gain a few cycles.
-        HashMap junk = new HashMap();
+        final String name = src.getName();
         
         // check include patterns
-        if (include != null && include.length > 0) {
+        if (includes != null && includes.size() > 0) {
             matches = false;
-            check: for (int i = 0; i < include.length; i++) {
-                if (WildcardHelper.match(junk, name, include[i])) {
+            check: for (int i = 0; i < includes.size(); i++) {
+                if (WildcardMatcherHelper.match((String)includes.get(i), name) != null) {
                     matches = true;
                     break check;
                 }
@@ -136,9 +132,9 @@ public class SourceTreeModel implements TreeModel {
         }
         
         // check exclude patterns
-        if (matches && exclude != null && exclude.length > 0) {
-            check: for (int i = 0; i < exclude.length; i++) {
-                if (WildcardHelper.match(junk, name, exclude[i])) {
+        if (matches && excludes != null && excludes.size() > 0) {
+            check: for (int i = 0; i < excludes.size(); i++) {
+                if (WildcardMatcherHelper.match((String)excludes.get(i), name) != null) {
                     matches = false;
                     break check;
                 }

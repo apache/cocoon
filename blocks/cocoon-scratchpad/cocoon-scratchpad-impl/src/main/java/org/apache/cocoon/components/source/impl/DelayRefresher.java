@@ -298,7 +298,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 	}
 
 	/**
-	 * @return
+	 *
 	 */
 	private Configuration readRefreshJobConfiguration() {
 		SAXConfigurationHandler b = new SAXConfigurationHandler();

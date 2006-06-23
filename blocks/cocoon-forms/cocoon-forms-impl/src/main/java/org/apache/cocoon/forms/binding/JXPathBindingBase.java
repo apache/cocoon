@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.forms.binding.library.Library;
-import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;

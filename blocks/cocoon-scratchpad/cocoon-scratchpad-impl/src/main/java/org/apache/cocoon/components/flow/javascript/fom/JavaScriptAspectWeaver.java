@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -37,7 +36,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -664,9 +663,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Servic
                 while( li.hasNext() ) {
                     Interceptor interceptor = (Interceptor) li.next();
                     interceptor.setBaseScript( interceptionList.getSourceScript() );                
-                    boolean success = WildcardHelper.match( 
-                        new HashMap(), functionName + Interceptor.DELIMITER + eventType, 
-                        WildcardHelper.compilePattern( interceptor.getName() ));
+                    boolean success = WildcardMatcherHelper.match( 
+                            interceptor.getName(), functionName + Interceptor.DELIMITER + eventType) != null;
                     if( success ) {
                         matchingInterceptors.add( interceptor );                        
                     }
