@@ -51,6 +51,7 @@ import org.apache.excalibur.store.StoreJanitor;
 /**
  * Store implementation based on EHCache.
  * (http://ehcache.sourceforge.net/)
+ * @version $Id$
  */
 public class EHDefaultStore extends AbstractLogEnabled 
 implements Store, Contextualizable, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
@@ -71,6 +72,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     // configuration options
     private int maxObjects;
     private boolean overflowToDisk;
+    private boolean diskPersistent;
     private boolean eternal;
     private long timeToLiveSeconds;
     private long timeToIdleSeconds;
@@ -162,11 +164,17 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * By setting <code>timeToIdleSeconds</code> to <code>0</code>, an item will stay in
      * the cache for exactly <code>timeToLiveSeconds</code>.
      * </p>
+     * 
+     * <p>
+     * <code>disk-persistent</code> Whether the disk store persists between restarts of
+     * the Virtual Machine. The default value is true.
+     * </p>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
 
         this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
         this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+        this.diskPersistent = parameters.getParameterAsBoolean("disk-persistent", true);
         
         this.eternal = parameters.getParameterAsBoolean("eternal", true);
         if (!this.eternal)
@@ -264,7 +272,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
         this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
-                this.timeToLiveSeconds, this.timeToIdleSeconds, true, 120);
+                this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
         getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");

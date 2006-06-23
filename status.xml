@@ -182,6 +182,11 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="add" due-to="Ard Schrijvers" due-to-emal="a.schrijvers@hippo.nl">
+      EHDefaultStore: Allow users to configure disk-persistent parameter. In earlier cocoon
+      versions this ehcache parameter was always true. It defines whether or not the disk
+      store persists between restarts of the Virtual Machine. The default value is true.
+    </action>
     <action dev="CZ" type="fix">
       The predefined variables "parameters" and "cocoon.parameters" now both point to the
       parameters object in JXTemplateGenerator and the template block. (cocoon.parameters did
