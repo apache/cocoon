@@ -319,9 +319,6 @@ public class WildcardMatcherHelper {
                                 final char[] a2,
                                 final int o2,
                                 final int l) {
-            if ( o2 < 0 ) {
-                return false;
-            }
             int i = 0;
 
             while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]) i++;
