@@ -48,21 +48,19 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  */
 public class SelectMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
-    private Map whenTest = null;
-    private ModuleHolder expression = null;
-    private ModuleHolder otherwise = null;
-    private String parameter = null;
+    private Map whenTest;
+    private ModuleHolder expression;
+    private ModuleHolder otherwise;
+    private String parameter;
 
     public SelectMetaInputModule() {
-        super();
         this.defaultInput = null; // not needed
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
-
         Configuration[] expr = config.getChildren("input-module");
         if (expr == null || expr.length != 1) {
             throw new ConfigurationException("Need to have exactly one input-module element.");
@@ -100,7 +98,7 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(String, Configuration, Map)
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
@@ -109,6 +107,9 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
         return result;
     }
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
         Object result = this.getAttribute(name, modeConf, objectModel, true);
@@ -207,7 +208,7 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
         return result;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -228,7 +229,7 @@ public class SelectMetaInputModule extends AbstractMetaModule implements ThreadS
         super.dispose();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.components.modules.input.AbstractMetaModule#lazy_initialize()
      */
     public synchronized void lazy_initialize() {

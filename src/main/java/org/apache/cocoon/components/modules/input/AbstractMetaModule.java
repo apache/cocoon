@@ -85,20 +85,12 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * and dispose() to keep references to more than one module.
      */
     public synchronized void lazy_initialize() {
-
         try {
             // obtain input modules
             if (!this.initialized) {
-                this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (this.inputSelector != null && this.inputSelector instanceof ThreadSafe) {
-                    
-                    if (this.defaultInput != null) {
-                        this.input = obtainModule(this.defaultInput);
-                    }
-                    
-                } else if (!(this.inputSelector instanceof ThreadSafe) ) {
-                    this.manager.release(this.inputSelector);
-                    this.inputSelector = null;
+                this.inputSelector = (ServiceSelector)this.manager.lookup(INPUT_MODULE_SELECTOR); 
+                if (this.defaultInput != null) {
+                    this.input = obtainModule(this.defaultInput);
                 }
                 
                 this.initialized = true;
@@ -115,49 +107,53 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * one, override this method and initialize().
      */
     public void dispose() {
-
         if (this.inputSelector != null) {
-            if (this.input != null)
-                this.inputSelector.release(this.input);
+            this.inputSelector.release(this.input);
+            this.input = null;
             this.manager.release(this.inputSelector);
+            this.inputSelector = null;
         }
+        this.manager = null;
     }
-
 
     /**
      * Obtain a permanent reference to an InputModule.
      */
     protected InputModule obtainModule(String type) {
-        ServiceSelector inputSelector = this.inputSelector;
+        // check whether the input selector has been looked up yet
+        // the contract of this class requries this, but we check anyway
+        if ( this.inputSelector == null ) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("A problem occurred setting up '" + type
+                                 +"': Selector is null");
+            }
+            return null;
+        }
         InputModule module = null;
         try {
-            if (inputSelector == null) 
-                inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-
-            if (inputSelector.isSelectable(type)){
+            if ( this.inputSelector.isSelectable(type) ){
                 
-                if (type != null && inputSelector.isSelectable(type))
-                    module = (InputModule) inputSelector.select(type);
+                module = (InputModule) inputSelector.select(type);
                 
                 if (!(module instanceof ThreadSafe) ) {
-                    inputSelector.release(module);
+                    if (getLogger().isWarnEnabled()) {
+                        getLogger().warn("A problem occurred setting up '" + type
+                                        +"': Component is not thread safe.");
+                    }
+                    this.inputSelector.release(module);
                     module = null;
                 }
-            }
-            if (type != null && module == null)
-                if (getLogger().isWarnEnabled())
+            } else {
+                if (getLogger().isWarnEnabled()) {
                     getLogger().warn("A problem occurred setting up '" + type
-                                     +"': Selector is "+(inputSelector!=null?"not ":"")
-                                     +"null, Component is "
-                                     +(inputSelector!=null && inputSelector.isSelectable(type)?"known":"unknown"));
+                                     +"': Component is unknown.");
+                }
+            }
             
         } catch (ServiceException ce) {
-            if (getLogger().isWarnEnabled())
-                getLogger().warn("Could not obtain selector for InputModules: "+ce.getMessage());
-        } finally {
-            if (this.inputSelector == null) 
-                this.manager.release(inputSelector);
-            // FIXME: Is it OK to keep a reference to the module when we release the selector?
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Could not obtain InputModules: "+ce.getMessage(), ce);
+            }
         }
 
         return module;
@@ -168,23 +164,8 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * release a permanent reference to an InputModule.
      */
     protected void releaseModule(InputModule module) {
-        ServiceSelector inputSelector = this.inputSelector;
         if (module != null) {
-            try {
-                // FIXME: Is it OK to release a module when we have released the selector before?
-                if (inputSelector == null) 
-                    inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                
-                inputSelector.release(module);
-                module = null;
-                
-            } catch (ServiceException ce) {
-                if (getLogger().isWarnEnabled())
-                    getLogger().warn("Could not obtain selector for InputModules: "+ce.getMessage());
-            } finally {
-                if (this.inputSelector == null) 
-                    this.manager.release(inputSelector);
-            }
+            this.inputSelector.release(module);
         }
     }
 
@@ -296,7 +277,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     private Object get(int op, String attr, Map objectModel,
                          InputModule staticMod, String staticModName, Configuration staticModConf,
                          InputModule dynamicMod, String dynamicModName, Configuration dynamicModConf)
-        throws ConfigurationException {
+    throws ConfigurationException {
 
         ServiceSelector cs = this.inputSelector;
         Object value = null;

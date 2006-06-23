@@ -17,7 +17,6 @@ package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Map;
@@ -63,14 +62,20 @@ import java.util.Iterator;
  */
 public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
 
-    private ModuleHolder[] inputs = null;
+    private ModuleHolder[] inputs;
 
     private boolean emptyAsNull = false;
     private boolean allNames = false;
     private boolean allValues = false;
 
-    public void configure(Configuration config) throws ConfigurationException {
+    public ChainMetaModule() {
+        this.defaultInput = null;
+    }
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration config) throws ConfigurationException {
         Configuration[] confs = config.getChildren("input-module");
         if (confs.length > 0) {
             this.inputs = new ModuleHolder[confs.length];
@@ -93,51 +98,38 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
         this.allValues = config.getChild("all-values").getValueAsBoolean(this.allValues);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractMetaModule#lazy_initialize()
+     */
     public synchronized void lazy_initialize() {
-
-        try {
+        if ( !this.initialized ) {
+            super.lazy_initialize();
             // obtain input modules
-            if (!this.initialized) {
-                this.inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-                if (this.inputSelector != null && this.inputSelector instanceof ThreadSafe) {
-                    
-                    for (int i=0; i<this.inputs.length; i++) {
-                        if (this.inputs[i].name != null) 
-                            this.inputs[i].input = obtainModule(this.inputs[i].name);
-                    }
-                    
-                } else if (!(this.inputSelector instanceof ThreadSafe) ) {
-                    this.manager.release(this.inputSelector);
-                    this.inputSelector = null;
-                }
-                
-                this.initialized = true;
-            }
-        } catch (Exception e) {
-            if (getLogger().isWarnEnabled()) 
-                getLogger().warn("A problem occurred setting up input modules :'" + e.getMessage());
-        }
-    }
-
-    
-    public void dispose() {
-        
-        if (this.inputSelector != null) {
-            
             for (int i=0; i<this.inputs.length; i++) {
-                if (this.inputs[i].input != null)
-                    this.inputSelector.release(this.inputs[i].input);
+                if (this.inputs[i].name != null) 
+                    this.inputs[i].input = obtainModule(this.inputs[i].name);
             }
-            
-            this.manager.release(this.inputSelector);
         }
     }
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractMetaModule#dispose()
+     */
+    public void dispose() {
+        if (this.inputSelector != null) {
+            for (int i=0; i<this.inputs.length; i++) {
+                this.inputSelector.release(this.inputs[i].input);
+            }
+            this.inputs = null;
+        }
+        super.dispose();
+    }
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String attr, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -198,10 +190,11 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
             col.add(iter.next());
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -253,12 +246,9 @@ public class ChainMetaModule extends AbstractMetaModule implements ThreadSafe {
 
 
     public Object getAttribute( String attr, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         Object[] values = this.getAttributeValues(attr,modeConf,objectModel);
         if (getLogger().isDebugEnabled()) getLogger().debug("result chaining single for "+attr+" is "+(values != null? values[0] : "null"));
         return (values != null? values[0] : null);
     }
-
-
 }

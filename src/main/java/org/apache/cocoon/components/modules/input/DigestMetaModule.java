@@ -44,7 +44,7 @@ import java.io.UnsupportedEncodingException;
 public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
 
     private String defaultAlgorithm = "SHA";
-    private String defaultProvider = null;
+    private String defaultProvider;
     private String defaultSalt = "salt";
     private String defaultEncode = "false";
 
@@ -72,9 +72,10 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
         names = null;
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name", this.defaultInput);
 
@@ -96,10 +97,11 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
         }
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -161,11 +163,12 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
         return null;        
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
-         if (!this.initialized) {
+    throws ConfigurationException {
+        if (!this.initialized) {
              this.lazy_initialize();
         }
         if (this.defaultInput == null) {
@@ -190,13 +193,13 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
                                   null, inputName, inputConfig);
         
         return names;
+    }
 
-   }
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -261,7 +264,6 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
         }
         return result;
     }
-
 
     /**
      * Create the output representation.

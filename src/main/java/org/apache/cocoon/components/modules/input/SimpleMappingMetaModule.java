@@ -51,15 +51,15 @@ import java.util.Set;
  */
 public class SimpleMappingMetaModule extends AbstractMetaModule implements ThreadSafe {
 
-    String prefix = null;
-    String suffix = null;
-    String rmPrefix = null;
-    String rmSuffix = null;
-    Mapping mapping = null;
+    String prefix;
+    String suffix;
+    String rmPrefix;
+    String rmSuffix;
+    Mapping mapping;
 
-    protected class Mapping {
-        Map toMap = null;
-        Map fromMap = null;
+    protected static class Mapping {
+        Map toMap;
+        Map fromMap;
 
         public Mapping() {
         }       
@@ -104,9 +104,10 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         }
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         // It seems that even if there is no config, we'll get an empty
         // input-module element here, so it will never be null (JT)
         this.inputConf = config.getChild("input-module");
@@ -118,10 +119,11 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         this.mapping = new Mapping(config);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -176,13 +178,11 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         return res;
     }
 
-
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -236,11 +236,11 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         return res;
     }
 
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -313,5 +313,4 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
         return set.iterator();
 
     }
-
 }
