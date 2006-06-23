@@ -131,25 +131,25 @@ extends DirectoryGenerator {
     protected static final String QUERY_ATTR_NAME = "query";
 
     /** All the mapping files lastmodified dates */
-    protected static Map mappingFiles = new HashMap();
+    protected static final Map mappingFiles = new HashMap();
 
     /** The parser for the XML snippets to be included. */
-    protected DOMParser parser = null;
+    protected DOMParser parser;
 
     /** The document that should be parsed and (partly) included. */
-    protected Document doc = null;
+    protected Document doc;
 
     /** The PrefixResolver responsable for processing current request (if any). */
-    protected PrefixResolver prefixResolver = null;
+    protected PrefixResolver prefixResolver;
 
     /** The regular expression for the XML files pattern. */
-    protected RE xmlRE = null;
+    protected RE xmlRE;
 
     /** The XPath. */
-    protected String xpath = null;
+    protected String xpath;
 
     /** The XPath processor. */
-    protected XPathProcessor processor = null;
+    protected XPathProcessor processor;
 
     /**
      * Disposable

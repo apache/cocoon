@@ -50,9 +50,6 @@ public class EnvironmentWrapper
     /** The request object */
     protected final Request request;
 
-    /** The stream to output to */
-    protected OutputStream outputStream;
-    
     protected String contentType;
 
     protected boolean internalRedirect = false;

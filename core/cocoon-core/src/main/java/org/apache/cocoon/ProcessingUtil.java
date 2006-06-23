@@ -35,19 +35,19 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 public class ProcessingUtil {
 
     /** Bean name for the Avalon context. */
-    public static String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
+    public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
 
     /** Bean name for the logger. */
-    public static String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
+    public static final String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
 
     /** Bean name for the settings. */
-    public static String SETTINGS_ROLE = Settings.class.getName();
+    public static final String SETTINGS_ROLE = Settings.class.getName();
 
     /** Bean name for the service manager. */
-    public static String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
+    public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
 
     /** Bean name for local source resolver. (TODO) */
-    public static String LOCAL_SOURCE_RESOLVER_ROLE = SourceResolver.ROLE + "/local";
+    public static final String LOCAL_SOURCE_RESOLVER_ROLE = SourceResolver.ROLE + "/local";
 
     /**
      * Avoid construction.
