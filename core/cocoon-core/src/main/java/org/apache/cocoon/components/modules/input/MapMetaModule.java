@@ -35,12 +35,13 @@ import java.util.Map;
  */
 public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
 
-    protected String objectName = null;
-    protected String parameter = null;
+    protected String objectName;
+    protected String parameter;
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name", this.defaultInput);
         this.objectName = this.inputConf.getAttribute("object",this.objectName);
@@ -52,9 +53,11 @@ public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
     }
 
 
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -89,13 +92,12 @@ public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
         return value;        
     }
 
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
-         if (!this.initialized) {
+    throws ConfigurationException {
+        if (!this.initialized) {
              this.lazy_initialize();
         }
         if (this.defaultInput == null) {
@@ -125,17 +127,15 @@ public class MapMetaModule extends AbstractMetaModule implements ThreadSafe {
                                         null, inputName, inputConfig)).keySet().iterator();
 
         return keys;        
-   }
+    }
 
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         Object[] values = new Object[1];
         values[0] = this.getAttribute(name, modeConf, objectModel);
         return (values[0]!=null?values:null);
     }
-
 }

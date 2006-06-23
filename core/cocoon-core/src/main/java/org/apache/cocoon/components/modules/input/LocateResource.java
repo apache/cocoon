@@ -57,7 +57,7 @@ import java.util.Vector;
  */
 public class LocateResource extends AbstractInputModule implements Serviceable, ThreadSafe {
 
-    protected static Collection col;
+    protected static final Collection col;
     static {
         col = new TreeSet();
     }
