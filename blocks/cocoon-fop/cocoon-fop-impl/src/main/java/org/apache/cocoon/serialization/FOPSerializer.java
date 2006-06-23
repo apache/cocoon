@@ -56,7 +56,7 @@ public class FOPSerializer extends AbstractSerializer implements
     /**
      * The Renderer Factory to use
      */
-    protected static RendererFactory factory = ExtendableRendererFactory.getRendererFactoryImplementation();
+    protected static final RendererFactory factory = ExtendableRendererFactory.getRendererFactoryImplementation();
 
     /**
      * The <code>Driver</code> which is FOP.
