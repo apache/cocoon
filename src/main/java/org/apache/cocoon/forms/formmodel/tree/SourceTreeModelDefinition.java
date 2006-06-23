@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel.tree;
 
+import java.util.List;
+
 import org.apache.excalibur.source.SourceResolver;
 
 /**
@@ -24,45 +26,44 @@ import org.apache.excalibur.source.SourceResolver;
  */
 public class SourceTreeModelDefinition implements TreeModelDefinition {
 
-    public static final int[][] NO_PATTERNS = new int[0][];
     private String url;
-    private int[][] fileIncludePatterns = NO_PATTERNS;
-    private int[][] fileExcludePatterns = NO_PATTERNS;
-    private int[][] dirIncludePatterns = NO_PATTERNS;
-    private int[][] dirExcludePatterns = NO_PATTERNS;
+    private List fileIncludePatterns;
+    private List fileExcludePatterns;
+    private List dirIncludePatterns;
+    private List dirExcludePatterns;
     private SourceResolver resolver;
 
     public void setURL(String url) {
         this.url = url;
     }
 
-    public void setFilePatterns(int[][] include, int[][] exclude) {
-        this.fileIncludePatterns = include;
-        this.fileExcludePatterns = exclude;
+    public void setFilePatterns(List includes, List excludes) {
+        this.fileIncludePatterns = includes;
+        this.fileExcludePatterns = excludes;
     }
 
-    public void setDirectoryPatterns(int[][] include, int[][] exclude) {
-        this.dirIncludePatterns = include;
-        this.dirExcludePatterns = exclude;
+    public void setDirectoryPatterns(List includes, List excludes) {
+        this.dirIncludePatterns = includes;
+        this.dirExcludePatterns = excludes;
     }
     
     public TreeModel createInstance() {
         return new SourceTreeModel(this);
     }
 
-    public int[][] getDirectoryExcludePatterns() {
+    public List getDirectoryExcludePatterns() {
         return dirExcludePatterns;
     }
 
-    public int[][] getDirectoryIncludePatterns() {
+    public List getDirectoryIncludePatterns() {
         return dirIncludePatterns;
     }
 
-    public int[][] getFileExcludePatterns() {
+    public List getFileExcludePatterns() {
         return fileExcludePatterns;
     }
 
-    public int[][] getFileIncludePatterns() {
+    public List getFileIncludePatterns() {
         return fileIncludePatterns;
     }
 
