@@ -218,8 +218,10 @@ public class WildcardMatcherHelper {
                 if(ipat >= lpat) {
                     // if the remaining length of the string isn't the same as that found in the pattern 
                     // we do not match
-                    if(strncmp(apat, sipat, astr, lstr - (lpat - sipat), lpat - sipat)) {
-                        add(new String(astr, istr, lstr - (lpat - sipat) - istr));
+                    final int l = lpat - sipat; // calculate length of comparison
+                    final int ostr = lstr - l; // calculate offset into string
+                    if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
+                        add(new String(astr, istr, ostr - istr));
 
                         return true;
                     }
@@ -239,8 +241,7 @@ public class WildcardMatcherHelper {
 
                 add(new String(astr, sistr, istr - sistr));
                 istr += l;
-            } else // if it is a single star pattern
-             {
+            } else {// if it is a single star pattern
                 // skip the star
                 ++ipat;
 
@@ -274,8 +275,10 @@ public class WildcardMatcherHelper {
                 // if we reached the end of the pattern just do a String compare with the corresponding part from 
                 // the end of the string
                 if(ipat >= lpat) {
-                    if(strncmp(apat, sipat, astr, lstr - (ipat - sipat), ipat - sipat)) {
-                        add(new String(astr, istr, lstr - (ipat - sipat) - istr)); // TODO: this is wrong
+                    final int l = ipat - sipat; // calculate length of comparison
+                    final int ostr = lstr - l; // calculate offset into string
+                    if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
+                        add(new String(astr, istr, ostr - istr));
 
                         return true;
                     }
@@ -341,7 +344,7 @@ public class WildcardMatcherHelper {
             }
             int i = 0;
 
-            for(i = 0; i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]; i++);
+            while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]) i++;
 
             return i == l;
         }
