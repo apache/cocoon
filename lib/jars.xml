@@ -928,7 +928,7 @@
     <title>Quartz</title>
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
-    <lib>optional/quartz-1.5.1.jar</lib>
+    <lib>optional/quartz-1.5.2.jar</lib>
     <homepage>http://www.opensymphony.com/quartz/</homepage>
    </file>
 
