@@ -267,12 +267,14 @@ public class WildcardMatcherHelper {
                     return checkEnds(sipat);
                 }
 
-                // Now we need to check whether the litteral substring of the pattern 
-                // is contained in the string somewhere
-                if(apat[ipat] != PATHSEP) {
+                // If we stopped at an other wildcard
+                // we exclude it from being compared
+                if(apat[ipat] == STAR) {
                     ipat--;
                 }
 
+                // Now we need to check whether the litteral substring of the pattern 
+                // is contained in the string somewhere
                 final int l = ipat- sipat + 1;
                 final int sistr = istr;
 
@@ -281,7 +283,7 @@ public class WildcardMatcherHelper {
                 if(istr >= lstr) return false;
 
                 add(new String(astr, sistr, istr - sistr));
-                ipat += l;
+                ipat++;
                 istr += l;
             }
 
