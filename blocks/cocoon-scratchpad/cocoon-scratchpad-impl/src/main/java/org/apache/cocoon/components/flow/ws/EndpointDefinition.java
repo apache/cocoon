@@ -131,7 +131,6 @@ public class EndpointDefinition {
      * Returns an object representation of the named service.
      *
      * @param serviceName
-     * @return
      */
     private Service getServiceNamed(String serviceName) {
         return wsdlDef.getService(new QName(namespaceURI, serviceName));
@@ -165,7 +164,6 @@ public class EndpointDefinition {
      * Returns an object representation of the named port.
      *
      * @param portName
-     * @return
      */
     private Port getPortNamed(String portName) {
         Map serviceMap = wsdlDef.getServices();
@@ -210,7 +208,6 @@ public class EndpointDefinition {
      * Tests if a port has a SOAP binding.
      *
      * @param port
-     * @return
      */
     private boolean hasSoapBinding(Port port) {
         Iterator it = port.getExtensibilityElements().iterator();

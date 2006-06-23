@@ -300,26 +300,26 @@ implements CacheableProcessingComponent  {
          * to the pipeline.</p>
          *
          * <p>In this case, then the validity of this instance, by itself, is always
-         * {@link SourceValidity.VALID}, as (in theory) Cocoon always accesses us
+         * {@link SourceValidity#VALID}, as (in theory) Cocoon always accesses us
          * with the correct uniquely identifying key.</p>
          *
          * @see SourceValidity#isValid()
          */
         public int isValid() {
-            return(SourceValidity.VALID);
+            return SourceValidity.VALID;
         }
 
         /**
          * <p>Compare the validity against another {@link SourceValidity}.</p>
          *
-         * <p>This method will return {@link SourceValidity.VALID} if and only if
+         * <p>This method will return {@link SourceValidity#VALID} if and only if
          * this instance {@link #equals equals} the specified validity, and
-         * {@link SourceValidity.INVALID} in all other cases.</p>
+         * {@link SourceValidity#INVALID} in all other cases.</p>
          *
          * @see SourceValidity#isValid(SourceValidity)
          */
         public int isValid(SourceValidity validity) {
-            return(this.equals(validity)? VALID: INVALID);
+            return (this.equals(validity)? VALID: INVALID);
         }
 
         /**
