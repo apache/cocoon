@@ -195,6 +195,63 @@ public class WildcardMatcherHelperTestCase
         assertNull(result);
     }
 
+    public void test24WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("**favicon.ico", "samples1234/");
+        assertNull(result);
+    }
+
+    public void test25WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("**favicon.ico", "samples123/");
+        assertNull(result);
+    }
+
+    public void test26WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("**/*/**", "foo/bar/baz/bug");
+        assertNotNull(result);
+        assertEquals("foo", result.get("1"));
+        assertEquals("bar", result.get("2"));
+        assertEquals("baz/bug", result.get("3"));
+    }
+
+    public void test27WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("end*end*end*end", "endXXendYendend");
+        assertNotNull(result);
+        assertEquals("XX", result.get("1"));
+        assertEquals("Y", result.get("2"));
+        assertEquals("", result.get("3"));
+    }
+
+    public void test28WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("end*end*end*end", "endendendend");
+        assertNotNull(result);
+        assertEquals("", result.get("1"));
+        assertEquals("", result.get("2"));
+        assertEquals("", result.get("3"));
+    }
+
+    public void test29WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("end**end**end**end", "endXXendYendend");
+        assertNotNull(result);
+        assertEquals("XX", result.get("1"));
+        assertEquals("Y", result.get("2"));
+        assertEquals("", result.get("3"));
+    }
+
+    public void test30WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("end**end**end**end", "endendendend");
+        assertNotNull(result);
+        assertEquals("", result.get("1"));
+        assertEquals("", result.get("2"));
+        assertEquals("", result.get("3"));
+    }
+
     public void testEmptyPattern() throws Exception {
         assertNotNull(WildcardMatcherHelper.match("", ""));
         assertNull(WildcardMatcherHelper.match("", "foo"));
