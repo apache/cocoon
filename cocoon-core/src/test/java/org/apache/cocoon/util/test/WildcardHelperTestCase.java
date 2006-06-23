@@ -18,7 +18,7 @@ package org.apache.cocoon.util.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.util.WildcardHelper;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 
 import junit.framework.TestCase;
 

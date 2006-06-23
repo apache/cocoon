@@ -30,7 +30,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
-import org.apache.cocoon.util.WildcardHelper;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
@@ -310,10 +310,6 @@ public class ConfigReader extends AbstractLogEnabled {
             
         } else {
             final String pattern = includeStatement.getAttribute("pattern", null);
-            int[] parsedPattern = null;
-            if ( pattern != null ) {
-                parsedPattern = WildcardHelper.compilePattern(pattern);
-            }
             Source directory = null;
             try {
                 directory = this.resolver.resolveURI(directoryURI, contextURI, CONTEXT_PARAMETERS);
@@ -322,7 +318,7 @@ public class ConfigReader extends AbstractLogEnabled {
                     while ( children.hasNext() ) {
                         final Source s = (Source)children.next();
                         try {
-                            if ( parsedPattern == null || this.match(s.getURI(), parsedPattern)) {
+                            if ( pattern == null || this.match(s.getURI(), pattern)) {
                                 this.loadURI(s, loadedURIs, includeStatement);
                             }
                         } finally {
@@ -376,12 +372,12 @@ public class ConfigReader extends AbstractLogEnabled {
         }
     }
 
-    private boolean match(String uri, int[] parsedPattern ) {
+    private boolean match(String uri, String pattern ) {
         int pos = uri.lastIndexOf('/');
         if ( pos != -1 ) {
             uri = uri.substring(pos+1);
         }
-        return WildcardHelper.match(null, uri, parsedPattern);      
+        return (WildcardMatcherHelper.match(pattern, uri) != null);      
     }
 
     protected void handleBeanInclude(final String contextURI,
@@ -414,10 +410,6 @@ public class ConfigReader extends AbstractLogEnabled {
 
         } else {
             final String pattern = includeStatement.getAttribute("pattern", null);
-            int[] parsedPattern = null;
-            if (pattern != null) {
-                parsedPattern = WildcardHelper.compilePattern(pattern);
-            }
             Source directory = null;
             try {
                 directory = this.resolver.resolveURI(directoryURI, contextURI, CONTEXT_PARAMETERS);
@@ -427,7 +419,7 @@ public class ConfigReader extends AbstractLogEnabled {
                     while (children.hasNext()) {
                         final Source s = (Source) children.next();
                         try {
-                            if (parsedPattern == null || this.match(s.getURI(), parsedPattern)) {
+                            if (pattern == null || this.match(s.getURI(), pattern)) {
                                 this.configInfo.addImport(s.getURI());
                             }
                         } finally {
