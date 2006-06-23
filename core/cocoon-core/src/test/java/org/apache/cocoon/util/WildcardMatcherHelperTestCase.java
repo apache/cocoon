@@ -181,6 +181,20 @@ public class WildcardMatcherHelperTestCase
         assertEquals("blocks/", result.get("2"));
     }
 
+    public void test22WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("*/**", "samples/");
+        assertNotNull(result);
+        assertEquals("samples", result.get("1"));
+        assertEquals("", result.get("2"));
+    }
+
+    public void test23WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("**favicon.ico", "samples/");
+        assertNull(result);
+    }
+
     public void testEmptyPattern() throws Exception {
         assertNotNull(WildcardMatcherHelper.match("", ""));
         assertNull(WildcardMatcherHelper.match("", "foo"));
