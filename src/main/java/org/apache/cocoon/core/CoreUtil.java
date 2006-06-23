@@ -713,16 +713,14 @@ public class CoreUtil {
 
     /**
      * @param environmentContext
-     * @return
      */
     public static String getWritableContextPath(ServletContext environmentContext) {
         return environmentContext.getRealPath("/");
     }
 
     /**
+     * @param environmentContext 
      * @param knownFile 
-     * @param context 
-     * @return
      */
     public static String getContextUrl(ServletContext environmentContext, String knownFile) {
         String servletContextURL;
