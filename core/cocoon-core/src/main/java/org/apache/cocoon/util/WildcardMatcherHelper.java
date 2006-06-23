@@ -216,18 +216,7 @@ public class WildcardMatcherHelper {
                 // if we reached the end of the pattern just do a string compare with the corresponding part from 
                 // the end of the string
                 if(ipat >= lpat) {
-                    // if the remaining length of the string isn't the same as that found in the pattern 
-                    // we do not match
-                    final int l = lpat - sipat; // calculate length of comparison
-                    final int ostr = lstr - l; // calculate offset into string
-                    if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
-                        add(new String(astr, istr, ostr - istr));
-
-                        return true;
-                    }
-
-                    // otherwise we do not match
-                    return false;
+                    return checkEnds(sipat);
                 }
 
                 // Now we need to check whether the litteral substring of the pattern 
@@ -272,19 +261,10 @@ public class WildcardMatcherHelper {
                     ipat++;
                 }
 
-                // if we reached the end of the pattern just do a String compare with the corresponding part from 
+                // if we reached the end of the pattern just do a string compare with the corresponding part from 
                 // the end of the string
                 if(ipat >= lpat) {
-                    final int l = ipat - sipat; // calculate length of comparison
-                    final int ostr = lstr - l; // calculate offset into string
-                    if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
-                        add(new String(astr, istr, ostr - istr));
-
-                        return true;
-                    }
-
-                    // otherwise we do not match
-                    return false;
+                    return checkEnds(sipat);
                 }
 
                 // Now we need to check whether the litteral substring of the pattern 
@@ -311,7 +291,7 @@ public class WildcardMatcherHelper {
         /**
          * Scan a possible common suffix
          */
-        private void scanLiteralPrefix() {
+        private final void scanLiteralPrefix() {
             // scan a common literal suffix
             while(ipat < lpat &&
                   istr < lstr &&
@@ -334,7 +314,7 @@ public class WildcardMatcherHelper {
          *
          * @return Whether the all the mentioned characters match each other
          */
-        private boolean strncmp(final char[] a1,
+        private final boolean strncmp(final char[] a1,
                                 final int o1,
                                 final char[] a2,
                                 final int o2,
@@ -347,6 +327,22 @@ public class WildcardMatcherHelper {
             while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]) i++;
 
             return i == l;
+        }
+        
+        private final boolean checkEnds(final int sipat)
+        {
+            // if the remaining length of the string isn't the same as that found in the pattern 
+            // we do not match
+            final int l = lpat - sipat; // calculate length of comparison
+            final int ostr = lstr - l; // calculate offset into string
+            if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
+                add(new String(astr, istr, ostr - istr));
+
+                return true;
+            }
+
+            // otherwise we do not match
+            return false;
         }
     }
 }
