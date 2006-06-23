@@ -38,10 +38,10 @@ import org.apache.excalibur.source.SourceResolver;
 public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
 
     /** Thread-local source resolver */
-    protected static InheritableThreadLocal localResolver = new InheritableThreadLocal();
+    protected static final InheritableThreadLocal localResolver = new InheritableThreadLocal();
 
     /** Batik's original default handler */        
-    protected static ParsedURLProtocolHandler defaultHandler;
+    protected static final ParsedURLProtocolHandler defaultHandler = ParsedURL.getHandler(null);
 
     /**
      * Change the default handler used by Batik to resolve URLs to a handler
@@ -55,9 +55,6 @@ public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
      * @param logger the logger for logging.
      */
     static {        
-        // Keep the default handler, if any
-        SourceProtocolHandler.defaultHandler = ParsedURL.getHandler(null);
-
         // Set the default handler to our handler
         ParsedURL.registerHandler(new SourceProtocolHandler(null));
 
@@ -75,8 +72,7 @@ public class SourceProtocolHandler extends AbstractParsedURLProtocolHandler {
     /**
      * Get the thread-local resolver.
      */
-    public static SourceResolver getSourceResolver()
-    {
+    public static SourceResolver getSourceResolver() {
         SourceResolver resolver = (SourceResolver)localResolver.get();
         return resolver;
     }

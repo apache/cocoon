@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class ExtendableRendererFactory implements RendererFactory {
 
-  protected static Map renderers = new HashMap();
+  protected static final Map renderers = new HashMap();
 
   protected final static RendererFactory singleton = new ExtendableRendererFactory();
 
