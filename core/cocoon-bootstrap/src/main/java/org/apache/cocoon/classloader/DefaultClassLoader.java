@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class DefaultClassLoader extends URLClassLoader {
 
-    protected final int[][] includes;
-    protected final int[][] excludes;
+    protected final List includes;
+    protected final List excludes;
 
     /**
      * Alternate constructor to define a parent and initial <code>URL</code>
@@ -50,21 +50,8 @@ public class DefaultClassLoader extends URLClassLoader {
      */
     public DefaultClassLoader(final URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent, URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
-        this.includes = compilePatterns(includePatterns);
-        this.excludes = compilePatterns(excludePatterns);
-    }
-
-    private int[][] compilePatterns(List patternConfigs) {
-        if (patternConfigs.size() == 0) {
-            return null;
-        }
-        final int[][] patterns = new int[patternConfigs.size()][];
-
-        for (int i = 0; i < patternConfigs.size(); i++) {
-            patterns[i] = WildcardHelper.compilePattern((String)patternConfigs.get(i));
-        }
-
-        return patterns;
+        this.includes = includePatterns;
+        this.excludes = excludePatterns;
     }
 
     protected boolean tryClassHere(String name) {
@@ -81,8 +68,8 @@ public class DefaultClassLoader extends URLClassLoader {
         } else {
             // See if it matches include patterns
             tryHere = false;
-            for (int i = 0; i < this.includes.length; i++) {
-                if (WildcardHelper.match(null, name, includes[i])) {
+            for (int i = 0; i < this.includes.size(); i++) {
+                if (WildcardMatcherHelper.match((String)includes.get(i), name) != null) {
                     tryHere = true;
                     break;
                 }
@@ -91,8 +78,8 @@ public class DefaultClassLoader extends URLClassLoader {
         
         // Go through the exclusion list
         if (tryHere && excludes != null) {
-            for (int i = 0; i < this.excludes.length; i++) {
-                if (WildcardHelper.match(null, name, excludes[i])) {
+            for (int i = 0; i < this.excludes.size(); i++) {
+                if (WildcardMatcherHelper.match((String)excludes.get(i), name) != null) {
                     tryHere = false;
                     break;
                 }

@@ -23,7 +23,7 @@ import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.util.WildcardHelper;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.commons.lang.SystemUtils;
 
 import org.apache.excalibur.source.ModifiableSource;
@@ -234,13 +234,11 @@ public class CocoonBean extends CocoonWrapper {
     }
     
     public void addExcludePattern(String pattern) {
-        int preparedPattern[] = WildcardHelper.compilePattern(pattern);
-        excludePatterns.add(preparedPattern);
+        excludePatterns.add(pattern);
     }
 
     public void addIncludePattern(String pattern) {
-        int preparedPattern[] = WildcardHelper.compilePattern(pattern);
-        includePatterns.add(preparedPattern);
+        includePatterns.add(pattern);
     }
 
     public void addIncludeLinkExtension(String extension) {
@@ -636,7 +634,6 @@ public class CocoonBean extends CocoonWrapper {
     private boolean isIncluded(String uri) {
         boolean included;
         Iterator i;
-        HashMap map = new HashMap();
 
         if (includePatterns.size() == 0) {
             included = true;
@@ -644,8 +641,8 @@ public class CocoonBean extends CocoonWrapper {
             included = false;
             i = includePatterns.iterator();
             while (i.hasNext()){
-                int pattern[] = (int[])i.next();
-                if (WildcardHelper.match(map, uri, pattern)) {
+                final String pattern = (String)i.next();
+                if (WildcardMatcherHelper.match(pattern, uri) != null) {
                     included=true;
                     break;
                 }
@@ -654,8 +651,8 @@ public class CocoonBean extends CocoonWrapper {
         if (excludePatterns.size() != 0) {
             i = excludePatterns.iterator();
             while (i.hasNext()) {
-                int pattern[] = (int[])i.next();
-                if (WildcardHelper.match(map, uri, pattern)) {
+                final String pattern = (String)i.next();
+                if (WildcardMatcherHelper.match(pattern, uri) != null) {
                     included=false;
                     break;
                 }
