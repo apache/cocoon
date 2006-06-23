@@ -402,6 +402,13 @@ public class DefaultEventManager
             }
             return false;
         }
+
+        /**
+         * @see java.lang.Object#hashCode()
+         */
+        public int hashCode() {
+            return this.className.hashCode();
+        }
     }
 
     protected static final class ReceiverInfo {
@@ -422,6 +429,13 @@ public class DefaultEventManager
                      && ((ReceiverInfo)obj).method.equals(this.method);
             }
             return false;
+        }
+
+        /**
+         * @see java.lang.Object#hashCode()
+         */
+        public int hashCode() {
+            return this.receiver.hashCode() + this.method.hashCode();
         }
     }
 }
