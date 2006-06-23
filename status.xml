@@ -182,10 +182,14 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="GP" type="fix">
+      Switched to the new WildcardMatcherHelper for all wildcard matching which is a rewrite
+      of the WildcardHelper.
+    </action>
     <action dev="AG" type="update">
       Updated quartz to 1.5.2.
     </action>
-    <action dev="AG" type="add" due-to="Ard Schrijvers" due-to-emal="a.schrijvers@hippo.nl">
+    <action dev="AG" type="add" due-to="Ard Schrijvers" due-to-email="a.schrijvers@hippo.nl">
       EHDefaultStore: Allow users to configure disk-persistent parameter. In earlier cocoon
       versions this ehcache parameter was always true. It defines whether or not the disk
       store persists between restarts of the Virtual Machine. The default value is true.
@@ -195,13 +199,13 @@
       parameters object in JXTemplateGenerator and the template block. (cocoon.parameters did
       point to a properties object).
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1862" due-to="Igor Naumov" due-to-emal="igornaumov@hotmail.com">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1862" due-to="Igor Naumov" due-to-email="igornaumov@hotmail.com">
       HSQLDB Block: Workaround for HSQLDB improper shutdown in SAP NetWeaver.
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1864" due-to="Dennis Dam" due-to-emal="d.dam@hippo.nl">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1864" due-to="Dennis Dam" due-to-email="d.dam@hippo.nl">
       CForms Block: RepeaterJXPathBinding - order of row is inverted.
     </action>
-    <action dev="AG" type="fix" fixes-bug="COCOON-1861" due-to="Igor Naumov" due-to-emal="igornaumov@hotmail.com">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1861" due-to="Igor Naumov" due-to-email="igornaumov@hotmail.com">
       Naming Block: Check for Null URI in LDAPTransformer.
     </action>
     <action dev="CZ" type="add">
