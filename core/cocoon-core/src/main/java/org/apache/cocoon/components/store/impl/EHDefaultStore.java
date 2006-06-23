@@ -79,6 +79,7 @@ public class EHDefaultStore
     // configuration options
     private int maxObjects;
     private boolean overflowToDisk;
+    private boolean diskPersistent;
     private boolean eternal;
     private long timeToLiveSeconds;
     private long timeToIdleSeconds;
@@ -165,15 +166,21 @@ public class EHDefaultStore
      * the cache as long as it is retrieved within <code>timeToIdleSeconds</code> after the
      * last retrieval.
      * </p>
-     * 
+     *
      * <p>
      * By setting <code>timeToIdleSeconds</code> to <code>0</code>, an item will stay in
      * the cache for exactly <code>timeToLiveSeconds</code>.
      * </p>
+     *
+     * <p>
+     * <code>disk-persistent</code> Whether the disk store persists between restarts of
+     * the Virtual Machine. The default value is true.
+     *
      */
     public void parameterize(Parameters parameters) throws ParameterException {
         this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
         this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+        this.diskPersistent = parameters.getParameterAsBoolean("disk-persistent", true);
 
         this.eternal = parameters.getParameterAsBoolean("eternal", true);
         if (!this.eternal) {
@@ -264,7 +271,7 @@ public class EHDefaultStore
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
         this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, this.eternal,
-                this.timeToLiveSeconds, this.timeToIdleSeconds, true, 120);
+                this.timeToLiveSeconds, this.timeToIdleSeconds, this.diskPersistent, 120);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
         getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
