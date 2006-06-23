@@ -177,8 +177,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.diskPersistent = parameters.getParameterAsBoolean("disk-persistent", true);
         
         this.eternal = parameters.getParameterAsBoolean("eternal", true);
-        if (!this.eternal)
-        {
+        if (!this.eternal) {
             this.timeToLiveSeconds = parameters.getParameterAsLong("timeToLiveSeconds", 0L);
             this.timeToIdleSeconds = parameters.getParameterAsLong("timeToIdleSeconds", 0L);
         }
@@ -189,26 +188,24 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
                     getLogger().debug("Using cache directory: " + cacheDir);
                 }
                 setDirectory(cacheDir);
-            }
-            else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
+            } else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
                 if (this.getLogger().isDebugEnabled()) {
                     getLogger().debug("Using work directory: " + workDir);
                 }
                 setDirectory(workDir);
-            }
-            else if (parameters.getParameter("directory", null) != null) {
+            } else if (parameters.getParameter("directory", null) != null) {
                 String dir = parameters.getParameter("directory");
                 dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
                 if (this.getLogger().isDebugEnabled()) {
                     getLogger().debug("Using directory: " + dir);
                 }
                 setDirectory(new File(dir));
-            }
-            else {
+            } else {
                 try {
                     // Legacy: use working directory by default
                     setDirectory(workDir);
                 } catch (IOException e) {
+                    // Empty
                 }
             }
         } catch (IOException e) {
@@ -242,7 +239,6 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         if (!(directory.canRead() && directory.canWrite())) {
             throw new IOException("Directory '" + directoryPath + "' is not readable/writable");
         }
-
         System.setProperty("java.io.tmpdir", directoryPath);
     }
 
@@ -259,8 +255,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     private static String getFullFilename(File file) {
         try {
             return file.getCanonicalPath();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return file.getAbsolutePath();
         }
     }
@@ -327,15 +322,13 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
             if (element != null) {
                 value = element.getValue();
             }
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             getLogger().error("Failure retrieving object from store", e);
         }
         if (getLogger().isDebugEnabled()) {
             if (value != null) {
                 getLogger().debug("Found key: " + key);
-            } 
-            else {
+            } else {
                 getLogger().debug("NOT Found key: " + key);
             }
         }
@@ -351,10 +344,10 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         }
 
         // without these checks we get cryptic "ClassCastException" messages
-        if(!(key instanceof Serializable)) {
+        if (!(key instanceof Serializable)) {
             throw new IOException("Key of class " + key.getClass().getName() + " is not Serializable");
         }
-        if(!(value instanceof Serializable)) {
+        if (!(value instanceof Serializable)) {
             throw new IOException("Value of class " + value.getClass().getName() + " is not Serializable");            
         }
 
@@ -382,8 +375,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
                     }
                 }
             }
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error in free()", e);
             }
@@ -409,8 +401,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         }
         try {
             this.cache.removeAll();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             getLogger().error("Failure to clearing store", e);
         }
     }
@@ -421,8 +412,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     public boolean containsKey(Object key) {
         try {
             return this.cache.get((Serializable) key) != null;
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             getLogger().error("Failure retrieving object from store",e);
         }
         return false;
@@ -435,8 +425,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         List keys = null;
         try {
             keys = this.cache.getKeys();
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error while getting cache keys", e);
             }
@@ -451,8 +440,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     public int size() {
         try {
             return this.cache.getSize();
-        }
-        catch (CacheException e) {
+        } catch (CacheException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error while getting cache size", e);
             }
