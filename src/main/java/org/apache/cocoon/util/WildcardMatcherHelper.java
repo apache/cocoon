@@ -87,17 +87,11 @@ public class WildcardMatcherHelper {
     private static class Matcher {
         //~ Instance fields ------------------------------------------------------------------------
 
-        /** The pattern */
-        private final String pat;
-
         /** The character array of the pattern */
         private final char[] apat;
 
         /** The length of the character array of the pattern */
         private final int lpat;
-
-        /** The string */
-        private final String str;
 
         /** The character array of the string */
         private final char[] astr;
@@ -125,15 +119,13 @@ public class WildcardMatcherHelper {
         /**
          * Creates a new Matcher object.
          *
-         * @param aPat The pattern
-         * @param aStr The string
+         * @param pat The pattern
+         * @param str The string
          */
         public Matcher(final String pat,
                        final String str) {
-            this.pat = pat;
             apat = pat.toCharArray();
             lpat = apat.length;
-            this.str = str;
             astr = str.toCharArray();
             lstr = astr.length;
             add(str);
