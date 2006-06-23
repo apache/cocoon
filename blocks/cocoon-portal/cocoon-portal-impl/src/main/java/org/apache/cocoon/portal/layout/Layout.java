@@ -170,7 +170,7 @@ public abstract class Layout extends AbstractParameters {
      * The parent of this layout object or null.
      */
     public Item getParent() {
-        return this.getParent();
+        return this.parent;
     }
 
     /**

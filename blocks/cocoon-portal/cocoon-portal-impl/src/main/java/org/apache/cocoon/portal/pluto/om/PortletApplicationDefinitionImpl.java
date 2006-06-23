@@ -41,10 +41,10 @@ implements PortletApplicationDefinition {
     protected String version;
     protected PortletDefinitionRegistryImpl registry;
 
-    private ArrayList customPortletMode = new ArrayList();
-    private ArrayList customPortletState = new ArrayList();
-    private ArrayList userAttribute = new ArrayList();
-    private ArrayList securityConstraint = new ArrayList();
+    private Collection customPortletMode = new ArrayList();
+    private Collection customPortletState = new ArrayList();
+    private Collection userAttribute = new ArrayList();
+    private Collection securityConstraint = new ArrayList();
 
     private PortletDefinitionListImpl portlets = new PortletDefinitionListImpl();
 
@@ -203,7 +203,7 @@ implements PortletApplicationDefinition {
     }
 
     public void setCustomPortletMode(Collection customPortletMode) {
-        this.customPortletMode = (ArrayList)customPortletMode;
+        this.customPortletMode = customPortletMode;
     }
 
     public Collection getCustomPortletState() {
@@ -211,7 +211,7 @@ implements PortletApplicationDefinition {
     }
 
     public void setCustomPortletState(Collection customPortletState) {
-        this.customPortletState = (ArrayList)customPortletState;
+        this.customPortletState = customPortletState;
     }
 
     public Collection getUserAttribute() {
@@ -219,7 +219,7 @@ implements PortletApplicationDefinition {
     }
 
     public void setUserAttribute(Collection userAttribute) {
-        this.userAttribute = (ArrayList)userAttribute;
+        this.userAttribute = userAttribute;
     }
 
     public Collection getSecurityConstraint() {
@@ -227,7 +227,7 @@ implements PortletApplicationDefinition {
     }
 
     public void setSecurityConstraint(Collection securityConstraint) {
-        this.securityConstraint = (ArrayList)securityConstraint;
+        this.securityConstraint = securityConstraint;
     }
 
     // additional internal methods
