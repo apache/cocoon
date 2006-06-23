@@ -94,12 +94,10 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
      */
     protected String parameter = "";
 
-
     public JXPathMetaModule() {
         // this value has a default in the super class
         super.defaultInput = "request-attr";
     }
-
 
     /**
      * Configure component. Preprocess list of packages and functions
@@ -108,8 +106,10 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
      * @param config a <code>Configuration</code> value
      * @exception ConfigurationException if an error occurs
      */
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
         this.parameter = config.getChild("parameter").getValue(this.parameter);
@@ -117,10 +117,11 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
         this.configuration = JXPathHelper.setup(config);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(!this.parameter.equals("") ? this.parameter : name);
@@ -128,25 +129,26 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
         return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         return JXPathHelper.getAttributeNames(this.configuration, contextObj);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(!this.parameter.equals("") ? this.parameter : name);
         }
         return JXPathHelper.getAttributeValues(name, modeConf, this.configuration, contextObj);
     }
-
 
     /**
      * Looks up object from configured InputModule.
@@ -157,7 +159,6 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
      */
     protected  Object getContextObject(Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-
         if (!this.initialized) {
             lazy_initialize();
         }
