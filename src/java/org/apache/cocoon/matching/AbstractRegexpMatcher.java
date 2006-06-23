@@ -33,7 +33,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher implements ThreadSafe {
@@ -74,7 +74,7 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher im
     public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
 
         if(preparedPattern == null) {
-            throw new PatternException("A pattern is needed at " + SitemapParameters.getStatementLocation(parameters));
+            throw new PatternException("A pattern is needed at " + SitemapParameters.getLocation(parameters));
         }
 
         RE re = new RE((REProgram)preparedPattern);

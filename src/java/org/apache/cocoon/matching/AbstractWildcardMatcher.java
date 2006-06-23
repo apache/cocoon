@@ -15,55 +15,43 @@
  */
 package org.apache.cocoon.matching;
 
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
+ * @version $Id$
  */
 
-public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher implements ThreadSafe {
-
-    /**
-     * Compile the pattern in an <code>int[]</code>.
-     */
-    public Object preparePattern(String pattern) {
-        // if pattern is null, return null to allow throwing a located exception in preparedMatch()
-        return pattern == null ? null : WildcardHelper.compilePattern(pattern);
-    }
+public abstract class AbstractWildcardMatcher
+    extends AbstractLogEnabled
+    implements Matcher, ThreadSafe {
 
     /**
      * Match the prepared pattern against the result of {@link #getMatchString(Map, Parameters)}.
+     * @see org.apache.cocoon.matching.AbstractPreparableMatcher#match(java.lang.String, java.util.Map, org.apache.avalon.framework.parameters.Parameters)
      */
-    public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
-
-        if(preparedPattern == null) {
+    public Map match(String pattern, Map objectModel, Parameters parameters) throws PatternException {
+        if (pattern == null) {
             throw new PatternException("A pattern is needed at " +
-                    SitemapParameters.getStatementLocation(parameters));
+                    SitemapParameters.getLocation(parameters));
         }
 
-        String match = getMatchString(objectModel, parameters);
+        final String match = this.getMatchString(objectModel, parameters);
 
         if (match == null) {
             return null;
         }
 
-        HashMap map = new HashMap();
-
-        if (WildcardHelper.match(map, match, (int[])preparedPattern)) {
-            return map;
-        } else {
-            return null;
-        }
+        return WildcardMatcherHelper.match(pattern, match);
     }
 
     /**
