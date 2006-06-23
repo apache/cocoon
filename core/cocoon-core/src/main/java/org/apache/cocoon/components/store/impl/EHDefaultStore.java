@@ -211,6 +211,7 @@ public class EHDefaultStore
                     // Legacy: use working directory by default
                     setDirectory(workDir);
                 } catch (IOException e) {
+                    // EMPTY
                 }
             }
         } catch (IOException e) {
@@ -348,10 +349,10 @@ public class EHDefaultStore
         }
 
         // without these checks we get cryptic "ClassCastException" messages
-        if(!(key instanceof Serializable)) {
+        if (!(key instanceof Serializable)) {
             throw new IOException("Key of class " + key.getClass().getName() + " is not Serializable");
         }
-        if(!(value instanceof Serializable)) {
+        if (!(value instanceof Serializable)) {
             throw new IOException("Value of class " + value.getClass().getName() + " is not Serializable");            
         }
 
