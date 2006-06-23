@@ -47,7 +47,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.helpers.TextRecorder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 
 import org.apache.commons.lang.StringEscapeUtils;

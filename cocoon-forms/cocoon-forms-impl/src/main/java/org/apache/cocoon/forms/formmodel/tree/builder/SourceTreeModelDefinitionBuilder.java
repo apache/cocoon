@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.forms.formmodel.tree.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -23,7 +26,6 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.formmodel.tree.SourceTreeModelDefinition;
 import org.apache.cocoon.forms.formmodel.tree.TreeModelDefinition;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
 
@@ -37,12 +39,17 @@ public class SourceTreeModelDefinitionBuilder extends AbstractLogEnabled
 
     private ServiceManager manager;
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.formmodel.tree.builder.TreeModelDefinitionBuilder#build(org.w3c.dom.Element)
+     */
     public TreeModelDefinition build(Element modelElt) throws Exception {
-        
         SourceTreeModelDefinition definition = new SourceTreeModelDefinition();
         
         definition.setURL(DomHelper.getAttribute(modelElt, "src"));
@@ -64,17 +71,17 @@ public class SourceTreeModelDefinitionBuilder extends AbstractLogEnabled
         return definition;
     }
     
-    int[][] getPatterns(Element parent, String name) throws Exception {
+    protected List getPatterns(Element parent, String name) throws Exception {
         Element[] children = DomHelper.getChildElements(parent, FormsConstants.DEFINITION_NS, name);
 
         if (children.length == 0) {
             return null;
         }
 
-        int[][] result = new int[children.length][];
+        final List result = new ArrayList();
         for (int i = 0; i < children.length; i++) {
-            String pattern = DomHelper.getAttribute(children[i], "pattern");
-            result[i] = WildcardHelper.compilePattern(pattern);
+            final String pattern = DomHelper.getAttribute(children[i], "pattern");
+            result.add(pattern);
         }
         return result;
     }
