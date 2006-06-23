@@ -16,14 +16,11 @@
  */
 package org.apache.cocoon.auth.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -61,17 +58,6 @@ public class PipelineSecurityHandler
 
     /** Configuration. */
     protected Configuration config;
-
-    /** Context. */
-    protected Context context;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(final Context aContext) throws ContextException {
-        super.contextualize(aContext);
-        this.context = aContext;
-    }
 
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
@@ -235,8 +221,6 @@ public class PipelineSecurityHandler
 
         /** The document delivered by the pipeline. */
         protected final Document userInfo;
-        /** The cached list of roles for this user. */
-        protected List  roles;
 
         /**
          * Create a new user object.
