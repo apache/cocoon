@@ -36,11 +36,12 @@ import java.util.Map;
 public class DateMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
     private String defaultFormat = "yyyy-MM-dd";
-    private DateFormat defaultFormatter = null;
+    private DateFormat defaultFormatter;
 
-    
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
         this.defaultFormat = this.inputConf.getAttribute("format",this.defaultFormat);
@@ -49,10 +50,11 @@ public class DateMetaInputModule extends AbstractMetaModule implements ThreadSaf
         }
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -102,13 +104,11 @@ public class DateMetaInputModule extends AbstractMetaModule implements ThreadSaf
         return dates;
     }
 
-
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -136,14 +136,13 @@ public class DateMetaInputModule extends AbstractMetaModule implements ThreadSaf
                                     this.input, this.defaultInput, inputConfig,
                                     null, inputName, mConf);
         return enumeration;
-     }
+    }
 
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         Object[] values = this.getAttributeValues(name,modeConf,objectModel);
         return (values != null ? values[0] : null);
     }

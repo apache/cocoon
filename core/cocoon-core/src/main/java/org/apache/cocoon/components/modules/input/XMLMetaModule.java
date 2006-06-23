@@ -108,10 +108,10 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         returnNames = tmp;
     }
 
-
-    
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name", this.defaultInput);
         this.rootName = this.inputConf.getAttribute("root",this.rootName);
@@ -127,12 +127,11 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         this.strip = config.getChild("strip").getValue(this.strip);
     }
 
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -141,7 +140,6 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
                 getLogger().warn("No input module given. FAILING");
             return null;
         }
-
 
         // obtain correct configuration objects
         // default vs dynamic
@@ -278,14 +276,12 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         return doc;
     }
 
-
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
-         if (!this.initialized) {
+    throws ConfigurationException {
+        if (!this.initialized) {
              this.lazy_initialize();
         }
         if (this.defaultInput == null) {
@@ -295,14 +291,13 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         }
 
         return XMLMetaModule.returnNames.iterator();
-   }
+    }
 
-
-
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -317,7 +312,7 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         return values;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
@@ -325,7 +320,7 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -335,5 +330,4 @@ public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
         }
         super.dispose();
     }
-
 }
