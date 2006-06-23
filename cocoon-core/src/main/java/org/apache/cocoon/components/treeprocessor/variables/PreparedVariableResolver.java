@@ -53,10 +53,10 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static final int ROOT_SITEMAP_VARIABLE = 0;
     private static final int ANCHOR_VAR = -1;
 
-    protected static Token COLON_TOKEN = new Token(COLON);
-    protected static Token OPEN_TOKEN = new Token(OPEN);
-    protected static Token CLOSE_TOKEN = new Token(CLOSE);
-    protected static Token EMPTY_TOKEN = new Token(EXPR);
+    protected static final Token COLON_TOKEN = new Token(COLON);
+    protected static final Token OPEN_TOKEN = new Token(OPEN);
+    protected static final Token CLOSE_TOKEN = new Token(CLOSE);
+    protected static final Token EMPTY_TOKEN = new Token(EXPR);
 
     public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
         super(expr);
