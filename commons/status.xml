@@ -176,6 +176,9 @@
   <!-- These are the changes from the last 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
+    <action dev="CZ" type="remove">
+      Remove deprecated WildcardHelper. Use WildcardMatcherHelper instead.
+    </action>
     <action dev="CZ" type="fix">
       Property files are read in alphabetical order to provide a reliable read order.
     </action>
