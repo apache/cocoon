@@ -101,6 +101,12 @@ public class SitemapLanguage
     extends AbstractLogEnabled
     implements TreeBuilder, Contextualizable, Serviceable, Recyclable, BeanFactoryAware {
 
+    private static final String DEFAULT_CONFIG_PROPERTIES = "config/properties";
+
+    private static final String DEFAULT_CONFIG_XCONF  = "config/xconf";
+
+    private static final String DEFAULT_CONFIG_SPRING = "config/spring";
+
     private static final String CLASSLOADER_CONFIG_NAME = "classloader";
 
     // Regexp's for splitting expressions
@@ -377,8 +383,15 @@ public class SitemapLanguage
                 getLogger().debug("Sitemap has no components definition at " + tree.getLocation());
             }
         }
-        // Context and manager and classloader for the sitemap we build
-        
+
+        // by default we include configuration files and properties from
+        // predefined locations
+        boolean useDefaultIncludes = true;
+        if ( componentConfig != null ) {
+            useDefaultIncludes = componentConfig.getAttributeAsBoolean("use-default-includes", true);
+        }
+
+        // Context and manager and classloader for the sitemap we build        
         final Context itsContext = createContext(tree);
 
         // TODO Get factory from spring
@@ -389,7 +402,7 @@ public class SitemapLanguage
         Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(ProcessingUtil.SETTINGS_ROLE);
         if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
             final String propertyDir = componentConfig.getAttribute("property-dir");
-            settings = this.createSettings(settings, propertyDir);
+            settings = this.createSettings(settings, propertyDir, useDefaultIncludes);
         }
         // compatibility with 2.1.x - check for global variables in sitemap
         // TODO - This will be removed in later versions!
@@ -433,6 +446,41 @@ public class SitemapLanguage
             classPathConfig = c.getChild(CLASSLOADER_CONFIG_NAME, false);
             if ( classPathConfig != null ) {
                 c.removeChild(classPathConfig);
+            }
+            // and now add default includes
+            if ( useDefaultIncludes ) {
+                final SourceResolver resolver = this.processor.getSourceResolver();
+                Source directory = null;
+                try {
+                    directory = resolver.resolveURI(DEFAULT_CONFIG_XCONF, null, CONTEXT_PARAMETERS);
+                    if (directory.exists() && directory instanceof TraversableSource) {
+                        final DefaultConfiguration includeElement = new DefaultConfiguration("include", 
+                                                                                             c.getLocation(),
+                                                                                             c.getNamespace(),
+                                                                                             "");
+                        includeElement.setAttribute("dir", DEFAULT_CONFIG_XCONF);
+                        includeElement.setAttribute("pattern", "*.xconf");
+                        c.addChild(includeElement);
+                    }
+                } finally {
+                    resolver.release(directory);
+                    directory = null;
+                }
+                try {
+                    directory = resolver.resolveURI(DEFAULT_CONFIG_SPRING, null, CONTEXT_PARAMETERS);
+                    if (directory.exists() && directory instanceof TraversableSource) {
+                        final DefaultConfiguration includeElement = new DefaultConfiguration("include-beans", 
+                                                                                             c.getLocation(),
+                                                                                             c.getNamespace(),
+                                                                                             "");
+                        includeElement.setAttribute("dir", DEFAULT_CONFIG_SPRING);
+                        includeElement.setAttribute("pattern", "*.xml");
+                        c.addChild(includeElement);
+                    }
+                } finally {
+                    resolver.release(directory);
+                    directory = null;
+                }
             }
             componentConfig = c;
         }
@@ -1093,12 +1141,21 @@ public class SitemapLanguage
      *
      * @return A new Settings object
      */
-    protected MutableSettings createSettings(Settings parent, String directory) {
+    protected MutableSettings createSettings(Settings parent,
+                                             String   directory,
+                                             boolean  useDefaultIncludes) {
         // get the running mode
         final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(parent);
+
+        // read properties from default includes
+        if ( useDefaultIncludes ) {
+            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s);
+            // read all properties from the mode dependent directory
+            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s);    
+        }
 
         // now read all properties from the properties directory
         this.readProperties(directory, s);
