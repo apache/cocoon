@@ -17,10 +17,14 @@
 
 <!-- CVS $Id$ -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet 
+  version="1.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:svg="http://www.w3.org/2000/svg"
+>
 
  <xsl:template match="page">
-  <svg width="500" height="160">
+  <svg xmlns="http://www.w3.org/2000/svg" width="500" height="160">
    <defs>
     <filter id="blur1"><feGaussianBlur stdDeviation="3"/></filter>
     <filter id="blur2"><feGaussianBlur stdDeviation="1"/></filter>
@@ -36,9 +40,9 @@
  </xsl:template>
  
  <xsl:template match="para">
-  <text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="80">
+  <svg:text style="fill:#FFFFFF;font-size:24;font-family:TrebuchetMS-Bold;filter:url(#blur2);" x="65" y="80">
    <xsl:apply-templates/>
-  </text>
+  </svg:text>
  </xsl:template>
 
 </xsl:stylesheet>
