@@ -434,6 +434,15 @@ public class SitemapLanguage
             tree = this.replaceProperties(tree, settings);
         }
 
+        // if we want to add the default includes and have no component section
+        // we have to create own!
+        if ( componentConfig == null && useDefaultIncludes ) {
+            componentConfig = new DefaultConfiguration("components",
+                                                       tree.getLocation(),
+                                                       tree.getNamespace(),
+                                                       "");
+        }
+
         if ( componentConfig != null ) {
             // before we pass the configuration we have to strip the
             // additional configuration parts, like classpath as these
