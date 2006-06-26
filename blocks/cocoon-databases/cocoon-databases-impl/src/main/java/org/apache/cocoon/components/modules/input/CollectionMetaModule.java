@@ -48,20 +48,22 @@ import java.util.TreeSet;
  */
 public class CollectionMetaModule extends AbstractMetaModule implements ThreadSafe {
 
-    protected Configuration memberConf = null;
+    protected Configuration memberConf;
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
-
         this.memberConf = config.getChild("member");
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name",this.defaultInput);
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -117,10 +119,11 @@ public class CollectionMetaModule extends AbstractMetaModule implements ThreadSa
         return objects;
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         if (!this.initialized) {
             this.lazy_initialize();
         }
@@ -188,10 +191,11 @@ public class CollectionMetaModule extends AbstractMetaModule implements ThreadSa
         }
     }
 
-
+    /**
+     * @see org.apache.cocoon.components.modules.input.AbstractInputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         Iterator names = this.getAttributeNames( modeConf, objectModel );
         ArrayList values = new ArrayList();
         while (names.hasNext()) {
@@ -199,6 +203,5 @@ public class CollectionMetaModule extends AbstractMetaModule implements ThreadSa
         }
 
         return values.toArray();
-
     }
 }
