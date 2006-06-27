@@ -1,3 +1,4 @@
+2006-06-27: merge with Revision 417477 (Reinhard)
 --------------------------------------------------------------------------
 2006-06-21: merge with Revision 415916 (Reinhard)
 --------------------------------------------------------------------------
@@ -15,8 +16,9 @@ Added:
 --------------------------------------------------------------------------
 
 merge command for cocoon-maven-eclipse-plugin:
-TBD
-svn merge -r [last-revision]:HEAD http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin
+svn merge -r [last-revision]:HEAD https://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin/
+(last revision currently is 417477)
 
 merge command for maven-eclipse-plugin:
-svn merge -r 396513:HEAD http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-maven-eclipse-plugin
+svn merge -r [last-revision]:HEAD http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-maven-eclipse-plugin
+(last-revision currently is 396513)
