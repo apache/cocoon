@@ -195,6 +195,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
                 throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
             }
             if ( this.useParanoidRepository ) {
+                this.getLog().info("Moving classes and libs");
                 final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
                 this.move(webInfDir, "lib", "cocoon-lib");
                 this.move(webInfDir, "classes", "cocoon-classes");
