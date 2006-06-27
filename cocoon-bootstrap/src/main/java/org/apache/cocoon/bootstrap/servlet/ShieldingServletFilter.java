@@ -30,7 +30,7 @@ import javax.servlet.ServletResponse;
  *
  * @version $Id$
  */
-public class ParanoidServletFilter implements Filter {
+public class ShieldingServletFilter implements Filter {
 
     protected Filter filter;
 
