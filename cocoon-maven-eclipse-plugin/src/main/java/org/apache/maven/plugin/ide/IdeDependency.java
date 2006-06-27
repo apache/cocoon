@@ -117,15 +117,6 @@ public class IdeDependency
         this.file = file;
         this.type = type;
     }
-    
-    /**
-     * Is the artifact an OSGi bundle?
-     * @return Returns true if the dependency is an OSGi bundle.
-     */
-	public boolean isOSGiBundle() 
-	{
-		return false;
-	}    
 
     /**
      * Getter for <code>javadocAttachment</code>.
