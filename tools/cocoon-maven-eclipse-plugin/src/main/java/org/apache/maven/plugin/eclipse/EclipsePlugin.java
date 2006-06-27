@@ -28,6 +28,7 @@ import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.eclipse.writers.EclipseClasspathWriter;
+import org.apache.maven.plugin.eclipse.writers.EclipseOSGiManifestWriter;
 import org.apache.maven.plugin.eclipse.writers.EclipseProjectWriter;
 import org.apache.maven.plugin.eclipse.writers.EclipseSettingsWriter;
 import org.apache.maven.plugin.eclipse.writers.EclipseWtpComponentWriter;
@@ -225,12 +226,29 @@ public class EclipsePlugin
     private boolean isJavaProject;
     
     /**
-     * Is it an PDE project?
+     * Is it an PDE project? If yes, the plugin adds the necessary natures and build commands to
+     * the .project file. Additionally it copies all libraries to a project local directory and
+     * references them instead of referencing the files in the local Maven repository. It's also
+     * ensured that the "Bundle-Classpath" in META-INF/MANIFEST.MF is synchronized.
      * 
      * @parameter expression="${eclipse.pde}" default-value="false"
      */
     private boolean pde;    
 
+    /**
+     * The relative path of the manifest file
+     * 
+     * @parameter expression="${eclipse.manifestFile}" default-value="${basedir}/META-INF/MANIFEST.MF"
+     */
+    private String manifestFile;
+    
+    /**
+     * The directory of local libraries
+     * 
+     * @parameter expression="${eclipse.pdeLibDir}" default-value="lib"
+     */
+    private String pdeLibDir;
+    
     /**
      * Getter for <code>buildcommands</code>.
      * @return Returns the buildcommands.
@@ -540,9 +558,17 @@ public class EclipsePlugin
                                                                                             classpathContainers,
                                                                                             localRepository,
                                                                                             buildOutputDirectory,
-                                                                                            pde );
+                                                                                            pde,
+                                                                                            pdeLibDir);
         }
 
+        if ( pde ) 
+        {
+            this.getLog().info("The Maven Eclipse plugin runs in 'pde'-mode.");
+            new EclipseOSGiManifestWriter(  getLog(), eclipseProjectDir, project, deps ).write( new File(this.manifestFile), 
+                                                                                                pdeLibDir );
+        }
+        
         getLog().info( Messages.getString( "EclipsePlugin.wrote", new Object[] { //$NON-NLS-1$
                                            project.getArtifactId(), eclipseProjectDir.getAbsolutePath() } ) );
     }
@@ -591,6 +617,10 @@ public class EclipsePlugin
     {
         classpathContainers = new ArrayList();
         classpathContainers.add( COMMON_PATH_JDT_LAUNCHING_JRE_CONTAINER );
+        if( this.pde ) 
+        {
+//            classpathContainers.add( )
+        }
     }
 
     private void fillDefaultBuilders( String packaging )
