@@ -74,9 +74,13 @@ repositories are temporarily unaccessible and cause the build to fail.
 
 Go to core/cocoon-webapp:
   $ mvn cocoon:deploy
-  $ mvn jetty6:run-exploded
+  $ mvn jetty6:run
 
 Point your browser to http://localhost:8888/
+
+(Don't use jetty6:run-exploded as in this case the jetty6 plugin will
+ alter the webapp build by the Cocoon deployer again!)
+
 
 
 HOW TO START THE COCOON WEBAPP (OSGI MODE)
