@@ -143,18 +143,18 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     private String webXml;
     
     /**
-     * Use paranoid classloading
+     * Use shielded classloading
      *
-     * @parameter expression="${maven.war.paranoidclassloader}"
+     * @parameter expression="${maven.war.shieldingclassloader}"
      */
-    private boolean useParanoidClassloader = true;
+    private boolean useShieldingClassloader = true;
 
     /**
-     * Move jars for paranoid classloading
+     * Move jars for shielded classloading
      *
-     * @parameter expression="${maven.war.paranoidrepository}"
+     * @parameter expression="${maven.war.shieldingrepository}"
      */
-    private boolean useParanoidRepository = true;
+    private boolean useShieldingRepository = true;
 
     /**
 	 * Deploy a monolithic Cocoon web application. This means it doesn't use
@@ -178,24 +178,24 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         }
         
         // take care of paranoid classloading
-        if ( this.useParanoidClassloader ) {
+        if ( this.useShieldingClassloader ) {
             String webXmlLocation = this.getWebXml();
             if ( webXmlLocation == null ) {
                 webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
             }
-            this.getLog().info("Adding paranoid classloader configuration.");
-            this.getLog().info("Reading web.xml: " + webXmlLocation);
+            this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
+            this.getLog().debug("Reading web.xml: " + webXmlLocation);
             try {
                 final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
                 WebApplicationRewriter.rewrite(webAppDoc);
                 final String dest = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
-                this.getLog().info("Writing web.xml: " + dest);
+                this.getLog().debug("Writing web.xml: " + dest);
                 XMLUtils.write(webAppDoc, new FileOutputStream(dest));
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
             }
-            if ( this.useParanoidRepository ) {
-                this.getLog().info("Moving classes and libs");
+            if ( this.useShieldingRepository ) {
+                this.getLog().info("Moving classes and libs to shielded location.");
                 final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
                 this.move(webInfDir, "lib", "cocoon-lib");
                 this.move(webInfDir, "classes", "cocoon-classes");
