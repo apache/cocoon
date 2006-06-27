@@ -26,7 +26,7 @@
   </scr:component>
   
   <!-- A BeanFactory that manages the beans of this bundle and provide them as services -->
-  <scr:component name="org.apache.cocoon.webapp.SpringEcmFactory">
+  <scr:component name="org.apache.cocoon.webapp.SpringEcmFactory" immediate="true">
     <scr:implementation class="org.apache.cocoon.core.osgi.OSGiSpringECMFactory"/>
     <scr:property name="configFile" value="/META-INF/xconf/webapp.xconf"/>
     <scr:service>
@@ -49,10 +49,9 @@
     <scr:property name="servletClass" value="org.apache.cocoon.sitemap.SitemapServlet"/>
     <scr:property name="sitemapPath" value="/src/main/webapp/sitemap.xmap"/>            
 
-    <scr:reference name="interface org.springframework.web.context.WebApplicationContext.ROOT"
+    <scr:reference name="org.springframework.web.context.WebApplicationContext.ROOT"
       interface="org.apache.cocoon.core.osgi.CocoonSpringBeanRegistry"
-      target="(component.name=org.apache.cocoon.webapp.SpringEcmFactory)"
-      bind="setBeanFactory"/>         
+      target="(component.name=org.apache.cocoon.webapp.SpringEcmFactory)"/>         
   </scr:component>
 
 </components>
