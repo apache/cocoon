@@ -49,7 +49,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @version $Id$
  */
-public class ParanoidServlet extends HttpServlet {
+public class ShieldingServlet extends HttpServlet {
 
     /**
      * The name of the actual servlet class.

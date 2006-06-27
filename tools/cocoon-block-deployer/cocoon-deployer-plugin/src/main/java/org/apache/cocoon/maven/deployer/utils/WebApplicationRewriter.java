@@ -26,11 +26,11 @@ import org.w3c.dom.Element;
  */
 public class WebApplicationRewriter {
 
-    public static final String SERVLET_CLASS = "org.apache.cocoon.bootstrap.servlet.ParanoidServlet";
+    public static final String SERVLET_CLASS = "org.apache.cocoon.bootstrap.servlet.ShieldingServlet";
 
-    public static final String LISTENER_CLASS = "org.apache.cocoon.bootstrap.servlet.ParanoidListener";
+    public static final String LISTENER_CLASS = "org.apache.cocoon.bootstrap.servlet.ShieldingListener";
 
-    public static final String FILTER_CLASS = "org.apache.cocoon.bootstrap.servlet.ParanoidServletFilter";
+    public static final String FILTER_CLASS = "org.apache.cocoon.bootstrap.servlet.ShieldingServletFilter";
 
     public static boolean rewrite(Document webAppDoc) {
         boolean rewritten = false;
