@@ -75,6 +75,7 @@ public abstract class AbstractParanoidListener {
                 while ( i.hasNext() ) {
                     final Object listener = i.next();
                     try {
+                        this.invokeListener(identifier, listener, event);
                     } catch (Exception e) {
                         throw new RuntimeException("Cannot invoke listener " + listener, e);
                     }
