@@ -63,7 +63,7 @@ public class DefaultClassLoader extends URLClassLoader {
         boolean tryHere;
         
         // If no explicit includes, try here
-        if (this.includes == null) {
+        if (this.includes == null || this.includes.size() == 0) {
             tryHere = true;
         } else {
             // See if it matches include patterns
@@ -77,7 +77,7 @@ public class DefaultClassLoader extends URLClassLoader {
         }
         
         // Go through the exclusion list
-        if (tryHere && excludes != null) {
+        if (tryHere && this.excludes != null && this.excludes.size() > 0) {
             for (int i = 0; i < this.excludes.size(); i++) {
                 if (WildcardMatcherHelper.match((String)excludes.get(i), name) != null) {
                     tryHere = false;
