@@ -73,10 +73,30 @@ public class EclipseClasspathWriter
     private static final String ATTR_PATH = "path"; //$NON-NLS-1$
 
     /**
-     * Attribute for kind - Container (con), Variable (var)..etc.
+     * Attribute name of kind - Container (con), Variable (var)..etc.
      */
     private static final String ATTR_KIND = "kind"; //$NON-NLS-1$
 
+    /**
+     * Attribute value for kind: var
+     */
+    private static final String ATTR_VAR = "var"; //$NON-NLS-1$    
+    
+    /**
+     * Attribute value for kind: lib
+     */
+    private static final String ATTR_LIB = "lib"; //$NON-NLS-1$      
+    
+    /**
+     * Attribute value for kind: src
+     */
+    private static final String ATTR_SRC = "src"; //$NON-NLS-1$   
+    
+    /**
+     * Attribute value for kind: src
+     */
+    private static final String ATTR_CON = "con"; //$NON-NLS-1$       
+    
     /**
      * Element for classpathentry.
      */
@@ -91,11 +111,6 @@ public class EclipseClasspathWriter
      * File name that stores project classpath settings.
      */
     private static final String FILE_DOT_CLASSPATH = ".classpath"; //$NON-NLS-1$
-    
-    /**
-     * Directory name that contains the OSGi libs within the project
-     */
-    private static final String LIB_DIR = "lib"; //$NON-NLS-1$
 
     public EclipseClasspathWriter( Log log, File eclipseProjectDir, MavenProject project, IdeDependency[] deps )
     {
@@ -103,7 +118,7 @@ public class EclipseClasspathWriter
     }
 
     public void write( File projectBaseDir, EclipseSourceDir[] sourceDirs, List classpathContainers,
-                       ArtifactRepository localRepository, File buildOutputDirectory, boolean rcp )
+                       ArtifactRepository localRepository, File buildOutputDirectory, boolean inPdeMode, String pdeLibDir )
         throws MojoExecutionException
     {
 
@@ -161,7 +176,7 @@ public class EclipseClasspathWriter
         for ( Iterator it = classpathContainers.iterator(); it.hasNext(); )
         {
             writer.startElement( ELT_CLASSPATHENTRY );
-            writer.addAttribute( ATTR_KIND, "con" ); //$NON-NLS-1$ 
+            writer.addAttribute( ATTR_KIND, ATTR_CON ); 
             writer.addAttribute( ATTR_PATH, (String) it.next() );
             writer.endElement(); // name
         }
@@ -176,7 +191,7 @@ public class EclipseClasspathWriter
 
             if ( dep.isAddedToClasspath() )
             {
-                addDependency( writer, dep, localRepository, rcp );
+                addDependency( writer, dep, localRepository, projectBaseDir, inPdeMode, pdeLibDir );
             }
         }
 
@@ -186,8 +201,8 @@ public class EclipseClasspathWriter
 
     }
 
-    private void addDependency( XMLWriter writer, IdeDependency dep, ArtifactRepository localRepository, boolean rcp )
-        throws MojoExecutionException
+    private void addDependency( XMLWriter writer, IdeDependency dep, ArtifactRepository localRepository, 
+        File projectBaseDir, boolean inPdeMode, String pdeLibDir ) throws MojoExecutionException
     {
 
         String path;
@@ -198,7 +213,7 @@ public class EclipseClasspathWriter
         if ( dep.isReferencedProject() )
         {
             path = "/" + dep.getArtifactId(); //$NON-NLS-1$
-            kind = "src"; //$NON-NLS-1$
+            kind = ATTR_SRC;
         }
         else
         {
@@ -220,50 +235,48 @@ public class EclipseClasspathWriter
                                                         new Object[] { dep.getArtifactId(), path } ) );
                 }
 
-                kind = "lib"; //$NON-NLS-1$
+                kind = ATTR_LIB;
             }
             else
             {
                 File localRepositoryFile = new File( localRepository.getBasedir() );
                 
-                if ( dep.isOSGiBundle() && rcp )
+                // if the dependency is not provided and the plugin runs in "pde mode", the dependency is
+                // added to the Bundle-Classpath:
+                if (inPdeMode && !dep.isProvided()) 
                 {
-                	// do nothing as required bundles need to be added to the Eclipse target platform
-                	return;
-                }                
-                else if ( !dep.isOSGiBundle() && rcp ) // && !dep.isTestDependency() && !dep.isProvided() )
-                {
-	                try {
-	                	File libsDir = new File(LIB_DIR);
-	                	if(!libsDir.exists()) 
+                    try 
+                    {
+                        // TODO problem with reactor build
+                        File libsDir = new File( projectBaseDir, pdeLibDir );
+                        if (!libsDir.exists()) 
                         {
-	                		libsDir.mkdirs();
-	                	}
-						FileUtils.copyFileToDirectory(dep.getFile(), libsDir);
-						
-					} 
-	                catch (IOException e) 
-	                {
-						throw new MojoExecutionException(Messages.getString( "EclipsePlugin.cantcopyartifact", 
-                            dep.getArtifactId() ));
-					}
-	                path = LIB_DIR + "/" + dep.getFile().getName();
-	                kind = "lib";
-                } 
+                            libsDir.mkdirs();
+                        }
+                        FileUtils.copyFileToDirectory(dep.getFile(), libsDir);
+
+                    } 
+                    catch (IOException e) 
+                    {
+                        throw new MojoExecutionException(Messages.getString("EclipsePlugin.cantcopyartifact",
+                                dep.getArtifactId()));
+                    }
+                    path = pdeLibDir + "/" + dep.getFile().getName();
+                    kind = ATTR_LIB;
+                }
+                
                 else 
                 {           	
-
-	
 	                String fullPath = artifactPath.getPath();
 	
-	                path = "M2_REPO/" //$NON-NLS-1$
+	                path = M2_REPO + "/" //$NON-NLS-1$
 	                    + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, new File( fullPath ), false );
 	
-	                kind = "var"; //$NON-NLS-1$
+	                kind = ATTR_VAR; //$NON-NLS-1$
                 }
                 if ( dep.getSourceAttachment() != null )
                 {
-                    sourcepath = "M2_REPO/" //$NON-NLS-1$
+                    sourcepath = M2_REPO + "/" //$NON-NLS-1$
                         + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, dep.getSourceAttachment(), false );
                 }
 
@@ -279,13 +292,13 @@ public class EclipseClasspathWriter
 
         }
 
-        writer.startElement( "classpathentry" ); //$NON-NLS-1$
-        writer.addAttribute( "kind", kind ); //$NON-NLS-1$
-        writer.addAttribute( "path", path ); //$NON-NLS-1$
+        writer.startElement( ELT_CLASSPATHENTRY );
+        writer.addAttribute( ATTR_KIND, kind );
+        writer.addAttribute( ATTR_PATH, path );
 
         if ( sourcepath != null )
         {
-            writer.addAttribute( "sourcepath", sourcepath ); //$NON-NLS-1$
+            writer.addAttribute( ATTR_SOURCEPATH, sourcepath );
         }
         else if ( javadocpath != null )
         {
