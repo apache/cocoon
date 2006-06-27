@@ -1,5 +1,3 @@
-package org.apache.maven.plugin.eclipse.writers;
-
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
  *
@@ -15,6 +13,7 @@ package org.apache.maven.plugin.eclipse.writers;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.maven.plugin.eclipse.writers;
 
 import java.io.File;
 import java.io.FileOutputStream;
