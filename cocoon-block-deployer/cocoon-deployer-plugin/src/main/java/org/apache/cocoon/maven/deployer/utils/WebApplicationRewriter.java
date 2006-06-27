@@ -30,6 +30,8 @@ public class WebApplicationRewriter {
 
     public static final String LISTENER_CLASS = "org.apache.cocoon.bootstrap.servlet.ParanoidListener";
 
+    public static final String FILTER_CLASS = "org.apache.cocoon.bootstrap.servlet.ParanoidServletFilter";
+
     public static boolean rewrite(Document webAppDoc) {
         boolean rewritten = false;
         final Element rootElement = webAppDoc.getDocumentElement();
@@ -50,10 +52,22 @@ public class WebApplicationRewriter {
                 initParamElem.appendChild(initParamValueElem);
                 XMLUtils.setValue(initParamNameElem, "servlet-class");
                 XMLUtils.setValue(initParamValueElem, className);
-                servletElement.appendChild(initParamElem);
+                Element beforeElement = XMLUtils.getChildNode(servletElement, "load-on-startup");
+                if ( beforeElement == null ) {
+                    beforeElement = XMLUtils.getChildNode(servletElement, "run-as");                    
+                    if ( beforeElement == null ) {
+                        beforeElement = XMLUtils.getChildNode(servletElement, "security-role-ref");                    
+                    }
+                }
+                if ( beforeElement == null ) {
+                    servletElement.appendChild(initParamElem);
+                } else {
+                    servletElement.insertBefore(initParamElem, beforeElement);
+                }
                 rewritten = true;
             }
         }
+
         // now rewrite listeners
         final List listeners = XMLUtils.getChildNodes(rootElement, "listener");
         i = listeners.iterator();
@@ -88,13 +102,34 @@ public class WebApplicationRewriter {
         if ( hasListener ) {
             addContextParameter(rootElement, LISTENER_CLASS, rewrittenListeners.toString());
         }
-        // TBD: filters
+
+        // and now filters
+        i = XMLUtils.getChildNodes(rootElement, "filter").iterator();
+        while ( i.hasNext() ) {
+            final Element filterElement = (Element)i.next();
+            final Element filterClassElement = XMLUtils.getChildNode(filterElement, "filter-class");
+            if ( filterClassElement != null ) {
+                final String className = XMLUtils.getValue(filterClassElement);
+                XMLUtils.setValue(filterClassElement, FILTER_CLASS);
+                // create init-param with real servlet class
+                final Element initParamElem = webAppDoc.createElementNS(null, "init-param");
+                final Element initParamNameElem = webAppDoc.createElementNS(null, "param-name");
+                final Element initParamValueElem = webAppDoc.createElementNS(null, "param-value");
+                initParamElem.appendChild(initParamNameElem);
+                initParamElem.appendChild(initParamValueElem);
+                XMLUtils.setValue(initParamNameElem, "filter-class");
+                XMLUtils.setValue(initParamValueElem, className);
+                filterElement.appendChild(initParamElem);
+                rewritten = true;
+            }
+        }
+
         return rewritten;
     }
 
     protected static void addContextParameter(Element root, String name, String value) {
         // search the element where we have to put the new context parameter before!
-        // we know that either filters or listeners exist
+        // we know that we have listeners so this is the last element to search for
         Element searchElement = XMLUtils.getChildNode(root, "context-param");
         if ( searchElement == null ) {
             searchElement = XMLUtils.getChildNode(root, "filter");
