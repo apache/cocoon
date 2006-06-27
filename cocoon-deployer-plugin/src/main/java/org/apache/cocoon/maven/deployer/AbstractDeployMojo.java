@@ -16,7 +16,9 @@
 package org.apache.cocoon.maven.deployer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +28,8 @@ import java.util.Map;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
 import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
+import org.apache.cocoon.maven.deployer.utils.WebApplicationRewriter;
+import org.apache.cocoon.maven.deployer.utils.XMLUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -34,14 +38,15 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.war.AbstractWarMojo;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
+import org.w3c.dom.Document;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
  * 
  * @version $Id$
  */
-abstract class AbstractDeployMojo extends AbstractWarMojo 
-{
+abstract class AbstractDeployMojo extends AbstractWarMojo {
+
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
      *
@@ -137,7 +142,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
      */
     private String webXml;
     
-	/**
+    /**
+     * Use paranoid classloading
+     *
+     * @parameter expression="${maven.war.paranoidclassloader}"
+     */
+    private boolean useParanoidClassloader = true;
+
+    /**
 	 * Deploy a monolithic Cocoon web application. This means it doesn't use
 	 * the features that the blocks-fw offers.
 	 */
@@ -159,7 +171,23 @@ abstract class AbstractDeployMojo extends AbstractWarMojo
         }
         
         // take care of paranoid classloading
-        // TBD
+        if ( this.useParanoidClassloader ) {
+            String webXmlLocation = this.getWebXml();
+            if ( webXmlLocation == null ) {
+                webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
+            }
+            this.getLog().info("Adding paranoid classloader configuration.");
+            this.getLog().info("Reading web.xml: " + webXmlLocation);
+            try {
+                final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
+                WebApplicationRewriter.rewrite(webAppDoc);
+                final String dest = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
+                this.getLog().info("Writing web.xml: " + dest);
+                XMLUtils.write(webAppDoc, new FileOutputStream(dest));
+            } catch (Exception e) {
+                throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
+            }
+        }
 	}  
     
     /**
