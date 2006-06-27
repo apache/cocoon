@@ -79,7 +79,9 @@ public class EclipseOSGiManifestWriter extends AbstractEclipseResourceWriter
             while ((str = in.readLine()) != null) {
                 if(inBundleClasspathEntry && str.indexOf(":") > -1) {
                     inBundleClasspathEntry = false;
-                    manifestSb.append(str + "\n");
+                    if(str.length > 0) {
+                        manifestSb.append(str + "\n");
+                    }
                 }
                 else if(str.indexOf(ENTRY_BUNDLE_CLASSPATH) > -1) 
                 {
@@ -110,26 +112,27 @@ public class EclipseOSGiManifestWriter extends AbstractEclipseResourceWriter
      */
     protected String addBundleClasspathEntries(String libdir) 
     {
-        StringBuffer bundleClasspathSb = new StringBuffer();
+        StringBuffer bundleClasspathSb = new StringBuffer(ENTRY_BUNDLE_CLASSPATH);
         int countAddedLibs = 0;                
         for( int i = 0; i < this.deps.length; i++ ) 
         {
-            if( !this.deps[i].isProvided() || !this.deps[i].isReferencedProject() )
+            if( !this.deps[i].isProvided() && !this.deps[i].isReferencedProject() )
             {
                 if( countAddedLibs != 0 )
                 {
                     // TODO problems with line endings might appear
                     bundleClasspathSb.append(",\n");
                 }
+                System.out.println("artifact: " + this.deps[i].getArtifactId());
                 bundleClasspathSb.append(" " + libdir + "/" + this.deps[i].getFile().getName() + "");
                 countAddedLibs++;
             }
         }        
         // only insert the name of the property if there are local libraries
-        if( bundleClasspathSb.length() > 0 ) {             
-            bundleClasspathSb.insert(0, ENTRY_BUNDLE_CLASSPATH);
+        if( countAddedLibs > 0 ) {             
+            return bundleClasspathSb.toString();
         }
-        return bundleClasspathSb.toString();
+        return "";
     }
     
 }
