@@ -79,7 +79,7 @@ public class EclipseOSGiManifestWriter extends AbstractEclipseResourceWriter
             while ((str = in.readLine()) != null) {
                 if(inBundleClasspathEntry && str.indexOf(":") > -1) {
                     inBundleClasspathEntry = false;
-                    if(str.length > 0) {
+                    if(str.length() > 0) {
                         manifestSb.append(str + "\n");
                     }
                 }
