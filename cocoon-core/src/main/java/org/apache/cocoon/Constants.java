@@ -181,9 +181,6 @@ public final class Constants {
     /** Application <code>Context</code> Key for the environmental Context */
     public static final String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
 
-    /** Application <code>Context</code> Key for the global classloader */
-    public static final String CONTEXT_CLASS_LOADER = "class-loader";
-
     /** Application <code>Context</code> Key for the work directory path */
     public static final String CONTEXT_WORK_DIR = "work-directory";
 

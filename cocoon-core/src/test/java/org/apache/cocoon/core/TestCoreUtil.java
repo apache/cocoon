@@ -23,13 +23,8 @@ public class TestCoreUtil extends CoreUtil {
 
     public TestCoreUtil(BootstrapEnvironment env) throws Exception {
         super(new MockContext(), env);
-        this.classloader = TestCoreUtil.class.getClassLoader();
     }
 
     // Simplified classloader handling
     protected void updateEnvironment() throws Exception {}
-
-    // No own classloader
-    protected void createClassloader() throws Exception {
-    }
 }
