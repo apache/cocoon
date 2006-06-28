@@ -45,7 +45,6 @@ import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -334,23 +333,6 @@ public class StatusGenerator extends ServiceableGenerator
             addMultilineValue("classpath", paths);
         }
         // END ClassPath
-
-        // BEGIN CONTEXT CLASSPATH
-        String contextClassPath = null;
-        try {
-            contextClassPath = (String) this.context.get(Constants.CONTEXT_CLASSPATH);
-        } catch (ContextException e) {
-            // we ignore this
-        }
-        if (contextClassPath != null) {
-            List paths = new ArrayList();
-            StringTokenizer tokenizer = new StringTokenizer(contextClassPath, File.pathSeparator);
-            while (tokenizer.hasMoreTokens()) {
-                paths.add(tokenizer.nextToken());
-            }
-            addMultilineValue("context-classpath", paths);
-        }
-        // END CONTEXT CLASSPATH
 
         // BEGIN Memory status
         startGroup("Memory");

@@ -180,7 +180,8 @@ public class CocoonPortlet extends GenericPortlet {
 
         try {
             this.exception = null;
-            this.cocoon = this.coreUtil.createCocoon();
+            // FIXME
+            this.cocoon = (Cocoon)this.coreUtil.createProcessor();
         } catch (Exception e) {
             this.exception = e;
         }
@@ -232,7 +233,8 @@ public class CocoonPortlet extends GenericPortlet {
         // Get the cocoon engine instance
         try {
             this.exception = null;
-            this.cocoon = this.coreUtil.getCocoon(null, request.getParameter(Constants.RELOAD_PARAM));
+            // FIXME
+            this.cocoon = (Cocoon)this.coreUtil.getProcessor(request.getParameter(Constants.RELOAD_PARAM) != null);
         } catch (Exception e) {
             this.exception = e;
         }
@@ -361,7 +363,8 @@ public class CocoonPortlet extends GenericPortlet {
         // Get the cocoon engine instance
         try {
             this.exception = null;
-            this.cocoon = this.coreUtil.getCocoon(null, request.getParameter(Constants.RELOAD_PARAM));
+            // FIXME
+            this.cocoon = (Cocoon)this.coreUtil.getProcessor(request.getParameter(Constants.RELOAD_PARAM) != null);
         } catch (Exception e) {
             this.exception = e;
         }

@@ -24,7 +24,4 @@ public class TestCoreUtil extends CoreUtil {
     public TestCoreUtil(BootstrapEnvironment env) throws Exception {
         super(new MockContext(), env);
     }
-
-    // Simplified classloader handling
-    protected void updateEnvironment() throws Exception {}
 }

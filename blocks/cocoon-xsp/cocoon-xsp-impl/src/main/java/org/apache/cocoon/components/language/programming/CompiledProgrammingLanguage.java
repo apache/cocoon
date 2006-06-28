@@ -68,7 +68,8 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
      * @param context The context
      */
     public void contextualize(Context context) throws ContextException {
-        this.classpath = (String) context.get(Constants.CONTEXT_CLASSPATH);
+        // FIXME - how do we get the classpath?
+        this.classpath = "";
     }
 
     /**

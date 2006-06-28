@@ -99,8 +99,8 @@ public class PythonGenerator extends XSPGenerator
             Properties properties = new Properties();
             File workDir = (File)avalonContext.get(Constants.CONTEXT_WORK_DIR);
             properties.setProperty("python.home", workDir.toString());
-            properties.setProperty("python.packages.fakepath",
-                    (String)avalonContext.get(Constants.CONTEXT_CLASSPATH));
+            // FIXME - how do we get the classpath?
+            properties.setProperty("python.packages.fakepath", "");
             PythonInterpreter.initialize(System.getProperties(), properties, new String[]{});
 
             python = new PythonInterpreter();
