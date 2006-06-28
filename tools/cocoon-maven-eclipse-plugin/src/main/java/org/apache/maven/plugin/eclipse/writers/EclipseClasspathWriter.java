@@ -264,15 +264,20 @@ public class EclipseClasspathWriter
                     path = pdeLibDir + "/" + dep.getFile().getName();
                     kind = ATTR_LIB;
                 }
-                
+                // running in PDE mode and the dependency is provided means, that it is provided by
+                // the target platform. This case is covered by adding the plugin container
+                else if (inPdeMode && dep.isProvided() ) 
+                {
+                    return;
+                }                
                 else 
-                {           	
-	                String fullPath = artifactPath.getPath();
-	
-	                path = M2_REPO + "/" //$NON-NLS-1$
-	                    + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, new File( fullPath ), false );
-	
-	                kind = ATTR_VAR; //$NON-NLS-1$
+                {               
+                    String fullPath = artifactPath.getPath();
+    
+                    path = M2_REPO + "/" //$NON-NLS-1$
+                        + IdeUtils.toRelativeAndFixSeparator( localRepositoryFile, new File( fullPath ), false );
+    
+                    kind = ATTR_VAR; //$NON-NLS-1$
                 }
                 if ( dep.getSourceAttachment() != null )
                 {
