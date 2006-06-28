@@ -56,10 +56,22 @@ public class WildcardMatcherHelper {
      *     The '\*' sequence is honored as a litteral '*' character, not a wildcard
      *   </li>
      * </ul>
-     *
+     * <br>
      * When more than two '*' characters, not separated by another character, are found their value is
-     * considered as '**'.
-     *
+     * considered as '**' and immediate succeeding '*' are skipped.
+     * <br>
+     * The '**' wildcard is greedy and thus the following sample cannot match:
+     * <dl>
+     *   <dt>pattern</dt>
+     *   <dd>STAR,STAR,PATHSEP,STAR,PATHSEP,STAR,STAR (why can't I express it litterally?)</pre></dt>
+     *   <dt>string</dt>
+     *   <dd>foo/bar/baz/bug</dt>
+     * </dl>
+     * The first '**' in the pattern will suck up until the last '/' in string and thus will not match.
+     * <br>
+     * A more advance algorithm could cerainly check whether there is an other literal later in the pattern to ev. match in string
+     * but I'll leave this exercise to someone else ATM if one needs such.
+     * 
      * @param pat The pattern string.
      * @param str The string to math agains the pattern
      *
@@ -222,14 +234,15 @@ public class WildcardMatcherHelper {
                 // Now we need to check whether the litteral substring of the pattern 
                 // is contained in the string somewhere
                 final int l = ipat - sipat;
-                final int sistr = istr;
+                int eistr = lstr - l;
 
-                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l)) istr++;
+                // beause the '**' wildcard need to be greedy we scan from the end of the string for a match
+                while(istr < eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
 
-                if(istr >= lstr) return false;
+                if(istr >= eistr) return false;
 
-                add(new String(astr, sistr, istr - sistr));
-                istr += l;
+                add(new String(astr, istr, eistr - istr));
+                istr = eistr + l;
             } else {// if it is a single star pattern
                 // skip the star
                 ++ipat;
