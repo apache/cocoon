@@ -63,7 +63,7 @@ public class WildcardMatcherHelper {
      * The '**' wildcard is greedy and thus the following sample cannot match:
      * <dl>
      *   <dt>pattern</dt>
-     *   <dd>STAR,STAR,PATHSEP,STAR,PATHSEP,STAR,STAR (why can't I express it litterally?)</pre></dt>
+     *   <dd>STAR,STAR,PATHSEP,STAR,PATHSEP,STAR,STAR (why can't I express it litterally?)</dt>
      *   <dt>string</dt>
      *   <dd>foo/bar/baz/bug</dt>
      * </dl>
