@@ -174,7 +174,7 @@ public class WildcardMatcherHelper {
         }
 
         /**
-         * Scans the pattern and the search string from the end toward the start
+         * Scans the pattern and the search string from the start toward the end
          *
          * @return wether the pstring matches the pattern
          */
