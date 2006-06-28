@@ -115,7 +115,8 @@ public class CocoonWrapper {
         env.setConfigFile(this.conf);
         env.setLoadClassList(this.classList);
         this.coreUtil = new CoreUtil(cliContext, env);
-        this.cocoon = this.coreUtil.createCocoon();
+        // FIXME
+        this.cocoon = (Cocoon)this.coreUtil.createProcessor();
         this.log = this.coreUtil.getRootLogger();
         this.initialized = true;
     }

@@ -191,7 +191,7 @@ public final class Constants {
     public static final String CONTEXT_CACHE_DIR = "cache-directory";
 
     /** Application <code>Context</code> Key for the current classpath */
-    public static final String CONTEXT_CLASSPATH = "classpath";
+    //public static final String CONTEXT_CLASSPATH = "classpath";
 
 
     /** Application <code>Context</code> key for the current environment prefix */
