@@ -39,7 +39,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
@@ -170,6 +169,10 @@ public class CoreUtil {
         this.environmentContext = context;
         this.env = environment;
         this.init();
+        // force load classes
+        // as we are using the same classloader for reloading
+        // we have to do this only once
+        this.forceLoad();
     }
 
     protected void init()
@@ -516,42 +519,16 @@ public class CoreUtil {
     }
 
     /**
-     * Creates the Cocoon object and handles exception handling.
-     */
-    public synchronized Cocoon createCocoon()
-    throws Exception {        
-        this.createProcessor();
-        return (Cocoon)this.processor;
-    }
-
-    /**
-     * Gets the current cocoon object.
-     * Reload cocoon if configuration changed or we are reloading.
-     * Ensure that the correct classloader is set.
-     * @param reload Should the container be reloaded?
-     */
-    public Cocoon getCocoon(boolean reload)
-    throws Exception {
-        this.getProcessor(reload);
-        return (Cocoon)this.processor;
-    }
-
-    /**
      * Creates the root processor object and handles exception handling.
      */
     public synchronized Processor createProcessor()
     throws Exception {
-
-        this.updateEnvironment();
-        this.forceLoad();
-
         try {
             if (this.log.isInfoEnabled()) {
                 this.log.info("Reloading from: " + this.settings.getConfiguration());
             }
             Processor p = (Processor)this.container.getBean("org.apache.cocoon.Cocoon");
 
-            this.settings.setCreationTime(System.currentTimeMillis());
             this.processor = p;
         } catch (Exception e) {
             this.log.error("Exception reloading root processor.", e);
@@ -635,6 +612,7 @@ public class CoreUtil {
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
         ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext, true);
 
+        this.settings.setCreationTime(System.currentTimeMillis());
         return mainContext;
     }
 
@@ -769,19 +747,6 @@ public class CoreUtil {
                 // Do not throw an exception, because it is not a fatal error.
             }
         }
-    }
-
-    /**
-     * Method to update the environment before Cocoon instances are created.
-     *
-     * This is also useful if you wish to customize any of the 'protected'
-     * variables from this class before a Cocoon instance is built in a derivative
-     * of this class (eg. Cocoon Context).
-     */
-    protected void updateEnvironment() throws Exception {
-        // FIXME - for now we just set an empty string as this information is looked up
-        //         by other components
-        this.appContext.put(Constants.CONTEXT_CLASSPATH, "");
     }
 
     /**
