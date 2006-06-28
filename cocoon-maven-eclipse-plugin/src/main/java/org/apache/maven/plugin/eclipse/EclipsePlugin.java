@@ -85,6 +85,8 @@ public class EclipsePlugin
     private static final String NATURE_PDE_PLUGIN = "org.eclipse.pde.PluginNature";  //$NON-NLS-1$
 
     private static final String COMMON_PATH_JDT_LAUNCHING_JRE_CONTAINER = "org.eclipse.jdt.launching.JRE_CONTAINER"; //$NON-NLS-1$
+    
+    private static final String REQUIRED_PLUGINS_CONTAINER = "org.eclipse.pde.core.requiredPlugins"; //$NON-NLS-1$    
 
     //  warning, order is important for binary search
     public static final String[] WTP_SUPPORTED_VERSIONS = new String[] { "1.0", "1.5", "R7", "none" }; //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
@@ -638,9 +640,9 @@ public class EclipsePlugin
     {
         classpathContainers = new ArrayList();
         classpathContainers.add( COMMON_PATH_JDT_LAUNCHING_JRE_CONTAINER );
-        if( this.pde ) 
+        if ( pde )
         {
-//            classpathContainers.add( )
+            classpathContainers.add( REQUIRED_PLUGINS_CONTAINER );
         }
     }
 
