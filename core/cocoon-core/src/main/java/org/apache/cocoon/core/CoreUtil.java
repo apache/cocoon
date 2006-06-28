@@ -90,8 +90,6 @@ public class CoreUtil {
     /** The Root processor instance */
     protected Processor processor;
 
-    protected ClassLoader classloader;
-
     /** The environment context. */
     protected final Context environmentContext;
 
@@ -155,7 +153,7 @@ public class CoreUtil {
      * @param context     The environment context.
      * @throws Exception
      */
-    public CoreUtil(Context              context)
+    public CoreUtil(Context context)
     throws Exception {
         this(context, null);
     }
@@ -189,9 +187,9 @@ public class CoreUtil {
         // Create bootstrap logger
         this.log = BeanFactoryUtil.createBootstrapLogger(this.environmentContext, settings.getBootstrapLogLevel());
 
-        if (this.log.isDebugEnabled())
+        if (this.log.isDebugEnabled()) {
             this.log.debug("Context URL: " + contextUrl);
-
+        }
         // initialize some directories
         CoreUtil.initSettingsFiles(this.settings, this.log);
 
@@ -209,9 +207,8 @@ public class CoreUtil {
         this.log = BeanFactoryUtil.createRootLogger(this.environmentContext,
                                                     this.settings);
 
-        this.createClassloader();
         // add the Avalon context attributes that are contained in the settings
-        CoreUtil.addSettingsContext(this.appContext, this.settings, this.classloader);
+        CoreUtil.addSettingsContext(this.appContext, this.settings);
 
         // test the setup of the spring based container
         this.container = this.setupSpringContainer();
@@ -287,7 +284,7 @@ public class CoreUtil {
         throws ServletException, MalformedURLException {
         DefaultContext appContext = new ComponentContext();
         CoreUtil.addSourceResolverContext(appContext, environmentContext, env, contextUrl);
-        CoreUtil.addSettingsContext(appContext, settings, classLoader);
+        CoreUtil.addSettingsContext(appContext, settings);
         return appContext;
     }
 
@@ -321,7 +318,7 @@ public class CoreUtil {
      * @param classloader 
      * @throws MalformedURLException
      */
-    private static void addSettingsContext(DefaultContext appContext, Settings settings, ClassLoader classloader)
+    private static void addSettingsContext(DefaultContext appContext, Settings settings)
     throws MalformedURLException {
         appContext.put(Constants.CONTEXT_WORK_DIR, new File(settings.getWorkDirectory()));
         appContext.put(Constants.CONTEXT_UPLOAD_DIR, new File(settings.getUploadDirectory()));
@@ -330,7 +327,6 @@ public class CoreUtil {
         	appContext.put(Constants.CONTEXT_CONFIG_URL, new URL(settings.getConfiguration()));
         }
         appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
-        appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
     }
 
     public Logger getRootLogger() {
@@ -520,14 +516,6 @@ public class CoreUtil {
     }
 
     /**
-     * Create the classloader 
-     * @throws Exception
-     */
-    protected void createClassloader() throws Exception {
-        this.classloader = Thread.currentThread().getContextClassLoader();
-    }
-
-    /**
      * Creates the Cocoon object and handles exception handling.
      */
     public synchronized Cocoon createCocoon()
@@ -540,10 +528,11 @@ public class CoreUtil {
      * Gets the current cocoon object.
      * Reload cocoon if configuration changed or we are reloading.
      * Ensure that the correct classloader is set.
+     * @param reload Should the container be reloaded?
      */
-    public Cocoon getCocoon(final String pathInfo, final String reloadParam)
+    public Cocoon getCocoon(boolean reload)
     throws Exception {
-        this.getProcessor(pathInfo, reloadParam);
+        this.getProcessor(reload);
         return (Cocoon)this.processor;
     }
 
@@ -574,13 +563,10 @@ public class CoreUtil {
     /**
      * Gets the current root processor object.
      * Reload the root processor if configuration changed or we are reloading.
-     * Ensure that the correct classloader is set.
+     * @param reloadContainer Should the container be reloaded?
      */
-    public Processor getProcessor(final String pathInfo, final String reloadParam)
+    public Processor getProcessor(boolean reloadContainer)
     throws Exception {
-        // set the blocks classloader for this thread
-        Thread.currentThread().setContextClassLoader(this.classloader);        
-        
         if (this.settings.isReloadingEnabled("config")) {
             boolean reload = false;
 
@@ -590,13 +576,13 @@ public class CoreUtil {
                         this.log.info("Configuration changed reload attempt");
                     }
                     reload = true;
-                } else if (pathInfo == null && reloadParam != null) {
+                } else if (reloadContainer) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Forced reload attempt");
                     }
                     reload = true;
                 }
-            } else if (pathInfo == null && reloadParam != null) {
+            } else if (reloadContainer) {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("Invalid configurations reload");
                 }
