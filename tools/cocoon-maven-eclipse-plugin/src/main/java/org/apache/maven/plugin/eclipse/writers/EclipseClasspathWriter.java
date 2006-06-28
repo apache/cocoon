@@ -210,7 +210,7 @@ public class EclipseClasspathWriter
         String sourcepath = null;
         String javadocpath = null;
 
-        if ( dep.isReferencedProject() )
+        if ( dep.isReferencedProject() && !inPdeMode )
         {
             path = "/" + dep.getArtifactId(); //$NON-NLS-1$
             kind = ATTR_SRC;
