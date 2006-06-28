@@ -209,11 +209,9 @@ public class WildcardMatcherHelperTestCase
 
     public void test26WildcardURIMatch()
     throws Exception {
+        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("**/*/**", "foo/bar/baz/bug");
-        assertNotNull(result);
-        assertEquals("foo", result.get("1"));
-        assertEquals("bar", result.get("2"));
-        assertEquals("baz/bug", result.get("3"));
+        assertNull(result);
     }
 
     public void test27WildcardURIMatch()
@@ -236,20 +234,30 @@ public class WildcardMatcherHelperTestCase
 
     public void test29WildcardURIMatch()
     throws Exception {
+        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("end**end**end**end", "endXXendYendend");
-        assertNotNull(result);
-        assertEquals("XX", result.get("1"));
-        assertEquals("Y", result.get("2"));
-        assertEquals("", result.get("3"));
+        assertNull(result);
     }
 
     public void test30WildcardURIMatch()
     throws Exception {
+        // greedy '**' patter swallows all until last '/' and thus doesn't match
         Map result = WildcardMatcherHelper.match("end**end**end**end", "endendendend");
+        assertNull(result);
+    }
+
+    public void test31WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("*/", "test/foo/bar");
+        assertNull(result);
+    }
+
+    public void test32WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("**/*.html", "foo/bar/baz.html");
         assertNotNull(result);
-        assertEquals("", result.get("1"));
-        assertEquals("", result.get("2"));
-        assertEquals("", result.get("3"));
+        assertEquals("baz", result.get("2"));
+        assertEquals("foo/bar", result.get("1"));
     }
 
     public void testEmptyPattern() throws Exception {
