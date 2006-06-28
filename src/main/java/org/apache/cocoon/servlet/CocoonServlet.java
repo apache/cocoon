@@ -212,7 +212,8 @@ public class CocoonServlet extends HttpServlet {
         // Get the cocoon engine instance
         try {
             this.exception = null;
-            this.processor = this.coreUtil.getProcessor(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
+            final boolean reload = (request.getPathInfo() == null && request.getParameter(Constants.RELOAD_PARAM) != null);
+            this.processor = this.coreUtil.getProcessor(reload);
         } catch (Exception e) {
             this.exception = e;
         }
