@@ -52,7 +52,6 @@ public class XMLUtils {
             DocumentBuilder docBuilder = documentFactory.newDocumentBuilder();
             // Parse using the local dtds instead of remote dtds. This
             // allows to deploy the application offline
-          /*
             docBuilder.setEntityResolver(new EntityResolver() {
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
                                 java.io.IOException {
@@ -62,7 +61,7 @@ public class XMLUtils {
                     return null;
                 }
             });
-          */
+
             return docBuilder.parse(source);
         } catch (ParserConfigurationException pce) {
             throw new IOException("Creating document failed:" + pce.getMessage());
