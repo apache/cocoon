@@ -524,9 +524,6 @@ public class CoreUtil {
     public synchronized Processor createProcessor()
     throws Exception {
         try {
-            if (this.log.isInfoEnabled()) {
-                this.log.info("Reloading from: " + this.settings.getConfiguration());
-            }
             Processor p = (Processor)this.container.getBean("org.apache.cocoon.Cocoon");
 
             this.processor = p;
