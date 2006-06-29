@@ -41,7 +41,6 @@
   <description></description>
   
   <modules>
-    <module>cocoon-core-samples-main-impl</module>
     <module>cocoon-core-samples-main-sample</module>
   </modules>
 </project>
