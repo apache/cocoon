@@ -39,11 +39,6 @@
   <description></description>
   
   <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core-samples-main-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 
 </project>
