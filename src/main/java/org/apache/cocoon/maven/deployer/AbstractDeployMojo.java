@@ -179,52 +179,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         
         // take care of paranoid classloading
         if ( this.useShieldingClassloader ) {
-            String webXmlLocation = this.getWebXml();
-            if ( webXmlLocation == null ) {
-                webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
-            }
-            this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
-            this.getLog().debug("Reading web.xml: " + webXmlLocation);
-            try {
-                final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
-                WebApplicationRewriter.rewrite(webAppDoc);
-                final String dest = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
-                this.getLog().debug("Writing web.xml: " + dest);
-                XMLUtils.write(webAppDoc, new FileOutputStream(dest));
-            } catch (Exception e) {
-                throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
-            }
-            if ( this.useShieldingRepository ) {
-                this.getLog().info("Moving classes and libs to shielded location.");
-                final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
-                this.move(webInfDir, "lib", "cocoon-lib");
-                this.move(webInfDir, "classes", "cocoon-classes");
-            }
+            rewriteWebXml();
         }
-	}  
-
-    protected void move(String parentDir, String srcDir, String destDir) {
-        final File srcDirectory = new File(parentDir, srcDir);
-        if ( srcDirectory.exists() && srcDirectory.isDirectory() ) {
-            File destDirectory = new File(parentDir, destDir);
-            destDirectory.delete();
-            destDirectory = new File(parentDir, destDir);
-            destDirectory.mkdir();
-            final File[] files = srcDirectory.listFiles();
-            if ( files != null && files.length > 0 ) {
-                for(int i=0; i<files.length; i++) {
-                    // TODO - replace this hard-coded exlclude with something configurable
-                    boolean exclude = false;
-                    if ( "lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap") ) {
-                        exclude = true;
-                    }
-                    if ( !exclude ) {
-                        files[i].renameTo(new File(destDirectory, files[i].getName()));
-                    }
-                }
-            }
-        }
-    }
+	}
 
     /**
      * Deploy a particular block at development time.
@@ -296,4 +253,54 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         return false;
     }
 
+    // ~~~~~~~~~~ utility methods ~~~~~~~~~~~
+    
+    private void rewriteWebXml() throws MojoExecutionException {
+        File webappDirectory_ = getWebappDirectory();
+        String webXmlLocation = this.getWebXml();
+        if ( webXmlLocation == null ) {
+            webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
+        }
+        this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
+        this.getLog().debug("Reading web.xml: " + webXmlLocation);
+        try {
+            final Document webAppDoc = XMLUtils.parseXml(new FileInputStream(new File(webXmlLocation)));
+            WebApplicationRewriter.rewrite(webAppDoc);
+            final String dest = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
+            this.getLog().debug("Writing web.xml: " + dest);
+            XMLUtils.write(webAppDoc, new FileOutputStream(dest));
+        } catch (Exception e) {
+            throw new MojoExecutionException("Unable to read web.xml from " + webXmlLocation, e);
+        }
+        if ( this.useShieldingRepository ) {
+            this.getLog().info("Moving classes and libs to shielded location.");
+            final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
+            this.move(webInfDir, "lib", "cocoon-lib");
+            this.move(webInfDir, "classes", "cocoon-classes");
+        }
+    }  
+
+    private void move(String parentDir, String srcDir, String destDir) {
+        final File srcDirectory = new File(parentDir, srcDir);
+        if ( srcDirectory.exists() && srcDirectory.isDirectory() ) {
+            File destDirectory = new File(parentDir, destDir);
+            destDirectory.delete();
+            destDirectory = new File(parentDir, destDir);
+            destDirectory.mkdir();
+            final File[] files = srcDirectory.listFiles();
+            if ( files != null && files.length > 0 ) {
+                for(int i=0; i<files.length; i++) {
+                    // TODO - replace this hard-coded exlclude with something configurable
+                    boolean exclude = false;
+                    if ( "lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap") ) {
+                        exclude = true;
+                    }
+                    if ( !exclude ) {
+                        files[i].renameTo(new File(destDirectory, files[i].getName()));
+                    }
+                }
+            }
+        }
+    }    
+    
 }
