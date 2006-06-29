@@ -77,7 +77,7 @@
   -->
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <!--
