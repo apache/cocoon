@@ -76,6 +76,7 @@ public class MonolithicCocoonDeployer {
         if(developmentBlocks != null && developmentBlocks.length > 0) {      	
 	        Map templateObjects = new HashMap();
 	        templateObjects.put("devblocks", developmentBlocks);
+            templateObjects.put("curblock", developmentBlocks[developmentBlocks.length - 1]);
 	        writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
 	        writeStringTemplateToFile(basedir, "WEB-INF/cocoon.xconf", templateObjects);
 	        
