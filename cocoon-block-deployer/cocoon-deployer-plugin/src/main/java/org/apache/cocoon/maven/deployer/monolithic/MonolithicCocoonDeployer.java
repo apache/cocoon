@@ -79,6 +79,7 @@ public class MonolithicCocoonDeployer {
 	        writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
 	        writeStringTemplateToFile(basedir, "WEB-INF/cocoon.xconf", templateObjects);
 	        
+            copyFile(basedir, "blocks/sitemap.xmap");
 			copyFile(basedir, "WEB-INF/log4j.xconf");
 	        copyFile(basedir, "WEB-INF/web.xml");	        
 	        copyFile(basedir, "WEB-INF/properties/core.properties");
