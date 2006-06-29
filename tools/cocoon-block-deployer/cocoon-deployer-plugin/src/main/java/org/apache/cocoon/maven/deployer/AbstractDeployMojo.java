@@ -207,6 +207,8 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         } catch (FileNotFoundException e) {
             throw new MojoExecutionException("Problems with setting the basedir of this block.", e);
         }
+        // it is important that the current block is put at the end of the array - the 
+        // MonotlithicCocoonDeployer expects this
         DevelopmentBlock[] extBlocks = new DevelopmentBlock[blocks.length + 1];
         System.arraycopy(blocks, 0, extBlocks, 0, blocks.length);
         extBlocks[blocks.length] = curBlock;
