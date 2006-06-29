@@ -38,6 +38,17 @@
     <param-value>/some/path/to/your/webapp</param-value>
     <description>An override of the session cookie path</description>
    </context-param-->
+   
+  <!-- Servlet Context Listener ======================================= -->
+  
+  <!--+
+      | Declare a context listener that sets up the Cocoon Spring bean factory
+      | and makes it available as a context parameter.
+      +-->
+  
+  <listener>
+  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+  </listener>
 
   <!-- Servlet Configuration ========================================== -->
 
@@ -46,7 +57,7 @@
     <display-name>Cocoon</display-name>
     <description>Cocoon demo web application</description>
 
-    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.servlet.SimpleServlet</servlet-class>
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding

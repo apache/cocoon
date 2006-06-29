@@ -414,6 +414,7 @@ public class RequestProcessor {
     protected boolean process(Environment environment) throws Exception {
         environment.startingProcessing();
         final int environmentDepth = EnvironmentHelper.markEnvironment();
+        EnvironmentHelper.enterProcessor(this.rootProcessor, environment);
         try {
             boolean result;
 
