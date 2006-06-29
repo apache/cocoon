@@ -26,6 +26,9 @@
 
   <map:pipelines>
     <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="blocks/$curblock.artifactId$/"/>
+      </map:match>
       $devblocks:{ devblock |    
         $if(devblock.cobInfPath)$  
           <map:match pattern="blocks/$devblock.artifactId$/**">
