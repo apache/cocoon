@@ -34,6 +34,9 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  */
 public class ProcessingUtil {
 
+    /** Servlet context attribute name for getting the root container. */
+    public static final String CONTAINER_CONTEXT_ATTR_NAME = "org.apache.cocoon.Cocoon";
+
     /** Bean name for the Avalon context. */
     public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
 
