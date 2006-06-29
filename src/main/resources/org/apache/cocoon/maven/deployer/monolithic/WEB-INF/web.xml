@@ -30,19 +30,24 @@
     <display-name>Cocoon</display-name>
     <description>Cocoon demo web application</description>
 
-    <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.bootstrap.servlet.ShieldingServlet</servlet-class>
 
     <init-param>
       <param-name>container-encoding</param-name>
       <param-value>ISO-8859-1</param-value>
     </init-param>
-
+    
+    <init-param>
+      <param-name>servlet-class</param-name>
+      <param-value>org.apache.cocoon.servlet.CocoonServlet</param-value>
+    </init-param>
+    
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>Cocoon</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
