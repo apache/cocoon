@@ -27,7 +27,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @version $Id$
  */
-public class SimpleServlet extends HttpServlet {
+
+// FIXME: This class should be merged with the o.a.c.sitemap.SitemapServlet
+// that is used in the OSGi mode.
+public class SitemapServlet extends HttpServlet {
 
     /** The Cocoon request processor. */
     protected RequestProcessor processor;
