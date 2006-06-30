@@ -38,6 +38,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.war.AbstractWarMojo;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.MavenMetadataSource;
+import org.codehaus.plexus.util.FileUtils;
 import org.w3c.dom.Document;
 
 /**
@@ -46,6 +47,10 @@ import org.w3c.dom.Document;
  * @version $Id$
  */
 abstract class AbstractDeployMojo extends AbstractWarMojo {
+
+    private static final String COCOON_CLASSES = "cocoon-classes";
+
+    private static final String COCOON_LIB = "cocoon-lib";
 
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
@@ -179,17 +184,12 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         
         // take care of paranoid classloading
         if ( this.useShieldingClassloader ) {
-            rewriteWebXml();
+            shieldCocoonWebapp();
         }
 	}
 
     /**
      * Deploy a particular block at development time.
-     * 
-     * @param blocksdir
-     * @param blocks 
-     * @param properties 
-     * @throws MojoExecutionException
      */
     protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks, 
             final DevelopmentProperty[] properties) throws MojoExecutionException {
@@ -198,7 +198,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         File webinfDir = new File(webappDirectory_, WEB_INF);
         webinfDir.mkdirs();
         
-        // add current block to the development properties
+        // add current block to the development blocks
+        // it is important that the current block is put at the end of the array - the 
+        // MonotlithicCocoonDeployer expects this
         DevelopmentBlock curBlock = new DevelopmentBlock();
         curBlock.artifactId = this.getProject().getArtifactId();
         curBlock.groupId = this.getProject().getGroupId();
@@ -207,8 +209,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         } catch (FileNotFoundException e) {
             throw new MojoExecutionException("Problems with setting the basedir of this block.", e);
         }
-        // it is important that the current block is put at the end of the array - the 
-        // MonotlithicCocoonDeployer expects this
         DevelopmentBlock[] extBlocks = new DevelopmentBlock[blocks.length + 1];
         System.arraycopy(blocks, 0, extBlocks, 0, blocks.length);
         extBlocks[blocks.length] = curBlock;
@@ -217,9 +217,11 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
         deployer.deploy(getBlockArtifactsAsMap(blocks), webappDirectory_, 
                 blocksdir, extBlocks, properties);
-    }      
+        
+        // deploy all libraries to WEB-INF/cocoon-lib and cocoon-bootstrap to WEB-INF/lib
+        copyLibs();        
+    }   
     
-
     /**
      * Create a <code>Map</code> of <code>java.io.File</code> objects pointing to artifacts.
      */
@@ -256,8 +258,11 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     }
 
     // ~~~~~~~~~~ utility methods ~~~~~~~~~~~
-    
-    private void rewriteWebXml() throws MojoExecutionException {
+    /**
+     * Make a Cocoon webapp using the ShieldingClassloader. This method rewrites the web.xml and moves
+     * all libs from WEB-INF/lib to WEB-INF/cocoon-lib, except cocoon-bootstrap which remains in WEB-INF/lib.
+     */
+    private void shieldCocoonWebapp() throws MojoExecutionException {
         File webappDirectory_ = getWebappDirectory();
         String webXmlLocation = this.getWebXml();
         if ( webXmlLocation == null ) {
@@ -277,27 +282,62 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         if ( this.useShieldingRepository ) {
             this.getLog().info("Moving classes and libs to shielded location.");
             final String webInfDir = webappDirectory_.getAbsolutePath() + File.separatorChar + "WEB-INF";
-            this.move(webInfDir, "lib", "cocoon-lib");
-            this.move(webInfDir, "classes", "cocoon-classes");
+            this.move(webInfDir, "lib", COCOON_LIB);
+            this.move(webInfDir, "classes", COCOON_CLASSES);
         }
     }  
 
+    /**
+     * Copy all libs that don't have the scope provided or system to WEB-INF/cocoon-lib, except
+     * cocoon-bootstrap, which is copied to WEB-INF/lib
+     */
+    private void copyLibs() throws MojoExecutionException {
+        File webappDirectory_ = this.getWebappDirectory();
+        for ( Iterator iter = this.getProject().getArtifacts().iterator(); iter.hasNext(); )
+        {
+            Artifact artifact = (Artifact) iter.next();
+            // Include runtime and compile time libraries
+            if (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())
+                    && !Artifact.SCOPE_TEST.equals(artifact.getScope()) 
+                    && "jar".equals(artifact.getType())) {
+                try {
+                    if(artifact.getArtifactId().equals("cocoon-bootstrap")) {
+                        FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));       
+                        this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());                       
+                    } else {
+                        FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/"
+                            + COCOON_LIB));
+                        this.getLog().info("Deploying artifact to WEB-INF/" + COCOON_LIB + "/" + 
+                            artifact.getFile().getName());                        
+                    }
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Can't copy artifact '" + artifact.getArtifactId()
+                            + "' to WEB-INF/" + COCOON_LIB);
+                }
+            }
+        }
+    }       
+    
+    /**
+     * Move all libs from one directory (WEB-INF/lib) to another (WEB-INF/cocoon-lib).
+     */
     private void move(String parentDir, String srcDir, String destDir) {
         final File srcDirectory = new File(parentDir, srcDir);
-        if ( srcDirectory.exists() && srcDirectory.isDirectory() ) {
+        if (srcDirectory.exists() && srcDirectory.isDirectory()) {
             File destDirectory = new File(parentDir, destDir);
             destDirectory.delete();
             destDirectory = new File(parentDir, destDir);
             destDirectory.mkdir();
             final File[] files = srcDirectory.listFiles();
-            if ( files != null && files.length > 0 ) {
-                for(int i=0; i<files.length; i++) {
-                    // TODO - replace this hard-coded exlclude with something configurable
+            if (files != null && files.length > 0) {
+                for (int i = 0; i < files.length; i++) {
+                    // TODO - replace this hard-coded exlclude with something
+                    // configurable
                     boolean exclude = false;
-                    if ( "lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap") ) {
+                    if ("lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap")) {
                         exclude = true;
                     }
-                    if ( !exclude ) {
+                    if (!exclude) {
                         files[i].renameTo(new File(destDirectory, files[i].getName()));
                     }
                 }
