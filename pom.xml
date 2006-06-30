@@ -128,14 +128,19 @@
       <version>2.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.excalibur.containerkit.instrument</groupId>
-      <artifactId>excalibur-instrument-api</artifactId>
-      <version>2.1</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.excalibur.components.xmlutil</groupId>
       <artifactId>excalibur-xmlutil</artifactId>
       <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.excalibur.testcase</groupId>
+          <artifactId>excalibur-testcase</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>servlet-api</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
@@ -172,6 +177,10 @@
           <groupId>jdom</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>servlet</artifactId>
+          <groupId>javax.servlet</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>servletapi</artifactId>
           <groupId>servletapi</groupId>
         </exclusion>
@@ -179,12 +188,15 @@
           <artifactId>xerces</artifactId>
           <groupId>xerces</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>ant-optional</artifactId>
+          <groupId>ant</groupId>
+        </exclusion>        
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>commons-cli</groupId>
-      <artifactId>commons-cli</artifactId>
-      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -298,28 +310,34 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>2.0-rc1</version>
-    </dependency>           
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-licenses</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
     
-		<!-- Ant -->
+		<!-- Ant and command line
+		     set the scope of all these dependencies to 'provided' as
+		     the Cocoon CLI will finally be moved into its own module -->
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>ant</groupId>
       <artifactId>ant-launcher</artifactId>
       <version>1.6.5</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>ant</groupId>
       <artifactId>ant-trax</artifactId>
       <version>1.6.5</version>
+      <scope>provided</scope>      
     </dependency>
     <dependency>
       <groupId>ant</groupId>
       <artifactId>ant</artifactId>
       <version>1.6.5</version>
+      <scope>provided</scope>      
     </dependency>		    
     
     <!-- OSGi -->
@@ -327,11 +345,13 @@
       <groupId>org.osgi</groupId>
       <artifactId>osgi_R4_core</artifactId>
       <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>osgi_R4_compendium</artifactId>
       <version>1.0</version>
+      <scope>provided</scope>
     </dependency>        
 
     <!--  test dependencies  -->
