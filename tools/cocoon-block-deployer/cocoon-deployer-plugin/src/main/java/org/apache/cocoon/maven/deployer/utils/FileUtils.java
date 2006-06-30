@@ -48,11 +48,16 @@ public class FileUtils {
 	/**
 	 * Create the directories of a non-exisiting file.
 	 */
-	public static File createDirectory(File file) throws IOException {
+	public static File createDirectory(File file) {
 		if(file.isDirectory() || file.exists()) {
 			return file;
 		}
-		String absolutePath = file.getCanonicalPath();
+		String absolutePath;
+        try {
+            absolutePath = file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new DeploymentException("A problem occured while reading the canonical path of '" + file.getAbsolutePath() + "'");
+        }
 		String absolutePathDir = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
 		File absolutePathDirFile = new File(absolutePathDir);
 		if(absolutePathDirFile.exists()) {
