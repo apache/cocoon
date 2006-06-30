@@ -29,6 +29,11 @@
       <map:match pattern="">
         <map:redirect-to uri="blocks/$curblock.artifactId$/"/>
       </map:match>
+      <!-- resources of block jars -->
+      <map:match pattern="_cocoon/resources/*/**">
+        <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
+      </map:match>      
+      <!-- mount all development blocks -->
       $devblocks:{ devblock |    
         $if(devblock.cobInfPath)$  
           <map:match pattern="blocks/$devblock.artifactId$/**">
@@ -36,6 +41,7 @@
           </map:match>
         $endif$
       }$
+      <!-- mount all deployed blocks -->      
       <map:match pattern="*/**">
         <map:mount src="{1}/" uri-prefix="{1}"/>
       </map:match>
