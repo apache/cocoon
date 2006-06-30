@@ -49,6 +49,19 @@
   <listener>
   	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
   </listener>
+  
+  <!-- Servlet Filters ================================================ -->
+  
+  <!--+
+      | Declare a filter for multipart MIME handling
+      +-->
+      
+  <filter>
+  	<filter-name>CocoonMultipartFilter</filter-name>
+  	<display-name>Cocoon multipart filter</display-name>
+  	<description>Multipart MIME handling filter for Cocoon</description>
+  	<filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
+  </filter>
 
   <!-- Servlet Configuration ========================================== -->
 
@@ -77,6 +90,17 @@
     -->
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
+  <!-- Filter mappings ================================================ -->
+  
+  <!--+
+      | Use the Cocoon multipart filter together with the Cocoon demo webapp
+      +-->
+      
+  <filter-mapping>
+  	<filter-name>CocoonMultipartFilter</filter-name>
+  	<servlet-name>Cocoon</servlet-name>
+  </filter-mapping>
 
   <!-- URL space mappings ============================================= -->
 
