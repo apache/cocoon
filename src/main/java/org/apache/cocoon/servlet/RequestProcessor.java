@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -40,8 +39,6 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
-import org.apache.cocoon.servlet.multipart.RequestFactory;
 import org.apache.commons.lang.time.StopWatch;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -68,12 +65,6 @@ public class RequestProcessor {
 
     protected final String containerEncoding;
 
-    /**
-     * The RequestFactory is responsible for wrapping multipart-encoded
-     * forms and for handing the file payload of incoming requests
-     */
-    protected final RequestFactory requestFactory;
-
     /** The logger. */
     protected final Logger log;
 
@@ -98,12 +89,6 @@ public class RequestProcessor {
         } else {
             this.containerEncoding = encoding;
         }
-        this.requestFactory = new RequestFactory(this.settings.isAutosaveUploads(),
-                                                 new File(this.settings.getUploadDirectory()),
-                                                 this.settings.isAllowOverwrite(),
-                                                 this.settings.isSilentlyRename(),
-                                                 this.settings.getMaxUploadSize(),
-                                                 this.containerEncoding);
         this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
         this.rootProcessor = (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
         this.environmentContext = new HttpContext(this.servletContext);
@@ -113,7 +98,7 @@ public class RequestProcessor {
      * Process the specified <code>HttpServletRequest</code> producing output
      * on the specified <code>HttpServletResponse</code>.
      */
-    public void service(HttpServletRequest req, HttpServletResponse res)
+    public void service(HttpServletRequest request, HttpServletResponse res)
     throws ServletException, IOException {        
         // used for timing the processing
         StopWatch stopWatch = new StopWatch();
@@ -122,25 +107,6 @@ public class RequestProcessor {
         // add the cocoon header timestamp
         if (this.settings.isShowVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
-        }
-
-        // get the request (wrapped if contains multipart-form data)
-        HttpServletRequest request;
-        try{
-            if (this.settings.isEnableUploads()) {
-                request = requestFactory.getServletRequest(req);
-            } else {
-                request = req;
-            }
-        } catch (Exception e) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Problem with Cocoon servlet", e);
-            }
-
-            manageException(req, res, null, null,
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Problem in creating the Request", null, null, e);
-            return;
         }
 
         // We got it... Process the request
@@ -195,119 +161,106 @@ public class RequestProcessor {
         }
 
         try {
-            try {
-                if (this.process(env)) {
-                    contentType = env.getContentType();
-                } else {
-                    // We reach this when there is nothing in the processing change that matches
-                    // the request. For example, no matcher matches.
-                    getLogger().fatalError("The Cocoon engine failed to process the request.");
-                    manageException(request, res, env, uri,
-                                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                    "Request Processing Failed",
-                                    "Cocoon engine failed in process the request",
-                                    "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
-                                    null);
-                    return;
-                }
-            } catch (ResourceNotFoundException e) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().warn(e.getMessage(), e);
-                } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(e.getMessage());
-                }
-
-                manageException(request, res, env, uri,
-                                HttpServletResponse.SC_NOT_FOUND,
-                                "Resource Not Found",
-                                "Resource Not Found",
-                                "The requested resource \"" + request.getRequestURI() + "\" could not be found",
-                                e);
-                return;
-
-            } catch (ConnectionResetException e) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(e.toString(), e);
-                } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(e.toString());
-                }
-
-            } catch (IOException e) {
-                // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(e.toString(), e);
-                } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(e.toString());
-                }
-
-            } catch (Exception e) {
-                if (getLogger().isErrorEnabled()) {
-                    getLogger().error("Internal Cocoon Problem", e);
-                }
-
+            if (this.process(env)) {
+                contentType = env.getContentType();
+            } else {
+                // We reach this when there is nothing in the processing change that matches
+                // the request. For example, no matcher matches.
+                getLogger().fatalError("The Cocoon engine failed to process the request.");
                 manageException(request, res, env, uri,
                                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                "Internal Server Error", null, null, e);
+                                "Request Processing Failed",
+                                "Cocoon engine failed in process the request",
+                                "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
+                                null);
                 return;
             }
-
-            stopWatch.stop();
-            String timeString = null;
-            if (getLogger().isInfoEnabled()) {
-                timeString = processTime(stopWatch.getTime());
-                getLogger().info("'" + uri + "' " + timeString);
+        } catch (ResourceNotFoundException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().warn(e.getMessage(), e);
+            } else if (getLogger().isWarnEnabled()) {
+                getLogger().warn(e.getMessage());
             }
 
-            if (contentType != null && contentType.equals("text/html")) {
-                String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
-                boolean show = this.settings.isShowTime();
-                if (showTime != null) {
-                    show = !showTime.equalsIgnoreCase("no");
-                }
-                if (show) {
-                    if ( timeString == null ) {
-                        timeString = processTime(stopWatch.getTime());
-                    }
-                    boolean hide = this.settings.isHideShowTime();
-                    if (showTime != null) {
-                        hide = showTime.equalsIgnoreCase("hide");
-                    }
-                    ServletOutputStream out = res.getOutputStream();
-                    out.print((hide) ? "<!-- " : "<p>");
-                    out.print(timeString);
-                    out.println((hide) ? " -->" : "</p>");
-                }
-            }
-        } finally {
-            try {
-                if (request instanceof MultipartHttpServletRequest) {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Deleting uploaded file(s).");
-                    }
-                    ((MultipartHttpServletRequest) request).cleanup();
-                }
-            } catch (IOException e) {
-                getLogger().error("Cocoon got an Exception while trying to cleanup the uploaded files.", e);
+            manageException(request, res, env, uri,
+                            HttpServletResponse.SC_NOT_FOUND,
+                            "Resource Not Found",
+                            "Resource Not Found",
+                            "The requested resource \"" + request.getRequestURI() + "\" could not be found",
+                            e);
+            return;
+
+        } catch (ConnectionResetException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug(e.toString(), e);
+            } else if (getLogger().isWarnEnabled()) {
+                getLogger().warn(e.toString());
             }
 
-            /*
-             * Servlet Specification 2.2, 6.5 Closure of Response Object:
-             *
-             *   A number of events can indicate that the servlet has provided all of the
-             *   content to satisfy the request and that the response object can be
-             *   considered to be closed. The events are:
-             *     o The termination of the service method of the servlet.
-             *     o When the amount of content specified in the setContentLength method
-             *       of the response has been written to the response.
-             *     o The sendError method is called.
-             *     o The sendRedirect method is called.
-             *   When a response is closed, all content in the response buffer, if any remains,
-             *   must be immediately flushed to the client.
-             *
-             * Due to the above, out.flush() and out.close() are not necessary, and sometimes
-             * (if sendError or sendRedirect were used) request may be already closed.
-             */
+        } catch (IOException e) {
+            // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug(e.toString(), e);
+            } else if (getLogger().isWarnEnabled()) {
+                getLogger().warn(e.toString());
+            }
+
+        } catch (Exception e) {
+            if (getLogger().isErrorEnabled()) {
+                getLogger().error("Internal Cocoon Problem", e);
+            }
+
+            manageException(request, res, env, uri,
+                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                            "Internal Server Error", null, null, e);
+            return;
         }
+
+        stopWatch.stop();
+        String timeString = null;
+        if (getLogger().isInfoEnabled()) {
+            timeString = processTime(stopWatch.getTime());
+            getLogger().info("'" + uri + "' " + timeString);
+        }
+
+        if (contentType != null && contentType.equals("text/html")) {
+            String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
+            boolean show = this.settings.isShowTime();
+            if (showTime != null) {
+                show = !showTime.equalsIgnoreCase("no");
+            }
+            if (show) {
+                if ( timeString == null ) {
+                    timeString = processTime(stopWatch.getTime());
+                }
+                boolean hide = this.settings.isHideShowTime();
+                if (showTime != null) {
+                    hide = showTime.equalsIgnoreCase("hide");
+                }
+                ServletOutputStream out = res.getOutputStream();
+                out.print((hide) ? "<!-- " : "<p>");
+                out.print(timeString);
+                out.println((hide) ? " -->" : "</p>");
+            }
+        }
+        
+        /*
+         * Servlet Specification 2.2, 6.5 Closure of Response Object:
+         *
+         *   A number of events can indicate that the servlet has provided all of the
+         *   content to satisfy the request and that the response object can be
+         *   considered to be closed. The events are:
+         *     o The termination of the service method of the servlet.
+         *     o When the amount of content specified in the setContentLength method
+         *       of the response has been written to the response.
+         *     o The sendError method is called.
+         *     o The sendRedirect method is called.
+         *   When a response is closed, all content in the response buffer, if any remains,
+         *   must be immediately flushed to the client.
+         *
+         * Due to the above, out.flush() and out.close() are not necessary, and sometimes
+         * (if sendError or sendRedirect were used) request may be already closed.
+         */
     }
 
     protected void manageException(HttpServletRequest req, HttpServletResponse res, Environment env,
