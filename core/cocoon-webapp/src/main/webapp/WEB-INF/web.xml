@@ -70,7 +70,7 @@
     <display-name>Cocoon</display-name>
     <description>Cocoon demo web application</description>
 
-    <servlet-class>org.apache.cocoon.servlet.SimpleServlet</servlet-class>
+    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
 
     <!--
       Set encoding used by the container. If not set the ISO-8859-1 encoding
