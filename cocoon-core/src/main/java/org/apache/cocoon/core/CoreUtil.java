@@ -612,7 +612,7 @@ public class CoreUtil {
         env.settings = this.settings;
         ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(env, this.environmentContext);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext, true);
+        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext);
 
         this.settings.setCreationTime(System.currentTimeMillis());
         return mainContext;

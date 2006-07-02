@@ -301,7 +301,7 @@ public class ContainerTestCase extends TestCase {
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
         this.addComponents( rolesInfo );
-        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory, false);
+        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory);
 
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
     }
