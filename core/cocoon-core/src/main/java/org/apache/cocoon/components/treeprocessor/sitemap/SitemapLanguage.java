@@ -1177,7 +1177,7 @@ public class SitemapLanguage
                 final Environment env = EnvironmentHelper.getCurrentEnvironment();
                 PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
                 // TODO - add the name of the sitemap file to the path
-                s.fill(provider.getProperties(env.getURIPrefix()));
+                s.fill(provider.getProperties(mode, env.getURIPrefix()));
             } catch (Exception ignore) {
                 this.getLogger().warn("Unable to get properties from provider.", ignore);
                 this.getLogger().warn("Continuing initialization.");            
