@@ -73,10 +73,9 @@ public class BeanFactoryUtil {
     public static ConfigurableListableBeanFactory createBeanFactory(AvalonEnvironment env,
                                                                     ConfigurationInfo info,
                                                                     SourceResolver    resolver,
-                                                                    BeanFactory       parent,
-                                                                    boolean           addCocoon)
+                                                                    BeanFactory       parent)
     throws Exception {
-        return createBeanFactory(env, info, resolver, parent, addCocoon, true);
+        return createBeanFactory(env, info, resolver, parent, true);
     }
     
     /**
@@ -92,10 +91,9 @@ public class BeanFactoryUtil {
                                                                     AvalonEnvironment env,
                                                                     ConfigurationInfo info,
                                                                     SourceResolver    resolver,
-                                                                    BeanFactory       parent,
-                                                                    boolean           addCocoon)
+                                                                    BeanFactory       parent)
     throws Exception {
-        return createBeanFactory(classLoader, env, info, resolver, parent, addCocoon, true);
+        return createBeanFactory(classLoader, env, info, resolver, parent, true);
     }
 
     /**
@@ -111,10 +109,9 @@ public class BeanFactoryUtil {
                                                                     ConfigurationInfo info,
                                                                     SourceResolver    resolver,
                                                                     BeanFactory       parent,
-                                                                    boolean           addCocoon,
                                                                     boolean           preInstantiateSingletons)
     throws Exception {
-        return createBeanFactory(Thread.currentThread().getContextClassLoader(), env, info, resolver, parent, addCocoon, preInstantiateSingletons);
+        return createBeanFactory(Thread.currentThread().getContextClassLoader(), env, info, resolver, parent, preInstantiateSingletons);
     }
 
     /**
@@ -131,7 +128,6 @@ public class BeanFactoryUtil {
                                                                     ConfigurationInfo info,
                                                                     SourceResolver    resolver,
                                                                     BeanFactory       parent,
-                                                                    boolean           addCocoon,
                                                                     boolean           preInstantiateSingletons)
     throws Exception {
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
@@ -139,7 +135,7 @@ public class BeanFactoryUtil {
             if ( classLoader != null ) {
                 Thread.currentThread().setContextClassLoader(classLoader);
             }
-            final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info, addCocoon);
+            final String xmlConfig = (new XmlConfigCreator(env.logger)).createConfig(info);
             Resource rsc = new ByteArrayResource(xmlConfig.getBytes("utf-8"));
             Logger logger = env.logger;
             if ( info.rootLogger != null ) {

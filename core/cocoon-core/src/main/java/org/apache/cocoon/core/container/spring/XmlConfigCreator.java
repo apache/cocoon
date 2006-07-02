@@ -21,13 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Poolable;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingUtil;
-import org.apache.cocoon.Processor;
 import org.springframework.util.StringUtils;
 
 /**
@@ -53,7 +49,7 @@ public class XmlConfigCreator {
         this.logger = log;
     }
 
-    public String createConfig(ConfigurationInfo info, boolean addCocoon) 
+    public String createConfig(ConfigurationInfo info) 
     throws Exception {
         final Map components = info.getComponents();
         final List pooledRoles = new ArrayList();
@@ -177,27 +173,6 @@ public class XmlConfigCreator {
                 this.appendAttribute(buffer, "alias", current.getAlias());
                 buffer.append("/>\n");
             }
-        }
-        // add the Cocoon object to the root
-        if ( addCocoon ) {
-            buffer.append("<bean");
-            this.appendAttribute(buffer, "id", Cocoon.class.getName());
-            this.appendAttribute(buffer, "class", Cocoon.class.getName());
-            this.appendAttribute(buffer, "singleton", "true");
-            buffer.append(">\n");
-            buffer.append("  <constructor-arg ref=\"");
-            buffer.append(Processor.ROLE);
-            buffer.append("\"/>\n");
-            buffer.append("  <constructor-arg ref=\"");
-            buffer.append(ServiceManager.class.getName());
-            buffer.append("\"/>\n");
-            buffer.append("  <constructor-arg ref=\"");
-            buffer.append(Context.class.getName());
-            buffer.append("\"/>\n");
-            buffer.append("  <constructor-arg ref=\"");
-            buffer.append(Logger.class.getName());
-            buffer.append("\"/>\n");
-            buffer.append("</bean>\n");
         }
         buffer.append("</beans>\n");
 
