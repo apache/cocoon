@@ -22,7 +22,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.collections.IteratorUtils;
@@ -44,7 +43,7 @@ public final class SettingsInputModule
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        final Settings settings = (Settings)EnvironmentHelper.getCurrentProcessor().getBeanFactory().getBean(ProcessingUtil.SETTINGS_ROLE);
+        final Settings settings = (Settings)EnvironmentHelper.getCurrentProcessor().getBeanFactory().getBean(Settings.ROLE);
         if ( settings != null ) {
             return settings.getProperty(name);
         }

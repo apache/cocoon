@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -34,11 +34,11 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.cocoon.auth.Application;
 import org.apache.cocoon.auth.ApplicationManager;
@@ -80,10 +80,8 @@ public class StandardApplicationManager
     public void contextualize(final Context aContext) throws ContextException {
         this.context = aContext;
         try {
-            ServletConfig config =
-                (ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-            config.getServletContext().setAttribute(StandardApplicationManager.class.getName(),
-                                                    this);
+            final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+            servletContext.setAttribute(StandardApplicationManager.class.getName(), this);
         } catch (ContextException ignore) {
             // we ignore this if we are not running inside a servlet environment
         }

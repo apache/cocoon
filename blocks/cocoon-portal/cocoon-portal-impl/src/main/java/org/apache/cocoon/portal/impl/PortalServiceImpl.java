@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -36,6 +36,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
@@ -50,7 +51,6 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.SkinDescription;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -222,12 +222,12 @@ public class PortalServiceImpl
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
         // add the portal service to the servlet context - if available
         try {
-            final ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-            servletConfig.getServletContext().setAttribute(PortalService.ROLE, this);
+            final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+            servletContext.setAttribute(PortalService.ROLE, this);
         } catch (ContextException ignore) {
             // we ignore the context exception
             // this avoids startup errors if the portal is configured for the CLI
@@ -244,11 +244,13 @@ public class PortalServiceImpl
             this.portalComponentManager.dispose();
         }
         // remove the portal service from the servlet context - if available
-        try {
-            final ServletConfig servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-            servletConfig.getServletContext().removeAttribute(PortalService.ROLE);
-        } catch (ContextException ignore) {
-            // we ignore the context exception
+        if ( this.context != null ) {
+            try {
+                final ServletContext servletContext = (ServletContext)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+                servletContext.removeAttribute(PortalService.ROLE);
+            } catch (ContextException ignore) {
+                // we ignore the context exception
+            }
         }
     }
 

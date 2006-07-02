@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -42,9 +41,6 @@ public class ProcessingUtil {
 
     /** Bean name for the logger. */
     public static final String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
-
-    /** Bean name for the settings. */
-    public static final String SETTINGS_ROLE = Settings.class.getName();
 
     /** Bean name for the service manager. */
     public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";

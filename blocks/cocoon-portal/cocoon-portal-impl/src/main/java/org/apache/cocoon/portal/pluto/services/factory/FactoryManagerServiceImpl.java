@@ -17,6 +17,7 @@ package org.apache.cocoon.portal.pluto.services.factory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -40,6 +42,7 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.pluto.factory.ActionRequestFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.ControllerFactoryImpl;
@@ -47,7 +50,6 @@ import org.apache.cocoon.portal.pluto.factory.ObjectIDFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.PortletInvokerFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.PortletPreferencesFactoryImpl;
 import org.apache.cocoon.portal.pluto.factory.RenderRequestFactoryImpl;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.pluto.factory.Factory;
 import org.apache.pluto.factory.ObjectIDFactory;
@@ -91,11 +93,49 @@ public class FactoryManagerServiceImpl
     /**<
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        super.contextualize(context);
-        this.servletConfig = (ServletConfig)this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
+    public void contextualize(Context aContext) throws ContextException {
+        super.contextualize(aContext);
+        final ServletContext servletContext = (ServletContext)aContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        this.servletConfig = new PortalServletConfig(servletContext);
     }
 
+    protected static final class PortalServletConfig implements ServletConfig {
+
+        private final ServletContext servletContext;
+
+        public PortalServletConfig(ServletContext sContext) {
+            this.servletContext = sContext;
+        }
+
+        /**
+         * @see javax.servlet.ServletConfig#getInitParameter(java.lang.String)
+         */
+        public String getInitParameter(String arg0) {
+            return this.servletContext.getInitParameter(arg0);
+        }
+
+        /**
+         * @see javax.servlet.ServletConfig#getInitParameterNames()
+         */
+        public Enumeration getInitParameterNames() {
+            return this.servletContext.getInitParameterNames();
+        }
+
+        /**
+         * @see javax.servlet.ServletConfig#getServletContext()
+         */
+        public ServletContext getServletContext() {
+            return this.servletContext;
+        }
+
+        /**
+         * @see javax.servlet.ServletConfig#getServletName()
+         */
+        public String getServletName() {
+            return this.servletContext.getServletContextName();
+        }
+        
+    }
     /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */

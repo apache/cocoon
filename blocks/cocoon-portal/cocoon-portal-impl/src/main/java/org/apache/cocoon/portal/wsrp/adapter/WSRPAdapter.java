@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-
 import oasis.names.tc.wsrp.v1.types.BlockingInteractionResponse;
 import oasis.names.tc.wsrp.v1.types.LocalizedString;
 import oasis.names.tc.wsrp.v1.types.MarkupContext;
@@ -38,8 +36,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -79,7 +75,6 @@ import org.apache.cocoon.portal.wsrp.consumer.UserContextProvider;
 import org.apache.cocoon.portal.wsrp.consumer.WSRPRequestImpl;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogManager;
 import org.apache.cocoon.portal.wsrp.logging.WSRPLogger;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -158,9 +153,6 @@ public class WSRPAdapter
     /** Stores the current coplet instance data per thread. */
     protected final ThreadLocal copletInstanceData = new ThreadLocal();
 
-    /** The servlet configuration. */
-    protected ServletConfig servletConfig;
-
     /** The user context provider. */
     protected UserContextProvider userContextProvider;
 
@@ -175,21 +167,6 @@ public class WSRPAdapter
 
     /** The configuration for this adapter. */
     protected Parameters parameters;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        super.contextualize(context);
-        try {
-            this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        } catch (ContextException ignore) {
-            // we ignore the context exception
-            // this avoids startup errors if the portal is configured for the CLI
-            // environment
-            this.getLogger().warn("The wsrp support is disabled as the servlet context is not available.", ignore);
-        } 
-    }    
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)

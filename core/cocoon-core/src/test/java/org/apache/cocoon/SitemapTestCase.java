@@ -27,7 +27,6 @@ import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
@@ -54,8 +53,6 @@ public class SitemapTestCase extends TestCase {
     private ConfigurableBeanFactory container;
     private ServiceManager serviceManager;
 
-    protected String processorClassName = Cocoon.class.getName();
-
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -75,8 +72,7 @@ public class SitemapTestCase extends TestCase {
 
         this.classDir = this.getClassDirURL().toExternalForm();
         BootstrapEnvironment env = 
-            new TestBootstrapEnvironment(this.getConfiguration(),
-                                         this.processorClassName);
+            new TestBootstrapEnvironment(this.getConfiguration());
 
         this.coreUtil = new TestCoreUtil(env);
         this.processor = this.coreUtil.createProcessor();
