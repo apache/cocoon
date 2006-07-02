@@ -39,17 +39,6 @@
     <description>An override of the session cookie path</description>
    </context-param-->
    
-  <!-- Servlet Context Listener ======================================= -->
-  
-  <!--+
-      | Declare a context listener that sets up the Cocoon Spring bean factory
-      | and makes it available as a context parameter.
-      +-->
-  
-  <listener>
-  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
-  </listener>
-  
   <!-- Servlet Filters ================================================ -->
   
   <!--+
@@ -63,34 +52,17 @@
   	<filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
   </filter>
 
-  <!-- Servlet Configuration ========================================== -->
+  <!--+
+      | Declare a filter for debugging incomming request
+      +-->
+      
+  <filter>
+  	<filter-name></filter-name>
+  	<display-name>Cocoon debug filter</display-name>
+  	<description>Log debug information about each request</description>
+  	<filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
+  </filter>
 
-  <servlet>
-    <servlet-name>Cocoon</servlet-name>
-    <display-name>Cocoon</display-name>
-    <description>Cocoon demo web application</description>
-
-    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
-
-    <!--
-      Set encoding used by the container. If not set the ISO-8859-1 encoding
-      will be assumed.
-      Since the servlet specification requires that the ISO-8859-1 encoding
-      is used (by default), you should never change this value unless
-      you have a buggy servlet container.
-    -->
-    <init-param>
-      <param-name>container-encoding</param-name>
-      <param-value>ISO-8859-1</param-value>
-    </init-param>
-
-    <!--
-      This parameter allows you to startup Cocoon2 immediately after startup
-      of your servlet engine.
-    -->
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
   <!-- Filter mappings ================================================ -->
   
   <!--+
@@ -102,6 +74,42 @@
   	<servlet-name>Cocoon</servlet-name>
   </filter-mapping>
 
+  <!--+
+      | Use the Cocoon debug filter together with the Cocoon demo webapp
+      
+  <filter-mapping>
+  	<filter-name>CocoonDebugFilter</filter-name>
+  	<servlet-name>Cocoon</servlet-name>
+  </filter-mapping>
+      +-->
+
+  <!-- Servlet Context Listener ======================================= -->
+  
+  <!--+
+      | Declare a context listener that sets up the Cocoon Spring bean factory
+      | and makes it available as a context parameter.
+      +-->
+  
+  <listener>
+  	<listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+  </listener>
+  
+  <!-- Servlet Configuration ========================================== -->
+
+  <servlet>
+    <servlet-name>Cocoon</servlet-name>
+    <display-name>Cocoon</display-name>
+    <description>Cocoon demo web application</description>
+
+    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
+
+    <!--
+      This parameter allows you to startup Cocoon2 immediately after startup
+      of your servlet engine.
+    -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
   <!-- URL space mappings ============================================= -->
 
   <!--

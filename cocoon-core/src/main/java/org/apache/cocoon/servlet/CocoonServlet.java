@@ -55,12 +55,6 @@ import org.apache.commons.lang.time.StopWatch;
  */
 public class CocoonServlet extends HttpServlet {
 
-    /**
-     * Application <code>Context</code> Key for the servlet configuration
-     * @since 2.1.3
-     */
-    public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
-
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
             + Constants.COMPLETE_NAME + " in ";
@@ -535,8 +529,6 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
          */
         public void configure(MutableSettings settings) {
-            // fill from the servlet parameters
-            SettingsHelper.fill(settings, this.config);
             if ( settings.getWorkDirectory() == null ) {
                 final File workDir = (File)this.config.getServletContext().getAttribute("javax.servlet.context.tempdir");
                 settings.setWorkDirectory(workDir.getAbsolutePath());
@@ -550,7 +542,7 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configure(DefaultContext context) {
-            context.put(CONTEXT_SERVLET_CONFIG, this.config);
+            // do nothing
         }
     }
 }

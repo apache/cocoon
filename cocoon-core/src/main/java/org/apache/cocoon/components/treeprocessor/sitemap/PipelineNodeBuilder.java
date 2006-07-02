@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -49,7 +48,7 @@ public class PipelineNodeBuilder extends AbstractParentProcessingNodeBuilder {
         super.setBuilder(treeBuilder);
         // check ssettings for ignoring of internal only pipeline flags
         this.ignoreInternalOnly = false;
-        final Settings settings = (Settings)treeBuilder.getBeanFactory().getBean(ProcessingUtil.SETTINGS_ROLE);
+        final Settings settings = (Settings)treeBuilder.getBeanFactory().getBean(Settings.ROLE);
         final String value = settings.getProperty(PipelineNodeBuilder.PROPERTY_SITEMAP_INTERNALONLY);
         if ( value != null ) {
             this.ignoreInternalOnly = Boolean.valueOf(value).booleanValue();

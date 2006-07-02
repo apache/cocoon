@@ -161,7 +161,7 @@ public class BeanFactoryUtil {
                 factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
             }
             // add local settings
-            factory.registerSingleton(ProcessingUtil.SETTINGS_ROLE, env.settings);
+            factory.registerSingleton(Settings.ROLE, env.settings);
             prepareBeanFactory(factory, info);
             if (preInstantiateSingletons) {
                 factory.preInstantiateSingletons();
@@ -185,16 +185,24 @@ public class BeanFactoryUtil {
     public static ConfigurableListableBeanFactory createRootBeanFactory(AvalonEnvironment  env,
                                                                         ServletContext     servletContext)
     throws Exception {
-    	ApplicationContext parent = null;
-    	if( servletContext != null) {
-    		parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-    	}
+    	ApplicationContext parent = getWebApplicationContext(servletContext);
         CocoonBeanFactory factory = new CocoonBeanFactory(parent);
         factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
         factory.registerSingleton(ProcessingUtil.LOGGER_ROLE, env.logger);
-        factory.registerSingleton(ProcessingUtil.SETTINGS_ROLE, env.settings);
+        factory.registerSingleton(Settings.ROLE, env.settings);
         factory.preInstantiateSingletons();
         return factory;
+    }
+
+    /**
+     * Get a possible root context.
+     */
+    public static ApplicationContext getWebApplicationContext(ServletContext servletContext) {
+        ApplicationContext parent = null;
+        if( servletContext != null) {
+            parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        }
+        return parent;
     }
 
     /**

@@ -91,7 +91,7 @@ public class SitemapServlet extends HttpServlet {
         this.contextUrl = CoreUtil.getContextUrl(this.cocoonContext, MANIFEST_FILE);
         org.apache.avalon.framework.context.Context avalonContext;
         try {
-            avalonContext = CoreUtil.createContext(this.settings, this.cocoonContext, this.contextUrl, null, null);
+            avalonContext = CoreUtil.createContext(this.settings, this.cocoonContext, this.contextUrl, null);
         } catch (MalformedURLException e) {
             throw new ServletException(e);
         }
