@@ -43,9 +43,6 @@ public interface BaseSettings {
     /** This parameter specifies the class for the root processor */
     String KEY_PROCESSOR_CLASS = "processor";
     
-    /** The default root processor */
-    String DEFAULT_PROCESSOR_CLASS = "org.apache.cocoon.Cocoon";
-    
     /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
@@ -125,23 +122,21 @@ public interface BaseSettings {
     String KEY_FORM_ENCODING = "formencoding";
 
     /**
+     * Set encoding used by the container. If not set the ISO-8859-1 encoding
+     * will be assumed.
+     * Since the servlet specification requires that the ISO-8859-1 encoding
+     * is used (by default), you should never change this value unless
+     * you have a buggy servlet container.
+     */
+    String KEY_CONTAINER_ENCODING = "containerencoding";
+
+    /**
      * If this value is specified, it will be interpreted as a log level and
      * all logging categories will be set to this level regardless of their
      * definition in the logging configuration.
      */
     String KEY_LOGGING_OVERRIDE_LOGLEVEL = "override.loglevel";
 
-    /**
-     * This key allows to add own {@link PropertyProvider}s.
-     */
-    String KEY_PROPERTY_PROVIDER = "property.provider";
-
-    /**
-     * @return Returns the class for the root processor
-     * @see #KEY_PROCESSOR_CLASS
-     */
-    String getProcessorClassName();
-    
     /**
      * @return Returns the configuration.
      * @see #KEY_CONFIGURATION
@@ -197,6 +192,12 @@ public interface BaseSettings {
     String getFormEncoding();
 
     /**
+     * @return Returns the container encoding
+     * @see #KEY_CONTAINER_ENCODING
+     */
+    String getContainerEncoding();
+
+    /**
      * @return Returns the manageExceptions.
      * @see #KEY_MANAGE_EXCEPTIONS
      */
@@ -218,10 +219,4 @@ public interface BaseSettings {
      * The creation time of the current Cocoon instance.
      */
     long getCreationTime();
-
-    /**
-     * @return All property providers.
-     * @see #KEY_PROPERTY_PROVIDER
-     */
-    List getPropertyProviders();
 }

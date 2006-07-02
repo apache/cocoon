@@ -29,6 +29,7 @@ import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.RequestListener;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
@@ -44,8 +45,6 @@ import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
- * TODO - Move container encoding to properties
- *      - Remove support for settings config from web.xml
  *
  * @version $Id$
  */
@@ -79,11 +78,17 @@ public class RequestProcessor {
     /** The root processor. */
     protected final Processor rootProcessor;
 
+    /**
+     * An optional component that is called before and after processing all
+     * requests.
+     */
+    protected RequestListener requestListener;
+
     public RequestProcessor(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.cocoonBeanFactory = (BeanFactory) servletContext.getAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME);
-        this.settings = (Settings) this.cocoonBeanFactory.getBean(ProcessingUtil.SETTINGS_ROLE);
-        final String encoding = this.servletContext.getInitParameter("container-encoding");
+        this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
+        final String encoding = this.settings.getContainerEncoding();
         if ( encoding == null ) {
             this.containerEncoding = "ISO-8859-1";
         } else {
@@ -92,6 +97,10 @@ public class RequestProcessor {
         this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
         this.rootProcessor = (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
         this.environmentContext = new HttpContext(this.servletContext);
+        // get the optional request listener
+        if (this.cocoonBeanFactory.containsBean(RequestListener.ROLE)) {
+            this.requestListener = (RequestListener) this.cocoonBeanFactory.getBean(RequestListener.ROLE);
+        }
     }
 
     /**
@@ -371,13 +380,38 @@ public class RequestProcessor {
         try {
             boolean result;
 
+            if (this.requestListener != null) {
+                try {
+                    requestListener.onRequestStart(environment);
+                } catch (Exception e) {
+                    this.log.error("Error encountered monitoring request start: "
+                            + e.getMessage());
+                }
+            }
             result = this.rootProcessor.process(environment);
+
+            if (this.requestListener != null) {
+                try {
+                    requestListener.onRequestEnd(environment);
+                } catch (Exception e) {
+                    this.log.error("Error encountered monitoring request start: "
+                            + e.getMessage());
+                }
+            }
 
             // commit response on success
             environment.commitResponse();
 
             return result;
         } catch (Exception any) {
+            if (this.requestListener != null) {
+                try {
+                    requestListener.onRequestException(environment, any);
+                } catch (Exception e) {
+                    this.log.error("Error encountered monitoring request start: "
+                            + e.getMessage());
+                }
+            }
             // reset response on error
             environment.tryResetResponse();
             throw any;

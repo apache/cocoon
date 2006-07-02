@@ -23,12 +23,9 @@ public class TestBootstrapEnvironment
     implements BootstrapEnvironment {
     
     private final String configuration;
-    private String processorClassName;
 
-    public TestBootstrapEnvironment(String configuration,
-                                    String processorClassName) {
+    public TestBootstrapEnvironment(String configuration) {
         this.configuration = configuration;
-        this.processorClassName = processorClassName;
     }
 
     /**
@@ -37,9 +34,9 @@ public class TestBootstrapEnvironment
     public void configure(MutableSettings settings) {
         settings.setConfiguration(this.configuration);
         settings.setWorkDirectory("work");
-        settings.setProcessorClassName(this.processorClassName);
     }
 
     public void configure(DefaultContext context) {
+        // nothing to do here
     }
 }

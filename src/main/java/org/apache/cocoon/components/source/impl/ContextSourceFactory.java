@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.context.ContextException;
@@ -34,7 +33,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -60,9 +58,6 @@ implements SourceFactory,
             ThreadSafe, 
             URIAbsolutizer {
 
-    /** The context */
-    protected Context envContext;
-
     /** The ServiceManager */
     protected ServiceManager manager;
 
@@ -81,12 +76,7 @@ implements SourceFactory,
      */
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException {
-        this.envContext = (Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-        try {
-            this.servletContext = ((ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG)).getServletContext();
-        } catch (ContextException ignore) {
-            // in other environments (CLI etc.), we don't have a servlet context
-        }
+        this.servletContext = (Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 
     /**
@@ -116,11 +106,11 @@ implements SourceFactory,
             URL u;
 
             // Try to get a file first and fall back to a resource URL
-            String actualPath = envContext.getRealPath(path);
+            String actualPath = this.servletContext.getRealPath(path);
             if (actualPath != null) {
                 u = new File(actualPath).toURL();
             } else {
-                u = envContext.getResource(path);
+                u = this.servletContext.getResource(path);
             }
 
             if (u != null) {
