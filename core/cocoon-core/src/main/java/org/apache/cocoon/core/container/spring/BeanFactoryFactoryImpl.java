@@ -100,7 +100,7 @@ public class BeanFactoryFactoryImpl
             final ConfigurationInfo parentConfigInfo = (ConfigurationInfo) parentFactory
                     .getBean(ConfigurationInfo.class.getName());
             final ConfigurationInfo ci = ConfigReader.readConfiguration(config, parentConfigInfo, ae, resolver);
-            return BeanFactoryUtil.createBeanFactory(classLoader, ae, ci, resolver, parentFactory, false);
+            return BeanFactoryUtil.createBeanFactory(classLoader, ae, ci, resolver, parentFactory);
         }
         return parentFactory;
     }

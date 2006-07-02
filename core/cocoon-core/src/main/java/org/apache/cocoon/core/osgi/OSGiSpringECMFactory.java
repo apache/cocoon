@@ -126,7 +126,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		    this.parentBeanfactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment, osgiServletContext);
 		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
 		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
-				null, this.parentBeanfactory, false, false);
+				null, this.parentBeanfactory, false);
         this.beanFactory.addBeanPostProcessor(new ServiceRegistrationPostProcessor());
         this.beanFactory.preInstantiateSingletons();
         // What is this for?
