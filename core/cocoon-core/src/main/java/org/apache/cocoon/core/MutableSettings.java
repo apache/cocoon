@@ -42,11 +42,6 @@ public class MutableSettings implements Settings {
     protected final List properties = new ArrayList();
 
     /**
-     * This parameter indicates what class to use for the root processor.
-     */
-    protected String processorClassName;
-    
-    /**
      * This parameter points to the main configuration file for Cocoon.
      * Note that the path is specified in absolute notation but it will be
      * resolved relative to the application context path.
@@ -185,8 +180,10 @@ public class MutableSettings implements Settings {
     /** The time the cocoon instance was created. */
     protected Long creationTime;
 
-    /** The property providers. */
-    protected final List propertyProviders = new ArrayList();
+    /** The container encoding.
+     * @see BaseSettings#KEY_CONTAINER_ENCODING 
+     */
+    protected String containerEncoding;
 
     /** The optional parent settings object. */
     protected Settings parent;
@@ -196,7 +193,6 @@ public class MutableSettings implements Settings {
      */
     public MutableSettings() {
         // set default values
-        this.processorClassName = DEFAULT_PROCESSOR_CLASS;
         this.reloadingEnabled = BooleanUtils.toBooleanObject(RELOADING_ENABLED_DEFAULT);
         this.enableUploads = BooleanUtils.toBooleanObject(ENABLE_UPLOADS);
         this.autosaveUploads = BooleanUtils.toBooleanObject(SAVE_UPLOADS_TO_DISK);
@@ -206,6 +202,7 @@ public class MutableSettings implements Settings {
         this.showCocoonVersion = BooleanUtils.toBooleanObject(SHOW_COCOON_VERSION);
         this.manageExceptions = BooleanUtils.toBooleanObject(MANAGE_EXCEPTIONS);
         this.configurationReloadDelay = new Long(1000);
+        this.containerEncoding = "ISO-8859-1";
     }
 
     public MutableSettings(Settings parent) {
@@ -226,9 +223,7 @@ public class MutableSettings implements Settings {
                     key = key.substring(KEYPREFIX.length());
                     final String value = current.getValue().toString();
 
-                    if ( key.equals(KEY_PROCESSOR_CLASS) ) {
-                        this.processorClassName = value;
-                    } else if ( key.equals(KEY_CONFIGURATION) ) {
+                    if ( key.equals(KEY_CONFIGURATION) ) {
                         this.configuration = value;
                     } else if ( key.equals(KEY_RELOAD_DELAY) ) {
                         this.configurationReloadDelay = Long.valueOf(value);
@@ -270,8 +265,8 @@ public class MutableSettings implements Settings {
                         this.overrideLogLevel = value;
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
                         this.addToLoadClasses(value);
-                    } else if ( key.startsWith(KEY_PROPERTY_PROVIDER) ) {
-                        this.addToPropertyProviders(value);
+                    } else if ( key.startsWith(KEY_CONTAINER_ENCODING ) ) {
+                        this.containerEncoding = value;
                     }
                 }
             }
@@ -358,16 +353,6 @@ public class MutableSettings implements Settings {
     }
 
     /**
-     * @see org.apache.cocoon.core.BaseSettings#getProcessorClassName()
-     */
-    public String getProcessorClassName() {
-        if ( this.processorClassName == null && this.parent != null ) {
-            return this.parent.getProcessorClassName();
-        }
-        return this.processorClassName;
-    }
-
-    /**
      * @see org.apache.cocoon.core.BaseSettings#getConfiguration()
      */
     public String getConfiguration() {
@@ -398,6 +383,24 @@ public class MutableSettings implements Settings {
             return this.parent.getFormEncoding();
         }
         return this.formEncoding;
+    }
+
+    /**
+     * @see org.apache.cocoon.core.BaseSettings#getContainerEncoding()
+     */
+    public String getContainerEncoding() {
+        if ( this.containerEncoding == null && this.parent != null ) {
+            return this.parent.getContainerEncoding();
+        }
+        return this.containerEncoding;
+    }
+
+    /**
+     * Set the container encoding.
+     * @param value The new encoding value.
+     */
+    public void setContainerEncoding(String value) {
+        this.containerEncoding = value;
     }
 
     /**
@@ -609,9 +612,7 @@ public class MutableSettings implements Settings {
         String value = null;
         if ( key.startsWith(KEYPREFIX) ) {
             final String sKey = key.substring(KEYPREFIX.length());
-            if ( sKey.equals(KEY_PROCESSOR_CLASS) ) {
-                value = this.getProcessorClassName();
-            } else if ( sKey.equals(KEY_CONFIGURATION) ) {
+            if ( sKey.equals(KEY_CONFIGURATION) ) {
                 value = this.getConfiguration();
             } else if ( sKey.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.getReloadDelay(null));
@@ -651,8 +652,8 @@ public class MutableSettings implements Settings {
                 value = this.getOverrideLogLevel();
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
                 value = this.toString(this.getLoadClasses());
-            } else if ( key.equals(KEY_PROPERTY_PROVIDER) ) {
-                value = this.toString(this.getPropertyProviders());
+            } else if ( key.equals(KEY_CONTAINER_ENCODING) ) {
+                value = this.containerEncoding;
             }
         }
 
@@ -678,7 +679,6 @@ public class MutableSettings implements Settings {
     public String toString() {
         return "Settings:\n" +
           "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
-          KEY_PROCESSOR_CLASS + " : " + this.processorClassName + '\n' +
           KEY_CONFIGURATION + " : " + this.configuration + '\n' +
           KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
           KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
@@ -697,6 +697,7 @@ public class MutableSettings implements Settings {
           KEY_CACHE_DIRECTORY + " : " + this.cacheDirectory + '\n' +
           KEY_WORK_DIRECTORY + " : " + this.workDirectory + '\n' +
           KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
+          KEY_CONTAINER_ENCODING + " : " + this.containerEncoding + '\n' +
           KEY_SHOWTIME + " : " + this.showTime + '\n' +
           KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
           KEY_SHOW_VERSION + " : " + this.showCocoonVersion + '\n';
@@ -739,9 +740,9 @@ public class MutableSettings implements Settings {
     /**
      * @param autosaveUploads The autosaveUploads to set.
      */
-    public void setAutosaveUploads(boolean autosaveUploads) {
+    public void setAutosaveUploads(boolean autosaveUploadsValue) {
         this.checkWriteable();
-        this.autosaveUploads = BooleanUtils.toBooleanObject(autosaveUploads);
+        this.autosaveUploads = BooleanUtils.toBooleanObject(autosaveUploadsValue);
     }
 
     /**
@@ -750,14 +751,6 @@ public class MutableSettings implements Settings {
     public void setCacheDirectory(String cacheDirectory) {
         this.checkWriteable();
         this.cacheDirectory = cacheDirectory;
-    }
-
-    /**
-     * @param processorClassName The processorClassName to set.
-     */
-    public void setProcessorClassName(String processorClassName) {
-        this.checkWriteable();
-        this.processorClassName = processorClassName;
     }
 
     /**
@@ -936,22 +929,6 @@ public class MutableSettings implements Settings {
         // Don't check read only here as this will change if Cocoon
         // is reloaded while the settings remain the same.
         this.creationTime = new Long(value);
-    }
-
-    /**
-     * @see org.apache.cocoon.core.BaseSettings#getPropertyProviders()
-     */
-    public List getPropertyProviders() {
-        // we don't ask the parent here
-        return this.propertyProviders;
-    }
-
-    /**
-     * Add a property provider.
-     */
-    public void addToPropertyProviders(String className) {
-        this.checkWriteable();
-        this.propertyProviders.add(className);
     }
 
     /**

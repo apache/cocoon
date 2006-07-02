@@ -23,13 +23,10 @@ import java.util.Properties;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.WindowState;
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -56,7 +53,6 @@ import org.apache.cocoon.portal.pluto.servlet.ServletRequestImpl;
 import org.apache.cocoon.portal.pluto.servlet.ServletResponseImpl;
 import org.apache.cocoon.portal.serialization.IncludingHTMLSerializer;
 import org.apache.cocoon.portal.util.HtmlSaxParser;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
@@ -85,9 +81,6 @@ public class PortletAdapter
     extends AbstractCopletAdapter
     implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
-    /** The servlet configuration for pluto. */
-    protected ServletConfig servletConfig;
-
     /** The Portlet Container. */
     protected PortletContainer portletContainer;
 
@@ -96,21 +89,6 @@ public class PortletAdapter
 
     /** The configuration. */
     protected Parameters parameters;
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        super.contextualize(context);
-        try {
-            this.servletConfig = (ServletConfig) context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        } catch (ContextException ignore) {
-            // we ignore the context exception
-            // this avoids startup errors if the portal is configured for the CLI
-            // environment
-            this.getLogger().warn("The JSR-168 support is disabled as the servlet context is not available.", ignore);
-        }
-    }
 
     /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
@@ -257,9 +235,7 @@ public class PortletAdapter
      */
     public void initialize() throws Exception {
         super.initialize();
-        if ( this.servletConfig != null ) {
-            this.initContainer();
-        }
+        this.initContainer();
     }
 
     /**
@@ -297,7 +273,9 @@ public class PortletAdapter
             Properties properties = new Properties();
 
             try {
-                portletContainer.init(uniqueContainerName, servletConfig, this.portletContainerEnvironment, properties);
+                // TODO - Currently it's safe to pass in null as the ServletConfig into Pluto, but we
+                //        should try to provide an object
+                portletContainer.init(uniqueContainerName, null, this.portletContainerEnvironment, properties);
             } catch (PortletContainerException exc) {
                 throw new ProcessingException("Initialization of the portlet container failed.", exc);
             }
@@ -350,11 +328,6 @@ public class PortletAdapter
     throws ProcessingException {
         // process the events
         aspectContext.invokeNext();
-
-        // if we aren't running in a servlet environment, just skip the JSR-168 part
-        if ( this.servletConfig == null ) {
-            return;
-        }
 
         // do we already have an environment?
         // if not, create one

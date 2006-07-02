@@ -90,8 +90,6 @@ public class CocoonServletListener implements ServletContextListener {
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
          */
         public void configure(MutableSettings settings) {
-            // fill from the servlet parameters
-            SettingsHelper.fill(settings, this.context);
             if ( settings.getWorkDirectory() == null ) {
                 final File workDir = (File)context.getAttribute("javax.servlet.context.tempdir");
                 settings.setWorkDirectory(workDir.getAbsolutePath());
@@ -104,7 +102,7 @@ public class CocoonServletListener implements ServletContextListener {
         /**
          * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
          */
-        public void configure(DefaultContext context) {
+        public void configure(DefaultContext componentContext) {
             // nothing to do
         }
     }

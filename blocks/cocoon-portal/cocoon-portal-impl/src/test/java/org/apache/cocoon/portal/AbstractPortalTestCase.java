@@ -23,13 +23,11 @@ import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.CocoonTestCase;
 import org.apache.cocoon.core.container.spring.ComponentInfo;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
-import org.apache.cocoon.servlet.CocoonServlet;
 
 /**
  * Abstract test case class that can be used as a base for own portal
@@ -69,14 +67,6 @@ public abstract class AbstractPortalTestCase extends CocoonTestCase {
         rootConfig.addChild(portalConfig);
         rootConfig.makeReadOnly();
         return rootConfig;
-    }
-
-    /**
-     * @see org.apache.cocoon.core.container.ContainerTestCase#addContext(org.apache.avalon.framework.context.DefaultContext)
-     */
-    protected void addContext(DefaultContext context) {
-        super.addContext(context);
-        context.put(CocoonServlet.CONTEXT_SERVLET_CONFIG, this.getServletConfig());
     }
 
     /**

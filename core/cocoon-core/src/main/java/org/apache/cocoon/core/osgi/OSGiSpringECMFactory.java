@@ -109,7 +109,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
             this.logger = (Logger) this.parentBeanfactory.getBean(ProcessingUtil.LOGGER_ROLE);
         }
         if (this.settings == null && this.parentBeanfactory != null) {
-            this.settings = (Settings) this.parentBeanfactory.getBean(ProcessingUtil.SETTINGS_ROLE);
+            this.settings = (Settings) this.parentBeanfactory.getBean(Settings.ROLE);
         }
         
         // create a minimal OSGi servlet context
@@ -148,7 +148,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		this.logger.debug("Context path: " + contextPath);
 
 		// create a minimal Avalon Context
-		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath, null, null);
+		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath, null);
 		
 		// create an Avalon environment (it's some kind of container for Avalon related information)
 		AvalonEnvironment avalonEnvironment = new AvalonEnvironment();

@@ -60,15 +60,15 @@ public class MultipartFilter implements Filter{
     /** The root settings. */
     protected Settings settings;
 
-    /* (non-Javadoc)
+    /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
         String containerEncoding;
         ServletContext servletContext = config.getServletContext();
         this.cocoonBeanFactory = (BeanFactory) servletContext.getAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME);
-        this.settings = (Settings) this.cocoonBeanFactory.getBean(ProcessingUtil.SETTINGS_ROLE);
-        final String encoding = servletContext.getInitParameter("container-encoding");
+        this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
+        final String encoding = settings.getContainerEncoding();
         if ( encoding == null ) {
             containerEncoding = "ISO-8859-1";
         } else {
@@ -83,13 +83,14 @@ public class MultipartFilter implements Filter{
         this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see javax.servlet.Filter#destroy()
      */
     public void destroy() {
+        // nothing to do
     }
 
-    /* (non-Javadoc)
+    /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {

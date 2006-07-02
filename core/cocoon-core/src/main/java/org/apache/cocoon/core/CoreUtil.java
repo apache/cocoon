@@ -60,6 +60,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.URLSource;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.xml.sax.InputSource;
 
@@ -282,8 +283,10 @@ public class CoreUtil {
         settings.setCacheDirectory(cacheDir.getAbsolutePath());
     }
 
-    public static DefaultContext createContext(Settings settings, Context environmentContext,
-            String contextUrl, ClassLoader classLoader, BootstrapEnvironment env)
+    public static DefaultContext createContext(Settings settings,
+                                               Context environmentContext,
+                                               String contextUrl,
+                                               BootstrapEnvironment env)
         throws ServletException, MalformedURLException {
         DefaultContext appContext = new ComponentContext();
         CoreUtil.addSourceResolverContext(appContext, environmentContext, env, contextUrl);
@@ -298,14 +301,17 @@ public class CoreUtil {
      * @param env optional bootstrap context
      * @param contextUrl URL for the context
      */
-    private static void addSourceResolverContext(DefaultContext appContext, Context environmentContext, BootstrapEnvironment env, String contextUrl) {
+    private static void addSourceResolverContext(DefaultContext       appContext,
+                                                 Context              environmentContext,
+                                                 BootstrapEnvironment env, 
+                                                 String               contextUrl) {
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
         } catch (MalformedURLException ignore) {
             // we simply ignore this
         }
     
-        // add environment context
+        // add environment context and config
         appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, environmentContext);
     
         // now add environment specific information
@@ -377,15 +383,14 @@ public class CoreUtil {
         // read all properties from the mode dependent directory
         this.readProperties("context://WEB-INF/properties/" + mode, s, resolver);
 
-        // Next look for custom property providers
-        Iterator i = s.getPropertyProviders().iterator();
-        while ( i.hasNext() ) {
-            final String className = (String)i.next();
+        // Next look for a custom property provider in the spring root context
+        BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(environmentContext);
+        if (rootContext != null && rootContext.containsBean(PropertyProvider.ROLE) ) {
             try {
-                PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
-                s.fill(provider.getProperties());
+                PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
+                s.fill(provider.getProperties(null));
             } catch (Exception ignore) {
-                this.environmentContext.log("Unable to get property provider for class " + className, ignore);
+                this.environmentContext.log("Unable to get properties from provider.", ignore);
                 this.environmentContext.log("Continuing initialization.");            
             }
         }

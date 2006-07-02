@@ -456,7 +456,6 @@ public class StatusGenerator extends ServiceableGenerator
                                                     Settings.DEFAULT_RUNNING_MODE));
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
-        this.addValue(Settings.KEY_PROPERTY_PROVIDER, s.getPropertyProviders());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
         this.addValue(Settings.KEY_LOGGING_BOOTSTRAP_LOGLEVEL, s.getBootstrapLogLevel());
         this.addValue(Settings.KEY_LOGGING_COCOON_LOGGER, s.getCocoonLogger());
@@ -467,6 +466,7 @@ public class StatusGenerator extends ServiceableGenerator
         this.addValue(Settings.KEY_CACHE_DIRECTORY, s.getCacheDirectory());
         this.addValue(Settings.KEY_WORK_DIRECTORY, s.getWorkDirectory());
         this.addValue(Settings.KEY_FORM_ENCODING, s.getFormEncoding());
+        this.addValue(Settings.KEY_CONTAINER_ENCODING, s.getContainerEncoding());
 
         this.endGroup();
 

@@ -76,7 +76,6 @@ import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
@@ -399,10 +398,10 @@ public class SitemapLanguage
         factory.setBeanFactory(this.beanFactory);
 
         // check for sitemap local properties
-        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(ProcessingUtil.SETTINGS_ROLE);
+        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
         if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
             final String propertyDir = componentConfig.getAttribute("property-dir");
-            settings = this.createSettings(settings, propertyDir, useDefaultIncludes);
+            settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext));
         }
         // compatibility with 2.1.x - check for global variables in sitemap
         // TODO - This will be removed in later versions!
@@ -1152,7 +1151,8 @@ public class SitemapLanguage
      */
     protected MutableSettings createSettings(Settings parent,
                                              String   directory,
-                                             boolean  useDefaultIncludes) {
+                                             boolean  useDefaultIncludes,
+                                             BeanFactory parentBeanFactory) {
         // get the running mode
         final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
 
@@ -1171,15 +1171,15 @@ public class SitemapLanguage
         // read all properties from the mode dependent directory
         this.readProperties(directory + '/' + mode, s);
 
-        // Next look for custom property providers
-        Iterator i = s.getPropertyProviders().iterator();
-        while ( i.hasNext() ) {
-            final String className = (String)i.next();
+        // Next look for a custom property provider in the parent bean factory
+        if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
-                PropertyProvider provider = (PropertyProvider)ClassUtils.newInstance(className);
-                s.fill(provider.getProperties());
+                final Environment env = EnvironmentHelper.getCurrentEnvironment();
+                PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
+                // TODO - add the name of the sitemap file to the path
+                s.fill(provider.getProperties(env.getURIPrefix()));
             } catch (Exception ignore) {
-                this.getLogger().warn("Unable to get property provider for class " + className, ignore);
+                this.getLogger().warn("Unable to get properties from provider.", ignore);
                 this.getLogger().warn("Continuing initialization.");            
             }
         }

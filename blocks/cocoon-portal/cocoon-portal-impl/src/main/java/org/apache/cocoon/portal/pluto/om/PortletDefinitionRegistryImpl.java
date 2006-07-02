@@ -29,7 +29,6 @@ import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -37,6 +36,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.portal.PortalComponentManager;
@@ -50,7 +50,6 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.pluto.deployment.Deployer;
 import org.apache.cocoon.portal.pluto.deployment.WebApplicationRewriter;
-import org.apache.cocoon.servlet.CocoonServlet;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.EntityResolver;
@@ -125,8 +124,8 @@ public class PortletDefinitionRegistryImpl
     /** The threadpool name to be used for daemon thread. */
     protected String threadPoolName = "daemon";
 
-    /** The servlet config. */
-    protected ServletConfig servletConfig;
+    /** The servlet context. */
+    protected ServletContext servletContext;
 
     /**
      * Default constructor.
@@ -183,11 +182,10 @@ public class PortletDefinitionRegistryImpl
         }
         super.initialize();
 
-        this.servletConfig = (ServletConfig) this.context.get(CocoonServlet.CONTEXT_SERVLET_CONFIG);
-        final ServletContext servletContext = servletConfig.getServletContext();
+        this.servletContext = (ServletContext)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
 
         // get our context path
-        String baseWMDir = servletContext.getRealPath("");
+        String baseWMDir = this.servletContext.getRealPath("");
         if (baseWMDir != null) {
             // BEGIN PATCH for IBM WebSphere
             if (baseWMDir.endsWith(File.separator)) {
@@ -198,7 +196,7 @@ public class PortletDefinitionRegistryImpl
             this.contextName = baseWMDir.substring(lastIndex + 1);
             baseWMDir = baseWMDir.substring(0, lastIndex);
             if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("servletContext.getRealPath('') =" + servletContext.getRealPath(""));
+                this.getLogger().debug("servletContext.getRealPath('') =" + this.servletContext.getRealPath(""));
                 this.getLogger().debug("baseWMDir = " + baseWMDir);
             }
         }
@@ -279,7 +277,7 @@ public class PortletDefinitionRegistryImpl
                                         + "and 'webapp-directory' is not configured.");
                 }
                 this.contextName = "local";
-                this.loadLocal(this.servletConfig);
+                this.loadLocal();
             } else {
                 this.scanWebapps();
             }
@@ -331,19 +329,18 @@ public class PortletDefinitionRegistryImpl
         }
     }
 
-    protected void loadLocal(ServletConfig config)
+    protected void loadLocal()
     throws Exception {
-        final ServletContext servletContext = config.getServletContext();
-        URL url = servletContext.getResource("/" + PORTLET_XML);
+        URL url = this.servletContext.getResource("/" + PORTLET_XML);
         if (url != null) {
             InputSource portletSource = new InputSource(url.openStream());
             portletSource.setSystemId(url.toExternalForm());
 
-            url = servletContext.getResource("/" + WEB_XML);
+            url = this.servletContext.getResource("/" + WEB_XML);
             final InputSource webSource = new InputSource(url.openStream());
             webSource.setSystemId(url.toExternalForm());
 
-            url = servletContext.getResource("/" + COPLET_XML);
+            url = this.servletContext.getResource("/" + COPLET_XML);
             InputSource copletSource = null;
             if ( url != null ) {
                 copletSource = new InputSource(url.openStream());

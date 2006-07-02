@@ -21,11 +21,15 @@ import java.util.Properties;
 /**
  * This is an interface for custom components delivering properties to
  * configure Cocoon.
+ * This component must be setup as a Spring bean in the root application
+ * context.
  *
  * @version $Id$
  * @since 2.2
  */
 public interface PropertyProvider {
 
-    Properties getProperties();
+    String ROLE = PropertyProvider.class.getName();
+
+    Properties getProperties(String path);
 }

@@ -178,7 +178,7 @@ public final class Constants {
     /** The namespace prefix for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_PREFIX = "error";
 
-    /** Application <code>Context</code> Key for the environmental Context */
+    /** Application <code>Context</code> Key for the environmental Context (= ServletContext) */
     public static final String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
 
     /** Application <code>Context</code> Key for the work directory path */
