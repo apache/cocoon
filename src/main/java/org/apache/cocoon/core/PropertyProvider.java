@@ -31,5 +31,5 @@ public interface PropertyProvider {
 
     String ROLE = PropertyProvider.class.getName();
 
-    Properties getProperties(String path);
+    Properties getProperties(String runningMode, String path);
 }
