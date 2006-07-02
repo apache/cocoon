@@ -388,7 +388,7 @@ public class CoreUtil {
         if (rootContext != null && rootContext.containsBean(PropertyProvider.ROLE) ) {
             try {
                 PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
-                s.fill(provider.getProperties(null));
+                s.fill(provider.getProperties(mode, null));
             } catch (Exception ignore) {
                 this.environmentContext.log("Unable to get properties from provider.", ignore);
                 this.environmentContext.log("Continuing initialization.");            
