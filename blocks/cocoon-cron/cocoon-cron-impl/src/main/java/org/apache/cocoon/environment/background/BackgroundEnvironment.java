@@ -24,8 +24,6 @@ import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.commandline.CommandLineRequest;
-import org.apache.cocoon.environment.commandline.CommandLineResponse;
 import org.apache.cocoon.util.NullOutputStream;
 
 /**
@@ -44,7 +42,7 @@ public class BackgroundEnvironment extends AbstractEnvironment {
         this.outputStream = new NullOutputStream();
 
         // TODO Would special Background*-objects have advantages?
-        Request request = new CommandLineRequest(
+        Request request = new BackgroundRequest(
                 this,                  // environment
                 "",                    // context path
                 "",                    // servlet path
@@ -55,7 +53,7 @@ public class BackgroundEnvironment extends AbstractEnvironment {
         );
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
-                             new CommandLineResponse());
+                             new BackgroundResponse());
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, ctx);
     }
 
