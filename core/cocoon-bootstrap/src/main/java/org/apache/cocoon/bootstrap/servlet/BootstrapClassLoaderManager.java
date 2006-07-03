@@ -60,17 +60,17 @@ public class BootstrapClassLoaderManager {
             ClassLoaderConfiguration config = new ClassLoaderConfiguration();
 
             try {
-                if ( servletContext.getResource("/" + WEB_INF_CLASSES) != null ) {
-                    config.addClassDirectory(WEB_INF_CLASSES);
-                }
-                if ( servletContext.getResource("/" + WEB_INF_LIB) != null ) {
-                    config.addLibDirectory(WEB_INF_LIB);
-                }
                 if ( servletContext.getResource("/" + WEB_INF_COCOON_CLASSES) != null ) {
                     config.addClassDirectory(WEB_INF_COCOON_CLASSES);
                 }
                 if ( servletContext.getResource("/" + WEB_INF_COCOON_LIB) != null ) {
                     config.addLibDirectory(WEB_INF_COCOON_LIB);
+                }
+                if ( servletContext.getResource("/" + WEB_INF_CLASSES) != null ) {
+                    config.addClassDirectory(WEB_INF_CLASSES);
+                }
+                if ( servletContext.getResource("/" + WEB_INF_LIB) != null ) {
+                    config.addLibDirectory(WEB_INF_LIB);
                 }
             } catch (MalformedURLException mue) {
                 throw new ServletException("", mue);
