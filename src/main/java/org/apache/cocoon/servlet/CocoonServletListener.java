@@ -29,6 +29,7 @@ import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * The Cocoon Servlet listener starts and stops Cocoon and makes
@@ -38,8 +39,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  */
 public class CocoonServletListener implements ServletContextListener {
 
-    /** CoreUtil */
-    protected CoreUtil coreUtil;
+    /** The core container. */
+    protected ConfigurableBeanFactory cocoonBeanFactory;
 
     /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
@@ -47,9 +48,9 @@ public class CocoonServletListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent event) {
         final ServletContext servletContext = event.getServletContext();
         servletContext.log("Destroying Apache Cocoon Core Container.");
-        if (this.coreUtil != null) {
-            this.coreUtil.destroy();
-            this.coreUtil = null;
+        if (this.cocoonBeanFactory != null) {
+            this.cocoonBeanFactory.destroySingletons();
+            this.cocoonBeanFactory = null;
         }
     }
 
@@ -64,7 +65,7 @@ public class CocoonServletListener implements ServletContextListener {
         ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(servletContext);
 
         try {
-            this.coreUtil = new CoreUtil(new HttpContext(servletContext), env);
+            this.cocoonBeanFactory = CoreUtil.createRootContainer(new HttpContext(servletContext), env);
         } catch (Exception e) {
             servletContext.log("Error during initializing Apache Cocoon " + Constants.VERSION + " - aborting.");
             servletContext.log(e.getMessage());
@@ -72,10 +73,7 @@ public class CocoonServletListener implements ServletContextListener {
             throw new RuntimeException(e);
         }
 
-        servletContext.setAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME, this.coreUtil.getContainer());
-        // for now we store the core util into the servlet context as well to
-        // allow for reloading
-        servletContext.setAttribute(CoreUtil.class.getName(), this.coreUtil);
+        servletContext.setAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME, this.cocoonBeanFactory);
         servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
     }
 

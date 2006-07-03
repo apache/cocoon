@@ -74,27 +74,6 @@ public class CoreUtil {
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
-    /** The callback to the real environment. */
-    protected final BootstrapEnvironment env;
-
-    /** "legacy" support: create an avalon context. */
-    protected final DefaultContext appContext = new ComponentContext();
-
-    /** The settings. */
-    protected MutableSettings settings;
-
-    /** The root logger. */
-    protected Logger log;
-
-    /** The environment context. */
-    protected final Context environmentContext;
-
-    /** The container. */
-    protected ConfigurableBeanFactory container;
-
-    /** The configuration file */
-    protected Source configurationFile;
-
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
     private static final LocationUtils.LocationFinder confLocFinder = new LocationUtils.LocationFinder() {
@@ -144,74 +123,58 @@ public class CoreUtil {
         LocationUtils.addFinder(confLocFinder);
     }
     
-    /**
-     * Setup a new instance.
-     * @param context     The environment context.
-     * @throws Exception
-     */
-    public CoreUtil(Context context)
+    public static ConfigurableBeanFactory createRootContainer(Context context)
     throws Exception {
-        this(context, null);
+        return createRootContainer(context, null);
     }
 
-    /**
-     * Setup a new instance.
-     * @param context     The environment context.
-     * @param environment The optional hook back to the environment.
-     * @throws Exception
-     */
-    public CoreUtil(Context              context,
-                    BootstrapEnvironment environment)
-    throws Exception {
-        this.environmentContext = context;
-        this.env = environment;
-        this.init();
-        // force load classes
-        // as we are using the same classloader for reloading
-        // we have to do this only once
-        this.forceLoad();
-    }
-
-    protected void init()
+    public static ConfigurableBeanFactory createRootContainer(Context              environmentContext,
+                                                              BootstrapEnvironment bootstrapEnvironment)
     throws Exception {
         // first let's set up the appContext with some values to make
         // the simple source resolver work
+        // "legacy" support: create an avalon context.
+        final DefaultContext appContext = new ComponentContext();
+
 
         // add root url
-        String contextUrl = this.getContextUrl();
-        CoreUtil.addSourceResolverContext(this.appContext, this.environmentContext, this.env, contextUrl);
+        String contextUrl = CoreUtil.getContextUrl(environmentContext, "/WEB-INF/web.xml");
+        CoreUtil.addSourceResolverContext(appContext, environmentContext, bootstrapEnvironment, contextUrl);
 
         // create settings
-        this.settings = this.createSettings();
+        final MutableSettings settings = CoreUtil.createSettings(environmentContext, appContext, bootstrapEnvironment);
 
         // Create bootstrap logger
-        this.log = BeanFactoryUtil.createBootstrapLogger(this.environmentContext, settings.getBootstrapLogLevel());
+        Logger log = BeanFactoryUtil.createBootstrapLogger(environmentContext, settings.getBootstrapLogLevel());
 
-        if (this.log.isDebugEnabled()) {
-            this.log.debug("Context URL: " + contextUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Context URL: " + contextUrl);
         }
         // initialize some directories
-        CoreUtil.initSettingsFiles(this.settings, this.log);
+        CoreUtil.initSettingsFiles(settings, log);
 
         // update configuration
-        final URL u = this.getConfigFile(this.settings.getConfiguration());
-        this.settings.setConfiguration(u.toExternalForm());
+        final URL u = CoreUtil.getConfigFile(settings.getConfiguration(), environmentContext, log);
+        settings.setConfiguration(u.toExternalForm());
 
         // dump system properties
-        this.dumpSystemProperties();
+        CoreUtil.dumpSystemProperties(log);
 
         // settings can't be changed anymore
-        this.settings.makeReadOnly();
+        settings.makeReadOnly();
 
         // Init logger
-        this.log = BeanFactoryUtil.createRootLogger(this.environmentContext,
-                                                    this.settings);
+        log = BeanFactoryUtil.createRootLogger(environmentContext,
+                                               settings);
 
         // add the Avalon context attributes that are contained in the settings
-        CoreUtil.addSettingsContext(this.appContext, this.settings);
+        CoreUtil.addSettingsContext(appContext, settings);
 
-        // test the setup of the spring based container
-        this.container = this.setupSpringContainer();
+        // force load classes
+        CoreUtil.forceLoad(settings, log);
+
+        // setup of the spring based container
+        return CoreUtil.setupSpringContainer(settings, environmentContext, appContext, log);
     }
 
     /**
@@ -352,21 +315,23 @@ public class CoreUtil {
      *
      * @return A new Settings object
      */
-    protected MutableSettings createSettings() {
+    protected static MutableSettings createSettings(Context              environmentContext,
+                                                    org.apache.avalon.framework.context.Context appContext,
+                                                    BootstrapEnvironment bootstrapEnvironment) {
         // get the running mode
         final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
-        this.environmentContext.log("Running in mode: " + mode);
+        environmentContext.log("Running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
         // we need our own resolver
-        final SourceResolver resolver = this.createSourceResolver(new LoggerWrapper(this.environmentContext));
+        final SourceResolver resolver = CoreUtil.createSourceResolver(appContext, new LoggerWrapper(environmentContext));
 
         // now read all properties from the properties directory
-        this.readProperties("context://WEB-INF/properties", s, resolver);
+        CoreUtil.readProperties("context://WEB-INF/properties", s, resolver, environmentContext);
         // read all properties from the mode dependent directory
-        this.readProperties("context://WEB-INF/properties/" + mode, s, resolver);
+        CoreUtil.readProperties("context://WEB-INF/properties/" + mode, s, resolver, environmentContext);
 
         // Next look for a custom property provider in the spring root context
         BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(environmentContext);
@@ -375,13 +340,13 @@ public class CoreUtil {
                 PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
                 s.fill(provider.getProperties(mode, null));
             } catch (Exception ignore) {
-                this.environmentContext.log("Unable to get properties from provider.", ignore);
-                this.environmentContext.log("Continuing initialization.");            
+                environmentContext.log("Unable to get properties from provider.", ignore);
+                environmentContext.log("Continuing initialization.");            
             }
         }
         // fill from the environment configuration, like web.xml etc.
-        if ( this.env != null ) {
-            env.configure(s);
+        if ( bootstrapEnvironment != null ) {
+            bootstrapEnvironment.configure(s);
         }
 
         // read additional properties file
@@ -396,15 +361,15 @@ public class CoreUtil {
             }
         }
         if ( additionalPropertyFile != null ) {
-            this.environmentContext.log("Reading user settings from '" + additionalPropertyFile + "'");
+            environmentContext.log("Reading user settings from '" + additionalPropertyFile + "'");
             final Properties p = new Properties();
             try {
                 FileInputStream fis = new FileInputStream(additionalPropertyFile);
                 p.load(fis);
                 fis.close();
             } catch (IOException ignore) {
-                this.environmentContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                this.environmentContext.log("Continuing initialization.");
+                environmentContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                environmentContext.log("Continuing initialization.");
             }
         }
         // now overwrite with system properties
@@ -416,16 +381,16 @@ public class CoreUtil {
     /**
      * Dump System Properties.
      */
-    protected void dumpSystemProperties() {
-        if (this.log.isDebugEnabled()) {
+    protected static void dumpSystemProperties(Logger log) {
+        if (log.isDebugEnabled()) {
             try {
                 Enumeration e = System.getProperties().propertyNames();
-                this.log.debug("===== System Properties Start =====");
+                log.debug("===== System Properties Start =====");
                 for (; e.hasMoreElements();) {
                     String key = (String) e.nextElement();
-                    this.log.debug(key + "=" + System.getProperty(key));
+                    log.debug(key + "=" + System.getProperty(key));
                 }
-                this.log.debug("===== System Properties End =====");
+                log.debug("===== System Properties End =====");
             } catch (SecurityException se) {
                 // Ignore Exceptions.
             }
@@ -435,9 +400,10 @@ public class CoreUtil {
     /**
      * Read all property files from the given directory and apply them to the settings.
      */
-    protected void readProperties(String          directoryName,
-                                  MutableSettings s,
-                                  SourceResolver  resolver) {
+    protected static void readProperties(String          directoryName,
+                                         MutableSettings s,
+                                         SourceResolver  resolver,
+                                         ServletContext  environmentContext) {
         Source directory = null;
         try {
             directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
@@ -457,7 +423,7 @@ public class CoreUtil {
                 while ( i.hasNext() ) {
                     final Source src = (Source)i.next();
                     final InputStream propsIS = src.getInputStream();
-                    this.environmentContext.log("Reading settings from '" + src.getURI() + "'.");
+                    environmentContext.log("Reading settings from '" + src.getURI() + "'.");
                     final Properties p = new Properties();
                     p.load(propsIS);
                     propsIS.close();
@@ -465,8 +431,8 @@ public class CoreUtil {
                 }
             }
         } catch (IOException ignore) {
-            this.environmentContext.log("Unable to read from directory " + directoryName, ignore);
-            this.environmentContext.log("Continuing initialization.");            
+            environmentContext.log("Unable to read from directory " + directoryName, ignore);
+            environmentContext.log("Continuing initialization.");            
         } finally {
             resolver.release(directory);
         }
@@ -495,12 +461,13 @@ public class CoreUtil {
     /**
      * Create a simple source resolver.
      */
-    protected SourceResolver createSourceResolver(Logger logger) {
+    protected static SourceResolver createSourceResolver(org.apache.avalon.framework.context.Context appContext,
+                                                         Logger logger) {
         // Create our own resolver
         final SimpleSourceResolver resolver = new SimpleSourceResolver();
         resolver.enableLogging(logger);
         try {
-            resolver.contextualize(this.appContext);
+            resolver.contextualize(appContext);
         } catch (ContextException ce) {
             throw new CoreInitializationException(
                     "Cannot setup source resolver.", ce);
@@ -508,50 +475,20 @@ public class CoreUtil {
         return resolver;        
     }
 
-    /**
-     * Reload the the container.
-     */
-    public synchronized void reloadCore()
+    protected static ConfigurableBeanFactory setupSpringContainer(MutableSettings settings,
+                                                                  ServletContext environmentContext,
+                                                                  org.apache.avalon.framework.context.Context appContext,
+                                                                  Logger   log)
     throws Exception {
-        if (this.settings.isReloadingEnabled("config")) {
-            boolean reload = false;
-
-            if (this.container != null) {
-                if (this.settings.getCreationTime() < this.configurationFile.getLastModified()) {
-                    if (this.log.isInfoEnabled()) {
-                        this.log.info("Configuration changed reload attempt");
-                    }
-                    reload = true;
-                } else {
-                    if (this.log.isInfoEnabled()) {
-                        this.log.info("Forced reload attempt");
-                    }
-                    reload = true;
-                }
-            } else {
-                if (this.log.isInfoEnabled()) {
-                    this.log.info("Invalid configurations reload - container has not been initialized yet.");
-                }
-                reload = true;
-            }
-
-            if (reload) {
-                this.destroy();
-                this.init();
-            }
-        }
-    }
-
-    protected ConfigurableBeanFactory setupSpringContainer() throws Exception {
-        if (this.log.isInfoEnabled()) {
-            this.log.info("Reading root configuration: " + this.settings.getConfiguration());
+        if (log.isInfoEnabled()) {
+            log.info("Reading root configuration: " + settings.getConfiguration());
         }
 
         URLSource urlSource = new URLSource();
-        urlSource.init(new URL(this.settings.getConfiguration()), null);
-        this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                this.settings.getReloadDelay("config"));
-        final InputSource is = SourceUtil.getInputSource(this.configurationFile);
+        urlSource.init(new URL(settings.getConfiguration()), null);
+        final Source configurationFile = new DelayedRefreshSourceWrapper(urlSource,
+                settings.getReloadDelay("config"));
+        final InputSource is = SourceUtil.getInputSource(configurationFile);
 
         final ConfigurationBuilder builder = new ConfigurationBuilder(settings);
         final Configuration rootConfig = builder.build(is);
@@ -559,59 +496,59 @@ public class CoreUtil {
         if (!"cocoon".equals(rootConfig.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + rootConfig.toString());
         }
-        if (this.log.isDebugEnabled()) {
-            this.log.debug("Configuration version: " + rootConfig.getAttribute("version"));
+        if (log.isDebugEnabled()) {
+            log.debug("Configuration version: " + rootConfig.getAttribute("version"));
         }
         if (!Constants.CONF_VERSION.equals(rootConfig.getAttribute("version"))) {
             throw new ConfigurationException("Invalid configuration schema version. Must be '" + Constants.CONF_VERSION + "'.");
         }
 
-        if (this.log.isInfoEnabled()) {
-            this.log.info("Setting up root Spring container.");
+        if (log.isInfoEnabled()) {
+            log.info("Setting up root Spring container.");
         }
-        AvalonEnvironment env = new AvalonEnvironment();
-        env.context = this.appContext;
-        env.logger = this.log;
-        env.settings = this.settings;
-        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(env, this.environmentContext);
-        ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), env);
-        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(env, result, null, rootContext);
+        final AvalonEnvironment avalonEnv = new AvalonEnvironment();
+        avalonEnv.context = appContext;
+        avalonEnv.logger = log;
+        avalonEnv.settings = settings;
+        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(avalonEnv, environmentContext);
+        ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), avalonEnv);
+        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(avalonEnv, result, null, rootContext);
 
-        this.settings.setCreationTime(System.currentTimeMillis());
+        settings.setCreationTime(System.currentTimeMillis());
         return mainContext;
     }
 
     /**
      * Get the URL of the main Cocoon configuration file.
      */
-    protected URL getConfigFile(final String configFileName)
+    protected static URL getConfigFile(final String configFileName, Context environmentContext, Logger log)
     throws Exception {
         final String usedFileName;
 
         if (configFileName == null) {
-            if (this.log.isWarnEnabled()) {
-                this.log.warn("No configuration for Cocoon configuration file specified, attempting to use '/WEB-INF/cocoon.xconf'");
+            if (log.isWarnEnabled()) {
+                log.warn("No configuration for Cocoon configuration file specified, attempting to use '/WEB-INF/cocoon.xconf'");
             }
             usedFileName = "/WEB-INF/cocoon.xconf";
         } else {
             usedFileName = configFileName;
         }
 
-        if (this.log.isDebugEnabled()) {
-            this.log.debug("Using configuration file: " + usedFileName);
+        if (log.isDebugEnabled()) {
+            log.debug("Using configuration file: " + usedFileName);
         }
 
         URL result;
         try {
             // test if this is a qualified url
             if (usedFileName.indexOf(':') == -1) {
-                result = this.environmentContext.getResource(usedFileName);
+                result = environmentContext.getResource(usedFileName);
             } else {
                 result = new URL(usedFileName);
             }
         } catch (Exception mue) {
             String msg = "Setting for 'configuration' is invalid : " + usedFileName;
-            this.log.error(msg, mue);
+            log.error(msg, mue);
             throw new CoreInitializationException(msg, mue);
         }
 
@@ -622,7 +559,7 @@ public class CoreUtil {
                     result = resultFile.getCanonicalFile().toURL();
                 } catch (Exception e) {
                     String msg = "Setting for 'configuration' is invalid : " + usedFileName;
-                    this.log.error(msg, e);
+                    log.error(msg, e);
                     throw new CoreInitializationException(msg, e);
                 }
             }
@@ -630,14 +567,10 @@ public class CoreUtil {
 
         if (result == null) {
             String msg = "Setting for 'configuration' doesn't name an existing resource : " + usedFileName;
-            this.log.error(msg);
+            log.error(msg);
             throw new CoreInitializationException(msg);
         }
         return result;
-    }
-
-    protected String getContextUrl() {
-        return CoreUtil.getContextUrl(this.environmentContext, "/WEB-INF/web.xml");
     }
 
     /**
@@ -696,36 +629,22 @@ public class CoreUtil {
      * entry with whitespace, a comma, or a semi-colon. Cocoon will
      * strip any whitespace from the entry.</p>
      */
-    protected void forceLoad() {
-        final Iterator i = this.settings.getLoadClasses().iterator();
+    protected static void forceLoad(final Settings settings, final Logger log) {
+        final Iterator i = settings.getLoadClasses().iterator();
         while (i.hasNext()) {
             final String fqcn = (String)i.next();
             try {
-                if (this.log.isDebugEnabled()) {
-                    this.log.debug("Loading: " + fqcn);
+                if (log.isDebugEnabled()) {
+                    log.debug("Loading: " + fqcn);
                 }
                 ClassUtils.loadClass(fqcn).newInstance();
             } catch (Exception e) {
-                if (this.log.isWarnEnabled()) {
-                    this.log.warn("Could not load class: " + fqcn, e);
+                if (log.isWarnEnabled()) {
+                    log.warn("Could not load class: " + fqcn, e);
                 }
                 // Do not throw an exception, because it is not a fatal error.
             }
         }
-    }
-
-    /**
-     * Dispose the root processor when environment is destroyed
-     */
-    public void destroy() {
-        if ( this.container != null ) {
-            this.container.destroySingletons();
-            this.container = null;
-        }
-    }
-
-    public ConfigurableBeanFactory getContainer() {
-        return this.container;
     }
 
     protected static final class LoggerWrapper implements Logger {
