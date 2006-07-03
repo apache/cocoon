@@ -325,9 +325,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         final File srcDirectory = new File(parentDir, srcDir);
         if (srcDirectory.exists() && srcDirectory.isDirectory()) {
             File destDirectory = new File(parentDir, destDir);
-            destDirectory.delete();
+            org.apache.cocoon.maven.deployer.utils.FileUtils.deleteDirRecursivly(destDirectory);
             destDirectory = new File(parentDir, destDir);
-            destDirectory.mkdir();
+            org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(destDirectory);
             final File[] files = srcDirectory.listFiles();
             if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
