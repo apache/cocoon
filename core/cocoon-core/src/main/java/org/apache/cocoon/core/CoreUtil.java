@@ -334,17 +334,6 @@ public class CoreUtil {
         appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
     }
 
-    public Logger getRootLogger() {
-        return this.log;
-    }
-
-    /**
-     * Return the settings object.
-     */
-    public Settings getSettings() {
-        return this.settings;
-    }
-
     /**
      * Get the settings for Cocoon.
      * This method reads several property files and merges the result. If there
