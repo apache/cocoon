@@ -325,9 +325,15 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         final File srcDirectory = new File(parentDir, srcDir);
         if (srcDirectory.exists() && srcDirectory.isDirectory()) {
             File destDirectory = new File(parentDir, destDir);
+            if ( this.getLog().isDebugEnabled() ) {
+                this.getLog().debug("Deleting directory " + destDirectory);
+            }
             org.apache.cocoon.maven.deployer.utils.FileUtils.deleteDirRecursivly(destDirectory);
             destDirectory = new File(parentDir, destDir);
-            org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(destDirectory);
+            if ( this.getLog().isDebugEnabled() ) {
+                this.getLog().debug("Recreating directory " + destDirectory);
+            }
+            destDirectory.mkdir();
             final File[] files = srcDirectory.listFiles();
             if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
@@ -336,8 +342,14 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
                     boolean exclude = false;
                     if ("lib".equals(srcDir) && files[i].getName().startsWith("cocoon-bootstrap")) {
                         exclude = true;
+                        if ( this.getLog().isDebugEnabled() ) {
+                            this.getLog().debug("Excluding " + files[i] + " from moving.");
+                        }
                     }
                     if (!exclude) {
+                        if ( this.getLog().isDebugEnabled() ) {
+                            this.getLog().debug("Moving " + files[i] + " to " + destDirectory);
+                        }
                         files[i].renameTo(new File(destDirectory, files[i].getName()));
                     }
                 }
