@@ -21,6 +21,9 @@ import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +47,7 @@ import javax.servlet.ServletContext;
  *   &lt;exclude-classes pattern="org.apache.cocoon.transformation.**"/&gt;
  * &/lt;classpath&gt;
  * </pre>
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -118,7 +122,8 @@ public abstract class AbstractClassLoaderFactory
                     throw new Exception("Configuration for lib class path is not a directory: " + libDir);
                 }
                 File[] libraries = libDir.listFiles(new JarFileFilter());
-
+                // sort the files to provide a consistent search order
+                Arrays.sort(libraries);
                 for (int m = 0; m < libraries.length; m++) {
                     final URL lib = libraries[m].toURL();
                     urlList.add(lib);
@@ -131,13 +136,19 @@ public abstract class AbstractClassLoaderFactory
                 final String contextPath = this.getContextPath(directory);
                 final Set resources = servletContext.getResourcePaths(contextPath + '/');
                 if ( resources != null ) {
+                    // we add all urls into a temporary list first to sort them
+                    // before we add them
+                    final List temporaryList = new ArrayList();
                     final Iterator iter = resources.iterator();
                     while ( iter.hasNext() ) {
                         final String path = (String)iter.next();
                         if (path.endsWith(".jar") || path.endsWith(".zip")) {
-                            urlList.add(servletContext.getResource(path));
+                            temporaryList.add(servletContext.getResource(path));
                         }
                     }
+                    // let's sort before adding
+                    Collections.sort(temporaryList, new UrlComparator());
+                    urlList.addAll(temporaryList);
                 }
             }
         }
@@ -149,10 +160,19 @@ public abstract class AbstractClassLoaderFactory
 
     protected abstract ClassLoader createClassLoader(URL[] urls, List includePatterns, List excludePatterns, ClassLoader parent);
 
-    private class JarFileFilter implements FilenameFilter {
+    private final static class JarFileFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return name.endsWith(".zip") || name.endsWith(".jar");
         }
     }
 
+    private final static class UrlComparator implements Comparator {
+
+        public int compare(Object o1, Object o2) {
+            if ( o1 instanceof URL && o2 instanceof URL ) {
+                return ((URL)o1).toExternalForm().compareTo(((URL)o2).toExternalForm());
+            }
+            return 0;
+        }        
+    }
 }
