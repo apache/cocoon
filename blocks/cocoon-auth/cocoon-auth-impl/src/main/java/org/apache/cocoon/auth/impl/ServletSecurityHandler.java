@@ -83,6 +83,8 @@ public class ServletSecurityHandler
      */
     public static class ServletUser extends StandardUser {
 
+        private static final long serialVersionUID = 1364001198329803481L;
+
         /** The principal belonging to the user. */
         protected final Principal principal;
 
