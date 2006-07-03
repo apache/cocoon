@@ -219,6 +219,8 @@ public class PipelineSecurityHandler
      */
     public static class PipelineSHUser extends StandardUser {
 
+        private static final long serialVersionUID = 8857947293278280019L;
+
         /** The document delivered by the pipeline. */
         protected final Document userInfo;
 
