@@ -51,11 +51,6 @@ import javax.servlet.http.HttpServlet;
  */
 public class ShieldingServlet extends HttpServlet {
 
-    /**
-     * The name of the actual servlet class.
-     */
-    public static final String DEFAULT_SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
-
     protected Servlet servlet;
 
     protected ClassLoader classloader;
@@ -70,10 +65,10 @@ public class ShieldingServlet extends HttpServlet {
 
         String servletName = config.getInitParameter("servlet-class");
         if (servletName == null) {
-            servletName = DEFAULT_SERVLET_CLASS;
+            throw new ServletException("ShieldingServlet: Init-Parameter 'servlet-class' is missing.");
         }
-        log("Loading servlet class " + servletName);
-        
+        log("ShieldingServlet: Loading servlet class " + servletName);
+
         // Create the servlet
         try {
 
