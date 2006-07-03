@@ -33,6 +33,8 @@ import java.util.StringTokenizer;
 public class StandardUser
 implements User, Serializable {
 
+    private static final long serialVersionUID = -4823699497822611877L;
+
     /** The unique id of the user. */
     protected String id;
 
