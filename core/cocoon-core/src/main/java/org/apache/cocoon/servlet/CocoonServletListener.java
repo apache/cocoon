@@ -65,7 +65,6 @@ public class CocoonServletListener implements ServletContextListener {
 
         try {
             this.coreUtil = new CoreUtil(new HttpContext(servletContext), env);
-            this.coreUtil.createProcessor();          
         } catch (Exception e) {
             servletContext.log("Error during initializing Apache Cocoon " + Constants.VERSION + " - aborting.");
             servletContext.log(e.getMessage());

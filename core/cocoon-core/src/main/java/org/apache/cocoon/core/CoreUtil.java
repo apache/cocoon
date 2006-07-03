@@ -40,7 +40,6 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -86,9 +85,6 @@ public class CoreUtil {
 
     /** The root logger. */
     protected Logger log;
-
-    /** The Root processor instance */
-    protected Processor processor;
 
     /** The environment context. */
     protected final Context environmentContext;
@@ -524,26 +520,9 @@ public class CoreUtil {
     }
 
     /**
-     * Creates the root processor object and handles exception handling.
-     */
-    public synchronized Processor createProcessor()
-    throws Exception {
-        try {
-            Processor p = (Processor)this.container.getBean("org.apache.cocoon.Cocoon");
-
-            this.processor = p;
-        } catch (Exception e) {
-            this.log.error("Exception reloading root processor.", e);
-            throw e;
-        }
-        return this.processor;
-    }
-
-    /**
      * Gets the current root processor object.
      * Reload the root processor if configuration changed or we are reloading.
      * @param reloadContainer Should the container be reloaded?
-     */
     public Processor getProcessor(boolean reloadContainer)
     throws Exception {
         if (this.settings.isReloadingEnabled("config")) {
@@ -578,6 +557,7 @@ public class CoreUtil {
         }
         return this.processor;
     }
+     */
 
     protected ConfigurableBeanFactory setupSpringContainer() throws Exception {
         if (this.log.isInfoEnabled()) {

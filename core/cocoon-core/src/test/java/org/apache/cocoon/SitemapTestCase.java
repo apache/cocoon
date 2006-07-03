@@ -32,7 +32,9 @@ import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.TestBootstrapEnvironment;
 import org.apache.cocoon.core.TestCoreUtil;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 import org.apache.cocoon.environment.mock.MockRequest;
@@ -48,10 +50,10 @@ public class SitemapTestCase extends TestCase {
 
     private Logger logger;
     private CoreUtil coreUtil;
-    private Processor processor;
     private String classDir;
     private ConfigurableBeanFactory container;
     private ServiceManager serviceManager;
+    private Processor rootProcessor;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -75,9 +77,9 @@ public class SitemapTestCase extends TestCase {
             new TestBootstrapEnvironment(this.getConfiguration());
 
         this.coreUtil = new TestCoreUtil(env);
-        this.processor = this.coreUtil.createProcessor();
         this.container = this.coreUtil.getContainer();
         this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
+        this.rootProcessor = (Processor)this.container.getBean(Processor.ROLE);
     }
 
     protected void tearDown() throws Exception {
@@ -194,10 +196,36 @@ public class SitemapTestCase extends TestCase {
 
     protected byte[] process(String uri) throws Exception {
         MockEnvironment env = getEnvironment(uri);
-        this.processor.process(env);
+        this.process(env);
         getLogger().info("Output: " + new String(env.getOutput(), "UTF-8"));
 
         return env.getOutput();
+    }
+
+    protected boolean process(Environment environment) throws Exception {
+        environment.startingProcessing();
+        final int environmentDepth = EnvironmentHelper.markEnvironment();
+        EnvironmentHelper.enterProcessor(this.rootProcessor, environment);
+        try {
+            boolean result;
+
+            result = this.rootProcessor.process(environment);
+
+            // commit response on success
+            environment.commitResponse();
+
+            return result;
+        } catch (Exception any) {
+            // reset response on error
+            environment.tryResetResponse();
+            throw any;
+        } finally {
+            EnvironmentHelper.leaveProcessor();
+            environment.finishingProcessing();
+            ProcessingUtil.cleanup();
+
+            EnvironmentHelper.checkEnvironment(environmentDepth, this.getLogger());
+        }
     }
 
     protected void pipeTest(String uri, String expectedSource) throws Exception {
