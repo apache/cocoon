@@ -73,6 +73,9 @@ public class CocoonServletListener implements ServletContextListener {
         }
 
         servletContext.setAttribute(ProcessingUtil.CONTAINER_CONTEXT_ATTR_NAME, this.coreUtil.getContainer());
+        // for now we store the core util into the servlet context as well to
+        // allow for reloading
+        servletContext.setAttribute(CoreUtil.class.getName(), this.coreUtil);
         servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
     }
 

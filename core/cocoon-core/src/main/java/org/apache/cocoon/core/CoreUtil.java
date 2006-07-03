@@ -520,44 +520,38 @@ public class CoreUtil {
     }
 
     /**
-     * Gets the current root processor object.
-     * Reload the root processor if configuration changed or we are reloading.
-     * @param reloadContainer Should the container be reloaded?
-    public Processor getProcessor(boolean reloadContainer)
+     * Reload the the container.
+     */
+    public synchronized void reloadCore()
     throws Exception {
         if (this.settings.isReloadingEnabled("config")) {
             boolean reload = false;
 
-            if (this.processor != null) {
+            if (this.container != null) {
                 if (this.settings.getCreationTime() < this.configurationFile.getLastModified()) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Configuration changed reload attempt");
                     }
                     reload = true;
-                } else if (reloadContainer) {
+                } else {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Forced reload attempt");
                     }
                     reload = true;
                 }
-            } else if (reloadContainer) {
+            } else {
                 if (this.log.isInfoEnabled()) {
-                    this.log.info("Invalid configurations reload");
+                    this.log.info("Invalid configurations reload - container has not been initialized yet.");
                 }
                 reload = true;
             }
 
             if (reload) {
-                if (this.container != null) {
-                    this.container = null;
-                }
+                this.destroy();
                 this.init();
-                this.createProcessor();
             }
         }
-        return this.processor;
     }
-     */
 
     protected ConfigurableBeanFactory setupSpringContainer() throws Exception {
         if (this.log.isInfoEnabled()) {
