@@ -31,7 +31,6 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.core.BootstrapEnvironment;
 import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.core.TestBootstrapEnvironment;
-import org.apache.cocoon.core.TestCoreUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -49,7 +48,6 @@ public class SitemapTestCase extends TestCase {
     private Map objectmodel = new HashMap();
 
     private Logger logger;
-    private CoreUtil coreUtil;
     private String classDir;
     private ConfigurableBeanFactory container;
     private ServiceManager serviceManager;
@@ -76,14 +74,18 @@ public class SitemapTestCase extends TestCase {
         BootstrapEnvironment env = 
             new TestBootstrapEnvironment(this.getConfiguration());
 
-        this.coreUtil = new TestCoreUtil(env);
-        this.container = this.coreUtil.getContainer();
+        this.container = CoreUtil.createRootContainer(new MockContext(), env);
         this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
         this.rootProcessor = (Processor)this.container.getBean(Processor.ROLE);
     }
 
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
     protected void tearDown() throws Exception {
-        this.coreUtil.destroy();
+        if ( this.container != null ) {
+            this.container.destroySingletons();
+        }
         super.tearDown();
     }
 
