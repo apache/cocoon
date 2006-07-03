@@ -62,8 +62,9 @@ public class ShieldingServletFilter implements Filter {
 
         String filterName = config.getInitParameter("filter-class");
         if (filterName == null) {
-            throw new ServletException("Filter-class parameter is missing.");
+            throw new ServletException("ShieldingServletFilter: 'filter-class' parameter is missing.");
         }
+        config.getServletContext().log("ShieldingServletFilter: Loading filter class " + filterName);
         
         // Create the filter
         try {

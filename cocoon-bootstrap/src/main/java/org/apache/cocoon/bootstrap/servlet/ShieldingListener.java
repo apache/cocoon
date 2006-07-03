@@ -106,7 +106,8 @@ public class ShieldingListener
                 final StringTokenizer st = new StringTokenizer(listenersConfig, " \t\r\n\f;,", false);
                 while ( st.hasMoreTokens() ) {
                     final String className = st.nextToken();
-                    try {    
+                    try {
+                        context.log("ShieldingListener: Loading listener class " + className);
                         Class listenerClass = this.classloader.loadClass(className);
                         final Object listener = listenerClass.newInstance();
                         if ( listener instanceof HttpSessionListener ) {
