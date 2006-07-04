@@ -25,23 +25,39 @@
 
 <web-app>
 
+  <filter>
+    <filter-name>CocoonMultipartFilter</filter-name>
+    <display-name>Cocoon multipart filter</display-name>
+    <description>Multipart MIME handling filter for Cocoon</description>
+    <filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
+  </filter>
+  
+  <filter>
+    <filter-name></filter-name>
+    <display-name>Cocoon debug filter</display-name>
+    <description>Log debug information about each request</description>
+    <filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>CocoonMultipartFilter</filter-name>
+    <servlet-name>Cocoon</servlet-name>
+  </filter-mapping>
+  
+  <!--filter-mapping>
+  	<filter-name>CocoonDebugFilter</filter-name>
+  	<servlet-name>Cocoon</servlet-name>
+  </filter-mapping-->
+  
+  <listener>
+    <listener-class>org.apache.cocoon.servlet.CocoonServletListener</listener-class>
+  </listener>
+  
   <servlet>
     <servlet-name>Cocoon</servlet-name>
     <display-name>Cocoon</display-name>
     <description>Cocoon demo web application</description>
-
-    <servlet-class>org.apache.cocoon.bootstrap.servlet.ShieldingServlet</servlet-class>
-
-    <init-param>
-      <param-name>container-encoding</param-name>
-      <param-value>ISO-8859-1</param-value>
-    </init-param>
-    
-    <init-param>
-      <param-name>servlet-class</param-name>
-      <param-value>org.apache.cocoon.servlet.CocoonServlet</param-value>
-    </init-param>
-    
+    <servlet-class>org.apache.cocoon.servlet.SitemapServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
