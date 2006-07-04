@@ -222,7 +222,8 @@ public class Form extends AbstractContainerWidget
         if (this.listener != null) {
             this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
         }
-        // TODO - Should we change the phase?
+        // go back to initial phase
+        this.phase = ProcessingPhase.LOAD_MODEL;
     }
 
     /**
