@@ -26,10 +26,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.antlr.stringtemplate.StringTemplate;
-import org.apache.cocoon.maven.deployer.monolithic.DevelopmentBlock;
-import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
-import org.apache.cocoon.maven.deployer.monolithic.MonolithicServer22;
-import org.apache.cocoon.maven.deployer.monolithic.SingleFileDeployer;
 import org.apache.cocoon.maven.deployer.utils.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -53,10 +49,12 @@ public class MonolithicCocoonDeployer {
 		throws DeploymentException {
 		
 		// iterate over all blocks that need to be installed into a J2EE web application
-        for(Iterator it = libraries.keySet().iterator(); it.hasNext();) {
-        	Object id = it.next();
-        	File lib = (File) libraries.get(id);  	
+        for(Iterator it = libraries.entrySet().iterator(); it.hasNext();) {
+            final Map.Entry entry = (Map.Entry)it.next();
+        	final Object id = entry.getKey();
+        	File lib = (File) entry.getValue();  	
         	try {
+                this.logger.info("Deploying " + id);
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
                 zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF"));        		
                 zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
