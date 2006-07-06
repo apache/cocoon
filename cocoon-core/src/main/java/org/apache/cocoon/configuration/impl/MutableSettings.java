@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -194,18 +195,18 @@ public class MutableSettings implements Settings {
      */
     public MutableSettings() {
         // set default values
-        this.reloadingEnabled = RELOADING_ENABLED_DEFAULT;
-        this.enableUploads = ENABLE_UPLOADS;
-        this.autosaveUploads = SAVE_UPLOADS_TO_DISK;
-        this.maxUploadSize = MAX_UPLOAD_SIZE;
-        this.showTime = SHOW_TIME;
-        this.hideShowTime = HIDE_SHOW_TIME;
-        this.showCocoonVersion = SHOW_COCOON_VERSION;
-        this.manageExceptions = MANAGE_EXCEPTIONS;
-        this.configurationReloadDelay = 1000;
-        this.containerEncoding = "ISO-8859-1";
-        this.loggingConfiguration = DEFAULT_LOGGING_CONFIGURATION;
-        this.configuration = DEFAULT_CONFIGURATION;
+        this.reloadingEnabled = SettingsDefaults.RELOADING_ENABLED_DEFAULT;
+        this.enableUploads = SettingsDefaults.ENABLE_UPLOADS;
+        this.autosaveUploads = SettingsDefaults.SAVE_UPLOADS_TO_DISK;
+        this.maxUploadSize = SettingsDefaults.MAX_UPLOAD_SIZE;
+        this.showTime = SettingsDefaults.SHOW_TIME;
+        this.hideShowTime = SettingsDefaults.HIDE_SHOW_TIME;
+        this.showCocoonVersion = SettingsDefaults.SHOW_COCOON_VERSION;
+        this.manageExceptions = SettingsDefaults.MANAGE_EXCEPTIONS;
+        this.configurationReloadDelay = SettingsDefaults.DEFAULT_CONFIGURATION_RELOAD_DELAY;
+        this.containerEncoding = SettingsDefaults.DEFAULT_CONTAINER_ENCODING;
+        this.loggingConfiguration = SettingsDefaults.DEFAULT_LOGGING_CONFIGURATION;
+        this.configuration = SettingsDefaults.DEFAULT_CONFIGURATION;
     }
 
     public MutableSettings(Settings parent) {

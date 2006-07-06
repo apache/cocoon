@@ -452,8 +452,7 @@ public class StatusGenerator extends ServiceableGenerator
         final Settings s = this.settings;
         this.startGroup("Base Settings");
 
-        this.addValue("Running mode", s.getProperty(Settings.PROPERTY_RUNNING_MODE,
-                                                    Settings.DEFAULT_RUNNING_MODE));
+        this.addValue("Running mode", s.getRunningMode());
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());
         this.addMultilineValue(Settings.KEY_LOAD_CLASSES, s.getLoadClasses());
         this.addValue(Settings.KEY_LOGGING_CONFIGURATION, s.getLoggingConfiguration());
@@ -577,26 +576,6 @@ public class StatusGenerator extends ServiceableGenerator
     /** Utility function to begin and end a <code>value</code> tag pair. */
     private void addValue(String name, long value) throws SAXException {
         addValue(name, String.valueOf(value), null);
-    }
-
-    /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(String name, List value) throws SAXException {
-        addValue(name, value.iterator());
-    }
-
-    /** Utility function to begin and end a <code>value</code> tag pair. */
-    private void addValue(String name, Iterator value) throws SAXException {
-        final StringBuffer buffer = new StringBuffer();
-        boolean first = true;
-        while ( value.hasNext() ) {
-            if ( !first ) {
-                buffer.append(',');
-            } else {
-                first = false;
-            }
-            buffer.append(value.next());
-        }
-        addValue(name, buffer.toString(), null);
     }
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */

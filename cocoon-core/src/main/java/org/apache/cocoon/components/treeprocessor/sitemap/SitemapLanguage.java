@@ -1154,7 +1154,7 @@ public class SitemapLanguage
                                              boolean  useDefaultIncludes,
                                              BeanFactory parentBeanFactory) {
         // get the running mode
-        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
+        final String mode = parent.getRunningMode();
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(parent);

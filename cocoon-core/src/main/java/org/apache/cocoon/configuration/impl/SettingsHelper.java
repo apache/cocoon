@@ -33,6 +33,7 @@ import javax.servlet.ServletContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -68,12 +69,12 @@ public class SettingsHelper {
      *
      * @return A new Settings object
      */
-    public static MutableSettings createSettings(ServletContext       servletContext,
-                                                    final SourceResolver resolver,
-                                                    final Logger         logger,
-                                                    PropertyProvider     externalPropertyProvider) {
+    public static MutableSettings createSettings(final ServletContext   servletContext,
+                                                 final SourceResolver   resolver,
+                                                 final Logger           logger,
+                                                 final PropertyProvider externalPropertyProvider) {
         // get the running mode
-        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
+        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
         logger.info("Running in mode: " + mode);
 
         // create an empty settings objects
