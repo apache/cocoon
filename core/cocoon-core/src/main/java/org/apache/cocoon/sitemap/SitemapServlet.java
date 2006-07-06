@@ -31,8 +31,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
@@ -91,7 +91,7 @@ public class SitemapServlet extends HttpServlet {
         this.contextUrl = CoreUtil.getContextUrl(this.cocoonContext, MANIFEST_FILE);
         org.apache.avalon.framework.context.Context avalonContext;
         try {
-            avalonContext = CoreUtil.createContext(this.settings, this.cocoonContext, this.contextUrl, null);
+            avalonContext = CoreUtil.createContext(this.settings, this.cocoonContext, this.contextUrl);
         } catch (MalformedURLException e) {
             throw new ServletException(e);
         }

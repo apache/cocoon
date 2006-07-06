@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.util;
+package org.apache.cocoon.configuration.impl;
 
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 
 /**
  * Helper class for replacing property references with the value of the
@@ -88,13 +88,17 @@ public class PropertyHelper {
         return buffer.toString();
     }
 
-    static String getProperty(String name, Settings settings) {
+    protected static String getProperty(String name, Settings settings) {
         String value = null;
         if ( settings != null ) {
             value = settings.getProperty(name);
         }
         if ( value == null ) {
-            value = System.getProperty(name);
+            try {
+                value = System.getProperty(name);
+            } catch (SecurityException ex) {
+                // ignore this
+            }
         }
         return value;
     }

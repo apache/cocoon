@@ -62,12 +62,12 @@ import org.apache.cocoon.components.treeprocessor.NodeBuilderSelector;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.MutableSettings;
-import org.apache.cocoon.core.PropertyProvider;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.PropertyProvider;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.impl.MutableSettings;
+import org.apache.cocoon.configuration.impl.PropertyHelper;
+import org.apache.cocoon.configuration.impl.SettingsHelper;
 import org.apache.cocoon.core.container.spring.BeanFactoryFactoryImpl;
-import org.apache.cocoon.core.container.util.PropertyHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.generation.Generator;
@@ -1177,7 +1177,7 @@ public class SitemapLanguage
                 final Environment env = EnvironmentHelper.getCurrentEnvironment();
                 PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
                 // TODO - add the name of the sitemap file to the path
-                s.fill(provider.getProperties(mode, env.getURIPrefix()));
+                s.fill(provider.getProperties(s, mode, env.getURIPrefix()));
             } catch (Exception ignore) {
                 this.getLogger().warn("Unable to get properties from provider.", ignore);
                 this.getLogger().warn("Continuing initialization.");            
@@ -1209,7 +1209,7 @@ public class SitemapLanguage
                     }
                 }
                 // sort
-                Collections.sort(propertyUris, CoreUtil.getSourceComparator());
+                Collections.sort(propertyUris, SettingsHelper.getSourceComparator());
                 // now process
                 final Iterator i = propertyUris.iterator();
                 while ( i.hasNext() ) {

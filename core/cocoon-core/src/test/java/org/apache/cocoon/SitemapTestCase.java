@@ -28,9 +28,9 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.TestBootstrapEnvironment;
+import org.apache.cocoon.core.TestPropertyProvider;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -71,8 +71,8 @@ public class SitemapTestCase extends TestCase {
         objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, environmentContext);
 
         this.classDir = this.getClassDirURL().toExternalForm();
-        BootstrapEnvironment env = 
-            new TestBootstrapEnvironment(this.getConfiguration());
+        PropertyProvider env = 
+            new TestPropertyProvider(this.getConfiguration());
 
         this.container = CoreUtil.createRootContainer(new MockContext(), env);
         this.serviceManager = (ServiceManager)this.container.getBean(ServiceManager.class.getName());
