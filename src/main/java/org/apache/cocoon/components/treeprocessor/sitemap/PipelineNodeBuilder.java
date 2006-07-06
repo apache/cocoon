@@ -25,7 +25,7 @@ import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBu
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.TreeBuilder;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 
 /**
  * Builds a &lt;map:pipeline&gt;

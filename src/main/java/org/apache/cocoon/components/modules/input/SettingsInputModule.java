@@ -22,7 +22,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.commons.collections.IteratorUtils;
 

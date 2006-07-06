@@ -40,7 +40,7 @@ import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;

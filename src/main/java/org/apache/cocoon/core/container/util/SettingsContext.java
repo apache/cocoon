@@ -18,13 +18,14 @@ package org.apache.cocoon.core.container.util;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 
 /**
  * This is an extension of the default context implementation.
  * It first looks into the settings object and only if the key
  * is not found there, it delegates to the parent.
- * 
+ * This object is used for setting up the logger.
+ *
  * @version $Id$
  * @since 2.2
  */
@@ -46,10 +47,11 @@ public class SettingsContext extends DefaultContext {
      * @see org.apache.avalon.framework.context.Context#get(java.lang.Object)
      */
     public Object get(Object name) throws ContextException {
-        if ( this.settings.getProperty(name.toString()) != null ) {
-            return this.settings.getProperty(name.toString());
+        if ( name != null && this.settings != null ) {
+            if ( this.settings.getProperty(name.toString()) != null ) {
+                return this.settings.getProperty(name.toString());
+            }
         }
         return super.get(name);
     }
-
 }

@@ -29,8 +29,8 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingUtil;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.Settings;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
 import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.ConfigReader;
@@ -148,7 +148,7 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		this.logger.debug("Context path: " + contextPath);
 
 		// create a minimal Avalon Context
-		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath, null);
+		DefaultContext avalonContext = CoreUtil.createContext(this.settings, osgiServletContext, contextPath);
 		
 		// create an Avalon environment (it's some kind of container for Avalon related information)
 		AvalonEnvironment avalonEnvironment = new AvalonEnvironment();
