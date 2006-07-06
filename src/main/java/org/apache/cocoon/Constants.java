@@ -48,13 +48,17 @@ public final class Constants {
 
     }
 
-    /** The name of this project. */
+    /** The name of this project. 
+     * @deprecated This will be removed soon. 
+     */
     public static final String NAME = properties.getProperty("name");
 
     /** The version of this build. */
     public static final String VERSION = properties.getProperty("version");
 
-    /** The full name of this project. */
+    /** The full name of this project.
+     * @deprecated This will be removed soon. 
+     */
     public static final String COMPLETE_NAME = properties.getProperty("fullname") + " " + VERSION;
 
     /** The version of the configuration schema */
@@ -65,13 +69,6 @@ public final class Constants {
 
     /** The build information */
     public static final String BUILD_INFO = properties.getProperty("build.info");
-
-    /**
-     * The request parameter name to reload the configuration.
-     *
-     * FIXME(GP): Isn't this Servlet specific?
-     */
-    public static final String RELOAD_PARAM = "cocoon-reload";
 
     /**
      * The request parameter name to add a line of the request duration.
@@ -164,11 +161,13 @@ public final class Constants {
 
     /**
      * The diretory to use for generated files.
+     * @deprecated This will be removed soon.
      */
     public static final String DEFAULT_WORK_DIR = "./work";
 
     /**
      * How a default configuration file is named.
+     * @deprecated This will be removed soon.
      */
     public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
@@ -181,18 +180,20 @@ public final class Constants {
     /** Application <code>Context</code> Key for the environmental Context (= ServletContext) */
     public static final String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
 
-    /** Application <code>Context</code> Key for the work directory path */
+    /** Application <code>Context</code> Key for the work directory path.
+     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getWorkDirectory() instead.}
+     */
     public static final String CONTEXT_WORK_DIR = "work-directory";
 
-    /** Application <code>Context</code> Key for the upload directory path */
+    /** Application <code>Context</code> Key for the upload directory path.
+     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getUploadDirectory() instead.}
+     */
     public static final String CONTEXT_UPLOAD_DIR = "upload-directory";
 
-    /** Application <code>Context</code> Key for the cache directory path */
+    /** Application <code>Context</code> Key for the cache directory path.
+     * @deprecated Use{@link org.apache.cocoon.configuration.Settings#getCacheDirectory() instead.}
+     */
     public static final String CONTEXT_CACHE_DIR = "cache-directory";
-
-    /** Application <code>Context</code> Key for the current classpath */
-    //public static final String CONTEXT_CLASSPATH = "classpath";
-
 
     /** Application <code>Context</code> key for the current environment prefix */
     public static final String CONTEXT_ENV_PREFIX = "env-prefix";
@@ -215,6 +216,4 @@ public final class Constants {
     /** Application <code>Context</code> Key for the default encoding.
      * @deprecated Use {@link org.apache.cocoon.configuration.Settings#getFormEncoding()}. */
     public static final String CONTEXT_DEFAULT_ENCODING = "default-encoding";
-
-    
 }

@@ -28,23 +28,11 @@ public interface Settings {
     /** The role to lookup this bean. */
     String ROLE = Settings.class.getName();
 
-    /** Default value for {@link #isManageExceptions()}. */
-    boolean MANAGE_EXCEPTIONS = true;
-
     /** Name of the property specifying a custom user properties file. */
     String PROPERTY_USER_SETTINGS = "org.apache.cocoon.settings";
 
     /** Name of the property specifying the running mode. */
     String PROPERTY_RUNNING_MODE = "org.apache.cocoon.mode";
-
-    /** The default running mode. */
-    String DEFAULT_RUNNING_MODE = "dev";
-
-    /** The default configuration location. */
-    String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon.xconf";
-
-    /** The default logging configuration location. */
-    String DEFAULT_LOGGING_CONFIGURATION = "/WEB-INF/log4j.xconf";
 
     /**
      * This parameter points to the main configuration file for Cocoon.
@@ -139,26 +127,6 @@ public interface Settings {
      * definition in the logging configuration.
      */
     String KEY_LOGGING_OVERRIDE_LOGLEVEL = "org.apache.cocoon.override.loglevel";
-
-    /**
-     * Default value for {@link #isReloadingEnabled(String)} parameter (false).
-     */
-    boolean RELOADING_ENABLED_DEFAULT = false;
-
-    /**
-     * Default value for {@link #isEnableUploads()} parameter (false).
-     */
-    boolean ENABLE_UPLOADS = false;
-    boolean SAVE_UPLOADS_TO_DISK = true;
-    int MAX_UPLOAD_SIZE = 10000000; // 10Mb
-
-    boolean SHOW_TIME = false;
-    boolean HIDE_SHOW_TIME = false;
-
-    /**
-     * Default value for {@link #isShowVersion()} parameter (true).
-     */
-    boolean SHOW_COCOON_VERSION = true;
 
     /**
      * Allow reinstantiating (reloading) of the cocoon instance. If this is
