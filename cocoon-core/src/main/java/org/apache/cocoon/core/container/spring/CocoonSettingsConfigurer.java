@@ -18,7 +18,7 @@ package org.apache.cocoon.core.container.spring;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;

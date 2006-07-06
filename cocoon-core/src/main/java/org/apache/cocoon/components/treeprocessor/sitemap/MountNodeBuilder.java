@@ -20,7 +20,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 
 /**
  *

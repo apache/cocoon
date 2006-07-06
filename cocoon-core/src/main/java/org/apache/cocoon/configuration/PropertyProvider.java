@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core;
+package org.apache.cocoon.configuration;
 
 import java.util.Properties;
 
@@ -31,5 +31,5 @@ public interface PropertyProvider {
 
     String ROLE = PropertyProvider.class.getName();
 
-    Properties getProperties(String runningMode, String path);
+    Properties getProperties(Settings settings, String runningMode, String path);
 }

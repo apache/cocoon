@@ -26,7 +26,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.impl.PropertyHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;

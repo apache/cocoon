@@ -16,7 +16,7 @@
  */
 package org.apache.cocoon.core.container.spring;
 
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 
 /**
  * This is a simple test bean.

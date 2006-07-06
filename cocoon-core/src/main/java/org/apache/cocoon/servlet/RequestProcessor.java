@@ -34,7 +34,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.core.Settings;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;

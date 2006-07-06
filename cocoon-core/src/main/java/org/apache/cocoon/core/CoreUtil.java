@@ -17,19 +17,12 @@
 package org.apache.cocoon.core;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -43,8 +36,12 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
+import org.apache.cocoon.configuration.PropertyProvider;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.configuration.impl.MutableSettings;
+import org.apache.cocoon.configuration.impl.SettingsHelper;
 import org.apache.cocoon.core.container.spring.AvalonEnvironment;
+import org.apache.cocoon.core.container.spring.BeanFactoryUtil;
 import org.apache.cocoon.core.container.spring.ConfigReader;
 import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ComponentContext;
@@ -57,9 +54,7 @@ import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.URLSource;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.xml.sax.InputSource;
 
@@ -128,21 +123,20 @@ public class CoreUtil {
         return createRootContainer(context, null);
     }
 
-    public static ConfigurableBeanFactory createRootContainer(Context              environmentContext,
-                                                              BootstrapEnvironment bootstrapEnvironment)
+    public static ConfigurableBeanFactory createRootContainer(Context          environmentContext,
+                                                              PropertyProvider externalPropertyProvider)
     throws Exception {
         // first let's set up the appContext with some values to make
         // the simple source resolver work
         // "legacy" support: create an avalon context.
         final DefaultContext appContext = new ComponentContext();
 
-
         // add root url
         String contextUrl = CoreUtil.getContextUrl(environmentContext, "/WEB-INF/web.xml");
-        CoreUtil.addSourceResolverContext(appContext, environmentContext, bootstrapEnvironment, contextUrl);
+        CoreUtil.addSourceResolverContext(appContext, environmentContext, contextUrl);
 
         // create settings
-        final MutableSettings settings = CoreUtil.createSettings(environmentContext, appContext, bootstrapEnvironment);
+        final MutableSettings settings = CoreUtil.createSettings(environmentContext, appContext, externalPropertyProvider);
 
         // Create bootstrap logger
         Logger log = BeanFactoryUtil.createBootstrapLogger(environmentContext, settings.getBootstrapLogLevel());
@@ -244,11 +238,10 @@ public class CoreUtil {
 
     public static DefaultContext createContext(Settings settings,
                                                Context environmentContext,
-                                               String contextUrl,
-                                               BootstrapEnvironment env)
+                                               String contextUrl)
         throws ServletException, MalformedURLException {
         DefaultContext appContext = new ComponentContext();
-        CoreUtil.addSourceResolverContext(appContext, environmentContext, env, contextUrl);
+        CoreUtil.addSourceResolverContext(appContext, environmentContext, contextUrl);
         CoreUtil.addSettingsContext(appContext, settings);
         return appContext;
     }
@@ -262,7 +255,6 @@ public class CoreUtil {
      */
     private static void addSourceResolverContext(DefaultContext       appContext,
                                                  Context              environmentContext,
-                                                 BootstrapEnvironment env, 
                                                  String               contextUrl) {
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
@@ -272,11 +264,6 @@ public class CoreUtil {
     
         // add environment context and config
         appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, environmentContext);
-    
-        // now add environment specific information
-        if ( env != null ) {
-            env.configure(appContext);
-        }
     }
 
     /**
@@ -315,67 +302,14 @@ public class CoreUtil {
      *
      * @return A new Settings object
      */
-    protected static MutableSettings createSettings(Context              environmentContext,
+    protected static MutableSettings createSettings(Context          environmentContext,
                                                     org.apache.avalon.framework.context.Context appContext,
-                                                    BootstrapEnvironment bootstrapEnvironment) {
-        // get the running mode
-        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, Settings.DEFAULT_RUNNING_MODE);
-        environmentContext.log("Running in mode: " + mode);
-
-        // create an empty settings objects
-        final MutableSettings s = new MutableSettings();
-
-        // we need our own resolver
+                                                    PropertyProvider externalPropertyProvider) {
+        // we need a logger for the settings util which will log info messages
+        final Logger logger = new LoggerWrapper(environmentContext, true);
+        // we need our own resolver (with own logger which just logs errors)
         final SourceResolver resolver = CoreUtil.createSourceResolver(appContext, new LoggerWrapper(environmentContext));
-
-        // now read all properties from the properties directory
-        CoreUtil.readProperties("context://WEB-INF/properties", s, resolver, environmentContext);
-        // read all properties from the mode dependent directory
-        CoreUtil.readProperties("context://WEB-INF/properties/" + mode, s, resolver, environmentContext);
-
-        // Next look for a custom property provider in the spring root context
-        BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(environmentContext);
-        if (rootContext != null && rootContext.containsBean(PropertyProvider.ROLE) ) {
-            try {
-                PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
-                s.fill(provider.getProperties(mode, null));
-            } catch (Exception ignore) {
-                environmentContext.log("Unable to get properties from provider.", ignore);
-                environmentContext.log("Continuing initialization.");            
-            }
-        }
-        // fill from the environment configuration, like web.xml etc.
-        if ( bootstrapEnvironment != null ) {
-            bootstrapEnvironment.configure(s);
-        }
-
-        // read additional properties file
-        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
-                                                      System.getProperty(Settings.PROPERTY_USER_SETTINGS));
-        // if there is no property defining the addition file, we try it in the home directory
-        if ( additionalPropertyFile == null ) {
-            additionalPropertyFile = System.getProperty("user.home") + File.separator + ".cocoon/settings.properties";
-            final File testFile = new File(additionalPropertyFile);
-            if ( !testFile.exists() ) {
-                additionalPropertyFile = null;
-            }
-        }
-        if ( additionalPropertyFile != null ) {
-            environmentContext.log("Reading user settings from '" + additionalPropertyFile + "'");
-            final Properties p = new Properties();
-            try {
-                FileInputStream fis = new FileInputStream(additionalPropertyFile);
-                p.load(fis);
-                fis.close();
-            } catch (IOException ignore) {
-                environmentContext.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                environmentContext.log("Continuing initialization.");
-            }
-        }
-        // now overwrite with system properties
-        s.fill(System.getProperties());
-
-        return s;
+        return SettingsHelper.createSettings(environmentContext, resolver, logger, externalPropertyProvider);
     }
 
     /**
@@ -394,67 +328,6 @@ public class CoreUtil {
             } catch (SecurityException se) {
                 // Ignore Exceptions.
             }
-        }
-    }
-
-    /**
-     * Read all property files from the given directory and apply them to the settings.
-     */
-    protected static void readProperties(String          directoryName,
-                                         MutableSettings s,
-                                         SourceResolver  resolver,
-                                         ServletContext  environmentContext) {
-        Source directory = null;
-        try {
-            directory = resolver.resolveURI(directoryName, null, CONTEXT_PARAMETERS);
-            if (directory.exists() && directory instanceof TraversableSource) {
-                final List propertyUris = new ArrayList();
-                final Iterator c = ((TraversableSource) directory).getChildren().iterator();
-                while (c.hasNext()) {
-                    final Source src = (Source) c.next();
-                    if ( src.getURI().endsWith(".properties") ) {
-                        propertyUris.add(src);
-                    }
-                }
-                // sort
-                Collections.sort(propertyUris, getSourceComparator());
-                // now process
-                final Iterator i = propertyUris.iterator();
-                while ( i.hasNext() ) {
-                    final Source src = (Source)i.next();
-                    final InputStream propsIS = src.getInputStream();
-                    environmentContext.log("Reading settings from '" + src.getURI() + "'.");
-                    final Properties p = new Properties();
-                    p.load(propsIS);
-                    propsIS.close();
-                    s.fill(p);
-                }
-            }
-        } catch (IOException ignore) {
-            environmentContext.log("Unable to read from directory " + directoryName, ignore);
-            environmentContext.log("Continuing initialization.");            
-        } finally {
-            resolver.release(directory);
-        }
-    }
-
-    /**
-     * Return a source comparator
-     */
-    public static Comparator getSourceComparator() {
-        return new SourceComparator();
-    }
-
-    protected final static class SourceComparator implements Comparator {
-
-        /**
-         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-         */
-        public int compare(Object o1, Object o2) {
-            if ( !(o1 instanceof Source) || !(o2 instanceof Source)) {
-                return 0;
-            }
-            return ((Source)o1).getURI().compareTo(((Source)o2).getURI());
         }
     }
 
@@ -523,42 +396,31 @@ public class CoreUtil {
      */
     protected static URL getConfigFile(final String configFileName, Context environmentContext, Logger log)
     throws Exception {
-        final String usedFileName;
-
-        if (configFileName == null) {
-            if (log.isWarnEnabled()) {
-                log.warn("No configuration for Cocoon configuration file specified, attempting to use '/WEB-INF/cocoon.xconf'");
-            }
-            usedFileName = "/WEB-INF/cocoon.xconf";
-        } else {
-            usedFileName = configFileName;
-        }
-
         if (log.isDebugEnabled()) {
-            log.debug("Using configuration file: " + usedFileName);
+            log.debug("Using configuration file: " + configFileName);
         }
 
         URL result;
         try {
             // test if this is a qualified url
-            if (usedFileName.indexOf(':') == -1) {
-                result = environmentContext.getResource(usedFileName);
+            if (configFileName.indexOf(':') == -1) {
+                result = environmentContext.getResource(configFileName);
             } else {
-                result = new URL(usedFileName);
+                result = new URL(configFileName);
             }
         } catch (Exception mue) {
-            String msg = "Setting for 'configuration' is invalid : " + usedFileName;
+            String msg = "Setting for 'configuration' is invalid : " + configFileName;
             log.error(msg, mue);
             throw new CoreInitializationException(msg, mue);
         }
 
         if (result == null) {
-            File resultFile = new File(usedFileName);
+            File resultFile = new File(configFileName);
             if (resultFile.isFile()) {
                 try {
                     result = resultFile.getCanonicalFile().toURL();
                 } catch (Exception e) {
-                    String msg = "Setting for 'configuration' is invalid : " + usedFileName;
+                    String msg = "Setting for 'configuration' is invalid : " + configFileName;
                     log.error(msg, e);
                     throw new CoreInitializationException(msg, e);
                 }
@@ -566,7 +428,7 @@ public class CoreUtil {
         }
 
         if (result == null) {
-            String msg = "Setting for 'configuration' doesn't name an existing resource : " + usedFileName;
+            String msg = "Setting for 'configuration' doesn't name an existing resource : " + configFileName;
             log.error(msg);
             throw new CoreInitializationException(msg);
         }
@@ -650,8 +512,16 @@ public class CoreUtil {
     protected static final class LoggerWrapper implements Logger {
         private final Context env;
 
+        private final boolean displayInfoAndWarn;
+
         public LoggerWrapper(Context env) {
             this.env = env;
+            this.displayInfoAndWarn = false;
+        }
+
+        public LoggerWrapper(Context env, boolean displayInfoAndWarn) {
+            this.env = env;
+            this.displayInfoAndWarn = displayInfoAndWarn;
         }
 
         protected void text(String arg0, Throwable arg1) {
@@ -662,68 +532,124 @@ public class CoreUtil {
             }
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#debug(java.lang.String, java.lang.Throwable)
+         */
         public void debug(String arg0, Throwable arg1) {
             // we ignore debug
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#debug(java.lang.String)
+         */
         public void debug(String arg0) {
             // we ignore debug
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#error(java.lang.String, java.lang.Throwable)
+         */
         public void error(String arg0, Throwable arg1) {
             this.text(arg0, arg1);
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#error(java.lang.String)
+         */
         public void error(String arg0) {
             this.text(arg0, null);
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#fatalError(java.lang.String, java.lang.Throwable)
+         */
         public void fatalError(String arg0, Throwable arg1) {
             this.text(arg0, arg1);
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#fatalError(java.lang.String)
+         */
         public void fatalError(String arg0) {
             this.text(arg0, null);
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#getChildLogger(java.lang.String)
+         */
         public Logger getChildLogger(String arg0) {
             return this;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#info(java.lang.String, java.lang.Throwable)
+         */
         public void info(String arg0, Throwable arg1) {
-            // we ignore info
+            if ( this.displayInfoAndWarn ) {
+                this.text(arg0, arg1);
+            }
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#info(java.lang.String)
+         */
         public void info(String arg0) {
-            // we ignore info
+            if ( this.displayInfoAndWarn ) {
+                this.text(arg0, null);
+            }
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isDebugEnabled()
+         */
         public boolean isDebugEnabled() {
             return false;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isErrorEnabled()
+         */
         public boolean isErrorEnabled() {
             return true;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isFatalErrorEnabled()
+         */
         public boolean isFatalErrorEnabled() {
             return true;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isInfoEnabled()
+         */
         public boolean isInfoEnabled() {
-            return false;
+            return this.displayInfoAndWarn;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#isWarnEnabled()
+         */
         public boolean isWarnEnabled() {
-            return false;
+            return this.displayInfoAndWarn;
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#warn(java.lang.String, java.lang.Throwable)
+         */
         public void warn(String arg0, Throwable arg1) {
-            // we ignore warn
+            if ( this.displayInfoAndWarn ) {
+                this.text(arg0, arg1);
+            }
         }
 
+        /**
+         * @see org.apache.avalon.framework.logger.Logger#warn(java.lang.String)
+         */
         public void warn(String arg0) {
-            // we ignore warn
+            if ( this.displayInfoAndWarn ) {
+                this.text(arg0, null);
+            }
         }
     }
 }

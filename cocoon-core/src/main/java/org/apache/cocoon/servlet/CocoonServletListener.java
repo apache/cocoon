@@ -16,17 +16,17 @@
 package org.apache.cocoon.servlet;
 
 import java.io.File;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingUtil;
-import org.apache.cocoon.core.BootstrapEnvironment;
+import org.apache.cocoon.configuration.PropertyProvider;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.MutableSettings;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -62,7 +62,7 @@ public class CocoonServletListener implements ServletContextListener {
         servletContext.log("Initializing Apache Cocoon " + Constants.VERSION);
 
         // initialize settings
-        ServletBootstrapEnvironment env = new ServletBootstrapEnvironment(servletContext);
+        ServletPropertyProvider env = new ServletPropertyProvider(servletContext);
 
         try {
             this.cocoonBeanFactory = CoreUtil.createRootContainer(new HttpContext(servletContext), env);
@@ -77,33 +77,25 @@ public class CocoonServletListener implements ServletContextListener {
         servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
     }
 
-    protected static final class ServletBootstrapEnvironment
-    implements BootstrapEnvironment {
+    protected static final class ServletPropertyProvider
+    implements PropertyProvider {
 
         private final ServletContext context;
     
-        public ServletBootstrapEnvironment(ServletContext context) {
+        public ServletPropertyProvider(ServletContext context) {
             this.context = context;
         }
-    
+
         /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
+         * @see org.apache.cocoon.configuration.PropertyProvider#getProperties(Settings, java.lang.String, java.lang.String)
          */
-        public void configure(MutableSettings settings) {
+        public Properties getProperties(Settings settings, String runningMode, String path) {
+            final Properties p = new Properties();
             if ( settings.getWorkDirectory() == null ) {
                 final File workDir = (File)context.getAttribute("javax.servlet.context.tempdir");
-                settings.setWorkDirectory(workDir.getAbsolutePath());
+                p.setProperty(Settings.KEY_WORK_DIRECTORY, workDir.getAbsolutePath());
             }
-            if ( settings.getLoggingConfiguration() == null ) {
-                settings.setLoggingConfiguration("/WEB-INF/log4j.xconf");
-            }
-        }
-    
-        /**
-         * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
-         */
-        public void configure(DefaultContext componentContext) {
-            // nothing to do
+            return p;
         }
     }
 }
