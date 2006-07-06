@@ -18,12 +18,35 @@ There are also some Daisy documentation pages about this, for more "stable" info
 http://cocoon.zones.apache.org/daisy/documentation/g2/756.html
 http://cocoon.zones.apache.org/daisy/documentation/g1/798.html
 
+PREREQUISITES
+-------------
+You need a JDK, 1.4.x or 1.5.x.
+
+Maven 2 must be installed (at least 2.0.4??).
+
+MAVEN REPOSITORY MIRRORS
+------------------------
+To avoid very slow builds due to slow or inaccessible Maven repositories,
+it is recommended to setup your closest/fastest/preferred Maven mirror,
+as explained in 
+
+  http://maven.apache.org/guides/mini/guide-mirror-settings.html
+
+People have been reporting good results with the dotsrc.org mirror, at
+least from Europe. 
+
+Build times will vary dramatically depending on how good your connectivity
+to the Maven repository/mirror is, and how well it performs, and on whether
+you already have a loaded local Maven repository. A full build can take
+from 5 minutes to maybe 4 hours...
+
 HOW TO BUILD THE COCOON WEBAPP (NON OSGI MODE)
 ----------------------------------------------
 
 Since Cocoon release 2.2, Cocoon relies on Maven 2 for its build
-process. You have to install Maven 2.0.4 (or later) first. Once
-Maven is installed, use following command:
+process. 
+
+To build Cocoon, use the following command:
 
   $ mvn -Dmaven.test.skip=true install
 
@@ -32,12 +55,9 @@ the message:
 
   BUILD SUCCESSFUL
 
-You may need anywhere from 5 minutes to 4 hours for this step to
-complete. This wide time span depends on how many jar files 
-(artifacts) the build depends on you already have in your local 
-Maven 2 repository.
 
- 
+See also MAVEN REPOSITORY MIRRORS above.
+
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
 
@@ -67,6 +87,7 @@ HOW TO START THE COCOON WEBAPP (NON OSGI MODE)
 
 Checkout complete trunk and build it. If clean rebuild is desired,
 use command:
+
   $ mvn clean install
 
 Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
@@ -81,16 +102,20 @@ Point your browser to http://localhost:8888/
 (Don't use jetty6:run-exploded as in this case the jetty6 plugin will
  alter the webapp build by the Cocoon deployer again!)
 
+See also MAVEN REPOSITORY MIRRORS above.
 
 
 HOW TO START THE COCOON WEBAPP (OSGI MODE)
 ------------------------------------------
 0. checkout complete trunk and
+
   $ mvn clean install -Dmaven.test.skip=true
 
   Call this until you get "BUILD SUCCESSFUL" - sometimes donwloads from maven
   repositories are temporarily unaccessible and cause the build to fail.
   
+  See also MAVEN REPOSITORY MIRRORS above.
+
 1. move to ./core/cocoon-core and call "mvn c-eclipse:eclipse -o". This makes the project
    an PDE project. This means that Eclipse offers tools to support development based on
    OSGi. 
