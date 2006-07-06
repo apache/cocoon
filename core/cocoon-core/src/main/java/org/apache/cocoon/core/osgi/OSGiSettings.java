@@ -16,8 +16,8 @@
 package org.apache.cocoon.core.osgi;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.configuration.impl.MutableSettings;
 import org.apache.cocoon.core.CoreUtil;
-import org.apache.cocoon.core.MutableSettings;
 import org.osgi.service.component.ComponentContext;
 
 /**

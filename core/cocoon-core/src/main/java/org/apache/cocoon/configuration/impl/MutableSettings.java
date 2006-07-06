@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core;
+package org.apache.cocoon.configuration.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -79,7 +80,7 @@ public class MutableSettings implements Settings {
      * the request parameter "cocoon-reload". It also enables that Cocoon is
      * reloaded when cocoon.xconf changes. Default is no for security reasons.
      */
-    protected Boolean reloadingEnabled;
+    protected boolean reloadingEnabled;
 
     /**
      * This parameter is used to list classes that should be loaded at
@@ -93,7 +94,7 @@ public class MutableSettings implements Settings {
      * Causes all files in multipart requests to be processed.
      * Default is false for security reasons.
      */
-    protected Boolean enableUploads;
+    protected boolean enableUploads;
 
     /**
      * This parameter allows to specify where Cocoon should put uploaded files.
@@ -107,7 +108,7 @@ public class MutableSettings implements Settings {
      * Causes all files in multipart requests to be saved to upload-dir.
      * Default is true for security reasons.
      */
-    protected Boolean autosaveUploads;
+    protected boolean autosaveUploads;
 
     /**
      * Specify handling of name conflicts when saving uploaded files to disk.
@@ -120,7 +121,7 @@ public class MutableSettings implements Settings {
     /**
      * Specify maximum allowed size of the upload. Defaults to 10 Mb.
      */
-    protected Integer maxUploadSize;
+    protected int maxUploadSize;
 
     /**
      * This parameter allows to specify where Cocoon should create its page
@@ -141,23 +142,23 @@ public class MutableSettings implements Settings {
     /**
      * Allow adding processing time to the response
      */
-    protected Boolean showTime;
+    protected boolean showTime;
 
     /**
      * If true, processing time will be added as an HTML comment
      */
-    protected Boolean hideShowTime;
+    protected boolean hideShowTime;
 
     /**
      * If true, the X-Cocoon-Version response header will be included.
      */
-    protected Boolean showCocoonVersion;
+    protected boolean showCocoonVersion;
 
     /**
      * If true or not set, this class will try to catch and handle all Cocoon exceptions.
      * If false, it will rethrow them to the servlet container.
      */
-    protected Boolean manageExceptions;
+    protected boolean manageExceptions;
 
     /**
      * Set form encoding. This will be the character set used to decode request
@@ -175,10 +176,10 @@ public class MutableSettings implements Settings {
     /**
      * Delay between reload checks for the configuration.
      */
-    protected Long configurationReloadDelay;
+    protected long configurationReloadDelay;
 
     /** The time the cocoon instance was created. */
-    protected Long creationTime;
+    protected long creationTime;
 
     /** The container encoding.
      * @see BaseSettings#KEY_CONTAINER_ENCODING 
@@ -193,16 +194,18 @@ public class MutableSettings implements Settings {
      */
     public MutableSettings() {
         // set default values
-        this.reloadingEnabled = BooleanUtils.toBooleanObject(RELOADING_ENABLED_DEFAULT);
-        this.enableUploads = BooleanUtils.toBooleanObject(ENABLE_UPLOADS);
-        this.autosaveUploads = BooleanUtils.toBooleanObject(SAVE_UPLOADS_TO_DISK);
-        this.maxUploadSize = new Integer(MAX_UPLOAD_SIZE);
-        this.showTime = BooleanUtils.toBooleanObject(SHOW_TIME);
-        this.hideShowTime = BooleanUtils.toBooleanObject(HIDE_SHOW_TIME);
-        this.showCocoonVersion = BooleanUtils.toBooleanObject(SHOW_COCOON_VERSION);
-        this.manageExceptions = BooleanUtils.toBooleanObject(MANAGE_EXCEPTIONS);
-        this.configurationReloadDelay = new Long(1000);
+        this.reloadingEnabled = RELOADING_ENABLED_DEFAULT;
+        this.enableUploads = ENABLE_UPLOADS;
+        this.autosaveUploads = SAVE_UPLOADS_TO_DISK;
+        this.maxUploadSize = MAX_UPLOAD_SIZE;
+        this.showTime = SHOW_TIME;
+        this.hideShowTime = HIDE_SHOW_TIME;
+        this.showCocoonVersion = SHOW_COCOON_VERSION;
+        this.manageExceptions = MANAGE_EXCEPTIONS;
+        this.configurationReloadDelay = 1000;
         this.containerEncoding = "ISO-8859-1";
+        this.loggingConfiguration = DEFAULT_LOGGING_CONFIGURATION;
+        this.configuration = DEFAULT_CONFIGURATION;
     }
 
     public MutableSettings(Settings parent) {
@@ -220,53 +223,52 @@ public class MutableSettings implements Settings {
                 final Map.Entry current = (Map.Entry)i.next();
                 String key = current.getKey().toString();
                 if ( key.startsWith(KEYPREFIX) ) {
-                    key = key.substring(KEYPREFIX.length());
                     final String value = current.getValue().toString();
 
                     if ( key.equals(KEY_CONFIGURATION) ) {
-                        this.configuration = value;
+                        this.setConfiguration(value);
                     } else if ( key.equals(KEY_RELOAD_DELAY) ) {
-                        this.configurationReloadDelay = Long.valueOf(value);
+                        this.setConfigurationReloadDelay(Long.valueOf(value).longValue());
                     } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
-                        this.loggingConfiguration = value;
+                        this.setLoggingConfiguration(value);
                     } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
-                        this.environmentLogger = value;
+                        this.setEnvironmentLogger(value);
                     } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
-                        this.cocoonLogger = value;
+                        this.setCocoonLogger(value);
                     } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
-                        this.bootstrapLogLevel = value;
+                        this.setBootstrapLogLevel(value);
                     } else if ( key.equals(KEY_RELOADING) ) {
-                        this.reloadingEnabled = BooleanUtils.toBooleanObject(value);
+                        this.setReloadingEnabled(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
-                        this.enableUploads = BooleanUtils.toBooleanObject(value);
+                        this.setEnableUploads(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
-                        this.uploadDirectory = value;
+                        this.setUploadDirectory(value);
                     } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
-                        this.autosaveUploads = BooleanUtils.toBooleanObject(value);
+                        this.setAutosaveUploads(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
-                        this.overwriteUploads = value;
+                        this.setOverwriteUploads(value);
                     } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
-                        this.maxUploadSize = Integer.valueOf(value);
+                        this.setMaxUploadSize(Integer.valueOf(value).intValue());
                     } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
-                        this.cacheDirectory = value;
+                        this.setCacheDirectory(value);
                     } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
-                        this.workDirectory = value;
+                        this.setWorkDirectory(value);
                     } else if ( key.equals(KEY_SHOWTIME) ) {
-                        this.showTime = BooleanUtils.toBooleanObject(value);
+                        this.setShowTime(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
-                        this.hideShowTime = BooleanUtils.toBooleanObject(value);
+                        this.setHideShowTime(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_SHOW_VERSION) ) {
-                        this.showCocoonVersion = BooleanUtils.toBooleanObject(value);
+                        this.setShowCocoonVersion(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
-                        this.manageExceptions = BooleanUtils.toBooleanObject(value);
+                        this.setManageExceptions(BooleanUtils.toBoolean(value));
                     } else if ( key.equals(KEY_FORM_ENCODING) ) {
-                        this.formEncoding = value;
+                        this.setFormEncoding(value);
                     } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
-                        this.overrideLogLevel = value;
+                        this.setOverrideLogLevel(value);
                     } else if ( key.startsWith(KEY_LOAD_CLASSES) ) {
                         this.addToLoadClasses(value);
                     } else if ( key.startsWith(KEY_CONTAINER_ENCODING ) ) {
-                        this.containerEncoding = value;
+                        this.setContainerEncoding(value);
                     }
                 }
             }
@@ -278,13 +280,10 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.DynamicSettings#isHideShowTime()
      */
     public boolean isHideShowTime() {
-        if ( this.hideShowTime == null ) {
-            if ( parent != null ) {
-                return parent.isShowTime();
-            }
-            return HIDE_SHOW_TIME;
+        if ( this.parent != null ) {
+            return this.parent.isHideShowTime();
         }
-        return this.hideShowTime.booleanValue();
+        return this.hideShowTime;
     }
 
     /**
@@ -292,51 +291,36 @@ public class MutableSettings implements Settings {
      */
     public boolean isReloadingEnabled(String type) {
         if ( type == null ) {
-            if ( this.reloadingEnabled == null ) {
-                if ( parent != null ) {
-                    return parent.isReloadingEnabled(type);
-                }
-                return RELOADING_ENABLED_DEFAULT;
+            if ( parent != null ) {
+                return parent.isReloadingEnabled(type);
             }
-            return this.reloadingEnabled.booleanValue();
+            return this.reloadingEnabled;
         }
-        String o = this.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
+        String o = this.getProperty(KEY_RELOADING + '.' + type);
         if ( o != null ) {
             return BooleanUtils.toBoolean(o);
         }
         if ( this.parent != null ) {
-            o = this.parent.getProperty(KEYPREFIX + KEY_RELOADING + '.' + type);
-            if ( o != null ) {
-                return BooleanUtils.toBoolean(o);
-            }
+            return this.parent.isReloadingEnabled(type);
         }
-        if ( this.reloadingEnabled == null ) {
-            if ( this.parent != null ) {
-                return this.parent.isReloadingEnabled(type);
-            }
-            return RELOADING_ENABLED_DEFAULT;
-        }
-        return this.reloadingEnabled.booleanValue();
+        return this.reloadingEnabled;
     }
 
     /**
      * @see org.apache.cocoon.core.DynamicSettings#isAutosaveUploads()
      */
     public boolean isAutosaveUploads() {
-        if ( this.autosaveUploads == null ) {
-            if ( parent != null ) {
-                return parent.isAutosaveUploads();
-            }
-            return SAVE_UPLOADS_TO_DISK;
+        if ( parent != null ) {
+            return parent.isAutosaveUploads();
         }
-        return this.autosaveUploads.booleanValue();
+        return this.autosaveUploads;
     }
 
     /**
      * @see org.apache.cocoon.core.BaseSettings#getCacheDirectory()
      */
     public String getCacheDirectory() {
-        if ( this.cacheDirectory == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getCacheDirectory();
         }
         return this.cacheDirectory;
@@ -346,7 +330,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getCocoonLogger()
      */
     public String getCocoonLogger() {
-        if ( this.cocoonLogger == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getCocoonLogger();
         }
         return this.cocoonLogger;
@@ -356,7 +340,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getConfiguration()
      */
     public String getConfiguration() {
-        if ( this.configuration == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getConfiguration();
         }
         return this.configuration;
@@ -366,20 +350,17 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.DynamicSettings#isEnableUploads()
      */
     public boolean isEnableUploads() {
-        if ( this.enableUploads == null ) {
-            if ( parent != null ) {
-                return parent.isEnableUploads();
-            }
-            return ENABLE_UPLOADS;
+        if ( parent != null ) {
+            return parent.isEnableUploads();
         }
-        return this.enableUploads.booleanValue();
+        return this.enableUploads;
     }
 
     /**
      * @see org.apache.cocoon.core.BaseSettings#getFormEncoding()
      */
     public String getFormEncoding() {
-        if ( this.formEncoding == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getFormEncoding();
         }
         return this.formEncoding;
@@ -389,7 +370,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getContainerEncoding()
      */
     public String getContainerEncoding() {
-        if ( this.containerEncoding == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getContainerEncoding();
         }
         return this.containerEncoding;
@@ -400,6 +381,7 @@ public class MutableSettings implements Settings {
      * @param value The new encoding value.
      */
     public void setContainerEncoding(String value) {
+        this.checkSubSetting();
         this.containerEncoding = value;
     }
 
@@ -407,7 +389,8 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getLoadClasses()
      */
     public List getLoadClasses() {
-        // we don't ask the parent here as that one already loaded the classe
+        // we don't ask the parent here as the classes of the parent
+        // have already been loaded
         return this.loadClasses;
     }
 
@@ -415,7 +398,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getLoggingConfiguration()
      */
     public String getLoggingConfiguration() {
-        if ( this.loggingConfiguration == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getLoggingConfiguration();
         }
         return this.loggingConfiguration;
@@ -425,7 +408,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getBootstrapLogLevel()
      */
     public String getBootstrapLogLevel() {
-        if ( this.bootstrapLogLevel == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getBootstrapLogLevel();
         }
         return this.bootstrapLogLevel;
@@ -435,33 +418,27 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#isManageExceptions()
      */
     public boolean isManageExceptions() {
-        if ( this.manageExceptions == null ) {
-            if ( parent != null ) {
-                return parent.isManageExceptions();
-            }
-            return MANAGE_EXCEPTIONS;
+        if ( parent != null ) {
+            return parent.isManageExceptions();
         }
-        return this.manageExceptions.booleanValue();
+        return this.manageExceptions;
     }
 
     /**
      * @see org.apache.cocoon.core.DynamicSettings#getMaxUploadSize()
      */
     public int getMaxUploadSize() {
-        if ( this.maxUploadSize == null ) {
-            if ( parent != null ) {
-                return parent.getMaxUploadSize();
-            }
-            return MAX_UPLOAD_SIZE;
+        if ( parent != null ) {
+            return parent.getMaxUploadSize();
         }
-        return this.maxUploadSize.intValue();
+        return this.maxUploadSize;
     }
 
     /**
      * @see org.apache.cocoon.core.DynamicSettings#getOverwriteUploads()
      */
     public String getOverwriteUploads() {
-        if ( this.overwriteUploads == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getOverwriteUploads();
         }
         return this.overwriteUploads;
@@ -471,33 +448,27 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.DynamicSettings#isShowTime()
      */
     public boolean isShowTime() {
-        if ( this.showTime == null ) {
-            if ( parent != null ) {
-                return parent.isShowTime();
-            }
-            return SHOW_TIME;
+        if ( parent != null ) {
+            return parent.isShowTime();
         }
-        return this.showTime.booleanValue();
+        return this.showTime;
     }
 
     /**
      * @return Returns the showCocoonVersion flag.
      */
     public boolean isShowVersion() {
-        if ( this.showCocoonVersion == null ) {
-            if ( parent != null ) {
-                return parent.isShowVersion();
-            }
-            return SHOW_COCOON_VERSION;
+        if ( parent != null ) {
+            return parent.isShowVersion();
         }
-        return this.showCocoonVersion.booleanValue();
+        return this.showCocoonVersion;
     }
 
     /**
      * @see org.apache.cocoon.core.BaseSettings#getUploadDirectory()
      */
     public String getUploadDirectory() {
-        if ( this.uploadDirectory == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getUploadDirectory();
         }
         return this.uploadDirectory;
@@ -507,7 +478,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getWorkDirectory()
      */
     public String getWorkDirectory() {
-        if ( this.workDirectory == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getWorkDirectory();
         }
         return this.workDirectory;
@@ -517,7 +488,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getEnvironmentLogger()
      */
     public String getEnvironmentLogger() {
-        if ( this.environmentLogger == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getEnvironmentLogger();
         }
         return this.environmentLogger;
@@ -527,7 +498,7 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.core.BaseSettings#getOverrideLogLevel()
      */
     public String getOverrideLogLevel() {
-        if ( this.overrideLogLevel == null && this.parent != null ) {
+        if ( this.parent != null ) {
             return this.parent.getOverrideLogLevel();
         }
         return this.overrideLogLevel;
@@ -568,42 +539,30 @@ public class MutableSettings implements Settings {
      */
     public long getReloadDelay(String type) {
         if ( type == null ) {
-            if ( this.configurationReloadDelay == null ) {
-                if ( parent != null ) {
-                    return parent.getReloadDelay(type);
-                }
-                return 1000;
+            if ( parent != null ) {
+                return parent.getReloadDelay(type);
             }
-            return this.configurationReloadDelay.longValue();
+            return this.configurationReloadDelay;
         }
-        String o = this.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
+        String o = this.getProperty(KEY_RELOAD_DELAY + '.' + type);
         if ( o != null ) {
             return NumberUtils.toLong(o);
         }
         if ( this.parent != null ) {
-            o = this.parent.getProperty(KEYPREFIX + KEY_RELOAD_DELAY + '.' + type);
-            if ( o != null ) {
-                return NumberUtils.toLong(o);
-            }
+            return this.parent.getReloadDelay(type);
         }
-        if ( this.configurationReloadDelay == null ) {
-            if ( this.parent != null ) {
-                return this.parent.getReloadDelay(type);
-            }
-            return 1000;
-        }
-        return this.configurationReloadDelay.longValue();
+        return this.configurationReloadDelay;
     }
 
     /**
-     * @see org.apache.cocoon.core.Settings#getProperty(java.lang.String)
+     * @see org.apache.cocoon.configuration.Settings#getProperty(java.lang.String)
      */
     public String getProperty(String name) {
         return this.getProperty(name, null);
     }
 
     /**
-     * @see org.apache.cocoon.core.Settings#getProperty(java.lang.String, java.lang.String)
+     * @see org.apache.cocoon.configuration.Settings#getProperty(java.lang.String, java.lang.String)
      */
     public String getProperty(String key, String defaultValue) {
         if ( key == null ) {
@@ -611,44 +570,43 @@ public class MutableSettings implements Settings {
         }
         String value = null;
         if ( key.startsWith(KEYPREFIX) ) {
-            final String sKey = key.substring(KEYPREFIX.length());
-            if ( sKey.equals(KEY_CONFIGURATION) ) {
+            if ( key.equals(KEY_CONFIGURATION) ) {
                 value = this.getConfiguration();
-            } else if ( sKey.equals(KEY_RELOAD_DELAY) ) {
+            } else if ( key.equals(KEY_RELOAD_DELAY) ) {
                 value = String.valueOf(this.getReloadDelay(null));
-            } else if ( sKey.equals(KEY_LOGGING_CONFIGURATION) ) {
+            } else if ( key.equals(KEY_LOGGING_CONFIGURATION) ) {
                 value = this.getLoggingConfiguration();
-            } else if ( sKey.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
+            } else if ( key.equals(KEY_LOGGING_ENVIRONMENT_LOGGER) ) {
                 value = this.getEnvironmentLogger();
-            } else if ( sKey.equals(KEY_LOGGING_COCOON_LOGGER) ) {
+            } else if ( key.equals(KEY_LOGGING_COCOON_LOGGER) ) {
                 value = this.getCocoonLogger();
-            } else if ( sKey.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
+            } else if ( key.equals(KEY_LOGGING_BOOTSTRAP_LOGLEVEL) ) {
                 value = this.getBootstrapLogLevel();
-            } else if ( sKey.equals(KEY_RELOADING) ) {
+            } else if ( key.equals(KEY_RELOADING) ) {
                 value = String.valueOf(this.isReloadingEnabled(null));
-            } else if ( sKey.equals(KEY_UPLOADS_ENABLE) ) {
+            } else if ( key.equals(KEY_UPLOADS_ENABLE) ) {
                 value = String.valueOf(this.isEnableUploads());
-            } else if ( sKey.equals(KEY_UPLOADS_DIRECTORY) ) {
+            } else if ( key.equals(KEY_UPLOADS_DIRECTORY) ) {
                 value = this.getUploadDirectory();
-            } else if ( sKey.equals(KEY_UPLOADS_AUTOSAVE) ) {
+            } else if ( key.equals(KEY_UPLOADS_AUTOSAVE) ) {
                 value = String.valueOf(this.isAutosaveUploads());
-            } else if ( sKey.equals(KEY_UPLOADS_OVERWRITE) ) {
+            } else if ( key.equals(KEY_UPLOADS_OVERWRITE) ) {
                 value = this.getOverwriteUploads();
-            } else if ( sKey.equals(KEY_UPLOADS_MAXSIZE) ) {
+            } else if ( key.equals(KEY_UPLOADS_MAXSIZE) ) {
                 value = String.valueOf(this.getMaxUploadSize());
-            } else if ( sKey.equals(KEY_CACHE_DIRECTORY) ) {
+            } else if ( key.equals(KEY_CACHE_DIRECTORY) ) {
                 value = this.getCacheDirectory();
-            } else if ( sKey.equals(KEY_WORK_DIRECTORY) ) {
+            } else if ( key.equals(KEY_WORK_DIRECTORY) ) {
                 value = this.getWorkDirectory();
-            } else if ( sKey.equals(KEY_SHOWTIME) ) {
+            } else if ( key.equals(KEY_SHOWTIME) ) {
                 value = String.valueOf(this.isShowTime());
-            } else if ( sKey.equals(KEY_HIDE_SHOWTIME) ) {
+            } else if ( key.equals(KEY_HIDE_SHOWTIME) ) {
                 value = String.valueOf(this.isHideShowTime());
-            } else if ( sKey.equals(KEY_MANAGE_EXCEPTIONS) ) {
+            } else if ( key.equals(KEY_MANAGE_EXCEPTIONS) ) {
                 value = String.valueOf(this.isManageExceptions());
-            } else if ( sKey.equals(KEY_FORM_ENCODING) ) {
+            } else if ( key.equals(KEY_FORM_ENCODING) ) {
                 value = this.getFormEncoding();
-            } else if ( sKey.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
+            } else if ( key.equals(KEY_LOGGING_OVERRIDE_LOGLEVEL) ) {
                 value = this.getOverrideLogLevel();
             } else if ( key.equals(KEY_LOAD_CLASSES) ) {
                 value = this.toString(this.getLoadClasses());
@@ -678,29 +636,29 @@ public class MutableSettings implements Settings {
      */
     public String toString() {
         return "Settings:\n" +
-          "Running mode : " + this.getProperty(PROPERTY_RUNNING_MODE, DEFAULT_RUNNING_MODE) + '\n' +
-          KEY_CONFIGURATION + " : " + this.configuration + '\n' +
-          KEY_RELOAD_DELAY + " : " + this.configurationReloadDelay + '\n' +
-          KEY_RELOADING + " : " + this.reloadingEnabled + '\n' +
-          KEY_LOAD_CLASSES + " : " + this.toString(this.loadClasses) + '\n' +
-          KEY_LOGGING_CONFIGURATION + " : " + this.loggingConfiguration + '\n' +
-          KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.environmentLogger + '\n' +
-          KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.bootstrapLogLevel + '\n' +
-          KEY_LOGGING_COCOON_LOGGER + " : " + this.cocoonLogger + '\n' +
-          KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.overrideLogLevel + '\n' +
-          KEY_MANAGE_EXCEPTIONS + " : " + this.manageExceptions + '\n' +
-          KEY_UPLOADS_DIRECTORY + " : " + this.uploadDirectory + '\n' +
-          KEY_UPLOADS_AUTOSAVE + " : " + this.autosaveUploads + '\n' +
-          KEY_UPLOADS_ENABLE + " : " + this.enableUploads + '\n' +
-          KEY_UPLOADS_MAXSIZE + " : " + this.maxUploadSize + '\n' +
-          KEY_UPLOADS_OVERWRITE + " : " + this.overwriteUploads + '\n' +
-          KEY_CACHE_DIRECTORY + " : " + this.cacheDirectory + '\n' +
-          KEY_WORK_DIRECTORY + " : " + this.workDirectory + '\n' +
-          KEY_FORM_ENCODING + " : " + this.formEncoding + '\n' +
-          KEY_CONTAINER_ENCODING + " : " + this.containerEncoding + '\n' +
-          KEY_SHOWTIME + " : " + this.showTime + '\n' +
-          KEY_HIDE_SHOWTIME + " : " + this.hideShowTime + '\n' +
-          KEY_SHOW_VERSION + " : " + this.showCocoonVersion + '\n';
+          "Running mode : " + this.getRunningMode()+ '\n' +
+          KEY_CONFIGURATION + " : " + this.getConfiguration() + '\n' +
+          KEY_RELOAD_DELAY + " : " + this.getReloadDelay(null) + '\n' +
+          KEY_RELOADING + " : " + this.isReloadingEnabled(null) + '\n' +
+          KEY_LOAD_CLASSES + " : " + this.toString(this.getLoadClasses()) + '\n' +
+          KEY_LOGGING_CONFIGURATION + " : " + this.getLoggingConfiguration() + '\n' +
+          KEY_LOGGING_ENVIRONMENT_LOGGER + " : " + this.getEnvironmentLogger() + '\n' +
+          KEY_LOGGING_BOOTSTRAP_LOGLEVEL + " : " + this.getBootstrapLogLevel() + '\n' +
+          KEY_LOGGING_COCOON_LOGGER + " : " + this.getCocoonLogger() + '\n' +
+          KEY_LOGGING_OVERRIDE_LOGLEVEL + " : " + this.getOverrideLogLevel() + '\n' +
+          KEY_MANAGE_EXCEPTIONS + " : " + this.isManageExceptions() + '\n' +
+          KEY_UPLOADS_DIRECTORY + " : " + this.getUploadDirectory() + '\n' +
+          KEY_UPLOADS_AUTOSAVE + " : " + this.isAutosaveUploads() + '\n' +
+          KEY_UPLOADS_ENABLE + " : " + this.isEnableUploads() + '\n' +
+          KEY_UPLOADS_MAXSIZE + " : " + this.getMaxUploadSize() + '\n' +
+          KEY_UPLOADS_OVERWRITE + " : " + this.isAllowOverwrite() + '\n' +
+          KEY_CACHE_DIRECTORY + " : " + this.getCacheDirectory() + '\n' +
+          KEY_WORK_DIRECTORY + " : " + this.getWorkDirectory() + '\n' +
+          KEY_FORM_ENCODING + " : " + this.getFormEncoding() + '\n' +
+          KEY_CONTAINER_ENCODING + " : " + this.getContainerEncoding() + '\n' +
+          KEY_SHOWTIME + " : " + this.isShowTime() + '\n' +
+          KEY_HIDE_SHOWTIME + " : " + this.isHideShowTime() + '\n' +
+          KEY_SHOW_VERSION + " : " + this.isShowVersion() + '\n';
     }
 
     /**
@@ -726,7 +684,8 @@ public class MutableSettings implements Settings {
      */
     public void setHideShowTime(boolean hideShowTime) {
         this.checkWriteable();
-        this.hideShowTime = BooleanUtils.toBooleanObject(hideShowTime);
+        this.checkSubSetting();
+        this.hideShowTime = hideShowTime;
     }
 
     /**
@@ -734,7 +693,8 @@ public class MutableSettings implements Settings {
      */
     public void setReloadingEnabled(boolean allowReload) {
         this.checkWriteable();
-        this.reloadingEnabled = BooleanUtils.toBooleanObject(allowReload);
+        this.checkSubSetting();
+        this.reloadingEnabled = allowReload;
     }
 
     /**
@@ -742,7 +702,8 @@ public class MutableSettings implements Settings {
      */
     public void setAutosaveUploads(boolean autosaveUploadsValue) {
         this.checkWriteable();
-        this.autosaveUploads = BooleanUtils.toBooleanObject(autosaveUploadsValue);
+        this.checkSubSetting();
+        this.autosaveUploads = autosaveUploadsValue;
     }
 
     /**
@@ -750,6 +711,7 @@ public class MutableSettings implements Settings {
      */
     public void setCacheDirectory(String cacheDirectory) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.cacheDirectory = cacheDirectory;
     }
 
@@ -758,6 +720,7 @@ public class MutableSettings implements Settings {
      */
     public void setCocoonLogger(String cocoonLogger) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.cocoonLogger = cocoonLogger;
     }
 
@@ -766,6 +729,7 @@ public class MutableSettings implements Settings {
      */
     public void setConfiguration(String configuration) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.configuration = configuration;
     }
 
@@ -774,7 +738,8 @@ public class MutableSettings implements Settings {
      */
     public void setEnableUploads(boolean enableUploads) {
         this.checkWriteable();
-        this.enableUploads = BooleanUtils.toBooleanObject(enableUploads);
+        this.checkSubSetting();
+        this.enableUploads = enableUploads;
     }
 
     /**
@@ -782,6 +747,7 @@ public class MutableSettings implements Settings {
      */
     public void setFormEncoding(String formEncoding) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.formEncoding = formEncoding;
     }
 
@@ -798,6 +764,7 @@ public class MutableSettings implements Settings {
      */
     public void setLoggingConfiguration(String loggingConfiguration) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.loggingConfiguration = loggingConfiguration;
     }
 
@@ -806,6 +773,7 @@ public class MutableSettings implements Settings {
      */
     public void setBootstrapLogLevel(String logLevel) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.bootstrapLogLevel = logLevel;
     }
 
@@ -814,7 +782,8 @@ public class MutableSettings implements Settings {
      */
     public void setManageExceptions(boolean manageExceptions) {
         this.checkWriteable();
-        this.manageExceptions = BooleanUtils.toBooleanObject(manageExceptions);
+        this.checkSubSetting();
+        this.manageExceptions = manageExceptions;
     }
 
     /**
@@ -822,7 +791,8 @@ public class MutableSettings implements Settings {
      */
     public void setMaxUploadSize(int maxUploadSize) {
         this.checkWriteable();
-        this.maxUploadSize = new Integer(maxUploadSize);
+        this.checkSubSetting();
+        this.maxUploadSize = maxUploadSize;
     }
 
     /**
@@ -830,6 +800,7 @@ public class MutableSettings implements Settings {
      */
     public void setOverwriteUploads(String overwriteUploads) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.overwriteUploads = overwriteUploads;
     }
     
@@ -838,7 +809,8 @@ public class MutableSettings implements Settings {
      */
     public void setShowTime(boolean showTime) {
         this.checkWriteable();
-        this.showTime = BooleanUtils.toBooleanObject(showTime);
+        this.checkSubSetting();
+        this.showTime = showTime;
     }
 
     /**
@@ -846,7 +818,8 @@ public class MutableSettings implements Settings {
      */
     public void setShowCocoonVersion(boolean showCocoonVersion) {
         this.checkWriteable();
-        this.showCocoonVersion = BooleanUtils.toBooleanObject(showCocoonVersion);
+        this.checkSubSetting();
+        this.showCocoonVersion = showCocoonVersion;
     }
 
     /**
@@ -854,6 +827,7 @@ public class MutableSettings implements Settings {
      */
     public void setUploadDirectory(String uploadDirectory) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.uploadDirectory = uploadDirectory;
     }
 
@@ -862,6 +836,7 @@ public class MutableSettings implements Settings {
      */
     public void setWorkDirectory(String workDirectory) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.workDirectory = workDirectory;
     }
 
@@ -870,6 +845,7 @@ public class MutableSettings implements Settings {
      */
     public void setEnvironmentLogger(String logger) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.environmentLogger = logger;
     }
 
@@ -878,6 +854,7 @@ public class MutableSettings implements Settings {
      */
     public void setOverrideLogLevel(String overrideLogLevel) {
         this.checkWriteable();
+        this.checkSubSetting();
         this.overrideLogLevel = overrideLogLevel;
     }
 
@@ -886,7 +863,8 @@ public class MutableSettings implements Settings {
      */
     public void setConfigurationReloadDelay(long configurationReloadDelay) {
         this.checkWriteable();
-        this.configurationReloadDelay = new Long(configurationReloadDelay);
+        this.checkSubSetting();
+        this.configurationReloadDelay = configurationReloadDelay;
     }
 
     /**
@@ -910,29 +888,41 @@ public class MutableSettings implements Settings {
     }
 
     /**
+     * check if this configuration is tried to be set for a sub settings
+     * object.
+     *
+     * @throws IllegalStateException if this setting is a sub setting
+     */
+    protected final void checkSubSetting()
+    throws IllegalStateException {
+        if( this.parent != null ) {
+            throw new IllegalStateException
+                ( "This value can only be changed for the root settings object." );
+        }
+    }
+
+    /**
      * @see org.apache.cocoon.core.BaseSettings#getCreationTime()
      */
     public long getCreationTime() {
-        if ( this.creationTime == null ) {
-            if ( this.parent != null ) {
-                return this.parent.getCreationTime();
-            }
-            return 0;
+        if ( this.parent != null ) {
+            return this.parent.getCreationTime();
         }
-        return this.creationTime.longValue();
+        return this.creationTime;
     }
 
     /**
      * Set the creation time of the current cocoon instance.
      */
     public void setCreationTime(long value) {
-        // Don't check read only here as this will change if Cocoon
-        // is reloaded while the settings remain the same.
-        this.creationTime = new Long(value);
+        // we don't check for writable here as this value is set after the whole
+        // container is setup
+        this.checkSubSetting();
+        this.creationTime = value;
     }
 
     /**
-     * @see org.apache.cocoon.core.Settings#getPropertyNames(java.lang.String)
+     * @see org.apache.cocoon.configuration.Settings#getPropertyNames(java.lang.String)
      */
     public List getPropertyNames(String keyPrefix) {
         final List props = new ArrayList();
@@ -960,7 +950,7 @@ public class MutableSettings implements Settings {
     }
     
     /**
-     * @see org.apache.cocoon.core.Settings#getPropertyNames()
+     * @see org.apache.cocoon.configuration.Settings#getPropertyNames()
      */
     public List getPropertyNames() {
         final List props = new ArrayList();
@@ -985,5 +975,12 @@ public class MutableSettings implements Settings {
             }
         }
         return props;
+    }
+
+    /**
+     * @see org.apache.cocoon.configuration.Settings#getRunningMode()
+     */
+    public String getRunningMode() {
+        return null;
     }
 }

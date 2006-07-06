@@ -15,28 +15,27 @@
  */
 package org.apache.cocoon.core;
 
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.cocoon.core.BootstrapEnvironment;
-import org.apache.cocoon.core.MutableSettings;
+import java.util.Properties;
 
-public class TestBootstrapEnvironment
-    implements BootstrapEnvironment {
+import org.apache.cocoon.configuration.PropertyProvider;
+import org.apache.cocoon.configuration.Settings;
+
+public class TestPropertyProvider
+    implements PropertyProvider {
     
     private final String configuration;
 
-    public TestBootstrapEnvironment(String configuration) {
+    public TestPropertyProvider(String configuration) {
         this.configuration = configuration;
     }
 
     /**
-     * @see org.apache.cocoon.core.BootstrapEnvironment#configure(org.apache.cocoon.core.MutableSettings)
+     * @see org.apache.cocoon.configuration.PropertyProvider#getProperties(org.apache.cocoon.configuration.Settings, java.lang.String, java.lang.String)
      */
-    public void configure(MutableSettings settings) {
-        settings.setConfiguration(this.configuration);
-        settings.setWorkDirectory("work");
-    }
-
-    public void configure(DefaultContext context) {
-        // nothing to do here
+    public Properties getProperties(Settings settings, String runningMode, String path) {
+        final Properties p = new Properties();
+        p.setProperty(Settings.KEY_CONFIGURATION, this.configuration);
+        p.setProperty(Settings.KEY_WORK_DIRECTORY, "work");
+        return p;
     }
 }
