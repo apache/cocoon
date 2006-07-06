@@ -101,7 +101,7 @@ public class SingleFileDeployer implements FileDeployer {
 		
 		this.alreadyDeployedFilesSet.add(targetFile.getCanonicalFile());
 		
-		this.logger.info("Deploying block resource to " + getOutputDir() + "/" + outputDocumentName);
+		this.logger.debug("Deploying block resource to " + getOutputDir() + "/" + outputDocumentName);
 		
 		return new FileOutputStream(FileUtils.createDirectory(targetFile));
 	}
