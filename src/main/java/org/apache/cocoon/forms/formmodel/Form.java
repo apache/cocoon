@@ -182,48 +182,36 @@ public class Form extends AbstractContainerWidget
      * Inform the form that the values will be loaded.
      */
     public void informStartLoadingModel() {
-        if (this.phase != ProcessingPhase.LOAD_MODEL) {
-            throw new IllegalStateException("Cannot load form in phase " + this.phase);
-        }
+        // nothing to do here
+        // TODO - we could remove this method?
     }
 
     /**
      * Inform the form that the values are loaded.
      */
     public void informEndLoadingModel() {
-        // Notify the end of the current phase
+        // Notify the end of the load phase
         if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, ProcessingPhase.LOAD_MODEL));
         }
-        // TODO - Should we change the phase?
     }
 
     /**
      * Inform the form that the values will be saved.
      */
     public void informStartSavingModel() {
-        if (this.phase != ProcessingPhase.VALIDATE) {
-            throw new IllegalStateException("Cannot save model in phase " + this.phase);
-        }
-        if (!isValid()) {
-            throw new IllegalStateException("Cannot save an invalid form.");
-        }
-        this.phase = ProcessingPhase.SAVE_MODEL;
+        // nothing to do here
+        // TODO - we could remove this method?
     }
 
     /**
      * Inform the form that the values are saved.
      */
     public void informEndSavingModel() {
-        if (this.phase != ProcessingPhase.SAVE_MODEL) {
-            throw new IllegalStateException("Cannot save model in phase " + this.phase);
-        }
-        // Notify the end of the current phase
+        // Notify the end of the save phase
         if (this.listener != null) {
-            this.listener.phaseEnded(new ProcessingPhaseEvent(this, this.phase));
+            this.listener.phaseEnded(new ProcessingPhaseEvent(this, ProcessingPhase.SAVE_MODEL));
         }
-        // go back to initial phase
-        this.phase = ProcessingPhase.LOAD_MODEL;
     }
 
     /**
