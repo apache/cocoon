@@ -23,5 +23,5 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-22-archetype-block</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon 2.2 Webapp Archetype</name>
+  <name>Cocoon 2.2 Block Archetype</name>
 </project>
