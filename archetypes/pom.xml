@@ -28,11 +28,11 @@
   
   <modelVersion>4.0.0</modelVersion>
   
-    <groupId>org.apache.cocoon</groupId>  
+  <groupId>org.apache.cocoon</groupId>  
   <artifactId>cocoon-archetypes</artifactId>
   <version>1-SNAPSHOT</version>
     
-  <name>Various Maven Archetypes</name>
+  <name>Cocoon Archetypes [modules]</name>
 
   <packaging>pom</packaging>
   
@@ -40,5 +40,9 @@
     <module>cocoon-22-archetype-block</module>
     <module>cocoon-22-archetype-webapp</module>    
   </modules>
+  
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/archetypes</connection>
+  </scm>
   
 </project>
