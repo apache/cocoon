@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.classloader;
+package org.apache.cocoon.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -179,7 +179,7 @@ public class WildcardMatcherHelper {
          * @return wether the pstring matches the pattern
          */
         private boolean match() {
-            // scan a common literal suffix
+            // scan a common literal prefix
             scanLiteralPrefix();
 
             // if we are already at the end of both strings 
@@ -228,7 +228,7 @@ public class WildcardMatcherHelper {
                 // if we reached the end of the pattern just do a string compare with the corresponding part from 
                 // the end of the string
                 if(ipat >= lpat) {
-                    return checkEnds(sipat);
+                    return checkEnds(sipat, false);
                 }
 
                 // Now we need to check whether the litteral substring of the pattern 
@@ -247,7 +247,7 @@ public class WildcardMatcherHelper {
                 // skip the star
                 ++ipat;
 
-                // if we are at the beginning of the pattern we have to check there is not PATH_SEP in string
+                // if we are at the beginning of the pattern we have to check there is no PATH_SEP in string
                 if(ipat >= lpat) {
                     final int sistr = istr;
 
@@ -277,7 +277,7 @@ public class WildcardMatcherHelper {
                 // if we reached the end of the pattern just do a string compare with the corresponding part from 
                 // the end of the string
                 if(ipat >= lpat) {
-                    return checkEnds(sipat);
+                    return checkEnds(sipat, true);
                 }
 
                 // If we stopped at an other wildcard
@@ -341,13 +341,25 @@ public class WildcardMatcherHelper {
             return i == l;
         }
         
-        private final boolean checkEnds(final int sipat)
+        private final boolean checkEnds(final int sipat, final boolean isSingleStart)
         {
             // if the remaining length of the string isn't the same as that found in the pattern 
             // we do not match
             final int l = lpat - sipat; // calculate length of comparison
             final int ostr = lstr - l; // calculate offset into string
             if(ostr >= 0 && strncmp(apat, sipat, astr, ostr, l)) {
+                if( isSingleStart )
+                {
+                    // if the ends matches make sure there isn't a PATHSEP in the candidate string part
+                    int i = ostr - istr;
+                    while( i > istr )
+                    {
+                        if( astr[--i] == PATHSEP )
+                        {
+                            return false; // we cannot match because of a PATHSEP in the matched part
+                        }
+                    }
+                }
                 add(new String(astr, istr, ostr - istr));
 
                 return true;
