@@ -266,6 +266,13 @@ public class WildcardMatcherHelperTestCase
         assertNull(result);
     }
 
+    public void test34WildcardURIMatch()
+    throws Exception {
+        Map result = WildcardMatcherHelper.match("*.html", "baz.html");
+        assertNotNull(result);
+        assertEquals("baz", result.get("1"));
+    }
+
     public void testEmptyPattern() throws Exception {
         assertNotNull(WildcardMatcherHelper.match("", ""));
         assertNull(WildcardMatcherHelper.match("", "foo"));
