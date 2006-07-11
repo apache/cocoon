@@ -51,8 +51,7 @@ import org.springframework.beans.factory.BeanFactory;
 public class RequestProcessor {
 
     // Processing time message
-    protected static final String PROCESSED_BY = "Processed by "
-            + Constants.COMPLETE_NAME + " in ";
+    protected static final String PROCESSED_BY = "Processed by Apache Cocoon in ";
 
     // Used by "show-time"
     static final float SECOND = 1000;
