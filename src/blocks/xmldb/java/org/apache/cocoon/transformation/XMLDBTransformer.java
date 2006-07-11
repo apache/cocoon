@@ -518,14 +518,13 @@ public class XMLDBTransformer extends AbstractTransformer
                     }
                 }
 
-
                 // Report result
                 AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute(null, XMLDB_QUERY_OID_ATTRIBUTE,
+                attrs.addAttribute("", XMLDB_QUERY_OID_ATTRIBUTE,
                         XMLDB_QUERY_OID_ATTRIBUTE, "CDATA", this.key);
-                attrs.addAttribute(null, XMLDB_QUERY_TYPE_ATTRIBUTE,
+                attrs.addAttribute("", XMLDB_QUERY_TYPE_ATTRIBUTE,
                         XMLDB_QUERY_TYPE_ATTRIBUTE, "CDATA", this.operation);
-                attrs.addAttribute(null, XMLDB_QUERY_RESULT_ATTRIBUTE,
+                attrs.addAttribute("", XMLDB_QUERY_RESULT_ATTRIBUTE,
                         XMLDB_QUERY_RESULT_ATTRIBUTE, "CDATA", result);
                 super.startElement(uri, loc, raw, attrs);
                 if (message != null) {
