@@ -118,43 +118,15 @@ public class RequestProcessor {
         }
 
         // We got it... Process the request
-        String uri = request.getServletPath();
-        if (uri == null) {
-            uri = "";
-        }
-        String pathInfo = request.getPathInfo();
-        if (pathInfo != null) {
-            // VG: WebLogic fix: Both uri and pathInfo starts with '/'
-            // This problem exists only in WL6.1sp2, not in WL6.0sp2 or WL7.0b.
-            if (uri.length() > 0 && uri.charAt(0) == '/') {
-                uri = uri.substring(1);
-            }
-            uri += pathInfo;
-        }
-
-        if (uri.length() == 0) {
-            /* empty relative URI
-                 -> HTTP-redirect from /cocoon to /cocoon/ to avoid
-                    StringIndexOutOfBoundsException when calling
-                    "".charAt(0)
-               else process URI normally
-            */
-            String prefix = request.getRequestURI();
-            if (prefix == null) {
-                prefix = "";
-            }
-
-            res.sendRedirect(res.encodeRedirectURL(prefix + "/"));
+        final String uri = RequestUtil.getCompleteUri(request, res);
+        if ( uri == null ) {
+            // a redirect occured, so we are finished
             return;
         }
-
         String contentType = null;
 
         Environment env;
         try{
-            if (uri.charAt(0) == '/') {
-                uri = uri.substring(1);
-            }
             // Pass uri into environment without URLDecoding, as it is already decoded.
             env = getEnvironment(uri, request, res);
         } catch (Exception e) {
