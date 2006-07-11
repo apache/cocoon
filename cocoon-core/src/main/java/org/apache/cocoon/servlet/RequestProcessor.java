@@ -74,8 +74,8 @@ public class RequestProcessor {
     /** The root settings. */
     protected final Settings settings;
 
-    /** The root processor. */
-    protected final Processor rootProcessor;
+    /** The processor. */
+    protected Processor processor;
 
     /**
      * An optional component that is called before and after processing all
@@ -94,12 +94,16 @@ public class RequestProcessor {
             this.containerEncoding = encoding;
         }
         this.log = (Logger) this.cocoonBeanFactory.getBean(ProcessingUtil.LOGGER_ROLE);
-        this.rootProcessor = (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
+        this.processor = (Processor)this.cocoonBeanFactory.getBean(Processor.ROLE);
         this.environmentContext = new HttpContext(this.servletContext);
         // get the optional request listener
         if (this.cocoonBeanFactory.containsBean(RequestListener.ROLE)) {
             this.requestListener = (RequestListener) this.cocoonBeanFactory.getBean(RequestListener.ROLE);
         }
+    }
+
+    public void setProcessor(Processor processor) {
+        this.processor = processor;
     }
 
     /**
@@ -347,7 +351,7 @@ public class RequestProcessor {
     protected boolean process(Environment environment) throws Exception {
         environment.startingProcessing();
         final int environmentDepth = EnvironmentHelper.markEnvironment();
-        EnvironmentHelper.enterProcessor(this.rootProcessor, environment);
+        EnvironmentHelper.enterProcessor(this.processor, environment);
         try {
             boolean result;
 
@@ -359,7 +363,7 @@ public class RequestProcessor {
                             + e.getMessage());
                 }
             }
-            result = this.rootProcessor.process(environment);
+            result = this.processor.process(environment);
 
             if (this.requestListener != null) {
                 try {
