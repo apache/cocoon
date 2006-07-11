@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class PartOnDisk extends Part {
 
-    /** Field file           */
+    /** Field file */
     private File file = null;
     private int size;
 
@@ -39,13 +39,13 @@ public class PartOnDisk extends Part {
      * @param headers
      * @param file
      */
-    protected PartOnDisk(Map headers, File file) {
+    public PartOnDisk(Map headers, File file) {
         super(headers);
         this.file = file;
-        
+
         // Ensure the file will be deleted when we exit the JVM
         this.file.deleteOnExit();
-        
+
         this.size = (int) file.length();
     }
 
@@ -89,7 +89,7 @@ public class PartOnDisk extends Part {
     public String toString() {
         return file.getPath();
     }
-    
+
     /**
      * Delete the underlying file.
      */
@@ -99,14 +99,13 @@ public class PartOnDisk extends Part {
             this.file = null;
         }
     }
-    
+
     /**
      * Ensures the underlying file has been deleted
      */
     public void finalize() throws Throwable {
         // Ensure the file has been deleted
         dispose();
-        
         super.finalize();
     }
 }
