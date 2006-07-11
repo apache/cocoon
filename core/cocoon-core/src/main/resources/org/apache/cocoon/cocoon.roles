@@ -45,6 +45,10 @@
         shorthand="source-resolver"
         default-class="org.apache.cocoon.components.source.CocoonSourceResolver"/>
 
+  <role name="org.apache.cocoon.processing.ProcessInfoProvider"
+        shorthand="process-info-provider"
+        default-class="org.apache.cocoon.processing.impl.ProcessInfoProviderImpl"/>
+
   <!-- The entity resolver used by most parsers -->
   <role name="org.apache.excalibur.xml.EntityResolver"
         shorthand="entity-resolver"
