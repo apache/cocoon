@@ -29,6 +29,7 @@ import javax.servlet.ServletException;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.Logger;
@@ -47,7 +48,6 @@ import org.apache.cocoon.core.container.spring.ConfigurationInfo;
 import org.apache.cocoon.core.container.util.ComponentContext;
 import org.apache.cocoon.core.container.util.ConfigurationBuilder;
 import org.apache.cocoon.core.container.util.SimpleSourceResolver;
-import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
@@ -118,12 +118,12 @@ public class CoreUtil {
         LocationUtils.addFinder(confLocFinder);
     }
     
-    public static ConfigurableBeanFactory createRootContainer(Context context)
+    public static ConfigurableBeanFactory createRootContainer(ServletContext context)
     throws Exception {
         return createRootContainer(context, null);
     }
 
-    public static ConfigurableBeanFactory createRootContainer(Context          environmentContext,
+    public static ConfigurableBeanFactory createRootContainer(ServletContext   servletContext,
                                                               PropertyProvider externalPropertyProvider)
     throws Exception {
         // first let's set up the appContext with some values to make
@@ -132,14 +132,14 @@ public class CoreUtil {
         final DefaultContext appContext = new ComponentContext();
 
         // add root url
-        String contextUrl = CoreUtil.getContextUrl(environmentContext, "/WEB-INF/web.xml");
-        CoreUtil.addSourceResolverContext(appContext, environmentContext, contextUrl);
+        String contextUrl = CoreUtil.getContextUrl(servletContext, "/WEB-INF/web.xml");
+        CoreUtil.addSourceResolverContext(appContext, servletContext, contextUrl);
 
         // create settings
-        final MutableSettings settings = CoreUtil.createSettings(environmentContext, appContext, externalPropertyProvider);
+        final MutableSettings settings = CoreUtil.createSettings(servletContext, appContext, externalPropertyProvider);
 
         // Create bootstrap logger
-        Logger log = BeanFactoryUtil.createBootstrapLogger(environmentContext, settings.getBootstrapLogLevel());
+        Logger log = BeanFactoryUtil.createBootstrapLogger(servletContext, settings.getBootstrapLogLevel());
 
         if (log.isDebugEnabled()) {
             log.debug("Context URL: " + contextUrl);
@@ -148,7 +148,7 @@ public class CoreUtil {
         CoreUtil.initSettingsFiles(settings, log);
 
         // update configuration
-        final URL u = CoreUtil.getConfigFile(settings.getConfiguration(), environmentContext, log);
+        final URL u = CoreUtil.getConfigFile(settings.getConfiguration(), servletContext, log);
         settings.setConfiguration(u.toExternalForm());
 
         // dump system properties
@@ -158,7 +158,7 @@ public class CoreUtil {
         settings.makeReadOnly();
 
         // Init logger
-        log = BeanFactoryUtil.createRootLogger(environmentContext,
+        log = BeanFactoryUtil.createRootLogger(servletContext,
                                                settings);
 
         // add the Avalon context attributes that are contained in the settings
@@ -168,7 +168,7 @@ public class CoreUtil {
         CoreUtil.forceLoad(settings, log);
 
         // setup of the spring based container
-        return CoreUtil.setupSpringContainer(settings, environmentContext, appContext, log);
+        return CoreUtil.setupSpringContainer(settings, servletContext, appContext, log);
     }
 
     /**
@@ -236,12 +236,12 @@ public class CoreUtil {
         settings.setCacheDirectory(cacheDir.getAbsolutePath());
     }
 
-    public static DefaultContext createContext(Settings settings,
-                                               Context environmentContext,
-                                               String contextUrl)
+    public static DefaultContext createContext(Settings       settings,
+                                               ServletContext servletContext,
+                                               String         contextUrl)
         throws ServletException, MalformedURLException {
         DefaultContext appContext = new ComponentContext();
-        CoreUtil.addSourceResolverContext(appContext, environmentContext, contextUrl);
+        CoreUtil.addSourceResolverContext(appContext, servletContext, contextUrl);
         CoreUtil.addSettingsContext(appContext, settings);
         return appContext;
     }
@@ -249,13 +249,12 @@ public class CoreUtil {
     /**
      * Adding the Avalon context content needed for setting up the <code>SimpleSourceResolver</code>
      * @param appContext the Avalon context
-     * @param environmentContext the Cocoon context
-     * @param env optional bootstrap context
+     * @param servletContext the Cocoon context
      * @param contextUrl URL for the context
      */
-    private static void addSourceResolverContext(DefaultContext       appContext,
-                                                 Context              environmentContext,
-                                                 String               contextUrl) {
+    private static void addSourceResolverContext(DefaultContext appContext,
+                                                 ServletContext servletContext,
+                                                 String         contextUrl) {
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(contextUrl));
         } catch (MalformedURLException ignore) {
@@ -263,7 +262,7 @@ public class CoreUtil {
         }
     
         // add environment context and config
-        appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, environmentContext);
+        appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, servletContext);
     }
 
     /**
@@ -302,14 +301,14 @@ public class CoreUtil {
      *
      * @return A new Settings object
      */
-    protected static MutableSettings createSettings(Context          environmentContext,
-                                                    org.apache.avalon.framework.context.Context appContext,
+    protected static MutableSettings createSettings(ServletContext   servletContext,
+                                                    Context          appContext,
                                                     PropertyProvider externalPropertyProvider) {
         // we need a logger for the settings util which will log info messages
-        final Logger logger = new LoggerWrapper(environmentContext, true);
+        final Logger logger = new LoggerWrapper(servletContext, true);
         // we need our own resolver (with own logger which just logs errors)
-        final SourceResolver resolver = CoreUtil.createSourceResolver(appContext, new LoggerWrapper(environmentContext));
-        return SettingsHelper.createSettings(environmentContext, resolver, logger, externalPropertyProvider);
+        final SourceResolver resolver = CoreUtil.createSourceResolver(appContext, new LoggerWrapper(servletContext));
+        return SettingsHelper.createSettings(servletContext, resolver, logger, externalPropertyProvider);
     }
 
     /**
@@ -334,8 +333,8 @@ public class CoreUtil {
     /**
      * Create a simple source resolver.
      */
-    protected static SourceResolver createSourceResolver(org.apache.avalon.framework.context.Context appContext,
-                                                         Logger logger) {
+    protected static SourceResolver createSourceResolver(Context appContext,
+                                                         Logger  logger) {
         // Create our own resolver
         final SimpleSourceResolver resolver = new SimpleSourceResolver();
         resolver.enableLogging(logger);
@@ -349,9 +348,9 @@ public class CoreUtil {
     }
 
     protected static ConfigurableBeanFactory setupSpringContainer(MutableSettings settings,
-                                                                  ServletContext environmentContext,
-                                                                  org.apache.avalon.framework.context.Context appContext,
-                                                                  Logger   log)
+                                                                  ServletContext  servletContext,
+                                                                  Context         appContext,
+                                                                  Logger          log)
     throws Exception {
         if (log.isInfoEnabled()) {
             log.info("Reading root configuration: " + settings.getConfiguration());
@@ -383,7 +382,7 @@ public class CoreUtil {
         avalonEnv.context = appContext;
         avalonEnv.logger = log;
         avalonEnv.settings = settings;
-        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(avalonEnv, environmentContext);
+        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(avalonEnv, servletContext);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), avalonEnv);
         ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(avalonEnv, result, null, rootContext);
 
@@ -394,7 +393,9 @@ public class CoreUtil {
     /**
      * Get the URL of the main Cocoon configuration file.
      */
-    protected static URL getConfigFile(final String configFileName, Context environmentContext, Logger log)
+    protected static URL getConfigFile(final String         configFileName,
+                                       final ServletContext servletContext,
+                                       final Logger         log)
     throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("Using configuration file: " + configFileName);
@@ -404,7 +405,7 @@ public class CoreUtil {
         try {
             // test if this is a qualified url
             if (configFileName.indexOf(':') == -1) {
-                result = environmentContext.getResource(configFileName);
+                result = servletContext.getResource(configFileName);
             } else {
                 result = new URL(configFileName);
             }
@@ -438,23 +439,23 @@ public class CoreUtil {
     /**
      * @param environmentContext
      */
-    public static String getWritableContextPath(ServletContext environmentContext) {
-        return environmentContext.getRealPath("/");
+    public static String getWritableContextPath(ServletContext servletContext) {
+        return servletContext.getRealPath("/");
     }
 
     /**
      * @param environmentContext 
      * @param knownFile 
      */
-    public static String getContextUrl(ServletContext environmentContext, String knownFile) {
+    public static String getContextUrl(ServletContext servletContext, String knownFile) {
         String servletContextURL;
-        String servletContextPath = CoreUtil.getWritableContextPath(environmentContext);
+        String servletContextPath = CoreUtil.getWritableContextPath(servletContext);
         String path = servletContextPath;
 
         if (path == null) {
             // Try to figure out the path of the root from that of a known file in the context
             try {
-                path = environmentContext.getResource(knownFile).toString();
+                path = servletContext.getResource(knownFile).toString();
             } catch (MalformedURLException me) {
                 throw new CoreInitializationException("Unable to get resource '" + knownFile + "'.", me);
             }
@@ -510,25 +511,26 @@ public class CoreUtil {
     }
 
     protected static final class LoggerWrapper implements Logger {
-        private final Context env;
+
+        private final ServletContext servletContext;
 
         private final boolean displayInfoAndWarn;
 
-        public LoggerWrapper(Context env) {
-            this.env = env;
+        public LoggerWrapper(ServletContext servletContext) {
+            this.servletContext = servletContext;
             this.displayInfoAndWarn = false;
         }
 
-        public LoggerWrapper(Context env, boolean displayInfoAndWarn) {
-            this.env = env;
+        public LoggerWrapper(ServletContext servletContext, boolean displayInfoAndWarn) {
+            this.servletContext = servletContext;
             this.displayInfoAndWarn = displayInfoAndWarn;
         }
 
         protected void text(String arg0, Throwable arg1) {
             if ( arg1 != null ) {
-                this.env.log(arg0, arg1);
+                this.servletContext.log(arg0, arg1);
             } else {
-                this.env.log(arg0);
+                this.servletContext.log(arg0);
             }
         }
 
