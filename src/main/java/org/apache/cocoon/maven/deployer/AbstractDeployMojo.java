@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,14 +43,14 @@ import org.w3c.dom.Document;
 
 /**
  * Create a Cocoon web application based on a block deployment descriptor.
- * 
+ *
  * @version $Id$
  */
 abstract class AbstractDeployMojo extends AbstractWarMojo {
 
-    private static final String COCOON_CLASSES = "cocoon-classes";
+    private static final String COCOON_CLASSES = "cocoon" + File.separator + "classes";
 
-    private static final String COCOON_LIB = "cocoon-lib";
+    private static final String COCOON_LIB = "cocoon" + File.separator + "lib";
 
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
@@ -60,7 +60,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @readonly
      */
     private ArtifactFactory artifactFactory;	
-    
+
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -69,7 +69,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @readonly
      */
     private ArtifactResolver artifactResolver;   
-    
+
     /**
      * Artifact resolver, needed to download source jars for inclusion in classpath.
      *
@@ -78,7 +78,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @readonly
      */
     private MavenMetadataSource metadataSource;    
-    
+
     /**
      * Local maven repository.
      *
@@ -87,7 +87,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @readonly
      */
     private ArtifactRepository localRepository;    
-    
+
     /**
      * Remote repositories which will be searched for blocks.
      *
@@ -96,17 +96,17 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @readonly
      */
     private List remoteArtifactRepositories;  
-    
+
     /**
      * The deploy descriptor
      * 
      * @parameter expression="${basedir}/cocoon-deploy.xml"
      */
     private File deploymentDescriptor;     
-    
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // set properties: necessary because DeployMojo is not in the same package as AbstractWarMojo
-    
+
     /**
      * The project whose project files to create.
      *
@@ -114,7 +114,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @required
      */
     private MavenProject project;	    
-    
+
     /**
      * The directory containing generated classes.
      *
@@ -146,7 +146,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
      * @parameter expression="${maven.war.webxml}"
      */
     private String webXml;
-    
+
     /**
      * Use shielded classloading
      *
@@ -167,21 +167,21 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 	 */
 	protected void deployMonolithicCocoonAppAsWebapp(final String blocksdir)  throws MojoExecutionException {
     	File webappDirectory_ = getWebappDirectory();
-    	
+
     	// build the web application
         this.buildExplodedWebapp(webappDirectory_);
-        
+
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());        
         deployer.deploy(getBlockArtifactsAsMap(null), webappDirectory_, 
                 blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
-        
+
         // make sure that all configuration files available in the webapp override block configuration files
         try {
             copyResources( getWarSourceDirectory(), webappDirectory_, getWebXml() );
         } catch (IOException e) {
             throw new MojoExecutionException("A problem occurred while copying webapp resources.", e);
         }
-        
+
         // take care of paranoid classloading
         if ( this.useShieldingClassloader ) {
             shieldCocoonWebapp();
@@ -194,10 +194,10 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     protected void blockDeploymentMonolithicCocoon(final String blocksdir, final DevelopmentBlock[] blocks, 
             final DevelopmentProperty[] properties) throws MojoExecutionException {
         File webappDirectory_ = getWebappDirectory();        
-        
+
         File webinfDir = new File(webappDirectory_, WEB_INF);
         webinfDir.mkdirs();
-        
+
         // add current block to the development blocks
         // it is important that the current block is put at the end of the array - the 
         // MonotlithicCocoonDeployer expects this
@@ -212,16 +212,16 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         DevelopmentBlock[] extBlocks = new DevelopmentBlock[blocks.length + 1];
         System.arraycopy(blocks, 0, extBlocks, 0, blocks.length);
         extBlocks[blocks.length] = curBlock;
-        
+
         // deploy all blocks
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());
         deployer.deploy(getBlockArtifactsAsMap(blocks), webappDirectory_, 
                 blocksdir, extBlocks, properties);
-        
-        // deploy all libraries to WEB-INF/cocoon-lib and cocoon-bootstrap to WEB-INF/lib
+
+        // deploy all libraries to WEB-INF/cocoon/lib and cocoon-bootstrap to WEB-INF/lib
         copyLibs();        
     }   
-    
+
     /**
      * Create a <code>Map</code> of <code>java.io.File</code> objects pointing to artifacts.
      */
@@ -242,7 +242,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         }
         return files;
     }     
-    
+
     /**
      * @return true if the DevelopmentBlock array contains a block with the passed artifactId and groupId
      */
@@ -260,7 +260,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     // ~~~~~~~~~~ utility methods ~~~~~~~~~~~
     /**
      * Make a Cocoon webapp using the ShieldingClassloader. This method rewrites the web.xml and moves
-     * all libs from WEB-INF/lib to WEB-INF/cocoon-lib, except cocoon-bootstrap which remains in WEB-INF/lib.
+     * all libs from WEB-INF/lib to WEB-INF/cocoon/lib, except cocoon-bootstrap which remains in WEB-INF/lib.
      */
     private void shieldCocoonWebapp() throws MojoExecutionException {
         File webappDirectory_ = getWebappDirectory();
@@ -288,20 +288,19 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
     }  
 
     /**
-     * Copy all libs that don't have the scope provided or system to WEB-INF/cocoon-lib, except
+     * Copy all libs that don't have the scope provided or system to WEB-INF/cocoon/lib, except
      * cocoon-bootstrap, which is copied to WEB-INF/lib
      */
     private void copyLibs() throws MojoExecutionException {
         File webappDirectory_ = this.getWebappDirectory();
-        for ( Iterator iter = this.getProject().getArtifacts().iterator(); iter.hasNext(); )
-        {
+        for ( Iterator iter = this.getProject().getArtifacts().iterator(); iter.hasNext(); ) {
             Artifact artifact = (Artifact) iter.next();
             // Include runtime and compile time libraries
             if (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())
                     && !Artifact.SCOPE_TEST.equals(artifact.getScope()) 
                     && "jar".equals(artifact.getType())) {
                 try {
-                    if(artifact.getArtifactId().equals("cocoon-bootstrap")) {
+                    if (artifact.getArtifactId().equals("cocoon-bootstrap")) {
                         FileUtils.copyFileToDirectory(artifact.getFile(), new File(webappDirectory_, "WEB-INF/lib"));       
                         this.getLog().info("Deploying artifact to WEB-INF/lib/" + artifact.getFile().getName());                       
                     } else {
@@ -317,9 +316,9 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             }
         }
     }       
-    
+
     /**
-     * Move all libs from one directory (WEB-INF/lib) to another (WEB-INF/cocoon-lib).
+     * Move all libs from one directory (WEB-INF/lib) to another (WEB-INF/cocoon/lib).
      */
     private void move(String parentDir, String srcDir, String destDir) {
         final File srcDirectory = new File(parentDir, srcDir);
@@ -333,7 +332,7 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             if ( this.getLog().isDebugEnabled() ) {
                 this.getLog().debug("Recreating directory " + destDirectory);
             }
-            destDirectory.mkdir();
+            destDirectory.mkdirs();
             final File[] files = srcDirectory.listFiles();
             if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
@@ -356,5 +355,4 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             }
         }
     }    
-    
 }
