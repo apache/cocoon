@@ -56,9 +56,9 @@ public class SettingsHelper {
      * This method reads several property files and merges the result. If there
      * is more than one definition for a property, the last one wins.
      * The property files are read in the following order:
-     * 1) context://WEB-INF/properties/*.properties
+     * 1) context://WEB-INF/cocoon/properties/*.properties
      *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-     * 2) context://WEB-INF/properties/[RUNNING_MODE]/*.properties
+     * 2) context://WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
      *    Default values for the running mode - the order in which the files are read is not guaranteed.
      * 3) Property providers (ToBeDocumented)
      * 4) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
@@ -74,16 +74,16 @@ public class SettingsHelper {
                                                  final Logger           logger,
                                                  final PropertyProvider externalPropertyProvider) {
         // get the running mode
-        final String mode = System.getProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
+        final String mode = SettingsHelper.getSystemProperty(Settings.PROPERTY_RUNNING_MODE, SettingsDefaults.DEFAULT_RUNNING_MODE);
         logger.info("Running in mode: " + mode);
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings();
 
         // now read all properties from the properties directory
-        readProperties("context://WEB-INF/properties", s, resolver, logger);
+        readProperties("context://WEB-INF/cocoon/properties", s, resolver, logger);
         // read all properties from the mode dependent directory
-        readProperties("context://WEB-INF/properties/" + mode, s, resolver, logger);
+        readProperties("context://WEB-INF/cocoon/properties/" + mode, s, resolver, logger);
 
         // Next look for a custom property provider in the spring root context
         BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(servletContext);
@@ -103,13 +103,16 @@ public class SettingsHelper {
 
         // read additional properties file
         String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
-                                                      System.getProperty(Settings.PROPERTY_USER_SETTINGS));
+                                                      SettingsHelper.getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
         // if there is no property defining the addition file, we try it in the home directory
         if ( additionalPropertyFile == null ) {
-            additionalPropertyFile = System.getProperty("user.home") + File.separator + ".cocoon/settings.properties";
-            final File testFile = new File(additionalPropertyFile);
-            if ( !testFile.exists() ) {
-                additionalPropertyFile = null;
+            final String homeDir = SettingsHelper.getSystemProperty("user.home");
+            if ( homeDir != null ) {
+                additionalPropertyFile = homeDir + File.separator + ".cocoon/settings.properties";
+                final File testFile = new File(additionalPropertyFile);
+                if ( !testFile.exists() ) {
+                    additionalPropertyFile = null;
+                }
             }
         }
         if ( additionalPropertyFile != null ) {
@@ -125,7 +128,11 @@ public class SettingsHelper {
             }
         }
         // now overwrite with system properties
-        s.fill(System.getProperties());
+        try {
+            s.fill(System.getProperties());
+        } catch (SecurityException se) {
+            // we ignore this
+        }
 
         return s;
     }
@@ -178,6 +185,18 @@ public class SettingsHelper {
         return new SourceComparator();
     }
 
+    protected static String getSystemProperty(String key) {
+        return SettingsHelper.getSystemProperty(key, null);
+    }
+
+    protected static String getSystemProperty(String key, String defaultValue) {
+        try {
+            return System.getProperty(key, defaultValue);
+        } catch (SecurityException se) {
+            // we ignore this
+            return defaultValue;
+        }
+    }
     protected final static class SourceComparator implements Comparator {
 
         /**
