@@ -39,9 +39,9 @@ import org.apache.cocoon.classloader.DefaultClassLoaderFactory;
  */
 public class BootstrapClassLoaderManager {
 
-    private static final String WEB_INF_COCOON_LIB = "WEB-INF/cocoon-lib";
+    private static final String WEB_INF_COCOON_LIB = "WEB-INF/cocoon/lib";
 
-    private static final String WEB_INF_COCOON_CLASSES = "WEB-INF/cocoon-classes";
+    private static final String WEB_INF_COCOON_CLASSES = "WEB-INF/cocoon/classes";
 
     private static final String WEB_INF_LIB = "WEB-INF/lib";
 
