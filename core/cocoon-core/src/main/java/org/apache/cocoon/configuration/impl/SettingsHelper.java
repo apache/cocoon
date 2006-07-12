@@ -62,10 +62,13 @@ public class SettingsHelper {
      *    Default values for the running mode - the order in which the files are read is not guaranteed.
      * 3) Property providers (ToBeDocumented)
      * 4) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
-     * 5) Additional property file specified by the "org.apache.cocoon.settings" system property or
-     *    if the property is not found, the file ".cocoon/settings.properties" is tried to be read from
-     *    the user directory.
-     * 6) System properties
+     * 5) Optional property file which is stored under ".cocoon/settings.properties" in the user
+     *    directory.
+     * 6) Additional property file specified by the "org.apache.cocoon.settings" property.
+     * 7) System properties
+     *
+     * This means that system properties (provided on startup of the web application) override all
+     * others etc.
      *
      * @return A new Settings object
      */
@@ -92,8 +95,8 @@ public class SettingsHelper {
                 PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
                 s.fill(provider.getProperties(s, mode, null));
             } catch (Exception ignore) {
-                logger.info("Unable to get properties from provider.", ignore);
-                logger.info("Continuing initialization.");            
+                logger.info("Unable to get properties from configured property provider - continuing with initialization.");
+                logger.debug("Unable to get properties from provider.", ignore);
             }
         }
         // fill from the environment configuration, like web.xml etc.
@@ -102,29 +105,39 @@ public class SettingsHelper {
         }
 
         // read additional properties file
-        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
-                                                      SettingsHelper.getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
-        // if there is no property defining the addition file, we try it in the home directory
-        if ( additionalPropertyFile == null ) {
-            final String homeDir = SettingsHelper.getSystemProperty("user.home");
-            if ( homeDir != null ) {
-                additionalPropertyFile = homeDir + File.separator + ".cocoon/settings.properties";
-                final File testFile = new File(additionalPropertyFile);
-                if ( !testFile.exists() ) {
-                    additionalPropertyFile = null;
+        // first try in home directory
+        final String homeDir = SettingsHelper.getSystemProperty("user.home");
+        if ( homeDir != null ) {
+            final String fileName = homeDir + File.separator + ".cocoon" + File.separator + "settings.properties";
+            final File testFile = new File(fileName);
+            if ( testFile.exists() ) {
+                logger.info("Reading user settings from '" + fileName + "'");
+                try {
+                    final Properties p = new Properties();
+                    FileInputStream fis = new FileInputStream(fileName);
+                    p.load(fis);
+                    fis.close();
+                    s.fill(p);
+                } catch (IOException ignore) {
+                    logger.info("Unable to read '" + fileName + "' - continuing with initialization.");
+                    logger.debug("Unable to read '" + fileName + "'.", ignore);
                 }
             }
         }
+        // check for additionally specified custom file        
+        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, 
+                                                      SettingsHelper.getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
         if ( additionalPropertyFile != null ) {
             logger.info("Reading user settings from '" + additionalPropertyFile + "'");
-            final Properties p = new Properties();
             try {
+                final Properties p = new Properties();
                 FileInputStream fis = new FileInputStream(additionalPropertyFile);
                 p.load(fis);
                 fis.close();
+                s.fill(p);
             } catch (IOException ignore) {
-                logger.info("Unable to read '" + additionalPropertyFile + "'.", ignore);
-                logger.info("Continuing initialization.");
+                logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.");
+                logger.debug("Unable to read '" + additionalPropertyFile + "'.", ignore);
             }
         }
         // now overwrite with system properties
@@ -171,8 +184,8 @@ public class SettingsHelper {
                 }
             }
         } catch (IOException ignore) {
-            logger.info("Unable to read from directory " + directoryName, ignore);
-            logger.info("Continuing initialization.");            
+            logger.info("Unable to read properties from directory '" + directoryName + "' - Continuing initialization.");
+            logger.debug("Unable to read properties from directory '" + directoryName + "'.", ignore);
         } finally {
             resolver.release(directory);
         }
@@ -197,6 +210,7 @@ public class SettingsHelper {
             return defaultValue;
         }
     }
+
     protected final static class SourceComparator implements Comparator {
 
         /**
