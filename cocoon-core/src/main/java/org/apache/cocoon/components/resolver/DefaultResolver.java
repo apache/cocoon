@@ -57,6 +57,6 @@ public class DefaultResolver
      * Default catalog path
      */
     protected String defaultCatalog() {
-        return "WEB-INF/entities/catalog";
+        return "WEB-INF/cocoon/entities/catalog";
     }
 }
