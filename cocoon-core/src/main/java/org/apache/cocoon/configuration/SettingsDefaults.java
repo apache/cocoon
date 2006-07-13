@@ -30,10 +30,10 @@ public abstract class SettingsDefaults {
     public static final String DEFAULT_RUNNING_MODE = "dev";
 
     /** The default configuration location. */
-    public static final String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon.xconf";
+    public static final String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon/cocoon.xconf";
 
     /** The default logging configuration location. */
-    public static final String DEFAULT_LOGGING_CONFIGURATION = "/WEB-INF/log4j.xconf";
+    public static final String DEFAULT_LOGGING_CONFIGURATION = "/WEB-INF/cocoon/log4j.xconf";
 
     /**
      * Default value for {@link Settings#isReloadingEnabled(String)} parameter (false).
