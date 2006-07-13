@@ -21,7 +21,7 @@
     +-->
 <components>
   <!-- Include dependencies -->
-  <include src="context://WEB-INF/xconf/cocoon-scratchpad.xconf"/>
+  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad.xconf"/>
 
   <source-factories>
 
