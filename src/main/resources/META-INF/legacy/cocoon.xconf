@@ -29,18 +29,18 @@
       | Include all configuration files ending with ".xconf" 
       | from the xconf directory.
       +-->
-  <include dir="context://WEB-INF/xconf" pattern="*.xconf"/>
+  <include dir="context://WEB-INF/cocoon/xconf" pattern="*.xconf"/>
 
   <!--+
       | Include all configuration files ending with ".xmap" 
       | from the sitemap-additions directory.
       +-->
-  <include dir="context://WEB-INF/sitemap-additions" pattern="*.xmap"/>
+  <include dir="context://WEB-INF/cocoon/sitemap-additions" pattern="*.xmap"/>
   
   <!--+
       | Include Spring beans definition files ending with ".xml" from
       | the spring directory.
       +-->
-  <include-beans dir="context://WEB-INF/spring" pattern="*.xml"/>
+  <include-beans dir="context://WEB-INF/cocoon/spring" pattern="*.xml"/>
 
 </cocoon>
