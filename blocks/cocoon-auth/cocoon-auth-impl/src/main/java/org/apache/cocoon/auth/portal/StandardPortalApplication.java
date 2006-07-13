@@ -122,8 +122,6 @@ public class StandardPortalApplication
      */
     public static final class PortalUserInfo extends AbstractPortalUser {
 
-        private static final long serialVersionUID = 2478414001555083442L;
-
         /** The cauth user object. */
         protected final User user;
 
