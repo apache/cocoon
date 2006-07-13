@@ -595,4 +595,32 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
     public Object initializeBean(Object arg0, String arg1) throws BeansException {
         return this.beanFactory.initializeBean(arg0, arg1);
     }
+
+    /**
+     * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#isCurrentlyInCreation(java.lang.String)
+     */
+    public boolean isCurrentlyInCreation(String arg0) {
+        return this.beanFactory.isCurrentlyInCreation(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.SingletonBeanRegistry#getSingleton(java.lang.String)
+     */
+    public Object getSingleton(String arg0) {
+        return this.beanFactory.getSingleton(arg0);
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.SingletonBeanRegistry#getSingletonCount()
+     */
+    public int getSingletonCount() {
+        return this.beanFactory.getSingletonCount();
+    }
+
+    /**
+     * @see org.springframework.beans.factory.config.SingletonBeanRegistry#getSingletonNames()
+     */
+    public String[] getSingletonNames() {
+        return this.beanFactory.getSingletonNames();
+    }
 }
