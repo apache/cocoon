@@ -266,12 +266,19 @@ public class ConfigReader extends AbstractLogEnabled {
                         }
                         componentRole += '/';
                         Configuration[] children = info.getConfiguration().getChildren();
+                        final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);                       
                         for (int j=0; j<children.length; j++) {
                             final Configuration current = children[j];
                             final ComponentInfo childInfo = new ComponentInfo();
                             childInfo.fill(current);
                             childInfo.setConfiguration(current);
-                            childInfo.setComponentClassName(current.getAttribute(classAttribute));
+                            final ComponentInfo hintInfo = (hintConfigs == null ? null : (ComponentInfo)hintConfigs.get(current.getName()));
+                            if ( current.getAttribute(classAttribute, null ) != null 
+                                 || hintInfo == null ) {
+                                childInfo.setComponentClassName(current.getAttribute(classAttribute));
+                            } else {
+                                childInfo.setComponentClassName(hintInfo.getComponentClassName());
+                            }
                             childInfo.setRole(componentRole + current.getAttribute("name"));
                             this.configInfo.addComponent(childInfo);
                         }
