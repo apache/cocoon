@@ -31,12 +31,12 @@ import org.apache.cocoon.auth.User;
 public class LoginInfo
 implements Serializable {
 
-    private static final long serialVersionUID = -7711022968113704323L;
-
     /** Number of applications using the security handler. */
     protected int   counter;
+
     /** The corresponding user. */
     protected final User user;
+
     /** The applications the user is logged in to. */
     protected List applications = new ArrayList();
 
