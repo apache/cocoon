@@ -99,11 +99,14 @@ public abstract class AbstractClassLoaderFactory
         while ( i.hasNext() ) {
             // A class dir: simply add its URL
             final String directory = (String)i.next();
-            final URL url = this.getUrl(servletContext, directory);
+            URL url = this.getUrl(servletContext, directory);
             if ( url == null ) {
                 throw new Exception("Directory not found for classpath: " + directory);
             }
             // TODO Should we somehow check if this is a dir?
+            if ( !url.toExternalForm().endsWith("/") ) {
+                url = new URL(url.toExternalForm() + "/");
+            }
             urlList.add(url);
         }
 
