@@ -21,7 +21,7 @@
     +-->
 <components>
   <!-- Include different scratchpad projects -->
-  <include src="context://WEB-INF/xconf/cocoon-scratchpad-caching-source.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-scratchpad-groovyflow.xconf"/>
-  <include src="context://WEB-INF/xconf/cocoon-scratchpad-intercepted-flow.xconf"/>
+  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad-caching-source.xconf"/>
+  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad-groovyflow.xconf"/>
+  <include src="context://WEB-INF/cocoon/xconf/cocoon-scratchpad-intercepted-flow.xconf"/>
 </components>

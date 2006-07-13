@@ -30,7 +30,7 @@
       +-->
   <slide-repository 
     logger="slide.repository"
-    file="context://WEB-INF/slide.xconf"
+    file="context://WEB-INF/cocoon/slide.xconf"
   />
 
   <source-factories>
@@ -49,7 +49,7 @@
       logger="core.modules.slide">
       <reloadable>false</reloadable>
       <cacheable>false</cacheable>
-      <file src="context://WEB-INF/slide.xconf"/>
+      <file src="context://WEB-INF/cocoon/slide.xconf"/>
     </component-instance>
 
     <component-instance 

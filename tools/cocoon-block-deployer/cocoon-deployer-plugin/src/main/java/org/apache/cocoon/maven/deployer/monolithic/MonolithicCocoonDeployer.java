@@ -56,10 +56,10 @@ public class MonolithicCocoonDeployer {
         	try {
                 this.logger.info("Deploying " + id);
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
-                zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF"));        		
-                zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/xconf"));
-                zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/sitemap-additions"));  
-                zipExtractor.addRule("**spring/**.xml", new SingleFileDeployer("WEB-INF/spring"));
+                zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));        		
+                zipExtractor.addRule("**legacy**.xconf", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
+                zipExtractor.addRule("**legacy**.xmap", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));  
+                zipExtractor.addRule("**spring/**.xml", new SingleFileDeployer("WEB-INF/cocoon/spring"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);
@@ -76,12 +76,12 @@ public class MonolithicCocoonDeployer {
 	        templateObjects.put("devblocks", developmentBlocks);
             templateObjects.put("curblock", developmentBlocks[developmentBlocks.length - 1]);
 	        writeStringTemplateToFile(basedir, "sitemap.xmap", templateObjects);
-	        writeStringTemplateToFile(basedir, "WEB-INF/cocoon.xconf", templateObjects);
+	        writeStringTemplateToFile(basedir, "WEB-INF/cocoon/cocoon.xconf", templateObjects);
 	        
             copyFile(basedir, "blocks/sitemap.xmap");
-			copyFile(basedir, "WEB-INF/log4j.xconf");
+			copyFile(basedir, "WEB-INF/cocoon/log4j.xconf");
 	        copyFile(basedir, "WEB-INF/web.xml");	        
-	        copyFile(basedir, "WEB-INF/properties/core.properties");
+	        copyFile(basedir, "WEB-INF/cocoon/properties/core.properties");
         }
         
         // write properties
@@ -90,7 +90,7 @@ public class MonolithicCocoonDeployer {
         	for(int i = 0; i < developmentProperties.length; i++) {
         		properties.setProperty(developmentProperties[0].name, developmentProperties[0].value);
         	}
-        	writeProperties(basedir, "WEB-INF/properties/dev/core.properties", properties);
+        	writeProperties(basedir, "WEB-INF/cocoon/properties/dev/core.properties", properties);
         }
 	}
 	
