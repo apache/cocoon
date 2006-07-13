@@ -18,17 +18,20 @@ package org.apache.cocoon.servlet;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
  * @version $Id$
+ * @since 2.2
  */
 public class RequestUtil {
 
     public static String getCompleteUri(HttpServletRequest request,
                                         HttpServletResponse response)
     throws IOException {
+        // We got it... Process the request
         String uri = request.getServletPath();
         if (uri == null) {
             uri = "";
@@ -58,9 +61,42 @@ public class RequestUtil {
             response.sendRedirect(response.encodeRedirectURL(prefix + "/"));
             return null;
         }
+
         if (uri.charAt(0) == '/') {
             uri = uri.substring(1);
         }
         return uri;
+    }
+
+    public static HttpServletRequest createRequestForUri(HttpServletRequest request, String uri) {
+        return new HttpServletRequestImpl(request, uri);
+    }
+
+    /** TODO - we have to check the return values with the servlet spec! */
+    protected static final class HttpServletRequestImpl extends HttpServletRequestWrapper {
+
+        final private String uri;
+
+        public HttpServletRequestImpl(HttpServletRequest request, String uri) {
+            super(request);
+            this.uri = uri;
+        }
+
+        public String getPathInfo() {
+            return this.uri;
+        }
+
+        public String getRequestURI() {
+            return this.uri;
+        }
+
+        public StringBuffer getRequestURL() {
+            return new StringBuffer(this.uri);
+        }
+
+        public String getServletPath() {
+            return null;
+        }
+
     }
 }
