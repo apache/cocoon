@@ -27,7 +27,10 @@ public abstract class SettingsDefaults {
     public static final boolean MANAGE_EXCEPTIONS = true;
 
     /** The default running mode. */
-    public static final String DEFAULT_RUNNING_MODE = "dev";
+    public static final String DEFAULT_RUNNING_MODE = "prod";
+
+    /** This is the list of predefined running modes (separated by a ,). */
+    public static final String PREDEFINED_RUNNING_MODE = "prod,dev";
 
     /** The default configuration location. */
     public static final String DEFAULT_CONFIGURATION = "/WEB-INF/cocoon/cocoon.xconf";
