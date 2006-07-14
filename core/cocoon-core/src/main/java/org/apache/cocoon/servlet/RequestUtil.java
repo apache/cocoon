@@ -33,6 +33,7 @@ public class RequestUtil {
     throws IOException {
         // We got it... Process the request
         String uri = request.getServletPath();
+        // uri should never be null, but we check it anyway
         if (uri == null) {
             uri = "";
         }
@@ -40,6 +41,9 @@ public class RequestUtil {
         if (pathInfo != null) {
             // VG: WebLogic fix: Both uri and pathInfo starts with '/'
             // This problem exists only in WL6.1sp2, not in WL6.0sp2 or WL7.0b.
+            // Comment: The servletPath always starts with '/', so it seems
+            //          that the above mentioned bug is only occuring if the servlet path
+            //          is just a "/".
             if (uri.length() > 0 && uri.charAt(0) == '/') {
                 uri = uri.substring(1);
             }
@@ -53,12 +57,14 @@ public class RequestUtil {
                     "".charAt(0)
                else process URI normally
             */
-            String prefix = request.getRequestURI();
-            if (prefix == null) {
-                prefix = "";
+            String serverAbsoluteUri = request.getRequestURI();
+            if (serverAbsoluteUri == null) {
+                serverAbsoluteUri = "/";
+            } else {
+                serverAbsoluteUri += "/";
             }
 
-            response.sendRedirect(response.encodeRedirectURL(prefix + "/"));
+            response.sendRedirect(response.encodeRedirectURL(serverAbsoluteUri));
             return null;
         }
 
@@ -68,35 +74,84 @@ public class RequestUtil {
         return uri;
     }
 
-    public static HttpServletRequest createRequestForUri(HttpServletRequest request, String uri) {
-        return new HttpServletRequestImpl(request, uri);
+    public static HttpServletRequest createRequestForUri(HttpServletRequest request, String servletPath, String pathInfo) {
+        return new HttpServletRequestImpl(request, servletPath, pathInfo);
     }
 
-    /** TODO - we have to check the return values with the servlet spec! */
     protected static final class HttpServletRequestImpl extends HttpServletRequestWrapper {
+
+        final private String servletPath;
+
+        final private String pathInfo;
 
         final private String uri;
 
-        public HttpServletRequestImpl(HttpServletRequest request, String uri) {
+        public HttpServletRequestImpl(HttpServletRequest request, String servletPath, String pathInfo) {
             super(request);
-            this.uri = uri;
+            this.servletPath = servletPath;
+            this.pathInfo = pathInfo;
+            final StringBuffer buffer = new StringBuffer();
+            if ( request.getContextPath() != null ) {
+                buffer.append(request.getContextPath());
+            }
+            if ( buffer.length() == 1 && buffer.charAt(0) == '/' ) {
+                buffer.deleteCharAt(0);
+            }
+            if ( servletPath != null ) {
+                buffer.append(servletPath);
+            }
+            if ( pathInfo != null ) {
+                buffer.append(pathInfo);
+            }
+            if ( buffer.charAt(0) != '/' ) {
+                buffer.insert(0, '/');
+            }
+            this.uri = buffer.toString();
+            
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
+         */
         public String getPathInfo() {
-            return this.uri;
+            return this.pathInfo;
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURI()
+         */
         public String getRequestURI() {
             return this.uri;
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURL()
+         */
         public StringBuffer getRequestURL() {
-            return new StringBuffer(this.uri);
+            final StringBuffer buffer = new StringBuffer();
+            buffer.append(this.getProtocol());
+            buffer.append("://");
+            buffer.append(this.getServerName());
+            boolean appendPort = true;
+            if ( this.getScheme().equals("http") && this.getServerPort() == 80 ) {
+                appendPort = false;
+            }
+            if ( this.getScheme().equals("https") && this.getServerPort() == 443) {
+                appendPort = false;
+            }
+            if ( appendPort ) {
+                buffer.append(':');
+                buffer.append(this.getServerPort());
+            }
+            buffer.append(this.uri);
+            return buffer;
         }
 
+        /**
+         * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
+         */
         public String getServletPath() {
-            return null;
+            return this.servletPath;
         }
-
     }
 }
