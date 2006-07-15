@@ -83,6 +83,7 @@
 		<module>cocoon-scratchpad</module>
 		<module>cocoon-serializers</module>
 		<module>cocoon-session-fw</module>
+		<module>cocoon-samples-style</module>				
 		<module>cocoon-slide</module>
 		<module>cocoon-slop</module>
 		<module>cocoon-stx</module>
