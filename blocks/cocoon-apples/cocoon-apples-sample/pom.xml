@@ -59,12 +59,6 @@
           </connectors>
           <webAppSourceDirectory>target/cocoon-apples-sample</webAppSourceDirectory>
           <contextPath>/</contextPath>
-          <systemProperties>
-            <systemProperty>
-              <name>org.apache.commons.logging.Log</name>
-              <value>org.apache.commons.logging.impl.SimpleLog</value>
-            </systemProperty>
-          </systemProperties>
         </configuration>
       </plugin>      
     </plugins>
@@ -90,7 +84,12 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
-    </dependency>             
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>                   
   </dependencies>
 
 </project>
