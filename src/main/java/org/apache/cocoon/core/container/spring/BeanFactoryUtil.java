@@ -48,6 +48,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * This utility class helps in creating new Spring {@link ConfigurableListableBeanFactory} objects
@@ -196,7 +197,7 @@ public class BeanFactoryUtil {
     public static ApplicationContext getWebApplicationContext(ServletContext servletContext) {
         ApplicationContext parent = null;
         if( servletContext != null) {
-            parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+            parent = WebApplicationContextUtils.getWebApplicationContext(servletContext);            parent = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         }
         return parent;
     }
