@@ -267,12 +267,12 @@
          |       some words may be found in more than one browser description. (MSIE is
          |       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
          +-->
+     <browser name="opera" useragent="Opera"/>
      <browser name="explorer" useragent="MSIE"/>
      <browser name="pocketexplorer" useragent="MSPIE"/>
      <browser name="handweb" useragent="HandHTTP"/>
      <browser name="avantgo" useragent="AvantGo"/>
      <browser name="imode" useragent="DoCoMo"/>
-     <browser name="opera" useragent="Opera"/>
      <browser name="lynx" useragent="Lynx"/>
      <browser name="java" useragent="Java"/>
      <browser name="wap" useragent="Nokia"/>
