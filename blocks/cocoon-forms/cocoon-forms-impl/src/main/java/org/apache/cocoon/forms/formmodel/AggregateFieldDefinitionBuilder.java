@@ -37,9 +37,9 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
         definition.makeImmutable();
         return definition;
     }
-    
+
     protected void setupDefinition(Element widgetElement, AggregateFieldDefinition definition) throws Exception {
-        
+
         // parse the field definition
         super.setupDefinition(widgetElement, definition);
 
@@ -75,7 +75,7 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
                 throw new Exception("Unknown widget id \"" + field + "\", at " +
                                     DomHelper.getLocation(mapElements[i]));
             }
-            
+
             try {
             	definition.addSplitMapping(group, field);
             	System.out.println("Aggregate: addSplitMapping("+group+","+field+")");
