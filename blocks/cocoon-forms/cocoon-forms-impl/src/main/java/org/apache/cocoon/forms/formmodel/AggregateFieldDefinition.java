@@ -61,7 +61,7 @@ public class AggregateFieldDefinition extends FieldDefinition {
      * a group (paren) from the regular expression and corresponding field id.
      */
     private List splitMappings = new ArrayList();
-    
+
     /**
      * Set containing widgets mapped to groups to find out if a specific widget has been mapped already
      */
@@ -77,27 +77,27 @@ public class AggregateFieldDefinition extends FieldDefinition {
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
     	super.initializeFrom(definition);
-    	
+
     	if(definition instanceof AggregateFieldDefinition) {
     		AggregateFieldDefinition other = (AggregateFieldDefinition)definition;
-    		
+
     		this.combineExpr = other.combineExpr;
     		this.splitRegexp = other.splitRegexp;
     		this.splitPattern = other.splitPattern;
     		this.splitFailMessage = other.splitFailMessage;
-    		
+
     		Iterator defs = other.container.getWidgetDefinitions().iterator();
     		while(defs.hasNext()) {
     			container.addWidgetDefinition((WidgetDefinition)defs.next());
     		}
-    		
+
     		Collections.copy(this.splitMappings,other.splitMappings);
-    		
+
     		Iterator fields = other.mappedFields.iterator();
     		while(fields.hasNext()) {
     			this.mappedFields.add(fields.next());
     		}
-    		
+
     	} else {
     		throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
     	}
@@ -107,25 +107,25 @@ public class AggregateFieldDefinition extends FieldDefinition {
         checkMutable();
         container.addWidgetDefinition(widgetDefinition);
     }
-    
+
     /**
      * checks completeness of this definition
      */
     public void checkCompleteness() throws IncompletenessException {
     	super.checkCompleteness();
-    	
+
     	if(this.container.size()==0)
     		throw new IncompletenessException("AggregateField doesn't have any child widgets!",this);
-    	
+
     	if(this.combineExpr==null)
     		throw new IncompletenessException("AggregateField requires a combine expression!",this);
-    	
+
     	if(this.splitPattern==null)
     		throw new IncompletenessException("AggregateField requires a split regular expression!",this);
-    	
+
     	if(this.splitMappings.size()==0)
     		throw new IncompletenessException("AggregateField requires at least one group to field mapping!",this);
-    	
+
     	// now check children's completeness
     	List defs = container.getWidgetDefinitions();
     	Iterator it = defs.iterator();
@@ -172,12 +172,12 @@ public class AggregateFieldDefinition extends FieldDefinition {
 
     protected void addSplitMapping(int group, String fieldId) {
         checkMutable();
-        
+
         if(mappedFields.contains(fieldId))
         	throw new RuntimeException("Field '"+fieldId+"' is already mapped to another group!");
-        
+
         mappedFields.add(fieldId);
-        
+
         splitMappings.add(new SplitMapping(group, fieldId));
     }
 
