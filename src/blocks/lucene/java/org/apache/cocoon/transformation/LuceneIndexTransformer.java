@@ -51,14 +51,64 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * A lucene index creation transformer.
- * <p>See <a href="http://wiki.cocoondev.org/Wiki.jsp?page=LuceneIndexTransformer">LuceneIndexTransformer</a>
- * documentation on the Cocoon Wiki.</p>
- * <p>TODO: Write more documentation.</p>
+  * <p style="font-weight: bold;">A lucene index creation transformer.</p>
+  * <p>This transformer reads a document with elements in the namespace 
+  * <code>http://apache.org/cocoon/lucene/1.0</code>, and creates a new Lucene Index,
+  * or updates an existing one.</p>
+  * <p>It has several parameters which can be set in the sitemap component configuration or as 
+  * parameters to the transformation step in the pipeline, or finally as attributes of the root element
+  * in the source XML document. The source document over-rides the transformation parameters, 
+  * which in turn over-ride any configuration parameters.</p>
+  * <dl>
+  * <dt>
+  * <dt style="font-weight: bold;">directory</dt>
+  * <dd><p>Location of directory where index files are stored. 
+  * This path is relative to the Cocoon work directory</p></dd>
+  * <dt style="font-weight: bold;">create</dt>
+  * <dd><p>This attribute controls whether the index is recreated.  </p>
+  *    <ul><li><p>If create = "false" and the index already exists then the index will be updated. 
+  *    Any documents which had already been indexed will be removed from the index and reinserted.</p></li>
+  *    <li><p>If the index does not exist then it will be created even if <code>create</code>="false".</p></li>
+  *    <li><p>If <code>create</code>="true" then any existing index will be destroyed and a new index created. 
+  *     If you are rebuilding your entire index then you should set <code>create</code>="true" because the 
+  *     indexer doesn't need to remove old documents from the index, so it will be faster.</p></li></ul>
+  * </dd>
+  * <dt style="font-weight: bold;">max-field-length</dt>
+  * <dd><p>Maximum number of terms to index in a field (as far as the index is concerned,
+  *    the document will effectively be truncated at this point. The default value, 10k, may not be sufficient for large documents.</p></dd>
+  * <dt style="font-weight: bold;">analyzer</dt>
+  * <dd><p>Class name of the Lucene text analyzer to use. Typically depends on the language of the text being indexed.
+  * See the Lucene documentation for more information.</p></dd>
+  * <dt style="font-weight: bold;">merge-factor</dt>
+  * <dd>Determines how often segment indices are merged. See the Lucene documentation for more information.</dd>
+  * </dl>
+  * <dl>
+  * <dt style="font-weight: bold;">A simple example of the input:</dt>
+  * <dd>
+  * <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  * &lt;lucene:index xmlns:lucene="http://apache.org/cocoon/lucene/1.0" 
+  *     merge-factor="20" 
+  *     create="false" 
+  *     directory="index" 
+  *     max-field-length="10000"
+  *     analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer"&gt;
+  *     &lt;lucene:document url="a.html"&gt;
+  *             &lt;documentTitle lucene:store="true"&gt;Doggerel&lt;/documentTitle&gt;
+  *             &lt;body&gt;The quick brown fox jumped over the lazy dog&lt;/body&gt;    
+  *     &lt;/lucene:document&gt;
+  *     &lt;lucene:document url="b.html"&gt;
+  *             &lt;documentTitle lucene:store="true"&gt;Lorem Ipsum&lt;/documentTitle&gt;
+  *             &lt;body&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit.&lt;/body&gt;
+  *             &lt;body&gt;Nunc a mauris blandit ligula scelerisque tristique.&lt;/body&gt;    
+  *     &lt;/lucene:document&gt;
+  * &lt;/lucene:index&gt;
+  * </pre>
+ * </dd>
+ * </dl>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Contextualizable {
@@ -72,6 +122,9 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public static final String MERGE_FACTOR_CONFIG = "merge-factor";
     public static final String MERGE_FACTOR_PARAMETER = "merge-factor";
     public static final int MERGE_FACTOR_DEFAULT = 20;
+    public static final String MAX_FIELD_LENGTH_CONFIG = "max-field-length";
+    public static final String MAX_FIELD_LENGTH_PARAMETER = "max-field-length";
+    public static final int MAX_FIELD_LENGTH_DEFAULT = IndexWriter.DEFAULT_MAX_FIELD_LENGTH;
 
     public static final String LUCENE_URI = "http://apache.org/cocoon/lucene/1.0";
     public static final String LUCENE_QUERY_ELEMENT = "index";
@@ -79,13 +132,14 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public static final String LUCENE_QUERY_DIRECTORY_ATTRIBUTE = "directory";
     public static final String LUCENE_QUERY_CREATE_ATTRIBUTE = "create";
     public static final String LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE = "merge-factor";
+    public static final String LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE = "max-field-length";
     public static final String LUCENE_DOCUMENT_ELEMENT = "document";
     public static final String LUCENE_DOCUMENT_URL_ATTRIBUTE = "url";
     public static final String LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE = "text-attr";
     public static final String LUCENE_ELEMENT_ATTR_STORE_VALUE = "store";
     public static final String LUCENE_ELAPSED_TIME_ATTRIBUTE = "elapsed-time";
     public static final String CDATA = "CDATA";
-    
+
     // The 3 states of the state machine
     private static final int STATE_GROUND = 0; // initial or "ground" state
     private static final int STATE_QUERY = 1; // processing a lucene:index (Query) element
@@ -117,11 +171,9 @@ public class LuceneIndexTransformer extends AbstractTransformer
     private AttributesImpl documentAttributes; 
     private long documentStartTime;
 
-
     private static String uid(String url) {
         return url.replace('/', '\u0000'); // + "\u0000" + DateField.timeToString(urlConnection.getLastModified());
     }
-
 
     /**
      * Configure the transformer. The configuration parameters are stored as
@@ -133,7 +185,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
         this.configureConfiguration = new IndexerConfiguration(
             conf.getChild(ANALYZER_CLASSNAME_CONFIG).getValue(ANALYZER_CLASSNAME_DEFAULT), 
             conf.getChild(DIRECTORY_CONFIG).getValue(DIRECTORY_DEFAULT), 
-            conf.getChild(MERGE_FACTOR_CONFIG).getValueAsInteger(MERGE_FACTOR_DEFAULT)
+            conf.getChild(MERGE_FACTOR_CONFIG).getValueAsInteger(MERGE_FACTOR_DEFAULT),
+            conf.getChild(MAX_FIELD_LENGTH_CONFIG).getValueAsInteger(MAX_FIELD_LENGTH_DEFAULT)
         );
     }
 
@@ -153,7 +206,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
         setupConfiguration = new IndexerConfiguration(
             parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, configureConfiguration.analyzerClassname),
             parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
-            parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.mergeFactor)
+            parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.mergeFactor),
+            parameters.getParameterAsInteger(MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.maxFieldLength)
         );
     }
 
@@ -197,7 +251,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
         return NOPValidity.SHARED_INSTANCE;
     }
 
-
     public void startDocument() throws SAXException {
         super.startDocument();
     }
@@ -240,11 +293,13 @@ public class LuceneIndexTransformer extends AbstractTransformer
                 String analyzerClassname = atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
                 String indexDirectory  = atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
                 String mergeFactor = atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
+                String maxFieldLength = atts.getValue(LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE);
 
                 queryConfiguration = new IndexerConfiguration(
                     analyzerClassname != null ? analyzerClassname : setupConfiguration.analyzerClassname,
                     indexDirectory != null ? indexDirectory : setupConfiguration.indexDirectory,
-                    mergeFactor != null ? Integer.parseInt(mergeFactor) : setupConfiguration.mergeFactor
+                    mergeFactor != null ? Integer.parseInt(mergeFactor) : setupConfiguration.mergeFactor,
+                    maxFieldLength != null ? Integer.parseInt(maxFieldLength) : setupConfiguration.maxFieldLength
                 );
 
                 if (!createIndex) {
@@ -348,8 +403,9 @@ public class LuceneIndexTransformer extends AbstractTransformer
                 boolean attributesToText = atts.getIndex(LUCENE_URI, LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE) != -1;
                 for (int i = 0; i < atts.getLength(); i++) {
                     // Ignore Lucene attributes
-                    if (LUCENE_URI.equals(atts.getURI(i)))
+                    if (LUCENE_URI.equals(atts.getURI(i))) {
                         continue;
+                    }
 
                     String atts_lname = atts.getLocalName(i);
                     String atts_value = atts.getValue(i);
@@ -401,31 +457,32 @@ public class LuceneIndexTransformer extends AbstractTransformer
         if (!indexExists) {
             createIndex = true;
         }
-        
+
         // Get the index directory, creating it if necessary
         Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(queryConfiguration.analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
-        this.writer.mergeFactor = queryConfiguration.mergeFactor; 
+        this.writer.mergeFactor = queryConfiguration.mergeFactor;
+        this.writer.maxFieldLength = queryConfiguration.maxFieldLength;
     }    
-    
+
     private IndexReader openReader() throws IOException {
-    		File indexDirectory = new File(queryConfiguration.indexDirectory);
+        File indexDirectory = new File(queryConfiguration.indexDirectory);
         if (!indexDirectory.isAbsolute()) {
             indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
         }
-    
         Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         IndexReader reader = IndexReader.open(directory);
         return reader;
     }    
 
-     private void reindexDocument() throws IOException {
+    private void reindexDocument() throws IOException {
         if (this.createIndex) {
             // The index is being created, so there's no need to delete the doc from an existing index.
             // This means we can keep a single IndexWriter open throughout the process.
-            if (this.writer == null)
+            if (this.writer == null) {
                 openWriter();
+            }
             this.writer.addDocument(this.bodyDocument);
         } else {
             // This is an incremental reindex, so the document should be removed from the index before adding it
@@ -440,7 +497,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
             this.writer = null;
         }
         this.bodyDocument = null;
-     }
+    }
 
     static class IndexHelperField {
         String localName;
@@ -474,15 +531,17 @@ public class LuceneIndexTransformer extends AbstractTransformer
         String analyzerClassname;
         String indexDirectory;
         int mergeFactor;
+        int maxFieldLength;
 
         public IndexerConfiguration(String analyzerClassname,
                                     String indexDirectory,
-                                    int mergeFactor) 
+                                    int mergeFactor,
+                                    int maxFieldLength) 
         {
             this.analyzerClassname = analyzerClassname;
             this.indexDirectory = indexDirectory;
             this.mergeFactor = mergeFactor;
+            this.maxFieldLength = maxFieldLength;
         }
     }
-
 }
