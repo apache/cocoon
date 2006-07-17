@@ -182,6 +182,12 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1854" due-to="Andrew Stevens" due-to-email="ats37@hotmail.com">
+      Browser selector should have Opera before MSIE.
+    </action>
+    <action dev="AG" type="fix" fixes-bug="COCOON-1880" due-to="Conal Tuohy" due-to-email="conal.tuohy@vuw.ac.nz">
+      Lucene Block: Allow LuceneIndexTransformer to index large documents (with more than 10k terms).
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1876" due-to="Don Grodecki" due-to-email="don@browsersoft.com">
       XML-DB Block: XMLDBTransformer blows up Saxon.
     </action>
