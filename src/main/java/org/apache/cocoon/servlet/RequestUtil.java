@@ -78,6 +78,19 @@ public class RequestUtil {
         return new HttpServletRequestImpl(request, servletPath, pathInfo);
     }
 
+    public static HttpServletRequest createRequestByRemovingPrefixFromUri(HttpServletRequest request, String prefix) {
+        String servletPath = request.getServletPath();
+        String pathInfo = request.getPathInfo();
+        String newPathInfo = pathInfo.substring(prefix.length()+1);
+        String newServletPath;
+        if ( servletPath == null ) {
+            newServletPath = pathInfo.substring(0, prefix.length()+1);
+        } else {
+            newServletPath = servletPath + pathInfo.substring(0, prefix.length()+1);
+        }
+        return new HttpServletRequestImpl(request, newServletPath, newPathInfo);
+    }
+
     protected static final class HttpServletRequestImpl extends HttpServletRequestWrapper {
 
         final private String servletPath;
