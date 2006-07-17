@@ -51,8 +51,7 @@ public class CalculatedFieldDefinitionBuilder extends FieldDefinitionBuilder {
         definition.makeImmutable();
         return definition;
     }
-        
-    
+
     protected void setupDefinition(Element widgetElement, CalculatedFieldDefinition definition) throws Exception {
         super.setupDefinition(widgetElement, definition);
 
@@ -71,6 +70,4 @@ public class CalculatedFieldDefinitionBuilder extends FieldDefinitionBuilder {
             this.serviceManager.release(builderSelector);
         }
     }
-    
-    
 }
