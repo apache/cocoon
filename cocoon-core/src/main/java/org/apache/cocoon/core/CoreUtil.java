@@ -382,9 +382,8 @@ public class CoreUtil {
         avalonEnv.context = appContext;
         avalonEnv.logger = log;
         avalonEnv.settings = settings;
-        ConfigurableBeanFactory rootContext = BeanFactoryUtil.createRootBeanFactory(avalonEnv, servletContext);
         ConfigurationInfo result = ConfigReader.readConfiguration(settings.getConfiguration(), avalonEnv);
-        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(avalonEnv, result, null, rootContext);
+        ConfigurableBeanFactory mainContext = BeanFactoryUtil.createBeanFactory(avalonEnv, result, null, BeanFactoryUtil.getWebApplicationContext(servletContext));
 
         settings.setCreationTime(System.currentTimeMillis());
         return mainContext;

@@ -134,9 +134,6 @@ public class ContainerTestCase extends TestCase {
     /** The context */
     private Context context;
 
-    /** The root bean factory. */
-    private ConfigurableListableBeanFactory rootBeanFactory;
-
     /** The bean factory containing the avalon components. */
     private ConfigurableListableBeanFactory beanFactory;
 
@@ -229,9 +226,9 @@ public class ContainerTestCase extends TestCase {
      * Disposes the <code>ComponentLocator</code>
      */
     final private void done() {
-        if( this.rootBeanFactory != null ) {
-            this.rootBeanFactory.destroySingletons();
-            this.rootBeanFactory = null;
+        if( this.beanFactory != null ) {
+            this.beanFactory.destroySingletons();
+            this.beanFactory = null;
         }
         this.manager = null;
         this.context = null;
@@ -297,11 +294,10 @@ public class ContainerTestCase extends TestCase {
         avalonEnv.context = this.context;
         avalonEnv.settings = new MutableSettings();
 
-        this.rootBeanFactory = BeanFactoryUtil.createRootBeanFactory(avalonEnv, new MockContext());
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
         this.addComponents( rolesInfo );
-        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, this.rootBeanFactory);
+        this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnv, rolesInfo, null, null);
 
         this.manager = (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName());
     }
