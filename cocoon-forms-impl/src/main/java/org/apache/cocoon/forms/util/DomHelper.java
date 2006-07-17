@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.util.location.Location;
@@ -61,7 +63,7 @@ import org.xml.sax.SAXNotSupportedException;
  */
 public class DomHelper {
 
-    public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
+    public static final String XMLNS_URI = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
 
     public static Location getLocationObject(Element element) {
         return LocationAttributes.getLocation(element);
