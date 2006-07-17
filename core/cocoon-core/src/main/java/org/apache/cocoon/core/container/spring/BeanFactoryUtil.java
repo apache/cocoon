@@ -150,10 +150,13 @@ public class BeanFactoryUtil {
                                             info,
                                             env.context,
                                             env.settings);
-            if ( info.rootLogger != null ) {
-                factory.registerSingleton(Logger.class.getName(), logger);
+            // register logger
+            factory.registerSingleton(ProcessingUtil.LOGGER_ROLE, logger);
+            // register avalon context - if available
+            if ( env.context != null ) {
+                factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
             }
-            // add local resolver
+            // add local resolver 
             if ( resolver != null ) {
                 factory.registerSingleton(SourceResolver.ROLE + "/Local", resolver);
             }
@@ -167,28 +170,6 @@ public class BeanFactoryUtil {
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
-    }
-
-    /**
-     * Create the root bean factory.
-     * This factory is the root of all Cocoon based Spring bean factories. If
-     * the default Spring application context is created using the Spring context listener, that
-     * default context will be the parent of this factory.
-     *
-     * @param env The avalon environment.
-     * @return A new root application factory.
-     * @throws Exception
-     */
-    public static ConfigurableListableBeanFactory createRootBeanFactory(AvalonEnvironment  env,
-                                                                        ServletContext     servletContext)
-    throws Exception {
-    	ApplicationContext parent = getWebApplicationContext(servletContext);
-        CocoonBeanFactory factory = new CocoonBeanFactory(parent);
-        factory.registerSingleton(ProcessingUtil.CONTEXT_ROLE, env.context);
-        factory.registerSingleton(ProcessingUtil.LOGGER_ROLE, env.logger);
-        factory.registerSingleton(Settings.ROLE, env.settings);
-        factory.preInstantiateSingletons();
-        return factory;
     }
 
     /**

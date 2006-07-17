@@ -122,8 +122,9 @@ public class OSGiSpringECMFactory implements CocoonSpringConfigurableListableBea
 		if(configFile == null) {
 			throw new ECMConfigurationFileNotSetException("You have to provide a ECM configurationf file!");
 		}
-		if (this.parentBeanfactory == null)
-		    this.parentBeanfactory = BeanFactoryUtil.createRootBeanFactory(avalonEnvironment, osgiServletContext);
+		if (this.parentBeanfactory == null) {
+		    this.parentBeanfactory = BeanFactoryUtil.getWebApplicationContext(osgiServletContext);
+        }
 		ConfigurationInfo springBeanConfiguration = ConfigReader.readConfiguration(configFile, avalonEnvironment);
 		this.beanFactory = BeanFactoryUtil.createBeanFactory(avalonEnvironment, springBeanConfiguration,
 				null, this.parentBeanfactory, false);
