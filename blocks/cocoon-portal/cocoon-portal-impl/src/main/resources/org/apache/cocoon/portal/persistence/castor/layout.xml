@@ -27,8 +27,10 @@
   </class>
 
   <class name="org.apache.cocoon.portal.layout.AbstractParameters">
-    <field name="parameters" type="org.apache.cocoon.portal.pluto.om.common.ParameterImpl" collection="set"
-      get-method="getCastorParameters" set-method="addParameter">
+    <field name="parameters"
+           type="org.exolab.castor.mapping.MapItem"
+           collection="map"
+           handler="org.apache.cocoon.portal.persistence.castor.ParametersFieldHandler">
       <bind-xml name="parameter" node="element"/>
     </field>
   </class>
@@ -43,11 +45,6 @@
 
     <field name="static" type="java.lang.Boolean" set-method="setIsStatic" get-method="isStatic">
       <bind-xml name="static" node="attribute"/>
-    </field>
-
-    <field name="parameters" type="org.apache.cocoon.portal.pluto.om.common.ParameterImpl" collection="set"
-      get-method="getCastorParameters" set-method="addParameter">
-      <bind-xml name="parameter" node="element"/>
     </field>
   </class>
 
@@ -141,22 +138,12 @@
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.pluto.om.common.ParameterImpl">
-    <field name="name" type="java.lang.String">
-      <bind-xml name="name" node="attribute"/>
-    </field>
-
-    <field name="value">
-      <bind-xml name="value" node="attribute"/>
-    </field>
-  </class>
-
   <class name="org.exolab.castor.mapping.MapItem">
     <field name="key" type="java.lang.String">
       <bind-xml name="name"/>
     </field>
 
-    <field name="value">
+    <field name="value" type="java.lang.String">
       <bind-xml name="value"/>
     </field>
   </class>
