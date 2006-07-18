@@ -121,6 +121,12 @@
       <groupId>org.apache.excalibur.containerkit.logger</groupId>
       <artifactId>excalibur-logger</artifactId>
       <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.excalibur.components.store</groupId>
@@ -139,6 +145,10 @@
         <exclusion>
           <groupId>servlet-api</groupId>
           <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-pool</groupId>
+          <artifactId>excalibur-pool-instrumented</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

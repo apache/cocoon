@@ -58,6 +58,14 @@
           <groupId>geronimo-spec</groupId>
           <artifactId>geronimo-spec-jms</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>avalon-logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-pool</groupId>
+          <artifactId>excalibur-pool-instrumented</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
   </dependencies>
