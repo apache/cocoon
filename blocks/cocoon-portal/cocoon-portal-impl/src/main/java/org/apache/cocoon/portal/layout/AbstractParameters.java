@@ -17,13 +17,8 @@ package org.apache.cocoon.portal.layout;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.pluto.om.common.Parameter;
-import org.apache.cocoon.portal.pluto.om.common.ParameterImpl;
 
 /**
  *
@@ -36,24 +31,6 @@ public abstract class AbstractParameters
 
     public final Map getParameters() {
         return parameters;
-    }
-
-    public final Set getCastorParameters() {
-        Set set = new HashSet(this.parameters.size());
-        Iterator iterator = this.parameters.entrySet().iterator();
-        Map.Entry entry;
-        while (iterator.hasNext()) {
-            entry = (Map.Entry) iterator.next();
-            ParameterImpl param = new ParameterImpl();
-            param.setName((String)entry.getKey());
-            param.setValue((String)entry.getValue());
-            set.add(param);
-        }
-        return set;
-    }
-
-    public void addParameter(Parameter parameter) {
-        parameters.put(parameter.getName(), parameter.getValue());
     }
 
     /**
