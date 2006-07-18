@@ -30,6 +30,7 @@ import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
 import org.apache.cocoon.maven.deployer.utils.WebApplicationRewriter;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -231,8 +232,27 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         for(Iterator it = this.getProject().getArtifacts().iterator(); it.hasNext(); ) {
             Artifact artifact = (Artifact) it.next();
             String id = artifact.getArtifactId();
-            if(files.containsKey(id)) {
-                throw new MojoExecutionException("There are at least two artifacts with the ID '" + id + "'.");
+            if (files.containsKey(id)) {
+                // Now search for all artifacts and print their dependency trail
+                StringBuffer msg = new StringBuffer("There are at least two artifacts with the ID '");
+                msg.append(id);
+                msg.append("':");
+                msg.append(SystemUtils.LINE_SEPARATOR);
+                for(Iterator ai = this.getProject().getArtifacts().iterator(); ai.hasNext(); ) {
+                    final Artifact current = (Artifact) ai.next();
+                    if ( current.getArtifactId().equals(id) ) {
+                        msg.append(artifact);
+                        msg.append(SystemUtils.LINE_SEPARATOR);
+                        final List l = current.getDependencyTrail();
+                        final Iterator i = l.iterator();
+                        while ( i.hasNext() ) {
+                            msg.append("    ");
+                            msg.append(i.next().toString());
+                            msg.append(SystemUtils.LINE_SEPARATOR);
+                        }
+                    }
+                }
+                throw new MojoExecutionException(msg.toString());
             }
             if(containsArtifact(excludedBlocks, artifact.getArtifactId(), artifact.getGroupId())) {
                 this.getLog().debug("Skipping " + artifact.getArtifactId() + ":" + artifact.getGroupId());
