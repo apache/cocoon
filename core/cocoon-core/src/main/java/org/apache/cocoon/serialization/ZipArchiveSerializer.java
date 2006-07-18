@@ -284,7 +284,8 @@ public class ZipArchiveSerializer extends AbstractSerializer
 
                 // and close the entry
                 this.zipOutput.closeEntry();
-
+                // close input stream (to avoid "too many open files" problem)
+                sourceInput.close();
             } else {
                 // Serialize content
                 if (this.selector == null) {
