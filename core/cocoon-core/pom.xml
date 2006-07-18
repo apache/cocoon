@@ -147,8 +147,12 @@
           <artifactId>servlet-api</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>excalibur-pool</groupId>
+          <groupId>org.apache.excalibur.components.pool</groupId>
           <artifactId>excalibur-pool-instrumented</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.excalibur.components.pool</groupId>
+          <artifactId>excalibur-pool-impl</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

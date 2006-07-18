@@ -155,6 +155,18 @@
           <groupId>excalibur-pool</groupId>
           <artifactId>excalibur-pool-instrumented</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-pool</groupId>
+          <artifactId>excalibur-pool-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-pool</groupId>
+          <artifactId>excalibur-pool-impl</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
   </dependencies>
