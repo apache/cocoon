@@ -79,6 +79,16 @@
       <groupId>castor</groupId>
       <artifactId>castor</artifactId>
       <version>1.0M1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xerces</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -94,6 +104,7 @@
       <groupId>org.apache.pluto</groupId>
       <artifactId>pluto</artifactId>
       <version>1.0.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>portlet-api</groupId>
@@ -121,6 +132,7 @@
       <groupId>org.apache.portals.bridges</groupId>
       <artifactId>portals-bridges-common</artifactId>
       <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>nekohtml</groupId>
