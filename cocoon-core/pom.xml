@@ -111,11 +111,23 @@
       <groupId>org.apache.excalibur.components.pool</groupId>
       <artifactId>excalibur-pool-api</artifactId>
       <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avalon.logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.excalibur.components.sourceresolve</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
       <version>2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avalon.framework</groupId>
+          <artifactId>avalon-framework-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.excalibur.containerkit.logger</groupId>
@@ -124,6 +136,10 @@
       <exclusions>
         <exclusion>
           <groupId>avalon-logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.avalon.logkit</groupId>
           <artifactId>avalon-logkit</artifactId>
         </exclusion>
       </exclusions>
@@ -154,12 +170,26 @@
           <groupId>org.apache.excalibur.components.pool</groupId>
           <artifactId>excalibur-pool-impl</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.excalibur.containerkit.instrument</groupId>
+          <artifactId>excalibur-instrument-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.avalon.framework</groupId>
+          <artifactId>avalon-framework-api</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>
       <artifactId>avalon-framework-impl</artifactId>
       <version>4.3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-logkit</groupId>
+          <artifactId>avalon-logkit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- commons -->
