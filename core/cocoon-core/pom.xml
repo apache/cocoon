@@ -171,10 +171,6 @@
           <artifactId>excalibur-pool-impl</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.apache.excalibur.containerkit.instrument</groupId>
-          <artifactId>excalibur-instrument-api</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>org.apache.avalon.framework</groupId>
           <artifactId>avalon-framework-api</artifactId>
         </exclusion>
