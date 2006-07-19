@@ -79,6 +79,10 @@
           <artifactId>avalon-framework-api</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework-impl</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>excalibur-pool</groupId>
           <artifactId>excalibur-pool-instrumented</artifactId>
         </exclusion>
@@ -89,6 +93,30 @@
         <exclusion>
           <groupId>excalibur-pool</groupId>
           <artifactId>excalibur-pool-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-fortress</groupId>
+          <artifactId>excalibur-fortress-meta</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-fortress</groupId>
+          <artifactId>excalibur-fortress-container-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-component</groupId>
+          <artifactId>excalibur-component</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-component</groupId>
+          <artifactId>excalibur-testcase</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-logger</groupId>
+          <artifactId>excalibur-logger</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>excalibur-instrument</groupId>
+          <artifactId>excalibur-instrument-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
