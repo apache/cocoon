@@ -21,7 +21,9 @@
         shorthand="ojb-odmg"
         default-class="org.apache.cocoon.ojb.odmg.components.ODMGImpl"/>
 
+<!--
   <role name="org.apache.cocoon.ojb.jdo.components.JDO"
         shorthand="ojb-jdo"
         default-class="org.apache.cocoon.ojb.jdo.components.JDOImpl"/>
+        -->
 </role-list>
