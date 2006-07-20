@@ -30,6 +30,8 @@
       | components properly. However, the best way is to start your
       | portal project from scratch!
       +-->
+  <!-- Load Sitemap components provided by CAuth. -->
+  <map:include src="resource://org/apache/cocoon/auth/sitemap-addons.xconf"/>
 
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
