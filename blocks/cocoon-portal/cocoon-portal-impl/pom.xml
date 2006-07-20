@@ -104,7 +104,6 @@
       <groupId>org.apache.pluto</groupId>
       <artifactId>pluto</artifactId>
       <version>1.0.1</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>portlet-api</groupId>
