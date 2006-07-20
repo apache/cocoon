@@ -32,12 +32,12 @@ import org.apache.maven.plugin.logging.Log;
  */
 public interface FileDeployer {
 
-	public OutputStream writeResource(String documentName) throws IOException;
+	OutputStream writeResource(String documentName) throws IOException;
 
-	public void setBasedir(File file);
+	void setBasedir(File file);
 
-	public void setLogger(Log logger);
+	void setLogger(Log logger);
 
-	public void setAlreadyDeployedFilesSet(Set alreadyDeployedFilesSet);
+	void setAlreadyDeployedFilesSet(Set alreadyDeployedFilesSet);
 	
 }
