@@ -244,6 +244,14 @@
           shorthand="portal-profile-manager"/>
 
   <!--+
+      | Profile Manager Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <role name="org.apache.cocoon.portal.profile.ProfileManagerAspectSelector"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+  <!--+
       | Deployment Manager
       |
       +-->
