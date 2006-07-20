@@ -310,14 +310,14 @@
   </scm>
   <distributionManagement>
     <repository>
-      <id>apache-maven-snapshot</id>
-      <name>repository</name>
-      <url>scpexe://people.apache.org/x1/www/cvs.apache.org/maven-snapshot-repository</url>
+      <id>apache-maven</id>
+      <name>release repository</name>
+      <url>scpexe://people.apache.org/www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
     </repository>
     <snapshotRepository>
       <id>apache-maven-snapshot</id>
-      <name>repository</name>
-      <url>scpexe://people.apache.org/x1/www/cvs.apache.org/maven-snapshot-repository</url>
+      <name>snapshot repository</name>
+      <url>scpexe://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
     </snapshotRepository>
   </distributionManagement>
   <build>
