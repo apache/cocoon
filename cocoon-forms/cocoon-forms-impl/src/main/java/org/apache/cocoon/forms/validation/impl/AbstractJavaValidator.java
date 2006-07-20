@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class AbstractJavaValidator
+public abstract class AbstractJavaValidator
     implements Configurable {
 
     protected ValidationError validationError;
