@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingUtil;
@@ -91,13 +92,19 @@ public class XmlConfigCreator {
             } else {
                 // test for unknown model
                 if ( current.getModel() == ComponentInfo.MODEL_UNKNOWN ) {
-                    final Class serviceClass = Class.forName(className);
-                    if ( ThreadSafe.class.isAssignableFrom(serviceClass) ) {
-                        current.setModel(ComponentInfo.MODEL_SINGLETON);
-                    } else if ( Poolable.class.isAssignableFrom(serviceClass) ) {
-                        current.setModel(ComponentInfo.MODEL_POOLED);
-                    } else {
-                        current.setModel(ComponentInfo.MODEL_PRIMITIVE);
+                    try {
+                        final Class serviceClass = Class.forName(className);
+                        if ( ThreadSafe.class.isAssignableFrom(serviceClass) ) {
+                            current.setModel(ComponentInfo.MODEL_SINGLETON);
+                        } else if ( Poolable.class.isAssignableFrom(serviceClass) ) {
+                            current.setModel(ComponentInfo.MODEL_POOLED);
+                        } else {
+                            current.setModel(ComponentInfo.MODEL_PRIMITIVE);
+                        }
+                    } catch (NoClassDefFoundError ncdfe) {
+                        throw new ConfigurationException("Unable to create class for component with role " + current.getRole() + " with class: " + className, ncdfe);
+                    } catch (ClassNotFoundException cnfe) {
+                        throw new ConfigurationException("Unable to create class for component with role " + current.getRole() + " with class: " + className, cnfe);
                     }
                 }
                 if ( current.getModel() == ComponentInfo.MODEL_POOLED ) {
