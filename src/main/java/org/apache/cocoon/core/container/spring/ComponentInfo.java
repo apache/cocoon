@@ -90,6 +90,9 @@ public final class ComponentInfo {
     /** The default component for selectors. */
     private String defaultValue;
 
+    /** Lazy init. */
+    private boolean lazyInit = false;
+
     /**
      * Create a new info.
      */
@@ -231,6 +234,7 @@ public final class ComponentInfo {
         if ( newDefaultValue != null ) {
             this.defaultValue = newDefaultValue;
         }
+        this.lazyInit = config.getAttributeAsBoolean("lazy-init", this.lazyInit);
     }
 
     /**
@@ -315,6 +319,15 @@ public final class ComponentInfo {
         info.role = this.role;
         info.alias = this.alias;
         info.defaultValue = this.defaultValue;
+        info.lazyInit = this.lazyInit;
         return info;
+    }
+
+    public boolean isLazyInit() {
+        return lazyInit;
+    }
+
+    public void setLazyInit(boolean lazyInit) {
+        this.lazyInit = lazyInit;
     }
 }

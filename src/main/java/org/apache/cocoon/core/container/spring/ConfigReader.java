@@ -183,6 +183,7 @@ public class ConfigReader extends AbstractLogEnabled {
         final Iterator i = this.configInfo.getClassNames().values().iterator();
         while ( i.hasNext() ) {
             final ComponentInfo current = (ComponentInfo)i.next();
+            current.setLazyInit(true);
             this.configInfo.addComponent(current);
         }
         this.configInfo.clearClassNames();
