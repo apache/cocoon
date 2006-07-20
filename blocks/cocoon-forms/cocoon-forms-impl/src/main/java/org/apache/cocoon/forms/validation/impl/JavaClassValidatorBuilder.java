@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
+import org.apache.avalon.framework.configuration.ConfigurationUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -42,35 +43,47 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class JavaClassValidatorBuilder implements WidgetValidatorBuilder, ThreadSafe, Serviceable, LogEnabled, Contextualizable  {
+public class JavaClassValidatorBuilder
+    implements WidgetValidatorBuilder, ThreadSafe, Serviceable, LogEnabled, Contextualizable  {
 
     private ServiceManager manager;
-    private Logger logger = null;
-    private Context context = null;
+    private Logger logger;
+    private Context context;
     
 
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
+    /**
+     * @see org.apache.cocoon.forms.validation.WidgetValidatorBuilder#build(org.w3c.dom.Element, org.apache.cocoon.forms.formmodel.WidgetDefinition)
+     */
     public WidgetValidator build(Element validationRuleElement, WidgetDefinition definition) throws Exception {
         String name = DomHelper.getAttribute(validationRuleElement, "class");
 
         Object validator = ClassUtils.newInstance(name);
         if (validator instanceof WidgetValidator) {
-            LifecycleHelper.setupComponent(validator, logger, context, manager, null);
+            LifecycleHelper.setupComponent(validator, logger, context, manager, ConfigurationUtil.toConfiguration(validationRuleElement));
             return (WidgetValidator)validator;
         } else {
             throw new Exception("Class " + validator.getClass() + " is not a " + WidgetValidator.class.getName());
         }
     }
     
+    /**
+     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
     public void enableLogging(Logger logger) {
         this.logger = logger;
     }
 
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
-
 }
