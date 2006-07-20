@@ -20,12 +20,6 @@
   <!-- ========================= Components ================================ -->
 
   <map:components logger="portal" property-dir="conf/properties">
-    <map:include src="conf/cocoon-portal-sample.xconf"/>
-    <map:include src="conf/cocoon-portal-tools.xconf"/>
-
-    <!-- Load Sitemap components provided by CAuth. -->
-    <map:include src="resource://org/apache/cocoon/auth/sitemap-addons.xconf"/>
-
     <map:generators default="file">
       <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
     </map:generators>
