@@ -182,6 +182,10 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="CZ" type="add">
+      CForms block: JavaClassValidatorBuilder supports Configurable validator implementations. New AbstractJavaValidator
+                    implementation supports generation of customized fail messages.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1882" due-to="Holger Wahlen" due-to-email="hwahlen@pironet-ndh.com">
       Core: ZipArchiveSerializer causes &quot;Too many open files&quot; exception.
     </action>
