@@ -117,6 +117,9 @@ public class XmlConfigCreator {
             this.appendAttribute(buffer, "init-method", current.getInitMethodName());
             this.appendAttribute(buffer, "destroy-method", current.getDestroyMethodName());
             this.appendAttribute(buffer, "singleton", String.valueOf(singleton));
+            if ( singleton && current.isLazyInit() ) {
+                this.appendAttribute(buffer, "lazy-init", "true");
+            }
             if ( !isSelector ) {
                 buffer.append("/>\n");
             } else {
