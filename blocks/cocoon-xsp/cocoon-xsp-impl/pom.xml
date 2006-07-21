@@ -84,10 +84,6 @@
         </exclusion>
         <exclusion>
           <groupId>excalibur-pool</groupId>
-          <artifactId>excalibur-pool-instrumented</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>excalibur-pool</groupId>
           <artifactId>excalibur-pool-api</artifactId>
         </exclusion>
         <exclusion>
