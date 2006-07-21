@@ -56,13 +56,13 @@ public class MonolithicCocoonDeployer {
         	try {
                 this.logger.info("Deploying " + id);
         		MonolithicServer22 zipExtractor = new MonolithicServer22(basedir, logger);
-                zipExtractor.addRule("**legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));        		
-                zipExtractor.addRule("**legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
-                zipExtractor.addRule("**legacy/sitemap-additions/**", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));  
-                zipExtractor.addRule("**spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
-                zipExtractor.addRule("**properties/**", new SingleFileDeployer("WEB-INF/cocoon/properties"));
-                zipExtractor.addRule("**WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
-                zipExtractor.addRule("**WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
+                zipExtractor.addRule("META-INF/legacy/cocoon.xconf", new SingleFileDeployer("WEB-INF/cocoon"));        		
+                zipExtractor.addRule("META-INF/legacy/xconf/**", new SingleFileDeployer("WEB-INF/cocoon/xconf"));
+                zipExtractor.addRule("META-INF/legacy/sitemap-additions/**", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));  
+                zipExtractor.addRule("META-INF/spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
+                zipExtractor.addRule("META-INF/properties/**", new SingleFileDeployer("WEB-INF/cocoon/properties"));
+                zipExtractor.addRule("WEB-INF/classes/**", new SingleFileDeployer("WEB-INF/classes"));
+                zipExtractor.addRule("WEB-INF/db/**", new SingleFileDeployer("WEB-INF/db"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);
