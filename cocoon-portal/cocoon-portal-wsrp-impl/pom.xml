@@ -25,10 +25,10 @@
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-portal-impl</artifactId>
+  <artifactId>cocoon-portal-wsrp-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Portal Block Implementation</name>
+  <name>Portal Block WSRP Implementation</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -37,33 +37,54 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-ajax-impl</artifactId>
+      <artifactId>cocoon-portal-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-forms-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>castor</groupId>
-      <artifactId>castor</artifactId>
-      <version>1.0M1</version>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
       <exclusions>
         <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xerces</artifactId>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis-saaj</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis-jaxrpc</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis-wsdl4j</artifactId>
+      <version>1.5.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-discovery</groupId>
+      <artifactId>commons-discovery</artifactId>
+      <version>0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pluto</groupId>
+      <artifactId>pluto</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>portlet-api</groupId>
+      <artifactId>portlet-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -72,49 +93,14 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>0.9.5</version>
+      <groupId>wsrp4j</groupId>
+      <artifactId>wsrp4j-consumer</artifactId>
+      <version>0.3-dev</version>
     </dependency>
     <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekodtd</artifactId>
-      <version>0.1.11</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-SNAPSHOT</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <!--  
-          Test dependencies
-          TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
-     -->
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-      <version>0.8</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jmock</groupId>
-      <artifactId>jmock</artifactId>
-      <version>1.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>1.1</version>
-      <scope>test</scope>
+      <groupId>wsrp4j</groupId>
+      <artifactId>wsrp4j-shared</artifactId>
+      <version>0.3-dev</version>
     </dependency>
   </dependencies>
 </project>

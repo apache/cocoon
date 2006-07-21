@@ -25,10 +25,10 @@
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-portal-impl</artifactId>
+  <artifactId>cocoon-portal-portlet-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Portal Block Implementation</name>
+  <name>Portal Block Portlet Implementation</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -37,13 +37,14 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-ajax-impl</artifactId>
+      <artifactId>cocoon-portal-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-forms-impl</artifactId>
+      <artifactId>cocoon-portal-bridges-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>castor</groupId>
@@ -61,60 +62,22 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
+      <groupId>org.apache.pluto</groupId>
+      <artifactId>pluto</artifactId>
+      <version>1.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>portlet-api</groupId>
+      <artifactId>portlet-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.3</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>0.9.5</version>
-    </dependency>
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekodtd</artifactId>
-      <version>0.1.11</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <version>2.2.0-SNAPSHOT</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <!--  
-          Test dependencies
-          TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
-     -->
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-      <version>0.8</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jmock</groupId>
-      <artifactId>jmock</artifactId>
-      <version>1.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>1.1</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
