@@ -93,10 +93,12 @@
   -->
   <portal-manager>
     <aspects>
-      <!-- JSR-168 support: -->
+      <!-- JSR-168 support: 
       <aspect adapter="portlet"/>
-      <!-- wsrp support: -->
+      -->
+      <!-- wsrp support: 
       <aspect adapter="wsrp"/>
+      -->
     </aspects>
   </portal-manager>
 
@@ -166,7 +168,7 @@
     <!-- Scan the provided directories every minute: -->
     <scanning-delay>60000</scanning-delay>
     <!-- Scan the following locations (comma-separated): -->
-    <deployment-sources>conf/deploy</deployment-sources>
+    <deployment-sources>config/deploy</deployment-sources>
     <!-- Turn on/off hot deployment: -->
     <hot-deployment>true</hot-deployment>
   </portal-deployment-manager>
@@ -302,6 +304,7 @@
         </aspect>
       </aspects>
     </renderer>
+    <!--
     <renderer name="portlet-window"
               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
       <aspects>
@@ -338,6 +341,7 @@
         <aspect type="coplet-cinclude"/>
       </aspects>
     </renderer>
+    -->
     <renderer name="link" 
               class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer"/>
     <renderer name="decorated-frame"
@@ -433,10 +437,10 @@
   <!-- This is the special basket renderer -->
   <component role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/basket"
              class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect"/>
-
+<!--
   <wsrp-adapter>
-     <!-- This is the WSRP configuration containing the producers etc. -->
+     This is the WSRP configuration containing the producers etc. 
      <parameter name="wsrp-config" value="profiles/wsrp-config.xml"/>
   </wsrp-adapter>
-
+-->
 </components>
