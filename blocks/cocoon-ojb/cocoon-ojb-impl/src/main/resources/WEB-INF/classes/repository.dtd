@@ -1,6 +1,5 @@
-<!-- @version $Id$ -->
 <!--
-#/* Copyright 2004 Apache Software Foundation
+#/* Copyright 2004-2005 Apache Software Foundation
 # *
 # * Licensed under the Apache License, Version 2.0 (the "License");
 # * you may not use this file except in compliance with the License.
@@ -15,10 +14,15 @@
 # * limitations under the License.
 # */
 -->
+<!-- @version $Id$ -->
 <!--
-	ObJectRelationalBridge - Bridging Java objects and relational dabatases
+	Apache OJB - ObJectRelationalBridge
+
+        Bridging Java objects and relational dabatases
+
 	This DTD describes the grammar of the Descriptor repository
-	Author: Thomas Mahler, (c) 2000, 2001, 2002, 2003
+
+	Initial author: Thomas Mahler
   -->
 
 <!--
@@ -99,7 +103,7 @@
 	The jdbc-level attribute is used to specify the Jdbc compliance
 	level of the used Jdbc driver.
 
-    The eager-release attribute was adopt to solve a problem occured when
+    DEPRECATED! The eager-release attribute was adopt to solve a problem occured when
     using OJB within JBoss (3.0 <= version < 3.2.2, seems to be fixed in jboss 3.2.2).
     Only use within JBoss.
 
@@ -113,15 +117,18 @@
 
     The useAutoCommit attribute allow to set how OJB uses
     the autoCommit state of the used connections. The default mode
-    was 1. When using mode 0 or 2 with the PB-api, you must use PB
-    transaction demarcation.
+    was 1.
     0 - OJB ignores the autoCommit setting of the connection and do not
         try to change it. This mode could be helpfully if the
         connection don't let you set the autoCommit state
         (e.g. using datasources from application server).
-    1 - set autoCommit explicit 'true' when connection was created
-        and temporary set to 'false' when necessary (default mode).
-    2 - set autoCommit explicit 'false' when connection was created.
+    1 - [default mode] set the connection's autoCommit state temporary to 'false' if needed
+        (when using transaction) and restore the old state after use. In
+        versions before OJB 1.0.4 the autoCommit state was explicit set 'true'
+        when connection was created, now OJB expect that this was done by
+        the jdbc-driver configuration. To enable old behavior set a custom attribute
+        'initializationCheck' to 'true'.
+    2 - this setting set autoCommit explicit 'false' when connection was created.
 
     If the ignoreAutoCommitExceptions attribute is set 'true', all
     exceptions caused by setting autocommit state, will be ignored.
@@ -195,83 +202,155 @@
 
 <!--
 	The connection-pool element specifies the connection pooling
-	parameter.
+    and low-level JDBC driver parameters.
 -->
-<!ELEMENT connection-pool (documentation?)>
+<!ELEMENT connection-pool (documentation?, attribute*)>
 
 
 <!--
-	maxActive
-	maximum number of connections that can be borrowed from the
-	pool at one time. When non-positive, there is no limit.
+    maxActive (default=21)
+    The maximum number of active connections that can be allocated from this
+    pool at the same time, or zero for no limit.
 
-	maxIdle
-	controls the maximum number of connections that can sit idle in the
-	pool at any time. When non-positive, there is no limit
+    maxIdle (default=-1)
+    The maximum number of active connections that can remain idle in the pool,
+    without extra ones being released, or zero for no limit.
 
-	maxWait
-	max time block to get connection instance from pool, after that exception is thrown.
-	When non-positive, block till last judgement
+    minIdle (default=0)
+    The minimum number of active connections that can remain idle in the pool,
+    without extra ones being created, or zero to create none.
+    Since: 1.0.4
 
-	whenExhaustedAction
+    maxWait (default=5000)
+    The maximum number of milliseconds that the pool will wait (when there
+    are no available connections) for a connection to be returned before
+    throwing an exception, or -1 to wait indefinitely.
+    Must be > 0 for timeout to actually happen in DBCP PoolingDataSource.
+
+    whenExhaustedAction (default=0/WHEN_EXHAUSTED_FAIL)
 	0 - fail when pool is exhausted
 	1 - block when pool is exhausted
 	2 - grow when pool is exhausted
 
-	testOnBorrow
-	The pool will attempt to validate each object before it is returned from the pool
+    validationQuery (default=not specified)
+    The SQL query that will be used to validate connections from this pool
+    before returning them to the caller. If specified, this query MUST be
+    an SQL SELECT statement that returns at least one row.
+    Eg:
+        Oracle      SELECT 1 FROM DUAL
+        PostgreSQL  SELECT 1
+        MySQL       SELECT 1
 
-	testOnReturn
-	The pool will attempt to validate each object before it is returned to the pool
+    testOnBorrow (default=true)
+    The indication of whether connections will be validated before being
+    borrowed from the pool. If the connection fails to validate, it will
+    be dropped from the pool, and OJB will attempt to borrow another.
 
-	testWhileIdle
-	Indicates whether or not idle objects should be validated.
-	Objects that fail to validate will be dropped from the pool
+    testOnReturn (default=false)
+    The indication of whether connections will be validated before being
+    returned to the pool.
 
-	timeBetweenEvictionRunsMillis
-	indicates how long the eviction thread should sleep before "runs" of examining
-	idle objects. When non-positive, no eviction thread will be launched.
+    testWhileIdle (default=false)
+    The indication of whether connections will be validated by the idle object
+    evictor (if any). If a connection fails to validate, it will be dropped
+    from the pool.
 
-	minEvictableIdleTimeMillis
-	specifies the minimum amount of time that a connection may sit idle
-	in the pool before it is eligable for eviction due to idle time.
-	When non-positive, no connection will be dropped from the pool due
-	to idle time alone (depends on timeBetweenEvictionRunsMillis > 0)
+    timeBetweenEvictionRunsMillis (default=-1)
+    The number of milliseconds to sleep between runs of the idle
+    object evictor thread. When non-positive, no idle object evictor thread
+    will be run.
 
-	numTestsPerEvictionRun
-	The number of connections to examine during each run of the
-	idle object evictor thread (if any)
+    numTestsPerEvictionRun (default=10)
+    The number of objects to examine during each run of the idle object
+    evictor thread (if any).
 
-    validationQuery
-    Here you could specify a validation query used by pool to test a
-    obtained connection (e.g. "select 1 from dual"), else a default query was
-    used - if defined in the platform class for your database.
+    minEvictableIdleTimeMillis (default=1800000)
+    The minimum amount of time a connection may sit idle in the pool before
+    it is eligable for eviction by the idle object evictor (if any).
 
-    logAbandoned
-    Only supported when using
-    org.apache.ojb.broker.accesslayer.ConnectionFactoryDBCPImpl
-    ConnectionFactory implementation.
-    Flag to log stack traces for application code which abandoned
-    a Statement or Connection. Defaults to false. Logging of
-    abandoned Statements and Connections adds overhead for
-    every Connection open or new Statement because a
-    stack trace has to be generated.
-
-    removeAbandoned/removeAbandonedTimeout
-    Only supported when using
-    org.apache.ojb.broker.accesslayer.ConnectionFactoryDBCPImpl
-    ConnectionFactory implementation.
+    removeAbandoned [only for ConnectionFactoryDBCPImpl] (default=false)
     Flag to remove abandoned connections if they exceed the
-    removeAbandonedTimeout. Set to true or false, default false.
-    If set to true a connection is considered abandoned and
-    eligible for removal if it has been idle longer than the
-    removeAbandonedTimeout. Setting this to true can recover
-    db connections from poorly written applications which
-    fail to close a connection.
+    removeAbandonedTimout.
+    If set to true a connection is considered abandoned and eligible for
+    removal if it has been idle longer than the removeAbandonedTimeout.
+    Setting this to true can recover db connections from poorly written
+    applications which fail to close a connection.
+    If you have enabled "removeAbandoned" then it is possible that a
+    connection is reclaimed by the pool because it is considered to be
+    abandoned. This mechanism is triggered on borrowObject (ie in OJB when
+    a PersistenceBroker gets a Connection) and:
+     (numIdle < 2) and (numActive > maxActive - 3).
+    The abandoned object eviction takes place before normal borrowObject
+    logic (there is no asynch evictor thread like for testWhileIdle).
+    For example maxActive=20 and 18 active connections and 1 idle connection
+    would trigger the "removeAbandoned". But only the active connections that
+    aren't used for more then "removeAbandonedTimeout" seconds are removed.
+    Traversing a resultset doesn't count as being used.
+
+    removeAbandonedTimeout [only for ConnectionFactoryDBCPImpl] (default=300)
+    Timeout in seconds before an abandoned connection can be removed.
+
+    logAbandoned [only for ConnectionFactoryDBCPImpl] (default=false)
+    Flag to log stack traces for application code which abandoned a
+    Statement or Connection.
+    Logging of abandoned Statements and Connections adds overhead for every
+    Connection open or new Statement because a stack trace has to be
+    generated.
+
+    Custom attributes:
+    <attribute attribute-name="fetchSize" attribute-value="(int)"/>
+
+        Sets a hint in the JDBC driver not to fetch more than
+        specified number of rows per server round trip for
+        any ResultSet.
+        Setttings different than the default (0) are especially
+        useful to reduce memory footprint when using drivers
+        that defaults to not using server-side cursors and
+        retrieves all rows to the JDBC client-side driver buffer.
+        PostgreSQL JDBC driver is a well-known example of this.
+        Many JDBC drivers will ignore this hint.
+
+    <attribute attribute-name="jdbc.(driver-specific attribute)"
+        attribute-value="(value)"/>
+
+        All attributes with names starting with "jdbc." will be
+        passed (without jdbc. prefix) to the JDBC DriverManager
+        when creating new Connection objects.
+        (Ignored when acquiring Connection objects through
+         JNDI DataSource lookup or in managed environments.)
+
+     <attribute attribute-name="dbcp.(Commons DBCP-options)"
+         attribute-value="(value)"/>
+
+         If using the ConnectionFactoryDBCPImpl (set in OJB.properties),
+         all parameters starting with "dbcp." will be made available
+         (without dbcp. prefix) to the ConnectionFactory for
+         configuring Commons DBCP accordingly.
+
+         Currently the following DBCP attributes are used:
+
+            dbcp.poolPreparedStatements (default=false)
+                Enable prepared statement pooling for this pool.
+
+            dbcp.maxOpenPreparedStatements (default=0/unlimited)
+                The maximum number of open statements that can be
+                allocated from the statement pool at the same time,
+                or zero for no limit.
+
+             dbcp.accessToUnderlyingConnectionAllowed (default=false)
+                Controls if the DBCP PoolGuard allows access to the underlying
+                connection from the JDBC-driver.
+
+                Only use when you need direct access to driver specific
+                extentions.
+
+                NOTE: Do not close the underlying connection, only the
+                original one.
 
 -->
 <!ATTLIST connection-pool
     maxActive                       CDATA #IMPLIED
+    minIdle                         CDATA #IMPLIED
     maxIdle                         CDATA #IMPLIED
     maxWait                         CDATA #IMPLIED
     minEvictableIdleTimeMillis      CDATA #IMPLIED
@@ -283,9 +362,9 @@
     whenExhaustedAction             (0|1|2) #IMPLIED
     validationQuery                 CDATA #IMPLIED
 
-    logAbandoned                    (true|false) #IMPLIED
     removeAbandoned                 (true|false) #IMPLIED
     removeAbandonedTimeout          CDATA #IMPLIED
+    logAbandoned                    ( true | false ) #IMPLIED
 >
 
 
@@ -380,7 +459,10 @@
 	This class will be used as the RowReader implementation used to
 	materialize instances of the persistent class.
 
-	The accept-locks attribute specifies whether implicit locking should
+    The extends attribute is deprecated and will be removed or reintroduced
+    with changed funcitonality in future. DON'T USE IT!
+
+	DEPRECATED. The accept-locks attribute specifies whether implicit locking should
 	propagate to this class.  Currently relevant for the ODMG layer only.
 
 	The optional initialization-method specifies a no-argument instance
@@ -400,7 +482,7 @@
 <!ATTLIST class-descriptor
 	class ID #REQUIRED
 	isolation-level (read-uncommitted | read-committed | repeatable-read |
-	                 serializable | optimistic | none) ""
+	                 serializable | optimistic | none) #IMPLIED
 	proxy CDATA #IMPLIED
 	proxy-prefetching-limit CDATA #IMPLIED
 	schema CDATA #IMPLIED
@@ -687,7 +769,8 @@
 	As this is an IDREF there must be a class-descriptor for this class
 	in the repository too.
 
-	The orderby attribute may specify a field of the element class.
+	DEPRECATED, please use the 'orderby'-element. The orderby attribute may
+	specify a field of the element class.
 	The Collection or Array will be sorted according to the specified attribute.
 	The sort attribute may be used to specify ascending or descending order for
 	this operation.
@@ -715,12 +798,12 @@
 	The auto-update attribute specifies whether OJB automatically stores
 	the referenced objects on storing the persistent object or not or only link.
 	This attribute must be set to 'false' if using the OTM or JDO layer.
-    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
+    Allowed ODMG settings please see OJB documentation.
 
 	The auto-delete attribute specifies whether OJB automatically deletes
 	the referenced objects on deleting the persistent object or not.
 	This attribute must be set to 'false' if using the OTM or JDO layer.
-    For ODMG it must be 'none' (since OJB 1.0.2). More info see OJB documentation.
+    Allowed ODMG settings please see OJB documentation.
 
 	The otm-dependent attribute specifies whether the OTM layer automatically
     creates collection elements that were included into the collectionelements
@@ -948,4 +1031,3 @@
 <!ATTLIST constant-argument
     value CDATA #REQUIRED
 >
-
