@@ -16,5 +16,7 @@
 -->
 <!-- $Id$ -->
 <role-list>
-  <role name="org.apache.cocoon.components.hsqldb.Server" shorthand="hsqldb-server" default-class="org.apache.cocoon.components.hsqldb.ServerImpl"/>
+  <role name="org.apache.cocoon.components.hsqldb.Server"
+        shorthand="hsqldb-server"
+        default-class="org.apache.cocoon.components.hsqldb.ServerImpl"/>
 </role-list>
