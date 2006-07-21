@@ -79,14 +79,7 @@
       the portlet and wsrp adapters. Therefore the caching-uri adapter has been removed.
     </action>
     <action dev="CZ" type="add">
-      Implement (hot)deployment for JSR 168 portlets.
-    </action>
-    <action dev="CZ" type="add">
       Add deployment infrastructure.
-    </action>
-    <action dev="CZ" type="add" fixes-bug="COCOON-1674">
-      Improved user support for portlets: user name, principal and role are "forwarded"
-      from the authentication mechanism to the portlet.
     </action>
     <action dev="CZ" type="add">
       Add static layout objects and implement maximize functionality for layouts.

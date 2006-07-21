@@ -35,10 +35,12 @@
 
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
-  <!-- If you don't need JSR 168 support, you can remove the following include: -->
+  <!-- If you don't need JSR 168 support, you can remove the following include: 
   <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
-  <!-- If you don't need WSRP support, you can remove the following include: -->
+  -->
+  <!-- If you don't need WSRP support, you can remove the following include: 
   <include src="resource://org/apache/cocoon/portal/wsrp/portal-wsrp.roles"/>
+  -->
 
   <!-- We use CAuth for authentication. If you don't use CAuth remove this line: -->
   <include src="auth-cauth.xconf"/>
