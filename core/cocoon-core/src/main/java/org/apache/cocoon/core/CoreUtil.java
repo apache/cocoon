@@ -19,10 +19,8 @@ package org.apache.cocoon.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -65,9 +63,6 @@ import org.xml.sax.InputSource;
  * @since 2.2
  */
 public class CoreUtil {
-
-    /** Parameter map for the context protocol */
-    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
     // Register the location finder for Avalon configuration objects and exceptions
     // and keep a strong reference to it.
@@ -319,7 +314,7 @@ public class CoreUtil {
             try {
                 Enumeration e = System.getProperties().propertyNames();
                 log.debug("===== System Properties Start =====");
-                for (; e.hasMoreElements();) {
+                while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     log.debug(key + "=" + System.getProperty(key));
                 }
@@ -480,16 +475,16 @@ public class CoreUtil {
     }
 
     /**
-     * Handle the <code>load-class</code> parameter. This overcomes
+     * Handle the <code>load-class</code> settings. This overcomes
      * limits in many classpath issues. One of the more notorious
      * ones is a bug in WebSphere that does not load the URL handler
      * for the <code>classloader://</code> protocol. In order to
-     * overcome that bug, set <code>load-class</code> parameter to
+     * overcome that bug, set <code>org.apache.cocoon.classloader.load.classes.XY</code> property to
      * the <code>com.ibm.servlet.classloader.Handler</code> value.
      *
-     * <p>If you need to load more than one class, then separate each
-     * entry with whitespace, a comma, or a semi-colon. Cocoon will
-     * strip any whitespace from the entry.</p>
+     * <p>If you need to load more than one class, then add several
+     * properties, all starting with <cod>org.apache.cocoon.classloader.load.classes.</code>
+     * followed by a self defined identifier.</p>
      */
     protected static void forceLoad(final Settings settings, final Logger log) {
         final Iterator i = settings.getLoadClasses().iterator();
@@ -497,12 +492,12 @@ public class CoreUtil {
             final String fqcn = (String)i.next();
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("Loading: " + fqcn);
+                    log.debug("Loading class: " + fqcn);
                 }
                 ClassUtils.loadClass(fqcn).newInstance();
             } catch (Exception e) {
                 if (log.isWarnEnabled()) {
-                    log.warn("Could not load class: " + fqcn, e);
+                    log.warn("Could not load class: " + fqcn + ". Continuing initialization.", e);
                 }
                 // Do not throw an exception, because it is not a fatal error.
             }
