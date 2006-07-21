@@ -38,6 +38,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.persistence.Converter;
 import org.apache.cocoon.portal.persistence.ConverterException;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.exolab.castor.mapping.Mapping;
@@ -153,7 +154,16 @@ public class CastorSourceConverter
         this.mappingSources.put("copletbasedata", prefix + "copletbasedata.xml");
         this.mappingSources.put("copletdata", prefix + "copletdata.xml");
         this.mappingSources.put("copletinstancedata", prefix + "copletinstancedata.xml");
-        this.mappingSources.put("portletpreferences", prefix + "pluto.xml");
+        boolean plutoAvailable = false;
+        try {
+            ClassUtils.loadClass("org.apache.cocoon.portal.pluto.adapter.PortletAdapter");
+            plutoAvailable = true;
+        } catch (Exception ignore) {
+            this.getLogger().info("Pluto is not available - no default mapping for castor loaded.");
+        }
+        if ( plutoAvailable ) {
+            this.mappingSources.put("portletpreferences", prefix + "pluto.xml");
+        }
 
         // the custom configuration might overwrite the default config
         Configuration[] children = config.getChildren("mapping-source");
