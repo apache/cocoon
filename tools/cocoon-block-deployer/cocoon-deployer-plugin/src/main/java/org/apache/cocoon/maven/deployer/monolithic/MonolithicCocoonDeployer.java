@@ -61,6 +61,7 @@ public class MonolithicCocoonDeployer {
                 zipExtractor.addRule("**legacy/sitemap-additions**", new SingleFileDeployer("WEB-INF/cocoon/sitemap-additions"));  
                 zipExtractor.addRule("**legacy/conf/**", new SingleFileDeployer("WEB-INF/classes"));  
                 zipExtractor.addRule("**spring/**", new SingleFileDeployer("WEB-INF/cocoon/spring"));
+                zipExtractor.addRule("**WEB-INF/**", new SingleFileDeployer("WEB-INF"));
                 zipExtractor.addRule("COB-INF**", new SingleFileDeployer(blocksdir + "/" + (String) id, true));  
         		// extract all configurations files
 				zipExtractor.extract(lib);
