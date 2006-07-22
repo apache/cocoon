@@ -49,7 +49,7 @@ import java.io.StringReader;
  * sitemap parameter 'form-name'.
  *
  * For the POST requests with mimetypes: text/plain, text/xml,
- * application/xml the xml data is in the body of the POST request and
+ * application/xhtml+xml, application/xml the xml data is in the body of the POST request and
  * its length is specified by the value returned by getContentLength()
  * method.  The StreamGenerator uses helper
  * org.apache.cocoon.util.PostInputStream class for InputStream
@@ -123,6 +123,7 @@ public class StreamGenerator extends ServiceableGenerator
                 inputSource = new InputSource(xmlReader);
             } else if (contentType.startsWith("text/plain") ||
                     contentType.startsWith("text/xml") ||
+                    contentType.startsWith("application/xhtml+xml") ||
                     contentType.startsWith("application/xml")) {
 
                 HttpServletRequest httpRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
