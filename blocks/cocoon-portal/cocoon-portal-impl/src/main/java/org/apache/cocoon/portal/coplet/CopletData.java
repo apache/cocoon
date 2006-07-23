@@ -61,7 +61,6 @@ public class CopletData implements Serializable {
         }
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
-            new NullPointerException().printStackTrace();
             throw new IllegalArgumentException(idErrorMsg);
         }
         this.id = id;
