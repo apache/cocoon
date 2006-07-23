@@ -35,5 +35,8 @@
     <module>cocoon-databases-mocks</module>
     <module>cocoon-databases-sample</module>
     <module>cocoon-databases-hsqldb-client</module>
+    <module>cocoon-databases-odbc-client</module>
+    <module>cocoon-databases-oracle-client</module>
+    <module>cocoon-databases-postgresql-client</module>
   </modules>
 </project>
