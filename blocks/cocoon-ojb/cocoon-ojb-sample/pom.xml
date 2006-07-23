@@ -50,6 +50,11 @@
       <version>1.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-databases-sample</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
     <!--  For now we have to depend on the querybean block as the ojb configuration contains
           mappings for some beans from the querybean block :( -->
     <dependency>

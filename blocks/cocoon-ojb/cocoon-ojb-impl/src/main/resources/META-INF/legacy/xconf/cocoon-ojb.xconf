@@ -23,11 +23,6 @@
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/ojb/ojb.roles"/>
 
-  <!-- OJB Logger -->
-  <component role="org.apache.cocoon.ojb.components.Logger"
-             class="org.apache.cocoon.ojb.components.LoggerImpl"
-             logger="ojb"/>
-
   <!-- OJB Connection Factory -->
   <component role="org.apache.cocoon.ojb.components.ConnectionFactory"
              class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
