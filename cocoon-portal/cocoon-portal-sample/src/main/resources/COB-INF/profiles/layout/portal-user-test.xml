@@ -21,19 +21,19 @@
     <composite-layout name="column" static="true">
       <item>
         <coplet-layout name="coplet" static="true">
-          <coplet-instance-data>static-sample-1</coplet-instance-data>
+          <coplet-instance-data>static_sample_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <composite-layout name="row">
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+              <coplet-instance-data>GalleryPetstore</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+              <coplet-instance-data>GalleryViewer_1</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -42,7 +42,7 @@
         <composite-layout name="row">
           <item>
             <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-              <coplet-instance-data>TestPortlet-1</coplet-instance-data>
+              <coplet-instance-data>TestPortlet_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
@@ -59,17 +59,17 @@
     <composite-layout name="column" static="true">
       <item>
         <coplet-layout name="coplet" static="true">
-          <coplet-instance-data>static-sample-1</coplet-instance-data>
+          <coplet-instance-data>static_sample_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet" >
-          <coplet-instance-data>app-test-1</coplet-instance-data>
+          <coplet-instance-data>app_test_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet" >
-          <coplet-instance-data>app-test-2</coplet-instance-data>
+          <coplet-instance-data>app_test_2</coplet-instance-data>
         </coplet-layout>
       </item>
     </composite-layout>

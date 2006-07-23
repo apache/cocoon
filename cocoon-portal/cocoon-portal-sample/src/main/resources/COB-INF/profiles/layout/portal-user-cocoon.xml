@@ -19,7 +19,7 @@
 
   <named-item name="Main">
     <coplet-layout name="coplet">
-      <coplet-instance-data>Portal-Demo-1</coplet-instance-data>
+      <coplet-instance-data>PortalDemo_1</coplet-instance-data>
     </coplet-layout>
   </named-item>
 
@@ -27,12 +27,12 @@
     <composite-layout name="column">
       <item>
         <coplet-layout name="coplet">
-          <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+          <coplet-instance-data>GalleryPetstore</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet">
-          <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+          <coplet-instance-data>GalleryViewer_1</coplet-instance-data>
         </coplet-layout>
       </item>
     </composite-layout>
@@ -42,7 +42,7 @@
     <composite-layout name="row">
       <item>
         <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-          <coplet-instance-data>TestPortlet-1</coplet-instance-data>
+          <coplet-instance-data>TestPortlet_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
@@ -54,12 +54,12 @@
         <composite-layout name="column">
           <item>
             <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-              <coplet-instance-data>Portlet-1</coplet-instance-data>
+              <coplet-instance-data>Portlet_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-              <coplet-instance-data>Portlet-2</coplet-instance-data>
+              <coplet-instance-data>Portlet_2</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -69,7 +69,7 @@
 
   <named-item name="Portals Bridges">
     <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-      <coplet-instance-data>Petstore-1</coplet-instance-data>
+      <coplet-instance-data>Petstore_1</coplet-instance-data>
     </coplet-layout>
   </named-item>
 
@@ -77,12 +77,12 @@
     <composite-layout name="column">
       <item>
         <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
-          <coplet-instance-data>WSRP-Calc-1</coplet-instance-data>
+          <coplet-instance-data>WSRP_Calc_1</coplet-instance-data>
       </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
-          <coplet-instance-data>WSRP-Test-1</coplet-instance-data>
+          <coplet-instance-data>WSRP_Test_1</coplet-instance-data>
       </coplet-layout>
       </item>
     </composite-layout>
@@ -95,13 +95,13 @@
           <item>
             <parameter name="width" value="50%" />
             <coplet-layout name="coplet" >
-              <coplet-instance-data>app-test-1</coplet-instance-data>
+              <coplet-instance-data>app_test_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <parameter name="width" value="50%" />
             <coplet-layout name="coplet" >
-              <coplet-instance-data>app-test-2</coplet-instance-data>
+              <coplet-instance-data>app_test_2</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -111,13 +111,13 @@
           <item>
             <parameter name="width" value="50%" />
             <coplet-layout name="coplet" >
-              <coplet-instance-data>app-test-3</coplet-instance-data>
+              <coplet-instance-data>app_test_3</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <parameter name="width" value="50%" />
             <coplet-layout name="coplet" >
-              <coplet-instance-data>app-test-4</coplet-instance-data>
+              <coplet-instance-data>app_test_4</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -127,7 +127,7 @@
 
   <named-item name="AppCoplet">
     <coplet-layout name="coplet">
-      <coplet-instance-data>Google-1</coplet-instance-data>
+      <coplet-instance-data>Google_1</coplet-instance-data>
     </coplet-layout>
   </named-item>
 </composite-layout>

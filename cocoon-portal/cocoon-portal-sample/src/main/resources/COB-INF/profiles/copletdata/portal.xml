@@ -47,7 +47,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CNET News">
+   <coplet-data id="CNETNews">
       <title>CNET News</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -56,7 +56,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="CNET Business">
+   <coplet-data id="CNETBusiness">
       <title>CNET Business News</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -83,15 +83,6 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="ML Weblog">
-      <title>ML's Weblog</title>
-      <coplet-base-data>URICoplet</coplet-base-data>
-      <attribute>
-         <name>uri</name>
-         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/ml_weblog.weblog-rss</value>
-      </attribute>
-   </coplet-data>
-
    <coplet-data id="Weblog">
       <title>Another Weblog</title>
       <coplet-base-data>URICoplet</coplet-base-data>
@@ -106,7 +97,7 @@
      + Try to read content from the internet. 
      + If the net is not available, use static file (for offline presentation)
      -->
-   <coplet-data id="CZ Weblog">
+   <coplet-data id="CZWeblog">
       <title>CZ's Weblog</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -126,7 +117,7 @@
    <!-- 
      + The portal introduction coplet 
      -->
-   <coplet-data id="Portal-Intro">
+   <coplet-data id="PortalIntro">
       <title>Introduction</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -138,7 +129,7 @@
          <value xsi:type="java:java.lang.Boolean">true</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="Portal-Demo">
+   <coplet-data id="PortalDemo">
       <title>Introduction</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -154,7 +145,7 @@
          <value xsi:type="java:java.lang.Boolean">true</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="Portal-Right">
+   <coplet-data id="PortalRight">
       <title>Right</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -166,7 +157,7 @@
          <value xsi:type="java:java.lang.Boolean">true</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="Portal-Left">
+   <coplet-data id="PortalLeft">
       <title>Left</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -178,7 +169,7 @@
          <value xsi:type="java:java.lang.Boolean">true</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="Portal-Bottom">
+   <coplet-data id="PortalBottom">
       <title>Bottom</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -190,7 +181,7 @@
          <value xsi:type="java:java.lang.Boolean">true</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="static-sample">
+   <coplet-data id="static_sample">
       <title>Static Information</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -299,7 +290,7 @@
          <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/basket/basket</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="Basket.admin">
+   <coplet-data id="Basket_admin">
       <title>Basket</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -477,7 +468,7 @@
      +  - the flow based calculator
      +  - and a forms sample
      -->
-   <coplet-data id="app-test-one">
+   <coplet-data id="app_test_one">
       <title>Application Test</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -497,7 +488,7 @@
          <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal-sample/coplets/samples/form</value>
       </attribute>
    </coplet-data>
-   <coplet-data id="app-test-two">
+   <coplet-data id="app_test_two">
       <title>Application Test</title>
       <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
@@ -533,7 +524,7 @@
    </coplet-data>
 
    <!-- Example for the wsrp portlet -->
-   <coplet-data id="wsrp-calc-portlet">
+   <coplet-data id="wsrp_calc_portlet">
       <title>WSRP-Calc-Portlet</title>
       <coplet-base-data>WSRP</coplet-base-data>
       <attribute>
@@ -546,7 +537,7 @@
       </attribute>
    </coplet-data>
 
-   <coplet-data id="wsrp-test-portlet">
+   <coplet-data id="wsrp_test_portlet">
       <title>WSRP-Test-Portlet</title>
       <coplet-base-data>WSRP</coplet-base-data>
       <attribute>

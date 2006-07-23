@@ -21,13 +21,13 @@
       <item>
         <parameter name="width" value="60%"/>
         <coplet-layout name="coplet" layout-renderer-name="borderless-window">
-          <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
+          <coplet-instance-data>PortalIntro_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <parameter name="width" value="40%"/>
         <coplet-layout name="coplet" layout-renderer-name="nowindow">
-          <coplet-instance-data>Login-1</coplet-instance-data>
+          <coplet-instance-data>Login_1</coplet-instance-data>
         </coplet-layout>
       </item>
     </composite-layout>
@@ -38,13 +38,13 @@
       <item>
         <parameter name="width" value="25%"/>
         <coplet-layout name="coplet" layout-renderer-name="borderless-window">
-          <coplet-instance-data>Portal-Left-1</coplet-instance-data>
+          <coplet-instance-data>PortalLeft_1</coplet-instance-data>
         </coplet-layout>
       </item>
       <item>
         <parameter name="width" value="75%"/>
         <coplet-layout name="coplet" layout-renderer-name="borderless-window">
-          <coplet-instance-data>Portal-Right-1</coplet-instance-data>
+          <coplet-instance-data>PortalRight_1</coplet-instance-data>
         </coplet-layout>
       </item>
     </composite-layout>
@@ -52,7 +52,7 @@
   <item>
     <parameter name="height" value="500"/>
     <coplet-layout name="coplet" layout-renderer-name="borderless-window">
-      <coplet-instance-data>Portal-Bottom-1</coplet-instance-data>
+      <coplet-instance-data>PortalBottom_1</coplet-instance-data>
     </coplet-layout>
   </item>
 </composite-layout>
