@@ -73,9 +73,12 @@ public abstract class Layout extends AbstractParameters {
      * @see PortalUtils#testId(String)
      */
     public Layout(String id, String name) {
-        final String idErrorMsg = PortalUtils.testId(id);
-        if ( idErrorMsg != null ) {
-            throw new IllegalArgumentException(idErrorMsg);
+        // check id, null for id is allowed!
+        if ( id != null ) {
+            final String idErrorMsg = PortalUtils.testId(id);
+            if ( idErrorMsg != null ) {
+                throw new IllegalArgumentException(idErrorMsg);
+            }
         }
         this.id = id;
         this.name = name;

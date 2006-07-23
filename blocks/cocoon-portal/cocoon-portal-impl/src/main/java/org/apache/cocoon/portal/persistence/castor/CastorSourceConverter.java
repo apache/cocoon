@@ -82,6 +82,7 @@ public class CastorSourceConverter
                             Map         references,
                             Map         parameters)
     throws ConverterException {
+        System.out.println("Reading objects for mapping: " + mappingName);
         try {
             this.idResolver.setObjectMap(references);
             Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];

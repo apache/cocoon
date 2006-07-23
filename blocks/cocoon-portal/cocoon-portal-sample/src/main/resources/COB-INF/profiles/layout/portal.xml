@@ -19,7 +19,7 @@
 
   <named-item name="Main">
     <coplet-layout name="coplet">
-      <coplet-instance-data>Portal-Demo-1</coplet-instance-data>
+      <coplet-instance-data>PortalDemo_1</coplet-instance-data>
     </coplet-layout>
   </named-item>
 
@@ -36,14 +36,14 @@
             <coplet-layout name="coplet">
               <parameter name="border" value="0" />
               <parameter name="border-color" value="#AA0000" />
-              <coplet-instance-data>Newsweek-1</coplet-instance-data>
+              <coplet-instance-data>Newsweek_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet">
               <parameter name="border" value="0"/>
               <parameter name="border-color" value="#AA0000" />
-              <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
+              <coplet-instance-data>NYTBusiness_1</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -57,7 +57,7 @@
             <coplet-layout name="coplet">
               <parameter name="border" value="0" />
               <parameter name="border-color" value="#AA0000" />
-              <coplet-instance-data>BBCNews-1</coplet-instance-data>
+              <coplet-instance-data>BBCNews_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
@@ -71,7 +71,7 @@
                 <coplet-layout name="coplet">
                   <parameter name="border" value="0" />
                   <parameter name="border-color" value="#AA0000" />
-                  <coplet-instance-data>CNET News-1</coplet-instance-data>
+                  <coplet-instance-data>CNETNews_1</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -88,14 +88,14 @@
             <coplet-layout name="coplet">
               <parameter name="border" value="0" />
               <parameter name="border-color" value="#AA0000" />
-              <coplet-instance-data>CSTNews-1</coplet-instance-data>
+              <coplet-instance-data>CSTNews_1</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet">
               <parameter name="border" value="0" />
               <parameter name="border-color" value="#AA0000" />
-              <coplet-instance-data>CNNEurope-1</coplet-instance-data>
+              <coplet-instance-data>CNNEurope_1</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -110,13 +110,7 @@
           <item>
             <parameter name="width" value="20%" />
             <coplet-layout name="coplet">
-              <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
-            </coplet-layout>
-          </item>
-          <item>
-            <parameter name="width" value="80%" />
-            <coplet-layout name="coplet">
-              <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+              <coplet-instance-data>CZWeblog_1</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -125,7 +119,7 @@
         <composite-layout name="row">
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>Weblog-1</coplet-instance-data>
+              <coplet-instance-data>Weblog_1</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -137,17 +131,12 @@
     <composite-layout name="tab">
       <named-item name="One">
         <coplet-layout name="coplet">
-          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+          <coplet-instance-data>CZWeblog_1</coplet-instance-data>
         </coplet-layout>
       </named-item>
       <named-item name="Two">
         <coplet-layout name="coplet">
-          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
-        </coplet-layout>
-      </named-item>
-      <named-item name="Three">
-        <coplet-layout name="coplet">
-          <coplet-instance-data>Weblog-1</coplet-instance-data>
+          <coplet-instance-data>Weblog_1</coplet-instance-data>
         </coplet-layout>
       </named-item>
     </composite-layout>
@@ -157,17 +146,12 @@
     <composite-layout name="linktab">
       <named-item name="One">
         <coplet-layout name="coplet">
-          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+          <coplet-instance-data>CZWeblog_1</coplet-instance-data>
         </coplet-layout>
       </named-item>
       <named-item name="Two">
         <coplet-layout name="coplet">
-          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
-        </coplet-layout>
-      </named-item>
-      <named-item name="Three">
-        <coplet-layout name="coplet">
-          <coplet-instance-data>Weblog-1</coplet-instance-data>
+          <coplet-instance-data>Weblog_1</coplet-instance-data>
         </coplet-layout>
       </named-item>
     </composite-layout>
@@ -177,31 +161,26 @@
     <composite-layout name="linktab">
       <named-item name="One">
         <coplet-layout name="coplet">
-          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+          <coplet-instance-data>CZWeblog_1</coplet-instance-data>
         </coplet-layout>
       </named-item>
       <named-item name="Two">
-        <coplet-layout name="coplet">
-          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
-        </coplet-layout>
-      </named-item>
-      <named-item name="Three">
         <composite-layout name="tab">
           <named-item name="Weblog">
              <coplet-layout name="coplet">
-          <coplet-instance-data>Weblog-1</coplet-instance-data>
+          <coplet-instance-data>Weblog_1</coplet-instance-data>
         </coplet-layout>
           </named-item>
           <named-item name="Gallery">
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+                  <coplet-instance-data>GalleryPetstore</coplet-instance-data>
                </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+                  <coplet-instance-data>GalleryViewer_1</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -222,7 +201,7 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-8</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_8</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -235,12 +214,12 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-1</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_1</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet" >
-                  <coplet-instance-data>basket-sample-2</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_2</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -249,12 +228,12 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-3</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_3</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet" >
-                  <coplet-instance-data>basket-sample-4</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_4</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -263,12 +242,12 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-5</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_5</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-6</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_6</coplet-instance-data>
                 </coplet-layout>
               </item>
             </composite-layout>
@@ -286,27 +265,27 @@
               </named-item>
               <named-item name="Document">
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-document</coplet-instance-data>
+                  <coplet-instance-data>basket_document</coplet-instance-data>
                 </coplet-layout>
               </named-item>
               <named-item name="Request">
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-request</coplet-instance-data>
+                  <coplet-instance-data>basket_request</coplet-instance-data>
                 </coplet-layout>
               </named-item>
               <named-item name="Result">
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-result</coplet-instance-data>
+                  <coplet-instance-data>basket_result</coplet-instance-data>
                 </coplet-layout>
               </named-item>
               <named-item name="Notepad">
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-notepad</coplet-instance-data>
+                  <coplet-instance-data>basket_notepad</coplet-instance-data>
                 </coplet-layout>
               </named-item>
               <named-item name="Folder">
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-folder</coplet-instance-data>
+                  <coplet-instance-data>basket_folder</coplet-instance-data>
                 </coplet-layout>
               </named-item>
             </composite-layout>
@@ -315,12 +294,12 @@
             <composite-layout name="column">
               <item>
                 <coplet-layout name="coplet" id="basket-content">
-                  <coplet-instance-data>basket-content</coplet-instance-data>
+                  <coplet-instance-data>basketcontent</coplet-instance-data>
                 </coplet-layout>
               </item>
               <item>
                 <coplet-layout name="coplet">
-                  <coplet-instance-data>basket-sample-7</coplet-instance-data>
+                  <coplet-instance-data>basket_sample_7</coplet-instance-data>
                 </coplet-layout>
               </item>         
             </composite-layout>
@@ -336,12 +315,12 @@
           </item>
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>Basket.admin</coplet-instance-data>
+              <coplet-instance-data>Basket_admin</coplet-instance-data>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet" id="basket-content-admin">
-              <coplet-instance-data>basket-content</coplet-instance-data>
+              <coplet-instance-data>basket_content</coplet-instance-data>
             </coplet-layout>
           </item>
         </composite-layout>
