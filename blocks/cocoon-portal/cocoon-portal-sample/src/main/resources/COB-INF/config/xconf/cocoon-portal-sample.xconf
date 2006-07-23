@@ -114,8 +114,9 @@
   <!-- Uncomment the following when using PageLabels
         <aspect type="page-label"/>
         -->
-        <!-- Comment the following out if you don't need WSRP: -->
+        <!-- Comment the following out if you don't need WSRP: 
         <aspect type="wsrp"/>
+        -->
         <aspect type="request-parameter"/>
     </event-aspects>
     <!-- add a new instance of each class as a receiver: -->

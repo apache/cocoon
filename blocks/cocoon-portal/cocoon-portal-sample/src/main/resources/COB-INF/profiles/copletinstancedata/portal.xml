@@ -16,60 +16,56 @@
 -->
 <!-- SVN $Id$ -->
 <coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <coplet-instance-data id="Newsweek-1">
+   <coplet-instance-data id="Newsweek_1">
       <coplet-data>Newsweek</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="NYTBusiness-1">
+   <coplet-instance-data id="NYTBusiness_1">
       <coplet-data>NYTBusiness</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="BBCNews-1">
+   <coplet-instance-data id="BBCNews_1">
       <coplet-data>BBCNews</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="CNET News-1">
-      <coplet-data>CNET News</coplet-data>
+   <coplet-instance-data id="CNETNews_1">
+      <coplet-data>CNETNews</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="CNET Business-1">
-      <coplet-data>CNET Business</coplet-data>
+   <coplet-instance-data id="CNETBusiness_1">
+      <coplet-data>CNETBusiness</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="CSTNews-1">
+   <coplet-instance-data id="CSTNews_1">
       <coplet-data>CSTNews</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="CNNEurope-1">
+   <coplet-instance-data id="CNNEurope_1">
       <coplet-data>CNNEurope</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="ML Weblog-1">
-      <coplet-data>ML Weblog</coplet-data>
+   <coplet-instance-data id="CZWeblog_1">
+      <coplet-data>CZWeblog</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="CZ Weblog-1">
-      <coplet-data>CZ Weblog</coplet-data>
-   </coplet-instance-data>
-
-   <coplet-instance-data id="Weblog-1">
+   <coplet-instance-data id="Weblog_1">
       <coplet-data>Weblog</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Portal-Intro-1">
-      <coplet-data>Portal-Intro</coplet-data>
+   <coplet-instance-data id="PortalIntro_1">
+      <coplet-data>PortalIntro</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Right-1">
-      <coplet-data>Portal-Right</coplet-data>
+   <coplet-instance-data id="PortalRight_1">
+      <coplet-data>PortalRight</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Left-1">
-      <coplet-data>Portal-Left</coplet-data>
+   <coplet-instance-data id="PortalLeft_1">
+      <coplet-data>PortalLeft</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Bottom-1">
-      <coplet-data>Portal-Bottom</coplet-data>
+   <coplet-instance-data id="PortalBottom_1">
+      <coplet-data>PortalBottom</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Demo-1">
-      <coplet-data>Portal-Demo</coplet-data>
+   <coplet-instance-data id="PortalDemo_1">
+      <coplet-data>PortalDemo</coplet-data>
    </coplet-instance-data>
 
    <!-- This is the basket sample
@@ -82,35 +78,35 @@
       </attribute>
    </coplet-instance-data>
 
-   <coplet-instance-data id="basket-document">
+   <coplet-instance-data id="basket_document">
        <coplet-data>Basket</coplet-data>
       <attribute>
          <name>type</name>
          <value xsi:type="java:java.lang.String">document</value>
       </attribute>       
    </coplet-instance-data>
-   <coplet-instance-data id="basket-request">
+   <coplet-instance-data id="basket_request">
        <coplet-data>Basket</coplet-data>
       <attribute>
          <name>type</name>
          <value xsi:type="java:java.lang.String">request</value>
       </attribute>       
    </coplet-instance-data>
-   <coplet-instance-data id="basket-result">
+   <coplet-instance-data id="basket_result">
        <coplet-data>Basket</coplet-data>
       <attribute>
          <name>type</name>
          <value xsi:type="java:java.lang.String">result</value>
       </attribute>       
    </coplet-instance-data>
-   <coplet-instance-data id="basket-notepad">
+   <coplet-instance-data id="basket_notepad">
       <coplet-data>Basket</coplet-data>
       <attribute>
          <name>type</name>
          <value xsi:type="java:java.lang.String">notepad</value>
       </attribute>       
    </coplet-instance-data>
-   <coplet-instance-data id="basket-folder">
+   <coplet-instance-data id="basket_folder">
        <coplet-data>Basket</coplet-data>
       <attribute>
          <name>type</name>
@@ -118,37 +114,37 @@
       </attribute>       
    </coplet-instance-data>
 
-   <coplet-instance-data id="Basket.admin">
-      <coplet-data>Basket.admin</coplet-data>
+   <coplet-instance-data id="Basket_admin">
+      <coplet-data>Basket_admin</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-content">
+   <coplet-instance-data id="basket_content">
       <coplet-data>BasketContent</coplet-data>
    </coplet-instance-data>
    <coplet-instance-data id="BasketAdmin">
       <coplet-data>BasketAdmin</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-1">
+   <coplet-instance-data id="basket_sample_1">
       <coplet-data>BasketSampleStaticCoplet</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-2">
+   <coplet-instance-data id="basket_sample_2">
       <coplet-data>BasketSampleCopletWithAttribute</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-3">
+   <coplet-instance-data id="basket_sample_3">
       <coplet-data>BasketSampleCopletWithInlineProcess</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-4">
+   <coplet-instance-data id="basket_sample_4">
       <coplet-data>BasketSampleCopletWithInputProcess</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-5">
+   <coplet-instance-data id="basket_sample_5">
       <coplet-data>BasketSampleCopletWithApp</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-6">
+   <coplet-instance-data id="basket_sample_6">
       <coplet-data>BasketSampleCopletWithUpload</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-7">
+   <coplet-instance-data id="basket_sample_7">
       <coplet-data>BasketSampleCopletWithInputProcessShow</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="basket-sample-8">
+   <coplet-instance-data id="basket_sample_8">
       <coplet-data>BasketSampleCopletList</coplet-data>
    </coplet-instance-data>
 </coplets>

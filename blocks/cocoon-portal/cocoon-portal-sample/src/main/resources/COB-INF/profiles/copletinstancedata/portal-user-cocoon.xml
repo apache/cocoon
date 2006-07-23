@@ -16,70 +16,70 @@
 -->
 <!-- SVN $Id$ -->
 <coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <coplet-instance-data id="Portal-Intro-1">
-      <coplet-data>Portal-Intro</coplet-data>
+   <coplet-instance-data id="PortalIntro_1">
+      <coplet-data>PortalIntro</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Right-1">
-      <coplet-data>Portal-Right</coplet-data>
+   <coplet-instance-data id="PortalRight_1">
+      <coplet-data>PortalRight</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Left-1">
-      <coplet-data>Portal-Left</coplet-data>
+   <coplet-instance-data id="PortalLeft_1">
+      <coplet-data>PortalLeft</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Bottom-1">
-      <coplet-data>Portal-Bottom</coplet-data>
+   <coplet-instance-data id="PortalBottom_1">
+      <coplet-data>PortalBottom</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Portal-Demo-1">
-      <coplet-data>Portal-Demo</coplet-data>
+   <coplet-instance-data id="PortalDemo_1">
+      <coplet-data>PortalDemo</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Gallery-Petstore">
+   <coplet-instance-data id="GalleryPetstore">
       <coplet-data>Gallery</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="GalleryViewer-1">
+   <coplet-instance-data id="GalleryViewer_1">
       <coplet-data>GalleryViewer</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Portlet-1">
-      <coplet-data>testsuite.TestPortlet1</coplet-data>
+   <coplet-instance-data id="Portlet_1">
+      <coplet-data>testsuite_TestPortlet1</coplet-data>
    </coplet-instance-data>
 
    <coplet-instance-data id="Portlet-2">
-      <coplet-data>testsuite.TestPortlet2</coplet-data>
+      <coplet-data>testsuite_TestPortlet2</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="TestPortlet-1">
+   <coplet-instance-data id="TestPortlet_1">
       <coplet-data>TestPortlet1</coplet-data>
    </coplet-instance-data>
    <coplet-instance-data id="CocoonPortlet">
       <coplet-data>CocoonPortlet</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Petstore-1">
-      <coplet-data>jpetstore.JPetstorePortlet</coplet-data>
+   <coplet-instance-data id="Petstore_1">
+      <coplet-data>jpetstore_JPetstorePortlet</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="app-test-1">
-      <coplet-data>app-test-one</coplet-data>
+   <coplet-instance-data id="app_test_1">
+      <coplet-data>app_test_one</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="app-test-2">
-      <coplet-data>app-test-one</coplet-data>
+   <coplet-instance-data id="app_test-2">
+      <coplet-data>app_test_one</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="app-test-3">
-      <coplet-data>app-test-two</coplet-data>
+   <coplet-instance-data id="app_test_3">
+      <coplet-data>app_test_two</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="app-test-4">
-      <coplet-data>app-test-two</coplet-data>
+   <coplet-instance-data id="app_test_4">
+      <coplet-data>app_test_two</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="Google-1">
+   <coplet-instance-data id="Google_1">
       <coplet-data>Google</coplet-data>
    </coplet-instance-data>
 
    <!-- wsrp example -->
-   <coplet-instance-data id="WSRP-Calc-1">
-      <coplet-data>wsrp-calc-portlet</coplet-data>
+   <coplet-instance-data id="WSRP_Calc_1">
+      <coplet-data>wsrp_calc_portlet</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="WSRP-Test-1">
-      <coplet-data>wsrp-test-portlet</coplet-data>
+   <coplet-instance-data id="WSRP_Test_1">
+      <coplet-data>wsrp_test_portlet</coplet-data>
    </coplet-instance-data>
 
 </coplets>
