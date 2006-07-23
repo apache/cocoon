@@ -17,7 +17,7 @@
 
 <!--+
     |
-    | SVN $Id$
+    | @version $Id$
     +-->
 <components>
   <!-- Include roles -->
@@ -27,41 +27,6 @@
     <!-- blob pseudo protocol -->
     <component-instance name="blob" class="org.apache.cocoon.components.source.impl.BlobSourceFactory"/>
   </source-factories>
-
-  <!-- JDBC datasources. No actual source is declared here. The one below is declared
-       in the hdslqb block used for Cocoon sample
-       
-  <datasources>
-    <!- -
-      - See Excalibur documentation for details
-      - http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/datasource/ResourceLimitingJdbcDataSource.html
-      - ->
-    <jdbc logger="core.datasources.personnel" name="personnel">
-      <!- -
-        - If you have an Oracle database, and are using the the
-        - pool-controller below, you should add the attribute
-        - "oradb" and set it to true.
-        -
-        - <pool-controller min="5" max="10" oradb="true"/>
-        -
-        - That way the test to see if the server has disconnected
-        - the JdbcConnection will function properly.
-        - ->
-      <pool-controller max="10" min="5" timeout="30000"/>
-      <!- -
-        - If you need to ensure an autocommit is set to true or
-        - false, then create the "auto-commit" element below.
-        -
-        - <auto-commit>false</auto-commit>
-        -
-        - The default is true.
-        - ->
-      <dburl>jdbc:hsqldb:hsql://localhost:9002</dburl>
-      <user>sa</user>
-      <password></password>
-    </jdbc>
-  </datasources>
-  -->
 
   <input-modules>
     <component-instance logger="core.modules.input" name="collection" 	class="org.apache.cocoon.components.modules.input.CollectionMetaModule"/>
