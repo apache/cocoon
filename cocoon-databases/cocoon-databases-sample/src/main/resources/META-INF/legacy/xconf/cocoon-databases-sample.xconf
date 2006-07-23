@@ -24,10 +24,10 @@
 
   <!-- Datasource for the database samples. -->
   <datasources>
-    <!- -
+    <!--
       - See Excalibur documentation for details
       - http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/datasource/ResourceLimitingJdbcDataSource.html
-      - ->
+      -->
     <jdbc logger="core.datasources.personnel" name="personnel">
       <!--
           If you have an Oracle database, and are using the the
