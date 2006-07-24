@@ -104,7 +104,7 @@ public class SettingsHelper {
                 final PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
                 final Properties providedProperties = provider.getProperties(s, mode, null);
                 if ( providedProperties != null ) {
-                    properties.putAll(properties);
+                    properties.putAll(providedProperties);
                 }
             } catch (Exception ignore) {
                 logger.info("Unable to get properties from configured property provider - continuing with initialization.");
@@ -115,7 +115,7 @@ public class SettingsHelper {
         if ( externalPropertyProvider != null ) {
             final Properties providedProperties = externalPropertyProvider.getProperties(s, mode, null);
             if ( providedProperties != null ) {
-                properties.putAll(properties);
+                properties.putAll(providedProperties);
             }
         }
 
