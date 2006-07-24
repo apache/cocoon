@@ -423,6 +423,7 @@ public class SitemapLanguage
             settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
         } else if ( globalSitemapVariables != null ) {
             MutableSettings s = new MutableSettings(settings);
+            PropertyHelper.replaceAll(globalSitemapVariables, settings);
             s.configure(globalSitemapVariables);
             settings = s;
         }
@@ -1195,6 +1196,7 @@ public class SitemapLanguage
         if ( globalSitemapVariables != null ) {
             properties.putAll(globalSitemapVariables);
         }
+        PropertyHelper.replaceAll(properties, parent);
         s.configure(properties);
 
         return s;
