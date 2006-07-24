@@ -40,8 +40,8 @@ public class MutableSettings implements Settings {
     /** Prefix for properties. */
     protected static final String KEYPREFIX = "org.apache.cocoon.";
 
-    /** The list of properties used to configure Cocoon. */
-    protected final List properties = new ArrayList();
+    /** The properties used to configure Cocoon. */
+    protected final Properties properties = new Properties();
 
     /**
      * This parameter points to the main configuration file for Cocoon.
@@ -190,10 +190,13 @@ public class MutableSettings implements Settings {
     /** The optional parent settings object. */
     protected Settings parent;
 
+    /** Running mode. */
+    protected final String runningMode;
+
     /**
      * Create a new settings object.
      */
-    public MutableSettings() {
+    public MutableSettings(String mode) {
         // set default values
         this.reloadingEnabled = SettingsDefaults.RELOADING_ENABLED_DEFAULT;
         this.enableUploads = SettingsDefaults.ENABLE_UPLOADS;
@@ -207,16 +210,18 @@ public class MutableSettings implements Settings {
         this.containerEncoding = SettingsDefaults.DEFAULT_CONTAINER_ENCODING;
         this.loggingConfiguration = SettingsDefaults.DEFAULT_LOGGING_CONFIGURATION;
         this.configuration = SettingsDefaults.DEFAULT_CONFIGURATION;
+        this.runningMode = mode;
     }
 
     public MutableSettings(Settings parent) {
         this.parent = parent;
+        this.runningMode = parent.getRunningMode();
     }
 
     /**
      * Fill from a properties object
      */
-    public void fill(Properties props) {
+    public void configure(Properties props) {
         this.checkWriteable();
         if ( props != null ) {
             final Iterator i = props.entrySet().iterator();
@@ -273,7 +278,7 @@ public class MutableSettings implements Settings {
                     }
                 }
             }
-            this.properties.add(props);
+            this.properties.putAll(props);
         }
     }
 
@@ -616,11 +621,7 @@ public class MutableSettings implements Settings {
             }
         }
 
-        // Iterate in reverse order, as most specific property sources are added last
-        for (int i = this.properties.size() - 1; i >= 0 && value == null; i--) {
-            final Properties p = (Properties)this.properties.get(i);
-            value = p.getProperty(key);
-        }
+        value = this.properties.getProperty(key);
 
         if ( value == null ) {
             if ( this.parent != null ) {
@@ -927,14 +928,11 @@ public class MutableSettings implements Settings {
      */
     public List getPropertyNames(String keyPrefix) {
         final List props = new ArrayList();
-        for(int i=0; i < this.properties.size(); i++) {
-            final Properties p = (Properties)this.properties.get(i);
-            final Iterator kI = p.keySet().iterator();
-            while ( kI.hasNext() ) {
-                final String name = (String)kI.next();
-                if ( name.startsWith(keyPrefix) && !props.contains(name) ) {
-                    props.add(name);
-                }
+        final Iterator kI = this.properties.keySet().iterator();
+        while ( kI.hasNext() ) {
+            final String name = (String)kI.next();
+            if ( name.startsWith(keyPrefix) && !props.contains(name) ) {
+                props.add(name);
             }
         }
         if ( this.parent != null ) {
@@ -955,14 +953,11 @@ public class MutableSettings implements Settings {
      */
     public List getPropertyNames() {
         final List props = new ArrayList();
-        for(int i=0; i < this.properties.size(); i++) {
-            final Properties p = (Properties)this.properties.get(i);
-            final Iterator kI = p.keySet().iterator();
-            while ( kI.hasNext() ) {
-                final String name = (String)kI.next();
-                if (!props.contains(name) ) {
-                    props.add(name);
-                }
+        final Iterator kI = this.properties.keySet().iterator();
+        while ( kI.hasNext() ) {
+            final String name = (String)kI.next();
+            if (!props.contains(name) ) {
+                props.add(name);
             }
         }
         if ( this.parent != null ) {
@@ -982,6 +977,6 @@ public class MutableSettings implements Settings {
      * @see org.apache.cocoon.configuration.Settings#getRunningMode()
      */
     public String getRunningMode() {
-        return null;
+        return this.runningMode;
     }
 }

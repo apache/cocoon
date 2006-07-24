@@ -397,36 +397,34 @@ public class SitemapLanguage
         final BeanFactoryFactoryImpl factory = new BeanFactoryFactoryImpl();
         factory.setBeanFactory(this.beanFactory);
 
-        // check for sitemap local properties
-        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
-        if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
-            final String propertyDir = componentConfig.getAttribute("property-dir");
-            settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext));
-        }
         // compatibility with 2.1.x - check for global variables in sitemap
         // TODO - This will be removed in later versions!
+        Properties globalSitemapVariables = null;
         if ( tree.getChild("pipelines").getChild("component-configurations", false) != null ) {
             Deprecation.logger.warn("The 'component-configurations' section in the sitemap is deprecated. Please check for alternatives.");
+            globalSitemapVariables = new Properties();
             // now check for global variables - if any other element occurs: throw exception
             Configuration[] children = tree.getChild("pipelines").getChild("component-configurations").getChildren();
             for(int i=0; i<children.length; i++) {
                 if ( "global-variables".equals(children[i].getName()) ) {
-                    final Properties p = new Properties();
-                    final MutableSettings mutableSettings;
-                    if ( settings instanceof MutableSettings ) {
-                        mutableSettings = (MutableSettings)settings;
-                    } else {
-                        mutableSettings = new MutableSettings(settings);
-                    }
                     Configuration[] variables = children[i].getChildren();
                     for(int v=0; v<variables.length; v++) {
-                        p.setProperty(variables[v].getName(), variables[v].getValue());
+                        globalSitemapVariables.setProperty(variables[v].getName(), variables[v].getValue());
                     }
-                    mutableSettings.fill(p);
-                } else {
+               } else {
                     throw new ConfigurationException("Component configurations in the sitemap are not allowed for component: " + children[i].getName());
                 }
             }
+        }
+        // check for sitemap local properties
+        Settings settings = (Settings)factory.getCurrentBeanFactory(itsContext).getBean(Settings.ROLE);
+        if ( componentConfig != null && componentConfig.getAttribute("property-dir", null) != null ) {
+            final String propertyDir = componentConfig.getAttribute("property-dir");
+            settings = this.createSettings(settings, propertyDir, useDefaultIncludes, factory.getCurrentBeanFactory(itsContext), globalSitemapVariables);
+        } else if ( globalSitemapVariables != null ) {
+            MutableSettings s = new MutableSettings(settings);
+            s.configure(globalSitemapVariables);
+            settings = s;
         }
         // replace properties?
         if ( componentConfig == null || componentConfig.getAttributeAsBoolean("replace-properties", true) ) {
@@ -498,7 +496,12 @@ public class SitemapLanguage
 
         // FIXME: Internal configurations doesn't work in a non bean factory
         // environment
-        this.itsBeanFactory = factory.createBeanFactory(this.itsClassLoader, this.getLogger(), componentConfig, itsContext, this.processor.getSourceResolver(), settings);
+        this.itsBeanFactory = factory.createBeanFactory(this.itsClassLoader,
+                                                        this.getLogger(),
+                                                        componentConfig,
+                                                        itsContext,
+                                                        this.processor.getSourceResolver(),
+                                                        settings);
         this.itsManager = (ServiceManager) this.itsBeanFactory.getBean(ProcessingUtil.SERVICE_MANAGER_ROLE);
         if (componentConfig != null) {
             // only register listeners if a new bean factory is created
@@ -1149,40 +1152,50 @@ public class SitemapLanguage
      *
      * @return A new Settings object
      */
-    protected MutableSettings createSettings(Settings parent,
-                                             String   directory,
-                                             boolean  useDefaultIncludes,
-                                             BeanFactory parentBeanFactory) {
+    protected MutableSettings createSettings(Settings    parent,
+                                             String      directory,
+                                             boolean     useDefaultIncludes,
+                                             BeanFactory parentBeanFactory,
+                                             Properties  globalSitemapVariables) {
         // get the running mode
         final String mode = parent.getRunningMode();
+        // get properties
+        final Properties properties = new Properties();
 
         // create an empty settings objects
         final MutableSettings s = new MutableSettings(parent);
 
         // read properties from default includes
         if ( useDefaultIncludes ) {
-            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s);
+            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES, s, properties);
             // read all properties from the mode dependent directory
-            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s);    
+            this.readProperties(SitemapLanguage.DEFAULT_CONFIG_PROPERTIES + '/' + mode, s, properties);    
         }
 
         // now read all properties from the properties directory
-        this.readProperties(directory, s);
+        this.readProperties(directory, s, properties);
         // read all properties from the mode dependent directory
-        this.readProperties(directory + '/' + mode, s);
+        this.readProperties(directory + '/' + mode, s, properties);
 
         // Next look for a custom property provider in the parent bean factory
         if (parentBeanFactory != null && parentBeanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
                 final Environment env = EnvironmentHelper.getCurrentEnvironment();
-                PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
+                final PropertyProvider provider = (PropertyProvider)parentBeanFactory.getBean(PropertyProvider.ROLE);
                 // TODO - add the name of the sitemap file to the path
-                s.fill(provider.getProperties(s, mode, env.getURIPrefix()));
+                final Properties providedProperties = provider.getProperties(s, mode, env.getURIPrefix());
+                if ( providedProperties != null ) {
+                    properties.putAll(providedProperties);
+                }
             } catch (Exception ignore) {
                 this.getLogger().warn("Unable to get properties from provider.", ignore);
                 this.getLogger().warn("Continuing initialization.");            
             }
         }
+        if ( globalSitemapVariables != null ) {
+            properties.putAll(globalSitemapVariables);
+        }
+        s.configure(properties);
 
         return s;
     }
@@ -1193,8 +1206,9 @@ public class SitemapLanguage
     /**
      * Read all property files from the given directory and apply them to the settings.
      */
-    protected void readProperties(String          directoryName,
-                                  MutableSettings s) {
+    protected void readProperties(String     directoryName,
+                                  Settings   s,
+                                  Properties properties) {
         final SourceResolver resolver = this.processor.getSourceResolver();
         Source directory = null;
         try {
@@ -1218,10 +1232,8 @@ public class SitemapLanguage
                     if ( this.getLogger().isDebugEnabled() ) {
                         this.getLogger().debug("Reading settings from '" + src.getURI() + "'.");
                     }
-                    final Properties p = new Properties();
-                    p.load(propsIS);
+                    properties.load(propsIS);
                     propsIS.close();
-                    s.fill(p);
                 }
             }
         } catch (IOException ignore) {

@@ -292,7 +292,7 @@ public class ContainerTestCase extends TestCase {
         final AvalonEnvironment avalonEnv = new AvalonEnvironment();
         avalonEnv.logger = this.logger;
         avalonEnv.context = this.context;
-        avalonEnv.settings = new MutableSettings();
+        avalonEnv.settings = new MutableSettings("test");
 
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigReader.readConfiguration(confRM, confCM, null, avalonEnv, null);
