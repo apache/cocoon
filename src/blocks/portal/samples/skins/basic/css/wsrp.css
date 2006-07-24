@@ -13,20 +13,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-<!-- all css-specification of an (wsrp-)portlet -->
+// all css-specification of an (wsrp-)portlet
 
-<!-- Fonts -->
+// Fonts
 portlet-font                { font-size:10pt;}
 portlet-font-dim            { }
 
-<!-- Messages -->
+// Messages
 portlet-msg-status          { }
 portlet-msg-info            { } 
 portlet-msg-error           { }
 portlet-msg-alert           { }
 portlet-msg-success         { }
 
-<!-- Sections -->
+// Sections
 portlet-section-header      { }
 portlet-section-body        { }
 portlet-section-alternate   { }
@@ -35,7 +35,7 @@ portlet-section-subheader   { }
 portlet-section-footer      { }
 portlet-section-text        { }
 
-<!-- Tables -->
+// Tables
 portlet-table-header        { }
 portlet-table-body          { }
 portlet-table-alternate     { }
@@ -44,7 +44,7 @@ portlet-table-subheader     { }
 portlet-table-footer        { }
 portlet-table-text          { }
 
-<!-- Forms -->
+// Forms
 portlet-form-label          { }
 portlet-form-input-field    { }
 portlet-form-button         { }
@@ -53,7 +53,7 @@ portlet-dlg-icon-label      { }
 portlet-form-field-label    { }
 portlet-form-field          { }
 
-<!-- Menus -->
+// Menus
 portlet-menu                { }
 portlet-menu-item           { }
 portlet-menu-item-selected  { }
