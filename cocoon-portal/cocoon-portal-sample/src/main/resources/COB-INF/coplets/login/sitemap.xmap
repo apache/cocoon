@@ -14,21 +14,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+<!-- @version $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <map:pipelines>
     
   <map:pipeline>	
 
-     <!-- this is a login coplet -->
-    <map:match pattern="coplet">
+      <!-- this is a login coplet -->
+      <map:match pattern="coplet">
         <map:generate src="login.xml"/>
         <map:transform src="{portal-skin:skin.basepath}/styles/login-html.xsl"/>
-	<map:serialize type="xml"/>
-    </map:match>
+	    <map:serialize type="xml"/>
+      </map:match>
     
-  </map:pipeline>
-
-</map:pipelines>
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>
