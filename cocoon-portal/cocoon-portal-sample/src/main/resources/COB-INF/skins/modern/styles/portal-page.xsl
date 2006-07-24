@@ -30,23 +30,21 @@
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/page.css"/>
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/wsrp.css"/>
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/portal-page.css"/>
-        <script src="{$rsrcprefix}resources/ajax/js/cocoon-ajax.js" type="text/javascript"/>
-        <script src="{$rsrcprefix}resources/portal/js/cocoon-portal.js" type="text/javascript"/>
       </head>
       <body>
         <div class="cocoon-portal-header">
           
           <xsl:if test="$user!='anonymous'">
             <div id="cocoon-portal-header-logout">
-              <a href="logout"><img src="{$rsrcprefix}skin/{$skin}/images/logout-door.gif" width="18" height="22" border="0"/></a>
+              <a href="logout"><img src="{$rsrcprefix}skin/{$skin}/images/logout-door.gif" alt="logo" width="18" height="22" border="0"/></a>
               <a href="logout">Logout</a>
               &#160;
               <a href="tools/">Tools</a>
             </div>
           </xsl:if>
           <div id="cocoon-portal-header-logo" >
-            <img src="{$rsrcprefix}skin/{$skin}/images/portal-logo.gif" width="250" height="90"/>
-	    </div>
+            <img src="{$rsrcprefix}skin/{$skin}/images/portal-logo.gif" alt="logo" width="250" height="90"/>
+	      </div>
 	    </div>
 	    
         <div class="cocoon-portal-content">
