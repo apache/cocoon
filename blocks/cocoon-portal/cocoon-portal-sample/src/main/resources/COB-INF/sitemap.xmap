@@ -274,6 +274,7 @@
               <map:when test="anonymous">
                 <map:act type="cauth-logout">
                   <map:parameter name="application" value="portal"/>
+                  <map:parameter name="mode" value="keep"/>
                 </map:act>
               </map:when>
               <map:otherwise>
@@ -321,6 +322,7 @@
 -->
           <map:act type="cauth-logout">
 		    <map:parameter name="application" value="portal"/>
+            <map:parameter name="mode" value="keep"/>
 	      </map:act>
         </map:act>
         <!-- TODO logout page -->
