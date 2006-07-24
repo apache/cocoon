@@ -220,6 +220,7 @@
                 <map:parameter name="title" value="{global:mainTitle}"/>
                 <map:parameter name="skin" value="{portal-skin:skin}"/>
               </map:transform>
+              <map:transform src="{portal-skin:skin.basepath}/styles/forms-styling.xsl"/>
               <map:transform type="cinclude"/>
               <map:transform type="portal-coplet"/>
               <map:transform type="portal-new-eventlink"/>
