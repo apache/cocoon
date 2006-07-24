@@ -88,19 +88,24 @@ public class SettingsHelper {
         logger.info("Running in mode: " + mode);
 
         // create an empty settings objects
-        final MutableSettings s = new MutableSettings();
+        final MutableSettings s = new MutableSettings(mode);
+        // create an empty properties object
+        final Properties properties = new Properties();
 
         // now read all properties from the properties directory
-        readProperties("context://WEB-INF/cocoon/properties", s, resolver, logger);
+        readProperties("context://WEB-INF/cocoon/properties", s, properties, resolver, logger);
         // read all properties from the mode dependent directory
-        readProperties("context://WEB-INF/cocoon/properties/" + mode, s, resolver, logger);
+        readProperties("context://WEB-INF/cocoon/properties/" + mode, s, properties, resolver, logger);
 
         // Next look for a custom property provider in the spring root context
         BeanFactory rootContext = BeanFactoryUtil.getWebApplicationContext(servletContext);
         if (rootContext != null && rootContext.containsBean(PropertyProvider.ROLE) ) {
             try {
-                PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
-                s.fill(provider.getProperties(s, mode, null));
+                final PropertyProvider provider = (PropertyProvider)rootContext.getBean(PropertyProvider.ROLE);
+                final Properties providedProperties = provider.getProperties(s, mode, null);
+                if ( providedProperties != null ) {
+                    properties.putAll(properties);
+                }
             } catch (Exception ignore) {
                 logger.info("Unable to get properties from configured property provider - continuing with initialization.");
                 logger.debug("Unable to get properties from provider.", ignore);
@@ -108,7 +113,10 @@ public class SettingsHelper {
         }
         // fill from the environment configuration, like web.xml etc.
         if ( externalPropertyProvider != null ) {
-            s.fill(externalPropertyProvider.getProperties(s, mode, null));
+            final Properties providedProperties = externalPropertyProvider.getProperties(s, mode, null);
+            if ( providedProperties != null ) {
+                properties.putAll(properties);
+            }
         }
 
         // read additional properties file
@@ -120,11 +128,8 @@ public class SettingsHelper {
             if ( testFile.exists() ) {
                 logger.info("Reading user settings from '" + fileName + "'");
                 try {
-                    final Properties p = new Properties();
-                    FileInputStream fis = new FileInputStream(fileName);
-                    p.load(fis);
-                    fis.close();
-                    s.fill(p);
+                    final FileInputStream fis = new FileInputStream(fileName);
+                    properties.load(fis);
                 } catch (IOException ignore) {
                     logger.info("Unable to read '" + fileName + "' - continuing with initialization.");
                     logger.debug("Unable to read '" + fileName + "'.", ignore);
@@ -137,11 +142,9 @@ public class SettingsHelper {
         if ( additionalPropertyFile != null ) {
             logger.info("Reading user settings from '" + additionalPropertyFile + "'");
             try {
-                final Properties p = new Properties();
-                FileInputStream fis = new FileInputStream(additionalPropertyFile);
-                p.load(fis);
+                final FileInputStream fis = new FileInputStream(additionalPropertyFile);
+                properties.load(fis);
                 fis.close();
-                s.fill(p);
             } catch (IOException ignore) {
                 logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.");
                 logger.debug("Unable to read '" + additionalPropertyFile + "'.", ignore);
@@ -149,10 +152,11 @@ public class SettingsHelper {
         }
         // now overwrite with system properties
         try {
-            s.fill(System.getProperties());
+            properties.putAll(System.getProperties());
         } catch (SecurityException se) {
             // we ignore this
         }
+        s.configure(properties);
 
         return s;
     }
@@ -161,7 +165,8 @@ public class SettingsHelper {
      * Read all property files from the given directory and apply them to the settings.
      */
     protected static void readProperties(String          directoryName,
-                                         MutableSettings s,
+                                         Settings        s,
+                                         Properties      properties,
                                          SourceResolver  resolver,
                                          Logger  logger) {
         Source directory = null;
@@ -184,10 +189,8 @@ public class SettingsHelper {
                     final Source src = (Source)i.next();
                     final InputStream propsIS = src.getInputStream();
                     logger.info("Reading settings from '" + src.getURI() + "'.");
-                    final Properties p = new Properties();
-                    p.load(propsIS);
+                    properties.load(propsIS);
                     propsIS.close();
-                    s.fill(p);
                 }
             }
         } catch (IOException ignore) {

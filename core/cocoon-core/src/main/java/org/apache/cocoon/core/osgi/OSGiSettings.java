@@ -27,6 +27,10 @@ public class OSGiSettings extends MutableSettings {
 	
     private Logger logger;
 
+    public OSGiSettings(String mode) {
+        super(mode);
+    }
+
 	protected void activate(ComponentContext componentContext) {
     	CoreUtil.initSettingsFiles(this, this.logger);
         // componentContext.getBundleContext().getDataFile("cocoon-files");
