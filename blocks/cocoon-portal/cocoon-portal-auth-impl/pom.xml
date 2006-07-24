@@ -28,7 +28,7 @@
   <artifactId>cocoon-portal-auth-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Cocoon CAuth Support</name>
+  <name>Portal Block CAuth Support</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
