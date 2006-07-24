@@ -33,6 +33,7 @@
       <xsl:apply-templates/>
       <xsl:apply-templates select="." mode="forms-page"/>
       <xsl:apply-templates select="." mode="forms-field"/>
+      <script src="{$resources-uri}/portal/cocoon-portal.js" type="text/javascript"/>
     </head>
   </xsl:template>
 

@@ -133,14 +133,6 @@
       <map:match pattern="skin/*/**.png">
         <map:read src="{portal-skin:{1}:skin.basepath}/{2}.png"/>
       </map:match>
-
-      <map:match pattern="resources/ajax/js/cocoon-ajax.js">
-        <map:read src="resource://org/apache/cocoon/ajax/resources/js/cocoon-ajax.js"/>
-      </map:match>
-      <map:match pattern="resources/portal/js/cocoon-portal.js">
-        <map:read src="resource://org/apache/cocoon/portal/resources/js/cocoon-portal.js"/>
-      </map:match>
-
     </map:pipeline>
 
     <!-- Now the accessible pipelines -->
@@ -220,7 +212,9 @@
                 <map:parameter name="title" value="{global:mainTitle}"/>
                 <map:parameter name="skin" value="{portal-skin:skin}"/>
               </map:transform>
-              <map:transform src="{portal-skin:skin.basepath}/styles/forms-styling.xsl"/>
+              <map:transform src="{portal-skin:skin.basepath}/styles/forms-styling.xsl">
+                <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+              </map:transform>
               <map:transform type="cinclude"/>
               <map:transform type="portal-coplet"/>
               <map:transform type="portal-new-eventlink"/>
