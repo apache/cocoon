@@ -16,6 +16,9 @@
  */
 package org.apache.cocoon.configuration.impl;
 
+import java.util.Iterator;
+import java.util.Properties;
+
 import org.apache.cocoon.configuration.Settings;
 
 /**
@@ -32,6 +35,14 @@ public class PropertyHelper {
      * and return it.
      */
     public static String replace(String value, Settings settings) {
+        return replace(value, null, settings);
+    }
+
+    /**
+     * Replace all property references in the string with the current value
+     * and return it.
+     */
+    public static String replace(String value, Properties properties, Settings settings) {
         // quick test for null or no references
         if ( value == null || value.indexOf("${") == -1 ) {
             return value;
@@ -67,7 +78,7 @@ public class PropertyHelper {
                     prev = value.length();
                 } else {
                     final String propertyName = value.substring(pos + 2, endName);
-                    String propertyValue = getProperty(propertyName, settings);
+                    String propertyValue = getProperty(propertyName, properties, settings);
                     // compatibility fallback - if the value is null, just readd token
                     if (propertyValue == null) {
                         buffer.append("${");
@@ -88,9 +99,12 @@ public class PropertyHelper {
         return buffer.toString();
     }
 
-    protected static String getProperty(String name, Settings settings) {
+    protected static String getProperty(String name, Properties properties, Settings settings) {
         String value = null;
-        if ( settings != null ) {
+        if ( properties != null ) {
+            value = properties.getProperty(name);
+        }
+        if ( value == null && settings != null ) {
             value = settings.getProperty(name);
         }
         if ( value == null ) {
@@ -101,5 +115,25 @@ public class PropertyHelper {
             }
         }
         return value;
+    }
+
+    /**
+     * Replace all references in the values contained in the properties.
+     * If the reference is not found in the properties it is searched in
+     * the settings.
+     * @param props
+     * @param settings
+     */
+    public static void replaceAll(Properties props, Settings settings) {
+       final Iterator kI = props.keySet().iterator();
+       while ( kI.hasNext() ) {
+           final String key = (String)kI.next();
+           // get value
+           String value = props.getProperty(key);
+           // replace
+           value = replace(value, props, settings);
+           // and put back
+           props.put(key, value);
+       }
     }
 }
