@@ -57,7 +57,7 @@
       +-->
       
   <filter>
-  	<filter-name></filter-name>
+  	<filter-name>CocoonDebugFilter</filter-name>
   	<display-name>Cocoon debug filter</display-name>
   	<description>Log debug information about each request</description>
   	<filter-class>org.apache.cocoon.servlet.DebugFilter</filter-class>
