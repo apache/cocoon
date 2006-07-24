@@ -31,6 +31,7 @@
   <name>Portal Block</name>
   <version>1-SNAPSHOT</version>
   <modules>
+    <module>cocoon-portal-auth-impl</module>
     <module>cocoon-portal-impl</module>
     <module>cocoon-portal-portlet-impl</module>
     <module>cocoon-portal-wsrp-impl</module>

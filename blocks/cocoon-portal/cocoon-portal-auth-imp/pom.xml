@@ -25,10 +25,10 @@
     <version>1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>cocoon-portal-sample</artifactId>
+  <artifactId>cocoon-portal-auth-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Portal Block Sample</name>
+  <name>Cocoon CAuth Support</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -42,27 +42,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-cron-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-ojb-sample</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-hsqldb-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-databases-hsqldb-client</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-portal-auth-impl</artifactId>
+      <artifactId>cocoon-auth-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
