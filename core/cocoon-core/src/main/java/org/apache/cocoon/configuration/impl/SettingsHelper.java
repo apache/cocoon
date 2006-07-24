@@ -156,6 +156,7 @@ public class SettingsHelper {
         } catch (SecurityException se) {
             // we ignore this
         }
+        PropertyHelper.replaceAll(properties, null);
         s.configure(properties);
 
         return s;
