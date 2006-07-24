@@ -16,15 +16,13 @@
 -->
 
 <!-- $Id$ 
- Description: The login form for the portal
-
+     Description: The login form for the portal
 -->
-
 <content>
-      <h3>Personalized Area</h3>
-	<form>
-		<url>auth</url>
-		<field name="name" type="text" length="24" description="User"/>
-		<field name="password" type="password" length="24" description="Password"/>
-	</form>
+  <h3>Personalized Area</h3>
+  <form>
+    <url>auth</url>
+    <field name="name" type="text" length="24" description="User"/>
+    <field name="password" type="password" length="24" description="Password"/>
+  </form>
 </content>
