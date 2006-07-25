@@ -84,10 +84,12 @@ public class CastorSourceConverter
     throws ConverterException {
         try {
             this.idResolver.setObjectMap(references);
-            Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];
-            Object result = unmarshaller.unmarshal(new InputSource(stream));
+            final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];
+            final Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
+        } catch (IllegalStateException ise) {
+            throw new ConverterException("Unable to unmarshal objects for mapping " + mappingName, ise);
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         } finally {
@@ -241,8 +243,11 @@ public class CastorSourceConverter
          * @see org.exolab.castor.xml.IDResolver#resolve(java.lang.String)
          */
         public Object resolve(String refId) {
-            // TODO - Should we throw an exception if the reference is not available?
-            return ((Map)this.threadLocalMap.get()).get(refId);
+            final Object o = ((Map)this.threadLocalMap.get()).get(refId);
+            if ( o == null ) {
+                throw new IllegalStateException("Referenced object with id " + refId + " is not found.");
+            }
+            return o;
         }
     }
 }

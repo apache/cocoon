@@ -37,6 +37,7 @@
       </item>
     </composite-layout>
   </named-item>
+<!-- 
 
   <named-item name="JSR-168">
     <composite-layout name="row">
@@ -87,6 +88,7 @@
       </item>
     </composite-layout>
   </named-item>
+ -->
 
   <named-item name="Apps">
     <composite-layout name="row">
