@@ -68,13 +68,21 @@ public class XMLUtils {
         }
     }
 
-    public static void write(Document node, OutputStream out)
+    public static void write(Document     node,
+                             OutputStream out)
     throws Exception {
         final Properties format = new Properties();
         format.put(OutputKeys.METHOD, "xml");
         format.put(OutputKeys.OMIT_XML_DECLARATION, "no");
         format.put(OutputKeys.INDENT, "yes");
-
+        if ( node.getDoctype() != null ) {
+            if ( node.getDoctype().getPublicId() != null ) {
+                format.put(OutputKeys.DOCTYPE_PUBLIC, node.getDoctype().getPublicId());
+            }
+            if ( node.getDoctype().getSystemId() != null ) {
+                format.put(OutputKeys.DOCTYPE_SYSTEM, node.getDoctype().getSystemId());
+            }
+        }
         Transformer transformer;
         transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperties(format);
