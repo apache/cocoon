@@ -17,10 +17,12 @@
 package org.apache.cocoon.core.container.spring;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,6 +57,9 @@ public class ConfigReader extends AbstractLogEnabled {
 
     /** Avalon environment. */
     protected final AvalonEnvironment environment;
+
+    /** All component configurations. */
+    protected final List componentConfigs = new ArrayList();
 
     public static ConfigurationInfo readConfiguration(String source, AvalonEnvironment env)
     throws Exception {
@@ -179,6 +184,9 @@ public class ConfigReader extends AbstractLogEnabled {
             }
         }
 
+        // now process all component configurations
+        this.processComponents();
+
         // add roles as components
         final Iterator i = this.configInfo.getClassNames().values().iterator();
         while ( i.hasNext() ) {
@@ -206,88 +214,99 @@ public class ConfigReader extends AbstractLogEnabled {
             } else if ( "include-beans".equals(componentName) ) {
                 this.handleBeanInclude(contextURI, componentConfig);
             } else {
-                // Component declaration
-                // Find the role
-                String role = componentConfig.getAttribute("role", null);
-                String alias = null;
+                // Component declaration, add it to list
+                this.componentConfigs.add(componentConfig);
+            }
+        }
+    }
+
+    protected void processComponents()
+    throws ConfigurationException {
+        final Iterator i = this.componentConfigs.iterator();
+        while ( i.hasNext() ) {
+            final Configuration componentConfig = (Configuration)i.next(); 
+            final String componentName = componentConfig.getName();
+
+            // Find the role
+            String role = componentConfig.getAttribute("role", null);
+            String alias = null;
+            if (role == null) {
+                // Get the role from the role manager if not explicitely specified
+                role = (String)this.configInfo.getShorthands().get( componentName );
+                alias = componentName;
                 if (role == null) {
-                    // Get the role from the role manager if not explicitely specified
-                    role = (String)this.configInfo.getShorthands().get( componentName );
-                    alias = componentName;
-                    if (role == null) {
-                        // Unknown role
-                        throw new ConfigurationException("Unknown component type '" + componentName +
-                            "' at " + componentConfig.getLocation());
+                    // Unknown role
+                    throw new ConfigurationException("Unknown component type '" + componentName +
+                        "' at " + componentConfig.getLocation());
+                }
+            }
+    
+            // Find the className
+            String className = componentConfig.getAttribute("class", null);
+            ComponentInfo info;
+            if (className == null) {
+                // Get the default class name for this role
+                info = (ComponentInfo)this.configInfo.getClassNames().get( role );
+                if (info == null) {
+                    throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
+                }
+                this.configInfo.getClassNames().remove(info);
+                className = info.getComponentClassName();
+            } else {                    
+                info = new ComponentInfo();
+            }
+            // If it has a "name" attribute, add it to the role (similar to the
+            // declaration within a service selector)
+            // Note: this has to be done *after* finding the className above as we change the role
+            String name = componentConfig.getAttribute("name", null);
+            if (name != null) {
+                role = role + "/" + name;
+            }
+            info.fill(componentConfig);
+            info.setComponentClassName(className);
+            info.setRole(role);
+            if ( alias != null ) {
+                info.setAlias(alias);
+            }
+            info.setConfiguration(componentConfig);
+    
+            this.configInfo.addComponent(info);
+            // now if this is a selector, then we have to register the single components
+            if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
+                String classAttribute = null;
+                if ( className.equals("org.apache.cocoon.core.container.DefaultServiceSelector") ) {
+                    classAttribute = "class";
+                } else if (className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
+                    classAttribute = "src";
+                } 
+                if ( classAttribute == null ) {
+                    this.getLogger().warn("Found unknown selector type (continuing anyway: " + className);
+                } else {
+                    String componentRole = role;
+                    if ( componentRole.endsWith("Selector") ) {
+                        componentRole = componentRole.substring(0, componentRole.length() - 8);
                     }
-                }
-
-                // Find the className
-                String className = componentConfig.getAttribute("class", null);
-                ComponentInfo info;
-                if (className == null) {
-                    // Get the default class name for this role
-                    info = (ComponentInfo)this.configInfo.getClassNames().get( role );
-                    if (info == null) {
-                        throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
-                    }
-                    this.configInfo.getClassNames().remove(info);
-                    className = info.getComponentClassName();
-                } else {                    
-                    info = new ComponentInfo();
-                }
-                // If it has a "name" attribute, add it to the role (similar to the
-                // declaration within a service selector)
-                // Note: this has to be done *after* finding the className above as we change the role
-                String name = componentConfig.getAttribute("name", null);
-                if (name != null) {
-                    role = role + "/" + name;
-                }
-                info.fill(componentConfig);
-                info.setComponentClassName(className);
-                info.setRole(role);
-                if ( alias != null ) {
-                    info.setAlias(alias);
-                }
-                info.setConfiguration(componentConfig);
-
-                this.configInfo.addComponent(info);
-                // now if this is a selector, then we have to register the single components
-                if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
-                    String classAttribute = null;
-                    if ( className.equals("org.apache.cocoon.core.container.DefaultServiceSelector") ) {
-                        classAttribute = "class";
-                    } else if (className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
-                        classAttribute = "src";
-                    } 
-                    if ( classAttribute == null ) {
-                        this.getLogger().warn("Found unknown selector type (continuing anyway: " + className);
-                    } else {
-                        String componentRole = role;
-                        if ( componentRole.endsWith("Selector") ) {
-                            componentRole = componentRole.substring(0, componentRole.length() - 8);
+                    componentRole += '/';
+                    Configuration[] children = info.getConfiguration().getChildren();
+                    final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);                       
+                    for (int j=0; j<children.length; j++) {
+                        final Configuration current = children[j];
+                        final ComponentInfo childInfo = new ComponentInfo();
+                        childInfo.fill(current);
+                        childInfo.setConfiguration(current);
+                        final ComponentInfo hintInfo = (hintConfigs == null ? null : (ComponentInfo)hintConfigs.get(current.getName()));
+                        if ( current.getAttribute(classAttribute, null ) != null 
+                             || hintInfo == null ) {
+                            childInfo.setComponentClassName(current.getAttribute(classAttribute));
+                        } else {
+                            childInfo.setComponentClassName(hintInfo.getComponentClassName());
                         }
-                        componentRole += '/';
-                        Configuration[] children = info.getConfiguration().getChildren();
-                        final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);                       
-                        for (int j=0; j<children.length; j++) {
-                            final Configuration current = children[j];
-                            final ComponentInfo childInfo = new ComponentInfo();
-                            childInfo.fill(current);
-                            childInfo.setConfiguration(current);
-                            final ComponentInfo hintInfo = (hintConfigs == null ? null : (ComponentInfo)hintConfigs.get(current.getName()));
-                            if ( current.getAttribute(classAttribute, null ) != null 
-                                 || hintInfo == null ) {
-                                childInfo.setComponentClassName(current.getAttribute(classAttribute));
-                            } else {
-                                childInfo.setComponentClassName(hintInfo.getComponentClassName());
-                            }
-                            childInfo.setRole(componentRole + current.getAttribute("name"));
-                            this.configInfo.addComponent(childInfo);
-                        }
+                        childInfo.setRole(componentRole + current.getAttribute("name"));
+                        this.configInfo.addComponent(childInfo);
                     }
                 }
             }
-        }
+        }        
     }
 
     protected void handleInclude(final String        contextURI,
@@ -367,7 +386,7 @@ public class ConfigReader extends AbstractLogEnabled {
             loadedURIs.add(uri);
 
             // what is it?
-            String includeKind = includeConfig.getName();
+            final String includeKind = includeConfig.getName();
             if (includeKind.equals("components")) {
                 // more components
                 this.parseConfiguration(includeConfig, uri, loadedURIs);
