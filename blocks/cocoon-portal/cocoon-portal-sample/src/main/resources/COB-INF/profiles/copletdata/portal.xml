@@ -512,7 +512,7 @@
    <!-- Example for the application coplet -->
    <coplet-data id="Google">
       <title>Application</title>
-      <coplet-base-data>Application</coplet-base-data>
+      <coplet-base-data>URICoplet</coplet-base-data>
       <attribute>
          <name>uri</name>
          <value xsi:type="java:java.lang.String">cocoon:/coplets/html/app-coplet</value>

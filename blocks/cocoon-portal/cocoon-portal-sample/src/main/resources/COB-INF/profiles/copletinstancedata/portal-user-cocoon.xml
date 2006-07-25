@@ -38,12 +38,12 @@
    <coplet-instance-data id="GalleryViewer_1">
       <coplet-data>GalleryViewer</coplet-data>
    </coplet-instance-data>
-
+<!-- 
    <coplet-instance-data id="Portlet_1">
       <coplet-data>testsuite_TestPortlet1</coplet-data>
    </coplet-instance-data>
 
-   <coplet-instance-data id="Portlet-2">
+   <coplet-instance-data id="Portlet_2">
       <coplet-data>testsuite_TestPortlet2</coplet-data>
    </coplet-instance-data>
 
@@ -57,11 +57,12 @@
    <coplet-instance-data id="Petstore_1">
       <coplet-data>jpetstore_JPetstorePortlet</coplet-data>
    </coplet-instance-data>
+ -->
 
    <coplet-instance-data id="app_test_1">
       <coplet-data>app_test_one</coplet-data>
    </coplet-instance-data>
-   <coplet-instance-data id="app_test-2">
+   <coplet-instance-data id="app_test_2">
       <coplet-data>app_test_one</coplet-data>
    </coplet-instance-data>
    <coplet-instance-data id="app_test_3">
@@ -74,12 +75,13 @@
       <coplet-data>Google</coplet-data>
    </coplet-instance-data>
 
-   <!-- wsrp example -->
+   <!-- wsrp example
    <coplet-instance-data id="WSRP_Calc_1">
       <coplet-data>wsrp_calc_portlet</coplet-data>
    </coplet-instance-data>
    <coplet-instance-data id="WSRP_Test_1">
       <coplet-data>wsrp_test_portlet</coplet-data>
    </coplet-instance-data>
+    -->
 
 </coplets>
