@@ -36,6 +36,7 @@
     <module>cocoon-portal-portlet-impl</module>
     <module>cocoon-portal-wsrp-impl</module>
     <module>cocoon-portal-bridges-impl</module>
+    <module>cocoon-portal-tools-impl</module>
     <module>cocoon-portal-sample</module>
   </modules>
 </project>
