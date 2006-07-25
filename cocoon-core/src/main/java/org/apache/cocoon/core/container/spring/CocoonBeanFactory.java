@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -41,6 +43,9 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.io.Resource;
+import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.ServletContextAwareProcessor;
 
 /**
  * This is a Cocoon specific implementation of a Spring {@link DefaultListableBeanFactory}.
@@ -61,6 +66,7 @@ public class CocoonBeanFactory
     protected final Logger avalonLogger;
     protected final Context avalonContext;
     protected final ConfigurationInfo avalonConfiguration;
+    protected final ServletContext servletContext;
 
     public CocoonBeanFactory(BeanFactory parent) {
         this(null, parent, null, null, null, null);
@@ -73,6 +79,19 @@ public class CocoonBeanFactory
                              Context                 avalonContext,
                              Settings                settings) {
         super(parent);
+        // try to get servlet context
+        if ( parent instanceof WebApplicationContext ) {
+            this.servletContext = ((WebApplicationContext)parent).getServletContext();
+        } else if ( parent instanceof CocoonBeanFactory ) {
+            this.servletContext = ((CocoonBeanFactory)parent).servletContext;
+        } else {
+            this.servletContext = null;
+        }
+        // add support for ServletContextAware
+        if ( this.servletContext != null ) {
+            this.addBeanPostProcessor(new ServletContextAwareProcessor(this.servletContext));
+            this.ignoreDependencyInterface(ServletContextAware.class);
+        }
         this.avalonResource = avalonResource;
         this.avalonLogger = avalonLogger;
         this.avalonConfiguration = avalonConfiguration;
