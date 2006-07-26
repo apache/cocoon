@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.validation.impl;
 
-import org.apache.avalon.framework.configuration.ConfigurationUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -31,6 +30,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.ConfigurationUtil;
 import org.w3c.dom.Element;
 
 /**
