@@ -29,7 +29,7 @@
 
   <!--+
       | Set a context property useful to allow you to ProxyPass your
-      | web application mounted to a different URI without loosing the
+      | web application mounted to a different URI without losing the
       | ability to do cookie-based sessions.
       | WARNING: this is Jetty specific!
       +-->
