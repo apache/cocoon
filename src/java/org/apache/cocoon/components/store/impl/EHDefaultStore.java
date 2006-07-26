@@ -439,8 +439,10 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      */
     public int size() {
         try {
-            return this.cache.getSize();
-        } catch (CacheException e) {
+            // cast to int due ehcache implementation returns a long instead of int.
+            // See: http://ehcache.sourceforge.net/javadoc/net/sf/ehcache/Cache.html#getMemoryStoreSize()
+            return (int)this.cache.getMemoryStoreSize();
+        } catch (IllegalStateException e) {
             if (getLogger().isWarnEnabled()) {
                 getLogger().warn("Error while getting cache size", e);
             }
