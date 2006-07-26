@@ -66,8 +66,13 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      Add Spring post processor to add all configured components implement the Receiver
+      interface as subscribers to the event manager. This simplifies component development
+      as the component itself does not need to register itself anymore.
+    </action>
+    <action dev="CZ" type="add">
       Add CopletDecorationProvider which provides the information for the
-      title bar of a coplet. A coplet adapter can optinally implement
+      title bar of a coplet. A coplet adapter can optionally implement
       this interface.
     </action>
     <action dev="CZ" type="add">
@@ -92,7 +97,7 @@
       Add AJAX support.
     </action>
     <action dev="CZ" type="add">
-      Make coplet adapters accessible from component manager.
+      Make coplet adapters accessible from portal component manager.
     </action>
     <action dev="CZ" type="add">
       Add layout source to stream complete coplets/layouts.

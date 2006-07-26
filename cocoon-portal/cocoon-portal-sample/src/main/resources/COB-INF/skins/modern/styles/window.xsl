@@ -34,7 +34,7 @@
             </xsl:choose> 
           </div>
           <div class="coplet-icons" id="coplet-icons-{$copletId}">
-            <xsl:variable name="copletSize"><xsl:value-of select="coplet-size"/></xsl:variable>
+            <xsl:variable name="copletSize"><xsl:value-of select="size"/></xsl:variable>
             <xsl:if test="basket-add-link">
               <div class="coplet-icon basket-add-link" id="coplet-icon-basket-add-link-{$copletId}">
                 <a href="{basket-add-link}">

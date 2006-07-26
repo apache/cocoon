@@ -25,6 +25,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.information.PortletActionProvider;
@@ -56,7 +57,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletMode(PortletMode mode) {
         if ( mode != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            cid.setTemporaryAttribute("portlet-mode", mode.toString());
+            cid.setTemporaryAttribute(PortletAdapter.PORTLET_MODE_ATTRIBUTE_NAME, mode.toString());
         }
     }
 
@@ -66,7 +67,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     public void changePortletWindowState(WindowState state) {
         if ( state != null ) {
             final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-            cid.setTemporaryAttribute("window-state", state.toString());
+            cid.setTemporaryAttribute(PortletAdapter.WINDOW_STATE_ATTRIBUTE_NAME, state.toString());
             int size = CopletInstanceData.SIZE_NORMAL;
             if ( state.equals(WindowState.MAXIMIZED) ) {
                 size = CopletInstanceData.SIZE_MAXIMIZED;

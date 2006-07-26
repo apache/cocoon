@@ -28,13 +28,6 @@
 
 
   <!--+
-      | Renderer Aspects
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/wsrp-window"
-          default-class="org.apache.cocoon.portal.wsrp.adapter.WSRPPortletWindowAspect"/>
-
-  <!--+
       | Default User Context Provider for WSRP.
       +-->
   <role name="org.apache.cocoon.portal.wsrp.consumer.UserContextProvider"

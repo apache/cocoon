@@ -37,11 +37,13 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.coplet.CopletDataFeatures;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
 import org.apache.cocoon.portal.pluto.PortletContainerEnvironmentImpl;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
@@ -81,6 +83,21 @@ public class PortletAdapter
     extends AbstractCopletAdapter
     implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
+    /** Name of the coplet instance data attribute holding the portlet window. */
+    public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
+
+    /** Name of the coplet instance data attribute holding the dynamic title (if any). */
+    public static final String DYNAMIC_TITLE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/dynamic-title";
+
+    /** Name of the coplet instance data attribute holding the window state. */
+    public static final String WINDOW_STATE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window-state";
+
+    /** Name of the coplet instance data attribute holding the portlet mode. */
+    public static final String PORTLET_MODE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/portlet-mode";
+
+    /** Name of the portlet mode for full screen (if supported). */
+    public static final String FULL_SCREEN_WINDOW_STATE_ATTRIBUTE_NAME = "full-screen-mode";
+
     /** The Portlet Container. */
     protected PortletContainer portletContainer;
 
@@ -89,6 +106,12 @@ public class PortletAdapter
 
     /** The configuration. */
     protected Parameters parameters;
+
+    /** Is full-screen enabled? */
+    protected boolean enableFullScreen;
+
+    /** Is maximized enabled? */
+    protected boolean enableMaximized;
 
     /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
@@ -123,7 +146,7 @@ public class PortletAdapter
             ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
             PortletWindowList windowList = portletEntity.getPortletWindowList();        
             ((PortletWindowListCtrl)windowList).add(portletWindow);    
-            coplet.setTemporaryAttribute("window", portletWindow);
+            coplet.setTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME, portletWindow);
 
             // load the portlet
             final Map objectModel = ContextHelper.getObjectModel(this.context);
@@ -141,7 +164,7 @@ public class PortletAdapter
             } catch (Exception e) {
                 this.getLogger().error("Error loading portlet " + portletEntityId + " for instance " + coplet.getId(), e);
                 // remove portlet entity
-                coplet.removeTemporaryAttribute("window");
+                coplet.removeTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
                 ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
             }
         } else {
@@ -161,7 +184,7 @@ public class PortletAdapter
         try {
             final String portletEntityId = (String) getConfiguration(coplet, "portlet");
             // get the window
-            final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
+            final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
             if ( window == null ) {
                 throw new SAXException("Portlet couldn't be loaded: " + coplet.getId() + "(" + portletEntityId + ")");
             }
@@ -203,9 +226,9 @@ public class PortletAdapter
         if ( this.portletContainer == null ) {
             return;
         }
-        PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
+        PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
-            coplet.removeTemporaryAttribute("window");
+            coplet.removeTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
             PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
 
             PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
@@ -218,12 +241,12 @@ public class PortletAdapter
      */
     public void dispose() {
         try {
+            ContainerUtil.dispose(this.portletContainerEnvironment);
+            this.portletContainerEnvironment = null;
             if (this.portletContainer != null ) {
                 this.portletContainer.shutdown();
                 this.portletContainer = null;
             }
-            ContainerUtil.dispose(this.portletContainerEnvironment);
-            this.portletContainerEnvironment = null;
         } catch (Throwable t) {
             this.getLogger().error("Destruction failed!", t);
         }
@@ -236,6 +259,8 @@ public class PortletAdapter
     public void initialize() throws Exception {
         super.initialize();
         this.initContainer();
+        this.enableFullScreen = this.portalService.getConfigurationAsBoolean(PortalService.CONFIGURATION_FULL_SCREEN_ENABLED, true);
+        this.enableMaximized = this.portalService.getConfigurationAsBoolean(PortalService.CONFIGURATION_MAXIMIZED_ENABLED, true);
     }
 
     /**
@@ -320,6 +345,23 @@ public class PortletAdapter
         }
     }
 
+    public void inform(CopletInstanceSizingEvent event, PortalService service) {
+        WindowState ws = WindowState.NORMAL;
+        if ( event.getSize() == CopletInstanceData.SIZE_NORMAL ) {
+            ws = WindowState.NORMAL;
+        } else if ( event.getSize() == CopletInstanceData.SIZE_MAXIMIZED ) {
+            ws = WindowState.MAXIMIZED;
+        } else if ( event.getSize() == CopletInstanceData.SIZE_MINIMIZED ) {
+            ws = WindowState.MINIMIZED;
+        } else if ( event.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
+            ws = new WindowState((String)CopletDataFeatures.getAttributeValue(event.getTarget().getCopletData(), FULL_SCREEN_WINDOW_STATE_ATTRIBUTE_NAME, null));
+        }
+        final String wsString = (String)event.getTarget().getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);
+        if ( !wsString.equals(ws.toString()) ) {
+            event.getTarget().setTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME, ws.toString());
+        }
+    }
+
     /**
      * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
      */
@@ -380,13 +422,13 @@ public class PortletAdapter
      */
     public List getPossibleCopletModes(CopletInstanceData copletInstanceData) {
         final List modes = new ArrayList();
-        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
-        if ( window != null && this.portletContainerEnvironment != null) {
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
+        if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
             DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
 
             // portlet modes
-            final String pmString = (String)copletInstanceData.getTemporaryAttribute("portlet-mode");
+            final String pmString = (String)copletInstanceData.getTemporaryAttribute(PORTLET_MODE_ATTRIBUTE_NAME);
             final PortletMode pm; 
             if ( pmString == null ) {
                 pm = PortletMode.VIEW;
@@ -397,19 +439,19 @@ public class PortletAdapter
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setPortletMode(PortletMode.EDIT);
-                modes.add(new DecorationAction("edit", url.toString()));
+                modes.add(new DecorationAction("edit-uri", url.toString()));
             }
             if ( !pm.equals(PortletMode.HELP) ) {
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setPortletMode(PortletMode.HELP);
-                modes.add(new DecorationAction("help", url.toString()));
+                modes.add(new DecorationAction("help-uri", url.toString()));
             }                
             if ( !pm.equals(PortletMode.VIEW) ) {
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setPortletMode(PortletMode.VIEW);
-                modes.add(new DecorationAction("view", url.toString()));
+                modes.add(new DecorationAction("view-uri", url.toString()));
             }                
         }
 
@@ -421,13 +463,13 @@ public class PortletAdapter
      */
     public List getPossibleWindowStates(CopletInstanceData copletInstanceData) {
         final List states = new ArrayList();
-        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
-        if ( window != null && this.portletContainerEnvironment != null) {
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
+        if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
             DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) ContextHelper.getObjectModel(this.context).get("portlet-request"));
 
             // Sizing
-            final String wsString = (String)copletInstanceData.getTemporaryAttribute("window-state");
+            final String wsString = (String)copletInstanceData.getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);
             final WindowState ws; 
             if ( wsString == null ) {
                 ws = WindowState.NORMAL;
@@ -439,21 +481,27 @@ public class PortletAdapter
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setWindowState(WindowState.MINIMIZED);
-                states.add(new DecorationAction("minimize", url.toString()));
+                states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MINIMIZED, url.toString()));
             }
 
             if ( !ws.equals(WindowState.NORMAL)) {
                 PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
                 url.clearParameters();
                 url.setWindowState(WindowState.NORMAL);
-                states.add(new DecorationAction("normal", url.toString()));
+                states.add(new DecorationAction(DecorationAction.WINDOW_STATE_NORMAL, url.toString()));
             }
 
-            if ( !ws.equals(WindowState.MAXIMIZED)) {
-                PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
-                url.clearParameters();
-                url.setWindowState(WindowState.MAXIMIZED);
-                states.add(new DecorationAction("maximize", url.toString()));
+            if ( this.enableMaximized ) {
+                if ( !ws.equals(WindowState.MAXIMIZED)) {
+                    PortletURLProviderImpl url = (PortletURLProviderImpl)dip.getPortletURLProvider(window);
+                    url.clearParameters();
+                    url.setWindowState(WindowState.MAXIMIZED);
+                    states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MAXIMIZED, url.toString()));
+                }
+            }
+            // TODO - Implement full screen for portlets (= own mode)
+            if ( this.enableFullScreen ) {
+                
             }
         }
 
@@ -465,9 +513,9 @@ public class PortletAdapter
      */
     public String getTitle(CopletInstanceData copletInstanceData) {
         String title = null;
-        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute("window");
+        final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
-            title = (String) copletInstanceData.getTemporaryAttribute("dynamic-title");
+            title = (String) copletInstanceData.getTemporaryAttribute(DYNAMIC_TITLE_ATTRIBUTE_NAME);
             if ( title == null ) {
                 final PortletDefinition def = window.getPortletEntity().getPortletDefinition();
                 try {

@@ -17,13 +17,6 @@
 <role-list>
 
   <!--+
-      | Renderer Aspects
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/portlet-window"
-          default-class="org.apache.cocoon.portal.pluto.adapter.PortletWindowAspect"/>
-
-  <!--+
       | Coplet Adapters
       |
       +-->

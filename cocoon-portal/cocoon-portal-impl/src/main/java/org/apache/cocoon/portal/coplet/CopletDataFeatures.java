@@ -46,7 +46,10 @@ public final class CopletDataFeatures {
     public static Object getAttributeValue(CopletData data, String key, Object defaultValue) {
         Object value = data.getAttribute(key);
         if ( value == null ) {
-            value = defaultValue;
+            value = data.getCopletBaseData().getCopletConfig(key);
+            if ( value == null ) {
+                value = defaultValue;
+            }
         }
         return value;
     }
