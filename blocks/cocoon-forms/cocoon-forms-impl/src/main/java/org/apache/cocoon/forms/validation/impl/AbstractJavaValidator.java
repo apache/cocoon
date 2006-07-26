@@ -18,10 +18,10 @@ package org.apache.cocoon.forms.validation.impl;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.ConfigurationUtil;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.cocoon.util.ConfigurationUtil;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 
