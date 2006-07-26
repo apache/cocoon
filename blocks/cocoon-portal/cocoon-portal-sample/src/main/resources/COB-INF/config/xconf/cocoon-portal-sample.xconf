@@ -16,7 +16,7 @@
 -->
 <!--+
     |
-    | SVN $Id: cocoon-portal-samples.xconf 125443 2005-01-17 20:39:52Z cziegeler $
+    | @version $Id: cocoon-portal-samples.xconf 125443 2005-01-17 20:39:52Z cziegeler $
     +-->
 <components>
   <!--+
@@ -35,12 +35,12 @@
 
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
-  <!-- If you don't need JSR 168 support, you can remove the following include: 
+
+  <!-- If you don't need JSR 168 support, you can remove the following include. -->
   <include src="resource://org/apache/cocoon/portal/pluto/portal-pluto.roles"/>
-  -->
-  <!-- If you don't need WSRP support, you can remove the following include: 
+
+  <!-- If you don't need WSRP support, you can remove the following include -->
   <include src="resource://org/apache/cocoon/portal/wsrp/portal-wsrp.roles"/>
-  -->
 
   <!-- We use CAuth for authentication. If you don't use CAuth remove this line: -->
   <include src="auth-cauth.xconf"/>
@@ -93,12 +93,10 @@
   -->
   <portal-manager>
     <aspects>
-      <!-- JSR-168 support: 
+      <!-- JSR-168 support: -->
       <aspect adapter="portlet"/>
-      -->
-      <!-- wsrp support: 
+      <!-- wsrp support: -->
       <aspect adapter="wsrp"/>
-      -->
     </aspects>
   </portal-manager>
 
@@ -111,12 +109,11 @@
         <!-- aspect type="action-counter"/ -->
         <aspect type="frame"/>
         <aspect type="link"/>
-  <!-- Uncomment the following when using PageLabels
+        <!-- Uncomment the following when using PageLabels
         <aspect type="page-label"/>
         -->
-        <!-- Comment the following out if you don't need WSRP: 
+        <!-- Comment the following out if you don't need WSRP: --> 
         <aspect type="wsrp"/>
-        -->
         <aspect type="request-parameter"/>
     </event-aspects>
     <!-- add a new instance of each class as a receiver: -->
@@ -262,8 +259,6 @@
         <aspect type="window">
           <parameter name="root-tag" value="false"/>
         </aspect>
-        <aspect type="coplet-removing"/>
-        <aspect type="coplet-sizing"/>
         <aspect type="history"/>
         <aspect type="basket"/>
         <aspect type="coplet-cinclude"/>
@@ -281,8 +276,6 @@
         <aspect type="window">
           <parameter name="root-tag" value="false"/>
         </aspect>
-        <aspect type="coplet-removing"/>
-        <aspect type="coplet-sizing"/>
         <aspect type="history"/>
         <aspect type="basket"/>
         <aspect type="coplet-cinclude"/>
@@ -305,44 +298,6 @@
         </aspect>
       </aspects>
     </renderer>
-    <!--
-    <renderer name="portlet-window"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="window"/>
-        </aspect>
-        <aspect type="portlet-window">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-        <aspect type="coplet-removing"/>
-        <aspect type="history"/>
-        <aspect type="basket"/>
-        <aspect type="coplet-cinclude"/>
-      </aspects>
-    </renderer>
-    <renderer name="wsrp-window"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
-      <aspects>
-        <aspect type="xslt">
-          <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
-        </aspect>
-        <aspect type="parameter">
-          <parameter name="tag-name" value="window"/>
-        </aspect>
-        <aspect type="wsrp-window">
-          <parameter name="root-tag" value="false"/>
-        </aspect>
-        <aspect type="coplet-removing"/>
-        <aspect type="history"/>
-        <aspect type="basket"/>
-        <aspect type="coplet-cinclude"/>
-      </aspects>
-    </renderer>
-    -->
     <renderer name="link" 
               class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer"/>
     <renderer name="decorated-frame"
@@ -410,7 +365,6 @@
               class="org.apache.cocoon.portal.layout.impl.CopletLayout">
         <renderers default="window">
           <renderer name="window"/>
-          <renderer name="portlet-window"/>
           <renderer name="nowindow"/>
         </renderers>
       </layout>
@@ -438,10 +392,10 @@
   <!-- This is the special basket renderer -->
   <component role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/basket"
              class="org.apache.cocoon.portal.coplets.basket.AddToBasketAspect"/>
-<!--
+
   <wsrp-adapter>
-     This is the WSRP configuration containing the producers etc. 
-     <parameter name="wsrp-config" value="profiles/wsrp-config.xml"/>
+     <!-- This is the WSRP configuration containing the producers etc. -->
+     <parameter name="wsrp-config" value="config/wsrp-config.xml"/>
   </wsrp-adapter>
--->
+
 </components>

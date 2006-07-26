@@ -20,6 +20,11 @@ package org.apache.cocoon.portal.coplet.adapter;
  */
 public final class DecorationAction {
 
+    public static final String WINDOW_STATE_NORMAL = "normal-uri";
+    public static final String WINDOW_STATE_MINIMIZED = "minimized-uri";
+    public static final String WINDOW_STATE_MAXIMIZED = "maximized-uri";
+    public static final String WINDOW_STATE_FULLSCREEN = "fullscreen-uri";
+
     protected String name;
     protected String url;
 
