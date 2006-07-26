@@ -24,6 +24,7 @@ import javax.portlet.WindowState;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.information.DynamicInformationProvider;
@@ -91,7 +92,7 @@ public class DynamicInformationProviderImpl
      */
     public PortletMode getPortletMode(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        final String pmString = (String)cid.getTemporaryAttribute("portlet-mode");
+        final String pmString = (String)cid.getTemporaryAttribute(PortletAdapter.PORTLET_MODE_ATTRIBUTE_NAME);
         if ( pmString == null ) {
             return PortletMode.VIEW;
         }
@@ -103,7 +104,7 @@ public class DynamicInformationProviderImpl
      */
     public WindowState getWindowState(PortletWindow portletWindow) {
         final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
-        final String wsString = (String)cid.getTemporaryAttribute("window-state");
+        final String wsString = (String)cid.getTemporaryAttribute(PortletAdapter.WINDOW_STATE_ATTRIBUTE_NAME);
         if ( wsString == null ) {
             return WindowState.NORMAL;
         }

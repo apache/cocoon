@@ -81,12 +81,6 @@
           default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
 
     <!--+
-        | This aspect can be used to render the minimize/maximize buttons.
-        +-->
-    <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-sizing"
-          default-class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
-
-    <!--+
         | This aspect can be used to render the remove button.
         +-->
     <role name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect/coplet-removing"

@@ -843,7 +843,7 @@ public class WSRPAdapter
         final List modes = new ArrayList();
         final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
 
-        if ( portletKey != null && this.consumerEnvironment != null ) {
+        if ( portletKey != null ) {
             final String portletInstanceKey = (String)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
             final User user = (User)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
 
@@ -866,7 +866,7 @@ public class WSRPAdapter
                         p.put(Constants.PORTLET_MODE, Modes._edit);
 
                         final String link = urlGenerator.getRenderURL(p);
-                        modes.add(new DecorationAction("edit", link));
+                        modes.add(new DecorationAction("edit-uri", link));
                     }
                     if ( !pm.equals(Modes._help)
                         && ArrayUtils.contains(supportedModes, Modes._help) ) {
@@ -875,7 +875,7 @@ public class WSRPAdapter
                         p.put(Constants.PORTLET_MODE, Modes._help);
 
                         final String link = urlGenerator.getRenderURL(p);                        
-                        modes.add(new DecorationAction("help", link));
+                        modes.add(new DecorationAction("help-uri", link));
                     }                
                     if ( !pm.equals(Modes._view)
                         && ArrayUtils.contains(supportedModes, Modes._view) ) {
@@ -884,7 +884,7 @@ public class WSRPAdapter
                         p.put(Constants.PORTLET_MODE, Modes._view);
 
                         final String link = urlGenerator.getRenderURL(p);                        
-                        modes.add(new DecorationAction("view", link));
+                        modes.add(new DecorationAction("view-uri", link));
                     } 
                 }
             } catch (WSRPException ignore) {
@@ -903,7 +903,7 @@ public class WSRPAdapter
         final List states = new ArrayList();
         final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
 
-        if ( portletKey != null && this.consumerEnvironment != null ) {
+        if ( portletKey != null ) {
             final String portletInstanceKey = (String)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY);
             final User user = (User)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
 
@@ -927,7 +927,7 @@ public class WSRPAdapter
                         p.put(Constants.WINDOW_STATE, WindowStates._minimized);
 
                         final String link = urlGenerator.getRenderURL(p);
-                        states.add(new DecorationAction("minimize", link));
+                        states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MINIMIZED, link));
                     }
                     if ( !ws.equals(WindowStates._normal)
                           && ArrayUtils.contains(supportedWindowStates, WindowStates._normal)) {
@@ -936,7 +936,7 @@ public class WSRPAdapter
                         p.put(Constants.WINDOW_STATE, WindowStates._normal);
 
                         final String link = urlGenerator.getRenderURL(p);
-                        states.add(new DecorationAction("normal", link));
+                        states.add(new DecorationAction(DecorationAction.WINDOW_STATE_NORMAL, link));
                     } 
                     if ( !ws.equals(WindowStates._maximized)
                           && ArrayUtils.contains(supportedWindowStates, WindowStates._maximized)) {
@@ -945,7 +945,7 @@ public class WSRPAdapter
                         p.put(Constants.WINDOW_STATE, WindowStates._maximized);
 
                         final String link = urlGenerator.getRenderURL(p);                    
-                        states.add(new DecorationAction("maximize", link));
+                        states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MAXIMIZED, link));
                     }
                 }
             } catch (WSRPException ignore) {

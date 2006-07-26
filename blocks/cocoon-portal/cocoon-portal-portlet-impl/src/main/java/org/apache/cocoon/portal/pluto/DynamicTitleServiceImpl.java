@@ -17,6 +17,7 @@ package org.apache.cocoon.portal.pluto;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
 import org.apache.cocoon.portal.pluto.om.PortletEntityImpl;
 import org.apache.pluto.om.window.PortletWindow;
 import org.apache.pluto.services.title.DynamicTitleService;
@@ -35,6 +36,6 @@ implements DynamicTitleService {
     public void setDynamicTitle(PortletWindow window,
                                 HttpServletRequest request,
                                 String dynamicTitle) {
-        ((PortletEntityImpl)window.getPortletEntity()).getCopletInstanceData().setTemporaryAttribute("dynamic-title", dynamicTitle);
+        ((PortletEntityImpl)window.getPortletEntity()).getCopletInstanceData().setTemporaryAttribute(PortletAdapter.DYNAMIC_TITLE_ATTRIBUTE_NAME, dynamicTitle);
     }                      
 }
