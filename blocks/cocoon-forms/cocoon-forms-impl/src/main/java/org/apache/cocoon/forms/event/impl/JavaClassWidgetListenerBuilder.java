@@ -20,7 +20,7 @@ import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.avalon.framework.configuration.ConfigurationUtil;
+import org.apache.cocoon.util.ConfigurationUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
