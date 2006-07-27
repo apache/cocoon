@@ -34,6 +34,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
@@ -164,19 +165,30 @@ public class XSLTAspect
 
     protected String getStylesheetURI(PreparedConfiguration config, Layout layout) 
     throws SAXException {
-        // FIXME Get the stylesheet either from a layout attribute or another aspect
-        try {
-            // FIXME - object model is not passed
-            String stylesheet = config.stylesheet.resolve(null);
-            return stylesheet;
-        } catch (PatternException pe) {
-            throw new SAXException("Pattern exception during variable resolving.", pe);            
+        String stylesheet = layout.getParameter("stylesheet");
+        if ( stylesheet != null ) {
+            VariableResolver resolver = null;
+            try {
+                resolver = VariableResolverFactory.getResolver(stylesheet, this.manager);
+                stylesheet = resolver.resolve(ContextHelper.getObjectModel(this.context));
+            } catch (PatternException pe) {
+                throw new SAXException("Unknown pattern for stylesheet " + stylesheet, pe);
+            } finally {
+                ContainerUtil.dispose(resolver);
+            }            
+        } else {
+            try {
+                stylesheet = config.stylesheet.resolve(ContextHelper.getObjectModel(this.context));
+            } catch (PatternException pe) {
+                throw new SAXException("Pattern exception during variable resolving.", pe);            
+            }
         }
+        return stylesheet;
     }
 
     protected String getParameterValue(Map.Entry entry) throws SAXException {
         try {
-            return ((VariableResolver)entry.getValue()).resolve(null);
+            return ((VariableResolver)entry.getValue()).resolve(ContextHelper.getObjectModel(this.context));
         } catch (PatternException pe) {
             throw new SAXException("Unable to get value for parameter " + entry.getKey(), pe);
         }

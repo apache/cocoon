@@ -439,7 +439,12 @@ public class GroupBasedProfileManager
             final Iterator i = ((Collection)loader.loadProfile(key, parameters)).iterator();
             while ( i.hasNext() ) {
                 final CopletData current = (CopletData)i.next();
-                objects.put(current.getId(), current);
+                // only add coplet data if coplet base data has been found
+                if ( current.getCopletBaseData() != null ) {
+                    objects.put(current.getId(), current);
+                } else {
+                    this.getLogger().error("CopletBaseData not found for CopletData: " + current);
+                }
             }
             this.copletDatas.objects = objects;
             // now add deployed coplets

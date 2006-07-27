@@ -174,7 +174,7 @@ public class PortletURLConverter {
      * @return A String containing the marshalled URL.
      */
     public String toString() {
-        StringBuffer buffer = new StringBuffer("");
+        StringBuffer buffer = new StringBuffer();
         buffer.append(PORTLET_ID).append(PREFIX).append(portletId);
         Iterator iter = urlData.entrySet().iterator();
         while (iter.hasNext()) {
