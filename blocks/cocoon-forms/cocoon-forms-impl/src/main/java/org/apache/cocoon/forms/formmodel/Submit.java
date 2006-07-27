@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.xml.AttributesImpl;
+
 /**
  * A submit is an action that exits of the current form.
  * 
@@ -30,6 +32,15 @@ public class Submit extends Action {
         this.validateForm = validateForm;
     }
     
+    /**
+     * @see org.apache.cocoon.forms.formmodel.AbstractWidget#getXMLElementAttributes()
+     */
+    public AttributesImpl getXMLElementAttributes() {
+        AttributesImpl attrs = super.getXMLElementAttributes();
+        attrs.addCDATAAttribute("validate", String.valueOf(validateForm));
+        return attrs;
+    }
+
     protected void handleActivate() {
         performAction();
         if (!validateForm) {
