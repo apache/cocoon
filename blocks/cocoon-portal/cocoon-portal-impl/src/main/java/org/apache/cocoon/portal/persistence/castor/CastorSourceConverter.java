@@ -65,6 +65,11 @@ public class CastorSourceConverter
     extends AbstractLogEnabled
     implements Serviceable, Configurable, Initializable, ThreadSafe, Converter {
 
+    /**
+     * Used to pass resolvable objects to the field handler.
+     */
+    public static final ThreadLocal threadLocalMap = new ThreadLocal();
+
     protected Map mappingSources = new HashMap();
     protected ServiceManager manager;
     protected Map mappings = new HashMap();
@@ -83,6 +88,7 @@ public class CastorSourceConverter
                             Map         parameters)
     throws ConverterException {
         try {
+            threadLocalMap.set(references);
             this.idResolver.setObjectMap(references);
             final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];
             final Object result = unmarshaller.unmarshal(new InputSource(stream));
@@ -93,6 +99,7 @@ public class CastorSourceConverter
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         } finally {
+            threadLocalMap.set(null);
             this.idResolver.clearObjectMap();
         }
     }
@@ -244,9 +251,6 @@ public class CastorSourceConverter
          */
         public Object resolve(String refId) {
             final Object o = ((Map)this.threadLocalMap.get()).get(refId);
-            if ( o == null ) {
-                throw new IllegalStateException("Referenced object with id " + refId + " is not found.");
-            }
             return o;
         }
     }
