@@ -116,16 +116,6 @@
         <aspect type="wsrp"/>
         <aspect type="request-parameter"/>
     </event-aspects>
-    <!-- add a new instance of each class as a receiver: -->
-    <receiver-classes>
-      <!--
-        class name="my.receiver.class"/>
-      -->
-    </receiver-classes>
-    <!-- add each component as a receiver (the component should be thread safe): -->
-    <receiver-roles>
-        <!-- <role name="AVALON-ROLE"/> -->
-    </receiver-roles>
   </portal-event-manager>
 
   <!--+

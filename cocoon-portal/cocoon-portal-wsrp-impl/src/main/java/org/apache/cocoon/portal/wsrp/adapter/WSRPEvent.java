@@ -58,5 +58,4 @@ public class WSRPEvent
     public Map getUrlParameters() {
         return this.producerParams;
     }
-
 }

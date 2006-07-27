@@ -14,15 +14,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id$ -->
+<!-- @version $Id$ -->
 <mapping>
   <description>Coplet instance data mapping file</description>
-
-  <class name="org.apache.cocoon.portal.coplet.CopletData" identity="id" verify-constructable="false">
-    <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
-      <bind-xml name="id" node="attribute" />
-    </field>
-  </class>
 
   <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
     <map-to xml="coplets" />
@@ -41,8 +35,10 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="copletData">
-      <bind-xml name="coplet-data" reference="true"/>
+    <field name="copletData"
+           type="java.lang.String"
+           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+      <bind-xml name="coplet-data"/>
     </field>
 
     <field name="attributes"

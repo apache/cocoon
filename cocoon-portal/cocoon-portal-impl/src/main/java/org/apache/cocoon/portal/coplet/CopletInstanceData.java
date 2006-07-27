@@ -75,11 +75,6 @@ public final class CopletInstanceData implements Serializable {
      * @see PortalUtils#testId(String)
 	 */
 	public CopletInstanceData(String id) {
-        // FIXME - Due to a bug in castor, we have to allow null ids for now
-        if ( id == null ) {
-            this.id = null;
-            return;
-        }
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);

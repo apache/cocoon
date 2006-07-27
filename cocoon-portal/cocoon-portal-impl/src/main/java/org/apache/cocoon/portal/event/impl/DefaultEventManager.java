@@ -26,7 +26,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
@@ -38,7 +37,6 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.impl.AbstractComponent;
-import org.apache.cocoon.util.ClassUtils;
 
 /**
  * This is the default implementation of the event manager.
@@ -110,40 +108,6 @@ public class DefaultEventManager
         super.initialize();
         // we create a tree of all events - we initialize this with the root class
         this.getHierarchyInfo(Event.class);
-
-        // subscribe all configured receiver roles
-        Configuration roles = this.configuration.getChild("receiver-roles", false);
-        if ( roles != null ) {
-            Configuration[] rolesConf = roles.getChildren("role");
-            for(int i=0; i<rolesConf.length;i++) {
-                final Configuration current = rolesConf[i];
-                final String name = current.getAttribute("name");
-                
-                Receiver receiver = null;
-                try {
-                    receiver = (Receiver) this.manager.lookup(name);
-                    this.subscribe(receiver);
-                } finally {
-                    this.manager.release(receiver);
-                }
-            }
-        }
-        // subscribe all configured receiver classes
-        Configuration classes = this.configuration.getChild("receiver-classes", false);
-        if ( classes != null ) {
-            Configuration[] classesConf = classes.getChildren("class");
-            for(int i=0; i<classesConf.length;i++) {
-                final Configuration current = classesConf[i];
-                final String name = current.getAttribute("name");
-                
-                Receiver receiver = (Receiver)ClassUtils.newInstance(name);
-                ContainerUtil.enableLogging(receiver, this.getLogger());
-                ContainerUtil.contextualize(receiver, this.context);
-                ContainerUtil.service(receiver, this.manager );
-                ContainerUtil.initialize(receiver);
-                this.subscribe(receiver);
-            }
-        }
 
         // subscribe all receivers that are necessary for the portal to work
         this.subscribe(new InternalEventReceiver());
