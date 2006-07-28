@@ -16,15 +16,20 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.formmodel.Repeater;
+import org.apache.cocoon.forms.formmodel.RepeaterDefinition;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.jxpath.JXPathContext;
@@ -116,8 +121,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             throw new BindingException("The repeater with the ID [" + this.repeaterId
                     + "] referenced in the binding does not exist in the form definition.");
         }
+        
+        if (repeater.isPageable()) {
+            PageStorage pageStorage = new PageStorage(repeater,jxpc);
+            pageStorage.doPageLoad();
+            return;
+        }
+        
         repeater.clear();
-
+        
         Pointer ptr = jxpc.getPointer(this.repeaterPath);
         if (ptr.getNode() != null) {
             // There are some nodes to load from
@@ -159,6 +171,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     throws BindingException {
         // Find the repeater
         Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
+        
+        if (repeater.isPageable()) {
+            jxpc = repeater.getStorage().doSave();
+            return;
+        }
+        
         // and his context, creating the path if needed
         JXPathContext repeaterContext =
             jxpc.getRelativeContext(jxpc.createPath(this.repeaterPath));
@@ -388,4 +406,161 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             this.identityBinding.enableLogging(logger);
         }
     }
+    
+    
+    public class PageStorage {
+        
+        private Repeater repeater;
+        private JXPathContext storageContext;
+        private Map updatedRows;
+        private int maxPage;
+        
+        public PageStorage(Repeater repeater, JXPathContext storageContext) {
+            this.repeater = repeater;
+            this.storageContext = storageContext;
+            
+            this.repeater.setStorage(this);
+            this.updatedRows = new HashMap();
+            
+            /*
+             * workaround for jxpath doesn't simply calls size() on count(..) using collections
+             */
+            
+            int collectionSize = 0;
+            Object value = storageContext.getValue(rowPath);
+            if (value != null) {
+                if (value instanceof Collection) {
+                    collectionSize = ((Collection)value).size();
+                } else {
+                    collectionSize = ((Double) storageContext.getValue("count("+rowPath+")")).intValue();
+                }
+            }
+            
+            this.maxPage = collectionSize / this.repeater.getPageSize() - 1;
+            
+        }
+
+        public void doPageLoad() throws BindingException {
+            repeater.clear();
+            
+            Pointer ptr = storageContext.getPointer(".");
+            if (ptr.getNode() != null) {
+                int initialSize = repeater.getSize();
+                JXPathContext repeaterContext = storageContext;
+                
+                Iterator rowPointers = repeaterContext.iteratePointers(rowPath + getPaginationClause());
+                while (rowPointers.hasNext()) {
+                    Repeater.RepeaterRow thisRow;
+                    if (initialSize > 0) {
+                        thisRow = repeater.getRow(--initialSize);
+                    } else {
+                        thisRow = repeater.addRow();
+                    }
+                    Pointer jxp = (Pointer)rowPointers.next();
+                    JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
+                    List contextIdentity = getIdentity(rowContext);
+                    if (isIdentityInUpdatedRows(contextIdentity)) {
+                        RowStore rowStore = (RowStore)this.updatedRows.get(contextIdentity);
+                        rowStore.recallRow(thisRow);
+                        continue;
+                    }
+                    if (identityBinding != null) {
+                        identityBinding.loadFormFromModel(thisRow, rowContext);
+                    } 
+                    rowBinding.loadFormFromModel(thisRow, rowContext);
+                }
+            }
+            if (getLogger().isDebugEnabled())
+                getLogger().debug("done loading page rows " + toString());
+        }
+        
+        public void doPageSave() throws BindingException {
+            JXPathContext repeaterContext = this.storageContext;
+            
+            // iterate rows in the form model...
+            int formRowCount = repeater.getSize();
+            for (int i = 0; i < formRowCount; i++) {
+                Repeater.RepeaterRow thisRow = repeater.getRow(i);
+
+                // Get the identity
+                List identity = getIdentity(thisRow);
+                
+                if (hasNonNullElements(identity)) {
+                    // iterate nodes to find match
+                    Iterator rowPointers = repeaterContext.iteratePointers(rowPath + getPaginationClause());
+                    while (rowPointers.hasNext()) {
+                        Pointer jxp = (Pointer) rowPointers.next();
+                        JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
+                        List contextIdentity = getIdentity(rowContext);
+                        if (ListUtils.isEqualList(identity, contextIdentity)) {
+                            updatedRows.put(identity,new RowStore(thisRow));
+                        }
+                    }
+                }
+            }
+        }
+        
+        public JXPathContext doSave() throws BindingException {
+            
+            // iterate context and saveToModel
+            Iterator rowPointers = this.storageContext.iteratePointers(rowPath);
+            while (rowPointers.hasNext()) {
+                Pointer jxp = (Pointer) rowPointers.next();
+                JXPathContext rowContext = this.storageContext.getRelativeContext(jxp);
+                List contextIdentity = getIdentity(rowContext);
+                if (isIdentityInUpdatedRows(contextIdentity)) {
+                    RepeaterRow repeaterRow = this.repeater.new RepeaterRow((RepeaterDefinition) this.repeater.getDefinition());
+                    RowStore rowStore = (RowStore)this.updatedRows.get(contextIdentity);
+                    rowStore.recallRow(repeaterRow);
+                    rowBinding.saveFormToModel(repeaterRow, rowContext);
+                }
+            }
+            return this.storageContext;
+        }
+        
+        private String getPaginationClause() {
+            String paginationClause = "";
+            int start = repeater.getCurrentPage() * repeater.getPageSize();
+            int end = start + repeater.getPageSize() + 1;
+            paginationClause = "[position() > " + start + " and position() < " + end + "]";
+            return paginationClause;
+        }
+        
+        private boolean isIdentityInUpdatedRows(List identity) {
+            return this.updatedRows.containsKey(identity);
+        }
+        
+        public int getMaxPage() {
+            return this.maxPage;
+        }
+        
+        private class RowStore {
+            private HashMap values;
+            private boolean deleted;
+            
+            public RowStore(RepeaterRow repeaterRow) {
+                this.values = new HashMap();
+                this.storeRow(repeaterRow);
+            }
+            
+            private void recallRow(RepeaterRow repeaterRow) {
+                Iterator iterator = values.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String key = (String) iterator.next();
+                    repeaterRow.lookupWidget(key).setValue(values.get(key));
+                }
+            }
+            
+            private void storeRow(RepeaterRow repeaterRow) {
+               Iterator iterator = repeaterRow.getChildren();
+               while (iterator.hasNext()) {
+                   Widget widget = (Widget) iterator.next();
+                   values.put(widget.getName(),widget.getValue());
+               }
+            }
+            
+        }
+
+    }
+    
 }
