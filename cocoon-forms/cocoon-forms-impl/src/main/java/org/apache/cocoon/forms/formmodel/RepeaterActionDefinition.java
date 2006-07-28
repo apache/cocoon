@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.binding.BindingException;
+import org.apache.cocoon.forms.binding.RepeaterJXPathBinding;
 import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 
@@ -202,4 +204,72 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             });
         }
     }
+    
+
+  
+    public static class ChangePageActionDefinition extends RepeaterActionDefinition {
+
+       protected int method;
+       
+       public static final int FIRST = 0; 
+       public static final int PREV = 1;
+       public static final int NEXT = 2;
+       public static final int LAST = 3;
+       public static final int CUSTOM = 4;
+
+        /**
+         * initialize this definition with the other, sort of like a copy constructor
+         */
+        public void initializeFrom(WidgetDefinition definition) throws Exception {
+            super.initializeFrom(definition);
+            if(definition instanceof ChangePageActionDefinition) {
+                ChangePageActionDefinition other = (ChangePageActionDefinition)definition;
+                this.method = other.method;
+            } else {
+                throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
+            }
+        }
+
+        public ChangePageActionDefinition(String repeaterName, int m) {
+            super(repeaterName);
+            
+            this.method = m;
+            
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
+                    
+                    int page = repeater.getCurrentPage();
+                    
+                    if (method == FIRST) {
+                        page = 0;
+                    } else if (method == PREV && page > 0) {
+                        page = repeater.getCurrentPage() - 1;
+                    } else if (method == NEXT && page < repeater.getStorage().getMaxPage()) {
+                        page = repeater.getCurrentPage() + 1;
+                    } else if (method == LAST) {
+                        page = repeater.getStorage().getMaxPage();
+                    } else if (method == CUSTOM) {
+                        ((Integer)repeater.getForm().lookupWidget("page-custom").getValue()).intValue();
+                    } else {
+                        return;
+                    }
+                    
+                    if (repeater.isPageable()) {
+                        try {
+                            if (repeater.validate()) {
+                                repeater.getStorage().doPageSave();
+                                repeater.setCurrentPage(page);
+                                repeater.getStorage().doPageLoad();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } 
+                }
+            });
+        }
+    }
+    
+    
 }
