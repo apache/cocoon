@@ -30,6 +30,10 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private int maxSize;
     private boolean orderable;
     private RepeaterListener listener;
+    
+    private boolean pageable=false;
+    private int initialPage=0;
+    private int pageSize;
 
     public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable, boolean orderable) {
         super();
@@ -39,7 +43,22 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         this.orderable = orderable;
     }
     
-    /**
+    
+    
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable,boolean orderable,boolean pageable, int initialPage, int pageSize) {
+		super();
+		this.initialSize = initialSize;
+		this.minSize = minSize;
+		this.maxSize = maxSize;
+		this.orderable = orderable;
+		this.pageable = pageable;
+		this.initialPage = initialPage;
+		this.pageSize = pageSize;
+	}
+
+
+
+	/**
      * initialize this definition with the other, sort of like a copy constructor
      */
     public void initializeFrom(WidgetDefinition definition) throws Exception {
@@ -93,5 +112,27 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     public RepeaterListener getRepeaterListener() {
         return this.listener;
     }
+
+
+
+	public int getInitialPage() {
+		return initialPage;
+	}
+
+
+
+	public boolean isPageable() {
+		return pageable;
+	}
+
+
+
+	public int getPageSize() {
+		return pageSize;
+	}
+    
+    
+    
+    
     
 }
