@@ -107,6 +107,21 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
             String select = DomHelper.getAttribute(element, "select");
             return new RepeaterActionDefinition.InsertRowsActionDefinition(repeater, select);
 
+        } else if ("page-first".equals(actionCommand)) {
+            return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.FIRST);
+        
+        } else if ("page-prev".equals(actionCommand)) {
+            return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.PREV);
+        
+        } else if ("page-next".equals(actionCommand)) {
+            return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.NEXT);
+        
+        } else if ("page-last".equals(actionCommand)) {
+            return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.LAST);
+        
+        } else if ("page-custom".equals(actionCommand)) {
+            return new RepeaterActionDefinition.ChangePageActionDefinition(repeater, RepeaterActionDefinition.ChangePageActionDefinition.CUSTOM);
+
         } else {
             throw new Exception("Unknown repeater action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));
         }

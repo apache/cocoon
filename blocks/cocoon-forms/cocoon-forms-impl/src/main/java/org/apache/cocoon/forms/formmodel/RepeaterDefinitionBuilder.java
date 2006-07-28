@@ -18,6 +18,7 @@ package org.apache.cocoon.forms.formmodel;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
@@ -54,7 +55,18 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
         boolean orderable = DomHelper.getAttributeAsBoolean(repeaterElement, "orderable", false);
         boolean selectable = DomHelper.getAttributeAsBoolean(repeaterElement, "selectable", false);
 
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable);
+        boolean pageable = false;
+        int initialPage = 0;
+        int pageSize = 0;
+        
+        Element pagesElement = DomHelper.getChildElement(repeaterElement,FormsConstants.DEFINITION_NS,"pages");
+        if (pagesElement!=null) {
+            pageable = true;
+            initialPage = DomHelper.getAttributeAsInteger(pagesElement, "initial", 0);
+            pageSize = DomHelper.getAttributeAsInteger(pagesElement, "size", 0);
+        }
+        
+        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, pageable,initialPage,pageSize);
         super.setupDefinition(repeaterElement, repeaterDefinition);
         setDisplayData(repeaterElement, repeaterDefinition);
 
