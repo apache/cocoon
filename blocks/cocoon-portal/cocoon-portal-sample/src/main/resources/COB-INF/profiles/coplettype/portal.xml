@@ -16,11 +16,11 @@
 -->
 <!-- SVN $Id$ -->
 <coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <coplet-base-data id="URICoplet">
+   <coplet-type id="URICoplet">
       <coplet-adapter>uri</coplet-adapter>
-   </coplet-base-data>
+   </coplet-type>
 
-   <coplet-base-data id="Portlet">
+   <coplet-type id="Portlet">
       <coplet-adapter>portlet</coplet-adapter>
       <configuration>
         <name>full-screen</name>
@@ -30,14 +30,14 @@
         <name>handle-sizing</name>
         <value xsi:type="java:java.lang.Boolean">true</value>
       </configuration>
-   </coplet-base-data>
+   </coplet-type>
 
-   <coplet-base-data id="WSRP">
+   <coplet-type id="WSRP">
       <coplet-adapter>wsrp</coplet-adapter>
       <configuration>
       	<name>buffer</name>
       	<value xsi:type="java:java.lang.Boolean">true</value>
       </configuration>
-   </coplet-base-data>
+   </coplet-type>
 </coplets>
 

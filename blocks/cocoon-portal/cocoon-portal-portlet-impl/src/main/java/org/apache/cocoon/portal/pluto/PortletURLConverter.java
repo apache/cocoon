@@ -25,7 +25,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import org.apache.pluto.util.StringUtils;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 
 /**
  * Create the URL for a portlet.
@@ -49,7 +49,7 @@ public class PortletURLConverter {
      * Constructor used when the URL will be marshalled.
      * @param cid The coplet id.
      */
-    public PortletURLConverter(CopletInstanceData cid) {
+    public PortletURLConverter(CopletInstance cid) {
         this.portletId = cid.getId();
     }
 

@@ -22,7 +22,6 @@ import java.util.Enumeration;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.commons.lang.BooleanUtils;
 
 /**
  * Helper class containing the information about common parts for each link
@@ -87,10 +86,7 @@ public class LinkInfo {
 
     public String getBase(Boolean secure) {
         // if no information is provided, we stay with the same protocol
-        if ( secure == null ) {
-            secure = BooleanUtils.toBooleanObject(this.isSecure);
-        }
-        if ( secure.booleanValue() ) {
+        if ( (secure == null && this.isSecure ) || (secure != null && secure.booleanValue() )) {
             return this.secureLinkBase + this.url.toString();
         }
         return this.httpLinkBase + this.url.toString();

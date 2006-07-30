@@ -30,7 +30,7 @@ public class CopletEventDescription extends CopletMapping {
     /**
      * @see org.apache.cocoon.portal.acting.helpers.Mapping#getEvent(org.apache.cocoon.portal.PortalService, java.lang.Object)
      */
-    public Event getEvent(PortalService service, Object data) {
-        return super.getEvent(service, (data == null ? this.data : data));
+    public Event getEvent(PortalService service, Object eventData) {
+        return super.getEvent(service, (eventData == null ? this.data : eventData));
     }
 }

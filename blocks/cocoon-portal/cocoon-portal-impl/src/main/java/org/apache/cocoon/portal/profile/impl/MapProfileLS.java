@@ -81,8 +81,8 @@ public class MapProfileLS
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
         this.converter = (Converter)this.manager.lookup(Converter.ROLE);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);

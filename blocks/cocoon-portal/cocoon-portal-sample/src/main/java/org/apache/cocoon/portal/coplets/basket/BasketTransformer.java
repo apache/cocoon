@@ -24,7 +24,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.BasketManager.ActionInfo;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -107,7 +107,7 @@ public class BasketTransformer
                     ci = new ContentItem(href, addContent);
                 } else {
                     final String copletId = attr.getValue("coplet");
-                    final CopletInstanceData cid = service.getProfileManager().getCopletInstanceData(copletId);                    
+                    final CopletInstance cid = service.getProfileManager().getCopletInstanceData(copletId);                    
                     ci = new ContentItem(cid, addContent);
                 }
 

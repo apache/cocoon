@@ -41,8 +41,8 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.deployment.DeploymentEvent;
 import org.apache.cocoon.portal.deployment.DeploymentException;
 import org.apache.cocoon.portal.deployment.DeploymentStatus;
@@ -509,9 +509,9 @@ public class PortletDefinitionRegistryImpl
             }
             if ( this.createCoplets ) {
                 // TODO - parse coplet.xml if available
-                final CopletBaseData cbd = pcm.getProfileManager().getCopletBaseData(this.copletBaseDataName);
+                final CopletType cbd = pcm.getProfileManager().getCopletType(this.copletBaseDataName);
                 // TODO - check portletId for invalid characters!
-                final CopletData cd = pcm.getCopletFactory().newInstance(cbd, portlet.getId().toString());
+                final CopletDefinition cd = pcm.getCopletFactory().newInstance(cbd, portlet.getId().toString());
                 cd.setAttribute("portlet", portlet.getId().toString());
                 cd.setAttribute("buffer", Boolean.TRUE);
                 if ( this.getLogger().isInfoEnabled() ) {

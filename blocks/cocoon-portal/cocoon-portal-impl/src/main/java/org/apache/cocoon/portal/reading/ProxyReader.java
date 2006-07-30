@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
 import org.apache.cocoon.reading.ServiceableReader;
 import org.apache.cocoon.util.NetUtils;
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
 public class ProxyReader extends ServiceableReader implements Disposable {
 
     /** The coplet instance data. */
-    protected CopletInstanceData copletInstanceData;
+    protected CopletInstance copletInstanceData;
 
     /** The HTTP response. */
     protected Response response;
@@ -69,8 +69,8 @@ public class ProxyReader extends ServiceableReader implements Disposable {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
     }
 
@@ -154,17 +154,17 @@ public class ProxyReader extends ServiceableReader implements Disposable {
 
     /**
      * Establish the HttpURLConnection to the given uri.
-     * @param request the original request
+     * @param req the original request
      * @param uri the remote uri
      * @return the established HttpURLConnection
      * @throws IOException on any exception
      */
-    protected HttpURLConnection connect(Request request, String uri)
+    protected HttpURLConnection connect(Request req, String uri)
         throws IOException {
         String cookie =
             (String) copletInstanceData.getTemporaryAttribute(ProxyTransformer.COOKIE);
 
-        Enumeration enumeration = request.getParameterNames();
+        Enumeration enumeration = req.getParameterNames();
 
         boolean firstattribute = true;
         StringBuffer query = new StringBuffer();
@@ -175,7 +175,7 @@ public class ProxyReader extends ServiceableReader implements Disposable {
 
             if (!linkService.isInternalParameterName(paramName)) {
 
-                String[] paramValues = request.getParameterValues(paramName);
+                String[] paramValues = req.getParameterValues(paramName);
 
                 for (int i = 0; i < paramValues.length; i++) {
                     if (firstattribute) {
@@ -216,11 +216,11 @@ public class ProxyReader extends ServiceableReader implements Disposable {
     /**
      * Copy header fields from external response to original response.
      * @param connection the connection to the external resource
-     * @param response the original HTTP response.
+     * @param res the original HTTP response.
      */
     private void copyHeaderFields(
         HttpURLConnection connection,
-        Response response) {
+        Response res) {
         String[] fieldNames =
             new String[] {
                 "Content-Range",
@@ -232,7 +232,7 @@ public class ProxyReader extends ServiceableReader implements Disposable {
         for (int i = 0; i < fieldNames.length; i++) {
             String value = connection.getHeaderField(fieldNames[i]);
             if (value != null) {
-                response.setHeader(fieldNames[i], value);
+                res.setHeader(fieldNames[i], value);
             }
 
         }

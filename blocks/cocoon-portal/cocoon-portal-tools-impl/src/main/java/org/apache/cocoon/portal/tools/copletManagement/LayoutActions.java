@@ -25,9 +25,9 @@ import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletFactory;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -245,7 +245,7 @@ public class LayoutActions {
 			}
 		}
 		for(Iterator it = lets.iterator(); it.hasNext();) {
-			CopletData cd = (CopletData) it.next();
+            CopletDefinition cd = (CopletDefinition) it.next();
 			String cdid = cd.getId();
 			for(Iterator it2 = coplets.iterator(); it2.hasNext();) {
 				String cdidTmp = (String) it2.next();
@@ -255,10 +255,10 @@ public class LayoutActions {
 		}
 
 		for(Iterator it = copletDatas.iterator(); it.hasNext();) {
-			CopletData cd = (CopletData) it.next();
+            CopletDefinition cd = (CopletDefinition) it.next();
 
 			try {
-				CopletInstanceData cinst = cf.newInstance(cd);
+				CopletInstance cinst = cf.newInstance(cd);
 				CopletLayout lay = (CopletLayout) lf.newInstance("coplet");
 				lay.setCopletInstanceData(cinst);
 			    if(obj instanceof Item) {
@@ -279,7 +279,7 @@ public class LayoutActions {
 		return copletDatas;
     }
 
-    public CopletInstanceData getCopletInstanceData(String id) {
+    public CopletInstance getCopletInstanceData(String id) {
         Object obj = getLayoutElement(layout, id, "", 1);
         if(obj instanceof CopletLayout) {
             return ((CopletLayout) obj).getCopletInstanceData();

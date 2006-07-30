@@ -19,10 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
-import org.apache.cocoon.portal.event.CopletDataEvent;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
+import org.apache.cocoon.portal.event.CopletDefinitionEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -59,7 +59,7 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceEvent event, PortalService service) {
-        CopletInstanceDataFeatures.addChangedCopletInstanceData(service, event.getTarget());
+        CopletInstanceFeatures.addChangedCopletInstanceData(service, event.getTarget());
     }
 
     /**
@@ -68,9 +68,9 @@ public final class InternalEventReceiver
     public void inform(JXPathEvent event, PortalService service) {
         final Object target = event.getObject();
         if ( target != null && event.getPath() != null && event.getValue() != null) {
-            if ( target instanceof CopletInstanceData && event.getPath().equals("size") ) {
+            if ( target instanceof CopletInstance && event.getPath().equals("size") ) {
                 int newSize = new Integer(event.getValue().toString()).intValue();
-                CopletInstanceSizingEvent e = new CopletInstanceSizingEvent((CopletInstanceData)target, newSize);
+                CopletInstanceSizingEvent e = new CopletInstanceSizingEvent((CopletInstance)target, newSize);
                 this.inform(e, service);
             } else {
                 final JXPathContext jxpathContext = JXPathContext.newContext(target);
@@ -83,16 +83,16 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceSizingEvent event, PortalService service) {
-        final CopletInstanceData cid = event.getTarget();
+        final CopletInstance cid = event.getTarget();
         Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
         if ( cid != null ) {
             final int oldSize = cid.getSize();
             cid.setSize(event.getSize());
-            if ( event.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
-                CopletLayout layout = CopletInstanceDataFeatures.searchLayout(cid.getId(), rootLayout);
+            if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
+                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
                 LayoutFeatures.setFullScreenInfo(rootLayout, layout);
-            } else if ( event.getSize() == CopletInstanceData.SIZE_MAXIMIZED ) {
-                CopletLayout layout = CopletInstanceDataFeatures.searchLayout(cid.getId(), rootLayout);
+            } else if ( event.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
+                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
                     final RenderInfo info = new RenderInfo(layout, container);
@@ -102,10 +102,10 @@ public final class InternalEventReceiver
                     LayoutFeatures.setFullScreenInfo(rootLayout, layout);                	
                 }
             }
-            if ( oldSize == CopletInstanceData.SIZE_FULLSCREEN ) {
+            if ( oldSize == CopletInstance.SIZE_FULLSCREEN ) {
                 LayoutFeatures.setFullScreenInfo(rootLayout, null);
-            } else if ( oldSize == CopletInstanceData.SIZE_MAXIMIZED ) {
-                CopletLayout layout = CopletInstanceDataFeatures.searchLayout(cid.getId(), rootLayout);
+            } else if ( oldSize == CopletInstance.SIZE_MAXIMIZED ) {
+                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
                 	LayoutFeatures.setRenderInfo(container.getParent(), null);
@@ -115,7 +115,7 @@ public final class InternalEventReceiver
                 }
             }
         } else {
-            if ( event.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
+            if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
                 LayoutFeatures.setFullScreenInfo(rootLayout, null);
             }
         }
@@ -125,14 +125,14 @@ public final class InternalEventReceiver
      * @see Receiver
      */
     public void inform(CopletInstanceDataRemovedEvent e, PortalService service) {
-        CopletInstanceData cid = e.getTarget();
+        CopletInstance cid = e.getTarget();
         // full screen?
-        if ( cid.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
+        if ( cid.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
             LayoutFeatures.setFullScreenInfo(rootLayout, null);
-        } else if ( cid.getSize() == CopletInstanceData.SIZE_MAXIMIZED ) {
+        } else if ( cid.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-            CopletLayout layout = CopletInstanceDataFeatures.searchLayout(cid.getId(), rootLayout);
+            CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
             Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
             if ( container != null ) {
                 LayoutFeatures.setRenderInfo(container.getParent(), null);
@@ -143,8 +143,8 @@ public final class InternalEventReceiver
     /**
      * @see Receiver
      */
-    public void inform(CopletDataEvent e, PortalService service) {
-        CopletData data = e.getTarget();
+    public void inform(CopletDefinitionEvent e, PortalService service) {
+        CopletDefinition data = e.getTarget();
         List instances = null;
 
         ProfileManager profileManager = service.getProfileManager();
@@ -157,7 +157,7 @@ public final class InternalEventReceiver
   
             Iterator i = instances.iterator();
             while ( i.hasNext() ) {
-                CopletInstanceData current = (CopletInstanceData) i.next();
+                CopletInstance current = (CopletInstance) i.next();
                 Event event = new CopletJXPathEvent(current, path, value);
                 eventManager.send(event);
             }

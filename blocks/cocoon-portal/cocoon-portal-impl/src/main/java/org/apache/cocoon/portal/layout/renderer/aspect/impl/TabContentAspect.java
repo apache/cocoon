@@ -111,7 +111,7 @@ public class TabContentAspect
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler handler)
@@ -120,7 +120,7 @@ public class TabContentAspect
         	// check for maximized information
         	final RenderInfo maximizedInfo = LayoutFeatures.getRenderInfo(layout);
 
-            final TabPreparedConfiguration config = (TabPreparedConfiguration)context.getAspectConfiguration();
+            final TabPreparedConfiguration config = (TabPreparedConfiguration)rendererContext.getAspectConfiguration();
 
             if ( config.rootTag ) {
                 XMLUtils.startElement(handler, config.tagName);

@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -44,7 +44,7 @@ public class LayoutRemoveEvent
             this.target = service.getProfileManager().getPortalLayout(null, eventData.substring(1));
         } else if ( eventData.charAt(0) == 'C' ) {
             final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-            this.target = CopletInstanceDataFeatures.searchLayout(eventData.substring(1), rootLayout);            
+            this.target = CopletInstanceFeatures.searchLayout(eventData.substring(1), rootLayout);            
         }
     }
 

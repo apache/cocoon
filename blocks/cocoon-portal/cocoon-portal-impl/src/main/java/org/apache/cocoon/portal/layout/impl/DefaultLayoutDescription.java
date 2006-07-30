@@ -62,8 +62,8 @@ public class DefaultLayoutDescription
         return this.rendererNames.iterator();
     }
 
-    public void addRendererName(String name) {
-        this.rendererNames.add( name );
+    public void addRendererName(String rendererName) {
+        this.rendererNames.add( rendererName );
     }
 
     /**

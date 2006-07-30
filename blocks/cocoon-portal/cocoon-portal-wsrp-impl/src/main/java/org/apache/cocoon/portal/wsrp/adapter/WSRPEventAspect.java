@@ -23,7 +23,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
@@ -55,7 +55,7 @@ public class WSRPEventAspect implements EventAspect, ThreadSafe {
                 }
             }
             final String copletid = values[0];
-            final CopletInstanceData cid = service.getProfileManager().getCopletInstanceData(copletid);
+            final CopletInstance cid = service.getProfileManager().getCopletInstanceData(copletid);
 
             final Event e = new WSRPEvent(cid, parameters);
             service.getEventManager().send(e);

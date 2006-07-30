@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
 public final class CopletLayout extends Layout {
 
     /** The coplet instance data. */
-    protected CopletInstanceData copletInstanceData;
+    protected CopletInstance copletInstanceData;
 
     /**
      * Create a new coplet layout object.
@@ -40,11 +40,11 @@ public final class CopletLayout extends Layout {
         super(id, name);
     }
 
-    public void setCopletInstanceData(CopletInstanceData cid) {
+    public void setCopletInstanceData(CopletInstance cid) {
         this.copletInstanceData = cid;
     }
 
-    public CopletInstanceData getCopletInstanceData() {
+    public CopletInstance getCopletInstanceData() {
         return this.copletInstanceData;
     }
 

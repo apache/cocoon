@@ -16,8 +16,8 @@
 package org.apache.cocoon.portal.event.coplet;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
@@ -44,10 +44,10 @@ public class CopletInstanceSizingEvent
         this.target = service.getProfileManager().getCopletInstanceData(cid);
     }
 
-    public CopletInstanceSizingEvent(CopletInstanceData target, int size) {
+    public CopletInstanceSizingEvent(CopletInstance target, int size) {
         super(target);
-        if ( size < CopletInstanceData.SIZE_MINIMIZED ||
-             size > CopletInstanceData.SIZE_FULLSCREEN ) {
+        if ( size < CopletInstance.SIZE_MINIMIZED ||
+             size > CopletInstance.SIZE_FULLSCREEN ) {
             throw new IllegalArgumentException("Unknown size for coplet: " + size);
         }
         this.size = size;
@@ -62,7 +62,7 @@ public class CopletInstanceSizingEvent
      */
     public boolean equalsEvent(ComparableEvent event) {
         if ( event instanceof CopletInstanceEvent
-             && CopletInstanceDataFeatures.isSizingEvent((CopletInstanceEvent)event) ) {
+             && CopletInstanceFeatures.isSizingEvent((CopletInstanceEvent)event) ) {
             if ( this.getTarget().equals( ((CopletInstanceEvent)event).getTarget()) ) {
                 return true;
             }

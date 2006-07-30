@@ -43,10 +43,10 @@ public final class ProfileManagerAspectChain {
                           Configuration   conf)
     throws ConfigurationException {
         if ( conf != null ) {
-            Configuration[] aspects = conf.getChildren("aspect");
-            for(int i=0; i < aspects.length; i++) {
+            final Configuration[] aspectConfigs = conf.getChildren("aspect");
+            for(int i=0; i < aspectConfigs.length; i++) {
                 this.process = true;
-                final Configuration current = aspects[i];
+                final Configuration current = aspectConfigs[i];
                 final String role = current.getAttribute("type");
                 try {
                     ProfileManagerAspect rAspect = (ProfileManagerAspect) selector.select(role);

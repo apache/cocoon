@@ -36,21 +36,22 @@ public class LayoutModule
      */
     public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
     throws ConfigurationException {
-        int pos = name.indexOf('/');
+        String key = name;
+        int pos = key.indexOf('/');
         String path;
         if ( pos == -1 ) {
             path = null;
         } else {
-            path = name.substring(pos + 1);
-            name = name.substring(0, pos);
+            path = key.substring(pos + 1);
+            key = key.substring(0, pos);
         }
         // is the layout key specified?
-        pos = name.indexOf(':');
+        pos = key.indexOf(':');
         String layoutKey = null;
-        String layoutId = name;
+        String layoutId = key;
         if ( pos != -1 ) {
-            layoutKey = name.substring(0, pos);
-            layoutId = name.substring(pos + 1);
+            layoutKey = key.substring(0, pos);
+            layoutId = key.substring(pos + 1);
         }
 
         // get the layout

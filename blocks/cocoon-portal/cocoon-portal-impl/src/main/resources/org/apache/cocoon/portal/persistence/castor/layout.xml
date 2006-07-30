@@ -94,10 +94,10 @@
       <bind-xml name="name" node="attribute"/>
     </field>
 
-    <field name="copletInstanceData"
+    <field name="copletInstance"
            type="java.lang.String"
            handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
-      <bind-xml name="coplet-instance-data"/>
+      <bind-xml name="coplet-instance"/>
     </field>
   </class>
 

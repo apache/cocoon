@@ -47,8 +47,8 @@ public final class DefaultProfileManagerAspectContext
 	/**
 	 * @see org.apache.cocoon.portal.profile.ProfileManagerAspectContext#invokeNext(org.apache.cocoon.portal.scratchpad.Profile)
 	 */
-	public void invokeNext(Profile profile) {
-        this.profile = profile;
+	public void invokeNext(Profile portalProfile) {
+        this.profile = portalProfile;
         if (this.iterator.hasNext()) {
             this.config = (Parameters)this.configIterator.next();
             final ProfileManagerAspect aspect = (ProfileManagerAspect) iterator.next();

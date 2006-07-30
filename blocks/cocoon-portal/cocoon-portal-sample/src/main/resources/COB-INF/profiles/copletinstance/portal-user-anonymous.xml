@@ -16,19 +16,19 @@
 -->
 <!-- SVN $Id$ -->
 <coplets>
-   <coplet-instance-data id="PortalIntro_1">
-      <coplet-data>PortalIntro</coplet-data>
-   </coplet-instance-data>
-   <coplet-instance-data id="PortalRight_1">
-      <coplet-data>PortalRight</coplet-data>
-   </coplet-instance-data>
-   <coplet-instance-data id="PortalLeft_1">
-      <coplet-data>PortalLeft</coplet-data>
-   </coplet-instance-data>
-   <coplet-instance-data id="PortalBottom_1">
-      <coplet-data>PortalBottom</coplet-data>
-   </coplet-instance-data>
-   <coplet-instance-data id="Login_1">
-      <coplet-data>Login</coplet-data>
-   </coplet-instance-data>
+   <coplet-instance id="PortalIntro_1">
+      <coplet-definition>PortalIntro</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalRight_1">
+      <coplet-definition>PortalRight</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalLeft_1">
+      <coplet-definition>PortalLeft</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="PortalBottom_1">
+      <coplet-definition>PortalBottom</coplet-definition>
+   </coplet-instance>
+   <coplet-instance id="Login_1">
+      <coplet-definition>Login</coplet-definition>
+   </coplet-instance>
 </coplets>

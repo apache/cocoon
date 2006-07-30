@@ -38,10 +38,10 @@ public final class EventAspectChain {
     public void configure(ServiceSelector selector, Configuration conf) 
     throws ConfigurationException {
         if ( conf != null ) {
-            Configuration[] aspects = conf.getChildren("aspect");
-            if ( aspects != null ) {
-                for(int i=0; i < aspects.length; i++) {
-                    final Configuration current = aspects[i];
+            final Configuration[] aspectConfigs = conf.getChildren("aspect");
+            if ( aspectConfigs != null ) {
+                for(int i=0; i < aspectConfigs.length; i++) {
+                    final Configuration current = aspectConfigs[i];
                     final String role = current.getAttribute("type");
                     try {
                         this.aspects.add(selector.select(role));

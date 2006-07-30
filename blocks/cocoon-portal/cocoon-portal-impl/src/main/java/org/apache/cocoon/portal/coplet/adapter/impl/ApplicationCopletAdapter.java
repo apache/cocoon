@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
@@ -43,9 +43,9 @@ import org.xml.sax.SAXException;
 public class ApplicationCopletAdapter extends URICopletAdapter {
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, java.lang.String, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, java.lang.String, org.xml.sax.ContentHandler)
      */
-    public void streamContent(final CopletInstanceData coplet,
+    public void streamContent(final CopletInstance coplet,
                               final String uri,
                               final ContentHandler contentHandler)
     throws SAXException {
@@ -71,7 +71,7 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
 
         if ( e instanceof CopletLinkEvent ) {
             CopletLinkEvent event = (CopletLinkEvent) e;
-            CopletInstanceData coplet = event.getTarget();
+            CopletInstance coplet = event.getTarget();
 
             // this is a normal link event, so save the url in the instance data
             // for ProxyTransformer
@@ -120,7 +120,7 @@ public class ApplicationCopletAdapter extends URICopletAdapter {
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstanceData coplet,
+    protected boolean renderErrorContent(CopletInstance coplet,
                                          ContentHandler handler)
     throws SAXException {
         handler.startDocument();

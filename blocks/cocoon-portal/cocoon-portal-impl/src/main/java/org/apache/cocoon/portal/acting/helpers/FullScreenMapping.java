@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal.acting.helpers;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -36,10 +36,10 @@ public class FullScreenMapping extends Mapping {
      */
     public Event getEvent(PortalService service, Object data) {
         final ProfileManager manager = service.getProfileManager();
-        final CopletInstanceData cid = manager.getCopletInstanceData(this.copletId);
+        final CopletInstance cid = manager.getCopletInstanceData(this.copletId);
         //final Layout layout = manager.getPortalLayout(null, layoutId) ;
         
-        Event e = new CopletInstanceSizingEvent(cid, CopletInstanceData.SIZE_FULLSCREEN);
+        Event e = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_FULLSCREEN);
         return e;
     }
 }

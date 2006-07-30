@@ -71,12 +71,12 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
                       PortalService         service,
                       ContentHandler        handler)
     throws SAXException {
-        PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         if ( config.rootTag) {
             final AttributesImpl ai = new AttributesImpl();
             if ( config.rootTagClass != null ) {
@@ -87,7 +87,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
             }
             XMLUtils.startElement(handler, config.tagName, ai);
         }
-        super.toSAX(context, layout, service, handler);
+        super.toSAX(rendererContext, layout, service, handler);
         if ( config.rootTag ) {
             XMLUtils.endElement(handler, config.tagName);
         }
@@ -96,12 +96,12 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processItem(org.apache.cocoon.portal.layout.Item, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
-	protected void processItem(RendererAspectContext context,
+	protected void processItem(RendererAspectContext rendererContext,
                                Item                  item,
 		                       ContentHandler        handler,
 		                       PortalService         service)
     throws SAXException {
-        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Layout layout = item.getLayout();
 
         if ( config.itemTag ) {
@@ -128,13 +128,13 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractCompositeAspect#processMaximizedItem(org.apache.cocoon.portal.layout.Item, org.apache.cocoon.portal.layout.Layout, org.xml.sax.ContentHandler, org.apache.cocoon.portal.PortalService)
 	 */
-	protected void processMaximizedItem(RendererAspectContext context,
+	protected void processMaximizedItem(RendererAspectContext rendererContext,
                                         Item                  item,
                                         Layout                maximizedLayout,
                                         ContentHandler        handler,
                                         PortalService         service)
     throws SAXException {
-        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
         Map parameters = item.getParameters();
         if ( config.itemTag ) {
             if (parameters.size() == 0) {

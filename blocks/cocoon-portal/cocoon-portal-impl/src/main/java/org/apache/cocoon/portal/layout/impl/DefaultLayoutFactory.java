@@ -234,9 +234,10 @@ public class DefaultLayoutFactory
             throw new LayoutException("LayoutDescription with name '" + layoutName + "' not found.");
         }
 
-        if ( layoutDescription.createId() && id == null ) {
+        String layoutId = id;
+        if ( layoutDescription.createId() && layoutId == null ) {
             synchronized (this) {
-                id = layoutName + '_' + idCounter;
+                layoutId = layoutName + '_' + idCounter;
                 idCounter += 1;
             }
         }
@@ -244,7 +245,7 @@ public class DefaultLayoutFactory
         try {
             Class clazz = ClassUtils.loadClass( layoutDescription.getClassName() );
             Constructor constructor = clazz.getConstructor(new Class[] {String.class, String.class});
-            layout = (Layout)constructor.newInstance(new Object[] {id, layoutName});
+            layout = (Layout)constructor.newInstance(new Object[] {layoutId, layoutName});
         } catch (Exception e) {
             throw new LayoutException("Unable to create new layout instance for: " + layoutDescription , e );
         }

@@ -87,13 +87,13 @@
 
       <p>Picture <xsl:value-of select="$showpicindex"/> of <xsl:value-of select="$maxp"/>
         <xsl:if test="$showpicindex &gt; 1">
-          - <cl:link path="attributes/picture" value="{$picp}" coplet="Gallery-Petstore">&#xAB; Previous</cl:link>
+          - <cl:link path="attributes/picture" value="{$picp}" coplet="GalleryPetstore_1">&#xAB; Previous</cl:link>
         </xsl:if>
         <xsl:if test="$showpicindex &lt; $maxp">
-          - <cl:link path="attributes/picture" value="{$picn}" coplet="Gallery-Petstore">Next &#xBB;</cl:link>
+          - <cl:link path="attributes/picture" value="{$picn}" coplet="GalleryPetstore_1">Next &#xBB;</cl:link>
         </xsl:if>
       </p>
-      <p><cl:link path="attributes/picture" value="{picture[position()=$showpicindex]}" coplet="GalleryViewer-1">Push to Viewer</cl:link></p>
+      <p><cl:link path="attributes/picture" value="{picture[position()=$showpicindex]}" coplet="GalleryViewer_1">Push to Viewer</cl:link></p>
       <img src="{picture[position()=$showpicindex]}"/>
       <p>Date: <xsl:value-of select="java:java.util.Date.new()"/></p>
     </xsl:otherwise>

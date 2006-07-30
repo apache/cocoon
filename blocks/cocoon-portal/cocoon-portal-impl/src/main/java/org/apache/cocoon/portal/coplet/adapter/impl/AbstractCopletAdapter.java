@@ -32,9 +32,9 @@ import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
@@ -172,8 +172,8 @@ public abstract class AbstractCopletAdapter
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.cache = (Cache)this.manager.lookup(Cache.ROLE);
         this.runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
     }
@@ -196,11 +196,11 @@ public abstract class AbstractCopletAdapter
      * First the coplet data is queried and if it doesn't provide an
      * attribute with the given name, the coplet base data is used.
      */
-    protected Object getConfiguration(CopletInstanceData coplet, String key) {
-        CopletData copletData = coplet.getCopletData();
+    protected Object getConfiguration(CopletInstance coplet, String key) {
+        CopletDefinition copletData = coplet.getCopletDefinition();
         Object data = copletData.getAttribute( key );
         if ( data == null) {
-            data = copletData.getCopletBaseData().getCopletConfig().get( key );
+            data = copletData.getCopletType().getCopletConfig().get( key );
         }
         return data;
     }
@@ -211,7 +211,7 @@ public abstract class AbstractCopletAdapter
      * attribute with the given name, the coplet base data is used.
      * If no value is found the default value is returned.
      */
-    protected Object getConfiguration(CopletInstanceData coplet,
+    protected Object getConfiguration(CopletInstance coplet,
                                       String key,
                                       Object defaultValue) {
         Object data = this.getConfiguration(coplet, key);
@@ -224,19 +224,19 @@ public abstract class AbstractCopletAdapter
     /**
      * Implement this and not toSAX().
      */
-    public abstract void streamContent(CopletInstanceData coplet, 
+    public abstract void streamContent(CopletInstance coplet, 
                                        ContentHandler contentHandler)
     throws SAXException; 
 
     /**
      * This method streams the content of a coplet instance data.
      * It handles buffering and timeout setting and calls
-     * {@link #streamContent(CopletInstanceData, ContentHandler)}
+     * {@link #streamContent(CopletInstance, ContentHandler)}
      * for creating the content.
      *
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
      */
-    public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
+    public void toSAX(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
         final long startTime = System.currentTimeMillis();
         Boolean bool = (Boolean) this.getConfiguration( coplet, CONFIGURATION_BUFFERING );
@@ -271,10 +271,10 @@ public abstract class AbstractCopletAdapter
                 }
             } catch (Exception exception ) {
                 error = exception;
-                this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
+                this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), exception);
             } catch (Throwable t ) {
                 error = new ProcessingException("Unable to get content of coplet: " + coplet.getId(), t);
-                this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), t);                
+                this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), t);                
             }
 
             if ( read ) {
@@ -294,7 +294,7 @@ public abstract class AbstractCopletAdapter
         }
         if ( this.getLogger().isInfoEnabled() ) {
             final long msecs = System.currentTimeMillis() - startTime;
-            this.getLogger().info("Streamed coplet " + coplet.getCopletData().getId() +
+            this.getLogger().info("Streamed coplet " + coplet.getCopletDefinition().getId() +
                                   " (instance " + coplet.getId() + ") in " + msecs + "ms.");
         }
     }
@@ -302,7 +302,7 @@ public abstract class AbstractCopletAdapter
     /**
      * This method does the caching (if enabled).
      */
-    public void streamContentAndCache( final CopletInstanceData coplet,
+    public void streamContentAndCache( final CopletInstance coplet,
                                        final ContentHandler contentHandler)
     throws SAXException {
         // Is caching enabled?
@@ -368,25 +368,25 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void init(CopletInstanceData coplet) {
+    public void init(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void destroy(CopletInstanceData coplet) {
+    public void destroy(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void login(CopletInstanceData coplet) {
+    public void login(CopletInstance coplet) {
         // copy temporary attributes from the coplet data
-        Iterator iter = coplet.getCopletData().getAttributes().entrySet().iterator();
+        Iterator iter = coplet.getCopletDefinition().getAttributes().entrySet().iterator();
         while ( iter.hasNext() ) {
             Map.Entry entry = (Map.Entry)iter.next();
             if ( entry.getKey().toString().startsWith("temporary:") ) {
@@ -397,9 +397,9 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void logout(CopletInstanceData coplet) {
+    public void logout(CopletInstance coplet) {
         // nothing to do here, can be overwritten in subclasses
     }
 
@@ -411,7 +411,7 @@ public abstract class AbstractCopletAdapter
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstanceData coplet, 
+    protected boolean renderErrorContent(CopletInstance coplet, 
                                          ContentHandler     handler,
                                          Exception          error)
     throws SAXException {
@@ -422,19 +422,19 @@ public abstract class AbstractCopletAdapter
      * @see org.apache.cocoon.portal.event.Receiver
      */
     public void inform(CopletInstanceEvent event, PortalService service) {
-        final CopletInstanceData coplet = event.getTarget();
+        final CopletInstance coplet = event.getTarget();
 
         // do we ignore SizingEvents
         boolean ignoreSizing = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_IGNORE_SIZING_EVENTS, Boolean.TRUE)).booleanValue();
 
-        if ( !ignoreSizing || !CopletInstanceDataFeatures.isSizingEvent(event)) {
+        if ( !ignoreSizing || !CopletInstanceFeatures.isSizingEvent(event)) {
             boolean cleanupCache = true;
             boolean ignoreSimpleSizing = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_IGNORE_SIMPLE_SIZING_EVENTS, Boolean.FALSE)).booleanValue();
-            if ( ignoreSimpleSizing && CopletInstanceDataFeatures.isSizingEvent(event) ) {
-                int newSize = CopletInstanceDataFeatures.getSize(event);
+            if ( ignoreSimpleSizing && CopletInstanceFeatures.isSizingEvent(event) ) {
+                int newSize = CopletInstanceFeatures.getSize(event);
                 int oldSize = coplet.getSize();
-                if (  (oldSize == CopletInstanceData.SIZE_NORMAL || oldSize == CopletInstanceData.SIZE_MINIMIZED )
-                   && (newSize == CopletInstanceData.SIZE_NORMAL || newSize == CopletInstanceData.SIZE_MINIMIZED )) {
+                if (  (oldSize == CopletInstance.SIZE_NORMAL || oldSize == CopletInstance.SIZE_MINIMIZED )
+                   && (newSize == CopletInstance.SIZE_NORMAL || newSize == CopletInstance.SIZE_MINIMIZED )) {
                     cleanupCache = false;
                 }
             }
@@ -457,15 +457,15 @@ public abstract class AbstractCopletAdapter
     /**
      * Build the key for the global cache.
      */
-    protected String getCacheKey(CopletInstanceData coplet) {
+    protected String getCacheKey(CopletInstance coplet) {
         final Boolean useAttributes = (Boolean)this.getConfiguration(coplet,
                                                             CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES,
                                                             Boolean.FALSE);
         if ( !useAttributes.booleanValue() ) {
-            return "coplet:" + coplet.getCopletData().getId();
+            return "coplet:" + coplet.getCopletDefinition().getId();
         }
         final StringBuffer buffer = new StringBuffer("coplet:");
-        buffer.append(coplet.getCopletData().getId());
+        buffer.append(coplet.getCopletDefinition().getId());
         boolean hasParams = false;
         // first add attributes:
         // sort the keys
@@ -522,12 +522,12 @@ final class LoaderThread implements Runnable {
 
     private final AbstractCopletAdapter adapter;
     private final ContentHandler        handler;
-    private final CopletInstanceData    coplet;
+    private final CopletInstance    coplet;
     private final CountDown             finished;
     Exception exception;
 
     public LoaderThread(AbstractCopletAdapter adapter, 
-                         CopletInstanceData coplet,
+                         CopletInstance coplet,
                          ContentHandler handler) {
         this.adapter = adapter;
         this.coplet  = coplet;

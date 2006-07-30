@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -71,11 +71,11 @@ public class ProfileImpl implements Profile {
         this.createLayoutCollections();
     }
 
-    public void setCopletBaseDatas(Map copletBaseDatas) {
+    public void setCopletTypes(Map copletBaseDatas) {
         this.copletBaseDatas = copletBaseDatas;
     }
 
-    public void setCopletDatas(Map copletDatas) {
+    public void setCopletDefinitions(Map copletDatas) {
         this.copletDatas = copletDatas;
     }
 
@@ -83,7 +83,7 @@ public class ProfileImpl implements Profile {
         this.copletInstanceDatas = new HashMap();
         final Iterator i = copletInstanceDatas.iterator();
         while ( i.hasNext() ) {
-            final CopletInstanceData current = (CopletInstanceData) i.next();
+            final CopletInstance current = (CopletInstance) i.next();
             this.copletInstanceDatas.put(current.getId(), current);
         }
     }
@@ -96,23 +96,23 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletBaseDataObjects()
+     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletTypes()
      */
-    public Collection getCopletBaseDataObjects() {
+    public Collection getCopletTypes() {
         return this.copletBaseDatas.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletDataObjects()
+     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletDefinitions()
      */
-    public Collection getCopletDataObjects() {
+    public Collection getCopletDefinitions() {
         return this.copletDatas.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletInstanceDataObjects()
+     * @see org.apache.cocoon.portal.scratchpad.Profile#getCopletInstances()
      */
-    public Collection getCopletInstanceDataObjects() {
+    public Collection getCopletInstances() {
         return this.copletInstanceDatas.values();
     }
 
@@ -131,28 +131,28 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletBaseData(java.lang.String)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletType(java.lang.String)
      */
-    public CopletBaseData searchCopletBaseData(String copletBaseDataId) {
-        return (CopletBaseData) this.copletBaseDatas.get(copletBaseDataId);
+    public CopletType searchCopletType(String copletBaseDataId) {
+        return (CopletType) this.copletBaseDatas.get(copletBaseDataId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletData(java.lang.String)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinition(java.lang.String)
      */
-    public CopletData searchCopletData(String copletDataId) {
-        return (CopletData) this.copletDatas.get(copletDataId);
+    public CopletDefinition searchCopletDefinition(String copletDataId) {
+        return (CopletDefinition) this.copletDatas.get(copletDataId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDataObjects(org.apache.cocoon.portal.coplet.CopletBaseData)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(org.apache.cocoon.portal.coplet.CopletType)
      */
-    public Collection searchCopletDataObjects(CopletBaseData copletBaseData) {
+    public Collection searchCopletDefinitions(CopletType copletType) {
         final List list = new ArrayList();
-        final Iterator i = this.getCopletDataObjects().iterator();
+        final Iterator i = this.getCopletDefinitions().iterator();
         while ( i.hasNext() ) {
-            final CopletData current = (CopletData)i.next();
-            if ( current.getCopletBaseData().equals(copletBaseData) ) {
+            final CopletDefinition current = (CopletDefinition)i.next();
+            if ( current.getCopletType().equals(copletType) ) {
                 list.add(current);
             }
         }
@@ -160,32 +160,32 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDataObjects(java.lang.String)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletDefinitionObjects(java.lang.String)
      */
-    public Collection searchCopletDataObjects(String copletBaseDataId) {
-        final CopletBaseData cbd = this.searchCopletBaseData(copletBaseDataId);
+    public Collection searchCopletDefinitions(String copletTyoeId) {
+        final CopletType cbd = this.searchCopletType(copletTyoeId);
         if ( cbd != null ) {
-            return this.searchCopletDataObjects(cbd);
+            return this.searchCopletDefinitions(cbd);
         }
         return null;
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstanceData(java.lang.String)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstance(java.lang.String)
      */
-    public CopletInstanceData searchCopletInstanceData(String copletId) {
-        return (CopletInstanceData) this.copletInstanceDatas.get(copletId);
+    public CopletInstance searchCopletInstance(String copletId) {
+        return (CopletInstance) this.copletInstanceDatas.get(copletId);
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstanceDataObjects(org.apache.cocoon.portal.coplet.CopletData)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public Collection searchCopletInstanceDataObjects(CopletData copletData) {
+    public Collection searchCopletInstances(CopletDefinition copletData) {
         final List list = new ArrayList();
-        final Iterator i = this.getCopletInstanceDataObjects().iterator();
+        final Iterator i = this.getCopletInstances().iterator();
         while ( i.hasNext() ) {
-            final CopletInstanceData current = (CopletInstanceData)i.next();
-            if ( current.getCopletData().equals(copletData) ) {
+            final CopletInstance current = (CopletInstance)i.next();
+            if ( current.getCopletDefinition().equals(copletData) ) {
                 list.add(current);
             }
         }
@@ -193,12 +193,12 @@ public class ProfileImpl implements Profile {
     }
 
     /**
-     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstanceDataObjects(java.lang.String)
+     * @see org.apache.cocoon.portal.scratchpad.Profile#searchCopletInstances(java.lang.String)
      */
-    public Collection searchCopletInstanceDataObjects(String copletDataId) {
-        final CopletData copletData = this.searchCopletData(copletDataId);
+    public Collection searchCopletInstances(String copletDataId) {
+        final CopletDefinition copletData = this.searchCopletDefinition(copletDataId);
         if ( copletData != null ) {
-            return this.searchCopletInstanceDataObjects(copletData);
+            return this.searchCopletInstances(copletData);
         }
         return null;
     }
@@ -233,13 +233,13 @@ public class ProfileImpl implements Profile {
         }        
     }
 
-    public void add(CopletInstanceData cid) {
+    public void add(CopletInstance cid) {
         if ( cid != null ) {
             this.copletInstanceDatas.put(cid.getId(), cid);
         }
     }
 
-    public void remove(CopletInstanceData cid) {
+    public void remove(CopletInstance cid) {
         if ( cid != null ) {
             this.copletInstanceDatas.remove(cid.getId());
         }
@@ -263,15 +263,15 @@ public class ProfileImpl implements Profile {
         }
     }
 
-    public Map getCopletInstanceDatasMap() {
+    public Map getCopletInstancesMap() {
         return this.copletInstanceDatas;
     }
 
-    public Map getCopletDatasMap() {
+    public Map getCopletDefinitionsMap() {
         return this.copletDatas;
     }
 
-    public Map getCopletBaseDatasMap() {
+    public Map getCopletTypesMap() {
         return this.copletBaseDatas;
     }
 }

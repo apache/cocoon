@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.coplet.AbstractCopletInstanceEvent;
 
 /**
@@ -34,7 +34,7 @@ public class CopletLinkEvent
     /**
      * Creates a new LinkEvent.
      */
-    public CopletLinkEvent(CopletInstanceData target, String link) {
+    public CopletLinkEvent(CopletInstance target, String link) {
         super(target);
         this.link = link;
     }

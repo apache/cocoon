@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 
 /**
  * This event is fired if an instance is removed.
@@ -25,7 +25,7 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 public class CopletInstanceDataRemovedEvent
     extends AbstractCopletInstanceEvent {
 
-    public CopletInstanceDataRemovedEvent(CopletInstanceData target) {
+    public CopletInstanceDataRemovedEvent(CopletInstance target) {
         super(target);
     }    
 }

@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.coplet.adapter;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -61,7 +61,7 @@ public interface CopletAdapter {
      * For each coplet, this method is only invoked once.
      * @param coplet The coplet
      */
-    void init(CopletInstanceData coplet);
+    void init(CopletInstance coplet);
 
     /**
      * Destroy the coplet.
@@ -69,12 +69,12 @@ public interface CopletAdapter {
      * For each coplet, this method is only invoked once.
      * @param coplet
      */
-    void destroy(CopletInstanceData coplet);
+    void destroy(CopletInstance coplet);
 
     /**
      * Stream the content of the coplet.
      */
-    void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
+    void toSAX(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException;
 
     /**
@@ -82,12 +82,12 @@ public interface CopletAdapter {
      * This method is invoked when a user logs in for each coplet instance
      * of the user.
      */
-    void login(CopletInstanceData coplet);
+    void login(CopletInstance coplet);
 
     /**
      * User logs out from a coplet.
      * This method is invoked when a user logs out for each coplet instance
      * of this user.
      */
-    void logout(CopletInstanceData coplet);
+    void logout(CopletInstance coplet);
 }

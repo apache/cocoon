@@ -24,9 +24,9 @@ import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileLS;
@@ -84,7 +84,7 @@ public class StaticProfileManager
             final Map objectMap = new HashMap();
             final Iterator i = c.iterator();
             while ( i.hasNext() ) {
-                CopletInstanceData current = (CopletInstanceData)i.next();
+                CopletInstance current = (CopletInstance)i.next();
                 objectMap.put(current.getId(), current);
             }
             Map parameters = new HashMap();
@@ -151,7 +151,7 @@ public class StaticProfileManager
         }
     }
 
-    private Map getCopletDataManager() 
+    private Map getCopletDefinitionManager() 
     throws Exception {
         final String portalName = this.portalService.getPortalName();
         // ensure that profile is loaded
@@ -185,12 +185,12 @@ public class StaticProfileManager
             final Map copletBaseDataManager = new HashMap();
             Iterator i = cBase.iterator();
             while ( i.hasNext() ) {
-                final CopletData current = (CopletData)i.next();
+                final CopletDefinition current = (CopletDefinition)i.next();
                 copletBaseDataManager.put(current.getId(), current);
             }
             this.copletBaseDataManagers.put(portalName, copletBaseDataManager);
 
-            //CopletData
+            //CopletDefinition
             parameters.clear();
             parameters.put("profiletype", "copletdata");
             parameters.put("objectmap", copletBaseDataManager);
@@ -204,7 +204,7 @@ public class StaticProfileManager
             final Map copletDataManager = new HashMap();
             i = c.iterator();
             while ( i.hasNext() ) {
-                final CopletData current = (CopletData)i.next();
+                final CopletDefinition current = (CopletDefinition)i.next();
                 copletDataManager.put(current.getId(), current);
             }
             //CopletInstanceData
@@ -231,13 +231,13 @@ public class StaticProfileManager
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
      */
-    public CopletInstanceData getCopletInstanceData(String copletID) {
+    public CopletInstance getCopletInstanceData(String copletID) {
         // TODO - we should store a map in the static profile manager
         //        instead of going through the collection each time
         try {
             final Iterator i = this.getCopletInstanceDataManager().iterator();
             while ( i.hasNext() ) {
-                final CopletInstanceData current = (CopletInstanceData) i.next();
+                final CopletInstance current = (CopletInstance) i.next();
                 if ( current.getId().equals(copletID) ) {
                     return current;
                 }
@@ -249,19 +249,19 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinition(java.lang.String)
      */
-    public CopletData getCopletData(String copletDataId) {
+    public CopletDefinition getCopletDefinition(String copletDataId) {
         try {
             Iterator i = getCopletInstanceDataManager().iterator();
             boolean found = false;
-            CopletInstanceData current = null;
+            CopletInstance current = null;
             while ( !found && i.hasNext() ) {
-                current = (CopletInstanceData)i.next();
-                found = current.getCopletData().getId().equals(copletDataId);
+                current = (CopletInstance)i.next();
+                found = current.getCopletDefinition().getId().equals(copletDataId);
             }
-            if ( found ) {
-                return current.getCopletData();
+            if ( found && current != null ) {
+                return current.getCopletDefinition();
             }
             return null;
         } catch (PortalRuntimeException pre) {
@@ -272,15 +272,15 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public List getCopletInstanceData(CopletData data) {
+    public List getCopletInstanceData(CopletDefinition data) {
         List coplets = new ArrayList();
         try {
             Iterator iter = getCopletInstanceDataManager().iterator();
             while (iter.hasNext()){
-                CopletInstanceData current = (CopletInstanceData) iter.next();
-                if (current.getCopletData().equals(data)) {
+                CopletInstance current = (CopletInstance) iter.next();
+                if (current.getCopletDefinition().equals(data)) {
                     coplets.add(current);
                 }
             }
@@ -293,21 +293,21 @@ public class StaticProfileManager
     /**
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
-    public void configure(Configuration configuration) 
+    public void configure(Configuration config) 
     throws ConfigurationException {
-        super.configure(configuration);
-        Configuration child = configuration.getChild("profiles-path");
+        super.configure(config);
+        Configuration child = config.getChild("profiles-path");
         this.profilesPath = child.getValue("cocoon:/profiles");
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
      */
-    public Collection getCopletDatas() {
+    public Collection getCopletDefinitions() {
         try {
-            return this.getCopletDataManager().values();
+            return this.getCopletDefinitionManager().values();
         } catch (Exception e) {
-            throw new ProfileException("Error in getCopletDatas.", e);
+            throw new ProfileException("Error in getCopletDefinitions.", e);
         }
     }
 
@@ -345,16 +345,16 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletBaseData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
      */
-    public CopletBaseData getCopletBaseData(String id) {
-        return (CopletBaseData)((Map)this.copletBaseDataManagers.get(this.portalService.getPortalName())).get(id);
+    public CopletType getCopletType(String id) {
+        return (CopletType)((Map)this.copletBaseDataManagers.get(this.portalService.getPortalName())).get(id);
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletBaseDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
      */
-    public Collection getCopletBaseDatas() {
+    public Collection getCopletTypes() {
         return ((Map)this.copletBaseDataManagers.get(this.portalService.getPortalName())).values();
     }
 
