@@ -35,9 +35,9 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
  *
  * @version $Id$
  */
-public final class CopletInstanceDataFeatures {
+public final class CopletInstanceFeatures {
 
-    protected static final String CHANGED_COPLETS_ATTRIBUTE_NAME = CopletInstanceDataFeatures.class.getName() + "/ChangedCoplets";
+    protected static final String CHANGED_COPLETS_ATTRIBUTE_NAME = CopletInstanceFeatures.class.getName() + "/ChangedCoplets";
 
     /**
      * Tests if this is a sizing event for a coplet instance.
@@ -103,7 +103,7 @@ public final class CopletInstanceDataFeatures {
     }
 
     public static void addChangedCopletInstanceData(PortalService service,
-                                                    CopletInstanceData cid) {
+                                                    CopletInstance cid) {
         List list = (List)service.getTemporaryAttribute(CHANGED_COPLETS_ATTRIBUTE_NAME);
         if ( list == null ) {
             list = new ArrayList();
@@ -116,10 +116,10 @@ public final class CopletInstanceDataFeatures {
 
     public static String sizeToString(int value) {
         switch (value) {
-            case CopletInstanceData.SIZE_NORMAL : return "normal";
-            case CopletInstanceData.SIZE_FULLSCREEN : return "fullscreen";
-            case CopletInstanceData.SIZE_MAXIMIZED : return "maximized";
-            case CopletInstanceData.SIZE_MINIMIZED : return "minimized";
+            case CopletInstance.SIZE_NORMAL : return "normal";
+            case CopletInstance.SIZE_FULLSCREEN : return "fullscreen";
+            case CopletInstance.SIZE_MAXIMIZED : return "maximized";
+            case CopletInstance.SIZE_MINIMIZED : return "minimized";
             default:
                 return "";
         }

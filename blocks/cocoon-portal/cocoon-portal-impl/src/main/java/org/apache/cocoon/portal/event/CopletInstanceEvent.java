@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 
 
 /**
@@ -25,5 +25,5 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
  */
 public interface CopletInstanceEvent extends Event {
 
-    CopletInstanceData getTarget();
+    CopletInstance getTarget();
 }

@@ -23,7 +23,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @version $Id$
  */
-public final class CopletDataFeatures {
+public final class CopletDefinitionFeatures {
 
     /** This is the name of the coplet data attribute containing a boolean value
      * indicating if the user is allowed to resize the coplet. (default is true) */
@@ -43,10 +43,10 @@ public final class CopletDataFeatures {
      * meaning the portal handles the state and renders only the title). */
     public static final String ATTRIBUTE_HANDLE_SIZING = "handle-sizing";
 
-    public static Object getAttributeValue(CopletData data, String key, Object defaultValue) {
+    public static Object getAttributeValue(CopletDefinition data, String key, Object defaultValue) {
         Object value = data.getAttribute(key);
         if ( value == null ) {
-            value = data.getCopletBaseData().getCopletConfig(key);
+            value = data.getCopletType().getCopletConfig(key);
             if ( value == null ) {
                 value = defaultValue;
             }
@@ -57,7 +57,7 @@ public final class CopletDataFeatures {
     /**
      * Is this coplet sizable?
      */
-    public static boolean isSizable(CopletData data) {
+    public static boolean isSizable(CopletDefinition data) {
         Boolean sizable = (Boolean)getAttributeValue(data, ATTRIBUTE_SIZABLE, Boolean.TRUE);
         return sizable.booleanValue();
     }
@@ -65,7 +65,7 @@ public final class CopletDataFeatures {
     /**
      * Is this coplet mandatory?
      */
-    public static boolean isMandatory(CopletData data) {
+    public static boolean isMandatory(CopletDefinition data) {
         Boolean mandatory = (Boolean)getAttributeValue(data, ATTRIBUTE_MANDATORY, Boolean.FALSE);
         return mandatory.booleanValue();
     }
@@ -73,7 +73,7 @@ public final class CopletDataFeatures {
     /**
      * Does this coplet support the full screen mode?
      */
-    public static boolean supportsFullScreenMode(CopletData data) {
+    public static boolean supportsFullScreenMode(CopletDefinition data) {
         Boolean supportsMode = (Boolean)getAttributeValue(data, ATTRIBUTE_FULLSCREEN, Boolean.TRUE);
         return supportsMode.booleanValue();
     }
@@ -81,16 +81,16 @@ public final class CopletDataFeatures {
     /**
      * Does this coplet handles sizing by itself?
      */
-    public static boolean handlesSizing(CopletData data) {
+    public static boolean handlesSizing(CopletDefinition data) {
         Boolean handlesSizing = (Boolean)getAttributeValue(data, ATTRIBUTE_HANDLE_SIZING, Boolean.FALSE);
         return handlesSizing.booleanValue();
     }
 
-    public static void setSizable(CopletData data, boolean value) {
+    public static void setSizable(CopletDefinition data, boolean value) {
         data.setAttribute(ATTRIBUTE_SIZABLE, BooleanUtils.toBooleanObject(value));
     }
 
-    public static void setMandatory(CopletData data, boolean value) {
+    public static void setMandatory(CopletDefinition data, boolean value) {
         data.setAttribute(ATTRIBUTE_MANDATORY, BooleanUtils.toBooleanObject(value));
     }
 }

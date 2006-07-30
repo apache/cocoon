@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.coplets.basket;
 
 import java.io.Serializable;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 
 
 /**
@@ -44,7 +44,7 @@ public class ContentItem extends AbstractItem implements Serializable {
      * @param cid     The coplet
      * @param content Do we store the content (false: a link)
      */
-    public ContentItem(CopletInstanceData cid, boolean content) {
+    public ContentItem(CopletInstance cid, boolean content) {
         this.copletId = cid.getId();
         this.storesContent = content;
     }

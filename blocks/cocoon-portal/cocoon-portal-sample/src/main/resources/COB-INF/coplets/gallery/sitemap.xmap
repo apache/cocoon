@@ -30,17 +30,17 @@
   <map:pipeline type="noncaching">
     <!-- this is a gallery coplet -->
     <map:match pattern="browser">
-        <map:generate type="directory" src="{coplet:copletData/attributes/image-dir}">
-            <map:parameter name="include" value="{coplet:copletData/attributes/image-include}"/>
+        <map:generate type="directory" src="{coplet:copletDefinition/attributes/image-dir}">
+            <map:parameter name="include" value="{coplet:copletDefinition/attributes/image-include}"/>
         </map:generate>
         <map:transform src="dir2pic.xsl">
-            <map:parameter name="dirprefix" value="{coplet:copletData/attributes/image-uri-prefix}"/>
+            <map:parameter name="dirprefix" value="{coplet:copletDefinition/attributes/image-uri-prefix}"/>
         </map:transform>
         <map:transform type="xslt" src="gallery.xsl">
             <map:parameter name="pic" value="{coplet:attributes/picture}"/>
             <map:parameter name="size" value="{coplet:size}"/>
         </map:transform>
-        <!-- This must be commented out if CachingURICopletAdapter is used in profiles/copletdata
+        <!-- This must be commented out if CachingURICopletAdapter is used in profiles/copletdefinition
              due to links that needs to be cached untranslated.
         <map:transform type="portal-coplet"/>
         -->

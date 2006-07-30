@@ -93,7 +93,7 @@ public class PortalServiceImpl
     final protected static String KEY = PortalServiceImpl.class.getName();
 
     /** The portal configuration. */
-    protected Configuration config;
+    protected Configuration configuration;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -296,7 +296,7 @@ public class PortalServiceImpl
         } finally {
             this.manager.release(resolver);
         }
-        this.config = portal.getChild("configuration");
+        this.configuration = portal.getChild("configuration");
     }
 
     /**
@@ -340,7 +340,7 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getConfiguration(java.lang.String, java.lang.String)
      */
     public String getConfiguration(String key, String defaultValue) {
-        return this.config.getChild(key).getValue(defaultValue);
+        return this.configuration.getChild(key).getValue(defaultValue);
     }
 
     /**
@@ -354,7 +354,7 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getConfigurationAsBoolean(java.lang.String, boolean)
      */
     public boolean getConfigurationAsBoolean(String key, boolean defaultValue) {
-        return this.config.getChild(key).getValueAsBoolean(defaultValue);
+        return this.configuration.getChild(key).getValueAsBoolean(defaultValue);
     }
 
     /**

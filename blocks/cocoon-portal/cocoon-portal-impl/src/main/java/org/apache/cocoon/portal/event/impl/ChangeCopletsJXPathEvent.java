@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.event.CopletDataEvent;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.event.CopletDefinitionEvent;
 
 /**
  * This event changes the value of all instances of a coplet data.
@@ -24,11 +24,11 @@ import org.apache.cocoon.portal.event.CopletDataEvent;
  * @version $Id$
  */
 public class ChangeCopletsJXPathEvent
-    implements CopletDataEvent {
+    implements CopletDefinitionEvent {
 
     protected String path;
     protected Object value;
-    protected CopletData target;
+    protected CopletDefinition target;
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ public class ChangeCopletsJXPathEvent
      * @param path   The path for the instance data
      * @param value  The value to set
      */
-    public ChangeCopletsJXPathEvent(CopletData target, String path, Object value) {
+    public ChangeCopletsJXPathEvent(CopletDefinition target, String path, Object value) {
         this.path = path;
         this.value = value;
         this.target = target;
@@ -57,9 +57,9 @@ public class ChangeCopletsJXPathEvent
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.CopletDataEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.CopletDefinitionEvent#getTarget()
      */
-    public CopletData getTarget() {
+    public CopletDefinition getTarget() {
         return this.target;
     }
 }

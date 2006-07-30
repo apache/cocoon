@@ -16,31 +16,29 @@
 -->
 <!-- @version $Id$ -->
 <mapping>
-  <description>Coplet data mapping file</description>
+  <description>Coplet instance mapping file</description>
 
   <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
     <map-to xml="coplets" />
 
     <field name="objects"
-           type="org.apache.cocoon.portal.coplet.CopletData"
+           type="org.apache.cocoon.portal.coplet.CopletInstance"
            collection="collection">
-      <bind-xml matches="coplet-data"/>
+      <bind-xml matches="coplet-instance"/>
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.coplet.CopletData" verify-constructable="false">
-    <map-to xml="coplet-data" />
-    
+  <class name="org.apache.cocoon.portal.coplet.CopletInstance" verify-constructable="false">
+    <map-to xml="coplet-instance"/>
+
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
       <bind-xml name="id" node="attribute" />
     </field>
-    
-    <field name="title" type="java.lang.String">
-      <bind-xml name="title"/>
-    </field>
 
-    <field name="allowedRoles" type="java.lang.String">
-      <bind-xml name="roles"/>
+    <field name="copletDefinition"
+           type="java.lang.String"
+           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+      <bind-xml name="coplet-definition"/>
     </field>
 
     <field name="attributes"
@@ -50,21 +48,22 @@
       <bind-xml name="attribute"/>
     </field>
 
-    <field name="copletBaseData"
-           type="java.lang.String"
-           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
-      <bind-xml name="coplet-base-data"/>
+    <field name="title" type="java.lang.String" get-method="getInstanceTitle" set-method="setTitle">
+      <bind-xml name="title"/>
+    </field>
+
+    <field name="size">
+      <bind-xml name="size"/>
     </field>
   </class>
-   
+
   <class name="org.exolab.castor.mapping.MapItem">
     <field name="key" type="java.lang.String">
       <bind-xml name="name"/>
     </field>
-
     <field name="value">
       <bind-xml name="value"/>
     </field>
   </class>
-</mapping>
 
+</mapping>

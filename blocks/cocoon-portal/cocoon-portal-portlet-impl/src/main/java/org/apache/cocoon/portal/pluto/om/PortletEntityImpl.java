@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.pluto.PortletPreferencesProvider;
 import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.Description;
@@ -40,7 +40,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
     protected final PortletWindowList portletWindows;
     protected final ObjectID objectId;
     protected final PortletDefinition definition;
-    protected final CopletInstanceData coplet;
+    protected final CopletInstance coplet;
     protected final PortletApplicationEntity applicationEntity;
     protected final PortalService service;
     protected final PortletPreferencesProvider prefProvider;
@@ -51,7 +51,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
      * Constructor.
      */
     PortletEntityImpl(PortletApplicationEntity pae,
-                      CopletInstanceData cid, 
+                      CopletInstance cid, 
                       PortletDefinition pd,
                       PortalService service) {
         this.objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString("CID" + cid.hashCode());
@@ -114,7 +114,7 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
     /**
      * Return the coplet instance data.
      */
-    public CopletInstanceData getCopletInstanceData() {
+    public CopletInstance getCopletInstanceData() {
         return this.coplet;
     }
     

@@ -33,7 +33,7 @@
         </xsl:when>
         <xsl:otherwise>
             <img src="{$pic}"/>
-            <p><cl:link path="temporaryAttributes/pictitle" value="{$pic}" coplet="GalleryViewer-1">Show file name</cl:link>
+            <p><cl:link path="temporaryAttributes/pictitle" value="{$pic}" coplet="GalleryViewer_1">Show file name</cl:link>
             <br/><xsl:value-of select="$tpic"/></p>
             <p>Date: <xsl:value-of select="java:java.util.Date.new()"/></p>
         </xsl:otherwise>

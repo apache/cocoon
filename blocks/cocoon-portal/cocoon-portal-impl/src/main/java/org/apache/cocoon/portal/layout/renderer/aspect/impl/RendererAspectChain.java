@@ -54,9 +54,9 @@ public final class RendererAspectChain {
     public void configure(ServiceSelector selector, Configuration conf) 
     throws ConfigurationException {
         if ( conf != null ) {
-            Configuration[] aspects = conf.getChildren("aspect");
-            for(int i=0; i < aspects.length; i++) {
-                final Configuration current = aspects[i];
+            final Configuration[] aspectConfigs = conf.getChildren("aspect");
+            for(int i=0; i < aspectConfigs.length; i++) {
+                final Configuration current = aspectConfigs[i];
                 final String role = current.getAttribute("type");
                 try {
                     RendererAspect rAspect = (RendererAspect) selector.select(role);

@@ -51,8 +51,8 @@ public abstract class AbstractRenderer
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     public String getStylesheetURI(Layout layout) {

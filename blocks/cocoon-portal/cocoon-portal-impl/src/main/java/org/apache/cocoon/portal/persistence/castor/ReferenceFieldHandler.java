@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.persistence.castor;
 
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 
@@ -34,11 +34,11 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#getValue(java.lang.Object)
      */
     public Object getValue(Object object) {
-        if ( object instanceof CopletData ) {
-            return ((CopletData)object).getCopletBaseData().getId();
+        if ( object instanceof CopletDefinition ) {
+            return ((CopletDefinition)object).getCopletType().getId();
         }
-        if ( object instanceof CopletInstanceData ) {
-            return ((CopletInstanceData)object).getCopletData().getId();
+        if ( object instanceof CopletInstance ) {
+            return ((CopletInstance)object).getCopletDefinition().getId();
         }
         if ( object instanceof CopletLayout ) {
             return ((CopletLayout)object).getCopletInstanceData().getId();
@@ -64,11 +64,11 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#resetValue(java.lang.Object)
      */
     public void resetValue(Object object) {
-        if ( object instanceof CopletData ) {
-            ((CopletData)object).setCopletBaseData(null);
+        if ( object instanceof CopletDefinition ) {
+            ((CopletDefinition)object).setCopletType(null);
         }
-        if ( object instanceof CopletInstanceData ) {
-            ((CopletInstanceData)object).setCopletData(null);
+        if ( object instanceof CopletInstance ) {
+            ((CopletInstance)object).setCopletDefinition(null);
         }
         if ( object instanceof CopletLayout ) {
             ((CopletLayout)object).setCopletInstanceData(null);
@@ -81,14 +81,14 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
     public void setValue(Object object, Object value) {
         final Map references = (Map)CastorSourceConverter.threadLocalMap.get();
         final Object reference = (references != null ? references.get(value) : null);
-        if ( object instanceof CopletData ) {
-            ((CopletData)object).setCopletBaseData((CopletBaseData)reference);
+        if ( object instanceof CopletDefinition ) {
+            ((CopletDefinition)object).setCopletType((CopletType)reference);
         }
-        if ( object instanceof CopletInstanceData ) {
-            ((CopletInstanceData)object).setCopletData((CopletData)reference);
+        if ( object instanceof CopletInstance ) {
+            ((CopletInstance)object).setCopletDefinition((CopletDefinition)reference);
         }
         if ( object instanceof CopletLayout ) {
-            ((CopletLayout)object).setCopletInstanceData((CopletInstanceData)reference);
+            ((CopletLayout)object).setCopletInstanceData((CopletInstance)reference);
         }
     }
 }

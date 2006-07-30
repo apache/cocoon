@@ -28,7 +28,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
@@ -96,7 +96,7 @@ public class PortletURLProviderImpl
         this.linkService = service.getLinkService();
         PortletURLConverter urlConverter = new PortletURLConverter(eventData);
         String copletId = urlConverter.getPortletId();
-        CopletInstanceData cid = service.getProfileManager()
+        CopletInstance cid = service.getProfileManager()
             .getCopletInstanceData(copletId);
         this.portletWindow = (PortletWindow)cid.getTemporaryAttribute(PortletAdapter.PORTLET_WINDOW_ATTRIBUTE_NAME);
         this.mode = urlConverter.getMode();
@@ -225,7 +225,7 @@ public class PortletURLProviderImpl
     /**
      * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
-    public CopletInstanceData getTarget() {        
+    public CopletInstance getTarget() {        
         return ((PortletEntityImpl)this.portletWindow.getPortletEntity()).getCopletInstanceData();
     }
 
@@ -237,7 +237,7 @@ public class PortletURLProviderImpl
     public String asString() {
 
         final PortletWindowImpl impl = (PortletWindowImpl) this.portletWindow;
-        final CopletInstanceData cid = impl.getCopletInstanceData();
+        final CopletInstance cid = impl.getCopletInstanceData();
         PortletURLConverter urlConverter = new PortletURLConverter(cid);
 
         if (this.mode != null) {

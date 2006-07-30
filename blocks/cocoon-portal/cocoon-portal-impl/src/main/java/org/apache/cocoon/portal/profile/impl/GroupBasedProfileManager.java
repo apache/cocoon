@@ -31,12 +31,12 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.event.coplet.CopletDataAddedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceDataAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceDataRemovedEvent;
 import org.apache.cocoon.portal.layout.Layout;
@@ -77,7 +77,7 @@ public class GroupBasedProfileManager
     public static final String CATEGORY_USER   = "user";
 
     protected static final Map MAP_FOR_BASE_DATA = Collections.singletonMap(ProfileLS.PARAMETER_PROFILETYPE,
-                                                                            ProfileLS.PROFILETYPE_COPLETBASEDATA);
+                                                                            ProfileLS.PROFILETYPE_COPLETTYPE);
 
     protected static final String KEY_PREFIX = GroupBasedProfileManager.class.getName() + ':';
 
@@ -90,7 +90,7 @@ public class GroupBasedProfileManager
     final protected ProfileInfo copletDatas = new ProfileInfo();
 
     /** All deployed coplet datas. */
-    final protected Map deployedCopletDatas = new HashMap();
+    final protected Map deployedCopletDefinitions = new HashMap();
 
     /** Check for changes? */
     protected boolean checkForChanges = true;
@@ -168,10 +168,10 @@ public class GroupBasedProfileManager
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
 
-            Iterator iter = profile.getCopletInstanceDataObjects().iterator();
+            Iterator iter = profile.getCopletInstances().iterator();
             while ( iter.hasNext() ) {
-                CopletInstanceData cid = (CopletInstanceData) iter.next();
-                CopletAdapter adapter = this.portalService.getCopletAdapter(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                CopletInstance cid = (CopletInstance) iter.next();
+                CopletAdapter adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());
                 adapter.logout( cid );
             }
 
@@ -183,36 +183,36 @@ public class GroupBasedProfileManager
     /**
      * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
      */
-    public CopletInstanceData getCopletInstanceData(String copletID) {
+    public CopletInstance getCopletInstanceData(String copletID) {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
-            return profile.searchCopletInstanceData(copletID);
+            return profile.searchCopletInstance(copletID);
         }
         return null;
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinition(java.lang.String)
      */
-    public CopletData getCopletData(String copletDataId) {
+    public CopletDefinition getCopletDefinition(String copletDataId) {
         final ProfileImpl profile = this.getUserProfile(null);
         if ( profile != null ) {
-            return profile.searchCopletData(copletDataId);
+            return profile.searchCopletDefinition(copletDataId);
         }
         return null;
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletData)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public List getCopletInstanceData(CopletData data) {
+    public List getCopletInstanceData(CopletDefinition data) {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
             final List coplets = new ArrayList();
-            final Iterator iter = profile.getCopletInstanceDataObjects().iterator();
+            final Iterator iter = profile.getCopletInstances().iterator();
             while ( iter.hasNext() ) {
-                final CopletInstanceData current = (CopletInstanceData)iter.next();
-                if ( current.getCopletData().equals(data) ) {
+                final CopletInstance current = (CopletInstance)iter.next();
+                if ( current.getCopletDefinition().equals(data) ) {
                     coplets.add( current );
                 }
             }
@@ -234,8 +234,8 @@ public class GroupBasedProfileManager
      * Receives a coplet data added event.
      * @see Receiver
      */
-    public void inform(CopletDataAddedEvent event, PortalService service) {
-        this.deployedCopletDatas.put(event.getTarget().getId(), event.getTarget());
+    public void inform(CopletDefinitionAddedEvent event, PortalService service) {
+        this.deployedCopletDefinitions.put(event.getTarget().getId(), event.getTarget());
         if ( this.copletDatas.objects != null ) {
             this.copletDatas.objects.put(event.getTarget().getId(), event.getTarget());
         }
@@ -292,12 +292,12 @@ public class GroupBasedProfileManager
     }
     
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
      */
-    public Collection getCopletDatas() {
+    public Collection getCopletDefinitions() {
         final ProfileImpl profile = this.getUserProfile(null);
         if ( profile != null ) {
-            return profile.getCopletDataObjects();
+            return profile.getCopletDefinitions();
         }
         return null;
     }
@@ -308,7 +308,7 @@ public class GroupBasedProfileManager
     public Collection getCopletInstanceDatas() {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
-            return profile.getCopletInstanceDataObjects();
+            return profile.getCopletInstances();
         }
         return null;
     }
@@ -322,8 +322,8 @@ public class GroupBasedProfileManager
         ProfileImpl profile = new ProfileImpl(layoutKey);
 
         // first "load" the global data
-        profile.setCopletBaseDatas( this.getGlobalBaseDatas(layoutKey) );
-        profile.setCopletDatas( this.getGlobalDatas(info, profile, layoutKey) );
+        profile.setCopletTypes( this.getGlobalBaseDatas(layoutKey) );
+        profile.setCopletDefinitions( this.getGlobalDatas(info, profile, layoutKey) );
 
         // now load the user/group specific data
         if ( !this.getCopletInstanceDatas(profile, info, CATEGORY_USER, layoutKey) ) {
@@ -356,7 +356,7 @@ public class GroupBasedProfileManager
         }
 
         final Map key = this.buildKey(CATEGORY_GLOBAL,
-                ProfileLS.PROFILETYPE_COPLETBASEDATA,
+                ProfileLS.PROFILETYPE_COPLETTYPE,
                 null,
                 true,
                 layoutKey);
@@ -382,7 +382,7 @@ public class GroupBasedProfileManager
             final Map objects = new HashMap();
             final Iterator i = ((Collection)loader.loadProfile(key, MAP_FOR_BASE_DATA)).iterator();
             while ( i.hasNext() ) {
-                final CopletBaseData current = (CopletBaseData)i.next();
+                final CopletType current = (CopletType)i.next();
                 objects.put(current.getId(), current);
             }
             this.copletBaseDatas.objects = objects;
@@ -408,15 +408,15 @@ public class GroupBasedProfileManager
         }
 
         final Map key = this.buildKey(CATEGORY_GLOBAL,
-                ProfileLS.PROFILETYPE_COPLETDATA,
+                ProfileLS.PROFILETYPE_COPLETDEFINITION,
                 info,
                 true,
                 layoutKey);
-        final Map parameters = new HashMap();
-        parameters.put(ProfileLS.PARAMETER_PROFILETYPE,
-                       ProfileLS.PROFILETYPE_COPLETDATA);
-        parameters.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletBaseDatasMap());
+        final Map profileLSParams = new HashMap();
+        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
+                       ProfileLS.PROFILETYPE_COPLETDEFINITION);
+        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
+                       profile.getCopletTypesMap());
 
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
@@ -426,7 +426,7 @@ public class GroupBasedProfileManager
             if ( validity == SourceValidity.VALID) {
                 return this.copletDatas.objects;
             } else if ( validity == SourceValidity.UNKNOWN ) {
-                newValidity = loader.getValidity(key,parameters);
+                newValidity = loader.getValidity(key,profileLSParams);
                 if ( newValidity != null
                      && this.copletDatas.validity.isValid(newValidity) == SourceValidity.VALID) {
                     return this.copletDatas.objects;
@@ -436,21 +436,21 @@ public class GroupBasedProfileManager
 
         synchronized ( this ) {
             final Map objects = new HashMap();
-            final Iterator i = ((Collection)loader.loadProfile(key, parameters)).iterator();
+            final Iterator i = ((Collection)loader.loadProfile(key, profileLSParams)).iterator();
             while ( i.hasNext() ) {
-                final CopletData current = (CopletData)i.next();
+                final CopletDefinition current = (CopletDefinition)i.next();
                 // only add coplet data if coplet base data has been found
-                if ( current.getCopletBaseData() != null ) {
+                if ( current.getCopletType() != null ) {
                     objects.put(current.getId(), current);
                 } else {
-                    this.getLogger().error("CopletBaseData not found for CopletData: " + current);
+                    this.getLogger().error("CopletType not found for CopletDefinition: " + current);
                 }
             }
             this.copletDatas.objects = objects;
             // now add deployed coplets
-            this.copletDatas.objects.putAll(this.deployedCopletDatas);
+            this.copletDatas.objects.putAll(this.deployedCopletDefinitions);
             if ( newValidity == null ) {
-                newValidity = loader.getValidity(key, parameters);
+                newValidity = loader.getValidity(key, profileLSParams);
             }
             this.copletDatas.validity = newValidity;
             this.prepareObject(this.copletDatas.objects);
@@ -474,20 +474,20 @@ public class GroupBasedProfileManager
                                              final String      layoutKey)
     throws Exception {
         Map key = this.buildKey(category,
-                                ProfileLS.PROFILETYPE_COPLETINSTANCEDATA,
+                                ProfileLS.PROFILETYPE_COPLETINSTANCE,
                                 info,
                                 true,
                                 layoutKey);
-        Map parameters = new HashMap();
-        parameters.put(ProfileLS.PARAMETER_PROFILETYPE,
-                       ProfileLS.PROFILETYPE_COPLETINSTANCEDATA);
-        parameters.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletDatasMap());
+        Map profileLSParams = new HashMap();
+        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
+                       ProfileLS.PROFILETYPE_COPLETINSTANCE);
+        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
+                       profile.getCopletDefinitionsMap());
 
         try {
-            Collection cidm = (Collection)loader.loadProfile(key, parameters);
+            Collection cidm = (Collection)loader.loadProfile(key, profileLSParams);
             profile.setCopletInstanceDatas(cidm);
-            this.prepareObject(profile.getCopletInstanceDatasMap());
+            this.prepareObject(profile.getCopletInstancesMap());
 
             return true;
         } catch (Exception e) {
@@ -508,13 +508,13 @@ public class GroupBasedProfileManager
                                       info,
                                       true,
                                       layoutKey);
-        final Map parameters = new HashMap();
-        parameters.put(ProfileLS.PARAMETER_PROFILETYPE,
+        final Map profileLSParams = new HashMap();
+        profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE,
                        ProfileLS.PROFILETYPE_LAYOUT);
-        parameters.put(ProfileLS.PARAMETER_OBJECTMAP,
-                       profile.getCopletInstanceDatasMap());
+        profileLSParams.put(ProfileLS.PARAMETER_OBJECTMAP,
+                       profile.getCopletInstancesMap());
         try {
-            Layout l = (Layout)loader.loadProfile(key, parameters);
+            Layout l = (Layout)loader.loadProfile(key, profileLSParams);
             this.prepareObject(l);
             profile.setRootLayout(l);
 
@@ -576,16 +576,16 @@ public class GroupBasedProfileManager
             }
             final ProfileImpl profile = this.getUserProfile(layoutKey);
 
-            final Map parameters = new HashMap();
-            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
-                           ProfileLS.PROFILETYPE_COPLETINSTANCEDATA);        
+            final Map profileLSParams = new HashMap();
+            profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE, 
+                           ProfileLS.PROFILETYPE_COPLETINSTANCE);        
 
             final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileLS.PROFILETYPE_COPLETINSTANCEDATA,
+                                          ProfileLS.PROFILETYPE_COPLETINSTANCE,
                                           this.getUser(),
                                           false,
                                           layoutKey);
-            this.loader.saveProfile(key, parameters, profile.getCopletInstanceDataObjects());
+            this.loader.saveProfile(key, profileLSParams, profile.getCopletInstances());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);
@@ -602,8 +602,8 @@ public class GroupBasedProfileManager
             }
             final Profile profile = this.getUserProfile(layoutKey);
 
-            final Map parameters = new HashMap();
-            parameters.put(ProfileLS.PARAMETER_PROFILETYPE, 
+            final Map profileLSParams = new HashMap();
+            profileLSParams.put(ProfileLS.PARAMETER_PROFILETYPE, 
                            ProfileLS.PROFILETYPE_LAYOUT);        
 
             final Map key = this.buildKey(CATEGORY_USER,
@@ -611,7 +611,7 @@ public class GroupBasedProfileManager
                                           this.getUser(), 
                                           false,
                                           layoutKey);
-            this.loader.saveProfile(key, parameters, profile.getRootLayout());
+            this.loader.saveProfile(key, profileLSParams, profile.getRootLayout());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);
@@ -619,19 +619,19 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletBaseData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
      */
-    public CopletBaseData getCopletBaseData(String id) {
+    public CopletType getCopletType(String id) {
         if ( this.copletBaseDatas.objects == null ) {
-            this.getCopletBaseDatas();
+            this.getCopletTypes();
         }
-        return (CopletBaseData)this.copletBaseDatas.objects.get(id);
+        return (CopletType)this.copletBaseDatas.objects.get(id);
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletBaseDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
      */
-    public Collection getCopletBaseDatas() {
+    public Collection getCopletTypes() {
         if ( this.copletBaseDatas.objects == null ) {
             try {
                 // first "load" the global data

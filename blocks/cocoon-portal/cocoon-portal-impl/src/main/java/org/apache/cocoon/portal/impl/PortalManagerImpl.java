@@ -37,8 +37,8 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.Layout;
@@ -131,14 +131,14 @@ public class PortalManagerImpl
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
      */
-    public void prepare(PortalManagerAspectPrepareContext context, PortalService service) throws ProcessingException {
+    public void prepare(PortalManagerAspectPrepareContext renderContext, PortalService service) throws ProcessingException {
         EventManager eventManager = this.portalService.getEventManager();
         eventManager.processEvents();
     }
@@ -146,7 +146,7 @@ public class PortalManagerImpl
     /**
      * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
      */
-    public void render(PortalManagerAspectRenderContext context,
+    public void render(PortalManagerAspectRenderContext renderContext,
                        PortalService                    service,
                        ContentHandler                   ch,
                        Parameters                       parameters)
@@ -154,19 +154,19 @@ public class PortalManagerImpl
         final ProfileManager profileManager = this.portalService.getProfileManager();
 
         // test for ajax request
-        final Request req = ObjectModelHelper.getRequest(context.getObjectModel());
+        final Request req = ObjectModelHelper.getRequest(renderContext.getObjectModel());
         if ( AjaxHelper.isAjaxRequest(req) ) {
             Layout rootLayout = profileManager.getPortalLayout(null, null);
             ch.startDocument();
             XMLUtils.startElement(ch, "coplets");
-            final List changed = CopletInstanceDataFeatures.getChangedCopletInstanceDataObjects(service);
+            final List changed = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(service);
             final Iterator i = changed.iterator();
             while ( i.hasNext() ) {
-                final CopletInstanceData current = (CopletInstanceData)i.next();
+                final CopletInstance current = (CopletInstance)i.next();
                 AttributesImpl a = new AttributesImpl();
                 a.addCDATAAttribute("id", current.getId());
                 XMLUtils.startElement(ch, "coplet", a);
-                final Layout l = CopletInstanceDataFeatures.searchLayout(current.getId(), rootLayout);
+                final Layout l = CopletInstanceFeatures.searchLayout(current.getId(), rootLayout);
                 Renderer portalLayoutRenderer = this.portalService.getRenderer( l.getRendererName());
                 portalLayoutRenderer.toSAX(l, this.portalService, ch);
                 XMLUtils.endElement(ch, "coplet");
@@ -183,9 +183,9 @@ public class PortalManagerImpl
                 throw new SAXException("Only one of the paramteters can be specified for rendering: coplet or layout.");
             }
             if ( StringUtils.isNotEmpty(copletId) ) {
-                final CopletInstanceData cid = profileManager.getCopletInstanceData(copletId);
+                final CopletInstance cid = profileManager.getCopletInstanceData(copletId);
                 if ( cid != null ) {
-                    portalLayout = CopletInstanceDataFeatures.searchLayout(cid.getId(), profileManager.getPortalLayout(null, null));
+                    portalLayout = CopletInstanceFeatures.searchLayout(cid.getId(), profileManager.getPortalLayout(null, null));
                 }
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
                 portalLayout = profileManager.getPortalLayout(null, layoutId);
@@ -210,6 +210,6 @@ public class PortalManagerImpl
         }
         // although we should be the last in the queue,
         // let's invoke the next
-        context.invokeNext(ch, parameters);
+        renderContext.invokeNext(ch, parameters);
     }
 }

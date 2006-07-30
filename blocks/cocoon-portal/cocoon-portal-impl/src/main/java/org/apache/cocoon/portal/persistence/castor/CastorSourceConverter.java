@@ -38,6 +38,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.persistence.Converter;
 import org.apache.cocoon.portal.persistence.ConverterException;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -89,7 +90,6 @@ public class CastorSourceConverter
     throws ConverterException {
         try {
             threadLocalMap.set(references);
-            this.idResolver.setObjectMap(references);
             final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];
             final Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
@@ -100,7 +100,6 @@ public class CastorSourceConverter
             throw new ConverterException(e.getMessage(), e);
         } finally {
             threadLocalMap.set(null);
-            this.idResolver.clearObjectMap();
         }
     }
 
@@ -109,11 +108,12 @@ public class CastorSourceConverter
 	 */
 	public void storeObject(OutputStream stream,
                             String       mappingName,
-                            Object       object,
+                            Object       referenceObject,
                             Map          parameters)
     throws ConverterException {
-        if ( object instanceof Collection && !(object instanceof CollectionWrapper) ) {
-            object = new CollectionWrapper((Collection)object);
+        Object references = referenceObject; 
+        if ( referenceObject instanceof Collection && !(referenceObject instanceof CollectionWrapper) ) {
+            references = new CollectionWrapper((Collection)referenceObject);
         }
         Writer writer = new OutputStreamWriter(stream);
 		try {
@@ -127,7 +127,7 @@ public class CastorSourceConverter
                 }
             }
             marshaller.setSuppressXSIType(suppressXSIType);
-			marshaller.marshal(object);
+			marshaller.marshal(references);
 			writer.close();
 		} catch (MappingException e) {
 			throw new ConverterException("Can't create Unmarshaller", e);
@@ -139,8 +139,8 @@ public class CastorSourceConverter
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     /**
@@ -159,10 +159,10 @@ public class CastorSourceConverter
 
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
-        this.mappingSources.put("layout", prefix + "layout.xml");
-        this.mappingSources.put("copletbasedata", prefix + "copletbasedata.xml");
-        this.mappingSources.put("copletdata", prefix + "copletdata.xml");
-        this.mappingSources.put("copletinstancedata", prefix + "copletinstancedata.xml");
+        this.mappingSources.put(ProfileLS.PROFILETYPE_LAYOUT, prefix + ProfileLS.PROFILETYPE_LAYOUT +".xml");
+        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETTYPE, prefix + ProfileLS.PROFILETYPE_COPLETTYPE + ".xml");
+        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETDEFINITION, prefix + ProfileLS.PROFILETYPE_COPLETDEFINITION + ".xml");
+        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETINSTANCE, prefix + ProfileLS.PROFILETYPE_COPLETINSTANCE + ".xml");
         boolean plutoAvailable = false;
         try {
             ClassUtils.loadClass("org.apache.cocoon.portal.pluto.adapter.PortletAdapter");
@@ -226,31 +226,15 @@ public class CastorSourceConverter
 
     public final static class ReferenceResolver implements IDResolver {
 
-        /**
-         * Used to pass resolvable objects to the field handler.
-         */
-        private ThreadLocal threadLocalMap = new ThreadLocal();
-
         public ReferenceResolver() {
             // nothing to do
-        }
-
-        /**
-         * Sets the map used to pass resolvable objects to the field handler.
-         */
-        public void setObjectMap(Map objectMap) {
-            this.threadLocalMap.set(objectMap);
-        }
-
-        public void clearObjectMap() {
-            this.threadLocalMap.set(null);
         }
 
         /**
          * @see org.exolab.castor.xml.IDResolver#resolve(java.lang.String)
          */
         public Object resolve(String refId) {
-            final Object o = ((Map)this.threadLocalMap.get()).get(refId);
+            final Object o = ((Map)CastorSourceConverter.threadLocalMap.get()).get(refId);
             return o;
         }
     }

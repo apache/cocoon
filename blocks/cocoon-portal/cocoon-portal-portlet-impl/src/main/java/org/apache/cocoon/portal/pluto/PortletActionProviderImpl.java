@@ -22,7 +22,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.pluto.adapter.PortletAdapter;
@@ -56,7 +56,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
      */
     public void changePortletMode(PortletMode mode) {
         if ( mode != null ) {
-            final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+            final CopletInstance cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
             cid.setTemporaryAttribute(PortletAdapter.PORTLET_MODE_ATTRIBUTE_NAME, mode.toString());
         }
     }
@@ -66,13 +66,13 @@ public class PortletActionProviderImpl implements PortletActionProvider {
      */
     public void changePortletWindowState(WindowState state) {
         if ( state != null ) {
-            final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+            final CopletInstance cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
             cid.setTemporaryAttribute(PortletAdapter.WINDOW_STATE_ATTRIBUTE_NAME, state.toString());
-            int size = CopletInstanceData.SIZE_NORMAL;
+            int size = CopletInstance.SIZE_NORMAL;
             if ( state.equals(WindowState.MAXIMIZED) ) {
-                size = CopletInstanceData.SIZE_MAXIMIZED;
+                size = CopletInstance.SIZE_MAXIMIZED;
             } else if ( state.equals(WindowState.MINIMIZED) ) {
-                size = CopletInstanceData.SIZE_MINIMIZED;
+                size = CopletInstance.SIZE_MINIMIZED;
             }
             if ( size != cid.getSize() ) {
                 final Event e = new CopletInstanceSizingEvent(cid, size);
@@ -82,7 +82,7 @@ public class PortletActionProviderImpl implements PortletActionProvider {
     }
 
     public void changeRenderParameters(Map parameters) {
-        final CopletInstanceData cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
+        final CopletInstance cid = ((PortletEntityImpl)portletWindow.getPortletEntity()).getCopletInstanceData();
         if ( parameters == null ) {
             cid.removeTemporaryAttribute("render-parameters");
         } else {

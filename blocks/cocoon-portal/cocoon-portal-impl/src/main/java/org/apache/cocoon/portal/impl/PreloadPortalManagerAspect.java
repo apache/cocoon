@@ -25,8 +25,8 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -66,11 +66,11 @@ public class PreloadPortalManagerAspect
     throws SAXException {
         // we should be the first aspect for rendering
         // preload all changed coplets
-        final List changedCoplets = CopletInstanceDataFeatures.getChangedCopletInstanceDataObjects(service);
+        final List changedCoplets = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(service);
         final Iterator i = changedCoplets.iterator();
         while (i.hasNext()) {
-            final CopletInstanceData cid = (CopletInstanceData)i.next();
-            final String adapterName = cid.getCopletData().getCopletBaseData().getCopletAdapterName();
+            final CopletInstance cid = (CopletInstance)i.next();
+            final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
             final CopletAdapter adapter = service.getCopletAdapter(adapterName);
             adapter.toSAX(cid, nullHandler );
         }

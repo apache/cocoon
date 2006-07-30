@@ -17,8 +17,8 @@ package org.apache.cocoon.portal.scratchpad;
 
 import java.util.Collection;
 
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -32,13 +32,13 @@ public interface Profile {
 
     String getProfileName();
 
-    Collection getCopletInstanceDataObjects();
+    Collection getCopletInstances();
     Collection getLayoutObjects();
 
     Layout searchLayout(String layoutId);
     Layout getRootLayout();
 
-    CopletInstanceData searchCopletInstanceData(String copletId);
-    Collection searchCopletInstanceDataObjects(String copletDataId);
-    Collection searchCopletInstanceDataObjects(CopletData copletData);
+    CopletInstance searchCopletInstance(String copletId);
+    Collection searchCopletInstances(String copletDefinitionId);
+    Collection searchCopletInstances(CopletDefinition copletDefinition);
 }

@@ -59,12 +59,12 @@ public final class ParameterAspect extends AbstractAspect {
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler contenthandler)
     throws SAXException {
-        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
 
         Map parameter = layout.getParameters();
         if (parameter.size() > 0) {
@@ -79,7 +79,7 @@ public final class ParameterAspect extends AbstractAspect {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
 
-        context.invokeNext( layout, service, contenthandler );
+        rendererContext.invokeNext( layout, service, contenthandler );
 
         XMLUtils.endElement(contenthandler, config.tagName);
     }

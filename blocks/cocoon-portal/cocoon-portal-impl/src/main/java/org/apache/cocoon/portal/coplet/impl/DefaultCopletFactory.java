@@ -16,12 +16,12 @@
 package org.apache.cocoon.portal.coplet.impl;
 
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletFactory;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.event.coplet.CopletDataAddedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceDataAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceDataRemovedEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
@@ -38,29 +38,30 @@ public class DefaultCopletFactory
     protected static long idCounter = System.currentTimeMillis();
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletData)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public CopletInstanceData newInstance(CopletData copletData)
+    public CopletInstance newInstance(CopletDefinition copletData)
     throws PortalException {
         return this.newInstance(copletData, null);
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletData, String)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletDefinition, String)
      */
-    public CopletInstanceData newInstance(CopletData copletData, String id)
+    public CopletInstance newInstance(CopletDefinition copletData, String key)
     throws PortalException {
+        String id = key;
         if (id == null ) {
             synchronized (this) {
                 id = copletData.getId() + '-' + idCounter;
                 idCounter += 1;
             }
         }
-        CopletInstanceData instance = new CopletInstanceData(id);
-        instance.setCopletData(copletData);
+        CopletInstance instance = new CopletInstance(id);
+        instance.setCopletDefinition(copletData);
 
         // now lookup the adapter
-        final String adapterName = copletData.getCopletBaseData().getCopletAdapterName();
+        final String adapterName = copletData.getCopletType().getCopletAdapterName();
         final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
         adapter.init( instance );
         adapter.login( instance );
@@ -71,12 +72,12 @@ public class DefaultCopletFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#remove(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#remove(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void remove(CopletInstanceData copletInstanceData) {
+    public void remove(CopletInstance copletInstanceData) {
         if ( copletInstanceData != null ) {
             // now lookup the adapter
-            final String adapterName = copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
+            final String adapterName = copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName();
             final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
             adapter.logout( copletInstanceData );
             adapter.destroy( copletInstanceData );
@@ -87,21 +88,22 @@ public class DefaultCopletFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletBaseData, java.lang.String)
+     * @see org.apache.cocoon.portal.coplet.CopletFactory#newInstance(org.apache.cocoon.portal.coplet.CopletType, java.lang.String)
      */
-    public CopletData newInstance(CopletBaseData copletBaseData, String id)
+    public CopletDefinition newInstance(CopletType copletType, String key)
     throws PortalException {
+        String id = key;
         if (id == null ) {
             synchronized (this) {
-                id = copletBaseData.getId() + '_' + idCounter;
+                id = copletType.getId() + '_' + idCounter;
                 idCounter += 1;
             }
         }
-        final CopletData instance = new CopletData(id);
-        instance.setCopletBaseData(copletBaseData);
+        final CopletDefinition instance = new CopletDefinition(id);
+        instance.setCopletType(copletType);
 
         // send an event
-        this.portalService.getEventManager().send(new CopletDataAddedEvent(instance));
+        this.portalService.getEventManager().send(new CopletDefinitionAddedEvent(instance));
 
         return instance;
     }

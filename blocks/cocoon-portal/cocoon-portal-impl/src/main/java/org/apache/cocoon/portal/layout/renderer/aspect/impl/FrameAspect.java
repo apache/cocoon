@@ -42,7 +42,7 @@ public class FrameAspect extends AbstractCIncludeAspect {
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context, Layout layout, PortalService service, ContentHandler handler)
+    public void toSAX(RendererAspectContext rendererContext, Layout layout, PortalService service, ContentHandler handler)
     throws SAXException {
         if (!(layout instanceof FrameLayout)) {
             throw new SAXException("Wrong layout type, FrameLayout expected: " + layout.getClass().getName());

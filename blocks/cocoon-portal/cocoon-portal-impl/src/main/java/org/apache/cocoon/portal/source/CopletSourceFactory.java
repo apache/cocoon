@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -52,7 +52,7 @@ public class CopletSourceFactory
             location = location.substring(position+2);
         }
         try {
-            CopletInstanceData coplet = this.portalService.getProfileManager().getCopletInstanceData(location);
+            CopletInstance coplet = this.portalService.getProfileManager().getCopletInstanceData(location);
             if ( coplet == null ) {
                 throw new IOException("Unable to get coplet for " + location);
             }

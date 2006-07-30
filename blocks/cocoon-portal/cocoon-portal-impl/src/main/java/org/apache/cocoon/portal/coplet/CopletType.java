@@ -29,9 +29,9 @@ import org.apache.cocoon.portal.util.PortalUtils;
  *
  * @version $Id$
  */
-public final class CopletBaseData implements Serializable { 
+public class CopletType implements Serializable { 
 
-	private Map copletConfig = new HashMap();
+	private final Map copletConfig = new HashMap();
 
 	private final String id;
 
@@ -42,7 +42,7 @@ public final class CopletBaseData implements Serializable {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
      */
-    public CopletBaseData(String id) {
+    public CopletType(String id) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
@@ -82,7 +82,7 @@ public final class CopletBaseData implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "CopletBaseData (" + this.hashCode() +
+        return "CopletType (" + this.hashCode() +
                "), id=" + this.getId() + ", coplet-adapter=" + this.getCopletAdapterName();
     }
 }

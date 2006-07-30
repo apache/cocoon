@@ -43,7 +43,7 @@ import org.apache.cocoon.portal.util.PortalUtils;
  *
  * @version $Id$
  */
-public final class CopletInstanceData implements Serializable {
+public final class CopletInstance implements Serializable {
 
     public final static int SIZE_MINIMIZED  = 0;
     public final static int SIZE_NORMAL     = 1;
@@ -52,8 +52,8 @@ public final class CopletInstanceData implements Serializable {
 
     protected final String id;
 
-    /** The corresponding {@link CopletData}. */
-	protected CopletData copletData;
+    /** The corresponding {@link CopletDefinition}. */
+	protected CopletDefinition copletDefinition;
 
     /** Persisted attributes. */
     protected Map attributes = new HashMap();
@@ -74,7 +74,7 @@ public final class CopletInstanceData implements Serializable {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
 	 */
-	public CopletInstanceData(String id) {
+	public CopletInstance(String id) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
@@ -91,18 +91,18 @@ public final class CopletInstanceData implements Serializable {
     }
 
 	/**
-	 * @return CopletData
+	 * @return CopletDefinition
 	 */
-	public CopletData getCopletData() {
-		return copletData;
+	public CopletDefinition getCopletDefinition() {
+		return this.copletDefinition;
 	}
 
 	/**
-	 * Sets the copletData.
-	 * @param copletData The copletData to set
+	 * Sets the coplet definition..
+	 * @param copletDef The copletDef to set
 	 */
-	public void setCopletData(CopletData copletData) {
-		this.copletData = copletData;
+	public void setCopletDefinition(CopletDefinition copletDef) {
+		this.copletDefinition = copletDef;
 	}
 
     public Object getAttribute(String key) {
@@ -141,7 +141,7 @@ public final class CopletInstanceData implements Serializable {
         if (this.title != null) {
             return this.title;
         }
-        return this.getCopletData().getTitle();
+        return this.getCopletDefinition().getTitle();
     }
 
     public String getInstanceTitle() {
@@ -156,18 +156,18 @@ public final class CopletInstanceData implements Serializable {
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
-        CopletInstanceData clone = new CopletInstanceData(this.id);
+        CopletInstance clone = new CopletInstance(this.id);
 
-        clone.copletData = this.copletData;
+        clone.copletDefinition = this.copletDefinition;
         clone.attributes = new HashMap(this.attributes);
         clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
 
         return clone;
     }
 
-    public CopletInstanceData copy() {
+    public CopletInstance copy() {
         try {
-            return (CopletInstanceData)this.clone();
+            return (CopletInstance)this.clone();
         } catch (CloneNotSupportedException cnse) {
             // ignore
             return null;
@@ -195,7 +195,7 @@ public final class CopletInstanceData implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "CopletInstanceData (" + this.hashCode() +
-               "), id=" + this.getId() + ", coplet-data=" + (this.getCopletData() == null ? "null" : this.getCopletData().getId());
+        return "CopletInstance (" + this.hashCode() +
+               "), id=" + this.getId() + ", coplet-definition=" + (this.getCopletDefinition() == null ? "null" : this.getCopletDefinition().getId());
     }
 }

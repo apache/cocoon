@@ -26,7 +26,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.Attributes;
@@ -68,7 +68,7 @@ public class LinkTransformer
     /**
      * The coplet instance data
      */
-    protected CopletInstanceData copletInstanceData;
+    protected CopletInstance copletInstanceData;
 
     /**
      * The html document base uri
@@ -86,8 +86,8 @@ public class LinkTransformer
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     /** The prefix */

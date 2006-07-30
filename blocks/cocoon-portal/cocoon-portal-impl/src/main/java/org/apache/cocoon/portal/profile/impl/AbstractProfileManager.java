@@ -26,7 +26,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserDidLoginEvent;
@@ -67,8 +67,8 @@ public abstract class AbstractProfileManager
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.aspectSelector = (ServiceSelector) this.manager.lookup( ProfileManagerAspect.ROLE+"Selector");
     }
 
@@ -171,26 +171,27 @@ public abstract class AbstractProfileManager
     protected void prepareObject(Object object)
     throws LayoutException {
         if ( object != null ) {
+            Object preparableObject = object;
             if ( object instanceof Map ) {
-                object = ((Map)object).values();
+                preparableObject = ((Map)object).values();
             }
             if (object instanceof Layout) {
-                object = this.checkAvailability((Layout)object);
-                if ( object != null ) {
-                    this.portalService.getLayoutFactory().prepareLayout((Layout)object);
+                preparableObject = this.checkAvailability((Layout)object);
+                if ( preparableObject != null ) {
+                    this.portalService.getLayoutFactory().prepareLayout((Layout)preparableObject);
                 }
             } else if (object instanceof Collection) {
-                final Iterator iterator = ((Collection)object).iterator();
+                final Iterator iterator = ((Collection)preparableObject).iterator();
                 while (iterator.hasNext()) {
                     final Object o = iterator.next();
-                    if ( o instanceof CopletInstanceData) {
-                        CopletInstanceData cid = (CopletInstanceData)o;
+                    if ( o instanceof CopletInstance) {
+                        CopletInstance cid = (CopletInstance)o;
                         // check if the coplet data is set; if not the instance
                         // will be removed later on
-                        if ( cid.getCopletData() != null ) {
+                        if ( cid.getCopletDefinition() != null ) {
                             // now invoke login on each instance
                             CopletAdapter adapter;
-                            adapter = this.portalService.getCopletAdapter(cid.getCopletData().getCopletBaseData().getCopletAdapterName());                            
+                            adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());                            
                             adapter.login( cid );
                         }
                     }
@@ -203,7 +204,7 @@ public abstract class AbstractProfileManager
         // is the coplet instance available?
         if ( layout instanceof CopletLayout ) {
             final CopletLayout cl = (CopletLayout)layout;
-            if ( cl.getCopletInstanceData() == null || cl.getCopletInstanceData().getCopletData() == null ) {
+            if ( cl.getCopletInstanceData() == null || cl.getCopletInstanceData().getCopletDefinition() == null ) {
                 return null;
             }
         } else if ( layout instanceof CompositeLayout ) {
@@ -229,7 +230,7 @@ public abstract class AbstractProfileManager
         if ( this.chain.hasAspects() ) {
             DefaultProfileManagerAspectContext aspectContext = new DefaultProfileManagerAspectContext(this.chain, this.portalService);
             aspectContext.invokeNext(profile);
-            profile = aspectContext.getProfile();
+            return aspectContext.getProfile();
         }
         return profile;
     }

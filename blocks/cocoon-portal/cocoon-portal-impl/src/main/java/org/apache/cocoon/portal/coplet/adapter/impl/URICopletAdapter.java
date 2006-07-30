@@ -29,8 +29,8 @@ import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -50,24 +50,24 @@ public class URICopletAdapter
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service( manager );
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service( aManager );
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
      */
-    public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
+    public void streamContent(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
-        final String uri = (String)coplet.getCopletData().getAttribute("uri");
+        final String uri = (String)coplet.getCopletDefinition().getAttribute("uri");
         if ( uri == null ) {
-            throw new SAXException("No URI for coplet data "+coplet.getCopletData().getId()+" found.");
+            throw new SAXException("No URI for coplet data "+coplet.getCopletDefinition().getId()+" found.");
         }
         this.streamContent( coplet, uri, contentHandler);
     }
 
-    protected void streamContent(final CopletInstanceData coplet, 
+    protected void streamContent(final CopletInstance coplet, 
                                  final String uri,
                                  final ContentHandler contentHandler)
     throws SAXException {
@@ -79,7 +79,7 @@ public class URICopletAdapter
                 String sourceUri = uri;
 
                 if ( handlePars.booleanValue() ) {
-                    List list = CopletInstanceDataFeatures.getChangedCopletInstanceDataObjects(this.portalService);
+                    List list = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(this.portalService);
                     if ( list.contains( coplet )) {
                         // add parameters
                         if ( uri.startsWith("cocoon:raw:") ) {
@@ -130,7 +130,7 @@ public class URICopletAdapter
      * @return True if the error content has been rendered, otherwise false
      * @throws SAXException
      */
-    protected boolean renderErrorContent(CopletInstanceData coplet, 
+    protected boolean renderErrorContent(CopletInstance coplet, 
                                          ContentHandler     handler,
                                          Exception          error)
     throws SAXException {

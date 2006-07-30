@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.acting.helpers.CopletEventDescription;
 import org.apache.cocoon.portal.acting.helpers.LayoutEventDescription;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -86,13 +86,13 @@ public class HistoryAspect
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext rendererContext,
                     Layout layout,
                     PortalService service,
                     ContentHandler handler)
     throws SAXException {
         if ( layout.getId() != null ) {
-            final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
+            final Request request = ObjectModelHelper.getRequest(rendererContext.getObjectModel());
             final Session session = request.getSession(false);
             if ( session != null ) {
                 List history = (List)session.getAttribute("portal-history");
@@ -111,13 +111,13 @@ public class HistoryAspect
 
                 // are we a coplet layout
                 if ( layout instanceof CopletLayout ) {
-                    CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+                    CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
                     this.addValues(cid.getId(), state, cid.getAttributes(), "attributes/", true);
                     this.addValues(cid.getId(), state, cid.getTemporaryAttributes(), "temporaryAttributes/", true);
                 }
                 session.setAttribute("portal-history", history);
             }
         }
-        context.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, service, handler);
     }
 }

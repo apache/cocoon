@@ -65,10 +65,10 @@ public class DefaultDeploymentObject implements DeploymentObject {
      */
     public InputStream getConfiguration(String configPath)
     throws IOException {
-        ZipFile zipFile = this.getZipFile();
-        ZipEntry entry = zipFile.getEntry(configPath);
+        final ZipFile file = this.getZipFile();
+        final ZipEntry entry = file.getEntry(configPath);
         if (entry != null) {
-            return zipFile.getInputStream(entry);
+            return file.getInputStream(entry);
         }
         return null;
     }

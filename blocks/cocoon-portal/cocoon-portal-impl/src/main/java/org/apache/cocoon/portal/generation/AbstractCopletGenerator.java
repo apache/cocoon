@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.xml.sax.SAXException;
 
 /**
@@ -64,9 +64,9 @@ extends ServiceableGenerator {
      * @return The coplet instance data
      * @throws SAXException If an errors occurs or the instance data is not available
      */
-    protected CopletInstanceData getCopletInstanceData() 
+    protected CopletInstance getCopletInstanceData() 
     throws SAXException {
-        CopletInstanceData cid = this.getCopletInstanceData(null);
+        CopletInstance cid = this.getCopletInstanceData(null);
         if ( cid == null ) {
             throw new SAXException("Could not find coplet instance data for the current pipeline.");
         }
@@ -87,12 +87,12 @@ extends ServiceableGenerator {
      * @return The coplet instance data or null
      * @throws SAXException If an error occurs
      */
-    protected CopletInstanceData getCopletInstanceData(String copletId) 
+    protected CopletInstance getCopletInstanceData(String instanceId) 
     throws SAXException {
-        final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-
+        String copletId = instanceId;
         if ( copletId == null ) {
             // determine coplet id
+            final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
             if (context != null) {
                 copletId = (String)context.get(Constants.COPLET_ID_KEY);
             } else {
@@ -110,7 +110,7 @@ extends ServiceableGenerator {
             throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
         }
 
-        CopletInstanceData object = this.getPortalService().getProfileManager().getCopletInstanceData( copletId );
+        CopletInstance object = this.getPortalService().getProfileManager().getCopletInstanceData( copletId );
 
         return object;
     }
@@ -129,8 +129,8 @@ extends ServiceableGenerator {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
     }
 }

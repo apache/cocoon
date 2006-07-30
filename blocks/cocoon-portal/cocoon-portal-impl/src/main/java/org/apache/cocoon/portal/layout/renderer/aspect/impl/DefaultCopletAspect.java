@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -54,15 +54,15 @@ public class DefaultCopletAspect extends AbstractAspect {
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
-	public void toSAX(RendererAspectContext context,
+	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler handler)
 	throws SAXException {
         XMLUtils.startElement(handler, "content");
-        CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+        CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        final String adapterName = cid.getCopletData().getCopletBaseData().getCopletAdapterName();
+        final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
         CopletAdapter copletAdapter = null;
         ServiceSelector adapterSelector = null;
         try {
@@ -72,13 +72,13 @@ public class DefaultCopletAspect extends AbstractAspect {
         } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup component.", ce);
         } finally {
-            if (null != copletAdapter) {
+            if (null != adapterSelector) {
                 adapterSelector.release(copletAdapter);
             }
             this.manager.release(adapterSelector);
         }
 
         XMLUtils.endElement(handler, "content");
-        context.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, service, handler);
 	}
 }

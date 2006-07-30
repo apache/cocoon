@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.apache.cocoon.portal.PortalRuntimeException;
@@ -50,10 +52,10 @@ public abstract class Layout extends AbstractParameters {
     protected Item parent;
 
     /** The name of the layout. */
-    protected String name;
+    protected final String name;
 
     /** The unique identifier of this layout object or null. */
-    protected String id;
+    protected final String id;
 
     /** The corresponding layout descripton. */
     transient protected LayoutDescription description;
@@ -225,17 +227,33 @@ public abstract class Layout extends AbstractParameters {
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
-        Layout clone = (Layout)super.clone();
+        
+        Constructor c;
+        try {
+            c = this.getClass().getConstructor(new Class[] {String.class, String.class});
+            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.name}); 
 
-        // we don't clone the parent; we just set it to null
-        clone.name = this.name;
-        clone.id = this.id;
-        clone.description = this.description;
-        clone.rendererName = this.rendererName;
-        clone.isStatic = this.isStatic;
-        clone.temporaryAttributes = new LinkedMap(this.temporaryAttributes);
-        clone.parent = null;
+            // clone fields from AbstractParameters
+            clone.parameters = new LinkedMap(this.parameters);
+            
+            // we don't clone the parent; we just set it to null
+            clone.parent = null;
+            clone.description = this.description;
+            clone.rendererName = this.rendererName;
+            clone.isStatic = this.isStatic;
+            clone.temporaryAttributes = new LinkedMap(this.temporaryAttributes);
 
-        return clone;
+            return clone;
+        } catch (NoSuchMethodException e) {
+            throw new CloneNotSupportedException("Unable to find constructor for new layout object.");
+        } catch (InstantiationException e) {
+            throw new CloneNotSupportedException("Unable to create layout object.");
+        } catch (InvocationTargetException e) {
+            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
+        } catch (IllegalArgumentException e) {
+            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
+        } catch (IllegalAccessException e) {
+            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
+        }
     }
 }

@@ -30,26 +30,26 @@ public interface CopletFactory  {
      * Create a new coplet instance.
      * This is also registered at the profile manager.
      */
-    CopletInstanceData newInstance(CopletData copletData)
+    CopletInstance newInstance(CopletDefinition copletDef)
     throws PortalException;
 
     /** 
      * Create a new coplet instance.
      * This is also registered at the profile manager.
      */
-    CopletInstanceData newInstance(CopletData copletData,
-                                   String id)
+    CopletInstance newInstance(CopletDefinition copletDef,
+                                   String           id)
     throws PortalException;
 
     /**
      * Remove the coplet instance data.
      * This is also unregistered at the profile manager.
      */
-    void remove(CopletInstanceData copletInstanceData);
+    void remove(CopletInstance copletInstanceData);
 
     /**
      * Create a new coplet data instance.
      */
-    CopletData newInstance(CopletBaseData copletBaseData, String id)
+    CopletDefinition newInstance(CopletType copletType, String id)
     throws PortalException;
 }

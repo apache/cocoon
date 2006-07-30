@@ -21,7 +21,7 @@ import java.util.Map;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.excalibur.source.SourceUtil;
 import org.xml.sax.Attributes;
@@ -131,7 +131,7 @@ extends AbstractCopletTransformer {
         newAttributes.removeAttribute("external");
         String link = attributes.getValue("href");
 
-        CopletInstanceData cid = this.getCopletInstanceData();
+        CopletInstance cid = this.getCopletInstanceData();
         link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
 
         newAttributes.addCDATAAttribute("path", this.jxPath);
@@ -151,7 +151,7 @@ extends AbstractCopletTransformer {
         newAttributes.removeAttribute("action");
         String link = attributes.getValue("action");
 
-        CopletInstanceData cid = this.getCopletInstanceData();
+        CopletInstance cid = this.getCopletInstanceData();
         link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
 
         newAttributes.addCDATAAttribute("path", this.jxPath);

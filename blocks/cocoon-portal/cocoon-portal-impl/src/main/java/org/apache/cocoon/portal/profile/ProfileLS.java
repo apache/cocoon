@@ -34,9 +34,9 @@ public interface ProfileLS {
     String PARAMETER_PROFILETYPE = "profiletype";
 
     String PROFILETYPE_LAYOUT = "layout";
-    String PROFILETYPE_COPLETBASEDATA = "copletbasedata";
-    String PROFILETYPE_COPLETDATA = "copletdata";
-    String PROFILETYPE_COPLETINSTANCEDATA = "copletinstancedata";
+    String PROFILETYPE_COPLETTYPE = "coplettype";
+    String PROFILETYPE_COPLETDEFINITION = "copletdefinition";
+    String PROFILETYPE_COPLETINSTANCE = "copletinstance";
 
     /**
      * Load a profile

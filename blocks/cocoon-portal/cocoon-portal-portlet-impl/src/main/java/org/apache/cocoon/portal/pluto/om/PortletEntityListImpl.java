@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl;
 import org.apache.pluto.PortletContainerServices;
 import org.apache.pluto.om.common.ObjectID;
@@ -64,7 +64,7 @@ public class PortletEntityListImpl
         PortletDefinition pd = registry.getPortletDefinition(ObjectIDImpl.createFromString(definitionId));
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         // FIXME
-        CopletInstanceData coplet = null;
+        CopletInstance coplet = null;
         PortletEntity portletEntity = new PortletEntityImpl(pae, coplet, pd, registry.getPortalService());
         this.portlets.put(portletEntity.getId(), portletEntity);
 
@@ -76,7 +76,7 @@ public class PortletEntityListImpl
      */
     public PortletEntity add(PortletApplicationEntity appEntity,
                              String definitionId,
-                             CopletInstanceData coplet,
+                             CopletInstance coplet,
                              PortletDefinitionRegistry registry) {
         PortletDefinition pd = registry.getPortletDefinition(ObjectIDImpl.createFromString(definitionId));
         PortletEntity portletEntity = new PortletEntityImpl(appEntity, coplet, pd, registry.getPortalService());

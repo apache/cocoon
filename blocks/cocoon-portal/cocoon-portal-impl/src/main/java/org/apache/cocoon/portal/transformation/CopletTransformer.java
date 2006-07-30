@@ -25,7 +25,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.LinkService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.impl.JXPathEvent;
 import org.apache.cocoon.portal.event.layout.LayoutJXPathEvent;
@@ -143,7 +143,7 @@ extends AbstractCopletTransformer {
                 throw new SAXException("Attribute '"+SELECT_ATTR+"' must be specified on element " + COPLET_ELEM + ".");
             }
             final String copletId = attr.getValue("id");
-            final CopletInstanceData cid = this.getCopletInstanceData(copletId);
+            final CopletInstance cid = this.getCopletInstanceData(copletId);
             if ( cid == null ) {
                 throw new SAXException("Unable to find coplet instance data with id '" + copletId + "'.");
             }
@@ -180,7 +180,7 @@ extends AbstractCopletTransformer {
             newAttrs.removeAttribute("format");
 
             if ( attr.getValue("href") != null ) {
-                final CopletInstanceData cid = this.getCopletInstanceData();
+                final CopletInstance cid = this.getCopletInstanceData();
                 CopletJXPathEvent event = new CopletJXPathEvent(cid, null, null);
 
                 String value = linkService.getLinkURI(event);
@@ -209,7 +209,7 @@ extends AbstractCopletTransformer {
                 } else {
                     String copletId = attr.getValue("coplet");
                     newAttrs.removeAttribute("coplet");
-                    final CopletInstanceData cid = this.getCopletInstanceData(copletId);
+                    final CopletInstance cid = this.getCopletInstanceData(copletId);
                     if ( cid != null ) {
                         event = new CopletJXPathEvent(cid, path, value);
                     }
@@ -323,14 +323,14 @@ extends AbstractCopletTransformer {
 
         } else if ( "html-form".equals(format) ) {
             boolean addParametersAsHiddenFields = false;
-            String parameters = null;
+            String reqParams = null;
             final String enctype = newAttrs.getValue("enctype");
             if ( enctype== null 
                 || "application/x-www-form-urlencoded".equalsIgnoreCase(enctype)
                 || "multipart/form-data".equalsIgnoreCase(enctype) )  {
                 final int pos = uri.indexOf('?');
                 if ( pos != -1 ) {
-                    parameters = uri.substring(pos+1);
+                    reqParams = uri.substring(pos+1);
                     uri = uri.substring(0, pos);
                     addParametersAsHiddenFields = true;
                 }
@@ -340,7 +340,7 @@ extends AbstractCopletTransformer {
             this.stack.push("form");
             if ( addParametersAsHiddenFields ) {
                 // create hidden input fields
-                RequestParameters pars = new RequestParameters(parameters);
+                RequestParameters pars = new RequestParameters(reqParams);
                 Enumeration enumeration = pars.getParameterNames();
                 while ( enumeration.hasMoreElements() ) {
                     final String pName = (String)enumeration.nextElement();

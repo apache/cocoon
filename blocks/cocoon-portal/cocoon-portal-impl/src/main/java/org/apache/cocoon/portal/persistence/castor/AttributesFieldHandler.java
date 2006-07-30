@@ -19,23 +19,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
 /**
- * Field handler for attributes of a CopletData and a CopletInstanceData object.
+ * Field handler for attributes of a CopletDefinition and a CopletInstanceData object.
  *
  * @version $Id$
  */
 public class AttributesFieldHandler extends AbstractFieldHandler {
 
     protected Map getAttributes(Object object) {
-        if (object instanceof CopletData) {
-            return ((CopletData) object).getAttributes();
+        if (object instanceof CopletDefinition) {
+            return ((CopletDefinition) object).getAttributes();
         }
-        return ((CopletInstanceData) object).getAttributes();
+        return ((CopletInstance) object).getAttributes();
     }
 
     /**

@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -62,13 +62,13 @@ public class CIncludeCopletAspect
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
-	public void toSAX(RendererAspectContext context,
+	public void toSAX(RendererAspectContext rendererContext,
                 		Layout layout,
                 		PortalService service,
                 		ContentHandler handler)
 	throws SAXException {
-        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
-        final CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
+        final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
 
         if ( config.rootTag ) {
             XMLUtils.startElement(handler, config.tagName);
@@ -80,7 +80,7 @@ public class CIncludeCopletAspect
             XMLUtils.endElement(handler, config.tagName);
         }
 
-        context.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, service, handler);
 	}
 
     protected static class PreparedConfiguration {

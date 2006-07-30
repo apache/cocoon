@@ -50,9 +50,9 @@ public class PageLabelEventAspect
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.labelManager = (PageLabelManager)manager.lookup(PageLabelManager.ROLE);
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
+        this.labelManager = (PageLabelManager)this.manager.lookup(PageLabelManager.ROLE);
     }
 
     /**

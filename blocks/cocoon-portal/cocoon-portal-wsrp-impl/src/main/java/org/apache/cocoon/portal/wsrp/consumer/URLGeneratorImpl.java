@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect;
 import org.apache.wsrp4j.consumer.URLGenerator;
@@ -94,7 +94,7 @@ public class URLGeneratorImpl
      * @see org.apache.wsrp4j.consumer.URLGenerator#getNamespacedToken(java.lang.String)
      */
     public String getNamespacedToken(String token) {
-        final CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
+        final CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         return coplet.getId();
     }
 
@@ -113,7 +113,7 @@ public class URLGeneratorImpl
         if ( "true".equalsIgnoreCase((String)params.get(Constants.SECURE_URL)) ) { 
             secureLink = Boolean.TRUE;
         }
-        final CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
+        final CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         params.put(WSRPEventAspect.REQUEST_PARAMETER_NAME, coplet.getId());
         final StringBuffer buffer = new StringBuffer(this.service.getLinkService().getRefreshLinkURI(secureLink));
         boolean hasParams = buffer.indexOf("?") > 0;
