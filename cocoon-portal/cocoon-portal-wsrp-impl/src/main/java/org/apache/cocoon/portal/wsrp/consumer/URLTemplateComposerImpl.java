@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.wsrp.consumer;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.wsrp4j.consumer.URLGenerator;
 import org.apache.wsrp4j.consumer.URLTemplateComposer;
@@ -242,7 +242,7 @@ public class URLTemplateComposerImpl
      * @see org.apache.wsrp4j.consumer.URLTemplateComposer#getNamespacePrefix()
      */
     public String getNamespacePrefix() {
-        final CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
+        final CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         return coplet.getId();
     }
 

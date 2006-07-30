@@ -16,44 +16,33 @@
 -->
 <!-- @version $Id$ -->
 <mapping>
-  <description>Coplet instance data mapping file</description>
+  <description>Coplet type mapping file</description>
 
   <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
     <map-to xml="coplets" />
 
     <field name="objects"
-           type="org.apache.cocoon.portal.coplet.CopletInstanceData"
+           type="org.apache.cocoon.portal.coplet.CopletType"
            collection="collection">
-      <bind-xml matches="coplet-instance-data"/>
+      <bind-xml matches="coplet-type" />
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.coplet.CopletInstanceData" verify-constructable="false">
-    <map-to xml="coplet-instance-data"/>
+  <class name="org.apache.cocoon.portal.coplet.CopletType" verify-constructable="false">
+    <map-to xml="coplet-type" />
 
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="copletData"
-           type="java.lang.String"
-           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
-      <bind-xml name="coplet-data"/>
+    <field name="copletAdapterName" type="java.lang.String">
+      <bind-xml name="coplet-adapter" />
     </field>
 
-    <field name="attributes"
-           type="org.exolab.castor.mapping.MapItem"
+    <field name="copletConfig" type="org.exolab.castor.mapping.MapItem"
            collection="map"
-           handler="org.apache.cocoon.portal.persistence.castor.AttributesFieldHandler">
-      <bind-xml name="attribute"/>
-    </field>
-
-    <field name="title" type="java.lang.String" get-method="getInstanceTitle" set-method="setTitle">
-      <bind-xml name="title"/>
-    </field>
-
-    <field name="size">
-      <bind-xml name="size"/>
+           handler="org.apache.cocoon.portal.persistence.castor.ConfigurationFieldHandler">
+      <bind-xml name="configuration"/>
     </field>
   </class>
 
@@ -61,9 +50,10 @@
     <field name="key" type="java.lang.String">
       <bind-xml name="name"/>
     </field>
+
     <field name="value">
       <bind-xml name="value"/>
     </field>
   </class>
-
 </mapping>
+

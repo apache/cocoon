@@ -23,7 +23,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.cocoon.portal.profile.ProfileLS;
@@ -104,9 +104,9 @@ public class PortletPreferencesProviderImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#getPreferenceSet(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#getPreferenceSet(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public PreferenceSet getPreferenceSet(CopletInstanceData cid) {
+    public PreferenceSet getPreferenceSet(CopletInstance cid) {
         final Map parameters = new HashMap();
         parameters.put(ProfileLS.PARAMETER_PROFILETYPE, PROFILETYPE_PREFERENCES);
         try {
@@ -118,9 +118,9 @@ public class PortletPreferencesProviderImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#storePreferenceSet(org.apache.cocoon.portal.coplet.CopletInstanceData, org.apache.pluto.om.common.PreferenceSet)
+     * @see org.apache.cocoon.portal.pluto.PortletPreferencesProvider#storePreferenceSet(org.apache.cocoon.portal.coplet.CopletInstance, org.apache.pluto.om.common.PreferenceSet)
      */
-    public void storePreferenceSet(CopletInstanceData cid, PreferenceSet prefs) {
+    public void storePreferenceSet(CopletInstance cid, PreferenceSet prefs) {
         final Map parameters = new HashMap();
         parameters.put(ProfileLS.PARAMETER_PROFILETYPE, PROFILETYPE_PREFERENCES);
         try {

@@ -20,7 +20,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.layout.Layout;
@@ -72,7 +72,7 @@ extends AbstractAspect {
                       PortalService service,
                       ContentHandler contenthandler)
     throws SAXException {
-        final CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+        final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
         final ContentStore store;
         final String elementName;
         if ( context.getAspectConfiguration().equals(Boolean.TRUE) ) {
@@ -83,13 +83,13 @@ extends AbstractAspect {
             elementName = "briefcase-add-content";
         }
 
-        Boolean b = (Boolean)cid.getCopletData().getAttribute("basket-content");
+        Boolean b = (Boolean)cid.getCopletDefinition().getAttribute("basket-content");
         if ( b != null && b.equals(Boolean.TRUE) ) {
             Object item = new ContentItem(cid, true);
             Event event = new AddItemEvent(store, item);
             XMLUtils.createElement(contenthandler, elementName, service.getLinkService().getLinkURI(event));
         }
-        b = (Boolean)cid.getCopletData().getAttribute("basket-link");
+        b = (Boolean)cid.getCopletDefinition().getAttribute("basket-link");
         if ( b != null && b.equals(Boolean.TRUE) ) {
             Object item = new ContentItem(cid, false);
             Event event = new AddItemEvent(store, item);

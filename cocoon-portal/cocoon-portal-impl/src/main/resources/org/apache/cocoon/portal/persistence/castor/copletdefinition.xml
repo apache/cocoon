@@ -16,36 +16,47 @@
 -->
 <!-- @version $Id$ -->
 <mapping>
-  <description>Coplet base data mapping file</description>
+  <description>Coplet definition mapping file</description>
 
   <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
     <map-to xml="coplets" />
 
     <field name="objects"
-           type="org.apache.cocoon.portal.coplet.CopletBaseData"
+           type="org.apache.cocoon.portal.coplet.CopletDefinition"
            collection="collection">
-      <bind-xml matches="coplet-base-data" />
+      <bind-xml matches="coplet-definition"/>
     </field>
   </class>
 
-  <class name="org.apache.cocoon.portal.coplet.CopletBaseData" verify-constructable="false">
-    <map-to xml="coplet-base-data" />
-
+  <class name="org.apache.cocoon.portal.coplet.CopletDefinition" verify-constructable="false">
+    <map-to xml="coplet-definition" />
+    
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
       <bind-xml name="id" node="attribute" />
     </field>
-
-    <field name="copletAdapterName" type="java.lang.String">
-      <bind-xml name="coplet-adapter" />
+    
+    <field name="title" type="java.lang.String">
+      <bind-xml name="title"/>
     </field>
 
-    <field name="copletConfig" type="org.exolab.castor.mapping.MapItem"
+    <field name="allowedRoles" type="java.lang.String">
+      <bind-xml name="roles"/>
+    </field>
+
+    <field name="attributes"
+           type="org.exolab.castor.mapping.MapItem"
            collection="map"
-           handler="org.apache.cocoon.portal.persistence.castor.ConfigurationFieldHandler">
-      <bind-xml name="configuration"/>
+           handler="org.apache.cocoon.portal.persistence.castor.AttributesFieldHandler">
+      <bind-xml name="attribute"/>
+    </field>
+
+    <field name="copletType"
+           type="java.lang.String"
+           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+      <bind-xml name="coplet-type"/>
     </field>
   </class>
-
+   
   <class name="org.exolab.castor.mapping.MapItem">
     <field name="key" type="java.lang.String">
       <bind-xml name="name"/>

@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.wsrp.adapter;
 
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 
 /**
@@ -29,7 +29,7 @@ public class WSRPEvent
     implements CopletInstanceEvent {
 
     /** The corresponding coplet instance data. */
-    protected final CopletInstanceData coplet;
+    protected final CopletInstance coplet;
 
     /** The parameters for the wsrp url. */
     protected final Map producerParams;
@@ -40,7 +40,7 @@ public class WSRPEvent
      * @param coplet corresponding coplet instance data
      * @param pParams producer-parameters
      */
-    public WSRPEvent(CopletInstanceData coplet, Map pParams) {
+    public WSRPEvent(CopletInstance coplet, Map pParams) {
         this.coplet = coplet;
         this.producerParams = pParams;
     }
@@ -48,7 +48,7 @@ public class WSRPEvent
     /**
      * @see org.apache.cocoon.portal.event.CopletInstanceEvent#getTarget()
      */
-    public CopletInstanceData getTarget() {
+    public CopletInstance getTarget() {
         return this.coplet;
     }
 

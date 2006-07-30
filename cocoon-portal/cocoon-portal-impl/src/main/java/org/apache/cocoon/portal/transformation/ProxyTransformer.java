@@ -38,8 +38,8 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.util.HtmlDomParser;
 import org.apache.cocoon.portal.util.InputModuleHelper;
 import org.apache.cocoon.transformation.AbstractTransformer;
@@ -98,7 +98,7 @@ public class ProxyTransformer
     protected ServiceManager manager;
 
     /** The coplet instance data. */
-    protected CopletInstanceData copletInstanceData;
+    protected CopletInstance copletInstanceData;
 
     /** The original request to the portal. */
     protected Request request;
@@ -121,8 +121,8 @@ public class ProxyTransformer
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
         this.imHelper = new InputModuleHelper(manager);
     }
@@ -163,7 +163,7 @@ public class ProxyTransformer
 
         this.copletInstanceData = getInstanceData(this.manager, objectModel, parameters);
 
-        final CopletData copletData = this.copletInstanceData.getCopletData();
+        final CopletDefinition copletData = this.copletInstanceData.getCopletDefinition();
 
         this.link = (String) this.copletInstanceData.getTemporaryAttribute(LINK);
 
@@ -573,7 +573,7 @@ public class ProxyTransformer
     * @return CopletInstanceData
     * @throws ProcessingException
     */
-    public static CopletInstanceData getInstanceData(ServiceManager manager,
+    public static CopletInstance getInstanceData(ServiceManager manager,
                                                      Map objectModel,
                                                      Parameters parameters)
     throws ProcessingException {

@@ -21,19 +21,19 @@
     <composite-layout name="column" static="true">
       <item>
         <coplet-layout name="coplet" static="true">
-          <coplet-instance-data>static_sample_1</coplet-instance-data>
+          <coplet-instance>static_sample_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
         <composite-layout name="row">
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>GalleryPetstore</coplet-instance-data>
+              <coplet-instance>GalleryPetstore_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet">
-              <coplet-instance-data>GalleryViewer_1</coplet-instance-data>
+              <coplet-instance>GalleryViewer_1</coplet-instance>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -42,12 +42,12 @@
         <composite-layout name="row">
           <item>
             <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-              <coplet-instance-data>TestPortlet_1</coplet-instance-data>
+              <coplet-instance>TestPortlet_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
             <coplet-layout name="coplet" layout-renderer-name="portlet-window">
-              <coplet-instance-data>CocoonPortlet</coplet-instance-data>
+              <coplet-instance>CocoonPortlet</coplet-instance>
             </coplet-layout>
           </item>
         </composite-layout>
@@ -59,17 +59,17 @@
     <composite-layout name="column" static="true">
       <item>
         <coplet-layout name="coplet" static="true">
-          <coplet-instance-data>static_sample_1</coplet-instance-data>
+          <coplet-instance>static_sample_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet" >
-          <coplet-instance-data>app_test_1</coplet-instance-data>
+          <coplet-instance>app_test_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
         <coplet-layout name="coplet" >
-          <coplet-instance-data>app_test_2</coplet-instance-data>
+          <coplet-instance>app_test_2</coplet-instance>
         </coplet-layout>
       </item>
     </composite-layout>

@@ -78,8 +78,8 @@ public class DefaultLinkService
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
         this.converter = (EventConverter)this.manager.lookup(EventConverter.ROLE);
     }
 
@@ -358,8 +358,8 @@ public class DefaultLinkService
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
     }
 
     /**
@@ -391,8 +391,8 @@ public class DefaultLinkService
         public ConstantParameterMatcher(String value) {
             this.name = value;
         }
-        public boolean match(String name) {
-            return this.name.equals(name);
+        public boolean match(String matchingName) {
+            return this.name.equals(matchingName);
         }
     }
     public static final class PrefixParameterMatcher implements ParameterMatcher {

@@ -105,8 +105,8 @@ public class DefaultDeploymentManager
     /**
      * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
@@ -225,11 +225,10 @@ public class DefaultDeploymentManager
             event = new DeploymentEventImpl(deploymentObject);
             this.portalService.getEventManager().send(event);
         } finally {
-            if ( deploymentObject != null ) {
-                try {
-                    deploymentObject.close();
-                } catch (IOException e) {                    
-                }
+            try {
+                deploymentObject.close();
+            } catch (IOException e) {
+                // ignore
             }
         }
         return event;

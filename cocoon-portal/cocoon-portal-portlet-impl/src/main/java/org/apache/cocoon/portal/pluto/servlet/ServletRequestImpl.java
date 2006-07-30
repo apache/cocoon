@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
 import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
 import org.apache.pluto.om.window.PortletWindow;
@@ -152,7 +152,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
             } else {
                 // provider is null or different window, use stored render parameters
                 if ( window != null ) {
-                    final CopletInstanceData cid = ((PortletWindowImpl)this.window).getCopletInstanceData();
+                    final CopletInstance cid = ((PortletWindowImpl)this.window).getCopletInstanceData();
                     this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
                 }
             }

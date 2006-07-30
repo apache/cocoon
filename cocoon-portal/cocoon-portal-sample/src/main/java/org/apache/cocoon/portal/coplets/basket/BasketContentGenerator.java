@@ -24,7 +24,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.generation.AbstractCopletGenerator;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -67,7 +67,7 @@ extends AbstractCopletGenerator {
         try {
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             if ( this.attributeName != null ) {
-                CopletInstanceData cid = this.getCopletInstanceData();
+                CopletInstance cid = this.getCopletInstanceData();
                 byte[] content = (byte[])cid.getAttribute(this.attributeName);
                 if ( content == null ) {
                     this.xmlConsumer.startDocument();

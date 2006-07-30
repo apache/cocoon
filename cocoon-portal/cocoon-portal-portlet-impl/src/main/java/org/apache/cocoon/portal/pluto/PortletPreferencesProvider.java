@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.pluto;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.pluto.om.common.PreferenceSet;
 
 /**
@@ -23,7 +23,7 @@ import org.apache.pluto.om.common.PreferenceSet;
  */
 public interface PortletPreferencesProvider {
 
-    PreferenceSet getPreferenceSet(CopletInstanceData cid);
+    PreferenceSet getPreferenceSet(CopletInstance cid);
 
-    void storePreferenceSet(CopletInstanceData cid, PreferenceSet prefs);
+    void storePreferenceSet(CopletInstance cid, PreferenceSet prefs);
 }

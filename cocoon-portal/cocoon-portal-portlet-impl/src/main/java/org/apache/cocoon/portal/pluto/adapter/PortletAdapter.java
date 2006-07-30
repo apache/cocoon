@@ -37,8 +37,8 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDataFeatures;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
@@ -121,9 +121,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void login(CopletInstanceData coplet) {
+    public void login(CopletInstance coplet) {
         super.login(coplet);
 
         if ( this.portletContainer == null ) {
@@ -173,9 +173,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
      */
-    public void streamContent(CopletInstanceData coplet,
+    public void streamContent(CopletInstance coplet,
                               ContentHandler contentHandler)
     throws SAXException {
         if ( this.portletContainer == null ) {
@@ -219,9 +219,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void logout(CopletInstanceData coplet) {
+    public void logout(CopletInstance coplet) {
         super.logout(coplet);
         if ( this.portletContainer == null ) {
             return;
@@ -347,14 +347,14 @@ public class PortletAdapter
 
     public void inform(CopletInstanceSizingEvent event, PortalService service) {
         WindowState ws = WindowState.NORMAL;
-        if ( event.getSize() == CopletInstanceData.SIZE_NORMAL ) {
+        if ( event.getSize() == CopletInstance.SIZE_NORMAL ) {
             ws = WindowState.NORMAL;
-        } else if ( event.getSize() == CopletInstanceData.SIZE_MAXIMIZED ) {
+        } else if ( event.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
             ws = WindowState.MAXIMIZED;
-        } else if ( event.getSize() == CopletInstanceData.SIZE_MINIMIZED ) {
+        } else if ( event.getSize() == CopletInstance.SIZE_MINIMIZED ) {
             ws = WindowState.MINIMIZED;
-        } else if ( event.getSize() == CopletInstanceData.SIZE_FULLSCREEN ) {
-            ws = new WindowState((String)CopletDataFeatures.getAttributeValue(event.getTarget().getCopletData(), FULL_SCREEN_WINDOW_STATE_ATTRIBUTE_NAME, null));
+        } else if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
+            ws = new WindowState((String)CopletDefinitionFeatures.getAttributeValue(event.getTarget().getCopletDefinition(), FULL_SCREEN_WINDOW_STATE_ATTRIBUTE_NAME, null));
         }
         final String wsString = (String)event.getTarget().getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);
         if ( !wsString.equals(ws.toString()) ) {
@@ -413,14 +413,14 @@ public class PortletAdapter
         }
     }
 
-    protected String getResponse(CopletInstanceData instance, HttpServletResponse response) {
+    protected String getResponse(CopletInstance instance, HttpServletResponse response) {
         return response.toString();
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
      */
-    public List getPossibleCopletModes(CopletInstanceData copletInstanceData) {
+    public List getPossibleCopletModes(CopletInstance copletInstanceData) {
         final List modes = new ArrayList();
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
@@ -459,9 +459,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
      */
-    public List getPossibleWindowStates(CopletInstanceData copletInstanceData) {
+    public List getPossibleWindowStates(CopletInstance copletInstanceData) {
         final List states = new ArrayList();
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
@@ -509,9 +509,9 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public String getTitle(CopletInstanceData copletInstanceData) {
+    public String getTitle(CopletInstance copletInstanceData) {
         String title = null;
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {

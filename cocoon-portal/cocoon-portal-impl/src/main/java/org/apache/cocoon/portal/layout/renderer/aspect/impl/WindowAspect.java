@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDataFeatures;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -103,18 +103,18 @@ public final class WindowAspect extends AbstractAspect {
     /**
      * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
-    public void toSAX(RendererAspectContext context,
+    public void toSAX(RendererAspectContext rendererContext,
                       Layout                layout,
                       PortalService         service,
                       ContentHandler        contenthandler)
     throws SAXException {
-        final PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
-        final CopletInstanceData copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
+        final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
+        final CopletInstance copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
 
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        final CopletAdapter adapter = service.getCopletAdapter(copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName());
+        final CopletAdapter adapter = service.getCopletAdapter(copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName());
 
         // stream some general infos about the copet instance data
         this.streamCopletInstanceDataInfos(copletInstanceData, adapter, layout, contenthandler);
@@ -131,7 +131,7 @@ public final class WindowAspect extends AbstractAspect {
         // stream the window states and determine if we should invoke the next aspect
         boolean invokeNext = this.streamWindowStates(copletInstanceData, adapter, layout, contenthandler);
         if ( invokeNext ) {
-            context.invokeNext( layout, service, contenthandler );
+            rendererContext.invokeNext( layout, service, contenthandler );
         }
 
         if ( config.rootTag ) {
@@ -139,7 +139,7 @@ public final class WindowAspect extends AbstractAspect {
         }
     }
 
-    protected void streamCopletInstanceDataInfos(CopletInstanceData cid,
+    protected void streamCopletInstanceDataInfos(CopletInstance cid,
                                                  CopletAdapter      adapter,
                                                  Layout             layout,
                                                  ContentHandler     contenthandler)
@@ -147,7 +147,7 @@ public final class WindowAspect extends AbstractAspect {
         XMLUtils.createElement(contenthandler, WindowAspect.INSTANCE_ID_TAG, cid.getId());
     }
 
-    protected void streamTitle(CopletInstanceData cid,
+    protected void streamTitle(CopletInstance cid,
                                CopletAdapter      adapter,
                                Layout             layout,
                                ContentHandler     contenthandler)
@@ -162,7 +162,7 @@ public final class WindowAspect extends AbstractAspect {
         XMLUtils.createElement(contenthandler, WindowAspect.TITLE_TAG, title);
     }
 
-    protected void streamCopletModes(CopletInstanceData cid,
+    protected void streamCopletModes(CopletInstance cid,
                                      CopletAdapter      adapter,
                                      Layout             layout,
                                      ContentHandler     contenthandler)
@@ -178,32 +178,31 @@ public final class WindowAspect extends AbstractAspect {
         }
     }
 
-    protected void streamRemoveButton(CopletInstanceData cid,
+    protected void streamRemoveButton(CopletInstance cid,
                                       CopletAdapter      adapter,
                                       Layout             layout,
                                       ContentHandler     contenthandler)
     throws SAXException {
-        boolean mandatory = CopletDataFeatures.isMandatory(cid.getCopletData());
+        boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
         if ( !mandatory ) {
             LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
             XMLUtils.createElement(contenthandler, "remove-uri", this.portalService.getLinkService().getLinkURI(lre));
         }
     }
 
-    protected boolean streamWindowStates(CopletInstanceData cid,
+    protected boolean streamWindowStates(CopletInstance cid,
                                          CopletAdapter      adapter,
                                          Layout             layout,
                                          ContentHandler     contenthandler)
     throws SAXException {
         boolean showContent = true;
 
-        final boolean sizable = CopletDataFeatures.isSizable(cid.getCopletData());
-
+        final boolean sizable = CopletDefinitionFeatures.isSizable(cid.getCopletDefinition());
         if ( sizable ) {
-            int size = cid.getSize();
+            final int size = cid.getSize();
 
             // stream out the current size
-            XMLUtils.createElement(contenthandler, WindowAspect.SIZE_TAG, CopletInstanceDataFeatures.sizeToString(size));
+            XMLUtils.createElement(contenthandler, WindowAspect.SIZE_TAG, CopletInstanceFeatures.sizeToString(size));
 
             // Does the coplet type provide the window states for us?
             if ( adapter instanceof CopletDecorationProvider ) {
@@ -216,38 +215,38 @@ public final class WindowAspect extends AbstractAspect {
             } else {
                 Event event;
 
-                if ( size != CopletInstanceData.SIZE_MINIMIZED ) {
-                    event = new CopletInstanceSizingEvent(cid, CopletInstanceData.SIZE_MINIMIZED);
+                if ( size != CopletInstance.SIZE_MINIMIZED ) {
+                    event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_MINIMIZED);
                     XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_MINIMIZED, this.portalService.getLinkService().getLinkURI(event));
                 }
-                if ( size != CopletInstanceData.SIZE_NORMAL) {
-                    event = new CopletInstanceSizingEvent(cid, CopletInstanceData.SIZE_NORMAL);
+                if ( size != CopletInstance.SIZE_NORMAL) {
+                    event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_NORMAL);
                     XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL, this.portalService.getLinkService().getLinkURI(event));
                 }
                 if ( this.enableMaximized ) {
-                    if ( size != CopletInstanceData.SIZE_MAXIMIZED ) {
-                        event = new CopletInstanceSizingEvent(cid, CopletInstanceData.SIZE_MAXIMIZED);
+                    if ( size != CopletInstance.SIZE_MAXIMIZED ) {
+                        event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_MAXIMIZED);
                         XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_MAXIMIZED, this.portalService.getLinkService().getLinkURI(event));
                     }
                 }
 
                 if ( this.enableFullScreen ) {
-                    boolean supportsFullScreen = CopletDataFeatures.supportsFullScreenMode(cid.getCopletData());
+                    boolean supportsFullScreen = CopletDefinitionFeatures.supportsFullScreenMode(cid.getCopletDefinition());
                     if ( supportsFullScreen ) {
                         final Layout rootLayout = this.portalService.getProfileManager().getPortalLayout(null, null);
                         final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
                         if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
-                            event = new CopletInstanceSizingEvent( cid, CopletInstanceData.SIZE_NORMAL );
+                            event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_NORMAL );
                             XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL, this.portalService.getLinkService().getLinkURI(event));
                         } else {
-                            event = new CopletInstanceSizingEvent( cid, CopletInstanceData.SIZE_FULLSCREEN );
+                            event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_FULLSCREEN );
                             XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_FULLSCREEN, this.portalService.getLinkService().getLinkURI(event));
                         }
                     }
                 }
             }
-            if (!CopletDataFeatures.handlesSizing(cid.getCopletData())
-                && size == CopletInstanceData.SIZE_MINIMIZED) {
+            if (!CopletDefinitionFeatures.handlesSizing(cid.getCopletDefinition())
+                && size == CopletInstance.SIZE_MINIMIZED) {
                 showContent = false;
             }
         }

@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.transformation;
 import java.util.Stack;
 
 import org.apache.cocoon.portal.LinkService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
@@ -165,7 +165,7 @@ public class EventLinkTransformer extends AbstractCopletTransformer {
 
                     // if attribute found that contains a link
                     if (link != null) {
-                        CopletInstanceData cid = this.getCopletInstanceData(attr.getValue("coplet"));
+                        CopletInstance cid = this.getCopletInstanceData(attr.getValue("coplet"));
                         LinkService linkService = this.portalService.getLinkService();
 
                         // create event link
@@ -184,7 +184,7 @@ public class EventLinkTransformer extends AbstractCopletTransformer {
                 if (this.elementName != null && name.equals(this.elementName)) {
                     String link = this.endTextRecording();
 
-                    CopletInstanceData cid = this.getCopletInstanceData();
+                    CopletInstance cid = this.getCopletInstanceData();
                     LinkService linkService = this.portalService.getLinkService();
 
                     // create event link

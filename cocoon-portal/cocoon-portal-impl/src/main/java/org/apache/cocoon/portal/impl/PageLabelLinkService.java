@@ -44,8 +44,8 @@ public class PageLabelLinkService extends DefaultLinkService {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.labelManager = (PageLabelManager)this.manager.lookup(PageLabelManager.ROLE);
     }
 

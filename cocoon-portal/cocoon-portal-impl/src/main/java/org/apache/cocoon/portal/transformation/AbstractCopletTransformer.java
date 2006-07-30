@@ -23,7 +23,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
@@ -65,9 +65,9 @@ extends AbstractSAXTransformer {
      * @return The coplet instance data
      * @throws SAXException If an errors occurs or the instance data is not available
      */
-    protected CopletInstanceData getCopletInstanceData() 
+    protected CopletInstance getCopletInstanceData() 
     throws SAXException {
-        CopletInstanceData cid = this.getCopletInstanceData(null);
+        CopletInstance cid = this.getCopletInstanceData(null);
         if ( cid == null ) {
             throw new SAXException("Could not find coplet instance data for the current pipeline.");
         }
@@ -76,19 +76,19 @@ extends AbstractSAXTransformer {
 
     /**
      * Try to get the coplet instance data with the given id
-     * @param copletId  The id of the coplet instance or null if this transformer
-     *                   is used inside a coplet pipeline
+     * @param instanceId  The id of the coplet instance or null if this transformer
+     *                    is used inside a coplet pipeline
      * @return The coplet instance data or null
      * @throws SAXException If an error occurs
      */
-    protected CopletInstanceData getCopletInstanceData(String copletId) 
+    protected CopletInstance getCopletInstanceData(String instanceId) 
     throws SAXException {
-        final Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-
+        final Map parentContext = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+        String copletId = instanceId;
         if ( copletId == null ) {
             // determine coplet id
-            if (context != null) {
-                copletId = (String)context.get(Constants.COPLET_ID_KEY);
+            if (parentContext != null) {
+                copletId = (String)parentContext.get(Constants.COPLET_ID_KEY);
             } else {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
                 if ( copletId == null ) {
@@ -105,7 +105,7 @@ extends AbstractSAXTransformer {
             throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
         }
 
-        CopletInstanceData object = this.portalService.getProfileManager().getCopletInstanceData( copletId );
+        CopletInstance object = this.portalService.getProfileManager().getCopletInstanceData( copletId );
 
         return object;
     }
@@ -113,8 +113,8 @@ extends AbstractSAXTransformer {
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);        
     }
 

@@ -49,9 +49,9 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.CopletInstanceDataFeatures;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
@@ -229,12 +229,12 @@ public class WSRPAdapter
      * and stores its into the copletInstanceData<br/>
      * After that it initiates the <tt>getServiceDescription()</tt>-call<br/>
      * 
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#login(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void login(CopletInstanceData coplet) {
+    public void login(CopletInstance coplet) {
         super.login(coplet);
 
-        final CopletData copletData = coplet.getCopletData();
+        final CopletDefinition copletData = coplet.getCopletDefinition();
 
         // get the producer
         final String producerId = (String) copletData.getAttribute("producer-id");
@@ -319,9 +319,9 @@ public class WSRPAdapter
      * Checks the values of the <tt>portlet-key</tt> and the <tt>user</tt> for current portlet-instance<br/>
      * After that all passed the <tt>getMarkup()</tt>-call will be initiated<br />
      * 
-	 * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstanceData, org.xml.sax.ContentHandler)
+	 * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#streamContent(org.apache.cocoon.portal.coplet.CopletInstance, org.xml.sax.ContentHandler)
 	 */
-	public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler) 
+	public void streamContent(CopletInstance coplet, ContentHandler contentHandler) 
     throws SAXException {
         try {
             // set the coplet in the thread local variable to give other components access to
@@ -394,9 +394,9 @@ public class WSRPAdapter
     /**
      * Releases all sessions (<tt>userSession, groupSession, portletSession</tt>)<br/>
      * 
-     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#logout(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public void logout(CopletInstanceData coplet) {
+    public void logout(CopletInstance coplet) {
     	super.logout(coplet);
 
         PortletKey portletKey = (PortletKey)coplet.getTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_KEY);
@@ -573,7 +573,7 @@ public class WSRPAdapter
      * @return the unique string which represents the portlet-instance 
      * */
     protected String getPortletInstanceKey(PortletKey key, 
-                                           CopletInstanceData coplet,
+                                           CopletInstance coplet,
                                            String userName) {
         final StringBuffer buffer = new StringBuffer(key.getProducerId());
         buffer.append('_').append(key.getPortletHandle()).append('_');
@@ -591,7 +591,7 @@ public class WSRPAdapter
      * @see Receiver
      */
     public void inform(WSRPEvent event, PortalService service) {
-        final CopletInstanceData coplet = event.getTarget();
+        final CopletInstance coplet = event.getTarget();
         this.setCurrentCopletInstanceData(coplet);
         
         try {
@@ -618,24 +618,24 @@ public class WSRPAdapter
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
                     
                     final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-                    final Layout layout = CopletInstanceDataFeatures.searchLayout(coplet.getId(), rootLayout);
+                    final Layout layout = CopletInstanceFeatures.searchLayout(coplet.getId(), rootLayout);
                     final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )
                          && !windowState.equals(WindowStates._maximized) ) {
-                        Event e = new CopletInstanceSizingEvent( coplet, CopletInstanceData.SIZE_FULLSCREEN );
+                        Event e = new CopletInstanceSizingEvent( coplet, CopletInstance.SIZE_FULLSCREEN );
                         service.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._minimized) ) {
-                        Event e = new CopletInstanceSizingEvent(coplet, CopletInstanceData.SIZE_MINIMIZED);
+                        Event e = new CopletInstanceSizingEvent(coplet, CopletInstance.SIZE_MINIMIZED);
                         service.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._normal) ) {
-                        Event e = new CopletInstanceSizingEvent(coplet, CopletInstanceData.SIZE_NORMAL);
+                        Event e = new CopletInstanceSizingEvent(coplet, CopletInstance.SIZE_NORMAL);
                         service.getEventManager().send(e);
                     }
                     if ( windowState.equals(WindowStates._maximized) ) {
-                        Event e = new CopletInstanceSizingEvent( coplet, CopletInstanceData.SIZE_FULLSCREEN );
+                        Event e = new CopletInstanceSizingEvent( coplet, CopletInstance.SIZE_FULLSCREEN );
                         service.getEventManager().send(e);
                     }
                     windowSession.setWindowState(windowState);
@@ -702,7 +702,7 @@ public class WSRPAdapter
      * 
      * @param coplet The coplet instance data or null to clear the information.
      */
-    public void setCurrentCopletInstanceData(CopletInstanceData coplet) {
+    public void setCurrentCopletInstanceData(CopletInstance coplet) {
         this.copletInstanceData.set(coplet);
     }
 
@@ -711,8 +711,8 @@ public class WSRPAdapter
      * 
      * @return Returns the instance or null.
      */
-    public CopletInstanceData getCurrentCopletInstanceData() {
-        return (CopletInstanceData)this.copletInstanceData.get();
+    public CopletInstance getCurrentCopletInstanceData() {
+        return (CopletInstance)this.copletInstanceData.get();
     }
 
     /**
@@ -837,9 +837,9 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
      */
-    public List getPossibleCopletModes(CopletInstanceData copletInstanceData) {
+    public List getPossibleCopletModes(CopletInstance copletInstanceData) {
         final List modes = new ArrayList();
         final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
 
@@ -897,9 +897,9 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
      */
-    public List getPossibleWindowStates(CopletInstanceData copletInstanceData) {
+    public List getPossibleWindowStates(CopletInstance copletInstanceData) {
         final List states = new ArrayList();
         final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
 
@@ -958,9 +958,9 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstanceData)
+     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.coplet.CopletInstance)
      */
-    public String getTitle(CopletInstanceData copletInstanceData) {
+    public String getTitle(CopletInstance copletInstanceData) {
         String title = null;
         final PortletKey portletKey = (PortletKey)copletInstanceData.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_PORTLET_KEY);
 

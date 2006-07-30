@@ -52,6 +52,7 @@ public class SkinModule
 	 */
 	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
     throws ConfigurationException {
+        String key = name;
         // lazy init
         if ( this.globalModule == null ) {
             synchronized ( this ) {
@@ -67,10 +68,10 @@ public class SkinModule
 
         String skinName = null;
         // if the attribute already contains a ':', the name is prefixed with the skin name
-        int pos = name.indexOf(':');
+        int pos = key.indexOf(':');
         if ( pos != -1 ) {
-            skinName = name.substring(0, pos);
-            name = name.substring(pos+1);
+            skinName = key.substring(0, pos);
+            key = key.substring(pos+1);
         } else {
             // get the current skin
             // the skin is stored as a parameter on the root layout
@@ -99,14 +100,14 @@ public class SkinModule
             }
         }
         if ( desc != null ) {
-            if ( "skin".equals(name) ) {
+            if ( "skin".equals(key) ) {
                 return skinName;
-            } else if ( "skin.basepath".equals(name) ) {
+            } else if ( "skin.basepath".equals(key) ) {
                 return desc.getBasePath();
-            } else if ( "skin.thumbnailpath".equals(name) ) {
+            } else if ( "skin.thumbnailpath".equals(key) ) {
                 return desc.getThumbnailPath();
-            } else if ( name.startsWith("skin.thumbnailuri.") ) {
-                String selectedSkinName = name.substring(name.lastIndexOf(".")+ 1, name.length());
+            } else if ( key.startsWith("skin.thumbnailuri.") ) {
+                String selectedSkinName = key.substring(key.lastIndexOf(".")+ 1, key.length());
                 for(Iterator it = portalService.getSkinDescriptions().iterator(); it.hasNext();) {
                     SkinDescription selected = (SkinDescription) it.next();
                     if(selected.getName().equals(selectedSkinName)) {

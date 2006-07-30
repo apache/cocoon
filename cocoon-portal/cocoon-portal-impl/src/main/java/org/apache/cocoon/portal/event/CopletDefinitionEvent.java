@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
 
 
 /**
@@ -24,7 +24,7 @@ import org.apache.cocoon.portal.coplet.CopletData;
  *
  * @version $Id$
  */
-public interface CopletDataEvent extends Event {
+public interface CopletDefinitionEvent extends Event {
 
-    CopletData getTarget();
+    CopletDefinition getTarget();
 }

@@ -29,7 +29,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.excalibur.source.Source;
@@ -53,7 +53,7 @@ public class CopletSource
 
     protected String uri;
     protected String copletControllerName;
-    protected CopletInstanceData copletInstanceData;
+    protected CopletInstance copletInstanceData;
 
     /** The used protocol */
     protected String scheme;
@@ -61,8 +61,8 @@ public class CopletSource
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
     }
 
     /**
@@ -73,11 +73,11 @@ public class CopletSource
     }
 
     public CopletSource(String location, String protocol,
-                         CopletInstanceData coplet) {
+                         CopletInstance coplet) {
         this.uri = location;
         this.scheme = (protocol == null ? "coplet" : protocol);
         this.copletInstanceData = coplet;
-        this.copletControllerName = this.copletInstanceData.getCopletData().getCopletBaseData().getCopletAdapterName();
+        this.copletControllerName = this.copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName();
     }
 
 	/**

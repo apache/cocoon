@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.transformation;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
@@ -144,7 +144,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
 
         // if attribute found that contains a link
         if (link != null) {
-            CopletInstanceData cid = this.getCopletInstanceData(attributes.getValue("coplet"));
+            CopletInstance cid = this.getCopletInstanceData(attributes.getValue("coplet"));
             // create event link
             CopletLinkEvent event = new CopletLinkEvent(cid, link);
             String eventLink = this.portalService.getLinkService().getLinkURI(event);
@@ -193,12 +193,12 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * Instead hidden input fields must be inserted into the SAX stream to add request parameters.
      * This method sends two hidden inputs adding the "cocoon-portal-action" parameter and
      * the "cocoon-portal-event" parameter.
-     * @param contentHandler the content handler recieving the SAX events
+     * @param handler the content handler recieving the SAX events
      * @param portalAction value of the "cocoon-portal-action" parameter
      * @param portalEvent value of the "cocoon-portal-event" parameter
      * @throws SAXException if sending the SAX events failed
      */
-    private void sendHiddenFields(ContentHandler contentHandler,
+    private void sendHiddenFields(ContentHandler handler,
                                   String portalAction,
                                   String portalEvent)
     throws SAXException {
@@ -207,13 +207,13 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
             attributes.addCDATAAttribute("type", "hidden");
             attributes.addCDATAAttribute("name", "cocoon-portal-action");
             attributes.addCDATAAttribute("value", portalAction);
-            XMLUtils.createElement(contentHandler, "input", attributes);
+            XMLUtils.createElement(handler, "input", attributes);
             attributes.clear();
         }
         attributes.addCDATAAttribute("type", "hidden");
         attributes.addCDATAAttribute("name", "cocoon-portal-event");
         attributes.addCDATAAttribute("value", portalEvent);
-        XMLUtils.createElement(contentHandler, "input", attributes);
+        XMLUtils.createElement(handler, "input", attributes);
     }
 
     /**

@@ -21,7 +21,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -48,7 +48,7 @@ public class UserConfiguration {
         UserConfiguration uc = (UserConfiguration)session.getAttribute(ATTR_NAME);
         if ( uc == null ) {
             final ProfileManager pm = service.getProfileManager();
-            final CopletInstanceData cid = pm.getCopletInstanceData("basket");
+            final CopletInstance cid = pm.getCopletInstanceData("basket");
             if ( cid != null ) {
                 uc = new UserConfiguration(cid.getAttributes());
                 session.setAttribute(ATTR_NAME, uc);

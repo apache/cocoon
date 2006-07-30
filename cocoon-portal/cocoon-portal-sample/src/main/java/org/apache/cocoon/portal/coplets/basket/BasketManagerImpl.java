@@ -45,8 +45,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
 import org.apache.cocoon.portal.coplets.basket.events.CleanBriefcaseEvent;
 import org.apache.cocoon.portal.coplets.basket.events.ContentStoreEvent;
@@ -232,9 +232,9 @@ public class BasketManagerImpl
 
                 ContentItem ci = (ContentItem)event.getItem();
                 CopletLayout layout = (CopletLayout) event.getLayout();
-                CopletInstanceData cid = null;
+                CopletInstance cid = null;
                 if ( ci.isContent() ) {
-                    CopletData copletData = this.portalService.getProfileManager().getCopletData(event.getCopletDataId());
+                    CopletDefinition copletData = this.portalService.getProfileManager().getCopletDefinition(event.getCopletDataId());
                     cid = this.portalService.getCopletFactory().newInstance(copletData);
                     cid.setAttribute("item-content", ci.getContent());                
                 } else {
@@ -246,7 +246,7 @@ public class BasketManagerImpl
                             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
                             url = ci.getURL();
                             source = resolver.resolveURI(url);
-                            CopletData copletData = this.portalService.getProfileManager().getCopletData(event.getCopletDataId());
+                            CopletDefinition copletData = this.portalService.getProfileManager().getCopletDefinition(event.getCopletDataId());
                             cid = this.portalService.getCopletFactory().newInstance(copletData);
                             cid.setAttribute("item-content", IOUtils.toByteArray(source.getInputStream()));
                         } catch (IOException se) {
@@ -261,8 +261,8 @@ public class BasketManagerImpl
                         }
                         
                     } else {
-                        final CopletInstanceData original = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
-                        final CopletData copletData = original.getCopletData();
+                        final CopletInstance original = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                        final CopletDefinition copletData = original.getCopletDefinition();
                         cid = this.portalService.getCopletFactory().newInstance(copletData);
                         Map attributes = (Map) ci.getAttribute("coplet-attributes");
                         Iterator i = attributes.entrySet().iterator();
@@ -361,7 +361,7 @@ public class BasketManagerImpl
                     url = ci.getURL();
                     if ( url == null ) {
                         // copy coplet attributes
-                        CopletInstanceData cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                        CopletInstance cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
                         url = "coplet://" + ci.getCopletId();
                         Map attributes = new HashMap();
                         Iterator i = cid.getAttributes().entrySet().iterator();
@@ -369,7 +369,7 @@ public class BasketManagerImpl
                             Map.Entry entry = (Map.Entry)i.next();
                             attributes.put(entry.getKey(), entry.getValue());
                         }
-                        i = cid.getCopletData().getAttributes().entrySet().iterator();
+                        i = cid.getCopletDefinition().getAttributes().entrySet().iterator();
                         while ( i.hasNext() ) {
                             Map.Entry entry = (Map.Entry)i.next();
                             attributes.put(entry.getKey(), entry.getValue());
@@ -390,14 +390,14 @@ public class BasketManagerImpl
                 }
             } else if ( ci.getURL() == null ) {
                 // copy coplet attributes
-                CopletInstanceData cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                CopletInstance cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
                 Map attributes = new HashMap();
                 Iterator i = cid.getAttributes().entrySet().iterator();
                 while ( i.hasNext() ) {
                     Map.Entry entry = (Map.Entry)i.next();
                     attributes.put(entry.getKey(), entry.getValue());
                 }
-                i = cid.getCopletData().getAttributes().entrySet().iterator();
+                i = cid.getCopletDefinition().getAttributes().entrySet().iterator();
                 while ( i.hasNext() ) {
                     Map.Entry entry = (Map.Entry)i.next();
                     attributes.put(entry.getKey(), entry.getValue());

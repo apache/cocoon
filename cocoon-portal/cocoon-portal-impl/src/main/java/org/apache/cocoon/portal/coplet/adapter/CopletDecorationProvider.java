@@ -17,24 +17,24 @@ package org.apache.cocoon.portal.coplet.adapter;
 
 import java.util.List;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 
 /**
  * @version $Id$
  */
 public interface CopletDecorationProvider extends CopletAdapter {
 
-    String getTitle(CopletInstanceData coplet);
+    String getTitle(CopletInstance coplet);
 
     /**
      * Returns a list of {@link DecorationAction}.
      * @return List of possible window states, might be empty.
      */
-    List getPossibleWindowStates(CopletInstanceData coplet);
+    List getPossibleWindowStates(CopletInstance coplet);
 
     /**
      * Returns a list of {@link DecorationAction}.
      * @return List of possible coplet modes, might be empty.
      */
-    List getPossibleCopletModes(CopletInstanceData coplet);
+    List getPossibleCopletModes(CopletInstance coplet);
 }

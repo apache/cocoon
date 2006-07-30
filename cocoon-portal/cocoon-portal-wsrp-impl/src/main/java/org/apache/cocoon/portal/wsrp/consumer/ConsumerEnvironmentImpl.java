@@ -21,7 +21,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 import org.apache.wsrp4j.consumer.PortletDriverRegistry;
 import org.apache.wsrp4j.consumer.PortletRegistry;
@@ -127,7 +127,7 @@ public class ConsumerEnvironmentImpl
      * @see org.apache.wsrp4j.consumer.driver.GenericConsumerEnvironment#getSupportedLocales()
      */
     public String[] getSupportedLocales() {
-        CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
+        CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         User user = (User)coplet.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
         
         return ((UserContextExtension)user.getUserContext()).getSupportedLocales();
@@ -137,7 +137,7 @@ public class ConsumerEnvironmentImpl
      * @see org.apache.wsrp4j.consumer.ConsumerCapabilities#getUserAuthentication()
      */
     public String getUserAuthentication() {
-        CopletInstanceData coplet = this.adapter.getCurrentCopletInstanceData();
+        CopletInstance coplet = this.adapter.getCurrentCopletInstanceData();
         User user = (User)coplet.getTemporaryAttribute(WSRPAdapter.ATTRIBUTE_NAME_USER);
         
         return ((UserContextExtension)user.getUserContext()).getUserAuthentication();

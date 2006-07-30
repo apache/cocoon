@@ -16,8 +16,8 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDataFeatures;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.layout.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -50,15 +50,15 @@ public class RemovableAspect
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
-	public void toSAX(RendererAspectContext context,
+	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler handler)
 	throws SAXException {
         if ( layout instanceof CopletLayout ) {
-            final CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
+            final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
     
-            boolean mandatory = CopletDataFeatures.isMandatory(cid.getCopletData());
+            boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
             if ( !mandatory ) {
                 LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
                 XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
@@ -69,6 +69,6 @@ public class RemovableAspect
             XMLUtils.createElement(handler, "remove-uri", 
                                    service.getLinkService().getLinkURI(lre));
         }
-        context.invokeNext(layout, service, handler);
+        rendererContext.invokeNext(layout, service, handler);
 	}
 }

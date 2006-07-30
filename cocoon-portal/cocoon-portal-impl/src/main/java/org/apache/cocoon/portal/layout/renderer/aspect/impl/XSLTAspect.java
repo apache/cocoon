@@ -110,12 +110,12 @@ public class XSLTAspect
 	/**
 	 * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
-	public void toSAX(RendererAspectContext context,
+	public void toSAX(RendererAspectContext rendererContext,
                       Layout layout,
                       PortalService service,
                       ContentHandler handler)
     throws SAXException {
-        PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
+        PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
 
         XSLTProcessor processor = null;
         Source stylesheet = null;
@@ -148,7 +148,7 @@ public class XSLTAspect
             }
             transformer.setResult(result);
             transformer.startDocument();
-            context.invokeNext(layout, service, transformer);
+            rendererContext.invokeNext(layout, service, transformer);
 
             transformer.endDocument();
         } catch (XSLTProcessorException xpe) {
@@ -167,14 +167,14 @@ public class XSLTAspect
     throws SAXException {
         String stylesheet = layout.getParameter("stylesheet");
         if ( stylesheet != null ) {
-            VariableResolver resolver = null;
+            VariableResolver variableResolver = null;
             try {
-                resolver = VariableResolverFactory.getResolver(stylesheet, this.manager);
-                stylesheet = resolver.resolve(ContextHelper.getObjectModel(this.context));
+                variableResolver = VariableResolverFactory.getResolver(stylesheet, this.manager);
+                stylesheet = variableResolver.resolve(ContextHelper.getObjectModel(this.context));
             } catch (PatternException pe) {
                 throw new SAXException("Unknown pattern for stylesheet " + stylesheet, pe);
             } finally {
-                ContainerUtil.dispose(resolver);
+                ContainerUtil.dispose(variableResolver);
             }            
         } else {
             try {
@@ -224,10 +224,10 @@ public class XSLTAspect
             String[] name = this.parameters.getNames();
             for (int i=0; i < name.length; ++i) {
                 try {
-                    VariableResolver resolver =
+                    VariableResolver variableResolver =
                         VariableResolverFactory.getResolver(this.parameters.getParameter(name[i]), this.manager);
-                    this.variables.add(resolver);
-                    pc.parameters.put(name[i], resolver);
+                    this.variables.add(variableResolver);
+                    pc.parameters.put(name[i], variableResolver);
                 } catch (PatternException e) {
                     throw new ParameterException("Invalid value for parameter " + name[i], e);
                 }
@@ -239,8 +239,8 @@ public class XSLTAspect
     /**
      * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager aManager) throws ServiceException {
+        super.service(aManager);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 

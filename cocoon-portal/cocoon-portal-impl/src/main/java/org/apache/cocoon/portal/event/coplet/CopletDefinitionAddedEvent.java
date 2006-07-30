@@ -15,17 +15,17 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
 
 /**
  * This event is fired when a new coplet is created.
  *
  * @version $Id$
  */
-public class CopletDataAddedEvent
-    extends AbstractCopletDataEvent {
+public class CopletDefinitionAddedEvent
+    extends AbstractCopletDefinitionEvent {
 
-    public CopletDataAddedEvent(CopletData target) {
+    public CopletDefinitionAddedEvent(CopletDefinition target) {
         super(target);
     }    
 }

@@ -15,22 +15,22 @@
  */
 package org.apache.cocoon.portal.event.coplet;
 
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.event.CopletDataEvent;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.event.CopletDefinitionEvent;
 
-public class AbstractCopletDataEvent
-    implements CopletDataEvent {
+public class AbstractCopletDefinitionEvent
+    implements CopletDefinitionEvent {
 
-    protected CopletData target;
+    protected CopletDefinition target;
 
-    public AbstractCopletDataEvent(CopletData target) {
+    public AbstractCopletDefinitionEvent(CopletDefinition target) {
         this.target = target;
     }
 
     /**
-     * @see org.apache.cocoon.portal.event.CopletDataEvent#getTarget()
+     * @see org.apache.cocoon.portal.event.CopletDefinitionEvent#getTarget()
      */
-    public CopletData getTarget() {
+    public CopletDefinition getTarget() {
         return this.target;
     }
 }

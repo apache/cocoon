@@ -18,9 +18,9 @@ package org.apache.cocoon.portal.profile;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.scratchpad.Profile;
 
@@ -52,17 +52,17 @@ public interface ProfileManager {
     /**
      * FIXME - This will be part of the profile interface.
      */
-    CopletInstanceData getCopletInstanceData(String copletID);
+    CopletInstance getCopletInstanceData(String copletID);
 
     /**
      * FIXME - This will be part of the profile interface.
      */
-    List getCopletInstanceData(CopletData data);
+    List getCopletInstanceData(CopletDefinition data);
 
     /**
      * Return the coplet data object
      */
-    CopletData getCopletData(String copletDataId);
+    CopletDefinition getCopletDefinition(String copletDataId);
 
     /**
      * New layouts have to be registered using this method.
@@ -91,17 +91,17 @@ public interface ProfileManager {
     /**
      * Get all coplets.
      */
-    Collection getCopletDatas();
+    Collection getCopletDefinitions();
 
     /**
      * Get all coplet base datas.
      */
-    Collection getCopletBaseDatas();
+    Collection getCopletTypes();
 
     /**
      * Get a specific coplet base data.
      */
-    CopletBaseData getCopletBaseData(String id);
+    CopletType getCopletType(String id);
 
     /**
      * Get current user information

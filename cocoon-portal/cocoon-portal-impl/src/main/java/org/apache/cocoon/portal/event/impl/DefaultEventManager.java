@@ -130,15 +130,15 @@ public class DefaultEventManager
             }
             this.configuration = null;
         }
-        DefaultEventAspectContext context = new DefaultEventAspectContext(this.chain);
+        DefaultEventAspectContext eventContext = new DefaultEventAspectContext(this.chain);
         EventConverter converter = null;
         try {
             converter = (EventConverter) this.manager.lookup(EventConverter.ROLE);
 
             // Invoke aspects
-            context.setObjectModel(this.getObjectModel());
-            context.setEventConverter(converter);
-            context.invokeNext( this.portalService );
+            eventContext.setObjectModel(this.getObjectModel());
+            eventContext.setEventConverter(converter);
+            eventContext.invokeNext( this.portalService );
 
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup component.", ce);

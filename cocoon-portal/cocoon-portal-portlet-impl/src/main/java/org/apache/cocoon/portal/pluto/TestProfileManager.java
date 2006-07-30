@@ -22,8 +22,8 @@ import java.util.List;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletDefinition;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.event.user.UserIsAccessingEvent;
@@ -75,22 +75,22 @@ public class TestProfileManager extends GroupBasedProfileManager {
             final ProfileImpl profile = new ProfileImpl(layoutKey);
 
             // first "load" the global data
-            profile.setCopletBaseDatas( this.getGlobalBaseDatas( layoutKey) );
-            profile.setCopletDatas( this.getGlobalDatas( info, profile, layoutKey) );
+            profile.setCopletTypes( this.getGlobalBaseDatas( layoutKey) );
+            profile.setCopletDefinitions( this.getGlobalDatas( info, profile, layoutKey) );
 
             // create root layout
             CompositeLayout rootLayout = new CompositeLayoutImpl("root", "row");
 
             // create coplet instances and layouts
             final List instances = new ArrayList();
-            final Iterator i = this.deployedCopletDatas.values().iterator();
+            final Iterator i = this.deployedCopletDefinitions.values().iterator();
             while ( i.hasNext() ) {
-                final CopletData cd = (CopletData)i.next();
+                final CopletDefinition cd = (CopletDefinition)i.next();
                 // check for portlets
-                if ( "portlet".equals(cd.getCopletBaseData().getCopletAdapterName()) ) {
+                if ( "portlet".equals(cd.getCopletType().getCopletAdapterName()) ) {
                     final String id = StringUtils.replaceChars(cd.getId() + "-1", '_', '-');
-                    final CopletInstanceData cid = new CopletInstanceData(id);
-                    cid.setCopletData(cd);
+                    final CopletInstance cid = new CopletInstance(id);
+                    cid.setCopletDefinition(cd);
                     instances.add(cid);
                     if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
                         final CopletLayout copletLayout = new CopletLayout(null, "coplet");
@@ -142,8 +142,8 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     // create new set
                     final Iterator i = this.getCopletInstanceDatas().iterator();
                     while ( i.hasNext() ) {
-                        final CopletInstanceData cid = (CopletInstanceData)i.next();
-                        if ( portletNames.contains(cid.getCopletData().getId())) {
+                        final CopletInstance cid = (CopletInstance)i.next();
+                        if ( portletNames.contains(cid.getCopletDefinition().getId())) {
                             final CopletLayout copletLayout = new CopletLayout(null, "coplet");
                             copletLayout.setCopletInstanceData(cid);
                             copletLayout.setLayoutRendererName("portlet-window");

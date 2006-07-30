@@ -27,22 +27,22 @@ import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * A coplet data describes an available coplet. A coplet data can be seen
+ * A coplet definition describes an available coplet. A coplet definition can be seen
  * as a class. A user can create one or more instances of the coplet
- * ({@link CopletInstanceData}s).
+ * ({@link CopletInstance}s).
  *
  * @version $Id$
  */
-public class CopletData implements Serializable {
+public class CopletDefinition implements Serializable {
 
     /** The unique identifier. */
     protected final String id;
 
     protected String title;
 
-    protected CopletBaseData copletBaseData;
+    protected CopletType copletType;
 
-    protected Map attributes = new HashMap();
+    protected final Map attributes = new HashMap();
 
     protected String allowedRoles;
 
@@ -53,7 +53,7 @@ public class CopletData implements Serializable {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
      */
-    public CopletData(String id) {
+    public CopletDefinition(String id) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
@@ -86,19 +86,19 @@ public class CopletData implements Serializable {
     }
 
     /**
-     * Returns the copletBaseData.
-     * @return CopletBaseData
+     * Returns the type of the coplet.
+     * @return CopletType
      */
-    public CopletBaseData getCopletBaseData() {
-        return copletBaseData;
+    public CopletType getCopletType() {
+        return this.copletType;
     }
 
     /**
-     * Sets the copletBaseData.
-     * @param copletBaseData The copletBaseData to set
+     * Sets the type of the coplet.
+     * @param copletType The coplet type to set
      */
-    public void setCopletBaseData(CopletBaseData copletBaseData) {
-        this.copletBaseData = copletBaseData;
+    public void setCopletType(CopletType copletType) {
+        this.copletType = copletType;
     }
 
     public Object removeAttribute(String key) {
@@ -201,7 +201,7 @@ public class CopletData implements Serializable {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "CopletData (" + this.hashCode() +
-               "), id=" + this.getId() + ", coplet-base-data=" + (this.getCopletBaseData() == null ? "null" : this.getCopletBaseData().getId());
+        return "CopletDefinition (" + this.hashCode() +
+               "), id=" + this.getId() + ", coplet-type=" + (this.getCopletType() == null ? "null" : this.getCopletType().getId());
     }
 }

@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.CopletBaseData;
+import org.apache.cocoon.portal.coplet.CopletType;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
 /**
- * Field handler for the configuration of a CopletBaseData object.
+ * Field handler for the configuration of a CopletType object.
  *
  * @version $Id$
  */
@@ -36,7 +36,7 @@ public class ConfigurationFieldHandler extends AbstractFieldHandler {
     public Object getValue(Object object) {
         HashMap map = new HashMap();
         Iterator iterator =
-            ((CopletBaseData) object).getCopletConfig().entrySet().iterator();
+            ((CopletType) object).getCopletConfig().entrySet().iterator();
         Map.Entry entry;
         Object key;
         while (iterator.hasNext()) {
@@ -68,7 +68,7 @@ public class ConfigurationFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#resetValue(java.lang.Object)
      */
     public void resetValue(Object object) {
-        ((CopletBaseData) object).getCopletConfig().clear();
+        ((CopletType) object).getCopletConfig().clear();
     }
 
     /**
@@ -76,7 +76,7 @@ public class ConfigurationFieldHandler extends AbstractFieldHandler {
      */
     public void setValue(Object object, Object value) {
         MapItem item = (MapItem) value;
-        ((CopletBaseData) object).setCopletConfig(
+        ((CopletType) object).setCopletConfig(
             (String) item.getKey(),
             item.getValue());
     }
