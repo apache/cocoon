@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang.exception.NestableException;
 
 /**
  * A cascading and located <code>Exception</code>. It is also {@link MultiLocatable} to easily build
@@ -29,7 +28,7 @@ import org.apache.commons.lang.exception.NestableException;
  * @since 2.1.8
  * @version $Id$
  */
-public class LocatedException extends NestableException
+public class LocatedException extends Exception
                               implements LocatableException, MultiLocatable {
 
     private List locations;
