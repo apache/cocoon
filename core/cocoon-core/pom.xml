@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>1</version>
+    <version>1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-core</artifactId>
@@ -102,7 +102,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-bootstrap</artifactId>
-      <version>1.0.0-M1</version>
+      <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
 
     <!--  excalibur -->
