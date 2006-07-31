@@ -26,19 +26,21 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-commons</artifactId>
-  <version>1-SNAPSHOT</version>
+  <artifactId>cocoon-commons-modules</artifactId>
+  <version>1</version>
     
-  <name>Cocoon Commons</name>
+  <name>Cocoon Commons [modules]</name>
 
   <modules>
     <module>legal</module>
   </modules>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-modules-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-modules-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-modules-1</url>
   </scm>
 </project>
