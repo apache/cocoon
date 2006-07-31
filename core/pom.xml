@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
@@ -34,12 +34,12 @@
     
   <name>Cocoon Core [modules]</name>
 
-  <modules>
+  <!--modules>
     <module>cocoon-blocks-fw</module>
     <module>cocoon-bootstrap</module>
     <module>cocoon-core</module>
     <module>cocoon-webapp</module>
-  </modules>
+  </modules-->
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
   </scm>
