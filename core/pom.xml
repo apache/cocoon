@@ -29,9 +29,9 @@
     <version>1</version>
   </parent>
 
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-core-modules</artifactId>
-    
+  <version>1-SNAPSHOT</version> 
+   
   <name>Cocoon Core [modules]</name>
 
   <!--modules>
