@@ -43,12 +43,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  <!--modules>
+  <modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
-  </modules-->
+  </modules>
   <repositories>
     <repository>
       <id>central</id>
