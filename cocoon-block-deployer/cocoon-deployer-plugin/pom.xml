@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-deployer</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <artifactId>cocoon-deployer-plugin</artifactId>
@@ -30,7 +30,6 @@
   <packaging>maven-plugin</packaging>
   
   <name>Cocoon Deployer - Maven 2 Plugin</name>
-  <url>http://cocoon.apache.org</url>
   
   <dependencies>
     
