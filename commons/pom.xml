@@ -31,7 +31,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-commons</artifactId>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
     
   <name>Cocoon Commons</name>
 
@@ -39,8 +39,8 @@
     <module>legal</module>
   </modules>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-commons-1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/cocoon-commons</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk/cocoon-commons</url>
   </scm>
 </project>
