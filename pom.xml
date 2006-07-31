@@ -30,7 +30,7 @@
   </parent>
 
   <artifactId>cocoon-tools-modules</artifactId>
-  <version>1-SNAPSHOT</version>
+  <version>1</version>
     
   <name>Cocoon Tools [modules]</name>
 
@@ -40,6 +40,8 @@
     <module>cocoon-maven-eclipse-plugin</module>
   </modules>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1</url>
   </scm>
 </project>
