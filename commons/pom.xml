@@ -30,10 +30,10 @@
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-commons</artifactId>
-  <version>2-SNAPSHOT</version>
+  <artifactId>cocoon-commons-modules</artifactId>
+  <version>1-SNAPSHOT</version>
     
-  <name>Cocoon Commons</name>
+  <name>Cocoon Commons [modules]</name>
 
   <modules>
     <module>legal</module>
