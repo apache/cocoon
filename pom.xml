@@ -26,16 +26,17 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-licenses</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
     
   <name>Cocoon Licenses</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons/legal</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</url>
   </scm>
 </project>
