@@ -26,7 +26,7 @@
   </parent>
   
   <artifactId>cocoon-deployer-core</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
     
   <name>Cocoon Deployer - Core</name>
     
@@ -104,4 +104,10 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-core-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-core-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-core-1.0.0-M1</url>
+  </scm>
 </project>
