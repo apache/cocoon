@@ -21,12 +21,12 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-deployer</artifactId>    
+    <artifactId>cocoon-deployer-modules</artifactId>    
     <version>1</version>
   </parent>
   
   <artifactId>cocoon-deployer-core</artifactId>
-  <version>1.0.0-M2-SNAPSHOT</version>
+  <version>1.0.0-M1-SNAPSHOT</version>
     
   <name>Cocoon Deployer - Core</name>
     
