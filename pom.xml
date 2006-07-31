@@ -32,7 +32,7 @@
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>1-SNAPSHOT</version>
+  <version>1</version>
   
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
@@ -43,12 +43,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  <modules>
+  <!--modules>
     <module>blocks</module>
     <module>commons</module>
     <module>core</module>
     <module>tools</module>
-  </modules>
+  </modules-->
   <repositories>
     <repository>
       <id>central</id>
@@ -301,9 +301,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-1</url>
   </scm>
   <distributionManagement>
     <repository>
@@ -346,6 +346,14 @@
       </plugin>
     </plugins>
     -->
+    <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags</tagBase>
+        </configuration>
+      </plugin>    
+    </plugins>
   </build>
   <reporting>
     <plugins>
