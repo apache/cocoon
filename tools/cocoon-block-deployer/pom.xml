@@ -22,7 +22,7 @@
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-block-deployer</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/cocoon-tools-modules/cocoon-deployer</developerConnection>
-    <url>http://svn.apache.org/viewcvs/cocoon/trunk/cocoon-tools-modules/cocoon-deployer</url>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-block-deployer</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk/tools/cocoon-block-deployer</url>
   </scm>
 </project>
