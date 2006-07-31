@@ -3,7 +3,7 @@
 <root>
   protocol: #{$cocoon/request/protocol}
 
-  <item attr="** #{$cocoon/parameters['test']} **">
+  <item attr="** #{$cocoon/parameters[@name = 'test']} **">
     context: #{test}
   </item>
 
