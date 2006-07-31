@@ -17,9 +17,13 @@ package org.apache.cocoon.environment;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
@@ -117,7 +121,7 @@ public class TemplateObjectModelHelper {
             
         // cocoon.parameters
         if ( parameters != null ) {
-            cocoon.put("parameters", parameters);
+            cocoon.put("parameters", new ParametersMap(parameters));
         }
 
         final Map map = new HashMap();
@@ -132,5 +136,158 @@ public class TemplateObjectModelHelper {
         }
         
         return map;
+    }
+
+    protected static final class ParametersMap extends Parameters implements Map {
+
+        protected final Parameters wrappedParameters;
+        protected Map map;
+
+        public ParametersMap(Parameters wrapped) {
+            wrappedParameters = wrapped;
+        }
+
+        public boolean equals(Object arg0) {
+            return wrappedParameters.equals(arg0);
+        }
+
+        public String[] getNames() {
+            return wrappedParameters.getNames();
+        }
+
+        public String getParameter(String arg0, String arg1) {
+            return wrappedParameters.getParameter(arg0, arg1);
+        }
+
+        public String getParameter(String arg0) throws ParameterException {
+            return wrappedParameters.getParameter(arg0);
+        }
+
+        public boolean getParameterAsBoolean(String arg0, boolean arg1) {
+            return wrappedParameters.getParameterAsBoolean(arg0, arg1);
+        }
+
+        public boolean getParameterAsBoolean(String arg0) throws ParameterException {
+            return wrappedParameters.getParameterAsBoolean(arg0);
+        }
+
+        public float getParameterAsFloat(String arg0, float arg1) {
+            return wrappedParameters.getParameterAsFloat(arg0, arg1);
+        }
+
+        public float getParameterAsFloat(String arg0) throws ParameterException {
+            return wrappedParameters.getParameterAsFloat(arg0);
+        }
+
+        public int getParameterAsInteger(String arg0, int arg1) {
+            return wrappedParameters.getParameterAsInteger(arg0, arg1);
+        }
+
+        public int getParameterAsInteger(String arg0) throws ParameterException {
+            return wrappedParameters.getParameterAsInteger(arg0);
+        }
+
+        public long getParameterAsLong(String arg0, long arg1) {
+            return wrappedParameters.getParameterAsLong(arg0, arg1);
+        }
+
+        public long getParameterAsLong(String arg0) throws ParameterException {
+            return wrappedParameters.getParameterAsLong(arg0);
+        }
+
+        public Iterator getParameterNames() {
+            return wrappedParameters.getParameterNames();
+        }
+
+        public int hashCode() {
+            return wrappedParameters.hashCode();
+        }
+
+        public boolean isParameter(String arg0) {
+            return wrappedParameters.isParameter(arg0);
+        }
+
+        public void makeReadOnly() {
+            wrappedParameters.makeReadOnly();
+        }
+
+        public Parameters merge(Parameters arg0) {
+            return wrappedParameters.merge(arg0);
+        }
+
+        public void removeParameter(String arg0) {
+            wrappedParameters.removeParameter(arg0);
+        }
+
+        public String setParameter(String arg0, String arg1) throws IllegalStateException {
+            return wrappedParameters.setParameter(arg0, arg1);
+        }
+
+        public void clear() {
+            this.checkWriteable();
+        }
+
+        protected Map getMap() {
+            if ( this.map == null ) {
+                this.map = new HashMap();
+                String[] names = this.getNames();
+                for(int i=0; i<names.length;i++) {
+                    map.put(names[i], this.getParameter(names[i], null));
+                }
+            }
+            return this.map;
+        }
+
+        public boolean containsKey(Object arg0) {
+            if ( arg0 == null ) {
+                return false;
+            }
+            return this.getParameter(arg0.toString(), null) != null;
+        }
+
+        public boolean containsValue(Object arg0) {
+            return this.map.containsValue(arg0);
+        }
+
+        public Set entrySet() {
+            return this.map.entrySet();
+        }
+
+        public Object get(Object arg0) {
+            if ( arg0 == null ) {
+                return null;
+            }
+            return this.getParameter(arg0.toString(), null);
+        }
+
+        public boolean isEmpty() {
+            return this.getNames().length == 0;
+        }
+
+        public Set keySet() {
+            return this.getMap().keySet();
+        }
+
+        public Object put(Object arg0, Object arg1) {
+            this.checkWriteable();
+            return null;
+        }
+
+        public void putAll(Map arg0) {
+            this.checkWriteable();
+        }
+
+        public Object remove(Object arg0) {
+            this.checkWriteable();
+            return null;
+        }
+
+        public int size() {
+            return this.getNames().length;
+        }
+
+        public Collection values() {
+            return this.getMap().values();
+        }
     }
 }
