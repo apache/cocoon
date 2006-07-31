@@ -25,7 +25,7 @@
   </parent>
 
   <artifactId>cocoon-deployer-plugin</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
     
   <packaging>maven-plugin</packaging>
   
@@ -100,12 +100,5 @@
         </configuration>
       </plugin>    
     </plugins>
-  </build> 
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</url>
-  </scm>
+  </build>
 </project>
