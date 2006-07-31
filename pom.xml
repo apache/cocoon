@@ -21,16 +21,15 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-deployer</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <artifactId>cocoon-deployer-plugin</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
     
   <packaging>maven-plugin</packaging>
   
   <name>Cocoon Deployer - Maven 2 Plugin</name>
-  <url>http://cocoon.apache.org</url>
   
   <dependencies>
     
@@ -103,4 +102,10 @@
     </plugins>
   </build> 
   
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</url>
+  </scm>
 </project>
