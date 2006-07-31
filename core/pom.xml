@@ -34,15 +34,10 @@
    
   <name>Cocoon Core [modules]</name>
 
-  <!--modules>
+  <modules>
     <module>cocoon-blocks-fw</module>
     <module>cocoon-bootstrap</module>
     <module>cocoon-core</module>
     <module>cocoon-webapp</module>
-  </modules-->
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-1/cocoon-core-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-1/cocoon-core-modules</url>
-  </scm>
+  </modules>
 </project>
