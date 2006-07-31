@@ -30,7 +30,7 @@
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-bootstrap</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2</version>
   
   <packaging>jar</packaging>
   
@@ -49,11 +49,4 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-bootstrap-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-bootstrap-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-bootstrap-1.0.0-M1</url>
-  </scm>
 </project>
