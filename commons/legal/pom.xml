@@ -30,13 +30,13 @@
   </parent>
 
   <artifactId>cocoon-licenses</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
     
   <name>Cocoon Licenses</name>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-licenses-1.0.0-M1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons/legal</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/cocoon-licenses</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk/cocoon-licenses</url>
   </scm>
 </project>
