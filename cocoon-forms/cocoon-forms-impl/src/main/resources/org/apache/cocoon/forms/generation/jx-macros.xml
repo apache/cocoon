@@ -27,7 +27,7 @@
     -->
     <jx:macro name="form" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>
-      <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
+      <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters.getParameter('attribute-name', null))}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
         <!-- the form is also the current widget -->
@@ -42,7 +42,7 @@
     -->
     <jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>
-      <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
+      <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters.getParameter('attribute-name', null))}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
         <!-- the form is also the current widget -->
