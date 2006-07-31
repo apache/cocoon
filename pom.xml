@@ -20,7 +20,7 @@
   
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-deployer</artifactId>
+    <artifactId>cocoon-deployer-modules</artifactId>
     <version>1</version>
   </parent>
 
@@ -100,8 +100,7 @@
         </configuration>
       </plugin>    
     </plugins>
-  </build> 
-  
+  </build>
 
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-deployer-plugin-1.0.0-M1</connection>
