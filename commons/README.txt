@@ -48,7 +48,7 @@
   Cocoon is implemented both as a Java servlet and a Java command line
   application. The following requirements exist for installing it:
 
-   o  A Java 1.3 or later compatible virtual machine for your operating system.
+   o  A Java 1.4 or later compatible virtual machine for your operating system.
 
    o  A Servlet API 2.3 compatible Servlet Engine or J2EE Application Server. 
       [not required for command line operation]
