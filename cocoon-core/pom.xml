@@ -27,11 +27,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <artifactId>cocoon-core</artifactId>
-  <version>2.2.0-M2-SNAPSHOT</version>
+  <version>2.2.0-M1-SNAPSHOT</version>
 
   <name>Cocoon Core</name>
   <build>
@@ -98,11 +98,17 @@
 
   <dependencies>
 
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-licenses</artifactId>
+      <version>1.0.0-M1</version>
+    </dependency>
+
     <!--  bootstrap -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-bootstrap</artifactId>
-      <version>1.0.0-M2-SNAPSHOT</version>
+      <version>1.0.0-M1</version>
     </dependency>
 
     <!--  excalibur -->
