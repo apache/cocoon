@@ -30,7 +30,7 @@
   </parent>
 
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
 
   <name>Cocoon Blocks [modules]</name>
 
@@ -95,8 +95,8 @@
     <module>cocoon-xsp</module>
   </modules>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-blocks-modules-1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/cocoon-blocks-modules</developerConnection>
+    <url>http://svn.apache.org/viewcvs/cocoon/trunk/cocoon-blocks-modules</url>
   </scm>
 </project>
