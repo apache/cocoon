@@ -41,7 +41,7 @@ public class CopletInstanceSizingEvent
         }
         final String cid = eventData.substring(0, pos);
         this.size = new Integer(eventData.substring(pos+1)).intValue();
-        this.target = service.getProfileManager().getCopletInstanceData(cid);
+        this.target = service.getProfileManager().getCopletInstance(cid);
     }
 
     public CopletInstanceSizingEvent(CopletInstance target, int size) {

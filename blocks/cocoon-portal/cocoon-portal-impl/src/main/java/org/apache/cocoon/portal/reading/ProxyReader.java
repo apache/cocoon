@@ -100,7 +100,7 @@ public class ProxyReader extends ServiceableReader implements Disposable {
         String copletID = request.getParameter(ProxyTransformer.COPLETID);
 
         this.copletInstanceData = this.portalService
-                                      .getProfileManager().getCopletInstanceData(copletID);
+                                      .getProfileManager().getCopletInstance(copletID);
         this.prefix = par.getParameter("prefix", ProxyTransformer.PROXY_PREFIX);
     }
 

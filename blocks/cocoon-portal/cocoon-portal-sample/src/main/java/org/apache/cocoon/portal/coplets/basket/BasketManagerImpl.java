@@ -261,7 +261,7 @@ public class BasketManagerImpl
                         }
                         
                     } else {
-                        final CopletInstance original = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                        final CopletInstance original = this.portalService.getProfileManager().getCopletInstance(ci.getCopletId());
                         final CopletDefinition copletData = original.getCopletDefinition();
                         cid = this.portalService.getCopletFactory().newInstance(copletData);
                         Map attributes = (Map) ci.getAttribute("coplet-attributes");
@@ -279,7 +279,7 @@ public class BasketManagerImpl
                         }
                     }
                 }
-                layout.setCopletInstanceData(cid);
+                layout.setCopletInstanceId(cid.getId());
             } catch (PortalException pe) {
                 this.getLogger().warn("Unable to create new instance.", pe);
             }
@@ -361,7 +361,7 @@ public class BasketManagerImpl
                     url = ci.getURL();
                     if ( url == null ) {
                         // copy coplet attributes
-                        CopletInstance cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                        CopletInstance cid = this.portalService.getProfileManager().getCopletInstance(ci.getCopletId());
                         url = "coplet://" + ci.getCopletId();
                         Map attributes = new HashMap();
                         Iterator i = cid.getAttributes().entrySet().iterator();
@@ -390,7 +390,7 @@ public class BasketManagerImpl
                 }
             } else if ( ci.getURL() == null ) {
                 // copy coplet attributes
-                CopletInstance cid = this.portalService.getProfileManager().getCopletInstanceData(ci.getCopletId());
+                CopletInstance cid = this.portalService.getProfileManager().getCopletInstance(ci.getCopletId());
                 Map attributes = new HashMap();
                 Iterator i = cid.getAttributes().entrySet().iterator();
                 while ( i.hasNext() ) {

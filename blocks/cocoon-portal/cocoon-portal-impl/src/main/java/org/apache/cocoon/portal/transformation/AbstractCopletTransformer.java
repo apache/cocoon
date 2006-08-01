@@ -105,7 +105,7 @@ extends AbstractSAXTransformer {
             throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
         }
 
-        CopletInstance object = this.portalService.getProfileManager().getCopletInstanceData( copletId );
+        CopletInstance object = this.portalService.getProfileManager().getCopletInstance( copletId );
 
         return object;
     }

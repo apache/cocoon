@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.event.coplet;
+package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
- * This event is fired if an instance is removed.
+ * This event is fired when a layout has been removed.
  *
  * @version $Id$
+ * @since 2.2
  */
-public class CopletInstanceDataRemovedEvent
-    extends AbstractCopletInstanceEvent {
+public class LayoutRemovedEvent
+    extends AbstractLayoutEvent {
 
-    public CopletInstanceDataRemovedEvent(CopletInstance target) {
+    public LayoutRemovedEvent(Layout target) {
         super(target);
-    }    
+    }
 }

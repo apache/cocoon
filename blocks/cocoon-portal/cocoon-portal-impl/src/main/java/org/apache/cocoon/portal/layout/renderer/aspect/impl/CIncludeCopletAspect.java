@@ -68,7 +68,7 @@ public class CIncludeCopletAspect
                 		ContentHandler handler)
 	throws SAXException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
-        final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
+        final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
         if ( config.rootTag ) {
             XMLUtils.startElement(handler, config.tagName);

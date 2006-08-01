@@ -163,7 +163,6 @@ public class LayoutActions {
 
 		try {
 			Layout nObj = lf.newInstance(type);
-			pm.register(nObj);
 
 			Item e = new Item();
 			nObj.setParent(e);
@@ -206,7 +205,6 @@ public class LayoutActions {
 		} else {
 			try {
 				Layout tab = lf.newInstance("tab");
-				pm.register(tab);
 
 				NamedItem e = new NamedItem();
 				e.setName(name);
@@ -260,7 +258,7 @@ public class LayoutActions {
 			try {
 				CopletInstance cinst = cf.newInstance(cd);
 				CopletLayout lay = (CopletLayout) lf.newInstance("coplet");
-				lay.setCopletInstanceData(cinst);
+				lay.setCopletInstanceId(cinst.getId());
 			    if(obj instanceof Item) {
 				    Item item = (Item) obj;
 				    item.setLayout(lay);
@@ -282,7 +280,7 @@ public class LayoutActions {
     public CopletInstance getCopletInstanceData(String id) {
         Object obj = getLayoutElement(layout, id, "", 1);
         if(obj instanceof CopletLayout) {
-            return ((CopletLayout) obj).getCopletInstanceData();
+            return pm.getCopletInstance(((CopletLayout) obj).getCopletInstanceId());
         }
         return null;    
     }

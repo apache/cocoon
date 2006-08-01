@@ -29,7 +29,7 @@ import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
-import org.apache.cocoon.portal.event.layout.LayoutRemoveEvent;
+import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFeatures;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -109,7 +109,7 @@ public final class WindowAspect extends AbstractAspect {
                       ContentHandler        contenthandler)
     throws SAXException {
         final PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
-        final CopletInstance copletInstanceData = ((CopletLayout)layout).getCopletInstanceData();
+        final CopletInstance copletInstanceData = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
@@ -185,7 +185,7 @@ public final class WindowAspect extends AbstractAspect {
     throws SAXException {
         boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
         if ( !mandatory ) {
-            LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
+            RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
             XMLUtils.createElement(contenthandler, "remove-uri", this.portalService.getLinkService().getLinkURI(lre));
         }
     }

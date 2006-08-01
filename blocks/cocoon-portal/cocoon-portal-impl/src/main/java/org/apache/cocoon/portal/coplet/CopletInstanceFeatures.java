@@ -17,17 +17,12 @@ package org.apache.cocoon.portal.coplet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
 
 /**
  * This class contains constants and utility methods for the standard features
@@ -68,30 +63,6 @@ public final class CopletInstanceFeatures {
             }
         }
         return -1;
-    }
-
-    /**
-     * Search for a layout containing the coplet instance data.
-     */
-    public static CopletLayout searchLayout(String copletId, Layout rootLayout) {
-        if ( rootLayout instanceof CopletLayout ) {
-            final CopletLayout cl = (CopletLayout)rootLayout;
-            if ( cl.getCopletInstanceData() != null
-                 && cl.getCopletInstanceData().getId().equals(copletId) ) {
-                return (CopletLayout) rootLayout;
-            }
-        } else if ( rootLayout instanceof CompositeLayout ) {
-            final CompositeLayout cl = (CompositeLayout)rootLayout;
-            final Iterator i = cl.getItems().iterator();
-            while ( i.hasNext() ) {
-                final Item current = (Item)i.next();
-                CopletLayout result = searchLayout(copletId, current.getLayout());
-                if ( result != null ) {
-                    return result;
-                }
-            }
-        }
-        return null;
     }
 
     public static List getChangedCopletInstanceDataObjects(PortalService service) {

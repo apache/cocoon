@@ -26,8 +26,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.event.layout.LayoutRemoveEvent;
+import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
+import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
+import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -105,7 +108,7 @@ public class DefaultLayoutFactory
 	extends AbstractComponent
     implements LayoutFactory, Configurable, Receiver {
 
-    protected Map layouts = new HashMap();
+    protected final Map layouts = new HashMap();
 
     protected Configuration[] layoutsConf;
 
@@ -252,7 +255,7 @@ public class DefaultLayoutFactory
 
         layout.setDescription( layoutDescription );
 
-        this.portalService.getProfileManager().register(layout);
+        this.portalService.getEventManager().send(new LayoutAddedEvent(layout));
 
         return layout;
     }
@@ -260,7 +263,7 @@ public class DefaultLayoutFactory
     /**
      * @see Receiver
      */
-    public void inform(LayoutRemoveEvent event, PortalService service) {
+    public void inform(RemoveLayoutEvent event, PortalService service) {
         this.remove( event.getTarget() );
     }
 
@@ -277,10 +280,15 @@ public class DefaultLayoutFactory
                     this.remove( i.getLayout() );
                 }
             }
+            final ProfileManager profileManager = this.portalService.getProfileManager();
 
             if ( layout instanceof CopletLayout ) {
-                CopletFactory factory = this.portalService.getCopletFactory();
-                factory.remove( ((CopletLayout)layout).getCopletInstanceData());
+                final CopletFactory copletFactory = this.portalService.getCopletFactory();
+                final String copletId = ((CopletLayout)layout).getCopletInstanceId();
+                if ( copletId != null ) {
+                    final CopletInstance instance = profileManager.getCopletInstance(copletId);
+                    copletFactory.remove( instance );
+                }
             }
 
             Item parent = layout.getParent();
@@ -288,8 +296,7 @@ public class DefaultLayoutFactory
                 parent.getParent().removeItem( parent );
             }
 
-            ProfileManager profileManager = this.portalService.getProfileManager();
-            profileManager.unregister(layout);
+            this.portalService.getEventManager().send(new LayoutRemovedEvent(layout));
         }
     }
 }

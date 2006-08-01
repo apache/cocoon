@@ -94,7 +94,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     instances.add(cid);
                     if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
                         final CopletLayout copletLayout = new CopletLayout(null, "coplet");
-                        copletLayout.setCopletInstanceData(cid);
+                        copletLayout.setCopletInstanceId(cid.getId());
                         copletLayout.setLayoutRendererName("portlet-window");
                         final Item item = new Item();
                         item.setLayout(copletLayout);
@@ -140,12 +140,12 @@ public class TestProfileManager extends GroupBasedProfileManager {
                         rootLayout.removeItem(rootLayout.getItem(0));
                     }
                     // create new set
-                    final Iterator i = this.getCopletInstanceDatas().iterator();
+                    final Iterator i = this.getCopletInstances().iterator();
                     while ( i.hasNext() ) {
                         final CopletInstance cid = (CopletInstance)i.next();
                         if ( portletNames.contains(cid.getCopletDefinition().getId())) {
                             final CopletLayout copletLayout = new CopletLayout(null, "coplet");
-                            copletLayout.setCopletInstanceData(cid);
+                            copletLayout.setCopletInstanceId(cid.getId());
                             copletLayout.setLayoutRendererName("portlet-window");
                             final Item item = new Item();
                             item.setLayout(copletLayout);

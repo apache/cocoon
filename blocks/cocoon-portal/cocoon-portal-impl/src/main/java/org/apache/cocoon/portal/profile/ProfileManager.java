@@ -22,7 +22,6 @@ import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.scratchpad.Profile;
 
 /**
  * The profile manager provides access to the portal profile (or parts
@@ -41,23 +40,22 @@ public interface ProfileManager {
      * With the optional subKey it's possible to retrieve
      * a specific layout object in the profile defined by
      * the layout key.
-     * FIXME - Add a method to get the profile for a key and then
-     *         the layout can be retrieved from the profile.
-     * @param layoutKey A key describing the layout or null for the default
+     * @param profileName A key describing the layout or null for the default
      * @param layoutID    The id of a layout object or null for the root object
      * @return The layout
      */
-	Layout getPortalLayout(String layoutKey, String layoutID);
+	Layout getPortalLayout(String profileName, String layoutID);
 
     /**
-     * FIXME - This will be part of the profile interface.
+     * Get the coplet instance with the given id.
+     * @return The coplet instance or null.
      */
-    CopletInstance getCopletInstanceData(String copletID);
+    CopletInstance getCopletInstance(String copletID);
 
     /**
-     * FIXME - This will be part of the profile interface.
+     * Get all coplet instances of the given coplet for the current user.
      */
-    List getCopletInstanceData(CopletDefinition data);
+    List getCopletInstances(CopletDefinition data);
 
     /**
      * Return the coplet data object
@@ -65,54 +63,35 @@ public interface ProfileManager {
     CopletDefinition getCopletDefinition(String copletDataId);
 
     /**
-     * New layouts have to be registered using this method.
-     */
-    void register(Layout layout);
-
-    /**
-     * New layouts have to be unregistered using this method.
-     */
-    void unregister(Layout layout);
-
-    /**
      * Save the profile. Usually this just calls {@link #saveUserCopletInstanceDatas(String)}
      * and {@link #saveUserLayout(String)}, but implementations are free to
      * implement this method in a different way.
      * @param layoutKey
      */
-    void saveUserProfiles(String layoutKey);
+    void saveUserProfiles(String profileName);
 
     /**
-     * Get all instances
-     * FIXME - This will be part of the profile interface.
+     * Get all coplet instances for the current user.
      */
-    Collection getCopletInstanceDatas();
+    Collection getCopletInstances();
 
     /**
-     * Get all coplets.
+     * Get all coplets definitions for the current user.
      */
     Collection getCopletDefinitions();
 
     /**
-     * Get all coplet base datas.
+     * Get all coplet types for the current user.
      */
     Collection getCopletTypes();
 
     /**
-     * Get a specific coplet base data.
+     * Get a specific coplet type for the current user.
      */
     CopletType getCopletType(String id);
 
     /**
-     * Get current user information
+     * Get current user information.
      */
     PortalUser getUser();
-
-    /**
-     * Get the profile for the given profile key.
-     * @return The profile or null if the profile could not be found.
-     * @throws ProfileException if an error occurs.
-     */
-    Profile getProfile(String profileName)
-    throws ProfileException;
 }

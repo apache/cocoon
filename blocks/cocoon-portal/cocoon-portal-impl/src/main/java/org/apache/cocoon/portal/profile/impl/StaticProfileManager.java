@@ -39,6 +39,7 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * FIXME - This profile manager implementation does not use all of the new features of 2.2 yet,
  *         like profile manager aspects etc.
+ * FIXME - Events for adding/removing coplet instances/layouts not implemented yet
  * @version $Id$
  */
 public class StaticProfileManager 
@@ -229,9 +230,9 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstance(java.lang.String)
      */
-    public CopletInstance getCopletInstanceData(String copletID) {
+    public CopletInstance getCopletInstance(String copletID) {
         // TODO - we should store a map in the static profile manager
         //        instead of going through the collection each time
         try {
@@ -272,9 +273,9 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletDefinition)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public List getCopletInstanceData(CopletDefinition data) {
+    public List getCopletInstances(CopletDefinition data) {
         List coplets = new ArrayList();
         try {
             Iterator iter = getCopletInstanceDataManager().iterator();
@@ -312,9 +313,9 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances()
      */
-    public Collection getCopletInstanceDatas() {
+    public Collection getCopletInstances() {
         try {
             return this.getCopletInstanceDataManager();
         } catch (Exception e) {

@@ -16,9 +16,9 @@
 package org.apache.cocoon.portal.event.layout;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutFeatures;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 
 /**
@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.layout.impl.CopletLayout;
  *
  * @version $Id$
  */
-public class LayoutRemoveEvent
+public class RemoveLayoutEvent
     extends AbstractLayoutEvent
     implements ConvertableEvent {
 
@@ -34,17 +34,17 @@ public class LayoutRemoveEvent
      * Constructor.
      * @param target
      */
-    public LayoutRemoveEvent(Layout target) {
+    public RemoveLayoutEvent(Layout target) {
         super(target);
     }
 
-    public LayoutRemoveEvent(PortalService service, String eventData) {
+    public RemoveLayoutEvent(PortalService service, String eventData) {
         super(null);
         if ( eventData.charAt(0) == 'L' ) {
             this.target = service.getProfileManager().getPortalLayout(null, eventData.substring(1));
         } else if ( eventData.charAt(0) == 'C' ) {
             final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-            this.target = CopletInstanceFeatures.searchLayout(eventData.substring(1), rootLayout);            
+            this.target = LayoutFeatures.searchLayout(service, eventData.substring(1), rootLayout);            
         }
     }
 
@@ -57,8 +57,8 @@ public class LayoutRemoveEvent
             // if this is a coplet layout we can use the coplet instance id
             if ( l instanceof CopletLayout ) {
                 final CopletLayout cl = (CopletLayout)l;
-                if ( cl.getCopletInstanceData() != null ) {
-                    return 'C' + cl.getCopletInstanceData().getId();
+                if ( cl.getCopletInstanceId() != null ) {
+                    return 'C' + cl.getCopletInstanceId();
                 }
             }
             return null;
