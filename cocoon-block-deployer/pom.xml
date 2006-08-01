@@ -5,20 +5,20 @@
     <artifactId>cocoon-tools-modules</artifactId>
     <version>2-SNAPSHOT</version>
   </parent>
-  
+
   <modelVersion>4.0.0</modelVersion>
-  
+
   <artifactId>cocoon-deployer-modules</artifactId>
   <version>2-SNAPSHOT</version>
-    
+
   <packaging>pom</packaging>
   <name>Cocoon Deployer [modules]</name>
 
   <modules>
-    <module>cocoon-deployer-minimal-webapp</module>     
+    <module>cocoon-deployer-minimal-webapp</module>
     <module>cocoon-deployer-plugin</module>
     <module>cocoon-deployer-plugin-demo</module>
-    <module>cocoon-tutorial-simple-block</module>             
+    <module>cocoon-tutorial-simple-block</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-block-deployer</connection>
