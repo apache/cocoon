@@ -31,7 +31,7 @@ public abstract class CompositeLayout
     extends Layout {
 
     /** The children of this layout object. */
-    protected List items = new ArrayList();
+    protected final List items = new ArrayList();
 
     /**
      * Create a new composite layout object.
@@ -124,7 +124,7 @@ public abstract class CompositeLayout
         CompositeLayoutImpl clone = (CompositeLayoutImpl)super.clone();
 
         // we are not cloning the items
-        clone.items = new ArrayList();
+        clone.items.clear();
 
         return clone;
     }
