@@ -102,7 +102,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     }
                 }
             }
-            profile.setCopletInstanceDatas(instances);
+            profile.setCopletInstances(instances);
             this.prepareObject(instances);
 
             this.prepareObject(rootLayout);

@@ -490,7 +490,7 @@ public class GroupBasedProfileManager
 
         try {
             Collection cidm = (Collection)loader.loadProfile(key, profileLSParams);
-            profile.setCopletInstanceDatas(cidm);
+            profile.setCopletInstances(cidm);
             this.prepareObject(profile.getCopletInstancesMap());
 
             return true;
