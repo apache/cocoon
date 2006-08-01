@@ -37,8 +37,10 @@ import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
-import org.apache.cocoon.portal.event.coplet.CopletInstanceDataAddedEvent;
-import org.apache.cocoon.portal.event.coplet.CopletInstanceDataRemovedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
+import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
+import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.profile.ProfileException;
@@ -181,9 +183,9 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstance(java.lang.String)
      */
-    public CopletInstance getCopletInstanceData(String copletID) {
+    public CopletInstance getCopletInstance(String copletID) {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return profile.searchCopletInstance(copletID);
@@ -203,9 +205,9 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceData(org.apache.cocoon.portal.coplet.CopletDefinition)
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.coplet.CopletDefinition)
      */
-    public List getCopletInstanceData(CopletDefinition data) {
+    public List getCopletInstances(CopletDefinition data) {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
             final List coplets = new ArrayList();
@@ -225,7 +227,7 @@ public class GroupBasedProfileManager
      * Receives a coplet instance data added event.
      * @see Receiver
      */
-    public void inform(CopletInstanceDataAddedEvent event, PortalService service) {
+    public void inform(CopletInstanceAddedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.add(event.getTarget());
     }
@@ -245,25 +247,27 @@ public class GroupBasedProfileManager
      * Receives a coplet instance data added event.
      * @see Receiver
      */
-    public void inform(CopletInstanceDataRemovedEvent event, PortalService service) {
+    public void inform(CopletInstanceRemovedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
         profile.remove(event.getTarget());
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#register(org.apache.cocoon.portal.layout.Layout)
+     * Receives a layout added event.
+     * @see Receiver
      */
-    public void register(Layout layout) {
+    public void inform(LayoutAddedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
-        profile.add(layout);
+        profile.add(event.getTarget());
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#unregister(org.apache.cocoon.portal.layout.Layout)
+     * Receives a layout removed event.
+     * @see Receiver
      */
-    public void unregister(Layout layout) {
+    public void inform(LayoutRemovedEvent event, PortalService service) {
         final ProfileImpl profile = this.getUserProfile(null);
-        profile.remove(layout);
+        profile.remove(event.getTarget());
     }
 
     /**
@@ -303,9 +307,9 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstanceDatas()
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances()
      */
-    public Collection getCopletInstanceDatas() {
+    public Collection getCopletInstances() {
         final Profile profile = this.getUserProfile(null);
         if ( profile != null ) {
             return profile.getCopletInstances();

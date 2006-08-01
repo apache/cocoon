@@ -18,14 +18,14 @@ package org.apache.cocoon.portal.event.coplet;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 
 /**
- * This event is fired if a new instance is created.
+ * This event is fired if an instance is removed.
  *
  * @version $Id$
  */
-public class CopletInstanceDataAddedEvent
+public class CopletInstanceRemovedEvent
     extends AbstractCopletInstanceEvent {
 
-    public CopletInstanceDataAddedEvent(CopletInstance target) {
+    public CopletInstanceRemovedEvent(CopletInstance target) {
         super(target);
     }    
 }

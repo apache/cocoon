@@ -166,7 +166,7 @@ public class PortalManagerImpl
                 AttributesImpl a = new AttributesImpl();
                 a.addCDATAAttribute("id", current.getId());
                 XMLUtils.startElement(ch, "coplet", a);
-                final Layout l = CopletInstanceFeatures.searchLayout(current.getId(), rootLayout);
+                final Layout l = LayoutFeatures.searchLayout(service, current.getId(), rootLayout);
                 Renderer portalLayoutRenderer = this.portalService.getRenderer( l.getRendererName());
                 portalLayoutRenderer.toSAX(l, this.portalService, ch);
                 XMLUtils.endElement(ch, "coplet");
@@ -183,9 +183,9 @@ public class PortalManagerImpl
                 throw new SAXException("Only one of the paramteters can be specified for rendering: coplet or layout.");
             }
             if ( StringUtils.isNotEmpty(copletId) ) {
-                final CopletInstance cid = profileManager.getCopletInstanceData(copletId);
+                final CopletInstance cid = profileManager.getCopletInstance(copletId);
                 if ( cid != null ) {
-                    portalLayout = CopletInstanceFeatures.searchLayout(cid.getId(), profileManager.getPortalLayout(null, null));
+                    portalLayout = LayoutFeatures.searchLayout(service, cid.getId(), profileManager.getPortalLayout(null, null));
                 }
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
                 portalLayout = profileManager.getPortalLayout(null, layoutId);

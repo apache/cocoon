@@ -204,9 +204,13 @@ public abstract class AbstractProfileManager
         // is the coplet instance available?
         if ( layout instanceof CopletLayout ) {
             final CopletLayout cl = (CopletLayout)layout;
-            if ( cl.getCopletInstanceData() == null || cl.getCopletInstanceData().getCopletDefinition() == null ) {
+            if ( cl.getCopletInstanceId() == null ) {
                 return null;
-            }
+            }/*
+            final CopletInstance instance = this.getCopletInstance(cl.getCopletInstanceId());
+            if ( instance == null || instance.getCopletDefinition() == null ) {
+                return null;
+            }*/
         } else if ( layout instanceof CompositeLayout ) {
             final CompositeLayout cl = (CompositeLayout)layout;
             final Iterator i = cl.getItems().iterator();

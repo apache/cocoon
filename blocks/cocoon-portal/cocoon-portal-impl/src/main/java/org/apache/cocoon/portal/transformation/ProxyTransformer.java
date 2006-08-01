@@ -598,7 +598,7 @@ public class ProxyTransformer
                     throw new ProcessingException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
                 }
             }
-            return portalService.getProfileManager().getCopletInstanceData(copletId);
+            return portalService.getProfileManager().getCopletInstance(copletId);
         } catch (ServiceException e) {
             throw new ProcessingException("Error getting portal service.", e);
         } finally {

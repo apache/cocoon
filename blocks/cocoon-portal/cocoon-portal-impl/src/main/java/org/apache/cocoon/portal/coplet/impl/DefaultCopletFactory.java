@@ -22,8 +22,8 @@ import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.CopletType;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
-import org.apache.cocoon.portal.event.coplet.CopletInstanceDataAddedEvent;
-import org.apache.cocoon.portal.event.coplet.CopletInstanceDataRemovedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 
 /**
@@ -67,7 +67,7 @@ public class DefaultCopletFactory
         adapter.login( instance );
 
         // send an event
-        this.portalService.getEventManager().send(new CopletInstanceDataAddedEvent(instance));
+        this.portalService.getEventManager().send(new CopletInstanceAddedEvent(instance));
         return instance;
     }
 
@@ -83,7 +83,7 @@ public class DefaultCopletFactory
             adapter.destroy( copletInstanceData );
 
             // send an event
-            this.portalService.getEventManager().send(new CopletInstanceDataRemovedEvent(copletInstanceData));
+            this.portalService.getEventManager().send(new CopletInstanceRemovedEvent(copletInstanceData));
         }
     }
 

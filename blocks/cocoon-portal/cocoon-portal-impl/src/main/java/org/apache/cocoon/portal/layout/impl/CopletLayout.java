@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 
@@ -26,8 +25,8 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  */
 public final class CopletLayout extends Layout {
 
-    /** The coplet instance data. */
-    protected CopletInstance copletInstanceData;
+    /** The coplet instance id. */
+    protected String copletInstanceId;
 
     /**
      * Create a new coplet layout object.
@@ -40,12 +39,12 @@ public final class CopletLayout extends Layout {
         super(id, name);
     }
 
-    public void setCopletInstanceData(CopletInstance cid) {
-        this.copletInstanceData = cid;
+    public void setCopletInstanceId(String cid) {
+        this.copletInstanceId = cid;
     }
 
-    public CopletInstance getCopletInstanceData() {
-        return this.copletInstanceData;
+    public String getCopletInstanceId() {
+        return this.copletInstanceId;
     }
 
     /**
@@ -54,7 +53,7 @@ public final class CopletLayout extends Layout {
     protected Object clone() throws CloneNotSupportedException {
         CopletLayout clone = (CopletLayout)super.clone();
 
-        clone.copletInstanceData = null;
+        clone.copletInstanceId = null;
 
         return clone;
     }
@@ -65,9 +64,7 @@ public final class CopletLayout extends Layout {
     public Layout copy() {
         CopletLayout clone = (CopletLayout)super.copy();
 
-        if ( this.copletInstanceData != null ) {
-            clone.copletInstanceData = this.copletInstanceData.copy();
-        }
+        clone.copletInstanceId = this.copletInstanceId;
 
         return clone;
     }

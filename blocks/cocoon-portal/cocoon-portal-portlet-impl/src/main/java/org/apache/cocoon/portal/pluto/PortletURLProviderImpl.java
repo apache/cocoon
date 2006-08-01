@@ -97,7 +97,7 @@ public class PortletURLProviderImpl
         PortletURLConverter urlConverter = new PortletURLConverter(eventData);
         String copletId = urlConverter.getPortletId();
         CopletInstance cid = service.getProfileManager()
-            .getCopletInstanceData(copletId);
+            .getCopletInstance(copletId);
         this.portletWindow = (PortletWindow)cid.getTemporaryAttribute(PortletAdapter.PORTLET_WINDOW_ATTRIBUTE_NAME);
         this.mode = urlConverter.getMode();
         this.state = urlConverter.getState();

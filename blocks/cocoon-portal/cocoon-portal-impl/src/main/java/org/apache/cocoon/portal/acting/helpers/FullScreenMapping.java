@@ -36,7 +36,7 @@ public class FullScreenMapping extends Mapping {
      */
     public Event getEvent(PortalService service, Object data) {
         final ProfileManager manager = service.getProfileManager();
-        final CopletInstance cid = manager.getCopletInstanceData(this.copletId);
+        final CopletInstance cid = manager.getCopletInstance(this.copletId);
         //final Layout layout = manager.getPortalLayout(null, layoutId) ;
         
         Event e = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_FULLSCREEN);

@@ -34,7 +34,7 @@ public class CopletMapping extends Mapping {
      * @see org.apache.cocoon.portal.acting.helpers.Mapping#getEvent(org.apache.cocoon.portal.PortalService, java.lang.Object)
      */
     public Event getEvent(PortalService service, Object data) {
-        CopletInstance cid = service.getProfileManager().getCopletInstanceData(this.copletId);
+        CopletInstance cid = service.getProfileManager().getCopletInstance(this.copletId);
         Event e = new CopletJXPathEvent(cid, this.path, data);
         return e;
     }

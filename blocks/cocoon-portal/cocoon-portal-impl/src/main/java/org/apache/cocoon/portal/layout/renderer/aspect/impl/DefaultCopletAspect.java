@@ -60,7 +60,7 @@ public class DefaultCopletAspect extends AbstractAspect {
                       ContentHandler handler)
 	throws SAXException {
         XMLUtils.startElement(handler, "content");
-        CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
+        CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
         final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
         CopletAdapter copletAdapter = null;

@@ -78,7 +78,7 @@ public class CopletModule
         if ( name.equals("#") ) {
             return copletId;
         }
-        JXPathContext jxpathContext = JXPathContext.newContext(portalService.getProfileManager().getCopletInstanceData(copletId));
+        JXPathContext jxpathContext = JXPathContext.newContext(portalService.getProfileManager().getCopletInstance(copletId));
         return jxpathContext.getValue(name);
     }
 }

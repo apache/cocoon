@@ -17,6 +17,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 
@@ -35,5 +36,13 @@ public abstract class AbstractAspect
     public Object prepareConfiguration(Parameters configuration) 
     throws ParameterException {
         return configuration;
+    }
+
+    /**
+     * Return the coplet instance with the given id.
+     * @return The coplet instance or null.
+     */
+    protected CopletInstance getCopletInstance(String id) {
+        return this.portalService.getProfileManager().getCopletInstance(id);
     }
 }
