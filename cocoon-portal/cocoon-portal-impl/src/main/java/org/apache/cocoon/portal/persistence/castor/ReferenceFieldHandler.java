@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.CopletType;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 
 /**
@@ -39,9 +38,6 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
         }
         if ( object instanceof CopletInstance ) {
             return ((CopletInstance)object).getCopletDefinition().getId();
-        }
-        if ( object instanceof CopletLayout ) {
-            return ((CopletLayout)object).getCopletInstanceData().getId();
         }
         return null;
     }
@@ -70,9 +66,6 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
         if ( object instanceof CopletInstance ) {
             ((CopletInstance)object).setCopletDefinition(null);
         }
-        if ( object instanceof CopletLayout ) {
-            ((CopletLayout)object).setCopletInstanceData(null);
-        }
     }
 
     /**
@@ -86,9 +79,6 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
         }
         if ( object instanceof CopletInstance ) {
             ((CopletInstance)object).setCopletDefinition((CopletDefinition)reference);
-        }
-        if ( object instanceof CopletLayout ) {
-            ((CopletLayout)object).setCopletInstanceData((CopletInstance)reference);
         }
     }
 }

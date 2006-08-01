@@ -64,7 +64,7 @@ public class CopletSetDataAction
                 final String path = names[i];
                 final String value = parameters.getParameter(path, null );
                 if ( value != null && value.trim().length() > 0 ) {
-                    final Event event = new CopletJXPathEvent(this.portalService.getProfileManager().getCopletInstanceData(copletId),
+                    final Event event = new CopletJXPathEvent(this.portalService.getProfileManager().getCopletInstance(copletId),
                             path,
                             value);
                     publisher.send(event);

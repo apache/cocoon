@@ -72,7 +72,7 @@ extends AbstractAspect {
                       PortalService service,
                       ContentHandler contenthandler)
     throws SAXException {
-        final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
+        final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
         final ContentStore store;
         final String elementName;
         if ( context.getAspectConfiguration().equals(Boolean.TRUE) ) {

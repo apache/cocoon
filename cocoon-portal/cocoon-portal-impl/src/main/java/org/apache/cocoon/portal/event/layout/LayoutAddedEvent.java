@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.scratchpad;
+package org.apache.cocoon.portal.event.layout;
 
-import org.apache.cocoon.portal.profile.PortalUser;
-
+import org.apache.cocoon.portal.layout.Layout;
 
 /**
- * The profile manager.
- * WORK IN PROGRESS
+ * This event is fired when a new layout has been added.
  *
  * @version $Id$
+ * @since 2.2
  */
-public interface NewProfileManager {
+public class LayoutAddedEvent
+    extends AbstractLayoutEvent {
 
-    /**
-     * Get the named profile for the user.
-     * @param profileName The profile name or null for the default profile.
-     * @return The profile or null if the profile is not available.
-     */
-    Profile getUserProfile(String profileName);
-
-    /**
-     * Get current user information.
-     */
-    PortalUser getUser();
+    public LayoutAddedEvent(Layout target) {
+        super(target);
+    }
 }

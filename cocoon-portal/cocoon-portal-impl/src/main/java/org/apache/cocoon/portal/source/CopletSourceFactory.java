@@ -52,7 +52,7 @@ public class CopletSourceFactory
             location = location.substring(position+2);
         }
         try {
-            CopletInstance coplet = this.portalService.getProfileManager().getCopletInstanceData(location);
+            CopletInstance coplet = this.portalService.getProfileManager().getCopletInstance(location);
             if ( coplet == null ) {
                 throw new IOException("Unable to get coplet for " + location);
             }

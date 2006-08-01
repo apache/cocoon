@@ -48,7 +48,7 @@ public class UserConfiguration {
         UserConfiguration uc = (UserConfiguration)session.getAttribute(ATTR_NAME);
         if ( uc == null ) {
             final ProfileManager pm = service.getProfileManager();
-            final CopletInstance cid = pm.getCopletInstanceData("basket");
+            final CopletInstance cid = pm.getCopletInstance("basket");
             if ( cid != null ) {
                 uc = new UserConfiguration(cid.getAttributes());
                 session.setAttribute(ATTR_NAME, uc);

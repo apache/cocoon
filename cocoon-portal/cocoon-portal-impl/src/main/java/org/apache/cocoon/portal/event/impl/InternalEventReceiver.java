@@ -27,7 +27,7 @@ import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.event.coplet.CopletInstanceDataRemovedEvent;
+import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.event.coplet.CopletJXPathEvent;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
@@ -89,10 +89,10 @@ public final class InternalEventReceiver
             final int oldSize = cid.getSize();
             cid.setSize(event.getSize());
             if ( event.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
-                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
+                CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
                 LayoutFeatures.setFullScreenInfo(rootLayout, layout);
             } else if ( event.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
-                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
+                CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
                     final RenderInfo info = new RenderInfo(layout, container);
@@ -105,7 +105,7 @@ public final class InternalEventReceiver
             if ( oldSize == CopletInstance.SIZE_FULLSCREEN ) {
                 LayoutFeatures.setFullScreenInfo(rootLayout, null);
             } else if ( oldSize == CopletInstance.SIZE_MAXIMIZED ) {
-                CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
+                CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
                 Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
                 if ( container != null ) {
                 	LayoutFeatures.setRenderInfo(container.getParent(), null);
@@ -124,7 +124,7 @@ public final class InternalEventReceiver
     /**
      * @see Receiver
      */
-    public void inform(CopletInstanceDataRemovedEvent e, PortalService service) {
+    public void inform(CopletInstanceRemovedEvent e, PortalService service) {
         CopletInstance cid = e.getTarget();
         // full screen?
         if ( cid.getSize() == CopletInstance.SIZE_FULLSCREEN ) {
@@ -132,7 +132,7 @@ public final class InternalEventReceiver
             LayoutFeatures.setFullScreenInfo(rootLayout, null);
         } else if ( cid.getSize() == CopletInstance.SIZE_MAXIMIZED ) {
             Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-            CopletLayout layout = CopletInstanceFeatures.searchLayout(cid.getId(), rootLayout);
+            CopletLayout layout = LayoutFeatures.searchLayout(service, cid.getId(), rootLayout);
             Item container = LayoutFeatures.searchItemForMaximizedCoplet(layout);
             if ( container != null ) {
                 LayoutFeatures.setRenderInfo(container.getParent(), null);
@@ -148,7 +148,7 @@ public final class InternalEventReceiver
         List instances = null;
 
         ProfileManager profileManager = service.getProfileManager();
-        instances = profileManager.getCopletInstanceData(data);
+        instances = profileManager.getCopletInstances(data);
 
         if ( instances != null && e instanceof ChangeCopletsJXPathEvent ) {
             EventManager eventManager = service.getEventManager();

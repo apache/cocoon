@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.layout.impl.LinkLayout;
 
 
 /**
@@ -83,4 +87,70 @@ public class LayoutFeatures {
 		}
 		return item;
 	}
+
+    /** 
+     * The layout traverser gets notified by each layout object in the tree when
+     * the layout is traversed using {@link LayoutFeatures#traverseLayout}.
+     */
+    public interface LayoutTraverser {
+
+        /**
+         * Get notified of a layout found during the tree traversal.
+         * @param layout The current layout.
+         * @return true if the traversal should continue, false otherwise
+         */
+        boolean processLayout(Layout layout);
+    }
+
+    /**
+     * Traverse the whole layout tree.
+     * @param rootLayout The root layout to start the traversal.
+     * @param traverser The traverser which gets notified
+     * @return If the traverser stops the traversing process, the layout will be returned.
+     *         Otherwise null wil be returned.
+     */
+    public static Layout traverseLayout(PortalService service, Layout rootLayout, LayoutTraverser traverser) {
+        if ( rootLayout != null ) {
+            if ( !traverser.processLayout(rootLayout) ) {
+                return rootLayout;
+            }
+            if ( rootLayout instanceof CompositeLayout ) {
+                final Iterator i = ((CompositeLayout)rootLayout).getItems().iterator();
+                while ( i.hasNext() ) {
+                    final Item item = (Item)i.next();
+                    if ( item.getLayout() != null ) {
+                        final Layout result = traverseLayout(service, item.getLayout(), traverser);
+                        if ( result != null ) {
+                            return result;
+                        }
+                    }
+                }
+            } else if ( rootLayout instanceof LinkLayout ) {
+                final LinkLayout linkLayout = (LinkLayout)rootLayout;
+                return traverseLayout(service, service.getProfileManager().getPortalLayout(linkLayout.getLayoutKey(), linkLayout.getLayoutId()), traverser);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search for a layout containing the coplet instance data.
+     */
+    public static CopletLayout searchLayout(final PortalService service,
+                                            final String copletId,
+                                            final Layout rootLayout) {
+        if ( copletId == null ) {
+            return null;
+        }
+        return (CopletLayout)traverseLayout(service, rootLayout, new LayoutTraverser() {
+           public boolean processLayout(Layout layout) {
+               if ( layout instanceof CopletLayout ) {
+                   if ( copletId.equals(((CopletLayout)layout).getCopletInstanceId())) {
+                       return false;
+                   }
+               }
+               return true;
+           }
+        });
+    }
 }

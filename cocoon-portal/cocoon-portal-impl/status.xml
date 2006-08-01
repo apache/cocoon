@@ -66,6 +66,14 @@
  <changes>
   <release version="@version@" date="@date@">
     <action dev="CZ" type="add">
+      CopletLayout only holds the coplet instance id instead of the object itself.
+    </action>
+    <action dev="CZ" type="add">
+      Refactor the object model: CopletBaseData has been renamed to CopletType,
+      CopletData has been renamed to CopletDefinition and CopletInstanceData
+      to CopletInstance.
+    </action>
+    <action dev="CZ" type="add">
       Add Spring post processor to add all configured components implement the Receiver
       interface as subscribers to the event manager. This simplifies component development
       as the component itself does not need to register itself anymore.

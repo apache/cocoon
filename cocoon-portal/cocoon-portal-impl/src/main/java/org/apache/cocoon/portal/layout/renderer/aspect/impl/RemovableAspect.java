@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
 import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.event.layout.LayoutRemoveEvent;
+import org.apache.cocoon.portal.event.layout.RemoveLayoutEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -56,16 +56,16 @@ public class RemovableAspect
                       ContentHandler handler)
 	throws SAXException {
         if ( layout instanceof CopletLayout ) {
-            final CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
+            final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
     
             boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
             if ( !mandatory ) {
-                LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
+                RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
                 XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
             }
         } else {
             // for any other layout just create the event
-            LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
+            RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
             XMLUtils.createElement(handler, "remove-uri", 
                                    service.getLinkService().getLinkURI(lre));
         }

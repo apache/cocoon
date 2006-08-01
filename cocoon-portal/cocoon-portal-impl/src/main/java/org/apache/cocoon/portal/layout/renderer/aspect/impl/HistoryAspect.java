@@ -111,7 +111,7 @@ public class HistoryAspect
 
                 // are we a coplet layout
                 if ( layout instanceof CopletLayout ) {
-                    CopletInstance cid = ((CopletLayout)layout).getCopletInstanceData();
+                    CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
                     this.addValues(cid.getId(), state, cid.getAttributes(), "attributes/", true);
                     this.addValues(cid.getId(), state, cid.getTemporaryAttributes(), "temporaryAttributes/", true);
                 }

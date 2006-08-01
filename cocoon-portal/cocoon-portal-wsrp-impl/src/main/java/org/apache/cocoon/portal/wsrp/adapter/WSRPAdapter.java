@@ -51,7 +51,6 @@ import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletInstance;
-import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
@@ -618,7 +617,7 @@ public class WSRPAdapter
                 if ( !windowState.equals(windowSession.getWindowState()) ) {
                     
                     final Layout rootLayout = service.getProfileManager().getPortalLayout(null, null);
-                    final Layout layout = CopletInstanceFeatures.searchLayout(coplet.getId(), rootLayout);
+                    final Layout layout = LayoutFeatures.searchLayout(service, coplet.getId(), rootLayout);
                     final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(rootLayout);
                     if ( fullScreenLayout != null 
                          && fullScreenLayout.equals( layout )

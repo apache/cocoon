@@ -55,7 +55,7 @@ public class WSRPEventAspect implements EventAspect, ThreadSafe {
                 }
             }
             final String copletid = values[0];
-            final CopletInstance cid = service.getProfileManager().getCopletInstanceData(copletid);
+            final CopletInstance cid = service.getProfileManager().getCopletInstance(copletid);
 
             final Event e = new WSRPEvent(cid, parameters);
             service.getEventManager().send(e);

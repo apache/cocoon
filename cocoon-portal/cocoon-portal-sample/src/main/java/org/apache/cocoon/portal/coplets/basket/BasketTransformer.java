@@ -107,7 +107,7 @@ public class BasketTransformer
                     ci = new ContentItem(href, addContent);
                 } else {
                     final String copletId = attr.getValue("coplet");
-                    final CopletInstance cid = service.getProfileManager().getCopletInstanceData(copletId);                    
+                    final CopletInstance cid = service.getProfileManager().getCopletInstance(copletId);                    
                     ci = new ContentItem(cid, addContent);
                 }
 
