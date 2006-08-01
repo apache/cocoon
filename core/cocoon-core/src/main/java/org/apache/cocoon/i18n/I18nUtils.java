@@ -52,23 +52,21 @@ public class I18nUtils {
 
     /**
      * Parses given locale string to Locale object. If the string is null
-     * then the given locale is returned.
+     * or empty then the given locale is returned.
      *
-     * @param localeString a string containing locale in
-     * <code>language_country_variant</code> format.
-     * @param defaultLocale returned if localeString is <code>null</code>
+     * @param localeString - a string containing locale in
+     *        <code>language_country_variant</code> format.
+     * @param defaultLocale - returned if localeString is <code>null</code>
+     *        or <code>""</code>
      */
     public static Locale parseLocale(String localeString, Locale defaultLocale) {
-        if (localeString != null) {
-            StringTokenizer st = new StringTokenizer(localeString,
-                                                     LOCALE_DELIMITER);
-            String l = st.hasMoreElements() ? st.nextToken()
-                                            : defaultLocale.getLanguage();
+        if (localeString != null && localeString.length() > 0) {
+            StringTokenizer st = new StringTokenizer(localeString, LOCALE_DELIMITER);
+            String l = st.hasMoreElements() ? st.nextToken() : defaultLocale.getLanguage();
             String c = st.hasMoreElements() ? st.nextToken() : "";
             String v = st.hasMoreElements() ? st.nextToken() : "";
             return new Locale(l, c, v);
         }
-
         return defaultLocale;
     }
 
