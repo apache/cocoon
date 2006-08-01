@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>1</version>
+    <version>2-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-tools-modules</artifactId>
@@ -37,7 +37,6 @@
   <modules>
     <module>archetypes</module>
     <module>cocoon-block-deployer</module>
-    <module>cocoon-maven-eclipse-plugin</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools</connection>
