@@ -98,6 +98,12 @@
 
   <dependencies>
 
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-licenses</artifactId>
+      <version>1.0.0-M1</version>
+    </dependency>
+
     <!--  bootstrap -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
