@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1758" due-to="Carlos Chávez" due-to-email="cchavez@agssa.net">
+      Form locale never used in JXMacros.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1885" due-to="Ard Schrijvers" due-to-email="a.schrijvers@hippo.nl">
       Core: EHDefaultStore returns in the size() method the wrong number of keys.
     </action>
