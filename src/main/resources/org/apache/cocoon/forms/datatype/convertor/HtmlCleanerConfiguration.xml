@@ -75,6 +75,8 @@
       <!-- linking -->
       <element name="a">
         <attribute name="href"/>
+        <attribute name="target"/>
+        <attribute name="title"/> 
       </element>
 
       <!-- inline styles -->
