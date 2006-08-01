@@ -16,7 +16,8 @@
 -->
 
 <!-- An implementation of the CForms template engine as a JXTemplate tag library -->
-    
+<!-- $Id$ -->
+
 <jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
              xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
              xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
@@ -26,7 +27,8 @@
         ft:form
     -->
     <jx:macro name="form" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>
+      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale')}"/>
+      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$localeSitemapParameter)}"/>
       <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
@@ -36,12 +38,13 @@
         <jx:set var="cformsDummy" value="${cformsHelper.endForm()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:form-template: preferred syntax is now "ft:form" (we know we're in a template)
     -->
     <jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$cocoon/parameters/locale)}"/>
+      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale')}"/>
+      <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$localeSitemapParameter)}"/>
       <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
         <jx:set var="cformsDummy" value="${cformsHelper.startForm(form, macro.arguments)}"/>
@@ -51,13 +54,13 @@
         <jx:set var="cformsDummy" value="${cformsHelper.endForm()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:widget
     -->
     <jx:macro name="widget" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:if test="${cformsHelper.pushWidget(id)}">
         <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
         <jx:set var="cformsDummy" value="${cformsHelper.generateWidget(widget, macro.arguments)}"/>
@@ -65,32 +68,32 @@
         <jx:set var="cformsDummy" value="${cformsHelper.flushRootAndPop()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:repeater-widget-label
     -->
     <jx:macro name="repeater-widget-label" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
       <jx:parameter name="widget-id"/>
-      
+
       <jx:set var="cformsDummy" value="${cformsHelper.generateRepeaterWidgetLabel(widget, id, this['widget-id'])}"/>
     </jx:macro>
-    
+
     <!--
         ft:widget-label
     -->
     <jx:macro name="widget-label" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:set var="cformsDummy" value="${cformsHelper.generateWidgetLabel(widget, id)}"/>
     </jx:macro>
-    
+
     <!--
         ft:repeater-size
     -->
     <jx:macro name="repeater-size" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:set var="cformsDummy" value="${cformsHelper.generateRepeaterSize(widget, id)}"/>
     </jx:macro>
 
@@ -112,7 +115,7 @@
         <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:continuation-id
     -->
@@ -125,7 +128,7 @@
     -->
     <jx:macro name="class" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:set var="cformsDummy" value="${cformsHelper.defineClassBody(form, id, macro.body)}"/>
     </jx:macro>
 
@@ -149,7 +152,7 @@
     -->
     <jx:macro name="new" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:eval select="${cformsHelper.getClassBody(id)}"/>
     </jx:macro>
 
@@ -158,7 +161,7 @@
     -->
     <jx:macro name="struct" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:if test="${cformsHelper.pushContainer(id)}">
         <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
         <fi:struct id="${widget.fullName}">
@@ -167,13 +170,13 @@
         <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:union
     -->
     <jx:macro name="union" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:if test="${cformsHelper.pushContainer(id)}">
         <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
         <fi:union id="${widget.getRequestParameterName()}">
@@ -194,13 +197,13 @@
         <jx:evalBody/>
       </jx:if>
     </jx:macro>
-    
+
     <!--
         ft:validation-error
     -->
     <jx:macro name="validation-error" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:set var="validationError" value="${widget.getValidationError()}"/>
       <jx:if test="${cformsHelper.isValidationError(validationError)}">
@@ -210,20 +213,19 @@
       </jx:if>
     </jx:macro>
 
-
     <!--
         ft:aggregate-widget
     -->
     <jx:macro name="aggregate-widget" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      
+
       <jx:if test="${cformsHelper.pushContainer(id)}">
         <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
         <jx:evalBody/>
         <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <jx:macro name="repeater" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
       <jx:if test="${cformsHelper.pushRepeater(id, true)}">
@@ -233,7 +235,7 @@
         <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
       </jx:if>
     </jx:macro>
-    
+
     <jx:macro name="repeater-rows" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
         <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
           <jx:if test="#{pushContainer($cformsHelper, java.lang.Integer.toString($repeaterLoop/index))}">
@@ -254,7 +256,7 @@
           <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
 	  </jx:if>
     </jx:macro>
-    
+
     <jx:macro name="tree-nodes" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:set var="treeNodesBody" value="${macro.body}"/>
       <!-- Generate tree-management hidden fields here, i.e. inside the block element
@@ -275,7 +277,7 @@
         </jx:otherwise>
       </jx:choose>
     </jx:macro>
-    
+
     <jx:macro name="tree-children" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:if test="${!treeNode.isLeaf() &amp;&amp; treeNode.isExpanded()}">
         <jx:forEach varStatus="treeLoop" items="${treeNode.enterChildren()}">
