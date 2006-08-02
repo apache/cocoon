@@ -15,23 +15,23 @@
   limitations under the License.
 -->
 <!-- SVN $Id$ -->
-<composite-layout name="tab" id="maintab">
+<composite-layout type="tab" id="maintab">
 
   <named-item name="Main">
-    <coplet-layout name="coplet">
+    <coplet-layout type="coplet">
       <coplet-instance>PortalDemo_1</coplet-instance>
     </coplet-layout>
   </named-item>
 
   <named-item name="Gallery">
-    <composite-layout name="column">
+    <composite-layout type="column">
       <item>
-        <coplet-layout name="coplet">
+        <coplet-layout type="coplet">
           <coplet-instance>GalleryPetstore_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <coplet-layout name="coplet">
+        <coplet-layout type="coplet">
           <coplet-instance>GalleryViewer_1</coplet-instance>
         </coplet-layout>
       </item>
@@ -40,26 +40,26 @@
 <!-- 
 
   <named-item name="JSR-168">
-    <composite-layout name="row">
+    <composite-layout type="row">
       <item>
-        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+        <coplet-layout type="coplet">
           <coplet-instance>TestPortlet_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+        <coplet-layout type="coplet">
           <coplet-instance>CocoonPortlet</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <composite-layout name="column">
+        <composite-layout type="column">
           <item>
-            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+            <coplet-layout type="coplet">
               <coplet-instance>Portlet_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
-            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+            <coplet-layout type="coplet">
               <coplet-instance>Portlet_2</coplet-instance>
             </coplet-layout>
           </item>
@@ -69,20 +69,20 @@
   </named-item>
 
   <named-item name="Portals Bridges">
-    <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+    <coplet-layout type="coplet">
       <coplet-instance>Petstore_1</coplet-instance>
     </coplet-layout>
   </named-item>
 
   <named-item name="WSRP">
-    <composite-layout name="column">
+    <composite-layout type="column">
       <item>
-        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
+        <coplet-layout type="coplet">
           <coplet-instance>WSRP_Calc_1</coplet-instance>
       </coplet-layout>
       </item>
       <item>
-        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
+        <coplet-layout type="coplet">
           <coplet-instance>WSRP_Test_1</coplet-instance>
       </coplet-layout>
       </item>
@@ -91,34 +91,34 @@
  -->
 
   <named-item name="Apps">
-    <composite-layout name="row">
+    <composite-layout type="row">
       <item>
-        <composite-layout name="column">
+        <composite-layout type="column">
           <item>
             <parameter name="width" value="50%" />
-            <coplet-layout name="coplet" >
+            <coplet-layout type="coplet" >
               <coplet-instance>app_test_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
             <parameter name="width" value="50%" />
-            <coplet-layout name="coplet" >
+            <coplet-layout type="coplet" >
               <coplet-instance>app_test_2</coplet-instance>
             </coplet-layout>
           </item>
         </composite-layout>
       </item>
       <item>
-        <composite-layout name="column">
+        <composite-layout type="column">
           <item>
             <parameter name="width" value="50%" />
-            <coplet-layout name="coplet" >
+            <coplet-layout type="coplet" >
               <coplet-instance>app_test_3</coplet-instance>
             </coplet-layout>
           </item>
           <item>
             <parameter name="width" value="50%" />
-            <coplet-layout name="coplet" >
+            <coplet-layout type="coplet" >
               <coplet-instance>app_test_4</coplet-instance>
             </coplet-layout>
           </item>
@@ -128,7 +128,7 @@
   </named-item>
 
   <named-item name="AppCoplet">
-    <coplet-layout name="coplet">
+    <coplet-layout type="coplet">
       <coplet-instance>Google_1</coplet-instance>
     </coplet-layout>
   </named-item>

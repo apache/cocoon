@@ -55,7 +55,7 @@ public class LinkEventAspect extends AbstractContentEventAspect {
         } else {
             this.getLogger().warn(
                 "the configured layout: "
-                    + layout.getName()
+                    + layout.getType()
                     + " is not a LinkLayout.");
         }
     }

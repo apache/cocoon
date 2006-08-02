@@ -78,7 +78,7 @@ public class LayoutFeatures {
 
 	public static Item searchItemForMaximizedCoplet(CopletLayout layout) {
 		Item item = layout.getParent();
-		while ( item != null && !item.getParent().isStatic().booleanValue() ) {
+		while ( item != null && !item.getParent().isStatic() ) {
 			if ( item.getParent() == null ) {
 				item = null;
 			} else {

@@ -113,9 +113,6 @@ public class StaticProfileManager
             layouts.put(null, layout); //save root with null as key
             cacheLayouts(layouts, layout);
 
-            LayoutFactory factory = this.portalService.getLayoutFactory();
-            factory.prepareLayout(layout);
-
             // store the new values in the service
             if (newValidity != null) {
                 objects = new Object[] { layouts, newValidity };

@@ -31,8 +31,8 @@
          extends="org.apache.cocoon.portal.layout.AbstractParameters"
          verify-constructable="false">
 
-    <field name="layoutRendererName" type="java.lang.String">
-      <bind-xml name="layout-renderer-name" node="attribute"/>
+    <field name="rendererName" type="java.lang.String">
+      <bind-xml name="renderer" node="attribute"/>
     </field>
 
     <field name="static" type="java.lang.Boolean" set-method="setIsStatic" get-method="isStatic">
@@ -49,8 +49,8 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="name" type="java.lang.String" set-method="%2" get-method="getName">
-      <bind-xml name="name" node="attribute"/>
+    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
+      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="layoutKey" type="java.lang.String">
@@ -70,8 +70,8 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="name" type="java.lang.String" set-method="%2" get-method="getName">
-      <bind-xml name="name" node="attribute"/>
+    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
+      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="items" type="org.apache.cocoon.portal.layout.Item"
@@ -90,8 +90,8 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="name" type="java.lang.String" set-method="%2" get-method="getName">
-      <bind-xml name="name" node="attribute"/>
+    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
+      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="copletInstanceId"
@@ -109,8 +109,8 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="name" type="java.lang.String" set-method="%2" get-method="getName">
-      <bind-xml name="name" node="attribute"/>
+    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
+      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="source" type="java.lang.String"/>
