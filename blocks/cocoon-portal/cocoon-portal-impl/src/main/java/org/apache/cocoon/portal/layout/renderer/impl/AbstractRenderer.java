@@ -113,7 +113,7 @@ public abstract class AbstractRenderer
      * Process a Layout
      */
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
-        final String rendererName = layout.getRendererName();
+        final String rendererName = service.getLayoutFactory().getRendererName(layout);
         Renderer renderer = null;
         renderer = service.getRenderer(rendererName);
         renderer.toSAX(layout, service, handler);

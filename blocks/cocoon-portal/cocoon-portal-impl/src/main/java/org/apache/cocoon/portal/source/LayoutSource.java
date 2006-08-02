@@ -142,7 +142,7 @@ public class LayoutSource
 	 */
 	public void toSAX(ContentHandler handler) 
     throws SAXException {
-        Renderer portalLayoutRenderer = this.portalService.getRenderer( this.layout.getRendererName());
+        Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(this.layout));
 
         handler.startDocument();
         portalLayoutRenderer.toSAX(this.layout, this.portalService, handler);

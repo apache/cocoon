@@ -16,8 +16,9 @@
 package org.apache.cocoon.portal.layout.impl;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -59,8 +60,8 @@ import org.apache.cocoon.util.ClassUtils;
  *   <td><code>null</code></td>
  *  </tr>
  * <tr>
- *   <th>layouts/layout/attribute::name</th>
- *   <td>Unique layout name.</td>
+ *   <th>layouts/layout/attribute::type</th>
+ *   <td>Unique layout type.</td>
  *   <td>req</td>
  *   <td>String</td>
  *   <td><code>null</code></td>
@@ -119,14 +120,14 @@ public class DefaultLayoutFactory
      */
     protected void configureLayout(Configuration layoutConf) 
     throws ConfigurationException {
-        DefaultLayoutDescription desc = new DefaultLayoutDescription();
-        final String name = layoutConf.getAttribute("name");
+        LayoutDescription desc = new LayoutDescription();
+        final String type = layoutConf.getAttribute("type");
    
         // unique test
-        if ( this.layouts.get(name) != null) {
-            throw new ConfigurationException("Layout name must be unique. Double definition for " + name);
+        if ( this.layouts.get(type) != null) {
+            throw new ConfigurationException("Layout type must be unique. Double definition for " + type);
         }
-        desc.setName(name);
+        desc.setType(type);
         desc.setClassName(layoutConf.getAttribute("class"));        
         desc.setCreateId(layoutConf.getAttributeAsBoolean("create-id", false));
         desc.setItemClassName(layoutConf.getAttribute("item-class", null));
@@ -147,13 +148,13 @@ public class DefaultLayoutFactory
                 }
             }
             if ( !found ) {
-                throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+                throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + type + "'");
             }
         } else {
-            throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+            throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + type + "'");
         }
 
-        this.layouts.put(desc.getName(), desc);
+        this.layouts.put(desc.getType(), desc);
     }
 
     /**
@@ -184,63 +185,30 @@ public class DefaultLayoutFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutFactory#prepareLayout(org.apache.cocoon.portal.layout.Layout)
-     */
-    public void prepareLayout(Layout layout)
-    throws LayoutException {
-        if ( layout != null ) {
-
-            this.init();
-
-            final String layoutName = layout.getName();
-            if ( layoutName == null ) {
-                throw new LayoutException("Layout '"+layout.getId()+"' has no associated name.");
-            }
-            DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)this.layouts.get( layoutName );
-
-            if ( layoutDescription == null ) {
-                throw new LayoutException("LayoutDescription with name '" + layoutName + "' not found.");
-            }
-
-            layout.setDescription( layoutDescription );
-
-            // recursive
-            if ( layout instanceof CompositeLayout ) {
-                CompositeLayout composite = (CompositeLayout)layout;
-
-                Iterator items = composite.getItems().iterator();
-                while ( items.hasNext() ) {
-                    this.prepareLayout( ((Item)items.next()).getLayout() );
-                }
-            }
-        }
-    }
-
-    /**
      * @see org.apache.cocoon.portal.layout.LayoutFactory#newInstance(java.lang.String)
      */
-    public Layout newInstance(String layoutName) 
+    public Layout newInstance(String layoutType) 
     throws LayoutException {
-        return this.newInstance(layoutName, null);
+        return this.newInstance(layoutType, null);
     }
 
     /**
      * @see org.apache.cocoon.portal.layout.LayoutFactory#newInstance(java.lang.String, java.lang.String)
      */
-    public Layout newInstance(String layoutName, String id) 
+    public Layout newInstance(String layoutType, String id) 
     throws LayoutException {
         this.init();
 
-        DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)this.layouts.get( layoutName );
+        LayoutDescription layoutDescription = (LayoutDescription)this.layouts.get( layoutType );
 
         if ( layoutDescription == null ) {
-            throw new LayoutException("LayoutDescription with name '" + layoutName + "' not found.");
+            throw new LayoutException("LayoutDescription for type '" + layoutType + "' not found.");
         }
 
         String layoutId = id;
         if ( layoutDescription.createId() && layoutId == null ) {
             synchronized (this) {
-                layoutId = layoutName + '_' + idCounter;
+                layoutId = layoutType + '_' + idCounter;
                 idCounter += 1;
             }
         }
@@ -248,12 +216,12 @@ public class DefaultLayoutFactory
         try {
             Class clazz = ClassUtils.loadClass( layoutDescription.getClassName() );
             Constructor constructor = clazz.getConstructor(new Class[] {String.class, String.class});
-            layout = (Layout)constructor.newInstance(new Object[] {layoutId, layoutName});
+            layout = (Layout)constructor.newInstance(new Object[] {layoutId, layoutType});
         } catch (Exception e) {
             throw new LayoutException("Unable to create new layout instance for: " + layoutDescription , e );
         }
 
-        layout.setDescription( layoutDescription );
+        layout.setIsStatic( layoutDescription.defaultIsStatic() );
 
         this.portalService.getEventManager().send(new LayoutAddedEvent(layout));
 
@@ -297,6 +265,57 @@ public class DefaultLayoutFactory
             }
 
             this.portalService.getEventManager().send(new LayoutRemovedEvent(layout));
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#getRendererName(org.apache.cocoon.portal.layout.Layout)
+     */
+    public String getRendererName(Layout layout) {
+        if ( layout != null ) {
+            if ( layout.getRendererName() != null ) {
+                return layout.getRendererName();
+            }
+            LayoutDescription description = (LayoutDescription) this.layouts.get(layout.getType());
+            return description.getDefaultRendererName();
+        }
+        return null;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#getLayoutTypes()
+     */
+    public Collection getLayoutTypes() {
+        return this.layouts.keySet();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#getRendererNames(java.lang.String)
+     */
+    public Collection getRendererNames(String type) {
+        LayoutDescription desc = (LayoutDescription) this.layouts.get(type);
+        if ( desc == null ) {
+            return Collections.EMPTY_LIST;
+        }
+        return desc.getRendererNames();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.layout.LayoutFactory#createItem(org.apache.cocoon.portal.layout.Layout)
+     */
+    public Item createItem(Layout layout)
+    throws LayoutException {
+        LayoutDescription desc = (LayoutDescription) this.layouts.get(layout.getType());
+        if ( desc == null ) {
+            throw new LayoutException("Description not found for layout " + layout);
+        }
+        if ( desc.getItemClassName() == null ) {
+            return new Item();
+        }
+        try {
+            return (Item) ClassUtils.newInstance(desc.getItemClassName());
+        } catch (Exception e ) {
+            throw new LayoutException("Unable to create new item for layout " + layout, e);
         }
     }
 }

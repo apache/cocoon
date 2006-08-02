@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl;
-import org.apache.cocoon.util.ClassUtils;
 
 /**
  * A composite layout is a layout that contains other layouts.
@@ -93,28 +92,6 @@ public abstract class CompositeLayout
     public final void removeItem(Item item) {
         this.items.remove(item);
         item.setParent(null);
-    }
-
-    /**
-     * Create a new item.
-     * This item is not added to the composite layout
-     */
-    public Item createNewItem() {
-        if ( this.description.getItemClassName() == null ) {
-            return new Item();
-        }
-        try {
-            return (Item)ClassUtils.newInstance(this.description.getItemClassName());
-        } catch (Exception ignore) {
-            return new Item();
-        }
-    }
-
-    /**
-     * @return Returns the item class name.
-     */
-    public String getItemClassName() {
-        return this.description.getItemClassName();
     }
 
     /**
