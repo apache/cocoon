@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2005 The Apache Software Foundation
+  Copyright 1999-2004 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,20 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
     | SVN $Id$
     +-->
 <components>
-  <include src="resource://org/apache/cocoon/components/xsp.roles"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-markup.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-program-generator.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-program-language.xconf"/>
-  <include src="context://WEB-INF/cocoon/xconf/cocoon-xsp-xscript.xconf"/>
-
-  <!--+
-      | The core classloader implementation
-      +-->
-  <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl" logger="core.classloader"/>
-
+  <!-- Xscript -->
+  <xscript logger="core.xscript">
+    <parameter name="xscript:copy-of" value="resource://org/apache/cocoon/components/xscript/xslt/copy-of.xsl"/>
+    <parameter name="xscript:value-of" value="resource://org/apache/cocoon/components/xscript/xslt/value-of.xsl"/>
+  </xscript>
 </components>
