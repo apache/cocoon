@@ -167,7 +167,7 @@ public class PortalManagerImpl
                 a.addCDATAAttribute("id", current.getId());
                 XMLUtils.startElement(ch, "coplet", a);
                 final Layout l = LayoutFeatures.searchLayout(service, current.getId(), rootLayout);
-                Renderer portalLayoutRenderer = this.portalService.getRenderer( l.getRendererName());
+                Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(l));
                 portalLayoutRenderer.toSAX(l, this.portalService, ch);
                 XMLUtils.endElement(ch, "coplet");
             }
@@ -202,7 +202,7 @@ public class PortalManagerImpl
                 return;
             }
 
-            Renderer portalLayoutRenderer = this.portalService.getRenderer( portalLayout.getRendererName());
+            Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(portalLayout));
 
             ch.startDocument();
             portalLayoutRenderer.toSAX(portalLayout, this.portalService, ch);

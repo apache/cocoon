@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Collection;
+
 /**
  * This factory is for creating and managing layout objects.
  *
@@ -25,23 +27,32 @@ public interface LayoutFactory  {
     String ROLE = LayoutFactory.class.getName();
 
     /**
-     * This method is invoked for a newly loaded profile
+     * Return all available types.
      */
-    void prepareLayout(Layout layout)
+    Collection getLayoutTypes();
+
+    /**
+     * Return all available renderer names for a type.
+     */
+    Collection getRendererNames(String type);
+
+    /**
+     * Return the renderer name for the layout.
+     */
+    String getRendererName(Layout layout);
+
+    /**
+     * Create a new layout instance.
+     * The instance is also registered at the profile manager.
+     */
+    Layout newInstance(String type)
     throws LayoutException;
 
     /**
      * Create a new layout instance.
      * The instance is also registered at the profile manager.
      */
-    Layout newInstance(String name)
-    throws LayoutException;
-
-    /**
-     * Create a new layout instance.
-     * The instance is also registered at the profile manager.
-     */
-    Layout newInstance(String name, String id)
+    Layout newInstance(String type, String id)
     throws LayoutException;
 
     /**
@@ -50,4 +61,10 @@ public interface LayoutFactory  {
      * the profile manager.
      */
     void remove(Layout layout);
+
+    /**
+     * Create a new item for the layout.
+     * This item is *not* added to the layout.
+     */
+    Item createItem(Layout layout) throws LayoutException;
 }

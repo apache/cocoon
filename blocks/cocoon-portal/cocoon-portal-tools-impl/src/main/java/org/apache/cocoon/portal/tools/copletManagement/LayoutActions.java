@@ -198,7 +198,7 @@ public class LayoutActions {
 			lay = (Layout) layoutObj;
 
 		// add tab:
-		if(lay != null && lay.getName().equals("tab")) {
+		if(lay != null && lay.getType().equals("tab")) {
 			NamedItem tab = new NamedItem();
 			tab.setName(name);
 			((CompositeLayout) lay).addItem(tab);

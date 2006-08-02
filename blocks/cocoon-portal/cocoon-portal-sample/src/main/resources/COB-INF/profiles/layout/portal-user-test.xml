@@ -15,38 +15,38 @@
   limitations under the License.
 -->
 <!-- SVN $Id$ -->
-<composite-layout name="tab" id="maintab">
+<composite-layout type="tab" id="maintab">
 
   <named-item name="Sample One">
-    <composite-layout name="column" static="true">
+    <composite-layout type="column" static="true">
       <item>
-        <coplet-layout name="coplet" static="true">
+        <coplet-layout type="coplet" static="true">
           <coplet-instance>static_sample_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <composite-layout name="row">
+        <composite-layout type="row">
           <item>
-            <coplet-layout name="coplet">
+            <coplet-layout type="coplet">
               <coplet-instance>GalleryPetstore_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
-            <coplet-layout name="coplet">
+            <coplet-layout type="coplet">
               <coplet-instance>GalleryViewer_1</coplet-instance>
             </coplet-layout>
           </item>
         </composite-layout>
       </item>
       <item>
-        <composite-layout name="row">
+        <composite-layout type="row">
           <item>
-            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+            <coplet-layout type="coplet">
               <coplet-instance>TestPortlet_1</coplet-instance>
             </coplet-layout>
           </item>
           <item>
-            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+            <coplet-layout type="coplet">
               <coplet-instance>CocoonPortlet</coplet-instance>
             </coplet-layout>
           </item>
@@ -56,19 +56,19 @@
   </named-item>
 
   <named-item name="Sample Two">
-    <composite-layout name="column" static="true">
+    <composite-layout type="column" static="true">
       <item>
-        <coplet-layout name="coplet" static="true">
+        <coplet-layout type="coplet" static="true">
           <coplet-instance>static_sample_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <coplet-layout name="coplet" >
+        <coplet-layout type="coplet" >
           <coplet-instance>app_test_1</coplet-instance>
         </coplet-layout>
       </item>
       <item>
-        <coplet-layout name="coplet" >
+        <coplet-layout type="coplet" >
           <coplet-instance>app_test_2</coplet-instance>
         </coplet-layout>
       </item>

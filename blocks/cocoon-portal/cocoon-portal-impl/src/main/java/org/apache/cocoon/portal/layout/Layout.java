@@ -19,7 +19,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.collections.map.LinkedMap;
 
@@ -43,38 +42,36 @@ import org.apache.commons.collections.map.LinkedMap;
  */
 public abstract class Layout extends AbstractParameters {
 
-    /** The renderer to render this layout if this layout object wants to use a different
-     * render than the default renderer.
+    /**
+     * The renderer to render this layout if this layout object wants to
+     * use a different render than the default renderer.
      */
     protected String rendererName;
 
     /** The parent item of this layout or null if this is a layout root. */
     protected Item parent;
 
-    /** The name of the layout. */
-    protected final String name;
+    /** The type of the layout. */
+    protected final String type;
 
     /** The unique identifier of this layout object or null. */
     protected final String id;
-
-    /** The corresponding layout descripton. */
-    transient protected LayoutDescription description;
 
     /** The temporary attributes. */
     transient protected Map temporaryAttributes = new LinkedMap();
 
     /** Is this layout object static? */
-    protected Boolean isStatic;
+    protected boolean isStatic;
 
     /**
      * Create a new layout object.
      * Never create a layout object directly. Use the
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the layout.
+     * @param name The type of the layout.
      * @see PortalUtils#testId(String)
      */
-    public Layout(String id, String name) {
+    public Layout(String id, String type) {
         // check id, null for id is allowed!
         if ( id != null ) {
             final String idErrorMsg = PortalUtils.testId(id);
@@ -83,14 +80,14 @@ public abstract class Layout extends AbstractParameters {
             }
         }
         this.id = id;
-        this.name = name;
+        this.type = type;
     }
 
     /**
-     * The name given from the factory.
+     * The type given from the factory.
      */
-    public String getName() {
-        return this.name;
+    public String getType() {
+        return this.type;
     }
 
     /**
@@ -99,19 +96,6 @@ public abstract class Layout extends AbstractParameters {
      */
     public String getId() {
         return this.id;
-    }
-
-    /**
-     * Set the layout description.
-     */
-    public void setDescription(LayoutDescription description) {
-        if ( this.description != null ) {
-            throw new PortalRuntimeException("The layout has already a layout description.");
-        }
-        this.description = description;
-        if ( this.isStatic == null ) {
-            this.isStatic = Boolean.valueOf(this.description.defaultIsStatic());
-        }
     }
 
     /**
@@ -150,24 +134,11 @@ public abstract class Layout extends AbstractParameters {
         return this.temporaryAttributes.remove(key);
     }
 
-    /**
-     * Get the name of the {@link org.apache.cocoon.portal.layout.renderer.Renderer} to draw this layout.
-     * If this layout has an own renderer {@link #getLayoutRendererName()}
-     * return this, otherwise the default renderer is returned.
-     * @return String The role name
-     */
-    public String getRendererName() {
-        if ( this.rendererName == null ) {
-            return this.description.getDefaultRendererName();
-        }
-        return this.rendererName;        
-    }
-
     /** 
      * Get the name of a custom {@link org.apache.cocoon.portal.layout.renderer.Renderer} for this layout.
      * @return String The role name
      */
-    public String getLayoutRendererName() {
+    public String getRendererName() {
         return this.rendererName;
     }
 
@@ -190,15 +161,15 @@ public abstract class Layout extends AbstractParameters {
      * If a layout is static, it is not removed when another layout
      * is max paged.
      */
-    public Boolean isStatic() {
+    public boolean isStatic() {
         return this.isStatic;
     }
 
-    public void setLayoutRendererName(String value) {
+    public void setRendererName(String value) {
         this.rendererName = value;
     }
 
-    public void setIsStatic(Boolean value) {
+    public void setIsStatic(boolean value) {
         this.isStatic = value;
     }
 
@@ -220,7 +191,7 @@ public abstract class Layout extends AbstractParameters {
      */
     public String toString() {
         return "Layout (" + this.getClass() + '.' + this.hashCode() +
-               "), name=" + this.name + ", id=" + (this.getId() == null ? "" : this.getId());
+               "), type=" + this.type + ", id=" + (this.getId() == null ? "" : this.getId());
     }
 
     /**
@@ -231,14 +202,13 @@ public abstract class Layout extends AbstractParameters {
         Constructor c;
         try {
             c = this.getClass().getConstructor(new Class[] {String.class, String.class});
-            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.name}); 
+            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.type}); 
 
             // clone fields from AbstractParameters
             clone.parameters = new LinkedMap(this.parameters);
             
             // we don't clone the parent; we just set it to null
             clone.parent = null;
-            clone.description = this.description;
             clone.rendererName = this.rendererName;
             clone.isStatic = this.isStatic;
             clone.temporaryAttributes = new LinkedMap(this.temporaryAttributes);

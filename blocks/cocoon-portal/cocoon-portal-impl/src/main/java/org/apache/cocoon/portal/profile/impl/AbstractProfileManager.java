@@ -177,9 +177,6 @@ public abstract class AbstractProfileManager
             }
             if (object instanceof Layout) {
                 preparableObject = this.checkAvailability((Layout)object);
-                if ( preparableObject != null ) {
-                    this.portalService.getLayoutFactory().prepareLayout((Layout)preparableObject);
-                }
             } else if (object instanceof Collection) {
                 final Iterator iterator = ((Collection)preparableObject).iterator();
                 while (iterator.hasNext()) {

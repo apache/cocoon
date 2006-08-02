@@ -16,23 +16,27 @@
 package org.apache.cocoon.portal.layout.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
-import org.apache.cocoon.portal.layout.LayoutDescription;
+import org.apache.cocoon.portal.layout.LayoutFactory;
 
 
 /**
  * A configured layout.
+ * This description is used to instantiate new layout objects by the {@link LayoutFactory}.
+ * A layout has an associated class and an associated type. The type is used to differentiate
+ * layout objects having the same class but providing different features. For example
+ * a composite layout can either be a row or a column - both use the same implementation class
+ * but have different types.
  *
  * @version $Id$
  */
-public class DefaultLayoutDescription
-    implements LayoutDescription  {
+public class LayoutDescription {
 
     protected String className;
 
-    protected String name;
+    protected String type;
 
     protected boolean createId = true;
 
@@ -44,6 +48,10 @@ public class DefaultLayoutDescription
 
     protected boolean defaultIsStatic = false;
 
+    /**
+     * This is the name of the renderer used by default to render this layout object.
+     * @return the default renderer name
+     */
     public String getDefaultRendererName() {
         return defaultRendererName;
     }
@@ -56,10 +64,11 @@ public class DefaultLayoutDescription
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#getRendererNames()
+     * Each layout can have several associated renderers.
+     * @return the names of all allowed renderers.
      */
-    public Iterator getRendererNames() {
-        return this.rendererNames.iterator();
+    public Collection getRendererNames() {
+        return this.rendererNames;
     }
 
     public void addRendererName(String rendererName) {
@@ -67,7 +76,9 @@ public class DefaultLayoutDescription
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#getItemClassName()
+     * Each composite layout object can contain items. This is the class name
+     * of the item implementation.
+     * @return The class name of the item.
      */
     public String getItemClassName() {
         return this.itemClassName;
@@ -81,17 +92,19 @@ public class DefaultLayoutDescription
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#getClassName()
+     * The name of the implementation class for this layout object.
+     * @return The class name.
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#getName()
+     * The associated type for this layout object.
+     * @return The configured type.
      */
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
     /**
@@ -104,12 +117,12 @@ public class DefaultLayoutDescription
     /**
      * @param string
      */
-    public void setName(String string) {
-        name = string;
+    public void setType(String string) {
+        type = string;
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#createId()
+     * Should the layout factory create a unique id for objects of this type?
      */
     public boolean createId() {
         return this.createId;
@@ -120,7 +133,7 @@ public class DefaultLayoutDescription
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.LayoutDescription#defaultIsStatic()
+     * Default setting for static.
      */
     public boolean defaultIsStatic() {
         return this.defaultIsStatic;

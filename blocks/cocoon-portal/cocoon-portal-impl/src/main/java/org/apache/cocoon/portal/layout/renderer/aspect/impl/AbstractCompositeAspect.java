@@ -61,7 +61,7 @@ public abstract class AbstractCompositeAspect
 	                Item item = (Item) iter.next();
 	                if ( item.equals(maximizedInfo.item) ) {
 	                    this.processMaximizedItem(rendererContext, item, maximizedInfo.layout, handler, service);
-	                } else if ( item.getLayout().isStatic().booleanValue() ) {
+	                } else if ( item.getLayout().isStatic() ) {
 	                    this.processItem(rendererContext, item, handler, service);	                	
 	                }
 	            }            	
@@ -109,7 +109,7 @@ public abstract class AbstractCompositeAspect
      */
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         if ( layout != null ) {
-            final String rendererName = layout.getRendererName();
+            final String rendererName = service.getLayoutFactory().getRendererName(layout);
             final Renderer renderer = service.getRenderer(rendererName);
             renderer.toSAX(layout, service, handler);
         }

@@ -47,8 +47,8 @@ public class FrameEventAspect extends AbstractContentEventAspect {
             publisher.send(e);
         } else {
             this.getLogger().warn(
-                "the configured layout: "
-                    + layout.getName()
+                "The configured layout: "
+                    + layout.getType()
                     + " is not a FrameLayout.");
         }
     }

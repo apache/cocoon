@@ -309,19 +309,19 @@
   <!-- Layout factory configuration -->
   <portal-layout-factory>
     <layouts>
-      <layout name="column" 
+      <layout type="column" 
               class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
         <renderers default="column">
           <renderer name="column"/>
         </renderers>
       </layout>
-      <layout name="row" 
+      <layout type="row" 
               class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
         <renderers default="row">
           <renderer name="row"/>
         </renderers>
       </layout>
-      <layout name="tab" 
+      <layout type="tab" 
               class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
               item-class="org.apache.cocoon.portal.layout.NamedItem"
               default-is-static="true">
@@ -329,14 +329,14 @@
           <renderer name="tab"/>
         </renderers>
       </layout>
-      <layout name="rawtab" 
+      <layout type="rawtab" 
               class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
               item-class="org.apache.cocoon.portal.layout.NamedItem">
         <renderers default="rawtab">
           <renderer name="rawtab"/>
         </renderers>
       </layout>
-      <layout name="linktab"
+      <layout type="linktab"
               class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
               item-class="org.apache.cocoon.portal.layout.NamedItem"
               default-is-static="true">
@@ -344,21 +344,22 @@
           <renderer name="linktab"/>
         </renderers>
       </layout>
-      <layout name="frame" 
+      <layout type="frame" 
               class="org.apache.cocoon.portal.layout.impl.FrameLayout"
               create-id="true">
         <renderers default="frame">
           <renderer name="frame"/>
         </renderers>
       </layout>
-      <layout name="coplet" 
+      <layout type="coplet" 
               class="org.apache.cocoon.portal.layout.impl.CopletLayout">
         <renderers default="window">
           <renderer name="window"/>
           <renderer name="nowindow"/>
+          <renderer name="borderless-window"/>
         </renderers>
       </layout>
-      <layout name="link"
+      <layout type="link"
               class="org.apache.cocoon.portal.layout.impl.LinkLayout"
               create-id="true">
         <renderers default="link">
