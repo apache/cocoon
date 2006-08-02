@@ -23,11 +23,16 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
+import org.apache.cocoon.util.Settings;
+import org.apache.cocoon.util.SettingsHelper;
 
 /**
  * This "component" is a trick to get global variables on a per
@@ -39,8 +44,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
-    implements Component, Configurable, SitemapConfigurable, ThreadSafe
-{
+    implements Component, Configurable, Contextualizable, SitemapConfigurable, ThreadSafe {
  
     public static final String ROLE = SitemapVariableHolder.class.getName();
     
@@ -52,6 +56,15 @@ public final class SitemapVariableHolder
 
     /** Manager for sitemap/sub sitemap configuration */
     private SitemapConfigurationHolder holder;
+
+    private Context context;
+
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
     /**
      * Configures the database access helper.
@@ -65,8 +78,15 @@ public final class SitemapVariableHolder
      * */
     public void configure(Configuration conf) 
     throws ConfigurationException {
+        this.globalValues = new HashMap();
+        Settings settings = SettingsHelper.getSettings(this.context);
+        final Iterator iter = settings.getProperties().iterator();
+        while ( iter.hasNext() ) {
+            final String key = (String)iter.next();
+            final String value = settings.getProperty(key);
+            this.globalValues.put(key, value);
+        }
         final Configuration[] parameters = conf.getChildren();
-        this.globalValues = new HashMap(parameters.length);
         for (int i = 0; i < parameters.length; i++) {
             final String key = parameters[i].getName();
             final String value = parameters[i].getValue();
