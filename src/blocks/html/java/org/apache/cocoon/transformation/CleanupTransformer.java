@@ -93,11 +93,13 @@ implements CacheableProcessingComponent {
     private LinkedList uriPrefixes = new LinkedList();
     private int indentSize = 2;
     private int numIndents = 0;
-    private String lastElement = null;
+    private String lastElement;
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration conf)
     throws ConfigurationException {
-        Configuration child;
         StringTokenizer st;
 
         Configuration inlineEltChild = conf.getChild("inline-elements");
@@ -124,26 +126,42 @@ implements CacheableProcessingComponent {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
     public void setup (SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.indentSize = par.getParameterAsInteger("indent-size", 2);
     }
-    
+
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#recycle()
+     */
     public void recycle () {
         super.recycle();
         this.numIndents = 0;
         this.lastElement = null;
+        this.uriPrefixes.clear();
     }
 
+    /**
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
+     */
     public Serializable getKey () {
         return Integer.toString(this.indentSize);
     }
 
+    /**
+     * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
+     */
     public SourceValidity getValidity () {
         return NOPValidity.SHARED_INSTANCE;
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startPrefixMapping(java.lang.String, java.lang.String)
+     */
     public void startPrefixMapping (String prefix, String uri)
     throws SAXException {
         if (this.allowAllURIs) {
@@ -154,6 +172,9 @@ implements CacheableProcessingComponent {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#endPrefixMapping(java.lang.String)
+     */
     public void endPrefixMapping (String prefix)
     throws SAXException {
         if (this.allowAllURIs) {
@@ -166,6 +187,9 @@ implements CacheableProcessingComponent {
         }
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
     public void startElement (String uri, String qName, String lName, Attributes attrs)
     throws SAXException {
         if (!inlineElements.contains(qName)) {
@@ -177,6 +201,9 @@ implements CacheableProcessingComponent {
         this.contentHandler.startElement(uri, qName, lName, attrs);
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#endElement(java.lang.String, java.lang.String, java.lang.String)
+     */
     public void endElement (String uri, String qName, String lName)
     throws SAXException {
         if (!inlineElements.contains(qName)) {
@@ -190,6 +217,9 @@ implements CacheableProcessingComponent {
         this.contentHandler.endElement(uri, qName, lName);
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#characters(char[], int, int)
+     */
     public void characters (char[] ch, int start, int length)
     throws SAXException {
         int end = start + length;
@@ -202,6 +232,9 @@ implements CacheableProcessingComponent {
         this.contentHandler.characters(INDENT, 1, 1);
     }
 
+    /**
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#ignorableWhitespace(char[], int, int)
+     */
     public void ignorableWhitespace (char[] ch, int start, int length)
     throws SAXException {
         // Do nothing
