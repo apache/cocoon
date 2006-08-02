@@ -18,6 +18,8 @@ package org.apache.cocoon.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.Processor;
+
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
@@ -42,7 +44,11 @@ public final class DefaultSitemapConfigurationHolder
      * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
-        Map confs = CocoonComponentManager.getCurrentProcessor().getComponentConfigurations();
+        final Processor processor = CocoonComponentManager.getCurrentProcessor();
+        if ( processor == null ) {
+            return null;
+        }
+        Map confs = processor.getComponentConfigurations();
         return (ChainedConfiguration) (confs == null ? null : confs.get(this.role));
     }
 
