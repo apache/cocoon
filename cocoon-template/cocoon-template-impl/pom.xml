@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-template-impl</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Template framework implementation</name>
   <dependencies>
@@ -76,10 +76,4 @@
       </resource>
     </resources>
   </build>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-impl-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-impl-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-impl-1.0.0-M1</url>
-  </scm>
 </project>
