@@ -114,10 +114,10 @@ public class JXTemplateGenerator
     throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-        if ( src == null ) {
-            throw new ProcessingException("JXTemplateGenerator: 'src' attribute is missing.");
+        // src can be null if this generator is triggered by the jxt transformer (through the TransformerAdapter)
+        if ( src != null ) {
+            this.startDocument = scriptManager.resolveTemplate(src);
         }
-        this.startDocument = scriptManager.resolveTemplate(src);
 
         this.expressionContext = FlowObjectModelHelper.getFOMExpressionContext(objectModel, parameters);
         this.definitions = new HashMap();
