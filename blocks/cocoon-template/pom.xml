@@ -10,14 +10,8 @@
   <artifactId>cocoon-template</artifactId>
   <packaging>pom</packaging>
   <name>Template framework</name>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
   <!--modules>
     <module>cocoon-template-impl</module>
   </modules-->
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-template-1</url>
-  </scm>
 </project>
