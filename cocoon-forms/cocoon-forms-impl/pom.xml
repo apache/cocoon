@@ -26,7 +26,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-forms-impl</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0-M1</version>
   <packaging>jar</packaging>
   <name>Forms Block Implementation</name>
   <build>
@@ -109,4 +109,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-impl-1.0.0-M1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-impl-1.0.0-M1</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-impl-1.0.0-M1</url>
+  </scm>
 </project>
