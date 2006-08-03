@@ -27,7 +27,6 @@
     <version>2-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-apples-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
@@ -65,7 +64,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-apples-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -75,12 +74,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
