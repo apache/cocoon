@@ -18,5 +18,5 @@
 <xconf xpath="/cocoon" unless="@version != '2.1' or component[@role='org.apache.cocoon.template.script.ScriptManager']">
     <component role="org.apache.cocoon.template.script.ScriptManager" class="org.apache.cocoon.template.script.DefaultScriptManager"/>
     <component role="org.apache.cocoon.template.script.InstructionFactory" class="org.apache.cocoon.template.script.DefaultInstructionFactory"/>
-    <component role="org.apache.cocoon.template.expression.AbstractStringTemplateParser" class="org.apache.cocoon.template.expression.JXTGStringTemplateParser"/>
+    <component role="org.apache.cocoon.template.expression.StringTemplateParser" class="org.apache.cocoon.template.expression.JXTGStringTemplateParser"/>
 </xconf>
