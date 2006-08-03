@@ -6,12 +6,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-22-archetype-block</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon 2.2 Block Archetype</name>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-22-archetype-block-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-22-archetype-block-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-22-archetype-block-1.0.0-M1</url>
-  </scm>
 </project>
