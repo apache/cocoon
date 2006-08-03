@@ -22,7 +22,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>2-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
