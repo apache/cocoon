@@ -27,7 +27,6 @@
     <version>1-SNAPSHOT</version>
   </parent>
   
-  <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-eventcache-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
     
