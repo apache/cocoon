@@ -29,15 +29,9 @@
   <artifactId>cocoon-forms</artifactId>
   <packaging>pom</packaging>
   <name>Forms Block</name>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
   <!--modules>
     <module>cocoon-forms-impl</module>
     <module>cocoon-forms-sample</module>
   </modules-->
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-forms-1</url>
-  </scm>
 </project>
