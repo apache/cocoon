@@ -10,7 +10,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-archetypes</artifactId>
-  <version>1</version>
+  <version>2-SNAPSHOT</version>
 
   <name>Cocoon Archetypes [modules]</name>
 
@@ -22,9 +22,9 @@
   </modules-->
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-archetypes-1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/tools/archetypes</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1/cocoon-archetypes</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-tools-modules-1/cocoon-archetypes</url>
   </scm>
 
 </project>
