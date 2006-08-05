@@ -191,8 +191,7 @@ public class ConfigReader extends AbstractLogEnabled {
         final Iterator i = this.configInfo.getClassNames().values().iterator();
         while ( i.hasNext() ) {
             final ComponentInfo current = (ComponentInfo)i.next();
-            // TODO
-            //current.setLazyInit(true);
+            current.setLazyInit(true);
             this.configInfo.addComponent(current);
         }
         this.configInfo.clearClassNames();
@@ -243,24 +242,36 @@ public class ConfigReader extends AbstractLogEnabled {
     
             // Find the className
             String className = componentConfig.getAttribute("class", null);
+            // If it has a "name" attribute, add it to the role (similar to the
+            // declaration within a service selector)
+            // Note: this has to be done *after* finding the className above as we change the role
+            String name = componentConfig.getAttribute("name", null);
             ComponentInfo info;
             if (className == null) {
                 // Get the default class name for this role
                 info = (ComponentInfo)this.configInfo.getClassNames().get( role );
                 if (info == null) {
+                    if ( this.configInfo.getComponents().get( role) != null ) {
+                        throw new ConfigurationException("Duplicate component definition for role " + role + " at " + componentConfig.getLocation());
+                    }
                     throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
                 }
-                this.configInfo.getClassNames().remove(info);
                 className = info.getComponentClassName();
+                if ( name != null ) {
+                    info = info.copy();                    
+                } else if ( !className.endsWith("Selector") ) {
+                    this.configInfo.getClassNames().remove(role);
+                }
             } else {                    
                 info = new ComponentInfo();
             }
-            // If it has a "name" attribute, add it to the role (similar to the
-            // declaration within a service selector)
+            // check for name attribute
             // Note: this has to be done *after* finding the className above as we change the role
-            String name = componentConfig.getAttribute("name", null);
             if (name != null) {
                 role = role + "/" + name;
+                if ( alias != null ) {
+                    alias = alias + '-' + name;
+                }
             }
             info.fill(componentConfig);
             info.setComponentClassName(className);
@@ -269,7 +280,7 @@ public class ConfigReader extends AbstractLogEnabled {
                 info.setAlias(alias);
             }
             info.setConfiguration(componentConfig);
-    
+
             this.configInfo.addComponent(info);
             // now if this is a selector, then we have to register the single components
             if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
@@ -401,11 +412,12 @@ public class ConfigReader extends AbstractLogEnabled {
     }
 
     private boolean match(String uri, String pattern ) {
-        int pos = uri.lastIndexOf('/');
+        String testUri = uri;
+        int pos = testUri.lastIndexOf('/');
         if ( pos != -1 ) {
-            uri = uri.substring(pos+1);
+            testUri = testUri.substring(pos+1);
         }
-        return (WildcardMatcherHelper.match(pattern, uri) != null);      
+        return WildcardMatcherHelper.match(pattern, testUri) != null;      
     }
 
     protected void handleBeanInclude(final String contextURI,
