@@ -197,10 +197,10 @@ public abstract class AbstractCopletAdapter
      * attribute with the given name, the coplet base data is used.
      */
     protected Object getConfiguration(CopletInstance coplet, String key) {
-        CopletDefinition copletData = coplet.getCopletDefinition();
-        Object data = copletData.getAttribute( key );
+        final CopletDefinition copletDefinition = coplet.getCopletDefinition();
+        Object data = copletDefinition.getAttribute( key );
         if ( data == null) {
-            data = copletData.getCopletType().getCopletConfig().get( key );
+            data = copletDefinition.getCopletType().getCopletConfig().get( key );
         }
         return data;
     }
