@@ -54,7 +54,7 @@ public class PortletServlet extends HttpServlet {
 
     public static final String PORTLET_DEFINITION = PortletServlet.class.getName() + "/portlet-definition";
 
-    protected ServletConfig config;
+    protected ServletConfig servletConfig;
     protected Map portlets = new HashMap();
 
     /**
@@ -62,7 +62,7 @@ public class PortletServlet extends HttpServlet {
      */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        this.config = config;
+        this.servletConfig = config;
     }
 
     protected synchronized void init(PortletDefinition pd, HttpServletRequest request)
@@ -84,9 +84,9 @@ public class PortletServlet extends HttpServlet {
             PortletDefinitionCtrl portletDefCtrl = (PortletDefinitionCtrl)ControllerObjectAccess.get(pd);
             portletDefCtrl.setPortletClassLoader(Thread.currentThread().getContextClassLoader());
     
-            info.context = PortletObjectAccess.getPortletContext(this.config.getServletContext(),
+            info.context = PortletObjectAccess.getPortletContext(this.servletConfig.getServletContext(),
                                                                    pd.getPortletApplicationDefinition());
-            info.config = PortletObjectAccess.getPortletConfig(this.config, 
+            info.config = PortletObjectAccess.getPortletConfig(this.servletConfig, 
                                                                info.context,
                                                                pd);
 

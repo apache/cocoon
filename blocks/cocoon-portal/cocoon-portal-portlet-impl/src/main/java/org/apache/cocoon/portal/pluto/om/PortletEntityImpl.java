@@ -61,7 +61,6 @@ public class PortletEntityImpl implements PortletEntity, PortletEntityCtrl {
         this.applicationEntity = pae;
         this.service = service;
         this.prefProvider = (PortletPreferencesProvider)PortletContainerServices.get(PortletPreferencesProvider.class);
-;
     }
     
     /**

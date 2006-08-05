@@ -243,16 +243,17 @@ public class PortletURLConverter {
     }
 
     private String decodeValue(String value) {
-        value = StringUtils.replace(value, "0x1", "_");
-        value = StringUtils.replace(value, "0x2", ".");
-        value = StringUtils.replace(value, "0x3", "/");
-        value = StringUtils.replace(value, "0x4", "\r");
-        value = StringUtils.replace(value, "0x5", "\n");
-        value = StringUtils.replace(value, "0x6", "<");
-        value = StringUtils.replace(value, "0x7", ">");
-        value = StringUtils.replace(value, "0x8", " ");
-        value = StringUtils.replace(value, "0x0", "0x");
-        return value;
+        String result = value;
+        result = StringUtils.replace(result, "0x1", "_");
+        result = StringUtils.replace(result, "0x2", ".");
+        result = StringUtils.replace(result, "0x3", "/");
+        result = StringUtils.replace(result, "0x4", "\r");
+        result = StringUtils.replace(result, "0x5", "\n");
+        result = StringUtils.replace(result, "0x6", "<");
+        result = StringUtils.replace(result, "0x7", ">");
+        result = StringUtils.replace(result, "0x8", " ");
+        result = StringUtils.replace(result, "0x0", "0x");
+        return result;
     }
 
     private String encodeParameterName(String paramName) {
@@ -272,15 +273,16 @@ public class PortletURLConverter {
     }
 
     private String encodeValue(String value) {
-        value = StringUtils.replace(value, "0x", "0x0");
-        value = StringUtils.replace(value, "_", "0x1");
-        value = StringUtils.replace(value, ".", "0x2");
-        value = StringUtils.replace(value, "/", "0x3");
-        value = StringUtils.replace(value, "\r", "0x4");
-        value = StringUtils.replace(value, "\n", "0x5");
-        value = StringUtils.replace(value, "<", "0x6");
-        value = StringUtils.replace(value, ">", "0x7");
-        value = StringUtils.replace(value, " ", "0x8");
-        return value;
+        String result = value;
+        result = StringUtils.replace(result, "0x", "0x0");
+        result = StringUtils.replace(result, "_", "0x1");
+        result = StringUtils.replace(result, ".", "0x2");
+        result = StringUtils.replace(result, "/", "0x3");
+        result = StringUtils.replace(result, "\r", "0x4");
+        result = StringUtils.replace(result, "\n", "0x5");
+        result = StringUtils.replace(result, "<", "0x6");
+        result = StringUtils.replace(result, ">", "0x7");
+        result = StringUtils.replace(result, " ", "0x8");
+        return result;
     }
 }

@@ -74,8 +74,8 @@ public class PortletPreferencesProviderImpl
     /**
      * @see org.apache.cocoon.portal.impl.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        super.service(manager);
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        super.service(serviceManager);
         this.loader = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
     }
 

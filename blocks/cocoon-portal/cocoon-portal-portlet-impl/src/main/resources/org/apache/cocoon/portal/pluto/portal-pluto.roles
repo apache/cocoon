@@ -26,4 +26,10 @@
     <role name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/portlet"
           default-class="org.apache.cocoon.portal.pluto.adapter.PortletAdapter"/>
 
+  <!--+
+      | The portlet preferences provider.
+      |
+      +-->
+    <role name="org.apache.cocoon.portal.pluto.PortletPreferencesProvider"
+          default-class="org.apache.cocoon.portal.pluto.PortletPreferencesProviderImpl"/>
 </role-list>

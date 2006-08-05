@@ -114,12 +114,12 @@ implements PortletApplicationDefinition {
     throws Exception {
         Vector structure = (Vector)parameter;
         String contextRoot = (String)structure.get(0);
-        WebApplicationDefinition webApplication = (WebApplicationDefinition)structure.get(1);
+        WebApplicationDefinition webApp = (WebApplicationDefinition)structure.get(1);
         Map servletMap = (Map)structure.get(2);
 
         this.setContextRoot(contextRoot);
 
-        setWebApplicationDefinition(webApplication);       
+        setWebApplicationDefinition(webApp);       
 
         Vector structure2 = new Vector();
         structure2.add(this);
