@@ -56,8 +56,8 @@ public class ActionRequestFactoryImpl
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
         this.portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
     }
 

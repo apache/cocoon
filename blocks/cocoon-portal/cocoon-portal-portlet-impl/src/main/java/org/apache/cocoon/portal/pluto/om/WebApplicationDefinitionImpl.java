@@ -237,14 +237,13 @@ implements WebApplicationDefinition, Support {
         setId(id);
     }
     
-    protected void setContextRoot(String contextPath)
-    {
+    protected void setContextRoot(String contextRoot) {
         // Test for IBM WebSphere 
-        if (contextPath != null && contextPath.endsWith(".war"))
-        {
-            contextPath = contextPath.substring(0, contextPath.length()-4);
+        if (contextRoot != null && contextRoot.endsWith(".war")) {
+            this.contextPath = contextRoot.substring(0, contextRoot.length()-4);
+        } else {
+            this.contextPath = contextRoot;
         }
-        this.contextPath = contextPath;
     }    
 
     public void setDescriptions(DescriptionSet descriptions) {

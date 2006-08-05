@@ -403,13 +403,13 @@ public class PortletAdapter
     public void render(PortalManagerAspectRenderContext aspectContext,
                        PortalService service,
                        ContentHandler ch,
-                       Parameters parameters)
+                       Parameters contextParameters)
     throws SAXException {
         final Map objectModel = aspectContext.getObjectModel();
 
         // don't generate a response, if we issued a redirect
         if (objectModel.remove("portlet-event") == null) {
-            aspectContext.invokeNext(ch, parameters);
+            aspectContext.invokeNext(ch, contextParameters);
         }
     }
 
@@ -499,9 +499,8 @@ public class PortletAdapter
                     states.add(new DecorationAction(DecorationAction.WINDOW_STATE_MAXIMIZED, url.toString()));
                 }
             }
-            // TODO - Implement full screen for portlets (= own mode)
             if ( this.enableFullScreen ) {
-                
+                // TODO - Implement full screen for portlets (= own mode)                
             }
         }
 
