@@ -111,8 +111,6 @@ public class DefaultLayoutFactory
 
     protected final Map layouts = new HashMap();
 
-    protected Configuration[] layoutsConf;
-
     protected static long idCounter = System.currentTimeMillis();
 
     /** 
@@ -153,7 +151,6 @@ public class DefaultLayoutFactory
         } else {
             throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + type + "'");
         }
-
         this.layouts.put(desc.getType(), desc);
     }
 
@@ -162,24 +159,12 @@ public class DefaultLayoutFactory
      */
     public void configure(Configuration configuration) 
     throws ConfigurationException {
-        this.layoutsConf = configuration.getChild("layouts").getChildren("layout");
-    }
-
-    protected void init() {
-        // FIXME when we switch to another container we can remove
-        //        the lazy evaluation
-        if ( this.layoutsConf != null ) {
-            synchronized (this) {
-                if ( this.layoutsConf != null ) {
-                    for(int i=0; i < layoutsConf.length; i++ ) {
-                        try {
-                            this.configureLayout( layoutsConf[i] );
-                        } catch (ConfigurationException ce) {
-                            throw new PortalRuntimeException("Unable to configure layout.", ce);
-                        }
-                    }
-                    this.layoutsConf = null;
-                }
+        final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
+        for(int i=0; i < layoutsConf.length; i++ ) {
+            try {
+                this.configureLayout( layoutsConf[i] );
+            } catch (ConfigurationException ce) {
+                throw new PortalRuntimeException("Unable to configure layout.", ce);
             }
         }
     }
@@ -197,8 +182,6 @@ public class DefaultLayoutFactory
      */
     public Layout newInstance(String layoutType, String id) 
     throws LayoutException {
-        this.init();
-
         LayoutDescription layoutDescription = (LayoutDescription)this.layouts.get( layoutType );
 
         if ( layoutDescription == null ) {
@@ -240,7 +223,6 @@ public class DefaultLayoutFactory
      */
     public void remove(Layout layout) {
         if ( layout != null ) {
-            this.init();
             if ( layout instanceof CompositeLayout ) {
                 final CompositeLayout cl = (CompositeLayout)layout;
                 while ( cl.getItems().size() > 0 ) {

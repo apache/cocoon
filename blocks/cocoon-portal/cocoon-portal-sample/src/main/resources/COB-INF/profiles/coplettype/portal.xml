@@ -14,14 +14,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+<!-- @version $Id$ -->
 <coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
    <coplet-type id="URICoplet">
       <coplet-adapter>uri</coplet-adapter>
    </coplet-type>
 
    <coplet-type id="Portlet">
       <coplet-adapter>portlet</coplet-adapter>
+      <configuration>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean">true</value>
+      </configuration>
       <configuration>
         <name>full-screen</name>
         <value xsi:type="java:java.lang.Boolean">false</value>

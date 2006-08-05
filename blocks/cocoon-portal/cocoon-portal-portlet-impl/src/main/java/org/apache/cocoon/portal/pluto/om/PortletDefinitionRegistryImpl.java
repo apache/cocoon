@@ -50,6 +50,7 @@ import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.pluto.deployment.Deployer;
 import org.apache.cocoon.portal.pluto.deployment.WebApplicationRewriter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.EntityResolver;
@@ -511,7 +512,8 @@ public class PortletDefinitionRegistryImpl
                 // TODO - parse coplet.xml if available
                 final CopletType cbd = pcm.getProfileManager().getCopletType(this.copletBaseDataName);
                 // TODO - check portletId for invalid characters!
-                final CopletDefinition cd = pcm.getCopletFactory().newInstance(cbd, portlet.getId().toString());
+                final String defId = StringUtils.replaceChars(portlet.getId().toString(), '.', '_');
+                final CopletDefinition cd = pcm.getCopletFactory().newInstance(cbd, defId);
                 cd.setAttribute("portlet", portlet.getId().toString());
                 cd.setAttribute("buffer", Boolean.TRUE);
                 if ( this.getLogger().isInfoEnabled() ) {
