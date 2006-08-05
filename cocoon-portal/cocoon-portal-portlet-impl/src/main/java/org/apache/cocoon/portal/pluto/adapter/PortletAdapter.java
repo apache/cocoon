@@ -83,20 +83,23 @@ public class PortletAdapter
     extends AbstractCopletAdapter
     implements PortalManagerAspect, CopletDecorationProvider, Receiver, Parameterizable {
 
-    /** Name of the coplet instance data attribute holding the portlet window. */
+    /** Name of the temporary coplet instance attribute holding the portlet window. */
     public static final String PORTLET_WINDOW_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window";
 
-    /** Name of the coplet instance data attribute holding the dynamic title (if any). */
+    /** Name of the temporary coplet instance attribute holding the dynamic title (if any). */
     public static final String DYNAMIC_TITLE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/dynamic-title";
 
-    /** Name of the coplet instance data attribute holding the window state. */
+    /** Name of the temporary coplet instance attribute holding the window state. */
     public static final String WINDOW_STATE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/window-state";
 
-    /** Name of the coplet instance data attribute holding the portlet mode. */
+    /** Name of the temporary coplet instance attribute holding the portlet mode. */
     public static final String PORTLET_MODE_ATTRIBUTE_NAME = PortletAdapter.class.getName() + "/portlet-mode";
 
     /** Name of the portlet mode for full screen (if supported). */
     public static final String FULL_SCREEN_WINDOW_STATE_ATTRIBUTE_NAME = "full-screen-mode";
+
+    /** Name of attribute in the coplet definition storing the portlet identifier. */
+    public static final String PORTLET_ATTRIBUTE_NAME = "portlet";
 
     /** The Portlet Container. */
     protected PortletContainer portletContainer;
@@ -126,12 +129,9 @@ public class PortletAdapter
     public void login(CopletInstance coplet) {
         super.login(coplet);
 
-        if ( this.portletContainer == null ) {
-            return;
-        }
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class);
 
-        final String portletEntityId = (String) getConfiguration(coplet, "portlet");   
+        final String portletEntityId = (String) getConfiguration(coplet, PORTLET_ATTRIBUTE_NAME);   
         if ( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("Coplet " + coplet.getId() + " tries to login into portlet " + portletEntityId);
         }
@@ -178,9 +178,6 @@ public class PortletAdapter
     public void streamContent(CopletInstance coplet,
                               ContentHandler contentHandler)
     throws SAXException {
-        if ( this.portletContainer == null ) {
-            throw new SAXException("Unable to execute JSR-168 portlets because of missing servlet context.");
-        }
         try {
             final String portletEntityId = (String) getConfiguration(coplet, "portlet");
             // get the window
@@ -203,7 +200,7 @@ public class PortletAdapter
                 // stream out the include for the serializer
                 IncludingHTMLSerializer.addPortlet(coplet.getId(), value);
                 contentHandler.startPrefixMapping("portal", IncludingHTMLSerializer.NAMESPACE);
-                AttributesImpl attr = new AttributesImpl();
+                final AttributesImpl attr = new AttributesImpl();
                 attr.addCDATAAttribute("portlet", coplet.getId());
                 contentHandler.startElement(IncludingHTMLSerializer.NAMESPACE, 
                                             "include", "portal:include", attr);
@@ -223,9 +220,6 @@ public class PortletAdapter
      */
     public void logout(CopletInstance coplet) {
         super.logout(coplet);
-        if ( this.portletContainer == null ) {
-            return;
-        }
         PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
             coplet.removeTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
@@ -258,9 +252,9 @@ public class PortletAdapter
      */
     public void initialize() throws Exception {
         super.initialize();
-        this.initContainer();
         this.enableFullScreen = this.portalService.getConfigurationAsBoolean(PortalService.CONFIGURATION_FULL_SCREEN_ENABLED, true);
         this.enableMaximized = this.portalService.getConfigurationAsBoolean(PortalService.CONFIGURATION_MAXIMIZED_ENABLED, true);
+        this.initContainer();
     }
 
     /**
@@ -284,7 +278,7 @@ public class PortletAdapter
         this.portletContainer = new PortletContainerImpl();
 
         if (!portletContainer.isInitialized()) {
-            this.getLogger().debug ("Initializing PortletContainer...");
+            this.getLogger().info("Initializing PortletContainer...");
 
             final String uniqueContainerName = "cocoon-portal";
 
@@ -308,10 +302,12 @@ public class PortletAdapter
             this.getLogger().debug("PortletContainer already initialized.");
         }
 
-        this.getLogger().debug("PortletContainer initialized.");
+        this.getLogger().info("PortletContainer initialized.");
     }
 
     /**
+     * This method is invoked each time an event for a portlet is received (user clicking/activating
+     * something in the portlet).
      * @see Receiver
      */
     public void inform(PortletURLProviderImpl event, PortalService service) {
@@ -345,6 +341,10 @@ public class PortletAdapter
         }
     }
 
+    /**
+     * This method is invoked each time a coplet instance is resized.
+     * @see Receiver
+     */
     public void inform(CopletInstanceSizingEvent event, PortalService service) {
         WindowState ws = WindowState.NORMAL;
         if ( event.getSize() == CopletInstance.SIZE_NORMAL ) {
