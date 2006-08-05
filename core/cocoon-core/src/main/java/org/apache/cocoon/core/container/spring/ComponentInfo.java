@@ -211,16 +211,16 @@ public final class ComponentInfo {
 
     public void fill(Configuration config) {
         // test model
-        final String model = config.getAttribute("model", null);
-        if ( TYPE_POOLED.equals(model) ) {
+        final String componentModel = config.getAttribute("model", null);
+        if ( TYPE_POOLED.equals(componentModel) ) {
             this.setModel(ComponentInfo.MODEL_POOLED);
             this.setPoolInMethodName(config.getAttribute("pool-in", null));
             this.setPoolOutMethodName(config.getAttribute("pool-out", null));
-        } else if (TYPE_NON_THREAD_SAFE_POOLED.equals(model)) {
+        } else if (TYPE_NON_THREAD_SAFE_POOLED.equals(componentModel)) {
             this.setModel(ComponentInfo.MODEL_POOLED);
             this.setPoolInMethodName(config.getAttribute("pool-in", null));
             this.setPoolOutMethodName(config.getAttribute("pool-out", null));
-        } else if ( TYPE_SINGLETON.equals(model) ) {
+        } else if ( TYPE_SINGLETON.equals(componentModel) ) {
             this.setModel(ComponentInfo.MODEL_SINGLETON);
         }
         // init/destroy methods

@@ -185,21 +185,19 @@ public class CocoonBeanFactory
                 }
                 ContainerUtil.contextualize(bean, this.context);
                 ContainerUtil.service(bean, (ServiceManager)this.beanFactory.getBean(ServiceManager.class.getName()));
-                if ( info != null ) {
-                    Configuration config = info.getConfiguration();
-                    if ( config == null ) {
-                        config = EMPTY_CONFIG;
+                Configuration config = info.getConfiguration();
+                if ( config == null ) {
+                    config = EMPTY_CONFIG;
+                }
+                if ( bean instanceof Configurable ) {
+                    ContainerUtil.configure(bean, config);
+                } else if ( bean instanceof Parameterizable ) {
+                    Parameters p = info.getParameters();
+                    if ( p == null ) {
+                        p = Parameters.fromConfiguration(config);
+                        info.setParameters(p);
                     }
-                    if ( bean instanceof Configurable ) {
-                        ContainerUtil.configure(bean, config);
-                    } else if ( bean instanceof Parameterizable ) {
-                        Parameters p = info.getParameters();
-                        if ( p == null ) {
-                            p = Parameters.fromConfiguration(config);
-                            info.setParameters(p);
-                        }
-                        ContainerUtil.parameterize(bean, p);
-                    }
+                    ContainerUtil.parameterize(bean, p);
                 }
                 ContainerUtil.initialize(bean);
             } catch (Exception e) {
