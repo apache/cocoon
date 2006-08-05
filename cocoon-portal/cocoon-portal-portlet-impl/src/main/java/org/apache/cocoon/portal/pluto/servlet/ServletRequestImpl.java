@@ -48,7 +48,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     final protected PortletURLProviderImpl provider;
 
-    final protected PortletWindow window;
+    final protected PortletWindow portletWindow;
 
     public ServletRequestImpl(HttpServletRequest request,
                               PortletURLProviderImpl provider) {
@@ -60,7 +60,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                                PortletWindow window) {
         super(request);
         this.provider = provider;
-        this.window = window;
+        this.portletWindow = window;
         this.originalRequest = request;
     }
 
@@ -111,7 +111,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
             // get control params
 
             if (this.provider != null
-                && this.provider.getPortletWindow().equals(this.window)) {
+                && this.provider.getPortletWindow().equals(this.portletWindow)) {
 
                 this.portletParameterMap = new HashMap();
 
@@ -151,8 +151,8 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
                 }
             } else {
                 // provider is null or different window, use stored render parameters
-                if ( window != null ) {
-                    final CopletInstance cid = ((PortletWindowImpl)this.window).getCopletInstanceData();
+                if ( portletWindow != null ) {
+                    final CopletInstance cid = ((PortletWindowImpl)this.portletWindow).getCopletInstanceData();
                     this.portletParameterMap = (Map)cid.getTemporaryAttribute("render-parameters");
                 }
             }

@@ -69,15 +69,15 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
     /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
+    public void contextualize(Context avalonContext) throws ContextException {
+        this.context = avalonContext;
     }
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
     }
 
     /**

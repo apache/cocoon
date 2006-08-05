@@ -145,13 +145,13 @@ public class LanguageImpl implements Language, java.io.Serializable {
 
     // internal methods.
     private ArrayList toList(String value) {
-        ArrayList keywords = new ArrayList();
+        ArrayList elements = new ArrayList();
 
         for (StringTokenizer st = new StringTokenizer(value, ","); st.hasMoreTokens();) {
-            keywords.add(st.nextToken().trim());
+            elements.add(st.nextToken().trim());
         }
 
-        return keywords;
+        return elements;
     }
 
     /**

@@ -39,10 +39,10 @@ public abstract class AbstractFactory
     /**
      * @see org.apache.pluto.factory.Factory#init(javax.servlet.ServletConfig, java.util.Map)
      */
-    public void init(ServletConfig config, Map properties) 
+    public void init(ServletConfig config, Map factoryProperties) 
     throws Exception {
         this.servletConfig = config;
-        this.properties = properties;
+        this.properties = factoryProperties;
     }
 
     /**

@@ -137,9 +137,9 @@ public class PortletDefinitionRegistryImpl
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager manager) 
+    public void service(ServiceManager serviceManager) 
     throws ServiceException {
-        super.service(manager);
+        super.service(serviceManager);
         this.entityResolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
     }
 

@@ -158,8 +158,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
 
         Iterator iter = value.iterator();
         while (iter.hasNext()) {
-            String value = (String) iter.next();
-            returnValue.add(value);
+            returnValue.add(iter.next());
         }
         return returnValue;
     }
