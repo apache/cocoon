@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
@@ -57,13 +56,12 @@ public class CopletSourceFactory
                 throw new IOException("Unable to get coplet for " + location);
             }
             CopletSource copletSource =
-                new CopletSource(uri, protocol,
-                                 coplet);
-            copletSource.contextualize(this.context);
+                new CopletSource(uri,
+                                 protocol,
+                                 coplet,
+                                 this.portalService);
             copletSource.service(this.manager);
             return copletSource;
-        } catch (ContextException ce) {
-            throw new SourceException("Unable to setup coplet source.", ce);
         } catch (ServiceException ce) {
             throw new SourceException("Unable to setup coplet source.", ce);
         }

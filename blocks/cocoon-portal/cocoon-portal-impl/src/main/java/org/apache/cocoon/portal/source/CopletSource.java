@@ -20,15 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.serialization.Serializer;
@@ -45,11 +41,9 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public class CopletSource 
-    implements Source, XMLizable, Serviceable, Contextualizable {
+    implements Source, XMLizable, Serviceable {
 
     protected ServiceManager manager;
-
-    protected Context context;
 
     protected String uri;
     protected String copletControllerName;
@@ -58,6 +52,9 @@ public class CopletSource
     /** The used protocol */
     protected String scheme;
 
+    /** The portal service. */
+    protected final PortalService portalService;
+
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -65,15 +62,11 @@ public class CopletSource
         this.manager = aManager;
     }
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
-
-    public CopletSource(String location, String protocol,
-                         CopletInstance coplet) {
+    public CopletSource(String         location,
+                        String         protocol,
+                        CopletInstance coplet,
+                        PortalService  service) {
+        this.portalService = service;
         this.uri = location;
         this.scheme = (protocol == null ? "coplet" : protocol);
         this.copletInstanceData = coplet;
@@ -84,29 +77,19 @@ public class CopletSource
 	 * @see org.apache.excalibur.source.Source#getInputStream()
 	 */
 	public InputStream getInputStream() throws IOException, SourceNotFoundException {
+        Serializer serializer = null;
         try {
-            ServiceManager sitemapManager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-            ServiceSelector serializerSelector = null;
-            Serializer serializer = null;
-            try {
-                serializerSelector = (ServiceSelector) sitemapManager.lookup(Serializer.ROLE+"Selector");
-                serializer = (Serializer) serializerSelector.select("xml");
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                serializer.setOutputStream(os);
-                this.toSAX(serializer);
-                return new ByteArrayInputStream(os.toByteArray());
-            } catch (SAXException se) {
-                throw new CascadingIOException("Unable to stream content.", se);
-            } catch (ServiceException ce) {
-                throw new CascadingIOException("Unable to get components for serializing.", ce);
-            } finally {
-                if ( serializer != null ) {
-                    serializerSelector.release(serializer);
-                }
-                sitemapManager.release(serializerSelector);
-            }
-        } catch (ContextException ce) {
-            throw new CascadingIOException("Unable to get service manager.", ce);
+            serializer = (Serializer) this.manager.lookup(Serializer.ROLE + "/xml");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            serializer.setOutputStream(os);
+            this.toSAX(serializer);
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (SAXException se) {
+            throw new CascadingIOException("Unable to stream content.", se);
+        } catch (ServiceException ce) {
+            throw new CascadingIOException("Unable to get components for serializing.", ce);
+        } finally {
+            this.manager.release(serializer);
         }
 	}
 
@@ -157,22 +140,9 @@ public class CopletSource
 	 */
 	public void toSAX(ContentHandler handler) 
     throws SAXException {
-        ServiceSelector copletAdapterSelector = null;
-        CopletAdapter copletAdapter = null;
-        try {
-            copletAdapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
-            copletAdapter = (CopletAdapter)copletAdapterSelector.select(this.copletControllerName);
-            
-            copletAdapter.toSAX(this.copletInstanceData, handler);
-        } catch (ServiceException ce) {
-            throw new SAXException("Unable to lookup coplet adaptor or adaptor selector.", ce);
-        } finally {
-            if ( null != copletAdapter ) {
-                 copletAdapterSelector.release( copletAdapter );
-            }
-            this.manager.release(copletAdapterSelector);
-        }
-            
+        final CopletAdapter copletAdapter = this.portalService.getCopletAdapter(this.copletControllerName);
+
+        copletAdapter.toSAX(this.copletInstanceData, handler);
 	}
 
     /**

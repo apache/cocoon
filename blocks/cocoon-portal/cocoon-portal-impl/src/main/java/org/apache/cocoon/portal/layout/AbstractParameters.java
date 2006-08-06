@@ -27,7 +27,7 @@ import org.apache.commons.collections.map.LinkedMap;
 public abstract class AbstractParameters 
     implements Cloneable, Serializable {
 
-    protected Map parameters = new LinkedMap();
+    protected final Map parameters = new LinkedMap();
 
     public final Map getParameters() {
         return parameters;
@@ -64,9 +64,9 @@ public abstract class AbstractParameters
      * @see java.lang.Object#clone()
      */
     protected Object clone() throws CloneNotSupportedException {
-        AbstractParameters clone = (AbstractParameters)super.clone();
+        final AbstractParameters clone = (AbstractParameters)super.clone();
 
-        clone.parameters = new LinkedMap(this.parameters);
+        clone.parameters.putAll(this.parameters);
 
         return clone;
     }
