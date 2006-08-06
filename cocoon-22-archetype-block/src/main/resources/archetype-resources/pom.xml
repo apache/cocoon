@@ -63,5 +63,17 @@
       <version>1.0.0-M2-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven central repository</name>
+      <url>http://ibiblio.org/maven2</url>
+    </repository>
+    <repository>
+      <id>apache.snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://svn.apache.org/maven-snapshot-repository</url>
+    </repository>
+  </repositories>
 
 </project>
