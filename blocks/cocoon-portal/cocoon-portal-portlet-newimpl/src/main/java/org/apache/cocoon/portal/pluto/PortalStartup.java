@@ -16,16 +16,12 @@
 package org.apache.cocoon.portal.pluto;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerException;
 import org.apache.pluto.PortletContainerFactory;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  * @version $Id$
@@ -62,36 +58,20 @@ public class PortalStartup extends AbstractLogEnabled
             this.getLogger().info("********** Pluto Portal Driver Shut Down **********\n\n");
         }
     }
-    
+
     /**
      * Initializes the portlet container. This method constructs and initializes
      * the portlet container, and saves it to the servlet context scope.
      * @param servletContext  the servlet context.
      */
     private void initContainer() {
-        
-    	// Retrieve the driver configuration from servlet context.
-    	//DriverConfiguration driverConfig = (DriverConfiguration)
-        //		servletContext.getAttribute(DRIVER_CONFIG_KEY);
-        
         try {
-        	
-        	// Create portal context.
-            if (this.getLogger().isDebugEnabled()) {
-           //     this.getLogger().debug("Creating portal context ["
-           //     		+ driverConfig.getPortalName() + "/"
-           //             + driverConfig.getPortalVersion() + "]...");
-            }
-           // PortalContextImpl portalContext =
-           // 		new PortalContextImpl(driverConfig);
-            
             // Create container services.
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Creating container services...");
             }
-          //  ContainerServicesImpl containerServices =
-          //  		new ContainerServicesImpl(portalContext, driverConfig);
-            
+            ContainerServicesImpl containerServices = new ContainerServicesImpl();
+
             // Create portlet container.
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Creating portlet container...");
@@ -100,29 +80,26 @@ public class PortalStartup extends AbstractLogEnabled
          		PortletContainerFactory.getInstance();
             PortletContainer container = factory.createContainer(
                     this.uniqueContainerName,
-                    null,
-                    null);
-            
+                    containerServices,
+                    containerServices);
+
             // Initialize portlet container.
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("Initializing portlet container...");
             }
             container.init(servletContext);
-            
+
             // Save portlet container to the servlet context scope.
-            servletContext.setAttribute(CONTAINER_KEY, container);
+            this.servletContext.setAttribute(CONTAINER_KEY, container);
             if (this.getLogger().isInfoEnabled()) {
                 this.getLogger().info("Pluto portlet container started.");
             }
-            
+
         } catch (PortletContainerException ex) {
             this.getLogger().error("Unable to start up portlet container: "
             		+ ex.getMessage(), ex);
         }
     }
-    
-    
-    // Private Destruction Methods ---------------------------------------------
     
     /**
      * Destroyes the portlet container and removes it from servlet context.
