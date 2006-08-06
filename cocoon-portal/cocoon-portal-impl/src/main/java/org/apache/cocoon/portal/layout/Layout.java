@@ -205,7 +205,7 @@ public abstract class Layout extends AbstractParameters {
             final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.type}); 
 
             // clone fields from AbstractParameters
-            clone.parameters = new LinkedMap(this.parameters);
+            clone.parameters.putAll(this.parameters);
             
             // we don't clone the parent; we just set it to null
             clone.parent = null;

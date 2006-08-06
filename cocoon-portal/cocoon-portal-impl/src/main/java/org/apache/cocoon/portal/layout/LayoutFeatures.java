@@ -103,13 +103,33 @@ public class LayoutFeatures {
     }
 
     /**
-     * Traverse the whole layout tree.
+     * Traverse the whole layout tree including links.
+     * @param service The portal service.
      * @param rootLayout The root layout to start the traversal.
      * @param traverser The traverser which gets notified
      * @return If the traverser stops the traversing process, the layout will be returned.
      *         Otherwise null wil be returned.
      */
-    public static Layout traverseLayout(PortalService service, Layout rootLayout, LayoutTraverser traverser) {
+    public static Layout traverseLayout(PortalService   service,
+                                        Layout          rootLayout,
+                                        LayoutTraverser traverser) {
+        return traverseLayout(service, rootLayout, traverser, true);
+    }
+    
+    /**
+     * Traverse the whole layout tree. Depending on the parameters, link layouts are
+     * either followed or not.
+     * @param service The portal service.
+     * @param rootLayout The root layout to start the traversal.
+     * @param traverser The traverser which gets notified
+     * @param followLinks Should LinkLayouts be followed or not.
+     * @return If the traverser stops the traversing process, the layout will be returned.
+     *         Otherwise null wil be returned.
+     */
+    public static Layout traverseLayout(PortalService   service,
+                                        Layout          rootLayout,
+                                        LayoutTraverser traverser,
+                                        boolean         followLinks) {
         if ( rootLayout != null ) {
             if ( !traverser.processLayout(rootLayout) ) {
                 return rootLayout;
@@ -125,7 +145,7 @@ public class LayoutFeatures {
                         }
                     }
                 }
-            } else if ( rootLayout instanceof LinkLayout ) {
+            } else if ( rootLayout instanceof LinkLayout && followLinks) {
                 final LinkLayout linkLayout = (LinkLayout)rootLayout;
                 return traverseLayout(service, service.getProfileManager().getPortalLayout(linkLayout.getLayoutKey(), linkLayout.getLayoutId()), traverser);
             }
