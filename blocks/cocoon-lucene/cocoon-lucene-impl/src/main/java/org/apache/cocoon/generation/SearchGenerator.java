@@ -16,19 +16,16 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneCocoonPager;
 import org.apache.cocoon.components.search.LuceneCocoonSearcher;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
@@ -92,7 +89,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class SearchGenerator extends ServiceableGenerator
-    implements Contextualizable, Disposable
+    implements Disposable
 {
 
     /**
@@ -411,6 +408,11 @@ public class SearchGenerator extends ServiceableGenerator
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
+        // If the index directory is specified relativly, the working directory is
+        // used as home directory of the index directory.
+        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
+        this.workDir = new File(settings.getWorkDirectory());
+        this.manager.release(settings);
     }
 
     /**
@@ -479,25 +481,6 @@ public class SearchGenerator extends ServiceableGenerator
         if (request.getParameter(param_name) != null) {
             pageLength = createInteger(request.getParameter(param_name));
         }
-    }
-
-
-    /**
-     * Contextualize this class.
-     *
-     * <p>
-     *   Especially retrieve the work directory.
-     *   If the index directory is specified relativly, the working directory is
-     *   used as home directory of the index directory.
-     * </p>
-     *
-     * @param  context               Context to use
-     * @exception  ContextException  If contextualizing fails.
-     * @since
-     */
-    public void contextualize(Context context) throws ContextException {
-        // retrieve the working directory, assuming that the index may reside there
-        workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
     }
 
     /**
