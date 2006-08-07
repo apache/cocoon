@@ -37,12 +37,13 @@ public class ContainerServicesImpl
 
     protected PortalContext portalContext = new PortalContextImpl();
 
+    protected PortalCallbackServiceImpl portalCallbackService = new PortalCallbackServiceImpl();
+
     /**
      * @see org.apache.pluto.RequiredContainerServices#getPortalCallbackService()
      */
     public PortalCallbackService getPortalCallbackService() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.portalCallbackService;
     }
 
     /**
