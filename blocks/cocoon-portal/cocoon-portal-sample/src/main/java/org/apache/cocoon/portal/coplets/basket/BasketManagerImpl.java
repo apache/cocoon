@@ -29,18 +29,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.cron.CronJob;
 import org.apache.cocoon.components.cron.JobScheduler;
 import org.apache.cocoon.components.cron.ServiceableCronJob;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.PortalException;
@@ -125,19 +123,14 @@ public class BasketManagerImpl
     }
 
     /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        super.contextualize(context);
-        this.directory = ((File)context.get(Constants.CONTEXT_WORK_DIR)).getAbsolutePath();
-    }
-
-    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.scheduler = (JobScheduler)this.manager.lookup(JobScheduler.ROLE);
+        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
+        this.directory = settings.getWorkDirectory();
+        this.manager.release(settings);
     }
 
     /**
