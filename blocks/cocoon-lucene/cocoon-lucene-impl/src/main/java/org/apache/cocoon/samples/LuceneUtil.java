@@ -20,16 +20,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneCocoonIndexer;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
 
@@ -39,23 +36,19 @@ import org.apache.lucene.store.Directory;
  * @version $Id$
  */
 public class LuceneUtil 
-    implements Contextualizable, Serviceable {
+    implements Serviceable {
 
     private File workDir;
     private ServiceManager manager;
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
-    }
-    
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
+        this.workDir = new File(settings.getWorkDirectory());
+        this.manager.release(settings);
     }
 
     public void createIndex(String baseURL, boolean create)
