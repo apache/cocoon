@@ -108,7 +108,7 @@ public class ConfigReader extends AbstractLogEnabled {
             while ( i.hasNext() ) {
                 final ComponentInfo current = (ComponentInfo)i.next();
                 if ( current.isSelector() ) {
-                    this.configInfo.getClassNames().put(current.getRole(), current.copy());
+                    this.configInfo.addRole(current.getRole(), current.copy());
                 }
             }
             // TODO - we should add the processor to each container
@@ -188,13 +188,13 @@ public class ConfigReader extends AbstractLogEnabled {
         this.processComponents();
 
         // add roles as components
-        final Iterator i = this.configInfo.getClassNames().values().iterator();
+        final Iterator i = this.configInfo.getRoles().iterator();
         while ( i.hasNext() ) {
             final ComponentInfo current = (ComponentInfo)i.next();
             current.setLazyInit(true);
             this.configInfo.addComponent(current);
         }
-        this.configInfo.clearClassNames();
+        this.configInfo.clearRoles();
     }
 
     protected void parseConfiguration(final Configuration configuration,
@@ -249,7 +249,7 @@ public class ConfigReader extends AbstractLogEnabled {
             ComponentInfo info;
             if (className == null) {
                 // Get the default class name for this role
-                info = (ComponentInfo)this.configInfo.getClassNames().get( role );
+                info = (ComponentInfo)this.configInfo.getRole( role );
                 if (info == null) {
                     if ( this.configInfo.getComponents().get( role) != null ) {
                         throw new ConfigurationException("Duplicate component definition for role " + role + " at " + componentConfig.getLocation());
@@ -260,7 +260,7 @@ public class ConfigReader extends AbstractLogEnabled {
                 if ( name != null ) {
                     info = info.copy();                    
                 } else if ( !className.endsWith("Selector") ) {
-                    this.configInfo.getClassNames().remove(role);
+                    this.configInfo.removeRole(role);
                 }
             } else {                    
                 info = new ComponentInfo();
@@ -510,7 +510,7 @@ public class ConfigReader extends AbstractLogEnabled {
             }
 
             if ( defaultClassName != null ) {
-                ComponentInfo info = (ComponentInfo)this.configInfo.getClassNames().get(roleName);
+                ComponentInfo info = (ComponentInfo)this.configInfo.getRole(roleName);
                 if (info == null) {
                     // Create a new info and store it
                     info = new ComponentInfo();
@@ -519,7 +519,7 @@ public class ConfigReader extends AbstractLogEnabled {
                     info.setRole(roleName);
                     info.setConfiguration(role);
                     info.setAlias(shorthand);
-                    this.configInfo.getClassNames().put(roleName, info);
+                    this.configInfo.addRole(roleName, info);
                 } else {
                     // Check that it's consistent with the existing info
                     if (!defaultClassName.equals(info.getComponentClassName())) {
