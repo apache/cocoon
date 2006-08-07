@@ -24,16 +24,16 @@ import java.util.Stack;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
+import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
@@ -109,7 +109,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id$
  */
 public class LuceneIndexTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Contextualizable {
+    implements CacheableProcessingComponent, Configurable, Serviceable {
 
     public static final String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     public static final String ANALYZER_CLASSNAME_PARAMETER = "analyzer-classname";
@@ -210,12 +210,17 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
     /**
-     * Contextualize this class
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void contextualize(Context context) throws ContextException {
-        this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+    public void service(ServiceManager manager) throws ServiceException {
+        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
+        this.workDir = new File(settings.getWorkDirectory());
+        manager.release(settings);
     }
 
+    /**
+     * @see org.apache.cocoon.xml.AbstractXMLProducer#recycle()
+     */
     public void recycle() {
         this.processing = STATE_GROUND;
         if (this.writer != null) {
