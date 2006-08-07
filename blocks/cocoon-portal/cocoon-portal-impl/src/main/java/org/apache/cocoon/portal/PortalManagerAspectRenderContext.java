@@ -16,8 +16,8 @@
 package org.apache.cocoon.portal;
 
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -31,13 +31,13 @@ public interface PortalManagerAspectRenderContext {
      * Invoke next aspect 
      */
     void invokeNext(ContentHandler ch,
-                    Parameters     parameters)
+                    Properties     parameters)
     throws SAXException;
 
     /** 
-     * Get the {@link Parameters} of the aspect.
+     * Get the {@link Properties} of the aspect.
      */
-    Parameters getAspectParameters();
+    Properties getAspectProperties();
 
     /**
      * Get the object model.

@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
@@ -57,12 +57,12 @@ public class PreloadPortalManagerAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext context,
                        PortalService                    service,
                        ContentHandler                   ch,
-                       Parameters                       parameters)
+                       Properties                       properties)
     throws SAXException {
         // we should be the first aspect for rendering
         // preload all changed coplets
@@ -75,6 +75,6 @@ public class PreloadPortalManagerAspect
             adapter.toSAX(cid, nullHandler );
         }
         // start "real" rendering
-        context.invokeNext(ch, parameters);
+        context.invokeNext(ch, properties);
     }
 }

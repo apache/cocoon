@@ -15,7 +15,8 @@
  */
 package org.apache.cocoon.portal;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -32,18 +33,19 @@ import org.xml.sax.SAXException;
  */
 public interface PortalManager {
 
-    /** This parameter containing a layout id can be passed to the
-     * {@link #showPortal(ContentHandler, Parameters)} method. In this
+    /** This property containing a layout id can be passed to the
+     * {@link #showPortal(ContentHandler, Properties)} method. In this
      * case only the tree starting with this layout object is rendered.
      */
-    String PARAMETER_RENDER_LAYOUT = "render-layout";
+    String PROPERTY_RENDER_LAYOUT = "render-layout";
 
-    /** This parameter containing a coplet instance id can be passed to the
-     * {@link #showPortal(ContentHandler, Parameters)} method. In this
+    /** This property containing a coplet instance id can be passed to the
+     * {@link #showPortal(ContentHandler, Properties)} method. In this
      * case only the coplet with the surrounding layout is rendered.
      */
-    String PARAMETER_RENDER_COPLET = "render-coplet";
+    String PROPERTY_RENDER_COPLET = "render-coplet";
 
+    /** The bean name of this component. */
     String ROLE = PortalManager.class.getName();
 
     /**
@@ -57,10 +59,10 @@ public interface PortalManager {
     /**
      * Render the portal.
      * @param ch         The content handler receiving the sax events.
-     * @param parameters A parameters object.
+     * @param Properties A properties object (can be null)
      * @throws SAXException
      */
     void showPortal(ContentHandler ch,
-                    Parameters     parameters)
+                    Properties     properties)
     throws SAXException;
 }

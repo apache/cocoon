@@ -16,8 +16,8 @@
 package org.apache.cocoon.portal;
 
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 
 /**
@@ -33,9 +33,9 @@ public interface PortalManagerAspectPrepareContext {
     throws ProcessingException;
 
     /** 
-     * Get the {@link Parameters} of the aspect.
+     * Get the {@link Properties} of the aspect.
      */
-    Parameters getAspectParameters();
+    Properties getAspectProperties();
 
     /**
      * Get the object model.

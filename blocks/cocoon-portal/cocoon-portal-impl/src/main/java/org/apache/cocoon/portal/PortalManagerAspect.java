@@ -15,7 +15,8 @@
  */
 package org.apache.cocoon.portal;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.ContentHandler;
@@ -37,6 +38,6 @@ public interface PortalManagerAspect {
     void render(PortalManagerAspectRenderContext context,
                 PortalService                  service,
                 ContentHandler                 ch,
-                Parameters                     parameters)
+                Properties                     properties)
     throws SAXException;
 }

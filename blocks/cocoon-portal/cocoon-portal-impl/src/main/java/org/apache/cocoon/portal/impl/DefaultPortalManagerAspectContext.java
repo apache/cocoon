@@ -17,8 +17,8 @@ package org.apache.cocoon.portal.impl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
@@ -39,7 +39,7 @@ public final class DefaultPortalManagerAspectContext
     private final Map objectModel;
     private Iterator iterator;
     private Iterator configIterator;
-    private Parameters config;
+    private Properties config;
 
     public DefaultPortalManagerAspectContext(PortalManagerAspectChain chain,
                                              PortalService service,
@@ -56,28 +56,28 @@ public final class DefaultPortalManagerAspectContext
 	public void invokeNext() 
     throws ProcessingException {
         if (this.iterator.hasNext()) {
-            this.config = (Parameters)this.configIterator.next();
+            this.config = (Properties)this.configIterator.next();
             final PortalManagerAspect aspect = (PortalManagerAspect) iterator.next();
             aspect.prepare(this, this.service);
         }
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspectPrepareContext#getAspectParameters()
+     * @see org.apache.cocoon.portal.PortalManagerAspectRenderContext#getAspectProperties()
      */
-    public Parameters getAspectParameters() {
+    public Properties getAspectProperties() {
         return this.config;
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalManagerAspectRenderContext#invokeNext(org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
      */
-    public void invokeNext(ContentHandler ch, Parameters parameters) 
+    public void invokeNext(ContentHandler ch, Properties properties) 
     throws SAXException {
         if (this.iterator.hasNext()) {
-            this.config = (Parameters)this.configIterator.next();
+            this.config = (Properties)this.configIterator.next();
             final PortalManagerAspect aspect = (PortalManagerAspect) iterator.next();
-            aspect.render(this, this.service, ch, parameters);
+            aspect.render(this, this.service, ch, properties);
         }
     }
 
