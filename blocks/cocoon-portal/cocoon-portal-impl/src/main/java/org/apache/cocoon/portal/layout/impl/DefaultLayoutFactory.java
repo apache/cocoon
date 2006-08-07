@@ -112,9 +112,6 @@ public class DefaultLayoutFactory
     /** All configured layouts. */
     protected final Map layouts = new HashMap();
 
-    /** All configured renderers. */
-    protected final Map renderers = new HashMap();
-
     protected static long idCounter = System.currentTimeMillis();
 
     /** 
