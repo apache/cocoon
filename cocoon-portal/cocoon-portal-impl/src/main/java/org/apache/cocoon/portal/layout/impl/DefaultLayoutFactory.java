@@ -109,7 +109,11 @@ public class DefaultLayoutFactory
 	extends AbstractComponent
     implements LayoutFactory, Configurable, Receiver {
 
+    /** All configured layouts. */
     protected final Map layouts = new HashMap();
+
+    /** All configured renderers. */
+    protected final Map renderers = new HashMap();
 
     protected static long idCounter = System.currentTimeMillis();
 
