@@ -64,6 +64,12 @@
           default-class="org.apache.cocoon.portal.impl.PreloadPortalManagerAspect"/>
 
   <!--+
+      | Renderer
+      |
+      +-->
+  <alias role="org.apache.cocoon.portal.layout.renderer.Renderer" shorthand="renderer"/>
+
+  <!--+
       | Renderer Aspects
       |
       +-->

@@ -492,10 +492,16 @@ public class ConfigReader extends AbstractLogEnabled {
         for( int i = 0; i < roles.length; i++ ) {
             final Configuration role = roles[i];
 
+            if ( "alias".equals(role.getName()) ) {
+                final String roleName = role.getAttribute("role");
+                final String shorthand = role.getAttribute("shorthand");
+                this.configInfo.getShorthands().put(shorthand, roleName);
+                continue;
+            }
             if (!"role".equals(role.getName())) {
                 throw new ConfigurationException("Unexpected '" + role.getName() + "' element at " + role.getLocation());
             }
-            
+
             final String roleName = role.getAttribute("name");
             final String shorthand = role.getAttribute("shorthand", null);
             final String defaultClassName = role.getAttribute("default-class", null);
