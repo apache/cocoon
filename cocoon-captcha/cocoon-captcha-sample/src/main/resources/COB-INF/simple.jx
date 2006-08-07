@@ -31,7 +31,7 @@
       <form action="continue" method="post">
         <img src="simple.jpeg" width="100" height="50"/><br />
         Enter the text written in the image above and click on <b>Verify</b>.<br />
-        <input type="hidden" name="continuation" value="${continuation.id}"/>
+        <input type="hidden" name="continuation" value="${cocoon.continuation.id}"/>
         <input type="text" name="captcha"/>
         <input type="submit" value="Verify"/>
       </form>
