@@ -15,17 +15,18 @@
  */
 package org.apache.cocoon.components.store.impl;
 
-import org.apache.excalibur.store.impl.AbstractFilesystemStore;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.IOUtils;
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.excalibur.store.impl.AbstractFilesystemStore;
 
 /**
  * Stores objects on the filesystem: String objects as text files,
@@ -34,18 +35,25 @@ import java.io.IOException;
  * @version $Id$
  */
 public final class FilesystemStore
-extends AbstractFilesystemStore
-implements Contextualizable, Parameterizable {
+    extends AbstractFilesystemStore
+    implements Serviceable, Parameterizable {
 
     protected File workDir;
     protected File cacheDir;
 
-    public void contextualize(final Context context)
-    throws ContextException {
-        this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
-        this.cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
+        this.workDir = new File(settings.getWorkDirectory());
+        this.cacheDir = new File(settings.getCacheDirectory());
+        manager.release(settings);
     }
 
+    /**
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
     public void parameterize(Parameters params)
     throws ParameterException {
         try {
