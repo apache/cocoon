@@ -37,7 +37,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * <p>
  * The {@link org.apache.cocoon.forms.formmodel.Widget#lookupWidget(String)} method is able
  * to only return one widget, while this class returns a list of widgets. It uses a path syntax containing a /./,
- * <code>repeater/./foo</code>, which reperesents all the instances of the foo widget inside the repeater,
+ * <code>repeater/./foo</code>, which repreesents all the instances of the foo widget inside the repeater,
  * one per row. Note that it also supports finding a widgets inside multi level repeaters, something like 
  * invoices/./movements/./amount or courseYears/./exams/./preparatoryCourses/./title . 
  * </p>
@@ -114,7 +114,7 @@ public class WidgetFinder {
     
     private String toAsterisk(String path) {
         StringBuffer pathsb = new StringBuffer(path);
-        int pos = 0;
+        int pos;
         while ((pos = pathsb.indexOf("/./")) != -1) {
             pathsb.setCharAt(pos + 1, '*');
         }
@@ -358,5 +358,4 @@ public class WidgetFinder {
     public boolean hasRepeaterListeners() {
         return this.listener != null;
     }
-
 }
