@@ -162,8 +162,6 @@
   </portal-deployment-manager>
 
   <!-- Renderer configuration -->
-  <component class="org.apache.cocoon.core.container.DefaultServiceSelector"
-             role="org.apache.cocoon.portal.layout.renderer.RendererSelector">
     <renderer name="column"
               class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer">
       <aspects>
@@ -304,7 +302,6 @@
         </aspect>
       </aspects>
     </renderer>
-  </component>
  
   <!-- Layout factory configuration -->
   <portal-layout-factory>
