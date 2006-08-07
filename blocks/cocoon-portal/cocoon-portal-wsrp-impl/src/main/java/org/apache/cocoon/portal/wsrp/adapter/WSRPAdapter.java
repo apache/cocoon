@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import oasis.names.tc.wsrp.v1.types.BlockingInteractionResponse;
 import oasis.names.tc.wsrp.v1.types.LocalizedString;
@@ -669,14 +670,14 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext aspectContext,
                        PortalService service,
                        ContentHandler ch,
-                       Parameters parameters)
+                       Properties properties)
     throws SAXException {
-        aspectContext.invokeNext(ch, parameters);
+        aspectContext.invokeNext(ch, properties);
     }
 
     /**

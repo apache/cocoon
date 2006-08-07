@@ -398,18 +398,18 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext aspectContext,
                        PortalService service,
                        ContentHandler ch,
-                       Parameters contextParameters)
+                       Properties properties)
     throws SAXException {
         final Map objectModel = aspectContext.getObjectModel();
 
         // don't generate a response, if we issued a redirect
         if (objectModel.remove("portlet-event") == null) {
-            aspectContext.invokeNext(ch, contextParameters);
+            aspectContext.invokeNext(ch, properties);
         }
     }
 
