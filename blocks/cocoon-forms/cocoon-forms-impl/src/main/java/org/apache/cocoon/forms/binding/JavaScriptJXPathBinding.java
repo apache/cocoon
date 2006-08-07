@@ -96,7 +96,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             }
         } else {
             if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("[Javascript Binding] - loadForm: No javascript code avaliable. Widget id=" + this.getId());
+                this.getLogger().info("[Javascript Binding] - loadForm: No javascript code available. Widget id=" + this.getId());
             }
         }
     }
@@ -122,7 +122,7 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
             }
         } else {
             if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("[Javascript Binding] - saveForm: No code avaliable on the javascript binding with id \"" + this.getId() + "\"");
+                this.getLogger().info("[Javascript Binding] - saveForm: No code available on the javascript binding with id \"" + this.getId() + "\"");
             }
         }
     }
