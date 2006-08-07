@@ -74,17 +74,17 @@
       <!-- ========================== batik ================================ -->
 
       <map:match pattern="hello.jpeg">
-        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
+        <map:generate src="block:cocoon-core-samples-main-sample:hello-world/hello.svg"/>
         <map:serialize type="svg2jpeg"/>
       </map:match>
 
       <map:match pattern="hello.png">
-        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
+        <map:generate src="block:cocoon-core-samples-main-sample:hello-world/hello.svg"/>
         <map:serialize type="svg2png"/>
       </map:match>
       
       <map:match pattern="hello.svg">
-        <map:generate src="cocoon://samples/hello-world/hello.svg"/>
+        <map:generate src="block:cocoon-core-samples-main-sample:hello-world/hello.svg"/>
         <map:serialize type="svgxml"/>
       </map:match>
 
