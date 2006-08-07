@@ -29,14 +29,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
 
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.IOUtils;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -45,6 +39,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 
@@ -56,7 +52,6 @@ import org.apache.excalibur.store.StoreJanitor;
 public class EHDefaultStore
     extends AbstractLogEnabled 
     implements Store,
-               Contextualizable,
                Serviceable,
                Parameterizable,
                Initializable,
@@ -101,19 +96,15 @@ public class EHDefaultStore
     }
 
     /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
-        this.cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
-    }
-
-    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
         this.storeJanitor = (StoreJanitor) this.manager.lookup(StoreJanitor.ROLE);
+        final Settings settings = (Settings)this.manager.lookup(Settings.ROLE);
+        this.workDir = new File(settings.getWorkDirectory());
+        this.cacheDir = new File(settings.getCacheDirectory());
+        this.manager.release(settings);
     }
 
     /**
