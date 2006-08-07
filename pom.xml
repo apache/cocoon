@@ -32,7 +32,7 @@
   
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>3-SNAPSHOT</version>
+  <version>2-SNAPSHOT</version>
   
   <name>Apache Cocoon</name>
   <url>http://cocoon.apache.org</url>
