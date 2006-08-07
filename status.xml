@@ -182,6 +182,9 @@
   <release version="@version@" date="@date@">
 -->
   <release version="2.1.10" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-1889" due-to="Jeroen Goubert" due-to-email="jgou@schaubroeck.be">
+      CForms: Tiny typo in JavaScriptJXPathBinding.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1678" due-to="Jeroen Reijn" due-to-email="j.reijn@hippo.nl">
       CForms: HTMLArea unable to set target and title to a "link".
     </action>
