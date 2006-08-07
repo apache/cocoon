@@ -22,11 +22,6 @@ import java.util.Properties;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.components.ContextHelper;
@@ -39,7 +34,6 @@ import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.CopletInstanceFeatures;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFeatures;
@@ -61,33 +55,14 @@ public class PortalManagerImpl
 
     protected PortalManagerAspectChain chain;
 
-    protected ServiceSelector aspectSelector;
-    protected ServiceSelector adapterSelector;
-
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
-     */
-    public void service(ServiceManager serviceManager)
-    throws ServiceException {
-        super.service(serviceManager);
-        if ( this.manager.hasService(PortalManagerAspect.ROLE+"Selector") ) {
-            this.aspectSelector = (ServiceSelector) this.manager.lookup( PortalManagerAspect.ROLE+"Selector");
-        }
-        this.adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
-    }
-
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if ( this.manager != null ) {
             if ( this.chain != null) {
-                this.chain.dispose( this.aspectSelector, this.adapterSelector );
+                this.chain.dispose( this.manager );
             }
-            this.manager.release( this.aspectSelector );
-            this.aspectSelector = null;
-            this.manager.release( this.adapterSelector );
-            this.adapterSelector = null;
         }
         super.dispose();
     }
@@ -121,18 +96,10 @@ public class PortalManagerImpl
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.chain = new PortalManagerAspectChain();
-        this.chain.configure(this.aspectSelector, 
-                             this.adapterSelector, 
+        this.chain.configure(this.manager, 
                              conf.getChild("aspects"), 
                              this, 
                              new Properties());
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
     }
 
     /**

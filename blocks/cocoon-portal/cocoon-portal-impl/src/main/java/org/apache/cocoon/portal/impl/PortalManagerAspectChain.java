@@ -24,7 +24,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 
@@ -39,8 +39,7 @@ public final class PortalManagerAspectChain {
 
     protected List configs = new ArrayList(3);
 
-    public void configure(ServiceSelector     aspectSelector,
-                          ServiceSelector     adapterSelector,
+    public void configure(ServiceManager      manager,
                           Configuration       conf,
                           PortalManagerAspect endAspect,
                           Properties          endAspectProperties) 
@@ -52,11 +51,8 @@ public final class PortalManagerAspectChain {
                 final String role = current.getAttribute("type", null);
                 PortalManagerAspect pAspect;
                 if ( role != null ) {
-                    if ( aspectSelector == null ) {
-                        throw new ConfigurationException("No selector for aspects defined.");
-                    }
                     try {
-                        pAspect = (PortalManagerAspect) aspectSelector.select(role);                        
+                        pAspect = (PortalManagerAspect) manager.lookup(PortalManagerAspect.ROLE + '/' + role);                        
                     } catch (ServiceException se) {
                         throw new ConfigurationException("Unable to lookup aspect " + role, current, se);
                     }
@@ -66,7 +62,7 @@ public final class PortalManagerAspectChain {
                         throw new ConfigurationException("Aspect configuration requires either a type or an adapter attribute.", current);
                     }
                     try {
-                        pAspect = (PortalManagerAspect)adapterSelector.select(adapterName);
+                        pAspect = (PortalManagerAspect)manager.lookup(CopletAdapter.ROLE + '/' + adapterName);
                     } catch (ServiceException se) {
                         throw new ConfigurationException("Unable to lookup coplet adapter " + adapterName, current, se);
                     }
@@ -88,15 +84,11 @@ public final class PortalManagerAspectChain {
         return this.configs.iterator();
     }
 
-    public void dispose(ServiceSelector aspectSelector, ServiceSelector adapterSelector) {
+    public void dispose(ServiceManager manager) {
         Iterator i = this.aspects.iterator();
         while (i.hasNext()) {
             final Object component = i.next();
-            if ( component instanceof CopletAdapter ) {
-                adapterSelector.release(component);
-            } else {
-                aspectSelector.release(component);
-            }
+            manager.release(component);
         }
         this.aspects.clear();
         this.configs.clear();
