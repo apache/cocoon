@@ -19,5 +19,9 @@
       <id>apache-maven-snapshot</id>
       <username>jheymans</username>
     </server>
+    <server>
+      <id>cocoon-staging-repo</id>
+      <username>maven</username>
+    </server>
   </servers>
 </settings>
