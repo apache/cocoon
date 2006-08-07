@@ -18,6 +18,7 @@ package org.apache.cocoon.portal.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -42,7 +43,7 @@ public final class PortalManagerAspectChain {
                           ServiceSelector     adapterSelector,
                           Configuration       conf,
                           PortalManagerAspect endAspect,
-                          Parameters          endAspectParameters) 
+                          Properties          endAspectProperties) 
     throws ConfigurationException {
         if ( conf != null ) {
             final Configuration[] aspectConfigs = conf.getChildren("aspect");
@@ -71,12 +72,12 @@ public final class PortalManagerAspectChain {
                     }
                 }
                 this.aspects.add(pAspect);               
-                Parameters aspectConfiguration = Parameters.fromConfiguration(current);
-                this.configs.add(aspectConfiguration);
+                final Parameters aspectConfiguration = Parameters.fromConfiguration(current);
+                this.configs.add(Parameters.toProperties(aspectConfiguration));
             }
         }
         this.aspects.add(endAspect);
-        this.configs.add(endAspectParameters);
+        this.configs.add(endAspectProperties);
     }
 
     public Iterator getIterator() {

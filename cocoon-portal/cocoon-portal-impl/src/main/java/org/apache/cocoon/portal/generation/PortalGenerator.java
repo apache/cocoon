@@ -73,7 +73,7 @@ extends ServiceableGenerator {
         // 2. rendering
         PortalManager pm = this.portalService.getPortalManager();
         pm.process();
-        pm.showPortal(this.xmlConsumer, this.parameters);
+        pm.showPortal(this.xmlConsumer, Parameters.toProperties(this.parameters));
 	}
 
     /**

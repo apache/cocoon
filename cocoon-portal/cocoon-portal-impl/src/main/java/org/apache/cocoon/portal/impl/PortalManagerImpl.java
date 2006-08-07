@@ -17,13 +17,13 @@ package org.apache.cocoon.portal.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -105,15 +105,15 @@ public class PortalManagerImpl
     }
 
 	/**
-	 * @see PortalManager#showPortal(ContentHandler, Parameters)
+	 * @see PortalManager#showPortal(ContentHandler, Properties)
 	 */
-	public void showPortal(ContentHandler contentHandler, Parameters parameters) 
+	public void showPortal(ContentHandler contentHandler, Properties properties) 
     throws SAXException {
         DefaultPortalManagerAspectContext aspectContext =
             new DefaultPortalManagerAspectContext(this.chain,
                                                   this.portalService,
                                                   ContextHelper.getObjectModel(this.context));
-        aspectContext.invokeNext(contentHandler, parameters);
+        aspectContext.invokeNext(contentHandler, properties);
 	}
 
     /**
@@ -125,7 +125,7 @@ public class PortalManagerImpl
                              this.adapterSelector, 
                              conf.getChild("aspects"), 
                              this, 
-                             new Parameters());
+                             new Properties());
     }
 
     /**
@@ -144,12 +144,12 @@ public class PortalManagerImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
      */
     public void render(PortalManagerAspectRenderContext renderContext,
                        PortalService                    service,
                        ContentHandler                   ch,
-                       Parameters                       parameters)
+                       Properties                       properties)
     throws SAXException {
         final ProfileManager profileManager = this.portalService.getProfileManager();
 
@@ -177,8 +177,8 @@ public class PortalManagerImpl
             Layout portalLayout = null;
 
             // check for parameters
-            final String copletId = parameters.getParameter(PortalManager.PARAMETER_RENDER_COPLET, null);
-            final String layoutId = parameters.getParameter(PortalManager.PARAMETER_RENDER_LAYOUT, null);
+            final String copletId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_COPLET, null));
+            final String layoutId = (properties == null ? null : properties.getProperty(PortalManager.PROPERTY_RENDER_LAYOUT, null));
             if ( StringUtils.isNotEmpty(copletId) && StringUtils.isNotEmpty(layoutId) ) {
                 throw new SAXException("Only one of the paramteters can be specified for rendering: coplet or layout.");
             }
@@ -210,6 +210,6 @@ public class PortalManagerImpl
         }
         // although we should be the last in the queue,
         // let's invoke the next
-        renderContext.invokeNext(ch, parameters);
+        renderContext.invokeNext(ch, properties);
     }
 }
