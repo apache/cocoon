@@ -16,7 +16,6 @@
 package org.apache.cocoon.servlet;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
