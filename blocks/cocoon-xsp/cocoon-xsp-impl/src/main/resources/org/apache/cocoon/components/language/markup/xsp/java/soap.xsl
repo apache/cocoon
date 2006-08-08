@@ -90,7 +90,7 @@
     <xsp:logic>
       if (getLogger().isDebugEnabled()) {
           getLogger().debug("XScriptObject for soap:call is\n" +
-              <xscript:get scope="request" name="{$tempvar}" as="object"/> +
+              <xsp:expr><xscript:get scope="request" name="{$tempvar}" as="object"/></xsp:expr> +
               ", sending request to: " + <xsl:value-of select="$url"/>);
       }
       try {
@@ -104,7 +104,7 @@
               <xsl:value-of select="$scope"/>);
           if (getLogger().isDebugEnabled()) {
               getLogger().debug("SOAP result is\n" +
-                                <xscript:get scope="request" name="{$tempvar}" as="object"/>);
+                                <xsp:expr><xscript:get scope="request" name="{$tempvar}" as="object"/></xsp:expr>);
           }
           <xscript:get scope="request" name="{$tempvar}"/>
       } catch (Exception ex) {
@@ -135,11 +135,11 @@
       <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
         <xsl:apply-templates select="*[name() != 'soap:url'
                                        and name() != 'soap:method'
-                                       and name() != 'soap:authorization'                                       
+                                       and name() != 'soap:authorization'
                                        and name() != 'soap:namespace']"/>
       </SOAP-ENV:Header>
   </xsl:template>
-  
+
   <xsl:template match="soap:body" name="soap-body">
     <xsp:logic>
       <xsl:for-each select="soap:namespace">
@@ -163,7 +163,7 @@
       </xsl:for-each>
     </xsp:logic>
   </xsl:template>
-  
+
   <xsl:template match="soap:enc">
       <xsp:attribute name="SOAP-ENV:encodingStyle">http://schemas.xmlsoap.org/soap/encoding/</xsp:attribute>
   </xsl:template>
