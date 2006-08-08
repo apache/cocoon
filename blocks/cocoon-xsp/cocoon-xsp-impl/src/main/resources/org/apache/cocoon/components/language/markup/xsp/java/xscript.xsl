@@ -42,7 +42,7 @@
         XScriptManager xscriptManager;
 
         public void service(ServiceManager manager) throws ServiceException {
-          service(manager);
+          super.service(manager);
           xscriptManager = (XScriptManager)this.manager.lookup(XScriptManager.ROLE);
         }
 
