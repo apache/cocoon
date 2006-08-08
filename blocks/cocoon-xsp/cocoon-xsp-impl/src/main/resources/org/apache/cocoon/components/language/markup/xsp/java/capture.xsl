@@ -83,7 +83,7 @@
         <xsl:apply-templates/>
         <xsp:logic>
         } finally {
-          this.manager.release((Component)this.captureParser);
+          this.manager.release(this.captureParser);
         }
         </xsp:logic>
       </xsl:when>
