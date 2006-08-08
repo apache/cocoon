@@ -48,7 +48,7 @@
 
         public void dispose() {
           if (xscriptManager != null) {
-            manager.release((Component)xscriptManager);
+            manager.release(xscriptManager);
             xscriptManager = null;
           }
           super.dispose();
