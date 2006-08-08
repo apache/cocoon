@@ -18,10 +18,14 @@
     <server>
       <id>apache-maven-snapshot</id>
       <username>jheymans</username>
+      <directoryPermissions>775</directoryPermissions>
+      <filePermissions>664</filePermissions
     </server>
     <server>
       <id>cocoon-staging-repo</id>
-      <username>maven</username>
+      <username>YOUR_USERNAME_HERE</username>
+      <directoryPermissions>775</directoryPermissions>
+      <filePermissions>664</filePermissions
     </server>
   </servers>
 </settings>
