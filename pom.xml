@@ -309,7 +309,7 @@
     <repository>
       <id>cocoon-staging-repo</id>
       <name>staging release repository</name>
-      <url>scpexe://cocoon.zones.apache.org/home/config/cocoon-staging-release-repository</url>
+      <url>scpexe://people.apache.org/home/jheymans/public_html</url>
     </repository>
     <snapshotRepository>
       <id>apache-maven-snapshot</id>
