@@ -243,7 +243,7 @@
           <h3 style="color:navy; text-align: center">
             <xsp:expr>filename</xsp:expr>
           </h3>
-        
+
           DOMParser parser = null;
           Source source = null;
 
@@ -255,7 +255,7 @@
 
               Document sourceDocument = parser.parseDocument(SourceUtil.getInputSource(source));
 
-              this.colorize(sourceDocument, outputDocument);    
+              this.colorize(sourceDocument, outputDocument);
           } catch (SAXException e){
               getLogger().debug("SAXException in colorize", e);
               throw e;
@@ -269,7 +269,7 @@
                 <xsp:expr>e</xsp:expr>
               </p>
           } finally {
-              this.manager.release((Component) parser);
+              this.manager.release(parser);
               if (source != null) {
                   super.resolver.release(source);
                   source = null;
