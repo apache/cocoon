@@ -258,7 +258,7 @@ implements ComponentHandler {
      * TODO - perhaps we can remove this later?
      */
     public static ComponentHandler getComponentHandler(Class clazz, Logger logger, Context context, ServiceManager manager, Configuration config) throws Exception {
-        ComponentEnvironment env = new ComponentEnvironment(logger, context, manager);
+        ComponentEnvironment env = new ComponentEnvironment(logger, context, manager, clazz.getClassLoader());
         ComponentInfo info = new ComponentInfo();
         info.setComponentClassName(clazz.getName());
         info.setConfiguration(config);

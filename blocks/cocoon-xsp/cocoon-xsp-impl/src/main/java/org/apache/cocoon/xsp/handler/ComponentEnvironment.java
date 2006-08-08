@@ -28,21 +28,24 @@ import org.apache.avalon.framework.service.ServiceManager;
  * @since 2.2
  */
 public class ComponentEnvironment {
-
     public final ServiceManager serviceManager;
     public final Context context;
     public final Logger logger;
+    
+    public final ClassLoader classLoader;
 
     public ComponentEnvironment(Logger logger,
                                 Context context,
-                                ServiceManager serviceManager) {
+                                ServiceManager serviceManager,
+                                ClassLoader classLoader ) {
 
         this.logger = logger;
         this.context = context;
         this.serviceManager = serviceManager;
+        this.classLoader = classLoader;
     }
 
     public Class loadClass(String name) throws ClassNotFoundException {
-        return this.getClass().getClassLoader().loadClass(name);
+        return this.classLoader.loadClass(name);
     }
 }
