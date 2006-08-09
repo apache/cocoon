@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.apache.cocoon.maven.deployer.monolithic.DevelopmentProperty;
 import org.apache.cocoon.maven.deployer.monolithic.MonolithicCocoonDeployer;
 import org.apache.cocoon.maven.deployer.utils.WebApplicationRewriter;
 import org.apache.cocoon.maven.deployer.utils.XMLUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -171,7 +173,6 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
 
     	// build the web application
         this.buildExplodedWebapp(webappDirectory_);
-
         MonolithicCocoonDeployer deployer = new MonolithicCocoonDeployer(this.getLog());        
         deployer.deploy(getBlockArtifactsAsMap(null), webappDirectory_, 
                 blocksdir, new DevelopmentBlock[0], new DevelopmentProperty[0]);
@@ -299,6 +300,18 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
         if ( webXmlLocation == null ) {
             webXmlLocation = getWarSourceDirectory().getAbsolutePath() + File.separatorChar + "WEB-INF" + File.separatorChar + "web.xml";
         }
+        if( ! new File(webXmlLocation).exists())
+        {
+            this.getLog().info("No web.xml supplied. Will install default web.xml");
+            final String webXml = "WEB-INF" + File.separatorChar + "web.xml";
+            File outFile = org.apache.cocoon.maven.deployer.utils.FileUtils.createDirectory(new File(webappDirectory_, webXml));
+            try {
+                IOUtils.copy(readResourceFromClassloader(webXml), new FileOutputStream(outFile));
+            } catch(IOException ioex) {
+                throw new MojoExecutionException("cannot read resource " + webXml, ioex);
+            }
+            webXmlLocation = webappDirectory_.getAbsolutePath() + File.separatorChar + webXml;
+        }
         this.getLog().info("Adding shielded classloader configuration to webapp configuration.");
         this.getLog().debug("Reading web.xml: " + webXmlLocation);
         try {
@@ -317,6 +330,11 @@ abstract class AbstractDeployMojo extends AbstractWarMojo {
             this.move(webInfDir, "classes", COCOON_CLASSES);
         }
     }  
+
+    private InputStream readResourceFromClassloader(String fileName) {
+        return MonolithicCocoonDeployer.class.getClassLoader().
+            getResourceAsStream("org/apache/cocoon/maven/deployer/monolithic/" + fileName);
+    }
 
     /**
      * Copy all libs that don't have the scope provided or system to WEB-INF/cocoon/lib, except
