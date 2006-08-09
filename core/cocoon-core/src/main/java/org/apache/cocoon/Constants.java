@@ -51,7 +51,7 @@ public final class Constants {
     /** The name of this project. 
      * @deprecated This will be removed soon. 
      */
-    public static final String NAME = properties.getProperty("name");
+    public static final String NAME = "Cocoon";
 
     /** The version of this build. */
     public static final String VERSION = properties.getProperty("version");
@@ -59,7 +59,7 @@ public final class Constants {
     /** The full name of this project.
      * @deprecated This will be removed soon. 
      */
-    public static final String COMPLETE_NAME = properties.getProperty("fullname") + " " + VERSION;
+    public static final String COMPLETE_NAME = "Apache Cocoon " + VERSION;
 
     /** The version of the configuration schema */
     public static final String CONF_VERSION  = "2.2";
