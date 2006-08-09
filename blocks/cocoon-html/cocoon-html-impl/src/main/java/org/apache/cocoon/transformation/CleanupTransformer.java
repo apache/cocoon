@@ -132,7 +132,7 @@ implements CacheableProcessingComponent {
         super.setup(resolver, objectModel, src, par);
         this.indentSize = par.getParameterAsInteger("indent-size", 2);
     }
-    
+
     /**
      * @see org.apache.cocoon.transformation.AbstractSAXTransformer#recycle()
      */
