@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.processing.impl;
 
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,5 +72,12 @@ public class ProcessInfoProviderImpl
      */
     public ServletContext getServletContext() {
         return this.servletContext;
+    }
+
+    /**
+     * @see org.apache.cocoon.processing.ProcessInfoProvider#getObjectModel()
+     */
+    public Map getObjectModel() {
+        return ContextHelper.getObjectModel(this.context);
     }
 }
