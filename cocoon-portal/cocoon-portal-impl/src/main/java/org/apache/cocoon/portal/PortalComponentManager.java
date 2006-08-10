@@ -21,6 +21,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * This component provides access to the most important portal components
@@ -73,4 +74,17 @@ public interface PortalComponentManager {
      * @since 2.1.8
      */
     PortalManager getPortalManager();
+
+    /**
+     * Register a renderer.
+     * @since 2.2
+     */
+    void register(String name, Renderer renderer);
+
+    /**
+     * Get the process info provider for accessing request
+     * information.
+     * @since 2.2
+     */
+    ProcessInfoProvider getProcessInfoProvider();
 }

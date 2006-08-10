@@ -20,6 +20,8 @@
       +-->
     <role name="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"
           default-class="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"/>
+    <role name="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"
+          default-class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
 
   <!--+ 
       | Event Aspects

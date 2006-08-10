@@ -15,10 +15,11 @@
  */
 package org.apache.cocoon.portal.coplets.basket;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplets.basket.events.AddItemEvent;
@@ -100,11 +101,11 @@ extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration)
-    throws ParameterException {
-        if ( configuration.getParameter("use-store", "basket").equalsIgnoreCase("basket") ) {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
+        if ( configuration.getProperty("use-store", "basket").equalsIgnoreCase("basket") ) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

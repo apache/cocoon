@@ -38,10 +38,13 @@ public class CopletDefinition implements Serializable {
     /** The unique identifier. */
     protected final String id;
 
+    /** The default title of the coplet. */
     protected String title;
 
+    /** The type of this coplet (cocoon, jsr168, wsrp etc.). */
     protected CopletType copletType;
 
+    /** Attributes (configuration) of this coplet. */
     protected final Map attributes = new HashMap();
 
     protected String allowedRoles;

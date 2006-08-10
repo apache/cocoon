@@ -18,13 +18,14 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 
 /**
@@ -51,7 +52,7 @@ public final class RendererAspectChain {
     /** The list of the configuration obejcts for each renderer aspects. */
     protected List configs = new ArrayList(3);
 
-    public void configure(ServiceSelector selector, Configuration conf) 
+    public void configure(ServiceManager manager, Configuration conf) 
     throws ConfigurationException {
         if ( conf != null ) {
             final Configuration[] aspectConfigs = conf.getChildren("aspect");
@@ -59,14 +60,13 @@ public final class RendererAspectChain {
                 final Configuration current = aspectConfigs[i];
                 final String role = current.getAttribute("type");
                 try {
-                    RendererAspect rAspect = (RendererAspect) selector.select(role);
+                    RendererAspect rAspect = (RendererAspect) manager.lookup(RendererAspect.ROLE + '/' + role);
                     this.aspects.add(rAspect);               
-                    Parameters aspectConfiguration = Parameters.fromConfiguration(current);
+                    Properties aspectConfiguration = Parameters.toProperties(Parameters.fromConfiguration(current));
                     Object compiledConf = rAspect.prepareConfiguration(aspectConfiguration);
                     this.configs.add(compiledConf);
-
-                } catch (ParameterException pe) {
-                    throw new ConfigurationException("Unable to configure renderer aspect: " + role, pe);
+                } catch (PortalException pe) {
+                    throw new ConfigurationException("Unable to configure renderer: " + role, pe);
                 } catch (ServiceException se) {
                     throw new ConfigurationException("Unable to lookup renderer aspect: " + role, se);
                 }
@@ -84,10 +84,10 @@ public final class RendererAspectChain {
         return this.configs.iterator();
     }
 
-    public void dispose(ServiceSelector selector) {
+    public void dispose(ServiceManager manager) {
         Iterator i = this.aspects.iterator();
         while (i.hasNext()) {
-            selector.release(i.next()); 
+            manager.release(i.next()); 
         }
         this.aspects.clear();
     }

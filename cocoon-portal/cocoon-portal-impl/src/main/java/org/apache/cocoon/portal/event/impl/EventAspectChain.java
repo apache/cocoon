@@ -23,7 +23,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.portal.event.aspect.EventAspect;
 
 /**
  *
@@ -35,7 +36,7 @@ public final class EventAspectChain {
 
     private List configs = new ArrayList();
 
-    public void configure(ServiceSelector selector, Configuration conf) 
+    public void configure(ServiceManager manager, Configuration conf) 
     throws ConfigurationException {
         if ( conf != null ) {
             final Configuration[] aspectConfigs = conf.getChildren("aspect");
@@ -44,8 +45,8 @@ public final class EventAspectChain {
                     final Configuration current = aspectConfigs[i];
                     final String role = current.getAttribute("type");
                     try {
-                        this.aspects.add(selector.select(role));
-                        this.configs.add(Parameters.fromConfiguration(current));
+                        this.aspects.add(manager.lookup(EventAspect.ROLE + '/' + role));
+                        this.configs.add(Parameters.toProperties(Parameters.fromConfiguration(current)));
                     } catch (ServiceException se) {
                         throw new ConfigurationException("Unable to lookup aspect " + role, se);
                     }
@@ -64,10 +65,10 @@ public final class EventAspectChain {
         return this.configs.iterator();
     }
 
-    public void dispose(ServiceSelector selector) {
+    public void dispose(ServiceManager manager) {
         Iterator i = this.aspects.iterator();
         while (i.hasNext()) {
-            selector.release(i.next()); 
+            manager.release(i.next()); 
         }
         this.aspects.clear();
     }

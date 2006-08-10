@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.coplet;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,18 +51,21 @@ public final class CopletInstance implements Serializable {
     public final static int SIZE_MAXIMIZED   = 2;
     public final static int SIZE_FULLSCREEN = 3;
 
+    /** The unique identifier.
+     * @see PortalUtils#testId(String)
+     */
     protected final String id;
 
     /** The corresponding {@link CopletDefinition}. */
 	protected CopletDefinition copletDefinition;
 
     /** Persisted attributes. */
-    protected Map attributes = new HashMap();
+    protected Map attributes = Collections.EMPTY_MAP;
 
     /** Temporary attributes are not persisted. */
-    transient protected Map temporaryAttributes = new HashMap();
+    transient protected Map temporaryAttributes = Collections.EMPTY_MAP;
 
-    /** The title of the coplet. */
+    /** The title of the coplet instance (if user specific). */
     protected String title;
 
     /** The size of the coplet. */
@@ -110,6 +114,9 @@ public final class CopletInstance implements Serializable {
     }
 
     public void setAttribute(String key, Object value) {
+        if ( this.attributes.size() == 0 ) {
+            this.attributes = new HashMap();
+        }
         this.attributes.put(key, value);
     }
 
@@ -126,6 +133,9 @@ public final class CopletInstance implements Serializable {
     }
 
     public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
         this.temporaryAttributes.put(key, value);
     }
 
@@ -159,8 +169,12 @@ public final class CopletInstance implements Serializable {
         CopletInstance clone = new CopletInstance(this.id);
 
         clone.copletDefinition = this.copletDefinition;
-        clone.attributes = new HashMap(this.attributes);
-        clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
+        if ( this.attributes.size() > 0 ) {
+            clone.attributes = new HashMap(this.attributes);
+        }
+        if ( this.temporaryAttributes.size() > 0 ) {
+            clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
+        }
 
         return clone;
     }

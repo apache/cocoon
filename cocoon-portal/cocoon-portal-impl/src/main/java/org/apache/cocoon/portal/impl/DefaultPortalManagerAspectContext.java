@@ -16,7 +16,6 @@
 package org.apache.cocoon.portal.impl;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.cocoon.ProcessingException;
@@ -36,16 +35,13 @@ public final class DefaultPortalManagerAspectContext
     implements PortalManagerAspectRenderContext, PortalManagerAspectPrepareContext {
 
     private final PortalService service;
-    private final Map objectModel;
     private Iterator iterator;
     private Iterator configIterator;
     private Properties config;
 
     public DefaultPortalManagerAspectContext(PortalManagerAspectChain chain,
-                                             PortalService service,
-                                             Map objectModel) {
+                                             PortalService service) {
         this.service = service;
-        this.objectModel = objectModel;
         this.iterator = chain.getIterator();
         this.configIterator = chain.getConfigIterator();
     }
@@ -79,12 +75,5 @@ public final class DefaultPortalManagerAspectContext
             final PortalManagerAspect aspect = (PortalManagerAspect) iterator.next();
             aspect.render(this, this.service, ch, properties);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#getObjectModel()
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
     }
 }

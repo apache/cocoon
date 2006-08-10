@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -93,12 +93,12 @@ public final class ParameterAspect extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.tagName = configuration.getParameter("tag-name", "parameter");
+        pc.tagName = configuration.getProperty("tag-name", "parameter");
         return pc;
     }
 }

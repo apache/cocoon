@@ -19,7 +19,6 @@ import java.util.StringTokenizer;
 import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -67,9 +66,8 @@ public class RequestParameterEventAspect
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
 	public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
-        final Parameters config = context.getAspectParameters();
-        final String requestParameterNames = config.getParameter("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
+        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
+        final String requestParameterNames = context.getAspectProperties().getProperty("parameter-name", LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME);
         boolean processedDefault = false;
 
         StringTokenizer tokenizer = new StringTokenizer(requestParameterNames, ", ");

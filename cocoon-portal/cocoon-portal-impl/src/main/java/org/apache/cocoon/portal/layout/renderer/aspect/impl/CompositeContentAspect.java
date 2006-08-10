@@ -17,15 +17,16 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -175,17 +176,17 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.tagName = configuration.getParameter("tag-name", "composite");
-        pc.rootTag = configuration.getParameterAsBoolean("root-tag", true);
-        pc.itemTag = configuration.getParameterAsBoolean("item-tag", true);
-        pc.itemTagName = configuration.getParameter("item-tag-name", ITEM_STRING);
-        pc.rootTagId = configuration.getParameter("root-tag-id", null);
-        pc.rootTagClass = configuration.getParameter("root-tag-class", null);
+        pc.tagName = configuration.getProperty("tag-name", "composite");
+        pc.rootTag = BooleanUtils.toBoolean(configuration.getProperty("root-tag", "true"));
+        pc.itemTag = BooleanUtils.toBoolean(configuration.getProperty("item-tag", "true"));
+        pc.itemTagName = configuration.getProperty("item-tag-name", ITEM_STRING);
+        pc.rootTagId = configuration.getProperty("root-tag-id", null);
+        pc.rootTagClass = configuration.getProperty("root-tag-class", null);
         return pc;
     }
 

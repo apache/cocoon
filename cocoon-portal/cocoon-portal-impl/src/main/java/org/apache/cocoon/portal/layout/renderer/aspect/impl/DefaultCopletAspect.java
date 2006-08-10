@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
@@ -63,20 +61,8 @@ public class DefaultCopletAspect extends AbstractAspect {
         CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
 
         final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-        CopletAdapter copletAdapter = null;
-        ServiceSelector adapterSelector = null;
-        try {
-            adapterSelector = (ServiceSelector) this.manager.lookup(CopletAdapter.ROLE + "Selector");
-            copletAdapter = (CopletAdapter) adapterSelector.select(adapterName);
-            copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
-        } catch (ServiceException ce) {
-            throw new SAXException("Unable to lookup component.", ce);
-        } finally {
-            if (null != adapterSelector) {
-                adapterSelector.release(copletAdapter);
-            }
-            this.manager.release(adapterSelector);
-        }
+        CopletAdapter copletAdapter = service.getCopletAdapter(adapterName);
+        copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
 
         XMLUtils.endElement(handler, "content");
         rendererContext.invokeNext(layout, service, handler);

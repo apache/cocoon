@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletDefinition;
 import org.apache.cocoon.portal.coplet.CopletInstance;
@@ -65,7 +65,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
             // display the portlets specified with the parameter. Otherwise
             // we show all portlets
             final List portletNames = new ArrayList();
-            final Request r = ObjectModelHelper.getRequest(this.portalService.getObjectModel());
+            final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
             final String[] values = r.getParameterValues("portletName");
             if ( values != null && values.length > 0 ) {
                 for(int i=0; i<values.length; i++) {
@@ -125,7 +125,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
         if ( event instanceof UserIsAccessingEvent ) {
             if ( "test".equals(event.getPortalUser().getUserName()) ) {
                 final List portletNames = new ArrayList();
-                final Request r = ObjectModelHelper.getRequest(this.portalService.getObjectModel());
+                final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
                 final String[] values = r.getParameterValues("portletName");
                 if ( values != null && values.length > 0 ) {
                     for(int i=0; i<values.length; i++) {

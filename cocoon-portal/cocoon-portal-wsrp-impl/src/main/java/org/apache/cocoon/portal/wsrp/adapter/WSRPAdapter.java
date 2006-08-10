@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import oasis.names.tc.wsrp.v1.types.BlockingInteractionResponse;
 import oasis.names.tc.wsrp.v1.types.LocalizedString;
 import oasis.names.tc.wsrp.v1.types.MarkupContext;
@@ -43,8 +46,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
@@ -284,7 +285,7 @@ public class WSRPAdapter
             }
         }
         coplet.setTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_KEY, portletKey);
-        final Session session = ObjectModelHelper.getRequest(this.portalService.getObjectModel()).getSession();
+        final HttpSession session = this.portalService.getProcessInfoProvider().getRequest().getSession();
         final String portletInstanceKey = this.getPortletInstanceKey(portletKey, coplet, session.getId());
         coplet.setTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY, portletInstanceKey);
 
@@ -600,8 +601,7 @@ public class WSRPAdapter
             WSRPPortlet wsrpPortlet = consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
             User user = (User) coplet.getTemporaryAttribute(ATTRIBUTE_NAME_USER);
             
-            org.apache.cocoon.environment.Request requestObject = ObjectModelHelper.getRequest(service.getObjectModel());
-            java.util.Enumeration formParameter = requestObject.getParameterNames();
+            final HttpServletRequest requestObject = service.getProcessInfoProvider().getRequest();
 
             Request request = new RequestImpl();
             String portletMode = requestObject.getParameter(Constants.PORTLET_MODE);
@@ -642,10 +642,10 @@ public class WSRPAdapter
                 }
             }
             if (requestObject.getParameter(Constants.URL_TYPE).equals(Constants.URL_TYPE_BLOCKINGACTION)) {
-            // performBlockingInteraction()
-                String parameter;
+                // performBlockingInteraction()
+                final Enumeration formParameter = requestObject.getParameterNames();
                 while (formParameter.hasMoreElements()) {
-                    parameter = (String) formParameter.nextElement();
+                    final String parameter = (String) formParameter.nextElement();
                     request.addFormParameter(parameter, requestObject.getParameter(parameter));
                 }
                 performBlockingInteraction(wsrpPortlet, windowSession, user, request);

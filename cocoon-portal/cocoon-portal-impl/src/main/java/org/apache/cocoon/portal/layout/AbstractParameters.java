@@ -16,6 +16,7 @@
 package org.apache.cocoon.portal.layout;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.collections.map.LinkedMap;
@@ -27,10 +28,10 @@ import org.apache.commons.collections.map.LinkedMap;
 public abstract class AbstractParameters 
     implements Cloneable, Serializable {
 
-    protected final Map parameters = new LinkedMap();
+    protected Map parameters = Collections.EMPTY_MAP;
 
     public final Map getParameters() {
-        return parameters;
+        return this.parameters;
     }
 
     /**
@@ -48,6 +49,9 @@ public abstract class AbstractParameters
      * @param value The value.
      */
     public void setParameter(String key, String value) {
+        if ( this.parameters.size() == 0 ) {
+            this.parameters = new LinkedMap();
+        }
         this.parameters.put(key, value);
     }
 
@@ -66,8 +70,9 @@ public abstract class AbstractParameters
     protected Object clone() throws CloneNotSupportedException {
         final AbstractParameters clone = (AbstractParameters)super.clone();
 
-        clone.parameters.putAll(this.parameters);
-
+        if ( this.parameters.size() > 0 ) {
+            clone.parameters = new LinkedMap(this.parameters);
+        }
         return clone;
     }
 }

@@ -19,9 +19,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.layout.ChangeTabEvent;
 import org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent;
@@ -34,6 +34,7 @@ import org.apache.cocoon.portal.layout.LayoutFeatures.RenderInfo;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -283,20 +284,20 @@ public class TabContentAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException { 
         TabPreparedConfiguration pc = new TabPreparedConfiguration();
         pc.takeValues((PreparedConfiguration)super.prepareConfiguration(configuration));
-        pc.childTagName = configuration.getParameter("child-tag-name", "");
+        pc.childTagName = configuration.getProperty("child-tag-name", "");
         if (!pc.childTagName.equals("")) {
             pc.showAllNav = true;
         } else {
-            pc.showAllNav = configuration.getParameterAsBoolean("show-all-nav", false);
+            pc.showAllNav = BooleanUtils.toBoolean(configuration.getProperty("show-all-nav", "false"));
         }
-        pc.includeSelected = configuration.getParameterAsBoolean("include-selected", false);
-        pc.useNames = configuration.getParameterAsBoolean("use-names", false);
+        pc.includeSelected = BooleanUtils.toBoolean(configuration.getProperty("include-selected", "false"));
+        pc.useNames = BooleanUtils.toBoolean(configuration.getProperty("use-names", "false"));
         return pc;
     }
 }
