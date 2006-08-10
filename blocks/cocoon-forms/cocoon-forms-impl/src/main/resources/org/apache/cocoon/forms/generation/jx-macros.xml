@@ -27,7 +27,7 @@
         ft:form
     -->
     <jx:macro name="form" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale')}"/>
+      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale','')}"/>
       <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$localeSitemapParameter)}"/>
       <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
@@ -43,7 +43,7 @@
         ft:form-template: preferred syntax is now "ft:form" (we know we're in a template)
     -->
     <jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale')}"/>
+      <jx:set var="localeSitemapParameter" value="${cocoon.parameters.getParameter('locale', '')}"/>
       <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer,$cocoon/request,$localeSitemapParameter)}"/>
       <jx:set var="form" value="${cformsHelper.getForm(CocoonFormsInstance, cocoon.parameters['attribute-name'])}"/>
       <jx:if test="${cformsHelper.isVisible(form)}">
