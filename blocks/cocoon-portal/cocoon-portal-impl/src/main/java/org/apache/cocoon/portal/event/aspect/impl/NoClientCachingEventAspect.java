@@ -40,7 +40,7 @@ public class NoClientCachingEventAspect
 	 */
 	public void process(EventAspectContext context, PortalService service) {
 
-        final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
+        final Response response = ObjectModelHelper.getResponse( service.getProcessInfoProvider().getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect;
 
-import java.util.Map;
-
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.xml.sax.ContentHandler;
@@ -41,9 +39,4 @@ public interface RendererAspectContext {
      * Get the "compiled" configuration of the aspect.
      */
     Object getAspectConfiguration();
-
-    /**
-     * Get the object model
-     */
-    Map getObjectModel();
 }

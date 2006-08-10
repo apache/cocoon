@@ -78,7 +78,7 @@ public abstract class AbstractContentEventAspect
      * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
      */
     public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
+        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
         String[] values = request.getParameterValues(this.getRequestParameterName());
         if (values != null) {
             final EventManager publisher = service.getEventManager();

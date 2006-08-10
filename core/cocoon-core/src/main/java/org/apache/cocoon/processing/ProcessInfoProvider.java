@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.processing;
 
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +30,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface ProcessInfoProvider {
 
+    String ROLE = ProcessInfoProvider.class.getName();
+
     HttpServletRequest getRequest();
 
     HttpServletResponse getResponse();
 
     ServletContext getServletContext();
+
+    Map getObjectModel();
 }

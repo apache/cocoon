@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal;
 
-import java.util.Map;
 import java.util.Properties;
 
 import org.xml.sax.ContentHandler;
@@ -38,9 +37,4 @@ public interface PortalManagerAspectRenderContext {
      * Get the {@link Properties} of the aspect.
      */
     Properties getAspectProperties();
-
-    /**
-     * Get the object model.
-     */
-    Map getObjectModel();
 }

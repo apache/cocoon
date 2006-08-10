@@ -15,8 +15,9 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.xml.sax.ContentHandler;
@@ -51,6 +52,6 @@ public interface RendererAspect {
      * The "compiled" configuration is available during streaming via the context object.
      * This method can also be used for validating the configuration.
      */
-    Object prepareConfiguration(Parameters configuration)
-    throws ParameterException;
+    Object prepareConfiguration(Properties configuration)
+    throws PortalException;
 }

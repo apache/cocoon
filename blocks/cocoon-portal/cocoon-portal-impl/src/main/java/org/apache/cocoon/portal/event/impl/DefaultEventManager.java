@@ -27,7 +27,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
@@ -35,7 +34,6 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Receiver;
-import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 
 /**
@@ -62,8 +60,6 @@ public class DefaultEventManager
     protected Configuration configuration;
 
     protected EventAspectChain chain;
-
-    protected ServiceSelector aspectSelector;
 
     /** Introspected receiver classes. */
     protected Map receiverClasses = new HashMap();
@@ -92,10 +88,9 @@ public class DefaultEventManager
     public void dispose() {
         if (this.manager != null) {
             if ( this.chain != null) {
-                this.chain.dispose( this.aspectSelector );
+                this.chain.dispose( this.manager );
+                this.chain = null;
             }
-            this.manager.release( this.aspectSelector );
-            this.aspectSelector = null;
         }
         super.dispose();
     }
@@ -120,13 +115,10 @@ public class DefaultEventManager
     throws ProcessingException {
         if ( this.configuration != null ) {
             try {
-                this.aspectSelector = (ServiceSelector) this.manager.lookup( EventAspect.ROLE+"Selector");
                 this.chain = new EventAspectChain();
-                this.chain.configure(this.aspectSelector, this.configuration.getChild("event-aspects"));
+                this.chain.configure(this.manager, this.configuration.getChild("event-aspects"));
             } catch (ConfigurationException ce) {
                 throw new ProcessingException("Unable configure component.", ce);
-            } catch (ServiceException ce) {
-                throw new ProcessingException("Unable to lookup component.", ce);
             }
             this.configuration = null;
         }
@@ -136,7 +128,6 @@ public class DefaultEventManager
             converter = (EventConverter) this.manager.lookup(EventConverter.ROLE);
 
             // Invoke aspects
-            eventContext.setObjectModel(this.getObjectModel());
             eventContext.setEventConverter(converter);
             eventContext.invokeNext( this.portalService );
 

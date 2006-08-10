@@ -17,6 +17,8 @@ package org.apache.cocoon.portal.layout;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cocoon.portal.util.PortalUtils;
@@ -58,7 +60,7 @@ public abstract class Layout extends AbstractParameters {
     protected final String id;
 
     /** The temporary attributes. */
-    transient protected Map temporaryAttributes = new LinkedMap();
+    transient protected Map temporaryAttributes = Collections.EMPTY_MAP;
 
     /** Is this layout object static? */
     protected boolean isStatic;
@@ -122,6 +124,9 @@ public abstract class Layout extends AbstractParameters {
      * @param value The value.
      */
     public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
         this.temporaryAttributes.put(key, value);
     }
 
@@ -175,7 +180,7 @@ public abstract class Layout extends AbstractParameters {
 
     /**
      * Make a copy of this layout object and of all it's children.
-     * This includes copies of items and copletinstancedatas.
+     * This includes copies of items and coplet instances.
      */
     public Layout copy() {
         try {
@@ -205,13 +210,17 @@ public abstract class Layout extends AbstractParameters {
             final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.type}); 
 
             // clone fields from AbstractParameters
-            clone.parameters.putAll(this.parameters);
+            if ( this.parameters.size() > 0 ) {
+                clone.parameters = new LinkedMap(this.parameters);
+            }
             
             // we don't clone the parent; we just set it to null
             clone.parent = null;
             clone.rendererName = this.rendererName;
             clone.isStatic = this.isStatic;
-            clone.temporaryAttributes = new LinkedMap(this.temporaryAttributes);
+            if ( this.temporaryAttributes.size() > 0 ) {
+                clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
+            }
 
             return clone;
         } catch (NoSuchMethodException e) {

@@ -92,7 +92,7 @@ public class HistoryAspect
                     ContentHandler handler)
     throws SAXException {
         if ( layout.getId() != null ) {
-            final Request request = ObjectModelHelper.getRequest(rendererContext.getObjectModel());
+            final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
             final Session session = request.getSession(false);
             if ( session != null ) {
                 List history = (List)session.getAttribute("portal-history");

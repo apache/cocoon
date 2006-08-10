@@ -373,7 +373,7 @@ public class PortletAdapter
 
         // do we already have an environment?
         // if not, create one
-        final Map objectModel = aspectContext.getObjectModel();
+        final Map objectModel = service.getProcessInfoProvider().getObjectModel();
 
         PortletURLProviderImpl event = (PortletURLProviderImpl) objectModel.get("portlet-event");
         if ( event != null ) {
@@ -405,7 +405,7 @@ public class PortletAdapter
                        ContentHandler ch,
                        Properties properties)
     throws SAXException {
-        final Map objectModel = aspectContext.getObjectModel();
+        final Map objectModel = service.getProcessInfoProvider().getObjectModel();
 
         // don't generate a response, if we issued a redirect
         if (objectModel.remove("portlet-event") == null) {

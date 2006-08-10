@@ -16,7 +16,6 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
@@ -37,7 +36,6 @@ public final class DefaultRendererContext implements RendererAspectContext {
     private Iterator iterator;
     private Iterator configIterator;
     private Object config;
-    private Map objectModel;
 
     public DefaultRendererContext(RendererAspectChain chain) {
         this.iterator = chain.getIterator();
@@ -64,19 +62,4 @@ public final class DefaultRendererContext implements RendererAspectContext {
 	public Object getAspectConfiguration() {
 		return this.config;
 	}
-
-    /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext#getObjectModel()
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
-    }
-
-    /**
-     * Set the object model
-     * @param map The object model
-     */
-    public void setObjectModel(Map map) {
-        this.objectModel = map;
-    }
 }

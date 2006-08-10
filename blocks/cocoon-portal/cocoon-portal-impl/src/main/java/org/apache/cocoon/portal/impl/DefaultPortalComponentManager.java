@@ -31,6 +31,7 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * Default {@link PortalComponentManager} implementation.
@@ -67,13 +68,18 @@ public class DefaultPortalComponentManager
     /** The portal manager. */
     protected PortalManager portalManager;
 
+    /** The process info provider. */
+    protected ProcessInfoProvider processInfoProvider;
+
     /**
      * Create a new portal component manager. Each portal has a own
      * component manager that manages all central components for this
      * portal.
      */
-    public DefaultPortalComponentManager(ServiceManager manager) {
+    public DefaultPortalComponentManager(ServiceManager manager)
+    throws ServiceException {
         this.manager = manager;
+        this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
     }
 
     /**
@@ -123,12 +129,8 @@ public class DefaultPortalComponentManager
      */
     public void dispose() {
         if (this.manager != null) {
-            Iterator i = this.renderers.values().iterator();
-            while (i.hasNext()) {
-                this.manager.release(i.next());
-            }
             this.renderers.clear();
-            i = this.copletAdapters.values().iterator();
+            Iterator i = this.copletAdapters.values().iterator();
             while (i.hasNext()) {
                 this.manager.release(i.next());
             }
@@ -145,6 +147,8 @@ public class DefaultPortalComponentManager
             this.eventManager = null;
             this.manager.release(this.portalManager);
             this.portalManager = null;
+            this.manager.release(this.processInfoProvider);
+            this.processInfoProvider = null;
             this.manager = null;
         }
     }
@@ -153,14 +157,9 @@ public class DefaultPortalComponentManager
      * @see org.apache.cocoon.portal.PortalComponentManager#getRenderer(java.lang.String)
      */
     public Renderer getRenderer(String name) {
-        Renderer o = (Renderer) this.renderers.get( name );
+        final Renderer o = (Renderer) this.renderers.get( name );
         if ( o == null ) {
-            try {
-                o = (Renderer) this.manager.lookup( Renderer.ROLE + '/' + name );
-                this.renderers.put( name, o );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup renderer with name " + name, e);
-            }
+            throw new PortalRuntimeException("Unable to lookup renderer with name " + name);
         }
         return o;
     }
@@ -221,5 +220,19 @@ public class DefaultPortalComponentManager
             }
         }
         return this.portalManager;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#register(String, org.apache.cocoon.portal.layout.renderer.Renderer)
+     */
+    public void register(String name, Renderer renderer) {
+        this.renderers.put(name, renderer);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#getProcessInfoProvider()
+     */
+    public ProcessInfoProvider getProcessInfoProvider() {
+        return this.processInfoProvider;
     }
 }

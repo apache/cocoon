@@ -33,6 +33,9 @@ import org.xml.sax.SAXException;
  */
 public class DefaultLinkRenderer extends AbstractRenderer {
 
+    /**
+     * @see org.apache.cocoon.portal.layout.renderer.impl.AbstractRenderer#process(org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     */
     public void process(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException {
         if (layout instanceof LinkLayout) {
