@@ -24,7 +24,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ajax.AjaxHelper;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalManager;
@@ -74,8 +73,7 @@ public class PortalManagerImpl
     throws ProcessingException {
         DefaultPortalManagerAspectContext aspectContext =
             new DefaultPortalManagerAspectContext(this.chain,
-                                                  this.portalService,
-                                                  ContextHelper.getObjectModel(this.context));
+                                                  this.portalService);
         aspectContext.invokeNext();
     }
 
@@ -86,8 +84,7 @@ public class PortalManagerImpl
     throws SAXException {
         DefaultPortalManagerAspectContext aspectContext =
             new DefaultPortalManagerAspectContext(this.chain,
-                                                  this.portalService,
-                                                  ContextHelper.getObjectModel(this.context));
+                                                  this.portalService);
         aspectContext.invokeNext(contentHandler, properties);
 	}
 
@@ -121,7 +118,7 @@ public class PortalManagerImpl
         final ProfileManager profileManager = this.portalService.getProfileManager();
 
         // test for ajax request
-        final Request req = ObjectModelHelper.getRequest(renderContext.getObjectModel());
+        final Request req = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
         if ( AjaxHelper.isAjaxRequest(req) ) {
             Layout rootLayout = profileManager.getPortalLayout(null, null);
             ch.startDocument();

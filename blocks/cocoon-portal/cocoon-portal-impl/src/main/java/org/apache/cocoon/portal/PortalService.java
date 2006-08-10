@@ -17,7 +17,6 @@ package org.apache.cocoon.portal;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This is the central component in the portal. It holds the configuration
@@ -95,12 +94,6 @@ public interface PortalService extends PortalComponentManager {
     Iterator getTemporaryAttributeNames();
 
     /**
-     * Return the component manager for the current portal.
-     * @deprecated Starting with 2.2, this service extends the PortalComponentManager.
-     */
-    PortalComponentManager getComponentManager();
-
-    /**
      * Change the default layout key for most functions
      */
     void setDefaultLayoutKey(String layoutKey);
@@ -114,12 +107,6 @@ public interface PortalService extends PortalComponentManager {
      * Return all skins
      */
     List getSkinDescriptions();
-
-    /**
-     * Return the current object model.
-     * @since 2.1.8
-     */
-    Map getObjectModel();
 
     /**
      * Get a configuration value.

@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -41,7 +40,6 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portal.LinkService;
-import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
@@ -51,6 +49,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.SkinDescription;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -213,13 +212,6 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#getComponentManager()
-     */
-    public PortalComponentManager getComponentManager() {
-        return this.portalComponentManager;
-    }
-
-    /**
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context aContext) throws ContextException {
@@ -330,13 +322,6 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#getObjectModel()
-     */
-    public Map getObjectModel() {
-        return ContextHelper.getObjectModel(this.context);
-    }
-
-    /**
      * @see org.apache.cocoon.portal.PortalService#getConfiguration(java.lang.String, java.lang.String)
      */
     public String getConfiguration(String key, String defaultValue) {
@@ -361,55 +346,69 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalComponentManager#getCopletAdapter(java.lang.String)
      */
     public CopletAdapter getCopletAdapter(String name) {
-        return this.getComponentManager().getCopletAdapter(name);
+        return this.portalComponentManager.getCopletAdapter(name);
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getCopletFactory()
      */
     public CopletFactory getCopletFactory() {
-        return this.getComponentManager().getCopletFactory();
+        return this.portalComponentManager.getCopletFactory();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getEventManager()
      */
     public EventManager getEventManager() {
-        return this.getComponentManager().getEventManager();
+        return this.portalComponentManager.getEventManager();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getLayoutFactory()
      */
     public LayoutFactory getLayoutFactory() {
-        return this.getComponentManager().getLayoutFactory();
+        return this.portalComponentManager.getLayoutFactory();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getLinkService()
      */
     public LinkService getLinkService() {
-        return this.getComponentManager().getLinkService();
+        return this.portalComponentManager.getLinkService();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getPortalManager()
      */
     public PortalManager getPortalManager() {
-        return this.getComponentManager().getPortalManager();
+        return this.portalComponentManager.getPortalManager();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getProfileManager()
      */
     public ProfileManager getProfileManager() {
-        return this.getComponentManager().getProfileManager();
+        return this.portalComponentManager.getProfileManager();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalComponentManager#getRenderer(java.lang.String)
      */
     public Renderer getRenderer(String name) {
-        return this.getComponentManager().getRenderer(name);
+        return this.portalComponentManager.getRenderer(name);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#register(java.lang.String, org.apache.cocoon.portal.layout.renderer.Renderer)
+     */
+    public void register(String name, Renderer renderer) {
+        this.portalComponentManager.register(name, renderer);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.PortalComponentManager#getProcessInfoProvider()
+     */
+    public ProcessInfoProvider getProcessInfoProvider() {
+        return this.portalComponentManager.getProcessInfoProvider();
     }
 }

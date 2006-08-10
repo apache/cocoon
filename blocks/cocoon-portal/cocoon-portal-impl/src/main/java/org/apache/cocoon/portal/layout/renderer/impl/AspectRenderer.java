@@ -19,20 +19,14 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultRendererContext;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.RendererAspectChain;
 import org.xml.sax.ContentHandler;
@@ -53,22 +47,17 @@ import org.xml.sax.SAXException;
  */
 public class AspectRenderer
     extends AbstractLogEnabled
-    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe, Contextualizable {
+    implements Renderer, Serviceable, Configurable, Disposable, ThreadSafe {
 
     protected ServiceManager manager;
 
     protected RendererAspectChain chain;
 
-    protected ServiceSelector aspectSelector;
-
-    protected Context context;
-    
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
-        this.aspectSelector = (ServiceSelector) this.manager.lookup( RendererAspect.ROLE+"Selector");
     }
 
     /**
@@ -76,7 +65,6 @@ public class AspectRenderer
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         DefaultRendererContext renderContext = new DefaultRendererContext(this.chain);
-        renderContext.setObjectModel(ContextHelper.getObjectModel(this.context));
         renderContext.invokeNext(layout, service, handler);
     }
 
@@ -85,7 +73,7 @@ public class AspectRenderer
 	 */
 	public void configure(Configuration conf) throws ConfigurationException {
         this.chain = new RendererAspectChain();
-        this.chain.configure(this.aspectSelector, conf.getChild("aspects"));
+        this.chain.configure(this.manager, conf.getChild("aspects"));
 	}
 
 	/**
@@ -94,18 +82,10 @@ public class AspectRenderer
 	public void dispose() {
 		if (this.manager != null) {
             if ( this.chain != null) {
-                this.chain.dispose( this.aspectSelector );
+                this.chain.dispose( this.manager );
+                this.chain = null;
             }
-            this.manager.release( this.aspectSelector );
-            this.aspectSelector = null;
             this.manager = null;
 		}
 	}
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
-    }
 }

@@ -15,9 +15,8 @@
  */
 package org.apache.cocoon.portal.event.aspect;
 
-import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.EventConverter;
 
@@ -33,17 +32,12 @@ public interface EventAspectContext {
     void invokeNext(PortalService service);
 
     /** 
-     * Get the {@link Parameters} of the aspect.
+     * Get the {@link Properties} of the aspect.
      */
-    Parameters getAspectParameters();
+    Properties getAspectProperties();
 
     /**
      * Get the encoder
      */
     EventConverter getEventConverter();
-
-    /**
-     * Get the object model
-     */
-    Map getObjectModel();
 }

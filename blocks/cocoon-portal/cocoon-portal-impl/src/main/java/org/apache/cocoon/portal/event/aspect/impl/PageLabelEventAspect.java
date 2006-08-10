@@ -74,7 +74,7 @@ public class PageLabelEventAspect
 	public void process(EventAspectContext context, PortalService service) {
         if (this.labelManager != null) {
             final EventManager publisher = service.getEventManager();
-            final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
+            final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
             final String parameterName = this.labelManager.getRequestParameterName();
 
             String label = request.getParameter(parameterName);

@@ -53,7 +53,7 @@ public class ActionCounterEventAspect
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
 	public void process(EventAspectContext context, PortalService service) {
-        final String requestParameterName = context.getAspectParameters().getParameter("parameter-name", this.parameterName);
+        final String requestParameterName = context.getAspectProperties().getProperty("parameter-name", this.parameterName);
 
         int actionCount;
 
@@ -67,7 +67,7 @@ public class ActionCounterEventAspect
             service.setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
         }
 
-        final Request request = ObjectModelHelper.getRequest( context.getObjectModel() );
+        final Request request = ObjectModelHelper.getRequest( service.getProcessInfoProvider().getObjectModel() );
         String value = request.getParameter( requestParameterName );
         if ( value != null && actionCount > 0) {
             // get number
@@ -85,7 +85,7 @@ public class ActionCounterEventAspect
         }
         service.getLinkService().addUniqueParameterToLink( requestParameterName, String.valueOf(actionCount));
 
-        final Response response = ObjectModelHelper.getResponse( context.getObjectModel() );
+        final Response response = ObjectModelHelper.getResponse( service.getProcessInfoProvider().getObjectModel() );
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");

@@ -41,7 +41,7 @@ public class WSRPEventAspect implements EventAspect, ThreadSafe {
      * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
      */
     public void process(EventAspectContext context, PortalService service) {
-        final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
+        final Request request = ObjectModelHelper.getRequest(service.getProcessInfoProvider().getObjectModel());
         final String[] values = request.getParameterValues("cocoon-wsrpevent");
         if ( values != null && values.length == 1 ) {
             // create a wsrp event, first build map of parameters

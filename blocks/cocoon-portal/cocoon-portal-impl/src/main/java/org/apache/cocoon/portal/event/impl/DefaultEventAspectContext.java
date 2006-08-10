@@ -16,9 +16,8 @@
 package org.apache.cocoon.portal.event.impl;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
@@ -33,9 +32,8 @@ public final class DefaultEventAspectContext
 
     private Iterator iterator;
     private Iterator configIterator;
-    private Parameters config;
+    private Properties config;
 
-    private Map objectModel;
     private EventConverter converter;
 
     public DefaultEventAspectContext(EventAspectChain chain) {
@@ -48,7 +46,7 @@ public final class DefaultEventAspectContext
 	 */
 	public void invokeNext(PortalService service) {
 		if (iterator.hasNext()) {
-            this.config = (Parameters) this.configIterator.next();
+            this.config = (Properties) this.configIterator.next();
             final EventAspect aspect = (EventAspect) iterator.next();
             aspect.process( this, service );
 		}
@@ -56,9 +54,9 @@ public final class DefaultEventAspectContext
 	}
 
 	/**
-	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#getAspectParameters()
+	 * @see org.apache.cocoon.portal.event.aspect.EventAspectContext#getAspectProperties()
 	 */
-	public Parameters getAspectParameters() {
+	public Properties getAspectProperties() {
 		return this.config;
 	}
 
@@ -69,24 +67,10 @@ public final class DefaultEventAspectContext
         return this.converter;
     }
 
-    /**
-     * Get the object model
-     */
-    public Map getObjectModel() {
-        return this.objectModel;
-    }
-
 	/**
 	 * @param converter
 	 */
 	public void setEventConverter(EventConverter converter) {
 		this.converter = converter;
-	}
-
-	/**
-	 * @param map
-	 */
-	public void setObjectModel(Map map) {
-		objectModel = map;
 	}
 }

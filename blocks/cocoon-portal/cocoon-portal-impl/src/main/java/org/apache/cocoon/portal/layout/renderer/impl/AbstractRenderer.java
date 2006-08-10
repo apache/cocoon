@@ -22,7 +22,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
@@ -45,7 +44,6 @@ public abstract class AbstractRenderer
     extends AbstractLogEnabled
     implements Renderer, Serviceable, Disposable, ThreadSafe {
 
-    protected ServiceSelector rendererSelector;
     protected ServiceManager manager;
 
     /**
@@ -67,11 +65,7 @@ public abstract class AbstractRenderer
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if (null != this.manager) {
-            this.manager.release(this.rendererSelector);
-            this.manager = null;
-            this.rendererSelector = null;
-        }
+        this.manager = null;
     }
 
     /**

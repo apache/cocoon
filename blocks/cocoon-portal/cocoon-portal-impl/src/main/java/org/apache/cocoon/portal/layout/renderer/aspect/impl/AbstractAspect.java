@@ -15,8 +15,9 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.Properties;
+
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.impl.AbstractComponent;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
@@ -31,10 +32,10 @@ public abstract class AbstractAspect
     implements RendererAspect {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration) 
+    throws PortalException { 
         return configuration;
     }
 

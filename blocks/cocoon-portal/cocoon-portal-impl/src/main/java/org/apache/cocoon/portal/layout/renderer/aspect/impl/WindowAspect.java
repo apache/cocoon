@@ -17,9 +17,9 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
 import org.apache.cocoon.portal.coplet.CopletInstance;
@@ -35,6 +35,7 @@ import org.apache.cocoon.portal.layout.LayoutFeatures;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -264,13 +265,13 @@ public final class WindowAspect extends AbstractAspect {
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.tagName = configuration.getParameter("tag-name", "window");
-        pc.rootTag = configuration.getParameterAsBoolean("root-tag", true);
+        pc.tagName = configuration.getProperty("tag-name", "window");
+        pc.rootTag = BooleanUtils.toBoolean(configuration.getProperty("root-tag", "true"));
         return pc;
     }
 }

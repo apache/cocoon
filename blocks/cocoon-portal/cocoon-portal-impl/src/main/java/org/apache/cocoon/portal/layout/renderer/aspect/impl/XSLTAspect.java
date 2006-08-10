@@ -21,12 +21,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -37,6 +37,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
@@ -92,7 +93,7 @@ public class XSLTAspect
     protected List variables = new ArrayList();
 
     /** Additional parameters passed to the stylesheet. */
-    protected Parameters parameters;
+    protected Map parameters;
 
     /** Source resolver for resolving the stylesheets. */
     protected SourceResolver resolver;
@@ -103,7 +104,13 @@ public class XSLTAspect
     public void configure(Configuration config) throws ConfigurationException {
         Configuration parameterItems = config.getChild("parameters", false);
         if (parameterItems != null) {
-            this.parameters = Parameters.fromConfiguration(parameterItems);
+            this.parameters = new HashMap();
+            final Parameters params = Parameters.fromConfiguration(parameterItems);
+            final String[] names = params.getNames();
+            for(int i=0; i<names.length; i++) {
+                final String value = params.getParameter(names[i], null);
+                this.parameters.put(names[i], value);
+            }
         }
     }
 
@@ -207,29 +214,30 @@ public class XSLTAspect
     }
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#prepareConfiguration(org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.AbstractAspect#prepareConfiguration(java.util.Properties)
      */
-    public Object prepareConfiguration(Parameters configuration) 
-    throws ParameterException {
+    public Object prepareConfiguration(Properties configuration)
+    throws PortalException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.xsltRole = configuration.getParameter("xslt-processor-role", XSLTProcessor.ROLE);
-        String stylesheet = configuration.getParameter("style");
+        pc.xsltRole = configuration.getProperty("xslt-processor-role", XSLTProcessor.ROLE);
+        String stylesheet = configuration.getProperty("style", null);
         try {
             pc.stylesheet = VariableResolverFactory.getResolver(stylesheet, this.manager);
         } catch (PatternException pe) {
-            throw new ParameterException("Unknown pattern for stylesheet " + stylesheet, pe);
+            throw new PortalException("Unknown pattern for stylesheet " + stylesheet, pe);
         }
         this.variables.add(pc.stylesheet);
         if (this.parameters != null) {
-            String[] name = this.parameters.getNames();
-            for (int i=0; i < name.length; ++i) {
+            final Iterator i = this.parameters.entrySet().iterator();
+            while ( i.hasNext() ) {
+                final Map.Entry current = (Map.Entry)i.next();
                 try {
                     VariableResolver variableResolver =
-                        VariableResolverFactory.getResolver(this.parameters.getParameter(name[i]), this.manager);
+                        VariableResolverFactory.getResolver(current.getValue().toString(), this.manager);
                     this.variables.add(variableResolver);
-                    pc.parameters.put(name[i], variableResolver);
+                    pc.parameters.put(current.getKey(), variableResolver);
                 } catch (PatternException e) {
-                    throw new ParameterException("Invalid value for parameter " + name[i], e);
+                    throw new PortalException("Invalid value for parameter " + current.getKey() + " : " + current.getValue(), e);
                 }
             }
         }
