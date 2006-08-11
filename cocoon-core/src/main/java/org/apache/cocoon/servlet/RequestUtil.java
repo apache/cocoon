@@ -18,7 +18,6 @@ package org.apache.cocoon.servlet;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -75,7 +74,7 @@ public class RequestUtil {
     }
 
     public static HttpServletRequest createRequestForUri(HttpServletRequest request, String servletPath, String pathInfo) {
-        return new HttpServletRequestImpl(request, servletPath, pathInfo);
+        return new UriHttpServletRequestWrapper(request, servletPath, pathInfo);
     }
 
     public static HttpServletRequest createRequestByRemovingPrefixFromUri(HttpServletRequest request, String prefix) {
@@ -88,83 +87,6 @@ public class RequestUtil {
         } else {
             newServletPath = servletPath + pathInfo.substring(0, prefix.length()+1);
         }
-        return new HttpServletRequestImpl(request, newServletPath, newPathInfo);
-    }
-
-    protected static final class HttpServletRequestImpl extends HttpServletRequestWrapper {
-
-        final private String servletPath;
-
-        final private String pathInfo;
-
-        final private String uri;
-
-        public HttpServletRequestImpl(HttpServletRequest request, String servletPath, String pathInfo) {
-            super(request);
-            this.servletPath = servletPath;
-            this.pathInfo = pathInfo;
-            final StringBuffer buffer = new StringBuffer();
-            if ( request.getContextPath() != null ) {
-                buffer.append(request.getContextPath());
-            }
-            if ( buffer.length() == 1 && buffer.charAt(0) == '/' ) {
-                buffer.deleteCharAt(0);
-            }
-            if ( servletPath != null ) {
-                buffer.append(servletPath);
-            }
-            if ( pathInfo != null ) {
-                buffer.append(pathInfo);
-            }
-            if ( buffer.charAt(0) != '/' ) {
-                buffer.insert(0, '/');
-            }
-            this.uri = buffer.toString();
-            
-        }
-
-        /**
-         * @see javax.servlet.http.HttpServletRequestWrapper#getPathInfo()
-         */
-        public String getPathInfo() {
-            return this.pathInfo;
-        }
-
-        /**
-         * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURI()
-         */
-        public String getRequestURI() {
-            return this.uri;
-        }
-
-        /**
-         * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURL()
-         */
-        public StringBuffer getRequestURL() {
-            final StringBuffer buffer = new StringBuffer();
-            buffer.append(this.getProtocol());
-            buffer.append("://");
-            buffer.append(this.getServerName());
-            boolean appendPort = true;
-            if ( this.getScheme().equals("http") && this.getServerPort() == 80 ) {
-                appendPort = false;
-            }
-            if ( this.getScheme().equals("https") && this.getServerPort() == 443) {
-                appendPort = false;
-            }
-            if ( appendPort ) {
-                buffer.append(':');
-                buffer.append(this.getServerPort());
-            }
-            buffer.append(this.uri);
-            return buffer;
-        }
-
-        /**
-         * @see javax.servlet.http.HttpServletRequestWrapper#getServletPath()
-         */
-        public String getServletPath() {
-            return this.servletPath;
-        }
+        return new UriHttpServletRequestWrapper(request, newServletPath, newPathInfo);
     }
 }
