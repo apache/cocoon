@@ -18,13 +18,13 @@ package org.apache.cocoon.environment.wrapper;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 /**
  * This is a wrapper class for the <code>Request</code> object.
@@ -39,7 +39,7 @@ public final class RequestWrapper extends AbstractRequestWrapper {
     private String queryString;
 
     /** The request parameters */
-    private final RequestParameters parameters ;
+    private final RequestParameters parameters;
 
     /** The environment */
     private final Environment environment;
@@ -110,21 +110,9 @@ public final class RequestWrapper extends AbstractRequestWrapper {
             while (names.hasMoreElements()) {
                 parameterNames.add(names.nextElement());
             }
-            return new EnumerationFromIterator(parameterNames.iterator());
+            return new IteratorEnumeration(parameterNames.iterator());
         }
         return this.parameters.getParameterNames();
-    }
-
-    final class EnumerationFromIterator implements Enumeration {
-        private Iterator iter;
-        EnumerationFromIterator(Iterator iter) {
-            this.iter = iter;
-        }
-
-        public boolean hasMoreElements() {
-            return iter.hasNext();
-        }
-        public Object nextElement() { return iter.next(); }
     }
 
     /* (non-Javadoc)
