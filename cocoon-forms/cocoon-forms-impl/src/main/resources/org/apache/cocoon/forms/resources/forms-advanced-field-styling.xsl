@@ -272,6 +272,7 @@
   <xsl:template match="fi:field[fi:styling/@type='suggest' and @state='active']">
     <span id="{@id}">
       <input name="{@id}" id="{@id}:input" value="{fi:value}" dojoType="CFormsSuggest">
+        <xsl:apply-templates select="." mode="styling"/>
         <xsl:if test="fi:suggestion">
           <xsl:attribute name="suggestion"><xsl:value-of select="fi:suggestion"/></xsl:attribute>
         </xsl:if>
