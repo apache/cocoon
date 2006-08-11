@@ -78,7 +78,6 @@ public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
             try {
             	definition.addSplitMapping(group, field);
-            	System.out.println("Aggregate: addSplitMapping("+group+","+field+")");
             } catch(RuntimeException e) {
             	throw new Exception("Two groups are mapped to the same widget id \"" + field + "\", at " +
                         DomHelper.getLocation(mapElements[i]));
