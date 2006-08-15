@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,11 +44,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
-import org.apache.cocoon.portal.PortalManagerAspect;
-import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
-import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -116,8 +111,7 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class WSRPAdapter 
     extends AbstractCopletAdapter
-    implements PortalManagerAspect,
-               CopletDecorationProvider,
+    implements CopletDecorationProvider,
                Parameterizable,
                Receiver {
 
@@ -181,7 +175,7 @@ public class WSRPAdapter
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters params) throws ParameterException {
-        this.wsrpConfigLocation = params.getParameter("wsrp-config");
+        this.wsrpConfigLocation = params.getParameter("wsrp-config", "config/wsrp-config.xml");
         this.parameters = params;
     }
 
@@ -657,27 +651,6 @@ public class WSRPAdapter
         } finally {
             this.setCurrentCopletInstanceData(null);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#prepare(org.apache.cocoon.portal.PortalManagerAspectPrepareContext, org.apache.cocoon.portal.PortalService)
-     */
-    public void prepare(PortalManagerAspectPrepareContext aspectContext,
-                        PortalService service)
-    throws ProcessingException {
-        // process the events
-        aspectContext.invokeNext();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalManagerAspect#render(org.apache.cocoon.portal.PortalManagerAspectRenderContext, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler, java.util.Properties)
-     */
-    public void render(PortalManagerAspectRenderContext aspectContext,
-                       PortalService service,
-                       ContentHandler ch,
-                       Properties properties)
-    throws SAXException {
-        aspectContext.invokeNext(ch, properties);
     }
 
     /**
