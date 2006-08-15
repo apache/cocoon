@@ -201,10 +201,11 @@ public class XmlConfigCreator {
     }
 
     protected String xml(String value) {
-        value = StringUtils.replace(value, "&", "&amp;");
-        value = StringUtils.replace(value, "<", "&lt;");
-        value = StringUtils.replace(value, ">", "&gt;");
-        return value;
+        String result;
+        result = StringUtils.replace(value, "&", "&amp;");
+        result = StringUtils.replace(result, "<", "&lt;");
+        result = StringUtils.replace(result, ">", "&gt;");
+        return result;
     }
 
     protected void appendAttribute(StringBuffer buffer, String attr, String value) {
