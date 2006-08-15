@@ -15,11 +15,13 @@
  */
 package org.apache.cocoon.portal.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -43,8 +45,8 @@ import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.layout.SkinDescription;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.portal.om.SkinDescription;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
@@ -52,6 +54,7 @@ import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.TraversableSource;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -67,6 +70,9 @@ public class PortalServiceImpl
                 Contextualizable,
                 Disposable,
                 Configurable {
+
+    /** Parameter map for the context protocol. */
+    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
     /** The component context. */
     protected Context context;
@@ -99,6 +105,7 @@ public class PortalServiceImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
+        this.portalComponentManager = new DefaultPortalComponentManager(this.manager);
     }
 
     /**
@@ -257,38 +264,55 @@ public class PortalServiceImpl
         this.portalName = portal.getAttribute("name");
         this.defaultLayoutKey = portal.getAttribute("default-layout-key", "portal");
         this.attributePrefix = this.getClass().getName() + '/' + this.portalName + '/';
+        this.configuration = portal.getChild("configuration");
+        this.configureSkins(this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH,
+                                                  org.apache.cocoon.portal.Constants.DEFAULT_CONFIGURATION_SKINS_PATH));
+    }
+
+    protected void configureSkins(String directory)
+    throws ConfigurationException {
         SourceResolver resolver = null;
+        Source dir = null;
         try {
             resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            this.portalComponentManager = new DefaultPortalComponentManager(this.manager);
-
-            // scan for skins
-            final Configuration[] skinConfs = portal.getChild("skins").getChildren("skin");
-            if ( skinConfs != null ) {
-                for(int s=0;s<skinConfs.length;s++) {
-                    final Configuration currentSkin = skinConfs[s];
-                    final String skinName = currentSkin.getAttribute("name");
-                    final SkinDescription desc = new SkinDescription();
-                    desc.setName(skinName);
-                    Source source = null;
+            dir = resolver.resolveURI(directory, null, CONTEXT_PARAMETERS);
+            if ( dir instanceof TraversableSource ) {
+                final Iterator children = ((TraversableSource)dir).getChildren().iterator();
+                while ( children.hasNext() ) {
+                    final Source s = (Source)children.next();
                     try {
-                        source = resolver.resolveURI(currentSkin.getAttribute("base-path"));
-                        desc.setBasePath(source.getURI());
+                        this.configureSkin(s);
                     } finally {
-                        resolver.release(source);
+                        resolver.release(s);
                     }
-                    desc.setThumbnailPath(currentSkin.getChild("thumbnail-path").getValue(null));
-                    this.skinList.add(desc);
                 }
+            } else {
+                throw new ConfigurationException("Include.dir must point to a directory, '" + dir.getURI() + "' is not a directory.'");
             }
-        } catch (ConfigurationException ce) {
-            throw ce;
-        } catch (Exception e) {
-            throw new ConfigurationException("Unable to setup new portal component manager for portal " + this.portalName, e);
+        } catch (IOException ioe) {
+            throw new ConfigurationException("Unable to read configurations from " + directory);
+        } catch (ServiceException e) {
+            throw new ConfigurationException("Unable to get source resolver.");
         } finally {
-            this.manager.release(resolver);
+            if ( resolver != null ) {
+                resolver.release(dir);
+                this.manager.release(resolver);
+            }
         }
-        this.configuration = portal.getChild("configuration");
+    }
+
+    protected void configureSkin(Source directory) {
+        String uri = directory.getURI();
+        if ( uri.endsWith("/") ) {
+            uri = uri.substring(0, uri.length()-1);
+        }
+        int pos = uri.lastIndexOf('/');
+        final String skinName = uri.substring(pos+1);
+        final SkinDescription desc = new SkinDescription();
+        desc.setName(skinName);
+        desc.setBasePath(directory.getURI());
+        desc.setThumbnailPath(directory.getURI() + '/' + "images/thumb.jpg");
+        this.skinList.add(desc);
     }
 
     /**
