@@ -31,12 +31,12 @@ import org.apache.cocoon.portal.PortalManagerAspect;
 import org.apache.cocoon.portal.PortalManagerAspectPrepareContext;
 import org.apache.cocoon.portal.PortalManagerAspectRenderContext;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletDefinitionFeatures;
-import org.apache.cocoon.portal.coplet.CopletInstance;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
+import org.apache.cocoon.portal.om.CopletInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -177,7 +177,7 @@ public class PortletAdapter
                        ContentHandler ch,
                        Properties properties)
     throws SAXException {
-        final Map objectModel = aspectContext.getObjectModel();
+        final Map objectModel = service.getProcessInfoProvider().getObjectModel();
 
         // don't generate a response, if we issued a redirect
         if (objectModel.remove("portlet-event") == null) {
