@@ -304,14 +304,14 @@ public class PoolableFactoryBean
      * Get a list of interfaces to proxy by scanning through
      * all interfaces a class implements.
      *
-     * @param interfaces      the array of interfaces
+     * @param classInterfaces      the array of interfaces
      * @param workInterfaces  the set of current work interfaces
      */
-    private void addInterfaces( final Class[] interfaces,
+    private void addInterfaces( final Class[] classInterfaces,
                                 final Set workInterfaces ) {
-        for ( int i = 0; i < interfaces.length; i++ ) {
-            workInterfaces.add( interfaces[i] );
-            this.addInterfaces(interfaces[i].getInterfaces(), workInterfaces);
+        for ( int i = 0; i < classInterfaces.length; i++ ) {
+            workInterfaces.add( classInterfaces[i] );
+            this.addInterfaces(classInterfaces[i].getInterfaces(), workInterfaces);
         }
     }
 
